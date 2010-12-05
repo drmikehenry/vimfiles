@@ -1,0 +1,1761 @@
+*notes.txt*     Notes on Vim installation and usage
+
+*notes*
+                                                          
+1.  Introduction                                        |notes_intro|
+2.  Installation                                        |notes_installation|
+3.  Plugins                                             |notes_plugins|
+    Align - Align things into columns                   |notes_align|
+    BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
+    bufmru - Most-recently-used buffer switcher         |notes_bufmru|
+    BufKill - Kill buffer without closing window        |notes_bufkill|
+    CloseTag - Close XML and HTML tags automatically    |notes_closetag|
+    ColorSamplerPack - Color schemes and theme menu     |notes_colorsampler|
+    Command-T - File finder a la TextMate Command-T     |notes_command-t|
+    Dual - Dual color scheme (gvim, vim)                |notes_dual|
+    EnhancedCommentify - comment lines in a program     |notes_enhcommentify|
+    Extline - for extending lines                       |notes_extline|
+    Fontsize - increment/decrement font size            |notes_fontsize|
+    FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
+    Genutils - Generic utility functions                |notes_genutils|
+    Grep - Wrapper for grep/xargs                       |notes_grep|
+    Headerguard - Add guards for header files           |notes_headerguard|
+    Keepcase - Search-and-replace keeping case          |notes_keepcase|
+    LookupFile - Lookup files, buffer, etc.             |notes_lookupfile|
+    LoremIpsum - Generate dummy text                    |notes_loremipsum|
+    LustyExplorer - File/buffer switcher w/incr. search |notes_lustyexplorer|
+    LustyJuggler - Quick access to recent buffers       |notes_lustyjuggler|
+    Markdown - Markdown syntax highlighting             |notes_markdown|
+    Matchit - Extended matching with '%'                |notes_matchit|
+    Netrw - File reading and writing across networks    |notes_netrw|
+    OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
+    Project - Managing "projects" of files              |notes_project|
+    Python - Python Syntax file with folding            |notes_python|
+    PythonComplete - Python Omnicompletion              |notes_pythoncomplete|
+    Repeat - Repeat operations for supported plugins    |notes_repeat|
+    RunView - Run lines through filter into buffer      |notes_runview|
+    Selfdot - Changes "." to "self." in Python          |notes_selfdot|
+    ScrollColor - Scroll through color schemes          |notes_scrollcolor|
+    SuperTab - Use <TAB> for all completion             |notes_supertab|
+    Surround - Manipulating "surroundings"              |notes_surround|
+    Svn - View Subversion diffs while writing commit log|notes_svn|
+    SwapIt - Cycle through related words                |notes_swapit|
+    TagSignature - Balloon signatures for tags          |notes_tagsignature|
+    TagList - Source code browser                       |notes_taglist|
+    TextObj-Indent - Indentation-based text objects     |notes_textobj-indent|
+    TextObj-User - Supports user-defined text objects   |notes_textobj-user|
+    UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
+    vcscommand - Version Control System integration     |notes_vcscommand|
+    VimBall - Vim "package manager"                     |notes_vimball|
+    Vis - The Visual Block Tool                         |notes_vis|
+    VisIncr - Increment visually selected areas         |notes_visincr|
+    VisSort - Sort visually selected areas              |notes_vissort|
+    VisSwap - Swap visually selected areas              |notes_visswap|
+4.  Customizations                                      |notes_customizations|
+5.  Tips                                                |notes_tips|
+
+
+==============================================================================
+1.  Introduction                                        *notes_intro*
+
+These are notes for Vim usage and setup.
+
+
+==============================================================================
+2.  Installation                                        *notes_installation*
+
+Prerequisites for Ubuntu: >
+    sudo apt-get install libgpmg1-dev libperl-dev ruby1.8-dev
+
+Prerequisites for Fedora: >
+    sudo yum install -y ruby ruby-devel perl-ExtUtils-Embed
+
+On 64-bit Linux, Python libraries live in /usr/lib64/pythonx.y,
+and Vim's configuration script doesn't find the config directory.
+One fix appears to be the following symlink: >
+
+  ln -s /usr/lib64/python2.6/config /usr/lib/python2.6/config
+
+Inspiration taken from: 
+  http://users.skynet.be/antoine.mechelynck/vim/compunix.htm
+
+The detailed steps for download and building Vim are captured in
+the script ~/.vim/buildtool.  See that script for more information.
+
+Download the sources, patches, and updated runtime files: >
+
+  ~/.vim/buildtool 7.2 download
+
+Unpack, patch, build, and create a binary tarball: >
+
+  ~/.vim/buildtool 7.2
+
+Installation of final tarball is done as follows: >
+    sudo tar -C / -zxf vim72/vim-7.2.patchlevel.i386.tar.gz
+
+If /usr/share/applications/*gvim.desktop exists, it may be necessary to 
+update this line: >
+    Exec=gvim -f %F
+
+to use a full path: >
+    Exec=/usr/local/bin/gvim -f %F
+
+Fonts
+-----
+
+On Linux, ensure the following fonts are available:
+
+- levien-inconsolata-fonts (Fedora package).  Reference:
+  http://www.levien.com/type/myfonts/inconsolata.html
+
+- Bitstream Vera Sans.  Reference:
+  http://www.gnome.org/fonts/
+
+Sources
+-------
+
+For references, the sources are available here:
+  ftp://ftp.vim.org/pub/vim/unix/vim-7.2.tar.bz2
+  ftp://ftp.vim.org/pub/vim/extra/vim-7.2-extra.tar.gz
+  ftp://ftp.vim.org/pub/vim/extra/vim-7.2-lang.tar.gz
+
+  It's best to download the -extra and -lang sources, as future patches 
+  may well be generated against these extra files.
+
+The patches are here:
+  ftp://ftp.vim.org/pub/vim/patches/7.2/7.2.*
+
+The updated runtime is here:
+  ftp://ftp.vim.org/pub/vim/runtime/*
+
+This content is mirrored for use with rsync at ftp.nluug.nl::Vim.
+
+==============================================================================
+3.  Plugins                                             *notes_plugins*
+
+For help with plugins: 
+
+- Adding local help files |add-local-help|
+
+Installed plugins:
+
+------------------------------------------------------------------------------
+ALIGN                                                   *notes_align*
+    Align things into columns                           |align|
+
+Align vimball comprises AlignPlugin and AlignMapsPlugin with a combined
+version number.
+
+Version 36e_46h from section "Alignment" at
+http://mysite.verizon.net/astronaut/vim/index.html
+
+Installation:
+- Distributed as a |vimball|  >
+
+    vim .VimballRecord Align-36e_46h.vba.gz
+    :RmVimball Align-xxx_yyy
+    :n
+    :so %
+    :q 
+
+------------------------------------------------------------------------------
+BUFEXPLORER                                             *notes_bufexplorer*
+  Buffer switcher and manager                           |bufexplorer|
+
+Invoke BufExplorer: 
+    <leader>be
+
+
+Version 7.2.7 from http://www.vim.org/scripts/script.php?script_id=42
+
+Installation:
+- Unzip in ~/.vim/
+- :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+BUFMRU                                                  *notes_bufmru*
+  Most-recently-used buffer switcher                    |notes_bufmru|
+
+(Documentation taken from top of bufmru.vim file.)
+
+Usage:
+  KEY(S)            ACTION
+  <Space>           switch to the most recently used buffer and enter Bufmru
+                    mode.
+
+  in BUFMRU MODE:
+  f  b              reach more MRU buffers (forward/backward)
+  e  <Enter>        accept current choice
+  !                 accept current choice (an abandoned modified buffer
+                        becomes hidden)
+  q  <Esc>          quit the mode, go back to start buffer (forcibly)
+  y                 copy file name
+
+  The mode times out after 'timeoutlen' ms.  A key not mapped in the mode
+  (e.g. <Space>) quits the mode and executes as usual.
+
+After yanking the filename, in insert mode CTRL-R=@@<CR> will put it in your
+buffer.
+
+Version 3.3 from http://www.vim.org/scripts/script.php?script_id=2346
+
+Installation:
+- Copy into ~/.vim/plugin/
+
+------------------------------------------------------------------------------
+BUFKILL                                                 *notes_bufkill*
+  BufKill - Kill buffer without closing window
+
+Usage:
+
+:BUN      - unload a buffer, keeping window
+:BD       - delete a buffer, keeping window
+:BW       - wipe a buffer, keeping window
+:BUNDO    - undo a previous :BUN, :BD, or :BW
+
+See also:
+:bun      - unload a buffer, closing window (vim built-in)    |:bunload|
+:bd       - delete a buffer, closing window (vim built-in)    |:bdelete|
+:bw       - wipe a buffer, closing window (vim built-in)      |:buwipe|
+
+Version 1.1 from http://vim.sourceforge.net/scripts/script.php?script_id=1147
+
+------------------------------------------------------------------------------
+CLOSETAG                                                *notes_closetag*
+  Close XML and HTML tags automatically
+
+
+Version 0.9.1 from http://www.vim.org/scripts/script.php?script_id=13
+
+Installation:
+- Install as ~/.vim/scripts/closetag.vim
+- In ~/.vim/scripts.vim, source the script as part of per-filetype setup: >
+    runtime scripts/closetag.vim
+
+------------------------------------------------------------------------------
+COLORSAMPLERPACK                                        *notes_colorsampler*
+  Color schemes and theme menu
+
+Schemes recommended by Matt Gilbert:
+- nuvola
+- ps_color
+- darkblue2
+
+Version 7.01 from http://www.vim.org/scripts/script.php?script_id=625
+
+Installation:
+- Unzip in ~/.vim/
+
+------------------------------------------------------------------------------
+COMMAND-T                                               *notes_command-t*
+  File finder a la TextMate Command-T                   |command-t|
+
+Usage: 
+
+<Leader>\t        Launch relative to current working directory
+<Leader>\r        Launch relative to current buffer
+
+:CommandT         Launch relative to current working directory
+:CommandT dir     Launch relative to directory "dir"
+:CommandTFlush    Flush Command-T's file cache
+
+Note Command-t's default key sequence, <Leader>t, is taken by Align plugin.
+
+Find more information in the |command-t| help page.
+
+Version 1.0b from http://www.vim.org/scripts/script.php?script_id=3025
+
+Installation:
+
+Note Something hangs when opening the Vimball, and CTRL-C may
+       be required before sourcing.
+
+- Distributed as a |vimball|  >
+
+    vim command-t-1.0b.vba
+    RmVimball command-t
+    :so %
+    :q 
+
+- Contains C code that must be compiled: >
+
+    cd ~/.vim/ruby/command-t
+    ruby extconf.rb
+    make
+
+------------------------------------------------------------------------------
+DUAL                                                    *notes_dual*
+  Dual color scheme (gvim, vim)                         |notes_dual|
+
+Version 1.1 from http://www.vim.org/scripts/script.php?script_id=2688
+
+Installation:
+- Copy to ~/.vim/colors/dual.vim
+
+Use: >
+    :colorscheme dual
+
+------------------------------------------------------------------------------
+EXTLINE                                                 *notes_extline*
+  Extend lines (e.g., for underlined titles)            |extline.txt|
+
+CTRL-L CTRL-L     Auto-line update
+CTRL-L CTRL-H     Horizontal line update
+CTRL-L CTRL-U     Change to underlined title
+CTRL-L CTRL-O     Change to overlined title
+CTRL-L CTRL-I     Change to underlined and overlined title
+
+Single-line headings:
+CTRL-L =          Force Section heading (level 1)
+CTRL-L 1
+CTRL-L -          Force Subsection heading (level 2)
+CTRL-L 2
+CTRL-L ^          Force Subsubsection heading (level 3)
+CTRL-L 3
+CTRL-L "          Force Paragraph heading (level 4)
+CTRL-L 4
+CTRL-L '          Force level 5 heading
+CTRL-L 5
+
+Double-line headings:
+CTRL-L #          Force Part heading (level 9)
+CTRL-L 9
+CTRL-L *          Force Chapter heading (level 0)
+CTRL-L 0
+
+(Custom plugin)
+
+------------------------------------------------------------------------------
+ENHANCEDCOMMENTIFY                                      *notes_enhcommentify*
+  Comment lines in a program                            |EnhancedCommentify|
+
+Toggles comments on current line or in visual range: >
+    \x  - toggle comment, stay on current line
+    \c  - toggle comment, move down one line
+
+Version 2.3 from http://www.vim.org/scripts/script.php?script_id=23
+
+Installation:
+- Untar in ~/.vim/
+- Copy contents from EnhancedCommentify-2.3: >
+  cp -a EnhancedCommentify-2.3/* .
+- Remove EnhancedCommentify-2.3: >
+  rm -rf EnhancedCommentify-2.3/*
+- Remove license file clutter: >
+  rm LICENSE.EnhancedCommentify
+
+------------------------------------------------------------------------------
+FONTSIZE                                                *notes_fontsize*
+  Fontsize - increment/decrement font size              |fontsize.txt|
+
+  <Leader>++    Increment font size
+  <Leader>==    Increment font size
+  <Leader>--    Decrement font size
+  <Leader>00    Reset to default font size
+
+The above mappings initiate a "font size" mode in which the following
+additional individual keys become active:
+
+  +          Increment font size
+  =          Increment font size
+  -          Decrement font size
+  0          Revert to default font size
+  !          Save current size as new default
+  q          Quit "font size" mode
+  <SPACE>    Quit "font size" mode
+  <CR>       Quit "font size" mode
+
+Other keys pressed will exit "font size" mode and perform their normal
+function.
+
+In addition, "font size" mode will automatically timeout after |timeoutlen|
+milliseconds have elapsed without a keypress, because "font size" mode is
+based on mappings.
+
+Version 0.1.0 from http://www.vim.org/scripts/script.php?script_id=2809
+(Original source in Subversion in ~/.vim/.)
+
+Installation:
+
+- Distributed as a |vimball|  >
+
+    vim fontsize-0.1.0.vba
+    :so %
+    :q 
+
+------------------------------------------------------------------------------
+FSWITCH                                                 *notes_fswitch*
+  FSwitch - Filename switching (e.g., .c <=> .h)        |fswitch|
+
+Usage:
+
+Mapping       Command       
+\of           :FSHere      Other file "here" (current window)
+
+\oh           :FSLeft      Other file into existing window on left
+\oH           :FSLeft      Other file into new split window on left
+
+\ol           :FSRight     Other file into existing window on right
+\oL           :FSRight     Other file into new split window on right
+
+\ok           :FSAbove     Other file into existing window above
+\oK           :FSAbove     Other file into new split window above
+
+\oj           :FSBelow     Other file into existing window below
+\oJ           :FSBelow     Other file into new split window below
+
+Compatibility command for Alternate.vim:
+
+  :A        Same as :FSHere
+
+Version 0.9.2 from http://www.vim.org/scripts/script.php?script_id=2590
+
+Installation:
+
+- Distributed as a |vimball|  >
+
+    vim FSwitch-0.9.2.vba.gz
+    :RmVimball FSwitch          (if upgrading)
+    :so %
+    :q 
+
+------------------------------------------------------------------------------
+GENUTILS                                                *notes_genutils*
+  Generic utility functions
+
+
+Required by several of Hari Krishna Dana's plugins, e.g. LookupFile.
+
+Version 2.5 from http://www.vim.org/scripts/script.php?script_id=197
+
+Installation:
+- Unzip in ~/.vim/
+
+------------------------------------------------------------------------------
+GREP                                                    *notes_grep*
+  Wrapper for grep/xargs                                |grep-plugin|
+
+Usage:
+
+:Grep          - Search for the specified pattern in the specified files
+:GrepAdd       - Same as ":Grep" but adds the results to the current results
+:Rgrep         - Run recursive grep
+:RgrepAdd      - Same as ":Rgrep" but adds the results to the current results
+:GrepBuffer    - Search for a pattern on all open buffers
+:GrepBufferAdd - Same as ":GrepBuffer" but adds the results to the current
+                 results
+:Bgrep         - Same as :GrepBuffer
+:BgrepAdd      - Same as :GrepBufferAdd
+:GrepArgs      - Search for a pattern on all the Vim argument
+                 filenames (:args)
+:GrepArgsAdd   - Same as ":GrepArgs" but adds the results to the current
+                 results
+:Fgrep         - Run fgrep
+:FgrepAdd      - Same as ":Fgrep" but adds the results to the current
+                 results
+:Rfgrep        - Run recursive fgrep
+:RfgrepAdd     - Same as ":Rfgrep" but adds the results to the current
+                 results
+:Egrep         - Run egrep
+:EgrepAdd      - Same as ":Egrep" but adds the results to the current
+                 results
+:Regrep        - Run recursive egrep
+:RegrepAdd     - Same as ":Regrep" but adds the results to the current
+                 results
+:Agrep         - Run agrep
+:AgrepAdd      - Same as ":Agrep" but adds the results to the current
+                 results
+:Ragrep        - Run recursive agrep
+:RagrepAdd     - Same as ":Ragrep" but adds the results to the current
+                 results
+
+The above commands can be invoked like this:
+
+   :Grep   [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :Rgrep  [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :Fgrep  [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :Rfgrep [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :Egrep  [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :Regrep [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :Agrep  [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :Ragrep [<grep_options>] [<search_pattern> [<file_name(s)>]]
+
+   :GrepAdd   [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :RgrepAdd  [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :FgrepAdd  [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :RfgrepAdd [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :EgrepAdd  [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :RegrepAdd [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :AgrepAdd  [<grep_options>] [<search_pattern> [<file_name(s)>]]
+   :RagrepAdd [<grep_options>] [<search_pattern> [<file_name(s)>]]
+
+   :GrepBuffer [<grep_options>] [<search_pattern>]
+   :Bgrep [<grep_options>] [<search_pattern>]
+   :GrepArgs [<grep_options>] [<search_pattern>]
+
+   :GrepBufferAdd [<grep_options>] [<search_pattern>]
+   :BgrepAdd [<grep_options>] [<search_pattern>]
+   :GrepArgsAdd [<grep_options>] [<search_pattern>]
+
+Local customizations
+
+- You can Regrep for the word under the cursor or the visual selection
+  by pressing <F3>.
+
+Installation:
+- Install grep.vim in ~/.vim/plugin
+- Install grep.txt in ~/.vim/doc
+- :helptags ~/.vim/doc
+- Note: grep.txt is not directly downloadable; it was created from a
+  copy-and-paste of the plugin web page
+
+- For Version 1.8: the xargs command is using --null.  OS X's version
+  of xargs doesn't support this long alias for -0, so replace --null
+  with -0 in grep.vim.  In Version 1.9, the new variable Grep_Xargs_Options
+  was added to fix this problem.
+
+Version 1.9 from http://www.vim.org/scripts/script.php?script_id=311
+
+------------------------------------------------------------------------------
+HEADERGUARD                                             *notes_headerguard*
+  Add guards for header files                           |headerguard|
+
+To add or update a header guard in a .h file: >
+
+    :HeaderguardAdd
+
+Version 0.1.0 from http://www.vim.org/scripts/script.php?script_id=2021
+
+------------------------------------------------------------------------------
+KEEPCASE                                                *notes_keepcase*
+  Search-and-replace keeping case
+
+Usage:
+
+:SubstituteCase/\ctoto\(Titi\)tata/\1Tutu/g  >
+    totoTitiTata -> titiTutu
+    TotoTitiTata -> TitiTutu
+    tototititata -> tititutu
+    tototitiTata -> titiTutu
+    TototitiTata -> TitiTutu
+
+Can use other delimiters (e.g., #, @, ...)
+
+Use \c to force case-insensitive matching, or use all lowercase in search.
+
+Example: replace MyStruct with YourClass >
+    #ifndef MYSTRUCT_H
+    #define MYSTRUCT_H
+
+    MyStruct myStruct;
+
+    void
+    MyStruct_function(MyStruct *pMyStruct)
+    {
+    }
+    #endif /* MYSTRUCT_H */
+
+Use this command: >
+    :%SubstituteCase/mystruct/YourClass/g
+
+Get this output: >
+    #ifndef YOURCLASS_H
+    #define YOURCLASS_H
+
+    YourClass yourClass;
+
+    void
+    YourClass_function(YourClass *pYourClass)
+    {
+    }
+    #endif /* YOURCLASS_H */
+
+Using KeepCase or KeepCaseSameLen defined here, do a substitution like this: >
+    %s/\u\<old_word\>/\=KeepCaseSameLen(submatch(0), 'new_word')/g
+
+KeepCase(original_word, new_word)  
+  returns the new word maintaining case 
+  simply uses heuristics to work out some different common situations
+    given   NewWord
+    Word    --> Newword
+    WORD    --> NEWWORD
+    word    --> newword
+    WoRd    --> NewWord
+    woRd    --> newWord
+
+KeepCaseSameLen(original_word, new_word)    
+  Returns the new word maintaining case
+    Keeps the case exactly the same letter-for-letter
+    It does work if the words aren't the same length, as it truncates or
+    just copies the case of the word for the length of the original word.
+
+Installation:
+- Install keepcase.vim in ~/.vim/plugin
+
+Version 2.0 from http://www.vim.org/scripts/script.php?script_id=6
+
+------------------------------------------------------------------------------
+LOOKUPFILE                                              *notes_lookupfile*
+  Lookup files, buffer, etc.                            |lookupfile.txt|
+
+Version 1.8 from http://www.vim.org/scripts/script.php?script_id=1581
+
+Press <F5> for :LookupFile command (most recently Lookup operation).
+
+This plugin needs more time for evaluation and configuration.
+
+Commands       Meaning
+:LUBufs        Lookup buffers
+:LUWalk        Walk filesystem
+:LUPath        Lookup in 'path'
+:LUArgs        Lookup in :args
+:LUTags        Lookup in tag file
+
+Installation:
+- Unzip in ~/.vim/
+- :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+LOREMIPSUM                                              *notes_loremipsum*
+  Generate dummy text                                   |loremipsum.txt|
+
+The Lorem Ipsum is a famous bit of Latin text used by typesetters for
+focusing on layout without being distracted by the text's meaning.
+
+See http://lipsum.com/ for details on Lorem Ipsum itself.
+
+Usage:
+
+:Loremipsum[!] [COUNT]     Insert COUNT words (default 100)
+
+With [!], inserts as a single paragraph.
+
+More options exist - see |loremipsum.txt| for details.
+
+Version 0.2 from http://www.vim.org/scripts/script.php?script_id=2289
+
+Installation:
+- Distributed as a |vimball|  >
+
+    vim loremipsum.vba.gz
+    :so %
+    :q 
+
+------------------------------------------------------------------------------
+LUSTYEXPLORER                                           *notes_lustyexplorer*
+  LustyExplorer - File/buffer switcher w/incr. search
+
+Usage (taken from lustyexplorer.vim): 
+
+  <Leader>lf  - Opens the filesystem explorer.
+  <Leader>lr  - Opens the filesystem explorer from the
+                directory of the current file.
+  <Leader>lb  - Opens the buffer explorer.
+  <Leader>lg  - Opens the buffer grep, for searching through
+                all loaded buffers
+
+You can also use the commands:
+
+  ":LustyFilesystemExplorer"
+  ":LustyFilesystemExplorerFromHere"
+  ":LustyBufferExplorer"
+  ":LustyBufferGrep"
+
+(Personally, I map these to ,f ,r ,b and ,g)
+
+When launched, a new window appears at bottom presenting a
+table of files/dirs or buffers, and in the status bar a
+prompt:
+
+  >>
+
+As you type, the table updates for possible matches using a
+fuzzy matching algorithm (or regex matching, in the case of
+grep).  Special keys include:
+
+  <Enter>  open selected match
+  <Tab>    open selected match
+  <Esc>    cancel
+  <C-c>    cancel
+  <C-g>    cancel
+
+  <C-t>    open selected match in a new [t]ab
+  <C-o>    open selected match in a new h[o]rizontal split
+  <C-v>    open selected match in a new [v]ertical split
+
+  <C-n>    select [n]ext match
+  <C-p>    select [p]revious match
+
+  <C-u>    clear prompt
+
+Additional shortcuts for the filesystem explorer:
+
+  <C-w>    ascend one directory at prompt
+  <C-r>    [r]efresh directory contents
+  <C-a>    open [a]ll files in current table
+  <C-e>    create new buffer with the given name and path
+
+Filesystem Explorer:
+
+ - Directory contents are memoized.  (<C-r> to refresh.)
+ - You can recurse into and out of directories by typing the directory name
+   and a slash, e.g. "stuff/" or "../".
+ - Variable expansion, e.g. "$D" -> "/long/dir/path/".
+ - Tilde (~) expansion, e.g. "~/" -> "/home/steve/".
+ - Dotfiles are hidden by default, but are shown if the current search term
+   begins with a '.'.  To show these file at all times, set this option:
+
+      let g:LustyExplorerAlwaysShowDotFiles = 1
+
+ You can prevent certain files from appearing in the table with the
+ following variable:
+
+   set wildignore=*.o,*.fasl,CVS
+
+ The above will mask all object files, compiled lisp files, and
+ files/directories named CVS from appearing in the table.  Note that they
+ can still be opened by being named explicitly.
+
+ See :help 'wildignore' for more information.
+
+Buffer Explorer:
+
+ - Buffers are sorted first by fuzzy match and then by most-recently used.
+ - The currently active buffer is highlighted.
+
+Buffer Grep:
+
+ - Searches all loaded buffers.
+ - Uses Ruby-style regexes instead of Vim style.  This means:
+
+   - \b instead of \< or \> for beginning/end of word.
+   - (foo|bar) instead of \(foo\|bar\)
+   - {2,5} instead of \{2,5}
+   - + instead of \+
+   - Generally, fewer backslashes. :-)
+
+ - For now, searches are always case-insensitive.
+ - Matches from the previous grep are remembered upon relaunch;  clear with
+   <C-u>.
+
+Version 582e889 from http://github.com/sjbach/lusty
+
+Released versions appear here:
+Version 3.1.1 from http://www.vim.org/scripts/script.php?script_id=1890
+
+Installation:
+- Install in ~/.vim/plugin
+
+------------------------------------------------------------------------------
+LUSTYJUGGLER                                            *notes_lustyjuggler*
+  LustyJuggler - Quick access to recent buffers
+
+
+Usage: To launch the juggler:
+
+         <Leader>lj
+
+       You can also use this command:
+
+         ":LustyJuggler"
+
+       (Personally, I map this to ,g)
+
+       When the juggler launches, the command bar at bottom is
+       replaced with a new bar showing the names of your currently
+       opened buffers in most-recently-used order.
+
+       The buffer names are mapped to these keys:
+
+           1st|2nd|3rd|4th|5th|6th|7th|8th|9th|10th
+           ----------------------------------------
+           a   s   d   f   g   h   j   k   l   ;
+           1   2   3   4   5   6   7   8   9   0
+
+       So if you type "f" or "4", the fourth buffer name will be
+       highlighted and the bar will shift to center it as necessary
+       (and show more of the buffer names on the right).
+
+       If you want to switch to that buffer, press "f" or "4" again
+       or press "<ENTER>".  Alternatively, press one of the other
+       mapped keys to highlight another buffer.
+
+       To display the key before the name of the buffer, add one of
+       the following lines to your .vimrc:
+
+         let g:LustyJugglerShowKeys = 'a'   (for alpha characters)
+         let g:LustyJugglerShowKeys = 1     (for digits)
+
+       To cancel the juggler, press any of "q", "<ESC>", "<C-c",
+       "<BS>", "<Del>", or "<C-h>".
+
+
+Bonus: This plugin also includes the following command, which will
+       immediately switch to your previously used buffer:
+
+         ":LustyJugglePrevious"
+       
+       This is similar to the :b# command, but accounts for the
+       common situation where your previously used buffer (#) has
+       been killed and is thus inaccessible.  In that case, it will
+       instead switch to the buffer used previous to the killed
+       buffer (and on down the line).
+
+
+Version 582e889 from http://github.com/sjbach/lusty
+
+Released versions appear here:
+Version 1.1.4 from http://www.vim.org/scripts/script.php?script_id=2050
+
+Installation:
+- Install in ~/.vim/plugin
+
+------------------------------------------------------------------------------
+MARKDOWN                                                *notes_markdown*
+  Markdown syntax highlighting
+
+Version 9 from http://www.vim.org/scripts/script.php?script_id=1242
+
+Installation:
+- Install into ~/.vim/syntax/mkd.vim
+
+------------------------------------------------------------------------------
+MATCHIT                                                 *notes_matchit*
+  Extended matching with '%'                            |matchit|
+
+Press '%' to match:
+  - Bracket pairs:  () [] {}
+  - C-language #if / #else / #endif
+  - HTML tags <start> / </end>
+  - etc.
+
+Version 1.13.2 from http://www.vim.org/scripts/script.php?script_id=39
+
+Installation:
+- Unzip in ~/.vim/
+- :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+NETRW                                                   *notes_netrw*
+  File reading and writing across networks              |netrw|
+  
+Version 128 from http://www.vim.org/scripts/script.php?script_id=1075
+(Also check Dr. Chip's site: http://mysite.verizon.net/astronaut/vim/#NETRW)
+
+Use <Leader>fe to invoke :Explore.  This will explore in the directory
+of the current file.
+
+To dismiss netrw buffer, simply wipe it via :bwipe or similar.
+
+Installation:
+- Distributed as a |vimball|  >
+
+    vim netrw.vba.gz
+    :so %
+    :q 
+
+------------------------------------------------------------------------------
+OMNICPPCOMPLETE                                         *notes_omnicppcomplete*
+  C/C++ Omnicompletion                                  |omnicppcomplete|
+
+CTRL-X CTRL-O - Completion of normal identifiers.
+"." or "->" - Completion of struct fields.
+
+Within popup completion menu:
+CTRL-Y - Yes: accept currently selected match.
+CTRL-E - End completion, reverting to what was typed.
+CTRL-N - Insert next completion.
+CTRL-P - Insert previous completion.
+<Down> - Select next match (like CTRL-N), but don't insert it.
+<Up>   - Select previous match (like CTRL-P), but don't insert it.
+
+Requires Exuberant ctags database with these options: >
+    ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
+
+For more details on insert-mode completion:|ins-completion|
+
+Version 0.41 from http://www.vim.org/scripts/script.php?script_id=1520
+
+Installation:
+- Unzip in ~/.vim/
+- :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+PROJECT                                                 *notes_project*
+  Managing "projects" of files                          |project|
+
+To invoke the project window: >
+    :Project
+
+Local customizations:
+  <F8>      - toggles the project window on and off.
+
+Version 1.4.1 from http://www.vim.org/scripts/script.php?script_id=69
+
+Installation:
+- Unzip in ~/.vim/
+- :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+PYTHON                                                  *notes_python*
+  Python Syntax file with folding
+
+Version 2.6.6 from http://www.vim.org/scripts/script.php?script_id=790
+
+Installation:
+- Install into ~/.vim/syntax/python.vim
+
+------------------------------------------------------------------------------
+PYTHONCOMPLETE                                          *notes_pythoncomplete*
+  Python Omnicompletion
+
+Although this is distributed with Vim, it lags behind in the official
+distribution.
+
+Version 0.9 from http://www.vim.org/scripts/script.php?script_id=1542
+
+Installation:
+- Install as ~/.vim/autoload/pythoncomplete.vim
+
+------------------------------------------------------------------------------
+REPEAT                                                  *notes_repeat*
+  Repeat operations for supported plugins.
+
+Plugins need to support this feature explicitly (such as the
+surround plugin).
+
+Version 1.0 from http://www.vim.org/scripts/script.php?script_id=2136
+
+Installation:
+- Copy to ~/.vim/plugin/repeat.vim.
+
+------------------------------------------------------------------------------
+RUNVIEW                                                 *notes_runview*
+  Run lines through filter into buffer                  |RunView|
+
+Version 1e from http://mysite.verizon.net/astronaut/vim/#RUNVIEW
+
+Installation:
+- Distributed as a |vimball|  >
+
+    vim RunView.vba.gz
+    :so %
+    :q 
+
+Local customizations: >
+  " Setup Bash as default view to run.
+  let g:runview_filtcmd="bash"
+
+------------------------------------------------------------------------------
+SELFDOT                                                 *notes_selfdot*
+  Changes "." to "self." in Python                      |notes_selfdot|
+
+(Temporarily removed, as it's not Python-specific and is impossible
+to work around.)
+
+Pressing "." in insert mode will cause "self." to be inserted
+in cases where "." would be a syntax error in Python.
+
+Version 1.0.2 from http://www.vim.org/scripts/script.php?script_id=2911
+
+Installation:
+- Copy to ~/.vim/plugin
+
+------------------------------------------------------------------------------
+SCROLLCOLOR                                             *notes_scrollcolor*
+  Scroll through color schemes
+
+Usage: >
+
+  :SCROLLCOLOR  Use arrow keys to scroll through color schemes
+  :COLORSCROLL  [Synonym for :SCROLLCOLOR]
+  :PREVCOLOR  Move to alphabetically previous color
+  :NEXTCOLOR  Move to alphabetically next color
+
+Version 2006-07-19 from http://www.vim.org/scripts/script.php?script_id=1488
+
+Installation:
+- Copy ScrollColor.vim to ~/.vim/plugin/ScrollColor.vim
+
+- Edit ScrollColor.vim and comment out these mappings (toward bottom of file): >
+
+    map \n
+    map \p
+    map \c
+
+------------------------------------------------------------------------------
+SURROUND                                                *notes_surround*
+  Manipulating "surroundings"                           |surround.txt|
+
+Usage (An asterisk (*) is used to denote the cursor position):
+  Old text                  Command     New text ~
+  "Hello *world!"           ds"         Hello world!
+  [123+4*56]/2              cs])        (123+456)/2
+  "Look ma, I'm *HTML!"     cs"<q>      <q>Look ma, I'm HTML!</q>
+  if *x>3 {                 ysW(        if ( x>3 ) {
+  my $str = *whee!;         vllllS'     my $str = 'whee!';
+
+See |surround.txt| for more complete examples and documentation.
+
+Local customization: Disabled visual-mode "s" mapping as it will be
+removed eventually.  Instead, use visual-mode "S".
+
+Version 1.90 from http://www.vim.org/scripts/script.php?script_id=1697
+
+Installation:
+- Unzip to as ~/.vim
+- :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+SVN                                                     *notes_svn*
+  View Subversion diffs while writing commit log
+
+Install this plugin as ~/.vim/ftplugin/svn.vim and use Vim as the
+editor for Subversion's command-line interface.  When editing a
+commit log message, the Subversion diffs will be displayed in a
+separate window.
+
+Version 0.5 from http://www.vim.org/scripts/script.php?script_id=978
+
+Note: Named svn-diff.vim in the index, but svn.vim is the new name.
+
+Installation:
+- Copy svn.vim to ~/.vim/ftplugin/
+
+------------------------------------------------------------------------------
+SWAPIT                                                  *notes_swapit*
+  Cycle through related words                           |swapit|
+
+Press CTRL-A to cycle forward through the list of related words
+Press CTRL-X to cycle forward through the list of related words
+
+Works in Normal and Visual mode.
+
+E.g., with cursor on "true" pressing CTRL-A changes the word to "false".
+
+Version 0.3 from http://www.vim.org/scripts/script.php?script_id=2294
+
+Installation:
+- Untar to ~/.vim
+For version 0.3, need the following patch: >
+
+  --- plugin/swapit.vim   (revision 549)
+  +++ plugin/swapit.vim   (revision 550)
+  @@ -327,14 +327,14 @@
+       else
+
+           if a:is_visual == 'yes'
+  -            if next_word =~ "\W"
+  +            if next_word =~ '\W'
+                   let in_visual = 1
+                   exec 'norm! gv"sp`[v`]'
+               else
+                   exec 'norm! gv"spb'
+               endif
+           else
+  -            if next_word =~ "\W"
+  +            if next_word =~ '\W'
+                   let in_visual = 1
+                   exec 'norm! maviw"sp`[v`]'
+               else
+
+------------------------------------------------------------------------------
+TAGSIGNATURE                                            *notes_tagsignature*
+  Balloon signatures for tags
+
+Displays the signature of a tag when you hover the mouse over that tag.
+Requires a tags file.
+
+Version r319 from http://www.vim.org/scripts/script.php?script_id=2714
+
+Installation:
+- Copy to ~/.vim/plugin/tag_signature.vim
+
+------------------------------------------------------------------------------
+TAGLIST                                                 *notes_taglist*
+  Source code browser                                   |taglist.txt|
+
+Local customizations:
+  <s-F8>    - toggle the taglist (:TlistToggle)
+
+Version 45 from http://www.vim.org/scripts/script.php?script_id=273
+
+Installation:
+- Unzip in ~/.vim/
+- :helptags ~/.vim/doc
+
+The file taglist.vim should be patched as follows: >
+  --- taglist.vim (revision 478)
+  +++ taglist.vim (working copy)
+  @@ -3289,7 +3289,7 @@
+           " tag is selected, close the taglist  window
+           if g:Tlist_Close_On_Select
+               call s:Tlist_Window_Goto_Window()
+  -            close
+  +            call s:Tlist_Exe_Cmd_No_Acmds('close')
+   
+               " Go back to the window displaying the selected file
+               let wnum = bufwinnr(a:filename)
+
+This avoids an unfortunate interaction with the BufEnter/BufLeave
+autocommands designed to keep Vim 7+ from scrolling the buffer.
+
+Requires ctags.exe to be in the path.  Generally this comes with Linux
+distributions.  Compiled binaries may be found at
+http://ctags.sourceforge.net/
+
+------------------------------------------------------------------------------
+TEXTOBJ-INDENT                                          *notes_textobj-indent*
+  Indentation-based text objects                        |textobj-indent.txt|
+
+Support for text objects based on indentation.
+
+Use "i" for text objects based on indentation.
+
+E.g., to select block:
+    vii
+
+Version 0.0.3 from http://www.vim.org/scripts/script.php?script_id=2484
+
+Installation:
+- Requires textobj-user support
+- Unzip in ~/.vim/ (note unfortunate directory prefix vim-textobj-indent-0.0.3)
+- :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+TEXTOBJ-USER                                            *notes_textobj-user*
+  Library support for user-defined text objects         |textobj-user.txt|
+
+Library to support construction of user-defined text objects; by itself,
+library is not terribly useful.  Enables things like |textobj-indent|
+
+Version 0.3.8 from http://www.vim.org/scripts/script.php?script_id=2100
+
+Installation:
+- Unzip in ~/.vim/ (note unfortunate directory prefix vim-textobj-user-0.3.8)
+- :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+ULTISNIPS                                               *notes_ultisnips*
+    Support for inserting snippets of text              |UltiSnips|
+
+Provides TextMate-like snippets for inserting text with placeholders.
+
+Configured as follows:
+
+- <Tab>   - Expand trigger
+- <Tab>   - Jump forward trigger
+- <s-Tab> - Jump backward trigger
+
+To see snippets whose triggers begin with a given prefix, type the prefix
+followed by <C-Tab>.
+
+Custom additional command to reset and reload snippets: >
+    UltiSnipsReset
+
+Snippets live in two places:
+
+- ~/.vim/UltiSnips         - Snippets common to all configurations
+- ~/.vim/local/UltiSnips   - Optional snippets local to an installation
+
+For select languages, the default snippets provided by UltiSnips are
+overridden by local snippets.  This is accomplished by putting the
+directory ~/.vim/clearsnippets into the &runtimepath before the new
+locally defined snippets.  In this directory are snippets files using
+the "clearsnippets" directive to wipe out the default snippets.
+
+To avoid rampant duplication when defining snippets, a custom set of Python
+scripts is used to define snippets.  For example, the file
+~/.vim/UltiSnips/c.snippets.py generates the snippets found in
+~/.vim/UltiSnips/c.snippets.  All snippets make be "built" via the Makefile in
+~/.vim/UltiSnips by executing "make", followed in Vim by :UltiSnipsReset to
+reload the snippets.
+
+Version 1.2 from http://www.vim.org/scripts/script.php?script_id=2715
+
+Installation:
+- If upgrading, remove ~/.vim/UltiSnips-old.version/
+- Unpack in ~/.vim/, creating ~/.vim/UltiSnips-x.y/
+- Update $ULTISNIPS variable in ~/.vim/vimrc for new directory name
+- See ~/.vim/vimrc for detailed configuration steps
+
+------------------------------------------------------------------------------
+VCSCOMMAND                                               *notes_vcscommand*
+  Version Control System integration                     |vcscommand|
+
+Local customizations:
+- Using <Leader>s (for "svn") instead of <Leader>c (originally "cvs").
+  Avoids conflict with <Leader>c mapping of EnhancedCommentify.
+
+Maps work on file associated with current buffer
+
+\sa VCSAdd                add to source control
+\sn VCSAnnotate           perform "svn annotate" (svn blame)
+\sc VCSCommit             commit file
+\sD VCSDelete             delete from source control
+\sd VCSDiff               diff against most CURRENT
+\sg VCSGotoOriginal       delete VCS scratch buffer, return to original file
+\sG VCSGotoOriginal!      as above, but wipeout all scratch buffers
+\si VCSInfo               "svn info"
+\sl VCSLog                "svn log"
+\sL VCSLock               "svn lock"
+\sr VCSReview             show version of current file (default: most recent)
+\ss VCSStatus             "svn status"
+\su VCSUpdate             "svn update"
+\sU VCSUnlock             "svn unlock"
+\sv VCSVimDiff            use vimdiff to show differences
+
+The ex commands allow additional parameters which are generally passed to
+the underlying source control system.
+
+Version 1.99.37 from http://www.vim.org/scripts/script.php?script_id=90
+
+Installation:
+- Unzip in ~/.vim/
+- :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+VIMBALL                                                 *notes_vimball*
+  "Package manager" for supporting .vba VimBalls        |vimball|
+
+Version 26 from http://vim.sourceforge.net/scripts/script.php?script_id=1502
+
+Installation:
+- Untar in ~/.vim/
+
+------------------------------------------------------------------------------
+VIS                                                     *notes_vis*
+  The Visual Block Tool                                 |vis.txt|
+
+Performs an arbitrary Ex command on a visual highlighted block.
+
+Mark visual block (CTRL-V) or visual character (v),
+  press ':B ' and enter an Ex command [cmd].
+
+  ex. Use ctrl-v to visually mark the block then use
+    :B cmd     (will appear as   :'<,'>B cmd )
+
+  ex. Use v to visually mark the block then use
+    :B cmd     (will appear as   :'<,'>B cmd )
+
+Popular uses for this command include: >
+
+  :B s/pattern/output/
+  :B left
+  :B right
+
+Using // and ?? after a visual selection (the // is only available
+if you have g:vis_WantSlashSlash=1 in your <.vimrc> file):
+>
+  ex. select region via V, v, or ctrl-v
+      //pattern
+<
+You'll actually get a long leader string of commands to restrict
+searches to the requested visual block first.  You may then enter
+the pattern afterwards.  For example, using "v" to select this
+paragraph, you'll see something like: >
+
+  /\%(\%(\%80l\%>12v\)\|\%(\%83l\%<53v\)\|\%(\%>80l\%<83l\)\)\&
+<
+You may enter whatever pattern you want after the \&, and the
+pattern search will be restricted to the requested region.
+
+The "S" command in visual mode:
+>
+  ex. select region via V, v, or ctrl-v
+      :S pattern
+<
+    The ":S pattern" will appear as ":'<,'>S pattern".  This
+    command will move the cursor to the next instance of the
+    pattern, restricted to the visually selected block.
+
+Installation:
+- Distributed as a |vimball|  >
+
+    vim vis.vba.gz
+    :so %
+    :q 
+
+Version 20a from section "Visual Block Commands" at
+http://mysite.verizon.net/astronaut/vim/index.html
+
+------------------------------------------------------------------------------
+VISINCR                                                 *notes_visincr*
+  Increment visually selected areas                     |visincr.txt|
+
+Using block visual mode (CTRL-v), visually select a column of numbers,
+then use one of the following:
+
+    :I [#]  will use the first line's number as a starting point
+      default increment (#) is 1
+      will justify left (pad right)
+      For more see |visincr-I|
+
+    :II [# [zfill]]
+      will use the first line's number as a starting point
+      default increment (#) is 1
+      default zfill         is a blank (ex. :II 1 0)
+      will justify right (pad left)
+      For more see |visincr-II|
+
+         ORIG      I        II
+         +---+   +----+   +----+
+         | 8 |   | 8  |   |  8 |
+         | 8 |   | 9  |   |  9 |
+         | 8 |   | 10 |   | 10 |
+         | 8 |   | 11 |   | 11 |
+         +---+   +----+   +----+
+
+Also try the "restricted" variants (:RI, :RII) which skip over lines
+that don't have numbers.  Can help to renumber paragraphs.
+See the following:
+
+  Restricted left-justified incrementing......|visincr-RI|
+  Restricted right-justified incrementing.....|visincr-RII|
+
+
+Installation:
+- Distributed as a |vimball|  >
+
+    vim visincr.vba.gz
+    :so %
+    :q 
+
+Version 20b from section "Visual Incrementing" at
+http://mysite.verizon.net/astronaut/vim/index.html
+
+------------------------------------------------------------------------------
+VISSORT                                                 *notes_vissort*
+  Sort visually selected areas                          |vissort.txt|
+
+   :[range]Vissort   actually same as Bisort
+   :'<,'>Vissort     apply sort to visual-block only
+
+   Select a block of text with visual-block mode; use the Vissort command to
+   sort the block.  This function sorts the lines *based on the selected
+   column*.
+
+   EXAMPLE
+
+    Original Text:
+    one      two      three   four
+    five     six      seven   eight
+    nine     ten      eleven  twelve
+    thirteen fourteen fifteen sixteen
+
+    Use ctrl-v (Visual-Block) to select two..fourteen column,
+    then Vissort:
+    thirteen fourteen fifteen sixteen
+    five     six      seven   eight
+    nine     ten      eleven  twelve
+    one      two      three   four
+
+More commands available at |vissort.txt|
+
+Installation:
+- Distributed as a |vimball|  >
+
+    vim vissort.vba.gz
+    :so %
+    :q 
+
+Version 4c from section "Visual Block Sorting" at
+http://mysite.verizon.net/astronaut/vim/index.html
+
+------------------------------------------------------------------------------
+VISSWAP                                                 *notes_visswap*
+  Swap visually selected areas                          |visswap.txt|
+
+Visually select a region and press CTRL-y to "yank".
+Visually select another region and press CTRL-t to "trade"
+the two regions.
+(The default is CTRL-x to "exchange" the regions, but this conflicts with the
+swapit plugin.)
+
+Installation:
+- Distributed as a |vimball|  >
+
+    vim visswap.vba.gz
+    :so %
+    :q 
+
+Version 4e from section "Visual Mode Based Swap" at
+http://mysite.verizon.net/astronaut/vim/index.html
+
+==============================================================================
+4.  Customizations                                      *notes_customizations*
+
+------------------------------------------------------------------------------
+Building and Running
+
+Press <F9> to save all buffers and execute :make in current directory.
+
+Press <S-F9> to execute current buffer (useful when editing Python scripts,
+for example).
+
+Press <F12> to execute the fifosignal command (a separate program).  Useful
+in combination with a separate command prompt using the fifowait command,
+commonly used to trigger a build outside of Vim.  For example: >
+
+    while fifowait; do echo "Building"; ./buildall; done
+
+------------------------------------------------------------------------------
+QuickFix window, diff mode
+
+Use <F4> and <S-F4> to navigate forward and backward through the QuickFix
+list, or through diffs when diff mode is active (:help :diffthis).
+
+Use :DiffOrig to compare unsaved changes against original on-disk.
+Use :diffoff to remove diff mode.
+Use :diffthis to put current window into diff mode (do on two windows
+separately to do a diff between them).
+
+------------------------------------------------------------------------------
+Dragging text in four directions
+
+Text may be "dragged" in any of the four directions (Up, Down, Left, or
+Right).  In normal and insert modes, the current line will be dragged; in
+select mode, the selection will be dragged.
+
+Lines dragged vertically move as whole lines.
+
+Lines dragged horizontally are shifted one space to the left or right,
+generally as if the standard "<<" or ">>" operator had been invoked with the
+shift width ('sw') variable temporarily set to one.  For block-wise
+selections, this implies that only the selected block is shifted.
+
+Dragging up:
+  <M-Up>        (select mode, insert mode, normal mode)
+  <M-K>         (select mode, insert mode, normal mode)
+  -             (select mode)
+
+Dragging down:
+  <M-Down>      (select mode, insert mode, normal mode)
+  <M-J>         (select mode, insert mode, normal mode)
+  +             (select mode)
+
+Dragging left:
+  <M-Left>      (select mode, insert mode, normal mode)
+  <M-H>         (select mode, insert mode, normal mode)
+  <Backspace>   (select mode)
+
+Dragging right:
+  <M-Left>      (select mode, insert mode, normal mode)
+  <M-H>         (select mode, insert mode, normal mode)
+  <Space>       (select mode)
+
+------------------------------------------------------------------------------
+Deleting "Rubbish" Whitespace
+
+The normal-mode mapping "drw" deletes "rubbish" whitespace, bringing a
+run of spaces down to a single space character, or a group of consecutive
+blank lines down to a single blank line.
+
+------------------------------------------------------------------------------
+Re-formatting paragraphs
+
+The useless key "Q" is mapped to the "gq" reformatting operator.  Pressing
+"QQ" on a line reformats that line.  Pressing "Q" in visual mode reformats the
+selection.
+
+<M-q> is mapped to "gqip", which formats an "inner paragraph" similar to the
+Emacs feature bound to the same key.
+
+------------------------------------------------------------------------------
+Moving "out" hierarchically
+
+Press <C-O><C-O> in insert or visual modes to exit "out" to the containing
+context.  For example, if your cursor is between parentheses, pressing
+<C-O><C-O> will move out just beyond the parentheses.  This is helpful for
+getting outside text that was automatically inserted (e.g., from a snippet).
+
+The following may be "exited": >
+
+  (Parentheses)
+  [Brackets]
+  {CurlyBraces}
+  break;
+
+------------------------------------------------------------------------------
+Additional CTRL-O mappings
+
+<C-O>o      - Open a line below this one
+<C-O>;      - Append ";" to the current line
+<C-O>:      - Append ":" to the current line
+<C-O>.      - Append "." to the current line
+<C-O><CR>   - Append "." and <CR> to the current line unless overridden by a
+              filetype-specific mapping
+<C-O><C-H>  - Exit visual modes at start of selected text
+<C-O><C-L>  - Exit visual modes at end of selected text
+
+------------------------------------------------------------------------------
+Movement by screen lines
+
+The standard movement keys have been remapped to move by screen lines instead
+of logical lines.  For "short" lines, there is no difference, but for wrapped
+lines, this reverses the default behavior of using logical lines.  Use "g" and
+the original key to move by logical lines.
+
+------------------------------------------------------------------------------
+Emacs-style command-line editing
+
+The standard Emacs-style command-line editing keys as used in Bash have been
+mapped for command-line mode.  These include:
+
+<C-A>   Start of line
+<C-B>   Move left one character
+<C-D>   Delete character under cursor
+<C-F>   Move right one character
+<C-N>   Next command history line
+<C-P>   Previous command history line
+<M-b>   Move left one word
+<M-f>   Move right one word
+
+<C-G>   Edit command-line history (used to be <C-F>)
+
+The original meanings for these keys may be activated by first pressing <C-O>
+(mnemonic: "Original").
+
+Original meanings:
+<C-A>   Insert all matching filenames
+<C-B>   <Home>
+<C-D>   List matching names
+<C-F>   Edit command-line history
+<C-G>   Nothing
+<C-N>   Next match after wildchar, or recall next command-line history
+<C-O>   Nothing
+<C-P>   Prev. match after wildchar, or recall prev. command-line history
+
+------------------------------------------------------------------------------
+Windows-style clipboard support
+
+Because the Windows standard keys for clipboard support are already taken in
+Vim, they have been mapped to the same keys using Alt:
+
+<M-a>         Select all
+<M-z>         Undo
+<M-x>         Cut to clipboard
+<M-c>         Copy to clipboard
+<M-v>         Paste from clipboard
+
+In addition, old-style mappings exist:
+
+<S-Insert>    Paste from clipboard
+<C-S-Insert>  Paste from primary X selection
+<C-Insert>    Copy to clipboard
+
+------------------------------------------------------------------------------
+Putting from most recent yank
+
+By default, yanking (e.g, "yy") copies your text into the scratch register,
+and putting (e.g., "p") puts text from the scratch register into your
+buffer.  Putting text onto a visual selection replaces that selection with
+your text, but it also has the sometimes undesirable effect of overwriting
+your scratch register with the previously selected text.  Subsequent "put"
+operations will then use the overwritten text instead of your previously
+yanked text.
+
+For situations such as this, Vim maintains a list of the most recently yanked
+text, with regiser "0" holding the most recently yanked, "1" holding the
+previously yanked text, etc., up through "9" which holds the tenth most
+recently yanked text.  A "put" operation can be told to use one of these
+registers by using a prefix of a double-quote and the register name.
+
+For example, if you want to "put" from your most recently yanked text instead
+of from the scratch register, do the following: >
+
+  "0p
+
+To make this easier to type, <M-p> has been mapped to paste from register "0".
+
+------------------------------------------------------------------------------
+Search for word under cursor
+
+Vim's standard "*" operator (which searches for the word under the cursor) has
+been modified to leave the cursor unmoved.  In visual mode, the selection
+becomes the search text.
+
+Use <F3> to begin a :Regrep command on the word under the cursor (or the
+selection in Visual mode).  See :help grep.txt for details on the grep plugin
+and the :Regrep command.
+
+Use the mapping \z after a search to fold all but the matching lines.
+
+------------------------------------------------------------------------------
+Pasting lines into Vim
+
+When pasting lines copied from outside Vim, the content is subject to
+auto-indentation at each <CR>.  The |'paste'| variable may be set to 
+prevent these unintended effects during pasting.  
+
+Press <S-F12> key to toggle the state of the |'paste'| variable; it may be set
+or cleared manually via: >
+    :set paste
+    :set nopaste
+Be sure to exit insert mode when pasting with :set paste active because
+mappings are disabled, so <S-INSERT> won't be interpreted as the paste
+operation.
+
+------------------------------------------------------------------------------
+Tag files
+
+Tag files (named "tags") will now be searched starting in the current working
+directory and all parent directories toward the root.
+
+The "gf" command ("goto file") will use any filename tags to augment the
+search path (:help 'path').
+
+The custom :Ctags command will launch "ctags-std" in the current directory to
+update the tags.
+
+------------------------------------------------------------------------------
+Cscope
+
+Key bindings have been setup for cscope (:help cscope):
+
+<C-\>c     :cs find c on current word under cursor
+<C-\>d     :cs find d on current word under cursor
+<C-\>e     :cs find e on current word under cursor
+<C-\>f     :cs find f on current word under cursor
+<C-\>g     :cs find g on current word under cursor
+<C-\>i     :cs find i on current word under cursor
+<C-\>s     :cs find s on current word under cursor
+<C-\>t     :cs find t on current word under cursor
+
+------------------------------------------------------------------------------
+Window Layout
+
+Usage:
+
+:L          Layout windows nicely using current number of columns.
+:L <n>      Layout windows in an <n>-column format.
+:L1         Layout windows in a one-column format.
+:L2         Layout windows in a two-column format.
+:L3         Layout windows in a three-column format.
+:L4         Layout windows in a four-column format.
+:L5         Layout windows in a five-column format.
+
+Performs the following:
+- Sets number of character columns for the requested number of window
+  columns, e.g.:
+  - :L1  ==> 80 characters
+  - :L2  ==> 161 characters (2 * 80 + 1)
+  - :L3  ==> 242 characters (3 * 80 + 2)
+  - :L4  ==> 323 characters (4 * 80 + 3)
+  - :L5  ==> 404 characters (5 * 80 + 4)
+  - :L n ==> n * 80 + (n - 1)
+
+  This leaves room for n windows with (n - 1) dividing lines between them.
+
+- Moves quickfix window to the bottom, re-sizes to 10 lines (if already open).
+- Makes all windows equally sized (via Ctrl-w_=).
+- Moves current window to the top (L1 only).
+
+*NOTE* If your Gvim window isn't positioned to span the edges of your monitor,
+the number of character columns may be truncated to keep Gvim on a single
+monitor.  To work around this, move Gvim to straddle the boundary between
+monitors before executing the above commands.
+
+<C-Q><C-Q>  Toggle the QuickFix window on or off (gvim only)
+
+------------------------------------------------------------------------------
+Alternatives to :bufdo, :windo, :tabdo
+
+These behave as their built-in counterparts but restore the current
+window, buffer, or tab when they complete.
+
+Usage:
+
+:Windo command
+:Bufdo command
+:Tabdo command
+
+------------------------------------------------------------------------------
+Highlight command
+
+The custom command :Highlight provides highlighting of non-conforming coding
+styles to make it easier to locate problems during editing.
+
+Highlights tabs, long lines, etc.: >
+    :Highlight *          ; enable all
+    :Highlight no*        ; disable all
+    :Highlight <Tab>      ; command-line completion to show all options
+
+Options include: >
+    tabs
+    longlines
+
+
+==============================================================================
+5.  Tips                                                *notes_tips*
+
+Use the following command: >
+    :help quickref
+to get a nice quick reference guide.
+
+- Use filetype=Wikipedia for MediaWiki files.
+
+Set 'path' variable to include **/pubinc, **/src: >
+    set path+=**/pubinc,**/src
+
+Use |gf| to jump to file under cursor (powerful in combination with setting
+the 'path' variable).
+
+Use |:find| instead of |:edit| to use 'path' to locate a file.
+
+Use |]p| and |]P| to perform |p| and |P| with re-indentation of the pasted text.
+(Or can use |]p| and |[p| for paste-after and paste-before.)
+
+Try @: to repeat the last ex-mode command; to repeat again, use @@.
+
+Use g& to repeat the last Search-and-replace.
+
+If your syntax highlighting gets out of sync, try the command: >
+    :syntax sync fromstart
+
+------------------------------------------------------------------------------
+Command-line window
+
+Special window for editing current and historical command and searches.
+
+From command-line mode or while editing a search pattern, press CTRL-G to open
+the window (Note: Vim default is to use CTRL-F, but this has been remapped).
+
+From normal mode, press "q:" or "q/" to open the command-history or
+search-history window, respectively.
+
+You can edit, cut, paste, yank, etc., from these history windows.  Press
+CTRL-C to exit.
+
+Press <CR> on a line in the window to execute it.
+
+------------------------------------------------------------------------------
+Debugging Vim problems
+
+- To disable plugins, ~/.vimrc, and ~/.gvimrc, use ``-u NONE``.
+- Use -N to set nocompatible.
+
+Standard invocation for bare-vim testing: >
+
+    vim -u NONE -N
+
+Displaying characters under cursor: >
+    ga  - decimal, hexadecimal, octal
+    g8  - bytes in UTF-8 character
+
+------------------------------------------------------------------------------
+Quitting with non-zero return code
+
+When using Vim as the "fix command" editor in Bash (via the ``fc`` command
+or via ``Ctrl-x Ctrl-e`` - "man bash" for details on fc), a successful 
+return code tells Bash to execute the commands.  This is somewhat 
+counter-intuitive when mixed with Vim's :qa! syntax which means "throw away
+all my changes."  But Vim has a "throw away all my changes and return failure"
+command: >
+    :cquit
+    :cq
+
+This command is the same as :qa! but returns failure so Bash will ignore
+the edited command.
+
+  vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:nospell:

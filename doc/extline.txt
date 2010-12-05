@@ -1,0 +1,103 @@
+*extline.txt*      Plugin for extending lines (e.g., underlined titles)
+
+*extline*          Version 0.1.1
+
+==============================================================================
+1.  Introduction                                    |extline-intro|
+2.  Installation                                    |extline-installation|
+3.  Customization                                   |extline-customization|
+4.  Credits                                         |extline-credits|
+
+==============================================================================
+1.  Introduction                                    *extline-intro*
+
+When writing titles in a plain text document, a common convention is to use
+repeated punctuation characters to draw lines under (and sometimes over) the
+title text.  This plugin helps maintain those title lines more easily, and
+it provides support for standalone horizontal lines as well.
+
+Titles are marked up in a manner compatible with reStructuredText[1], and the
+various heading levels are chosen to coincide with the Sphinx[2] project's
+conventions as follows:
+
+    ##############
+    Part (level 9)
+    ##############
+
+    *****************
+    Chapter (level 0)
+    *****************
+
+    Section (level 1)
+    =================
+
+    Subsection (level 2)
+    --------------------
+
+    Subsubsection (level 3)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+
+    Paragraph (level 4)
+    """""""""""""""""""
+
+    Level-5 heading
+    '''''''''''''''
+
+The following mappings apply in Visual and Insert modes:
+
+CTRL-L CTRL-L     Auto-line update
+CTRL-L CTRL-H     Horizontal line update
+CTRL-L CTRL-U     Change to underlined title
+CTRL-L CTRL-O     Change to overlined title
+CTRL-L CTRL-I     Change to underlined and overlined title
+
+CTRL-L =          Force Section heading (level 1)
+CTRL-L 1
+CTRL-L -          Force Subsection heading (level 2)
+CTRL-L 2
+CTRL-L ^          Force Subsubsection heading (level 3)
+CTRL-L 3
+CTRL-L "          Force Paragraph heading (level 4)
+CTRL-L 4
+CTRL-L '          Force level 5 heading (level 5)
+CTRL-L 5
+
+To insert a literal CTRL-L in insert mode, use CTRL-V CTRL-L (or CTRL-Q CTRL-L
+if CTRL-V has been remapped as happens on Windows by default).
+
+Each of the "change to xxx title" commands will convert an existing title to
+the desired format.  
+
+The "horizontal line update" command will update an existing horizontal line
+of punctuation charcters to reach column 78.
+
+The "auto-line update" command will update an existing title or horizontal.
+
+If a title has no pre-existing underline or overline, by default a Section
+heading will be used with a row of equals signs as an underline.
+
+===============================================================================
+2.  Installation                                    *extline-installation*
+
+Unzip the downloaded file in your personal |vimfiles| directory (~/.vim under 
+unix or %HOMEPATH%\vimfiles under windows).  The following files will
+be unpacked: >
+
+  doc/extline.txt
+  plugin/extline.vim
+
+Finally, re-generate your help tags with the |:helptags| command, e.g.: >
+
+  :helptags ~/.vim/doc
+
+===============================================================================
+3.  Customization                                   *extline-customization*
+
+
+===============================================================================
+4.  Credits                                         *extline-credits*
+
+Author: Michael Henry <vim at drmikehenry.com>
+
+===============================================================================
+vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:spell:

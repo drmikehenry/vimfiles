@@ -1,0 +1,94 @@
+*RunView.txt*	RunView					Oct 26, 2005
+Copyright:    Copyright (C) 2005 Charles E. Campbell, Jr. {{{1
+              Permission is hereby granted to use and distribute this code,
+              with or without modifications, provided that this copyright
+              notice is copied with it. Like anything else that's free,
+              RunView.vim is provided *as is* and comes with no warranty
+              of any kind, either expressed or implied. By using this
+              plugin, you agree that in no event will the copyright
+              holder be liable for any damages resulting from the use
+              of this software.
+
+
+==============================================================================
+1. Contents					*runview* *runview-contents*
+
+	1. Contents..................................: |runview-contents|
+	2. Usage.....................................: |runview-usage|
+	3. Options...................................: |runview-options|
+	4. History...................................: |runview-history|
+
+
+==============================================================================
+2. Usage						*runview-usage*
+
+   COMMAND
+   	:[range]RunView[!] [filtercommand]
+
+   VISUAL MODE MAPS
+	(visual-line-selection) \rh
+	(visual-line-selection) \rv
+
+	RunView runs user-selected lines, selected either via a range provided
+	to the RunView command or by visual-line selection (|V|), through a
+	|filter|.  By default, the filter is ksh; however, the |runview-filtcmd|
+	can be set (let g:runview_filtcmd="someotherfilter") in your <.vimrc>
+	to override this.  The RunView command lets you specify the filter
+	on the command line, too.
+
+	The output is placed in a separate window; it is horizontally or
+	vertically separated.  Source code is left unchanged and visible.
+
+	Without the !, the RunView command uses vertically stacked windows.
+	With the !, the RunView command uses horizontally separated windows.
+
+	As an example, consider the file: >
+		echo "one"
+		echo "two"
+		echo "three"
+<	Using >
+		:%RunView ksh
+<	the source code window is left on top, but the results of filtering
+	the three lines is shown below it: >
+		echo "one"
+		echo "two"
+		echo "three"
+		-------------
+		RunView ksh Output Window
+		=== 01/02/05 06:07:08 ===
+		one
+		two
+		three
+<	RunView provides a title and a separator.  Subsequent applications
+	of RunView will append a new separator line plus the new filter
+	output.
+
+	The package contains: >
+		plugin/RunView.vim
+		syntax/RunView.vim
+		doc/RunView.txt
+<	
+
+==============================================================================
+3. Options				*runview-option* *runview-options*
+
+                      Option Variable     Default Value
+                      -----------------   -------------
+   *runview-filtcmd*  g:runview_filtcmd   "ksh"
+   *runview-swapwin*  g:runview_swapwin   1
+
+	The g:runview_filtcmd specifies the default application that will
+	be used to filter lines.
+
+	If g:runview_swapwin is true, then the source lines and output
+	window will be swapped (horizontal: top<>bottom, vertical:left<>right).
+
+
+==============================================================================
+4. History						*runview-history*
+
+	v1  Oct 26, 2005 : Initial release
+
+
+==============================================================================
+vim: ts=8

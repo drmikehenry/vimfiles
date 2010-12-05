@@ -1,0 +1,232 @@
+*vissort.txt*	Visual-Mode Based Sorting		Aug 25, 2004
+
+Authors:  Charles E. Campbell, Jr.  <NdrOchip@ScampbellPfamilyA.Mbiz>
+	  Piet Delport (BISort())
+Copyright: (c) 2004-2005 by Charles E. Campbell, Jr.	*vissort-copyright*
+           The VIM LICENSE applies to vissort.vim and vissort.txt
+           (see |copyright|) except use "vissort" instead of "Vim"
+	   No warranty, express or implied.  Use At-Your-Own-Risk.
+
+	  (remove NOSPAM from Campbell's email first)
+
+==============================================================================
+1. Contents						*vissort-contents*
+
+	1. Contents.......................................: |vissort-contents|
+	2. Bisort.........................................: |bisort|
+	3. Vissort..(sorting lines based on a column).....: |vissort|
+	4. Sorting A Column Only..........................: |vissort-column|
+	5. BlockSort......................................: |blocksort|
+
+==============================================================================
+2. Bisort : binary search sort					*bisort*
+
+   :[range]Bisort
+
+   Applies an in-place binary-search sort.  Generally its faster than
+   quicksort with Vim since its using Vim's interpreter.
+
+   EXAMPLES
+
+	Original Text:
+	one      two      three   four
+	five     six      seven   eight
+	nine     ten      eleven  twelve
+	thirteen fourteen fifteen sixteen
+
+	Use Visual-Line (V) mode to select text, then Bisort - sorts lines:
+		V to select lines
+		:Bisort
+	five     six      seven   eight
+	nine     ten      eleven  twelve
+	one      two      three   four
+	thirteen fourteen fifteen sixteen
+
+	Use <vis.vim>'s B command with Bissort - sorts the column only:
+	    ctrl-v to select column
+	    :'<,'>B Bisort
+	one      fourteen three   four
+	five     six      seven   eight
+	nine     ten      eleven  twelve
+	thirteen two      fifteen sixteen
+
+
+==============================================================================
+3. Vissort     							*vissort*
+>
+	sorting lines based on selected column
+<
+   :[range]Vissort   actually same as Bisort
+   :'<,'>Vissort     apply sort to visual-block only
+
+   Select a block of text with visual-block mode; use the Vissort command to
+   sort the block.  This function sorts the lines *based on the selected
+   column*.
+
+   EXAMPLE
+
+	Original Text:
+	one      two      three   four
+	five     six      seven   eight
+	nine     ten      eleven  twelve
+	thirteen fourteen fifteen sixteen
+
+	Use ctrl-v (Visual-Block) to select two..fourteen column,
+	then Vissort:
+	thirteen fourteen fifteen sixteen
+	five     six      seven   eight
+	nine     ten      eleven  twelve
+	one      two      three   four
+
+
+==============================================================================
+4. Sorting A Column Only				*vissort-column*
+>
+	sorting a column independently of the surrounding lines
+<
+   |vissort| provides the ability to sort lines based on a column; the
+   technique described here allows one to sort columns independently of any
+   line contents surrounding the column.
+
+   To accomplish this you'll also need the <vis.vim> script; you may acquire
+   a copy at:
+>
+	http://mysite.verizon.net/astronaut/vim/index.html#VimFuncs
+	as "Visual Block Commands"
+<
+   This topic is also covered by the tip:
+>
+   http://vim.sourceforge.net/tips/tip.php?tip_id=588
+<
+   Select the column using |blockwise-visual| mode (use ctrl-v, move).  Then,
+   assuming <vis.vim> has been installed as a plugin, type
+>
+	:B Bisort
+<
+   or you may often use an external sorting program; in such a case, the
+   typical command is:
+>
+	:B !sort
+<
+  Since these methods use blockwise-visual selection, the command will appear
+  as
+>
+	:'<,'>B Bisort
+
+
+==============================================================================
+5. BlockSort   							*blocksort*
+
+   :'<,'>BS
+   :'< '>BS nextblock endblock findtag tagpat tagsub
+   :[range]call BlockSort(nextblock,endblock,findtag,tagpat,tagsub)
+   :[range]call BlockSort(...)
+
+              If any arguments are missing, BlockSort()
+                    will query the user for them.
+
+    This function's purpose is to sort blocks of text based on tags
+    contained within the blocks.
+
+    WARNING: this function can move lots of text around, so using it
+    is use-at-your-own-risk!  Please check and verify that things
+    have worked as you expected.  Backing up your file before
+    modifying it would be advisable before doing such things as
+    sorting C functions.
+
+    nextblock:
+      Blocks are assumed to begin on a line containing the nextblock pattern.
+
+      If the nextblock pattern is "" (the empty string), then the next block is
+      assumed to begin with the line following the line matching the endblock
+      pattern.
+
+    endblock:
+      Blocks are assumed to end with a line containing the endblock pattern.
+
+      If the endblock pattern is "" (the empty string), then the end of the
+      block will be assumed to be the line preceding the line matching
+      the nextblock pattern.
+
+    findtag:
+      Blocks are assumed to contain a tag findable by the findtag pattern.
+
+      If the findtag pattern is "", then nextblock line will be assumed
+      to contain the tag.
+
+    tagpat, tagsub:
+      The tagpat and tagsub are used by a |substitute()|; the tag is extracted
+      by applying the tagpat to the line containing the tag and substitution
+      is made with the tagsub pattern.
+
+      If the tagpat is "", then it will default to '^.*$'.
+
+      If the tagsub is "", then if the tagpat was "", then tagsub will
+      take on the default value of "&".
+
+      If the tagsub is "" but the tagpat wasn't "", then the tagsub will
+      take on the default value of '\1'.
+
+   EXAMPLES
+
+    1. :[range]call BlockSort('^[a-z]','---$','\u','^.*\(\u\).*$','\1')
+
+     Original Text: >
+     	one
+             	some
+             	junk
+             	B
+             	appears
+             	---
+     	two
+             	some more
+             	junk
+             	A
+             	appears here.
+             	---
+<
+     After BlockSort('^[a-z]','---$','\u','^.*\(\u\).*$','\1') >
+     	two
+             	some more
+             	junk
+             	A
+             	appears here.
+             	---
+     	one
+             	some
+             	junk
+             	B
+             	appears
+             	---
+<
+    2. Sorting C functions (see warning above!)  [USE AT YOUR OWN RISK]
+
+	:[range]CFuncSort
+	:[range]call BlockSort('','^}','^[^/*]\&^[^ ][^*]\&^.*\h\w*\s*(','^.\{-}\(\h\w*\)\s*(.*$','')
+
+	CFuncSort is a command that does exactly the same thing as the
+	BlockSort shown above; its just easier to type.
+
+	Each function is a block; the nextblock is implied by being the endblock + 1.
+
+	The endblock assumes that C functions end with a pattern matching '^}'.  This
+	assumption is not required by the language, but it is typical use.
+
+	The findtag pattern attempts to avoid comments; its not perfect:
+	                 1         2
+	        12345678901234567890  <--column
+		/* something()
+		 * somethingelse()
+		 */
+       		// something()
+	Its looking for a C-word ('\h\w*') followed by possible white space
+	and an open parenthesis.  It undoubtedly can be confused by prototypes,
+	stuff that looks like functions but is inside comments, etc.
+
+	Once such a line is found, the tagpat operates to identify the function name.
+	Since tagsub is '', its default value of '\1' is used.
+
+
+==============================================================================
+vim:tw=78:ts=8:ft=help
+

@@ -1,0 +1,107 @@
+*visswap.txt*	Visual-Mode Based Text Swapping		Jun 16, 2006
+
+Author:  Charles E. Campbell, Jr.  <NdrchipO@ScampbellPfamily.AbizM>
+	  (remove NOSPAM from Campbell's email first)
+Copyright: (c) 2004-2006 by Charles E. Campbell, Jr.	*visswap-copyright*
+           The VIM LICENSE applies to visswap.vim and visswap.txt
+           (see |copyright|) except use "visswap" instead of "Vim"
+	   No warranty, express or implied.  Use At-Your-Own-Risk.
+
+
+==============================================================================
+1. Visual Mode Based Swapping			*visswap*	*v_c-y*	*v_c-x*
+
+	Use any visual mode to select the first text block for the swap
+	(V, v, or ctrl-v).  Press <ctrl-y>.
+
+	Use any visual mode to select the second text block for the swap,
+	although one generally uses the same mode as was used for the first
+	selection.  Press <ctrl-x>.  The text will now be swapped.
+
+	As a warning: mixing visual modes or overlapping the selected
+	regions may not have the intended effect.  The selected regions
+	do not have to be the same size, however.
+
+
+==============================================================================
+2. Visual-Mode Based Replacement			*visswap-replace* *v_vr*
+
+	This mapping allows one to use a visually selected block of text 
+	to replace text at another location.
+
+	Use visual block mode to select the text block (ctrl-v).
+	Press <esc>.
+	Move the cursor to where the columns are to be replaced.
+	Press \vr  (actually, its <leader>vr; see |mapleader|).
+
+
+==============================================================================
+3. Examples						*visswap-example*
+
+   	A. Original Text:
+		one       two      three    four
+		five      six      seven    eight
+		nine      ten      eleven   twelve
+		thirteen  fourteen fifteen  sixteen
+		seventeen eighteen nineteen twenty
+
+	B. Visual Line Mode: V					*visswap_V*
+	       [one       two      three    four
+		five      six      seven    eight]1
+		nine      ten      eleven   twelve
+	       [thirteen  fourteen fifteen  sixteen
+		seventeen eighteen nineteen twenty]2
+
+	   The first selection is [...]1 and the
+	   second one is [...]2.  The result:
+
+		thirteen  fourteen fifteen  sixteen
+		seventeen eighteen nineteen twenty
+		nine      ten      eleven   twelve
+		one       two      three    four
+		five      six      seven    eight
+
+	C. Visual Characterwise Mode: v				*visswap_v*
+	       [one       two      three    four
+		five]1    six      seven    eight
+		nine      ten      eleven   twelve
+	       [thirteen  fourteen fifteen]2  sixteen
+		seventeen eighteen nineteen twenty
+
+	   The first selection is [...]1 and the second one is [...]2.
+	   The result after swapping:
+
+		thirteen  fourteen fifteen      six      seven    eight
+		nine      ten      eleven   twelve
+		one       two      three    four
+		five  sixteen
+		seventeen eighteen nineteen twenty
+
+	D. Visual Block Mode: <ctrl-v>				*visswap_ctrl-v*
+
+		one       two      three  2[four
+		five    1[six      seven    eight
+		nine      ten      eleven   twelve  ]
+		thirteen  fourteen]fifteen  sixteen
+		seventeen eighteen nineteen twenty
+
+	   The first selection is 1[...] and the second one is 2[...].
+	   The result after swapping:
+
+		one       two      three    six     
+		five      four     seven    ten     
+		nine      eight    eleven   fourteen
+		thirteen  twelve   fifteen  sixteen
+		seventeen eighteen nineteen twenty
+
+==============================================================================
+3. History						*visswap-history*
+
+	v4 Oct 25, 2004 : * \vr (VisualReplace) implemented
+	   Dec 02, 2005   * debugging inserted, chgd 1->y 2->x in variable
+	                    names to relate to the ctrl-y, ctrl-x actions
+	   Jan 25, 2006   * SaveWinPosn(0) used to prevent stores on stack
+	   Mar 07, 2006   * noremap setting now elicits a warning
+	v3 Oct 12, 2004 : * the epic (visual selection-based swapping)
+
+vim:tw=78:ts=8:ft=help

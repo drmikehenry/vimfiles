@@ -1,0 +1,133 @@
+*headerguard.txt*   Plugin for adding header guards to C/C++ header files
+
+*headerguard*       Version 0.1.0
+
+==============================================================================
+1.  Introduction                                    |headerguard-intro|
+2.  Installation                                    |headerguard-installation|
+3.  Customization                                   |headerguard-customization|
+4.  Credits                                         |headerguard-credits|
+
+==============================================================================
+1.  Introduction                                    *headerguard-intro*
+
+It is a common practice to insert header guards into C/C++ header files to
+allow a header to be included multiple times.  A header guard for file
+HeaderName.h typically looks something like this: >
+
+  #ifndef HEADERNAME_H
+  #define HEADERNAME_H
+
+    ...header content...
+
+  #endif /* HEADERNAME_H */
+
+This plugin provides the following command:         *HeaderguardAdd*  >
+
+  :HeaderguardAdd                                   
+
+This will add a new header guard to the current file.  It checks for a
+pre-existing header guard, and if found, modifies the existing guard in-place.  
+
+Detection of pre-existing header guards is somewhat primitive.  The first two
+pre-processor directives in the file must be the pre-existing header guard's
+#ifndef (or #if !defined()) and #define directives, and the final directive in
+the file must be the corresponding #endif.  Pre-existing header guards not
+following this form won't be recognized and thus cannot be converted in-place.
+To avoid mistakenly adding another header guard with the same guard name,
+|HeaderguardAdd| will refuse to add a new header guard if it can find a
+#define of the guard name macro anywhere in the file.
+
+===============================================================================
+2.  Installation                                    *headerguard-installation*
+
+Unzip the downloaded file in your personal |vimfiles| directory (~/.vim under 
+unix or %HOMEPATH%\vimfiles under windows).  The following files will
+be unpacked: >
+
+  doc/headerguard.txt
+  plugin/headerguard.vim
+
+Finally, re-generate your help tags with the |:helptags| command, e.g.: >
+
+  :helptags ~/.vim/doc
+
+===============================================================================
+3.  Customization                                   *headerguard-customization*
+
+You may customize the format of the generated header guards by defining
+any combination of the following functions in your |.vimrc|file: >
+
+  Function                  Returns
+  =====================     =================================
+  g:HeaderguardName()       HEADERNAME_H
+  g:HeaderguardLine1()      #ifndef HEADERNAME_H
+  g:HeaderguardLine2()      #define HEADERNAME_H
+  g:HeaderguardLine3()      #endif /* HEADERNAME_H */
+
+If not overridden, headerguard.vim will create definitions that generate
+guards in this style: >
+
+  #ifndef HEADERNAME_H
+  #define HEADERNAME_H
+
+    ...header content...
+
+  #endif /* HEADERNAME_H */
+
+To change the name of the macro, override the g:HeaderguardName() function.
+The default function looks like this: >
+
+  function! g:HeaderguardName()
+      return toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g'))
+  endfunction
+
+It uses the |expand()| function to get the current filename, convert it
+to uppercase, and convert invalid macro character to underscores ("_").
+
+Each of the three lines in the header guard idiom are controlled
+by separately overridable functions, defined in terms of g:HeaderguardName().
+These functions are: >
+
+  g:HeaderguardLine1()
+  g:HeaderguardLine2()
+  g:HeaderguardLine3()
+
+As an example, to create guards for file HeaderName.h in this format: >
+
+  #if !defined(INCLUDED_FILENAME_H)
+  #define INCLUDED_FILENAME_H  1
+
+    ...header content...
+
+  #endif /* !defined(INCLUDED_FILENAME_H) */
+
+You could use the following overrides: >
+
+  function! g:HeaderguardName()
+      return "INCLUDED_" . toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g'))
+  endfunction
+
+  function! g:HeaderguardLine1()
+      return "#if !defined(" . g:HeaderguardName() . ")"
+  endfunction
+
+  function! g:HeaderguardLine2()
+      return "#define " . g:HeaderguardName() . "  1"
+  endfunction
+
+  function! g:HeaderguardLine3()
+      return "#endif /* !defined(" . g:HeaderguardName() . ") */"
+  endfunction
+
+===============================================================================
+4.  Credits                                         |headerguard-credits|
+
+Author: Michael Henry <vim at drmikehenry.com>
+
+Thanks to all the tireless posters on the Vim mailing lists.  I have
+benefitted greatly from the detailed and helpful postings contributed daily
+by the helpful Vim community.
+
+===============================================================================
+vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:
