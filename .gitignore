@@ -1,4 +1,5 @@
 ruby/command-t/Makefile
+ruby/command-t/*.log
 *.o
 *.so
 *.pyc
