@@ -1,6 +1,15 @@
-To setup for Unix (Linux, mac)::
+To setup for Unix (Linux, mac):
 
-    cp home.vimrc ~/.vimrc
+  Automated method (preferred)::
+
+    ~/.vim/setup.py
+
+  Manual method::
+
+    cp ~/.vim/home.vimrc ~/.vimrc
+    cd ~/.vim/ruby/command-t
+    ruby extconf.rb
+    make
 
 To setup for Windows::
 
