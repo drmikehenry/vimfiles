@@ -645,7 +645,7 @@ Installation:
 LUSTYEXPLORER                                           *notes_lustyexplorer*
   LustyExplorer - File/buffer switcher w/incr. search
 
-Usage (taken from lustyexplorer.vim): 
+Usage (taken from lusty-explorer.vim): 
 
   <Leader>lf  - Opens the filesystem explorer.
   <Leader>lr  - Opens the filesystem explorer from the
@@ -738,10 +738,10 @@ Buffer Grep:
  - Matches from the previous grep are remembered upon relaunch;  clear with
    <C-u>.
 
-Version 582e889 from http://github.com/sjbach/lusty
+Development versions found at: http://github.com/sjbach/lusty
 
 Released versions appear here:
-Version 3.1.1 from http://www.vim.org/scripts/script.php?script_id=1890
+Version 4.0 from http://www.vim.org/scripts/script.php?script_id=1890
 
 Installation:
 - Install in ~/.vim/plugin

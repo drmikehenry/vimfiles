@@ -15,10 +15,10 @@
 "               Rajendra Badapanda, cho45, Simo Salminen, Sami Samhuri,
 "               Matt Tolton, Björn Winckler, sowill, David Brown
 "               Brett DiFrischia, Ali Asad Lotia, Kenneth Love, Ben Boeckel,
-"               robquant
+"               robquant, lilydjwg, Martin Wache, Johannes Holzfuß
 "
-" Release Date: July 21, 2010
-"      Version: 3.1.1
+" Release Date: December 16, 2010
+"      Version: 4.0
 "
 "        Usage:
 "                 <Leader>lf  - Opens the filesystem explorer.
@@ -410,6 +410,10 @@ module VIM
       VIM::nonzero? VIM::evaluate("getbufvar(#{number()}, '&modified')")
     end
 
+    def listed?
+      VIM::nonzero? VIM::evaluate("getbufvar(#{number()}, '&buflisted')")
+    end
+
     def self.obj_for_bufnr(n)
       # There's gotta be a better way to do this...
       (0..VIM::Buffer.count-1).each do |i|
@@ -435,6 +439,22 @@ module VIM
     end
 
     command 'echohl None'
+  end
+end
+
+# Hack for wide CJK characters.
+if VIM::exists?("*strwidth")
+  module VIM
+    def self.strwidth(s)
+      # strwidth() is defined in Vim 7.3.
+      evaluate("strwidth('#{single_quote_escape(s)}')").to_i
+    end
+  end
+else
+  module VIM
+    def self.strwidth(s)
+      s.length
+    end
   end
 end
 
@@ -659,12 +679,13 @@ class Entry
     @label = label
   end
 
+  # NOTE: very similar to BufferStack::shorten_paths()
   def self.compute_buffer_entries()
     buffer_entries = []
 
     $le_buffer_stack.numbers.each do |n|
       o = VIM::Buffer.obj_for_bufnr(n)
-      next if o.nil?
+      next if (o.nil? or not o.listed?)
       buffer_entries << self.new(o, n)
     end
 
@@ -847,7 +868,7 @@ class Explorer
       on_refresh()
       highlight_selected_index() if VIM::has_syntax?
       @display.print @current_sorted_matches.map { |x| x.label }
-      @prompt.print
+      @prompt.print Display.max_width
     end
 
     def create_explorer_window
@@ -1469,9 +1490,16 @@ class Prompt
       @input = ""
     end
 
-    def print
+    def print(max_width = 0)
+      text = @input
+      # may need some extra characters for "..." and spacing
+      max_width -= 5
+      if max_width > 0 && text.length > max_width
+        text = "..." + text[(text.length - max_width + 3 ) .. -1]
+      end
+
       VIM::pretty_msg("Comment", @@PROMPT,
-                      "None", VIM::single_quote_escape(@input),
+                      "None", VIM::single_quote_escape(text),
                       "Underlined", " ")
     end
 
@@ -1851,7 +1879,7 @@ class Display
 
           if col_index < col_count - 1
             # Add spacer to the width of the column
-            rows[i] << (" " * (column_width - string.length))
+            rows[i] << (" " * (column_width - VIM::strwidth(string)))
             rows[i] << @@COLUMN_SEPARATOR
           end
         end
@@ -1928,7 +1956,8 @@ class Display
       column_widths = []
       total_width = 0
       strings.each_slice(optimal_row_count) do |column|
-        column_width = column.max { |a, b| a.length <=> b.length }.length
+        longest = column.max { |a, b| VIM::strwidth(a) <=> VIM::strwidth(b) }
+        column_width = VIM::strwidth(longest)
         total_width += column_width
 
         break if total_width > max_width
@@ -2241,8 +2270,11 @@ class BufferStack
 
   private
     def cull!
-      # Remove empty buffers.
-      @stack.delete_if { |x| not VIM::evaluate_bool("bufexists(#{x})") }
+      # Remove empty and unlisted buffers.
+      @stack.delete_if { |x|
+        not (VIM::evaluate_bool("bufexists(#{x})") and
+             VIM::evaluate_bool("getbufvar(#{x}, '&buflisted')"))
+      }
     end
 
     # NOTE: very similar to Entry::compute_buffer_entries()
