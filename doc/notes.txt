@@ -162,10 +162,6 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Invoke BufExplorer: 
-    <leader>be
-
-
 Version 7.2.7 from http://www.vim.org/scripts/script.php?script_id=42
 
 Installation:
@@ -251,9 +247,6 @@ COMMAND-T                                               *notes_command-t*
   File finder a la TextMate Command-T                   |command-t|
 
 Usage: 
-
-<Leader>\t        Launch relative to current working directory
-<Leader>\r        Launch relative to current buffer
 
 :CommandT         Launch relative to current working directory
 :CommandT dir     Launch relative to directory "dir"
@@ -751,21 +744,21 @@ LUSTYJUGGLER                                            *notes_lustyjuggler*
   LustyJuggler - Quick access to recent buffers
 
 
-Usage: To launch the juggler:
+Usage (taken from lusty-juggler.vim):
 
-         <Leader>lj
+         <Leader>lj  - Opens the buffer juggler.
 
        You can also use this command:
 
          ":LustyJuggler"
 
-       (Personally, I map this to ,g)
+       (Personally, I map this to ,j)
 
-       When the juggler launches, the command bar at bottom is
-       replaced with a new bar showing the names of your currently
-       opened buffers in most-recently-used order.
+       When launched, the command bar at bottom is replaced with a
+       new bar showing the names of currently-opened buffers in
+       most-recently-used order.
 
-       The buffer names are mapped to these keys:
+       The buffers are mapped to these keys:
 
            1st|2nd|3rd|4th|5th|6th|7th|8th|9th|10th
            ----------------------------------------
@@ -780,7 +773,7 @@ Usage: To launch the juggler:
        or press "<ENTER>".  Alternatively, press one of the other
        mapped keys to highlight another buffer.
 
-       To display the key before the name of the buffer, add one of
+       To display the key with the name of the buffer, add one of
        the following lines to your .vimrc:
 
          let g:LustyJugglerShowKeys = 'a'   (for alpha characters)
@@ -789,23 +782,39 @@ Usage: To launch the juggler:
        To cancel the juggler, press any of "q", "<ESC>", "<C-c",
        "<BS>", "<Del>", or "<C-h>".
 
+       LustyJuggler can act very much like <A-Tab> window switching.
+       To enable this mode, add the following line to your .vimrc:
+
+         let g:LustyJugglerAltTabMode = 1
+
+       Then, given the following mapping:
+
+         noremap <silent> <A-s> :LustyJuggler<CR>
+
+       Pressing "<A-s>" will launch the LustyJuggler with the
+       previous buffer highlighted. Typing "<A-s>" again will cycle
+       to the next buffer (in most-recently used order), and
+       "<ENTER>" will open the highlighted buffer.  For example, the
+       sequence "<A-s><Enter>" will open the previous buffer, and
+       "<A-s><A-s><Enter>" will open the buffer used just before the
+       previous buffer, and so on.
 
 Bonus: This plugin also includes the following command, which will
        immediately switch to your previously used buffer:
 
          ":LustyJugglePrevious"
        
-       This is similar to the :b# command, but accounts for the
-       common situation where your previously used buffer (#) has
+       This is similar to the ":b#" command, but accounts for the
+       common situation where the previously used buffer (#) has
        been killed and is thus inaccessible.  In that case, it will
-       instead switch to the buffer used previous to the killed
-       buffer (and on down the line).
+       instead switch to the buffer used before that one (and on down
+       the line if that buffer has been killed too).
 
 
-Version 582e889 from http://github.com/sjbach/lusty
+Development versions found at: http://github.com/sjbach/lusty
 
 Released versions appear here:
-Version 1.1.4 from http://www.vim.org/scripts/script.php?script_id=2050
+Version 1.2 from http://www.vim.org/scripts/script.php?script_id=2050
 
 Installation:
 - Install in ~/.vim/plugin
@@ -1384,6 +1393,30 @@ http://mysite.verizon.net/astronaut/vim/index.html
 
 ==============================================================================
 4.  Customizations                                      *notes_customizations*
+
+------------------------------------------------------------------------------
+Buffer switchers and filesystem navigators
+
+Lusty Juggler - rapidly switch among buffers
+
+  <M-s>  Launch Lusty Juggler; while in juggler, press again to cycle
+         through most-recently-used buffers.
+  \lj    Launch Lusty Juggler (default mapping, doesn't do MRU cycling).
+
+BufMRU - most-recently-used buffer switcher
+
+  <space> Switch to MRU buffer and enter Bufmru mode.
+
+  See |notes_bufmru| for more details.
+
+Buf Explorer - display all buffers in a list, switch or delete buffers, etc.
+
+  \be    Invoke BufExplorer.
+
+Command-T - fuzzy search across entire file tree at once
+
+  \\t    Launch relative to current working directory.
+  \\r    Launch relative to current buffer.
 
 ------------------------------------------------------------------------------
 Building and Running

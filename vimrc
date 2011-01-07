@@ -1185,6 +1185,8 @@ let g:LookupFile_MinPatLength = 0
 " g:LustyExplorerSuppressRubyWarning - if missing Ruby, don't complain
 let g:LustyExplorerSuppressRubyWarning = 1
 
+nnoremap <Leader>\b :LustyBufferExplorer<CR>
+
 " -------------------------------------------------------------
 " LustyJuggler
 " -------------------------------------------------------------
@@ -1195,7 +1197,13 @@ let g:LustyJugglerShowKeys = 'a'
 " Prevents warning if Ruby not compiled in.
 let g:LustyJugglerSuppressRubyWarning = 1
 
-nnoremap <Leader>\b :LustyBufferExplorer<CR>
+" Use alt-tab mode support.  Re-launching the juggler when it is already
+" active will cycle through the most-recently-used list of buffers.
+let g:LustyJugglerAltTabMode = 1
+
+" Launch Lusty Juggler (also used for cycling through MRU buffers).
+" This is in addition to \lj (the default mapping).
+nnoremap <silent> <M-s> :LustyJuggler<CR>
 
 " -------------------------------------------------------------
 " netrw

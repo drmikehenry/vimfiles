@@ -10,10 +10,11 @@
 " Name Of File: lusty-juggler.vim
 "  Description: Dynamic Buffer Switcher Vim Plugin
 "   Maintainer: Stephen Bach <this-file@sjbach.com>
-" Contributors: Juan Frias, Bartosz Leper, Marco Barberis
+" Contributors: Juan Frias, Bartosz Leper, Marco Barberis, Vincent Driessen,
+"               Martin Wache, Johannes Holzfuß
 "
-" Release Date: June 2, 2010
-"      Version: 1.1.4
+" Release Date: December 16, 2010
+"      Version: 1.2
 "
 "        Usage:
 "                 <Leader>lj  - Opens the buffer juggler.
@@ -52,6 +53,22 @@
 "               To cancel the juggler, press any of "q", "<ESC>", "<C-c",
 "               "<BS>", "<Del>", or "<C-h>".
 "
+"               LustyJuggler can act very much like <A-Tab> window switching.
+"               To enable this mode, add the following line to your .vimrc:
+"
+"                 let g:LustyJugglerAltTabMode = 1
+"
+"               Then, given the following mapping:
+"
+"                 noremap <silent> <A-s> :LustyJuggler<CR>
+"
+"               Pressing "<A-s>" will launch the LustyJuggler with the
+"               previous buffer highlighted. Typing "<A-s>" again will cycle
+"               to the next buffer (in most-recently used order), and
+"               "<ENTER>" will open the highlighted buffer.  For example, the
+"               sequence "<A-s><Enter>" will open the previous buffer, and
+"               "<A-s><A-s><Enter>" will open the buffer used just before the
+"               previous buffer, and so on.
 "
 "        Bonus: This plugin also includes the following command, which will
 "               immediately switch to your previously used buffer:
@@ -312,6 +329,10 @@ module VIM
       VIM::nonzero? VIM::evaluate("getbufvar(#{number()}, '&modified')")
     end
 
+    def listed?
+      VIM::nonzero? VIM::evaluate("getbufvar(#{number()}, '&buflisted')")
+    end
+
     def self.obj_for_bufnr(n)
       # There's gotta be a better way to do this...
       (0..VIM::Buffer.count-1).each do |i|
@@ -337,6 +358,22 @@ module VIM
     end
 
     command 'echohl None'
+  end
+end
+
+# Hack for wide CJK characters.
+if VIM::exists?("*strwidth")
+  module VIM
+    def self.strwidth(s)
+      # strwidth() is defined in Vim 7.3.
+      evaluate("strwidth('#{single_quote_escape(s)}')").to_i
+    end
+  end
+else
+  module VIM
+    def self.strwidth(s)
+      s.length
+    end
   end
 end
 
@@ -487,13 +524,19 @@ class LustyJuggler
     end
 
     def run
-      return if @running
-
       if $lj_buffer_stack.length <= 1
         VIM::pretty_msg("PreProc", "No other buffers")
         return
       end
 
+      # If already running, highlight next buffer
+      if @running and LustyJuggler::alt_tab_mode_active?
+        @last_pressed = (@last_pressed % $lj_buffer_stack.length) + 1;
+        print_buffer_list(@last_pressed)
+        return
+      end
+
+      return if @running
       @running = true
 
       # Need to zero the timeout length or pressing 'g' will hang.
@@ -524,7 +567,8 @@ class LustyJuggler
       map_key("<Del>", ":call <SID>LustyJugglerCancel()<CR>")
       map_key("<C-h>", ":call <SID>LustyJugglerCancel()<CR>")
 
-      print_buffer_list()
+      @last_pressed = 2 if LustyJuggler::alt_tab_mode_active?
+      print_buffer_list(@last_pressed)
     end
 
     def key_pressed()
@@ -532,12 +576,12 @@ class LustyJuggler
 
       if @last_pressed.nil? and c == 'ENTER'
         cleanup()
-      elsif @last_pressed and (c == @last_pressed or c == 'ENTER')
-        choose(@@KEYS[@last_pressed])
+      elsif @last_pressed and (@@KEYS[c] == @last_pressed or c == 'ENTER')
+        choose(@last_pressed)
         cleanup()
       else
-        print_buffer_list(@@KEYS[c])
-        @last_pressed = c
+        @last_pressed = @@KEYS[c]
+        print_buffer_list(@last_pressed)
       end
     end
 
@@ -569,6 +613,11 @@ class LustyJuggler
     end
 
   private
+    def self.alt_tab_mode_active?
+       return (VIM::exists?("g:LustyJugglerAltTabMode") and
+               VIM::evaluate("g:LustyJugglerAltTabMode").to_i != 0)
+    end
+
     def print_buffer_list(highlighted_entry = nil)
       # If the user pressed a key higher than the number of open buffers,
       # highlight the highest (see also BufferStack.num_at_pos()).
@@ -993,8 +1042,11 @@ class BufferStack
 
   private
     def cull!
-      # Remove empty buffers.
-      @stack.delete_if { |x| not VIM::evaluate_bool("bufexists(#{x})") }
+      # Remove empty and unlisted buffers.
+      @stack.delete_if { |x|
+        not (VIM::evaluate_bool("bufexists(#{x})") and
+             VIM::evaluate_bool("getbufvar(#{x}, '&buflisted')"))
+      }
     end
 
     # NOTE: very similar to Entry::compute_buffer_entries()
