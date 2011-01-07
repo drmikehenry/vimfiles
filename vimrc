@@ -1459,7 +1459,6 @@ command! SetupText call SetupText()
 function! SetupSource()
     setlocal tw=80 ts=4 sts=4 sw=4 et ai spell spelllang=en_us
     Highlight tabs longlines
-    let b:syntaxSyncFromstart = 1
 endfunction
 command! SetupSource call SetupSource()
 
@@ -1470,7 +1469,6 @@ function! SetupMarkup()
     setlocal tw=80 ts=2 sts=2 sw=2 et ai spell spelllang=en_us
     runtime scripts/closetag.vim
     runtime scripts/xml.vim
-    let b:syntaxSyncFromstart = 1
 endfunction
 command! SetupMarkup call SetupMarkup()
 
@@ -1511,13 +1509,11 @@ function! SetupRstSyntax()
     " is based on the C highlighting, and it doesn't like to 
     " have both C and CPP active at the same time.
     call l:EmbedSourceAs('c', 'cpp')
-    let b:syntaxSyncFromstart = 1
 endfunction
 command! SetupRstSyntax call SetupRstSyntax()
 
 function! SetupRst()
     setlocal tw=80 ts=2 sts=2 sw=2 et ai spell spelllang=en_us
-    let b:syntaxSyncFromstart = 1
 endfunction
 command! SetupRst call SetupRst()
 
@@ -1574,7 +1570,6 @@ function! SetupWikipedia()
     setlocal tw=0 ts=2 sts=2 sw=2 et ai spell spelllang=en_us
     " Setup angle brackets as matched pairs for '%'.
     setlocal matchpairs+=<:>
-    let b:syntaxSyncFromstart = 1
 endfunction
 command! SetupWikipedia call SetupWikipedia()
 
@@ -1587,7 +1582,7 @@ let g:c_syntax_for_h = 1
 
 " Minimum number of lines before current line to start syntax
 " synchronization (default 50).
-let g:c_minlines = 150
+let g:c_minlines = 300
 
 " Enable Doxygen highlighting.
 let g:load_doxygen_syntax = 1
@@ -1764,13 +1759,6 @@ if has("autocmd")
                     \   exe "normal g`\"" |
                     \ endif
 
-        " If b:syntaxSyncFromstart exists, do a one-time change to the 
-        " syntax sync rules to force re-scanning for the entire file
-        " to fix syntax highlighting errors.
-        autocmd BufEnter * if (exists('b:syntaxSyncFromstart')) | 
-                    \syntax sync fromstart | 
-                    \unlet b:syntaxSyncFromstart |
-                    \endif
     augroup END
 
     " Support for gpg-encrypted files.
