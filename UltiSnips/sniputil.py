@@ -27,9 +27,11 @@ def snip(trigger, desc, body, flags="", aliases=[], trimBody=True):
             t, re.sub('"', '\\"', desc), flags, body))
 
 def bsnip(trigger, desc, body, flags="b", aliases=[], trimBody=True):
+    """Beginning-of-line only."""
     snip(trigger, desc, body, flags, aliases=aliases, trimBody=trimBody)
 
 def wsnip(trigger, desc, body, flags="w", aliases=[], trimBody=True):
+    """Word boundary."""
     snip(trigger, desc, body, flags, aliases=aliases, trimBody=trimBody)
 
 def abbr(trigger, value, flags="", aliases=[]):
@@ -37,8 +39,10 @@ def abbr(trigger, value, flags="", aliases=[]):
     snip(trigger, desc, value, flags=flags, aliases=aliases)
 
 def babbr(trigger, value, flags="b", aliases=[]):
+    """Beginning-of-line only."""
     abbr(trigger, value, flags=flags, aliases=aliases)
 
 def wabbr(trigger, value, flags="w", aliases=[]):
+    """Word boundary."""
     abbr(trigger, value, flags=flags, aliases=aliases)
 

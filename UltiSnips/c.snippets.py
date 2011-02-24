@@ -200,4 +200,6 @@ bsnip("@retval",    "@retval value, Description", r"""
     ${0:Reason to return $1.}
 """, aliases=["@rv"])
 babbr("/**",   "/** @brief ${1:Brief description with period.} */")
+babbr("todo",  "/** @todo ${1:Description of what's TO DO.} */")
+babbr("bug",   "/** @bug ${1:Description of BUG.} */")
 
