@@ -1509,7 +1509,7 @@ function! SetupRstSyntax()
         execute cmd
         hi link embeddedSyntax SpecialComment
     endfunction
-    for lang in split("cpp html python")
+    for lang in split("cpp html python java")
         call SyntaxInclude('embedded_' . lang, lang)
         call l:EmbedSourceAs(lang, lang)
     endfor
