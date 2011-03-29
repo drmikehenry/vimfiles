@@ -66,6 +66,8 @@ These are notes for Vim usage and setup.
 
 Prerequisites for Ubuntu: >
     sudo apt-get install libgpmg1-dev libperl-dev ruby1.8-dev
+or, for more automation: >
+    sudo apt-get build-dep vim-gnome
 
 Prerequisites for Fedora: >
     sudo yum install -y ruby ruby-devel perl-ExtUtils-Embed
