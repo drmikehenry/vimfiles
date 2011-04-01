@@ -1,54 +1,70 @@
 #!/bin/bash
 
+DOWNLOAD_DIRS="$HOME/download/programming/vim /tools/software/vim"
+
 function usage()
 {
     cat <<EOF
-Usage: `basename "$0"` /path/to/vim/source/x.y [ACTION+]
-       `basename "$0"` x.y [ACTION+]
+Usage: `basename "$0"` VIM_SOURCE_PATH [ACTION+]
 
-In second case, x.y is searched in "standard" download locations.
+VIM_SOURCE_PATH must end in a Vim version number in the form MAJOR.MINOR
+and may be relative or absolute, e.g.:
+  7.3
+  ../sources/7.3
+  /download/vim/7.3
 
-Final directory must be of form major.minor (e.g., 7.2).
-
+Relative paths will be searched in the current directory, then in these
+"standard" locations:
+EOF
+    for d in $DOWNLOAD_DIRS; do
+        echo "  $d"
+    done
+    cat <<EOF
 Valid ACTIONs are:
   update            - use "hg pull -u" to update hg/ directory
   unpack            - unpack Vim sources below CWD
   configure         - configure Vim with standard build options
   build             - build Vim and create binary tarball
+Default action list: unpack configure build
 
-If no ACTIONs are specified, defaults to unpack configure build.
-
-Run from a suitable build location (e.g., ~/build).
+Building takes place in "vim-MAJOR.MINOR" in current working directory.
 EOF
+}
+
+function die()
+{
+    if [ -n "$1" ]; then
+        echo "$1"
+    fi
+    echo "For usage instructions, run with no arguments."
+    exit
 }
 
 function setup()
 {
-    VERSION="$1"
-    if [ -z "$VERSION" ]; then
+    DIR="$1"
+    if [ -z "$DIR" ]; then
         usage
         exit
     fi
-    for DIR in "$VERSION" \
-        "$VERSION" \
-        "$HOME/download/programming/vim/$VERSION" \
-        "/tools/software/vim/$VERSION"; do
-        if [ -d "$DIR" ]; then
-            break
-        fi
-    done
+    VERSION=`basename "$DIR"`
+    if ! echo $VERSION | grep -q '^[0-9]\+\.[0-9]\+$'; then
+        die "Version \"$VERSION\" not in form MAJOR.MINOR"
+    fi
+    if [ ! -d "$DIR" ]; then
+        for d in $DOWNLOAD_DIRS; do
+            probeDir="$d/$DIR"
+            if [ -d "$probeDir" ]; then
+                DIR="$probeDir"
+                break
+            fi
+        done
+    fi
 
     if [ ! -d "$DIR" ]; then
-        echo "Cannot find source directory $DIR"
-        usage
-        exit
+        die "Cannot find source directory $DIR"
     fi
 
-    if ! echo $VERSION | grep -q '^[0-9]\+\.[0-9]\+$'; then
-        echo "Bad version in $DIR"
-        usage
-        exit
-    fi
     echo "Vim $VERSION sources in $DIR"
     VIMNAME=vim-$VERSION
     VIMDIR=$VIMNAME
@@ -57,10 +73,11 @@ function setup()
 
 function update()
 {
-    if [ -d "$DIR/hg" ]; then
-        hg pull -u "$DIR/hg"
+    hgDir="$DIR/hg"
+    if [ -d "$hgDir" ]; then
+        hg pull -u "$hgDir"
     else
-        echo "Cannot update; missing $dir/hg"
+        die "Cannot update; missing path \"$hgDir\""
     fi
 }
 
@@ -102,8 +119,7 @@ function latestVersion()
 function unpack()
 {
     if [ -d "$VIMDIR" ]; then
-        echo "Must remove directory $VIMDIR manually before continuing"
-        exit
+        die "Must remove directory $VIMDIR manually before continuing"
     fi
     echo "Unpacking Vim $VERSION..."
     if [ -d "$DIR/hg" ]; then
@@ -120,8 +136,7 @@ function unpack()
             echo "  Unpacking $TARNAME..."
             tar -jxf "$TARNAME"
         else
-            echo "Error: couldn't find $VIMNAME sources; exiting"
-            exit
+            die "Error: couldn't find $VIMNAME sources; exiting"
         fi
     fi
 }
@@ -157,10 +172,10 @@ function build()
         mkdir DESTDIR
         echo "  Compiling $VIMFULLNAME..." && \
             make && \
-            echo "  Installing in DESTDIR..." && \
+            echo "  Installing in $VIMDIR/DESTDIR..." && \
             make install DESTDIR=`pwd`/DESTDIR && \
             find DESTDIR -type d -print0 | xargs -0 chmod go-w && \
-            echo "  Creating tar from DESTDIR" && \
+            echo "  Creating tar from $VIMDIR/DESTDIR" && \
             tar -C DESTDIR --owner=root --group=root -zcf $TARNAME . && \
             echo "  Created archive $VIMDIR/$TARNAME"
     )
