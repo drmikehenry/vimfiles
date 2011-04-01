@@ -150,7 +150,7 @@ function build()
     PATCHLEVEL=`patchlevel`
     VIMFULLNAME="$VIMNAME.$PATCHLEVEL"
     (
-        TARNAME="$VIMFULLNAME.i386.tar.gz"
+        TARNAME="$VIMFULLNAME.`uname -m`.tar.gz"
         cd $VIMDIR
         echo "  Removing DESTDIR..."
         rm -rf DESTDIR
