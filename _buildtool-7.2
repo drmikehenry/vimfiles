@@ -1,0 +1,146 @@
+#!/bin/sh
+
+function usage()
+{
+    cat <<EOF
+Usage: `basename "$0"` /path/to/vim/source/x.y [ACTION+]
+       `basename "$0"` x.y [ACTION+]
+
+In second case, x.y is searched in "standard" download locations.
+
+Final directory must be of form major.minor (e.g., 7.2).
+
+Valid ACTIONs are:
+  download          - use rsync to download Vim sources
+  unpack            - unpack Vim sources below CWD
+  configure         - configure Vim with standard build options
+  build             - build Vim and create binary tarball
+
+If no ACTIONs are specified, defaults to unpack configure build.
+EOF
+}
+
+function setup()
+{
+    if [ -z "$1" ]; then
+        usage
+        exit
+    fi
+    for DIR in "$1" \
+        "~/download/programming/vim/$1" \
+        "/tools/software/vim/$1" \
+        "$1"; do
+        if [ -d "$DIR" ]; then
+            break
+        fi
+    done
+
+    if [ ! -d "$DIR" ]; then
+        echo "Cannot find source directory $DIR"
+        usage
+        exit
+    fi
+
+    VERSION=`basename "$DIR"`
+    VIMDIR=vim`echo $VERSION | sed 's/\.//'`
+
+    if ! echo $VERSION | grep -q '^[0-9]\+\.[0-9]\+$'; then
+        echo "Bad version in $DIR"
+        usage
+        exit
+    fi
+    echo "Vim $VERSION sources in $DIR"
+}
+
+function download()
+{
+    SITE=ftp.nluug.nl::Vim
+    echo "Synchronizing Vim $VERSION into $DIR"
+
+    rsync -avzcP  \
+        $SITE/unix/vim-$VERSION.tar.bz2          \
+        $SITE/extra/vim-$VERSION-extra.tar.gz    \
+        $SITE/extra/vim-$VERSION-lang.tar.gz     \
+        "$DIR"/
+
+    rsync -avzcP --delete --exclude="/dos/" $SITE/runtime/ "$DIR"/runtime/
+    rsync -avzcP --delete $SITE/patches/$VERSION/ "$DIR"/patches/
+
+    date > "$DIR"/LAST_RSYNC.txt
+}
+
+function unpack()
+{
+    if [ -d "$VIMDIR" ]; then
+        echo "Must remove directory $VIMDIR manually before continuing"
+        exit
+    fi
+    echo "Unpacking Vim $VERSION..."
+    echo "  Expanding tarballs..."
+    tar -jxf "$DIR"/vim-$VERSION.tar.bz2
+    tar -zxf "$DIR"/vim-$VERSION-extra.tar.gz
+    tar -zxf "$DIR"/vim-$VERSION-lang.tar.gz
+
+    echo "  Applying patches..."
+    ls "$DIR"/patches/$VERSION.* | grep -v '\.gz$' | sort | xargs cat | \
+        (cd $VIMDIR; patch -sp0)
+    echo "  Updating runtime/..."
+    rsync -ax --delete "$DIR"/runtime/ "$VIMDIR"/runtime/
+}
+
+function configure()
+{
+    echo "Configuring in $VIMDIR..."
+    (
+        cd $VIMDIR; 
+        ./configure \
+            --quiet \
+            --with-features=huge    \
+            --enable-perlinterp     \
+            --enable-pythoninterp     \
+            --enable-tclinterp     \
+            --enable-rubyinterp     \
+            --enable-cscope     \
+            --with-compiledby=drmikehenry@drmikehenry.com     \
+    )
+}
+
+function patchlevel()
+{
+    grep -A 3 '^static int included_patches' src/version.c | 
+        tail -n 1 | perl -pe 's/^\s*(\d+).*/$1/'
+}
+
+function build()
+{
+    echo "Building in $VIMDIR..."
+    (
+        cd $VIMDIR
+        echo "  Removing DESTDIR..."
+        rm -rf DESTDIR
+        mkdir DESTDIR
+        TARNAME="vim-$VERSION.`patchlevel`.i386.tar.gz"
+        echo "  Compiling Vim $VERSION.`patchlevel`..." && \
+            make && \
+            echo "  Installing in DESTDIR..." && \
+            make install DESTDIR=`pwd`/DESTDIR && \
+            find DESTDIR -type d -print0 | xargs -0 chmod go-w && \
+            echo "  Creating tar from DESTDIR" && \
+            tar -C DESTDIR --owner=root --group=root -zcf $TARNAME . && \
+            echo "  Created archive $VIMDIR/$TARNAME"
+    )
+}
+
+
+setup "$1"
+shift
+if [ -z "$1" ]; then
+    unpack
+    configure
+    build
+else
+    while [ -n "$1" ]; do
+        $1
+        shift
+    done
+fi

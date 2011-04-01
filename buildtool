@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function usage()
 {
@@ -11,25 +11,28 @@ In second case, x.y is searched in "standard" download locations.
 Final directory must be of form major.minor (e.g., 7.2).
 
 Valid ACTIONs are:
-  download          - use rsync to download Vim sources
+  update            - use "hg pull -u" to update hg/ directory
   unpack            - unpack Vim sources below CWD
   configure         - configure Vim with standard build options
   build             - build Vim and create binary tarball
 
 If no ACTIONs are specified, defaults to unpack configure build.
+
+Run from a suitable build location (e.g., ~/build).
 EOF
 }
 
 function setup()
 {
-    if [ -z "$1" ]; then
+    VERSION="$1"
+    if [ -z "$VERSION" ]; then
         usage
         exit
     fi
-    for DIR in "$1" \
-        "/m/download/programming/vim/$1" \
-        "/tools/software/vim/$1" \
-        "$1"; do
+    for DIR in "$VERSION" \
+        "$VERSION" \
+        "$HOME/download/programming/vim/$VERSION" \
+        "/tools/software/vim/$VERSION"; do
         if [ -d "$DIR" ]; then
             break
         fi
@@ -41,32 +44,59 @@ function setup()
         exit
     fi
 
-    VERSION=`basename "$DIR"`
-    VIMDIR=vim`echo $VERSION | sed 's/\.//'`
-
     if ! echo $VERSION | grep -q '^[0-9]\+\.[0-9]\+$'; then
         echo "Bad version in $DIR"
         usage
         exit
     fi
     echo "Vim $VERSION sources in $DIR"
+    VIMNAME=vim-$VERSION
+    VIMDIR=$VIMNAME
+    echo "Vim build directory in $VIMDIR"
 }
 
-function download()
+function update()
 {
-    SITE=ftp.nluug.nl::Vim
-    echo "Synchronizing Vim $VERSION into $DIR"
+    if [ -d "$DIR/hg" ]; then
+        hg pull -u "$DIR/hg"
+    else
+        echo "Cannot update; missing $dir/hg"
+    fi
+}
 
-    rsync -avzcP  \
-        $SITE/unix/vim-$VERSION.tar.bz2          \
-        $SITE/extra/vim-$VERSION-extra.tar.gz    \
-        $SITE/extra/vim-$VERSION-lang.tar.gz     \
-        "$DIR"/
+function patchlevel()
+{
+    grep -A 3 '^static int included_patches' "$VIMDIR"/src/version.c | 
+        tail -n 1 | perl -pe 's/^\s*(\d+).*/$1/'
+}
 
-    rsync -avzcP --delete --exclude="/dos/" $SITE/runtime/ "$DIR"/runtime/
-    rsync -avzcP --delete $SITE/patches/$VERSION/ "$DIR"/patches/
+# Return list of matching paths, reverse-sorted by version number.
+# listVersions /path/to/vim-7.3. .tar.bz2
+# ==>
+# /path/to/vim-7.3.100.tar.bz2
+# /path/to/vim-7.3.99.tar.bz2
+# ...
+# /path/to/vim-7.3.2.tar.bz2
+# /path/to/vim-7.3.1.tar.bz2
+function listVersions()
+{
+    prefix="$1"
+    suffix="$2"
 
-    date > "$DIR"/LAST_RSYNC.txt
+    for i in $prefix[0-9]{,[0-9]{,[0-9]{,[0-9]}}}$suffix; do
+        echo "${i:${#prefix}}"
+    done | sort -rn | while read tail; do
+        echo "$prefix$tail"
+    done
+}
+
+function latestVersion()
+{
+    prefix="$1"
+    suffix="$2"
+
+    largest=`listVersions "$prefix" "$suffix" | head -1`
+    echo "$largest"
 }
 
 function unpack()
@@ -76,16 +106,24 @@ function unpack()
         exit
     fi
     echo "Unpacking Vim $VERSION..."
-    echo "  Expanding tarballs..."
-    tar -jxf "$DIR"/vim-$VERSION.tar.bz2
-    tar -zxf "$DIR"/vim-$VERSION-extra.tar.gz
-    tar -zxf "$DIR"/vim-$VERSION-lang.tar.gz
-
-    echo "  Applying patches..."
-    ls "$DIR"/patches/$VERSION.* | grep -v '\.gz$' | sort | xargs cat | \
-        (cd $VIMDIR; patch -sp0)
-    echo "  Updating runtime/..."
-    rsync -ax --delete "$DIR"/runtime/ "$VIMDIR"/runtime/
+    if [ -d "$DIR/hg" ]; then
+        echo "  Extracting source from hg to $VIMDIR..."
+        hg archive --repository "$DIR/hg" "$VIMDIR"
+        SRCTAR="$VIMDIR/$VIMDIR.`patchlevel`.tar.bz2"
+        echo "  Creating source archive $SRCTAR..."
+        hg archive --repository "$DIR/hg" --prefix "$VIMDIR" "$SRCTAR"
+    else
+        TARPREFIX="$DIR/$VIMNAME."
+        suffix=".tar.bz2"
+        TARNAME=`latestVersion "$TARPREFIX" "$suffix"`
+        if [ -n "$TARNAME" -a -f "$TARNAME" ]; then
+            echo "  Unpacking $TARNAME..."
+            tar -jxf "$TARNAME"
+        else
+            echo "Error: couldn't find $VIMNAME sources; exiting"
+            exit
+        fi
+    fi
 }
 
 function configure()
@@ -102,25 +140,22 @@ function configure()
             --enable-rubyinterp     \
             --enable-cscope     \
             --with-compiledby=drmikehenry@drmikehenry.com     \
-    )
-}
 
-function patchlevel()
-{
-    grep -A 3 '^static int included_patches' src/version.c | 
-        tail -n 1 | perl -pe 's/^\s*(\d+).*/$1/'
+    )
 }
 
 function build()
 {
     echo "Building in $VIMDIR..."
+    PATCHLEVEL=`patchlevel`
+    VIMFULLNAME="$VIMNAME.$PATCHLEVEL"
     (
+        TARNAME="$VIMFULLNAME.i386.tar.gz"
         cd $VIMDIR
         echo "  Removing DESTDIR..."
         rm -rf DESTDIR
         mkdir DESTDIR
-        TARNAME="vim-$VERSION.`patchlevel`.i386.tar.gz"
-        echo "  Compiling Vim $VERSION.`patchlevel`..." && \
+        echo "  Compiling $VIMFULLNAME..." && \
             make && \
             echo "  Installing in DESTDIR..." && \
             make install DESTDIR=`pwd`/DESTDIR && \
@@ -131,6 +166,9 @@ function build()
     )
 }
 
+# Trap any exiting, setup to exit on any failures.
+trap "trap - EXIT; echo Aborting" EXIT 
+set -e
 
 setup "$1"
 shift
@@ -144,3 +182,6 @@ else
         shift
     done
 fi
+
+# Reset exit trap.
+trap - EXIT
