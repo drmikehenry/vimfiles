@@ -28,6 +28,8 @@ Valid ACTIONs are:
 Default action list: unpack configure build
 
 Building takes place in "vim-MAJOR.MINOR" in current working directory.
+Vim source must be MAJOR.MINOR/hg/ or MAJOR.MINOR/vim-MAJOR.MINOR.tar.bz2.
+Checkout vim with hg:  hg clone https://vim.googlecode.com/hg/
 EOF
 }
 
