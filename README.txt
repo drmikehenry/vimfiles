@@ -14,8 +14,8 @@ If you have a pre-built binary tarballl, install as:
 
   sudo tar -C / -xf /path/to/vim-7.3.123.tar.gz
 
-To setup for Unix (Linux, mac):
-===============================
+To setup for Unix (Linux, mac)
+==============================
 
   Automated method (preferred)::
 
@@ -28,7 +28,8 @@ To setup for Unix (Linux, mac):
     ruby extconf.rb
     make
 
-To setup for Windows::
+To setup for Windows
+====================
 
     copy home.vimrc %USERPROFILE%\_vimrc
 
