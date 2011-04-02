@@ -12,7 +12,7 @@ prior to building.
 
 If you have a pre-built binary tarballl, install as:
 
-  sudo tar -C / -xf /path/to/vim-7.3.123.tar.gz
+  sudo tar -C / -xf /path/to/vim-7.3.123.i386.tar.gz
 
 To setup for Unix (Linux, mac)
 ==============================
