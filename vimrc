@@ -721,6 +721,11 @@ endif
 nnoremap <M-p>      "0p
 vnoremap <M-p>      "0p
 
+" Visual-mode "p" throws away selected text and inserts from register.
+" For original behavior (cutting selected text into scratch register), 
+" use uppercase "P".
+vnoremap <expr> p "\"_c\<C-r>\<C-r>" . v:register . "\e"
+
 " =============================================================
 " Search-related configuration
 " =============================================================

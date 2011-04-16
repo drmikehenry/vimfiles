@@ -1580,7 +1580,7 @@ In addition, old-style mappings exist:
 <C-Insert>    Copy to clipboard
 
 ------------------------------------------------------------------------------
-Putting from most recent yank
+Putting text to replace visual selection
 
 By default, yanking (e.g, "yy") copies your text into the scratch register,
 and putting (e.g., "p") puts text from the scratch register into your
@@ -1590,18 +1590,27 @@ your scratch register with the previously selected text.  Subsequent "put"
 operations will then use the overwritten text instead of your previously
 yanked text.
 
-For situations such as this, Vim maintains a list of the most recently yanked
-text, with regiser "0" holding the most recently yanked, "1" holding the
-previously yanked text, etc., up through "9" which holds the tenth most
-recently yanked text.  A "put" operation can be told to use one of these
-registers by using a prefix of a double-quote and the register name.
+For this reason, visual-mode "p" has been remapped to throw away the current
+selected text and put the text from the scratch register (or another register
+if so specified; see |p| for details).  Simply use uppercase "P" if you want
+the original behavior.
+
+In some situations, the scratch register contents will be lost due to an
+intervening edit.  Vim maintains a list of the most recently yanked text, with
+register "0" holding the most recently yanked, "1" holding the previously
+yanked text, etc., up through "9" which holds the tenth most recently yanked
+text.  A "put" operation can be told to use one of these registers by using a
+prefix of a double-quote and the register name.
 
 For example, if you want to "put" from your most recently yanked text instead
-of from the scratch register, do the following: >
+of from the scratch register, do the following (works in normal and visual
+modes): >
 
   "0p
 
 To make this easier to type, <M-p> has been mapped to paste from register "0".
+Note that this mapping uses the original definition of put, so the scratch
+register will receive the overwritten text.
 
 ------------------------------------------------------------------------------
 Search for word under cursor
