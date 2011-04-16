@@ -1046,7 +1046,7 @@ com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 
 " Taken from :help :DiffOrig.  Shows unsaved differences between
 " this buffer and original file.
-command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
             \ | wincmd p | diffthis
 
 " =============================================================
@@ -1599,11 +1599,17 @@ let g:load_doxygen_syntax = 1
 let g:c_no_curly_error = 1
 
 function! IndentC()
-    if v:lnum > 1 && getline(v:lnum - 1) =~ '^\s*\*//\*\*'
-        return indent(v:lnum - 1) + &shiftwidth
-    else
-        return cindent(v:lnum)
+    let refLineNum = prevnonblank(v:lnum - 1)
+    if refLineNum > 0
+        let refLine = getline(refLineNum)
+        let refIndent = indent(refLineNum)
+        if refLine =~ '^\s*\*//\*\*'
+            return refIndent + &shiftwidth
+
+        elseif refLine =~ '^\s*extern\s\+"C"\s*{'
+            return refIndent
     endif
+    return cindent(v:lnum)
 endfunction
 
 function! SetupC()
