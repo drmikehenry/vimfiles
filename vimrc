@@ -1604,17 +1604,11 @@ let g:load_doxygen_syntax = 1
 let g:c_no_curly_error = 1
 
 function! IndentC()
-    let refLineNum = prevnonblank(v:lnum - 1)
-    if refLineNum > 0
-        let refLine = getline(refLineNum)
-        let refIndent = indent(refLineNum)
-        if refLine =~ '^\s*\*//\*\*'
-            return refIndent + &shiftwidth
-
-        elseif refLine =~ '^\s*extern\s\+"C"\s*{'
-            return refIndent
+    if v:lnum > 1 && getline(v:lnum - 1) =~ '^\s*\*//\*\*'
+        return indent(v:lnum - 1) + &shiftwidth
+    else
+        return cindent(v:lnum)
     endif
-    return cindent(v:lnum)
 endfunction
 
 function! SetupC()
