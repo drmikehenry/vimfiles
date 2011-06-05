@@ -77,7 +77,7 @@ function update()
 {
     hgDir="$DIR/hg"
     if [ -d "$hgDir" ]; then
-        hg pull -u "$hgDir"
+        (cd "$hgDir"; hg pull -u)
     else
         die "Cannot update; missing path \"$hgDir\""
     fi
