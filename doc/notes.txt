@@ -258,7 +258,7 @@ Note Command-t's default key sequence, <Leader>t, is taken by Align plugin.
 
 Find more information in the |command-t| help page.
 
-Version 1.0b from http://www.vim.org/scripts/script.php?script_id=3025
+Version 1.2.1 from http://www.vim.org/scripts/script.php?script_id=3025
 
 Installation:
 
@@ -267,7 +267,7 @@ Note Something hangs when opening the Vimball, and CTRL-C may
 
 - Distributed as a |vimball|  >
 
-    vim command-t-1.0b.vba
+    vim command-t-1.2.1.vba
     RmVimball command-t
     :so %
     :q 
