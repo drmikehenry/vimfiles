@@ -1309,7 +1309,7 @@ nmap <silent> <s-F8> :TlistToggle<CR>
 " UltiSnips
 " -------------------------------------------------------------
 if !exists('$ULTISNIPS')
-    let $ULTISNIPS=$VIMFILES . "/UltiSnips-1.2"
+    let $ULTISNIPS=$VIMFILES . "/UltiSnips-1.3"
 endif
 set runtimepath+=$VIMFILES/local
 
