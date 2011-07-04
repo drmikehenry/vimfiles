@@ -1419,6 +1419,7 @@ Command-T - fuzzy search across entire file tree at once
 
   \\t    Launch relative to current working directory.
   \\r    Launch relative to current buffer.
+  \\b    Launch fuzzy search over buffers.
 
 ------------------------------------------------------------------------------
 Building and Running
