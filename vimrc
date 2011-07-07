@@ -1096,6 +1096,9 @@ nnoremap <Leader>\t :CommandT<CR>
 " Launch relative to current buffer.
 nnoremap <Leader>\r :CommandT %:h<CR>
 
+" Launch fuzzy search over buffers.
+nnoremap <Leader>\b :CommandTBuffer<CR>
+
 " -------------------------------------------------------------
 " EnhancedCommentify
 " -------------------------------------------------------------
@@ -1189,8 +1192,6 @@ let g:LookupFile_MinPatLength = 0
 
 " g:LustyExplorerSuppressRubyWarning - if missing Ruby, don't complain
 let g:LustyExplorerSuppressRubyWarning = 1
-
-nnoremap <Leader>\b :LustyBufferExplorer<CR>
 
 " -------------------------------------------------------------
 " LustyJuggler
