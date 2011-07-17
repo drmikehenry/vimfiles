@@ -1091,13 +1091,13 @@ let g:CommandTMaxFiles=30000
 let g:CommandTMatchWindowAtTop = 1
 
 " Quick-access (default \t is mapped by Align plugin).
-nnoremap <Leader>\t :CommandT<CR>
+nnoremap <Leader><Leader>t :CommandT<CR>
 
 " Launch relative to current buffer.
-nnoremap <Leader>\r :CommandT %:h<CR>
+nnoremap <Leader><Leader>r :CommandT %:h<CR>
 
 " Launch fuzzy search over buffers.
-nnoremap <Leader>\b :CommandTBuffer<CR>
+nnoremap <Leader><Leader>b :CommandTBuffer<CR>
 
 " -------------------------------------------------------------
 " EnhancedCommentify
