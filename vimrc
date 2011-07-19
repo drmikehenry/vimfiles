@@ -1349,7 +1349,7 @@ xmap <silent> <C-T> <Plug>VisualSwap
 let VCSCommandMapPrefix = '<Leader>s'
 
 " When doing diff, force two-window layout with old on left.
-nmap <silent> \sv <C-W>o<Plug>VCSVimDiff<C-W>H<C-W>w
+nmap <silent> <Leader>sv <C-W>o<Plug>VCSVimDiff<C-W>H<C-W>w
 
 " -------------------------------------------------------------
 " winmanager
