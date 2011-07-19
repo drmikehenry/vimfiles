@@ -1,11 +1,21 @@
 " vim:tw=80:ts=4:sts=4:sw=4:et:ai
-" =============================================================
-" General settings
-" =============================================================
 
 " Set environment variable to directory containing this vimrc.
 " On Unix, expect ~/.vim; on Windows, expect $HOME/vimfiles.
 let $VIMFILES=expand("<sfile>:h")
+
+" Allow specific user customizations before setting up everything.
+" This is mainly here to allow folks to customize <Leader> before
+" all the shortcuts are set.
+let s:before_script = $VIMFILES . "/" . $USER . "-before.vim"
+if filereadable(s:before_script)
+    exec "source " . s:before_script
+endif
+unlet s:before_script
+
+" =============================================================
+" General settings
+" =============================================================
 
 " Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
 set nocompatible
@@ -1946,4 +1956,12 @@ if has("gui_running")
         " Non-X11 GUIs including Windows.
         set guifont=Lucida_Console:h12:cDEFAULT
     endif
-endif 
+endif
+
+" Allow specific user customizations after setting up everything.
+" Most user customizations will fall into here.
+let s:after_script = $VIMFILES . "/" . $USER . ".vim"
+if filereadable(s:after_script)
+    exec "source " . s:after_script
+endif
+unlet s:after_script
