@@ -1,4 +1,6 @@
-let Tlist_Ctags_Cmd='/Users/jszakmeister/.local/bin/ctags'
+if has("mac") || has("macunix")
+    let Tlist_Ctags_Cmd='/Users/jszakmeister/.local/bin/ctags'
+endif
 
 set tags=./tags;$HOME
 
