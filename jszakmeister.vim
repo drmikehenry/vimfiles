@@ -69,6 +69,9 @@ nnoremap <leader><space> :noh<cr>
 " Another way to toggle the taglist
 nmap <silent> <Leader>t :TlistToggle<CR>
 
+" Another way to toggle the project listing
+nmap <silent> <Leader>p <Plug>ToggleProject
+
 if v:version >= 703
     set undofile
     set undodir=$VIMFILES/.undo
