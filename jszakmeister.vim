@@ -32,6 +32,10 @@ if has("mac") || has("macunix")
     " let Grep_Xargs_Options = -0
 endif
 
+if has("gui_macvim")
+    set macmeta
+endif
+
 set nowrap
 
 " Use ack for grep
