@@ -76,6 +76,9 @@ nmap <silent> <Leader>t :TlistToggle<CR>
 " Another way to toggle the project listing
 nmap <silent> <Leader>p <Plug>ToggleProject
 
+" Show diffs when writing commit messages for git
+autocmd FileType gitcommit DiffGitCached | wincmd J | wincmd p | resize 15
+
 if v:version >= 703
     set undofile
     set undodir=$VIMFILES/.undo
