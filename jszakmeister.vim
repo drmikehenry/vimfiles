@@ -83,6 +83,10 @@ autocmd FileType gitcommit DiffGitCached | wincmd J | wincmd p | resize 15
 " at git commit.
 autocmd BufReadPost COMMIT_EDITMSG exe "normal! gg"
 
+" Use tabs in gitconfig and .gitconfig
+autocmd FileType gitconfig setlocal noexpandtab
+autocmd FileType .gitconfig setlocal noexpandtab
+
 if v:version >= 703
     set undofile
     set undodir=$VIMFILES/.undo
