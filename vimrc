@@ -5,7 +5,57 @@
 
 " Set environment variable to directory containing this vimrc.
 " On Unix, expect ~/.vim; on Windows, expect $HOME/vimfiles.
+" Note: using an environment variable instead of normal Vim variable
+" because environment variables are expanded in values used with
+" setting 'runtimepath' later.
 let $VIMFILES=expand("<sfile>:h")
+
+" Provide for per-user hook points before and after common vimrc.
+" User may supply a "-before.vim" hook that runs before the main contents
+" of this vimrc file, and a "-after.vim" hook that runs afterward.
+" The "-before.vim" hook is useful for changing things like <Leader>
+" so that it will be used by mappings below.  Settings which override those
+" given below fit better in "-after.vim".
+"
+" Given a user named "someuser", the hooks default to:
+"
+"   ~/.vim/user/someuser-before.vim
+"   ~/.vim/user/someuser-after.vim
+"
+" They are adjustable by setting the following environment variables
+" either outside of vim or in the ~/.vimrc file before executing this
+" vimrc file.
+
+" VIMUSERFILES points to directory where per-user overrides live.
+" To avoid accidental name collisions based on arbitrary user names, it should
+" point to an otherwise empty directory.  It may live beneath $VIMFILES (in
+" which case it may live as a branch of vimfiles), or it may live elsewhere
+" to be separately source-controlled.
+if $VIMUSERFILES == ""
+    let $VIMUSERFILES=expand("$VIMFILES/user")
+endif
+
+" VIMUSER defaults to the logged-in user, but may be overridden to allow
+" multiple user to share the same overrides (e.g., to let "root" share settings
+" with another user).
+if $VIMUSER == ""
+    let $VIMUSER=expand("$USER")
+endif
+
+" VIMRC_BEFORE points directly to the "-before.vim" script to execute.
+if $VIMRC_BEFORE == ""
+    let $VIMRC_BEFORE=expand("$VIMUSERFILES/$VIMUSER-before.vim")
+endif
+
+" VIMRC_AFTER points directly to the "-after.vim" script to execute.
+if $VIMRC_AFTER == ""
+    let $VIMRC_AFTER=expand("$VIMUSERFILES/$VIMUSER-after.vim")
+endif
+
+" If it exists, source the specified "-before.vim" hook.
+if filereadable($VIMRC_BEFORE)
+    source $VIMRC_BEFORE
+endif
 
 " Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
 set nocompatible
@@ -1947,3 +1997,9 @@ if has("gui_running")
         set guifont=Lucida_Console:h12:cDEFAULT
     endif
 endif 
+
+" If it exists, source the specified "-after.vim" hook.
+if filereadable($VIMRC_AFTER)
+    source $VIMRC_AFTER
+endif
+
