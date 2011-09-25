@@ -108,7 +108,7 @@ set browsedir=buffer
 set encoding=utf-8
 
 " 'fileencodings' contains a list of possible encodings to try when reading
-" a file.  When 'encoding' is a unicode value (such as utf-8), the 
+" a file.  When 'encoding' is a unicode value (such as utf-8), the
 " value of fileencodings defaults to ucs-bom,utf-8,default,latin1.
 "   ucs-bom  Treat as unicode-encoded file if and only if BOM is present
 "   utf-8    Use utf-8 encoding
@@ -168,9 +168,9 @@ set linebreak
 " May use a small non-zero number for fast terminals.
 set sidescroll=0
 
-" Enable 'list' mode (:set list) to see non-visibles a la "reveal codes" 
+" Enable 'list' mode (:set list) to see non-visibles a la "reveal codes"
 " in the old Word Perfect.  In list mode, 'listchars' indicates
-" what to show.  Defaults to "eol:$", but has lots of features 
+" what to show.  Defaults to "eol:$", but has lots of features
 " (see :help 'listchars).
 " set list
 " set listchars=eol:$
@@ -253,13 +253,13 @@ inoremap <silent> <S-F4> <C-O>:call GotoPrev()<CR>
 nnoremap <silent> <S-F4>      :call GotoPrev()<CR>
 
 function! s:Qf2Args()
-    let l:files={} 
+    let l:files={}
     argdo argdelete %
-    for l:lineDict in getqflist() 
+    for l:lineDict in getqflist()
         if l:lineDict.bufnr > 0
             let l:files[bufname(l:lineDict.bufnr)]=1
         endif
-    endfor 
+    endfor
     for l:file in keys(l:files)
         execute "silent argadd " . l:file
     endfor
@@ -496,7 +496,7 @@ vnoremap <silent> <C-O><C-L>       <C-\><C-N>a
 " Move vertically by screen lines instead of physical lines.
 " Exchange meanings for physical and screen motion keys.
 
-" When the popup menu is visible (pumvisible() is true), the up and 
+" When the popup menu is visible (pumvisible() is true), the up and
 " down arrows should not be mapped in order to preserve the expected
 " behavior when navigating the popup menu.  See :help ins-completion-menu
 " for details.
@@ -669,7 +669,7 @@ set sessionoptions=blank,buffers,curdir,folds,help,resize,slash
 " preview - use preview window to show extra information.
 set completeopt=longest,menuone
 
-" 'complete' controls which types of completion may be initiated by 
+" 'complete' controls which types of completion may be initiated by
 " pressing CTRL-n and CTRL-p.
 " . - Scans current buffer.
 " w - Scans buffers from other windows.
@@ -753,7 +753,7 @@ noremap  <M-a>      ggVG
 inoremap <M-a> <ESC>ggVG
 
 " Mapping M-a separately for visual and select modes to always end up
-" in visual mode; otherwise, with a single :vnoremap, pressing M-a in 
+" in visual mode; otherwise, with a single :vnoremap, pressing M-a in
 " select mode selects all but switches back to select mode when done.
 snoremap <M-a> <ESC>ggVG
 xnoremap <M-a> <ESC>ggVG
@@ -772,7 +772,7 @@ nnoremap <M-p>      "0p
 vnoremap <M-p>      "0p
 
 " Fix visual-mode "p" to throw away selected text and insert from register.
-" For original behavior (cutting selected text into scratch register), 
+" For original behavior (cutting selected text into scratch register),
 " use uppercase "P".
 " The goal is to avoid clobbering the scratch register (@").  By
 " default, Vim deletes the current visual selection into the scratch
@@ -910,7 +910,7 @@ set hidden
 " and :set nopaste by executing :set invpaste).
 set pastetoggle=<S-F12>
 
-" Change default from unnamed register ('"') to the primary selection 
+" Change default from unnamed register ('"') to the primary selection
 " register ("*") for general yank and put operations. Avoid autoselect mode.
 " Inspired by Tip #21.  Notice also you can append to a register and then
 " assign it to the primary selection (@*) or the clipboard (@+).  E.g.:
@@ -927,13 +927,13 @@ fun! InvertPasteAndMouse()
         set mouse= | set paste
         echo "mouse mode off, paste mode on"
     endif
-endfunction 
+endfunction
 
 " =============================================================
 " Tags
 " =============================================================
 
-" The semicolon gives permission to search up toward the root 
+" The semicolon gives permission to search up toward the root
 " directory (see :help file-searching).
 " Remove the defaults, add in version with ';'.
 set tags-=./tags,tags
@@ -942,9 +942,9 @@ set tags+=./tags;,tags;
 " Use the following settings in a .ctags file.  With the
 " --extra=+f, filenames are tags, too, so the following
 " mappings will work when a file isn't in the path.
-nnoremap <expr> gf empty(taglist(expand('<cfile>'))) ? 
+nnoremap <expr> gf empty(taglist(expand('<cfile>'))) ?
             \ "gf" : ":ta <C-r><C-f><CR>"
-nnoremap <expr> <C-w>f empty(taglist(expand('<cfile>'))) ? 
+nnoremap <expr> <C-w>f empty(taglist(expand('<cfile>'))) ?
             \ "\<C-w>f" : ":stj <C-r><C-f><CR>"
 
 " Convenience for building tag files in current directory.
@@ -980,9 +980,9 @@ if has("cscope")
     endif
     " Turn warnings back on for future "cs add" commands.
     set cscopeverbose
-    
+
     " Setup which queries use the QuickFix window.
-    " Flags: 
+    " Flags:
     "   + Append results to QuickFix window.
     "   - Clear QuickFix window before appending results.
     "   0 Don't use QuickFix window.
@@ -1205,13 +1205,13 @@ augroup local_fswitch
     autocmd!
     " There are lots more options - :help fswitch.
     autocmd BufEnter *.h let b:fswitchdst = 'c,cpp'
-    autocmd BufEnter *.h let b:fswitchlocs = 
+    autocmd BufEnter *.h let b:fswitchlocs =
                 \ 'reg:/pubinc/src/'
                 \.',reg:/include/src/'
                 \.',reg:/include.*/src/'
                 \.',ifrel:|/include/|../src|'
     autocmd BufEnter *.c,*.cpp let b:fswitchdst = 'h'
-    autocmd BufEnter *.c,*.cpp let b:fswitchlocs = 
+    autocmd BufEnter *.c,*.cpp let b:fswitchlocs =
                 \ 'reg:/src/pubinc/'
                 \.',reg:/src/include/'
                 \.',reg:|src|include/**|'
@@ -1253,7 +1253,7 @@ command! A FSHere
 " -------------------------------------------------------------
 
 let Grep_Skip_Dirs = '.svn .bzr .git .hg build bak export'
-let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' . 
+let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
     \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc build.out doxy.out'
 
 " -------------------------------------------------------------
@@ -1296,12 +1296,12 @@ nmap <silent> <Leader>fe :Explore<CR>
 " OmniCppComplete
 " -------------------------------------------------------------
 
-" 'OmniCpp_SelectFirstItem' 
+" 'OmniCpp_SelectFirstItem'
 "   0 ==> initially deselects first item in the menu.
 "   1 ==> initially selects first item in the menu.
 " default: let OmniCpp_SelectFirstItem = 0
 
-" Work-around for Doxygen comments.  Forces Doxygen comments to be 
+" Work-around for Doxygen comments.  Forces Doxygen comments to be
 " skipped for Omnicompletion.
 function! omni#cpp#utils#IsCursorInCommentOrString()
     let attr= '\C\<cComment\|\<cCppString\|\<cIncluded\|\<doxygen'
@@ -1395,9 +1395,9 @@ set runtimepath+=$VIMFILES/clearsnippets
 set runtimepath+=$ULTISNIPS
 "inoremap <C-J> <C-R>=UltiSnips_JumpForwards()<cr>
 "snoremap <C-J> <ESC>:call UltiSnips_JumpForwards()<cr>
-let g:UltiSnipsExpandTrigger="<tab>" 
-let g:UltiSnipsJumpForwardTrigger="<tab>" 
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>" 
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 command! UltiSnipsReset py UltiSnips_Manager.reset()
 
 " -------------------------------------------------------------
@@ -1477,7 +1477,7 @@ let g:HighlightRegex_keywordspace = '\(\<' . join(
 function! HighlightNamedRegex(regexName, linkedGroup, enable)
     exe "silent! syntax clear Highlight_" . a:regexName
     if a:enable
-        exe "syntax match Highlight_" . a:regexName . 
+        exe "syntax match Highlight_" . a:regexName .
                     \ " /" . g:HighlightRegex_{a:regexName} . "/"
         exe "highlight link Highlight_" . a:regexName . " " . a:linkedGroup
     endif
@@ -1532,7 +1532,7 @@ function! Highlight(...)
         let i = i + 1
     endwhile
 endfunction
-command! -nargs=* -complete=custom,HighlightArgs 
+command! -nargs=* -complete=custom,HighlightArgs
             \ Highlight call Highlight(<f-args>)
 
 " -------------------------------------------------------------
@@ -1581,7 +1581,7 @@ function! SetupRstSyntax()
     function! l:EmbedSourceAs(lang, asLang)
         let cmd  = 'syntax region embedded_' . a:lang
         let cmd .= ' matchgroup=embeddedSyntax'
-        let cmd .= ' start="^\z(\s*\)\.\.\s\+code-block::\s\+' 
+        let cmd .= ' start="^\z(\s*\)\.\.\s\+code-block::\s\+'
         let cmd .= a:lang . '\s*$"'
         " @todo Don't forget to highlight :options: lines
         " such as :linenos:
@@ -1596,7 +1596,7 @@ function! SetupRstSyntax()
         call l:EmbedSourceAs(lang, lang)
     endfor
     " Special-case C because Vim's syntax highlighting for cpp
-    " is based on the C highlighting, and it doesn't like to 
+    " is based on the C highlighting, and it doesn't like to
     " have both C and CPP active at the same time.
     call l:EmbedSourceAs('c', 'cpp')
 endfunction
@@ -1836,8 +1836,8 @@ if has("autocmd")
         " issued).  This fix restores the buffer's position.
         if v:version >= 700
                 autocmd BufLeave * let b:winview = winsaveview()
-                autocmd BufEnter * if (exists('b:winview')) | 
-                            \call winrestview(b:winview) | 
+                autocmd BufEnter * if (exists('b:winview')) |
+                            \call winrestview(b:winview) |
                             \endif
         endif
 
@@ -1867,7 +1867,7 @@ if has("autocmd")
         autocmd BufReadPre,FileReadPre      *.gpg let shsave=&sh
         autocmd BufReadPre,FileReadPre      *.gpg let &sh='sh'
         autocmd BufReadPre,FileReadPre      *.gpg let ch_save = &ch|set ch=2
-        autocmd BufReadPost,FileReadPost    *.gpg '[,']!gpg --decrypt 
+        autocmd BufReadPost,FileReadPost    *.gpg '[,']!gpg --decrypt
             \   --default-recipient-self 2> /dev/null
         autocmd BufReadPost,FileReadPost    *.gpg let &sh=shsave
 
@@ -1875,14 +1875,14 @@ if has("autocmd")
         autocmd BufReadPost,FileReadPost    *.gpg set nobin
         autocmd BufReadPost,FileReadPost    *.gpg let &ch = ch_save|
             \   unlet ch_save
-        autocmd BufReadPost,FileReadPost    *.gpg execute 
+        autocmd BufReadPost,FileReadPost    *.gpg execute
             \   ":doautocmd BufReadPost " . expand("%:r")
 
         " Convert all text to encrypted text before writing
         autocmd BufWritePre,FileWritePre    *.gpg set bin
         autocmd BufWritePre,FileWritePre    *.gpg let shsave=&sh
         autocmd BufWritePre,FileWritePre    *.gpg let &sh='sh'
-        autocmd BufWritePre,FileWritePre    *.gpg '[,']!gpg --encrypt 
+        autocmd BufWritePre,FileWritePre    *.gpg '[,']!gpg --encrypt
             \   --default-recipient-self 2>/dev/null
         autocmd BufWritePre,FileWritePre    *.gpg let &sh=shsave
 
@@ -2018,11 +2018,11 @@ if has("gui_running")
         catch
             set guifont=Lucida_Console:h12:cDEFAULT
         endtry
-    else            
+    else
         " Non-X11 GUIs including Windows.
         set guifont=Lucida_Console:h12:cDEFAULT
     endif
-endif 
+endif
 
 " If it exists, source the specified "-after.vim" hook.
 if filereadable($VIMRC_AFTER)
