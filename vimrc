@@ -153,8 +153,8 @@ set switchbuf=
 " Enable wrapping of long lines.
 set wrap
 
-" Use the prompt ">   " for wrapped lines (note trailing space below).
-set showbreak=\ \ \ \ 
+" Use the prompt ">   " for wrapped lines.
+let &showbreak="    "
 
 " Break lines at reasonable places instead of mid-word.
 set linebreak
