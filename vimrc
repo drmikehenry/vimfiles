@@ -1094,7 +1094,7 @@ function! QuickFixWinToggle()
         botright copen
     endif
 endfunction
-nnoremap <C-Q><C-Q> :call QuickFixWinToggle()<CR>
+nnoremap <silent> <C-Q><C-Q> :call QuickFixWinToggle()<CR>
 command! QuickFixWinToggle :call QuickFixWinToggle()
 
 " Like windo but restore the current window.
