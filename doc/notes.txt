@@ -95,6 +95,12 @@ Unpack, patch, build, and create a binary tarball: >
 Installation of final tarball is done as follows: >
     sudo tar -C / -zxf vim72/vim-7.2.patchlevel.i386.tar.gz
 
+To register as the system alternative: >
+
+  for i in gvim gview gvimdiff; do
+    update-alternatives --install /usr/bin/$i $i /usr/local/bin/$i 500
+  done
+
 If /usr/share/applications/*gvim.desktop exists, it may be necessary to 
 update this line: >
     Exec=gvim -f %F
