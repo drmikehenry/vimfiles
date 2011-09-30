@@ -71,6 +71,7 @@ or, for more automation: >
 
 Prerequisites for Fedora: >
     sudo yum install -y ruby ruby-devel perl-ExtUtils-Embed
+    sudo yum install -y gtk+-devel gtk2-devel
 
 On 64-bit Linux, Python libraries live in /usr/lib64/pythonx.y,
 and Vim's configuration script doesn't find the config directory.
