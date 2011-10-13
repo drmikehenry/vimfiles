@@ -1751,6 +1751,14 @@ endfunction
 command! SetupCpp call SetupCpp()
 
 " -------------------------------------------------------------
+" Setup for D code.
+" -------------------------------------------------------------
+function! SetupD()
+    call SetupC()
+endfunction
+command! SetupD call SetupD()
+
+" -------------------------------------------------------------
 " Setup for JavaScript.
 " -------------------------------------------------------------
 function! SetupJavaScript()
