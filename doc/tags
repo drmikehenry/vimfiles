@@ -211,6 +211,7 @@ Tlist_Get_Tag_Prototype_By_Line()	taglist.txt	/*Tlist_Get_Tag_Prototype_By_Line(
 Tlist_Get_Tagname_By_Line()	taglist.txt	/*Tlist_Get_Tagname_By_Line()*
 Tlist_Set_App()	taglist.txt	/*Tlist_Set_App()*
 Tlist_Update_File_Tags()	taglist.txt	/*Tlist_Update_File_Tags()*
+ToggleParenRainbow	clojure.txt	/*ToggleParenRainbow*
 VCSCommandCVSDiffOpt	vcscommand.txt	/*VCSCommandCVSDiffOpt*
 VCSCommandCVSExec	vcscommand.txt	/*VCSCommandCVSExec*
 VCSCommandCommitOnWrite	vcscommand.txt	/*VCSCommandCommitOnWrite*
@@ -234,6 +235,7 @@ VCSCommandVCSTypeOverride	vcscommand.txt	/*VCSCommandVCSTypeOverride*
 Vimball-copyright	pi_vimball.txt	/*Vimball-copyright*
 [%	matchit.txt	/*[%*
 ]%	matchit.txt	/*]%*
+^	clojure.txt	/*^*
 align	Align.txt	/*align*
 align-align	Align.txt	/*align-align*
 align-codepoint	Align.txt	/*align-codepoint*
@@ -431,6 +433,7 @@ fswitch_ifabs	fswitch.txt	/*fswitch_ifabs*
 fswitch_ifrel	fswitch.txt	/*fswitch_ifrel*
 fswitch_reg	fswitch.txt	/*fswitch_reg*
 fswitch_rel	fswitch.txt	/*fswitch_rel*
+ft-clj-indent	clojure.txt	/*ft-clj-indent*
 ft-clj-syntax	clojure.txt	/*ft-clj-syntax*
 ftp	pi_netrw.txt	/*ftp*
 g%	matchit.txt	/*g%*
@@ -993,6 +996,7 @@ textobj-user-function	textobj-user.txt	/*textobj-user-function*
 textobj-user-interface	textobj-user.txt	/*textobj-user-interface*
 textobj-user-introduction	textobj-user.txt	/*textobj-user-introduction*
 textobj-user.txt	textobj-user.txt	/*textobj-user.txt*
+tr	clojure.txt	/*tr*
 vS	surround.txt	/*vS*
 v_:B	vis.txt	/*v_:B*
 v_[%	matchit.txt	/*v_[%*
