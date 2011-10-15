@@ -173,8 +173,10 @@ set sidescroll=0
 " what to show.  Defaults to "eol:$", but has lots of features
 " (see :help 'listchars).
 " The "trail" setting means trailing whitespace.
-set list
-set listchars=tab:\ \ ,trail:·,extends:>,precedes:<
+" The feature is too disconcerting to leave on, but pre-configure
+" listchars so :set list will do the right thing.
+" set list
+set listchars=trail:·,nbsp:·,extends:>,precedes:<,eol:$
 
 " =============================================================
 " Menu settings
