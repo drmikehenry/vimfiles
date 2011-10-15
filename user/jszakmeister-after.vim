@@ -83,6 +83,9 @@ autocmd FileType gitcommit DiffGitCached | wincmd J | wincmd p | resize 15
 " at git commit.
 autocmd BufReadPost COMMIT_EDITMSG exe "normal! gg"
 
+" Do the same for Subversion
+autocmd BufReadPost svn-commit.tmp exe "normal! gg"
+
 " Use tabs in gitconfig and .gitconfig
 autocmd FileType gitconfig setlocal noexpandtab
 autocmd FileType .gitconfig setlocal noexpandtab
