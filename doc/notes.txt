@@ -1495,6 +1495,14 @@ run of spaces down to a single space character, or a group of consecutive
 blank lines down to a single blank line.
 
 ------------------------------------------------------------------------------
+Deleting Trailing Whitespace
+
+The normal-mode command :StripTrailingWhitespace will remove all trailing
+whitepsace from the current buffer.  It accepts a line range as well, such
+that selecting a visual range first followed by typing
+:StripTrailingWhitespace will strip only the selected lines.
+
+------------------------------------------------------------------------------
 Re-formatting paragraphs
 
 The useless key "Q" is mapped to the "gq" reformatting operator.  Pressing

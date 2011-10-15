@@ -172,8 +172,9 @@ set sidescroll=0
 " in the old Word Perfect.  In list mode, 'listchars' indicates
 " what to show.  Defaults to "eol:$", but has lots of features
 " (see :help 'listchars).
-" set list
-" set listchars=eol:$
+" The "trail" setting means trailing whitespace.
+set list
+set listchars=trail:·
 
 " =============================================================
 " Menu settings
@@ -415,6 +416,18 @@ function! DeleteRubbishWhitespace()
     let [&ve] = saveVirtualEdit
     silent! call repeat#set("drw")
 endfunction
+
+function! StripTrailingWhitespace()
+    let savePos = winsaveview()
+    let saveFoldEnable = &foldenable
+    setlocal nofoldenable
+    execute a:firstline . "," . a:lastline .
+                \ 'substitute /\s\+$//ge'
+    let &l:foldenable = saveFoldEnable
+    call winrestview(savePos)
+endfunction
+command! -bar -nargs=0 -range=% StripTrailingWhitespace
+            \ <line1>,<line2>call StripTrailingWhitespace()
 
 " Remap Q from useless "Ex" mode to "gq" re-formatting command.
 nnoremap Q gq
