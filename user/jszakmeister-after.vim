@@ -91,3 +91,11 @@ if v:version >= 703
     set undofile
     set undodir=$VIMFILES/.undo
 endif
+
+" -------------------------------------------------------------
+" Setup for general Clojure code.
+" -------------------------------------------------------------
+function! SetupClojure()
+    call SetupSource()
+endfunction
+command! SetupClojure call SetupClojure()
