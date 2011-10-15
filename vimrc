@@ -174,7 +174,7 @@ set sidescroll=0
 " (see :help 'listchars).
 " The "trail" setting means trailing whitespace.
 set list
-set listchars=trail:·
+set listchars=tab:\ \ ,trail:·,extends:>,precedes:<
 
 " =============================================================
 " Menu settings
