@@ -105,3 +105,6 @@ command! SetupClojure call SetupClojure()
 
 " Make sure Command-T ignores some java-related bits
 set wildignore+=*.class,classes/**,*.jar
+
+" Keep snippets in my own area
+set runtimepath+=$VIMUSERFILES/$VIMUSER
