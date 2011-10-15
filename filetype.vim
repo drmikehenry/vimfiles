@@ -15,5 +15,4 @@ augroup filetypedetect
     au BufNewFile,BufRead *.wiki setf Wikipedia
     au BufNewFile,BufRead *.{md,mkd,mdwn,mdown,markdown} setf mkd
     au BufNewFile,BufRead bash-fc-* unlet g:is_kornshell | let g:is_bash=1 | setf sh | setl nospell | setl tw=0 | Highlight no*
-    au BufNewFile,BufRead *.clj setf clojure
 augroup END
