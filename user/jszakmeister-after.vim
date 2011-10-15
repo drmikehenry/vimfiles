@@ -99,3 +99,6 @@ function! SetupClojure()
     call SetupSource()
 endfunction
 command! SetupClojure call SetupClojure()
+
+" Make sure Command-T ignores some java-related bits
+set wildignore+=*.class,classes/**,*.jar
