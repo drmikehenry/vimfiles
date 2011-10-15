@@ -1242,6 +1242,17 @@ Installation:
 - Untar in ~/.vim/
 
 ------------------------------------------------------------------------------
+VIMCLOJURE                                              *notes_vimclojure*
+  Support for the Clojure programming language          |VimClojure|
+
+Version 2.3.0 from http://www.vim.org/scripts/script.php?script_id=2501
+
+Installation:
+- Ran "unzip /path/to/vimclojure-<version>.zip -x LICENSE.txt README.markdown"
+  in ~/.vim/
+- Ran :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
 VIS                                                     *notes_vis*
   The Visual Block Tool                                 |vis.txt|
 
