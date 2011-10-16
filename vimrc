@@ -782,40 +782,8 @@ endif
 " end "inspired by mswin.vim"
 " =============================================================
 
-" Alt-P pastes from most recent yank instead of scratch register.
-nnoremap <M-p>      "0p
-vnoremap <M-p>      "0p
-
-" Fix visual-mode "p" to throw away selected text and insert from register.
-" For original behavior (cutting selected text into scratch register),
-" use uppercase "P".
-" The goal is to avoid clobbering the scratch register (@").  By
-" default, Vim deletes the current visual selection into the scratch
-" register before putting the new text in place.  If the source of the
-" "put" operation is the scratch register, this has the upside that its
-" easy to swap text (select first text, yank, select second text, put,
-" re-select first text, put again).  But it has the much larger downside
-" that it's inconvenient to yank text and paste it over more than one
-" selection.
-" The basic idea to is save the contents of the scratch register,
-" execute the "p" operation using the specified register (v:register),
-" then restore the scratch register.  Unfortunately, this is not quite
-" sufficient when the 'clipboard' option is set to 'unnamed'.  That option
-" should tie the scratch register to the clipboard register ("*).  So
-" when doing a plain "p" operation, v:register is set to "* instead of
-" the scratch register.  But this tying together doesn't appear to be applied
-" when assigning to the scratch register directly.  So the "p" operation
-" clobbers both the scratch register and the clipboard register, but the
-" subsequent assignment to the scratch register does not restore the clipboard.
-" Therefore, both scratch and clipboard registers are saved and restored.
-" Side-effect: The "last-yanked" register (@0) is clobbered whenever the
-" scratch register is assigned (and vice-versa).  This appears to be a
-" hard-wired limitation of Vim.
-vnoremap <expr> p    ":\<C-U>let g:SavedReg=@" . v:register . "\<CR>" .
-            \ ":let g:SavedScratchReg=@\"\<CR>" .
-            \ "gv\"" . v:register . "p" .
-            \ ":let @\"=g:SavedScratchReg\<CR>" .
-            \ ":let @" . v:register . "=g:SavedReg\<CR>"
+" Put from most recent yank instead of scratch register.
+vnoremap P "0P
 
 " =============================================================
 " Search-related configuration
