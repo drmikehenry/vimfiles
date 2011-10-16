@@ -1742,8 +1742,11 @@ Highlights tabs, long lines, etc.: >
     :Highlight <Tab>      ; command-line completion to show all options
 
 Options include: >
-    tabs
+    commas
+    keywordspace
     longlines
+    tabs
+    trailingspace
 
 
 ==============================================================================

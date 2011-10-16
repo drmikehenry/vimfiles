@@ -1480,15 +1480,40 @@ let g:xptemplate_brace_complete = 0
 
 set spelllang=en_us
 
-let g:HighlightNames = split("commas keywordspace longlines tabs")
+" =============================================================
+" Highlight setup
+" =============================================================
+
+" Define a nice highlighting color for matches.
+" From Nuvola:
+" highlight NonText gui=BOLD guifg=#4000FF guibg=#EFEFF7
+"highlight HG_Background gui=BOLD guibg=#EFEFF7
+
+function! HighlightDefineGroups()
+    hi HG_Subtle ctermfg=yellow ctermbg=white guibg=#efeff7
+    hi HG_Warning ctermfg=yellow ctermbg=white guibg=#ffffdd
+    hi HG_Error   ctermfg=red    ctermbg=white guibg=#ffe0e0
+endfunction
+
+:autocmd ColorScheme * call HighlightDefineGroups()
+call HighlightDefineGroups()
+
+let g:HighlightNames = split("commas keywordspace longlines tabs trailingspace")
 let g:HighlightRegex_longlines1 = '\%>61v.*\%<82v\(.*\%>80v.\)\@='
 let g:HighlightRegex_longlines2 = '\%>80v.\+'
 let g:HighlightRegex_tabs = '\t'
 let g:HighlightRegex_commas = ',\S'
 let g:HighlightRegex_keywordspace = '\(\<' . join(
             \ split('for if while switch'), '\|\<') . '\)\@<=('
+let g:HighlightRegex_trailingspace = '\s\+$'
 
-" Invoke as: HighlightNamedRegex('longlines1', 'Search', 1)
+" Invoke as: HighlightNamedRegex('longlines1', 'HG_Warning', 1)
+" The linkedGroup comes from the highlight groups (:help highlight-groups),
+" or from HighlightDefinGroups() above.
+" Highlight groups to consider:
+"   Error       very intrusive group with reverse-video red.
+"   ErrorMsg    less intrusive, red foreground (invisible for whitespace).
+"   NonText     non-intrusive, fairly subtle.
 function! HighlightNamedRegex(regexName, linkedGroup, enable)
     exe "silent! syntax clear Highlight_" . a:regexName
     if a:enable
@@ -1499,20 +1524,24 @@ function! HighlightNamedRegex(regexName, linkedGroup, enable)
 endfunction
 
 function! Highlight_commas(enable)
-    call HighlightNamedRegex('commas', 'Error', a:enable)
+    call HighlightNamedRegex('commas', 'HG_Error', a:enable)
 endfunction
 
 function! Highlight_keywordspace(enable)
-    call HighlightNamedRegex('keywordspace', 'Error', a:enable)
+    call HighlightNamedRegex('keywordspace', 'HG_Error', a:enable)
 endfunction
 
 function! Highlight_longlines(enable)
-    call HighlightNamedRegex('longlines1', 'Search', a:enable)
-    call HighlightNamedRegex('longlines2', 'ErrorMsg', a:enable)
+    call HighlightNamedRegex('longlines1', 'HG_Warning', a:enable)
+    call HighlightNamedRegex('longlines2', 'HG_Error', a:enable)
 endfunction
 
 function! Highlight_tabs(enable)
-    call HighlightNamedRegex('tabs', 'Error', a:enable)
+    call HighlightNamedRegex('tabs', 'HG_Error', a:enable)
+endfunction
+
+function! Highlight_trailingspace(enable)
+    call HighlightNamedRegex('trailingspace', 'HG_Subtle', a:enable)
 endfunction
 
 function! HighlightArgs(ArgLead, CmdLine, CursorPos)
@@ -1563,7 +1592,7 @@ command! SetupText call SetupText()
 " -------------------------------------------------------------
 function! SetupSource()
     setlocal tw=80 ts=4 sts=4 sw=4 et ai spell spelllang=en_us
-    Highlight tabs longlines
+    Highlight commas keywordspace longlines tabs trailingspace
 endfunction
 command! SetupSource call SetupSource()
 
