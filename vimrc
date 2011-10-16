@@ -1560,7 +1560,7 @@ command! SetupText call SetupText()
 " -------------------------------------------------------------
 function! SetupSource()
     setlocal tw=80 ts=4 sts=4 sw=4 et ai spell spelllang=en_us
-    Highlight commas keywordspace longlines tabs trailingspace
+    Highlight longlines tabs trailingspace
 endfunction
 command! SetupSource call SetupSource()
 
@@ -1702,6 +1702,7 @@ endfunction
 
 function! SetupC()
     call SetupSource()
+    Highlight commas keywordspace longlines tabs trailingspace
     setlocal indentexpr=IndentC()
 
     " Re-indent when ending a C-style comment.
