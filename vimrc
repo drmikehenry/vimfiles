@@ -420,7 +420,12 @@ function! DeleteRubbishWhitespace()
 endfunction
 
 function! StripTrailingWhitespace()
+    let savePos = winsaveview()
+    let saveFoldEnable = &foldenable
+    setlocal nofoldenable
     %substitute /\s\+$//ge
+    let &l:foldenable = saveFoldEnable
+    call winrestview(savePos)
 endfunction
 command! StripTrailingWhitespace  call StripTrailingWhitespace()
 
