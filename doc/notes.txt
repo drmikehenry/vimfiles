@@ -85,16 +85,20 @@ Inspiration taken from:
 The detailed steps for download and building Vim are captured in
 the script ~/.vim/buildtool.  See that script for more information.
 
-Download the sources, patches, and updated runtime files: >
+Update the hg directory (in the default download location) with the latest Vim
+source: >
 
-  ~/.vim/buildtool 7.2 download
+  # From any directory; updates clone in <download>/vim/7.3/hg:
+  ~/.vim/buildtool 7.3 update
 
-Unpack, patch, build, and create a binary tarball: >
+Unpack, configure, build, and create binary and source tarballs: >
 
-  ~/.vim/buildtool 7.2
+  cd ~/build
+  rm -rf vim7.3
+  ~/.vim/buildtool 7.3
 
 Installation of final tarball is done as follows: >
-    sudo tar -C / -zxf vim72/vim-7.2.patchlevel.i386.tar.gz
+    sudo tar -C / -zxf vim73/vim-7.3.patchlevel.i386.tar.gz
 
 To register as the system alternative: >
 
@@ -123,21 +127,12 @@ On Linux, ensure the following fonts are available:
 Sources
 -------
 
-For references, the sources are available here:
-  ftp://ftp.vim.org/pub/vim/unix/vim-7.2.tar.bz2
-  ftp://ftp.vim.org/pub/vim/extra/vim-7.2-extra.tar.gz
-  ftp://ftp.vim.org/pub/vim/extra/vim-7.2-lang.tar.gz
+Vim source lives in a mercurial repository as described here:
+  http://www.vim.org/download.php
 
-  It's best to download the -extra and -lang sources, as future patches 
-  may well be generated against these extra files.
-
-The patches are here:
-  ftp://ftp.vim.org/pub/vim/patches/7.2/7.2.*
-
-The updated runtime is here:
-  ftp://ftp.vim.org/pub/vim/runtime/*
-
-This content is mirrored for use with rsync at ftp.nluug.nl::Vim.
+Clone the repository via: >
+  cd ~/build
+  hg clone https://vim.googlecode.com/hg/ vim
 
 ==============================================================================
 3.  Plugins                                             *notes_plugins*
