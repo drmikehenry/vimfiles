@@ -1497,6 +1497,8 @@ whitepsace from the current buffer.  It accepts a line range as well, such
 that selecting a visual range first followed by typing
 :StripTrailingWhitespace will strip only the selected lines.
 
+<Leader><Leader>$ is mapped to :StripTrailingWhitespace for convenience.
+
 ------------------------------------------------------------------------------
 Re-formatting paragraphs
 

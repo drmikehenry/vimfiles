@@ -420,16 +420,11 @@ function! DeleteRubbishWhitespace()
 endfunction
 
 function! StripTrailingWhitespace()
-    let savePos = winsaveview()
-    let saveFoldEnable = &foldenable
-    setlocal nofoldenable
-    execute a:firstline . "," . a:lastline .
-                \ 'substitute /\s\+$//ge'
-    let &l:foldenable = saveFoldEnable
-    call winrestview(savePos)
+    %substitute /\s\+$//ge
 endfunction
-command! -bar -nargs=0 -range=% StripTrailingWhitespace
-            \ <line1>,<line2>call StripTrailingWhitespace()
+command! StripTrailingWhitespace  call StripTrailingWhitespace()
+
+nnoremap <Leader><Leader>$  :StripTrailingWhitespace<CR>
 
 " Remap Q from useless "Ex" mode to "gq" re-formatting command.
 nnoremap Q gq
