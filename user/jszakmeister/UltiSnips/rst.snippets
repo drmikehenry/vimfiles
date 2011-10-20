@@ -46,5 +46,17 @@ snippet f "file markup" w
 :file:\`${1:path}\`$0
 endsnippet
 
-# vim:ft=snippets:
+snippet warn "Warning Admonition" !b
+.. warning::
+   ${1:text goes here}
+
+$0
+endsnippet
+
+snippet note "Note Admonition" !b
+.. note::
+   ${1:text goes here}
+
+$0
+endsnippet
 
