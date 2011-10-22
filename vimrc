@@ -1473,7 +1473,7 @@ let g:HighlightRegex_tabs = '\t'
 let g:HighlightRegex_commas = ',\S'
 let g:HighlightRegex_keywordspace = '\(\<' . join(
             \ split('for if while switch'), '\|\<') . '\)\@<=('
-let g:HighlightRegex_trailingspace = '\s\+$'
+let g:HighlightRegex_trailingspace = '\s\+\%#\@<!$'
 
 " Invoke as: HighlightNamedRegex('longlines1', 'HG_Warning', 1)
 " The linkedGroup comes from the highlight groups (:help highlight-groups),
