@@ -10,7 +10,7 @@ so some plugins won't work unless a re-built Vim is used.
 Read ~/.vim/doc/notes.txt for build dependencies that must be installed
 prior to building.
 
-If you have a pre-built binary tarballl, install as:
+If you have a pre-built binary tarball, install as:
 
   sudo tar -C / -xf /path/to/vim-7.3.123.i386.tar.gz
 
