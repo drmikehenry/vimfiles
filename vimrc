@@ -1,7 +1,4 @@
 " vim:tw=80:ts=4:sts=4:sw=4:et:ai
-" =============================================================
-" General settings
-" =============================================================
 
 " Set environment variable to directory containing this vimrc.
 " On Unix, expect ~/.vim; on Windows, expect $HOME/vimfiles.
@@ -2049,4 +2046,3 @@ endif
 if filereadable($VIMRC_AFTER)
     source $VIMRC_AFTER
 endif
-
