@@ -49,6 +49,11 @@ if $VIMRC_AFTER == ""
     let $VIMRC_AFTER=expand("$VIMUSERFILES/$VIMUSER-after.vim")
 endif
 
+" Prepend per-user directory to runtimepath (provides the highest priority).
+if isdirectory($VIMUSERFILES . "/" . $VIMUSER)
+    set runtimepath^=$VIMUSERFILES/$VIMUSER
+endif
+
 " If it exists, source the specified "-before.vim" hook.
 if filereadable($VIMRC_BEFORE)
     source $VIMRC_BEFORE
@@ -433,10 +438,13 @@ nnoremap Q gq
 xnoremap Q gq
 onoremap Q gq
 
-" Emulate Emacs's Meta-Q functionality.
-nnoremap <M-q> gqip
-xnoremap <M-q> gq
-inoremap <M-q> <ESC>gqipA
+" Rewrap a paragraph of text via Meta-Q or <Leader>q (emulates Emacs's Meta-Q
+" and TextMate's Ctrl-Q).
+nnoremap <M-q>      gqip
+nnoremap <Leader>q  gqip
+xnoremap <M-q>      gq
+xnoremap <Leader>q  gq
+inoremap <M-q>      <ESC>gqipA
 
 function! ClosestPos(positions)
     let closestLine = 0
@@ -648,6 +656,9 @@ set wildignore=*.o,*.obj,*.a,*.lib,*.so,*~,*.bak,*.swp,tags,*.opt,*.ncb
             \,*.plg,*.elf,cscope.out,*.ecc,*.exe,*.ilk,*.pyc
             \,export,build,_build
 
+" Make sure Command-T ignores some java-related bits.
+set wildignore+=*.class,classes/**,*.jar
+
 " Want sessionoptions to contain:
 "   blank - save unnamed buffers.
 "   buffers - save buffers.
@@ -668,6 +679,13 @@ set wildignore=*.o,*.obj,*.a,*.lib,*.so,*~,*.bak,*.swp,tags,*.opt,*.ncb
 
 set sessionoptions=blank,buffers,curdir,folds,help,resize,slash
             \,tabpages,unix,winpos,winsize
+
+
+" Setup undofile capability if available.
+if v:version >= 703
+    set undofile
+    set undodir=$VIMFILES/.undo
+endif
 
 " -------------------------------------------------------------
 " Completion
@@ -914,10 +932,18 @@ endfunction
 " =============================================================
 
 " The semicolon gives permission to search up toward the root
-" directory (see :help file-searching).
-" Remove the defaults, add in version with ';'.
-set tags-=./tags,tags
-set tags+=./tags;,tags;
+" directory.  When followed by a path, the upward search terminates
+" at this "stop directory"; otherwise, the search terminates at the root.
+" Relative paths starting with "./" begin at Vim's current
+" working directory or the directory of the currently open file.
+" See :help file-searching for more details.
+"
+" Additional directories may be added, e.g.:
+" set tags+=/usr/local/share/ctags/qt4
+"
+" Start at working directory or directory of currently open file
+" and search upward, stopping at $HOME.
+set tags=./tags;$HOME
 
 " Use the following settings in a .ctags file.  With the
 " --extra=+f, filenames are tags, too, so the following
@@ -1314,7 +1340,9 @@ endfunc
 "   v - use vimgrep instead of grep.
 let g:proj_flags = 'csStTv'
 let g:proj_window_width = 40
-nmap <silent> <F8> <Plug>ToggleProject
+nmap <silent> <F8>        <Plug>ToggleProject
+nmap <silent> <C-Q><C-P>  <Plug>ToggleProject
+nmap <silent> <C-Q>p      <Plug>ToggleProject
 
 " -------------------------------------------------------------
 " RunView
@@ -1360,7 +1388,9 @@ let Tlist_Inc_Winwidth = 0
 let Tlist_Close_On_Select = 1
 let Tlist_WinWidth = 40
 
-nmap <silent> <s-F8> :TlistToggle<CR>
+nnoremap <silent> <s-F8>        :TlistToggle<CR>
+nnoremap <silent> <C-Q><C-T>    :TlistToggle<CR>
+nnoremap <silent> <C-Q>t        :TlistToggle<CR>
 
 " -------------------------------------------------------------
 " UltiSnips
@@ -1368,6 +1398,15 @@ nmap <silent> <s-F8> :TlistToggle<CR>
 if !exists('$ULTISNIPS')
     let $ULTISNIPS=$VIMFILES . "/UltiSnips-1.5"
 endif
+
+" Paths found earlier in runtimepath have higher snippet priority.
+" Therefore, put the distribution snippets in $ULTISNIPS last, and put
+" the "clearsnippets" path just before this to allow wiping of the
+" default snippets that come with UltiSnips.
+" Per-user customization will have highest priority because the per-user
+" directory was prepended to runtimepath.
+
+" Local customizations.
 set runtimepath+=$VIMFILES/local
 
 " The "clearsnippets" directory wipes out default snippets.
@@ -1761,6 +1800,14 @@ endfunction
 command! SetupCpp call SetupCpp()
 
 " -------------------------------------------------------------
+" Setup for general Clojure code.
+" -------------------------------------------------------------
+function! SetupClojure()
+    call SetupSource()
+endfunction
+command! SetupClojure call SetupClojure()
+
+" -------------------------------------------------------------
 " Setup for D code.
 " -------------------------------------------------------------
 function! SetupD()
@@ -1832,89 +1879,94 @@ runtime ftplugin/man.vim
 " Autocmds
 " =============================================================
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
+" Enable file type detection.
+" Use the default filetype settings, so that mail gets 'tw' set to 72,
+" 'cindent' is on in C files, etc.
+" Also load indent files, to automatically do language-dependent indenting.
+filetype plugin indent on
 
-    " Enable file type detection.
-    " Use the default filetype settings, so that mail gets 'tw' set to 72,
-    " 'cindent' is on in C files, etc.
-    " Also load indent files, to automatically do language-dependent indenting.
-    filetype plugin indent on
+" Extended filetype detection by extensions is found in
+" filetype.vim
 
-    " Extended filetype detection by extensions is found in
-    " filetype.vim
+" Put these in an autocmd group, so that we can delete them easily.
+augroup local_vimrc
+    " First, remove all autocmds in this group.
+    autocmd!
 
-    " Put these in an autocmd group, so that we can delete them easily.
-    augroup local_vimrc
-        " First, remove all autocmds in this group.
-        autocmd!
+    " Show diffs when writing commit messages for git.
+    autocmd FileType gitcommit DiffGitCached | wincmd J | wincmd p | resize 15
 
-        " By default, when Vim switches buffers in a window, the new buffer's
-        " cursor position is scrolled to the center (as if 'zz' had been
-        " issued).  This fix restores the buffer's position.
-        if v:version >= 700
-                autocmd BufLeave * let b:winview = winsaveview()
-                autocmd BufEnter * if (exists('b:winview')) |
-                            \call winrestview(b:winview) |
-                            \endif
-        endif
+    " Make sure we start at the top of the commit message when doing
+    " a git commit.
+    autocmd BufReadPost COMMIT_EDITMSG exe "normal! gg"
 
-        " When editing a file, always jump to the last known cursor position.
-        " Don't do it when the position is invalid or when inside an event
-        " handler (happens when dropping a file on gvim).
-        autocmd BufReadPost *
-                    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-                    \   exe "normal g`\"" |
-                    \ endif
+    " Do the same for Subversion.
+    autocmd BufReadPost svn-commit.tmp exe "normal! gg"
 
-    augroup END
+    " Use tabs in gitconfig and .gitconfig.
+    autocmd FileType gitconfig setlocal noexpandtab
+    autocmd FileType .gitconfig setlocal noexpandtab
 
-    " Support for gpg-encrypted files.
-    augroup local_encrypted
-        " First, remove all autocmds in this group.
-        autocmd!
+    " By default, when Vim switches buffers in a window, the new buffer's
+    " cursor position is scrolled to the center (as if 'zz' had been
+    " issued).  This fix restores the buffer's position.
+    if v:version >= 700
+            autocmd BufLeave * let b:winview = winsaveview()
+            autocmd BufEnter * if (exists('b:winview')) |
+                        \call winrestview(b:winview) |
+                        \endif
+    endif
 
-        " First make sure nothing is written to ~/.viminfo while editing
-        " an encrypted file.
-        autocmd BufReadPre,FileReadPre      *.gpg set viminfo=
-        " We don't want a swap file, as it writes unencrypted data to disk
-        autocmd BufReadPre,FileReadPre      *.gpg set noswapfile
-        " Switch to binary mode to read the encrypted file
-        autocmd BufReadPre,FileReadPre      *.gpg set bin
-        autocmd BufReadPre,FileReadPre      *.gpg let ch_save = &ch|set ch=2
-        autocmd BufReadPre,FileReadPre      *.gpg let shsave=&sh
-        autocmd BufReadPre,FileReadPre      *.gpg let &sh='sh'
-        autocmd BufReadPre,FileReadPre      *.gpg let ch_save = &ch|set ch=2
-        autocmd BufReadPost,FileReadPost    *.gpg '[,']!gpg --decrypt
-            \   --default-recipient-self 2> /dev/null
-        autocmd BufReadPost,FileReadPost    *.gpg let &sh=shsave
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event
+    " handler (happens when dropping a file on gvim).
+    autocmd BufReadPost *
+                \ if line("'\"") > 0 && line("'\"") <= line("$") |
+                \   exe "normal g`\"" |
+                \ endif
 
-        " Switch to normal mode for editing
-        autocmd BufReadPost,FileReadPost    *.gpg set nobin
-        autocmd BufReadPost,FileReadPost    *.gpg let &ch = ch_save|
-            \   unlet ch_save
-        autocmd BufReadPost,FileReadPost    *.gpg execute
-            \   ":doautocmd BufReadPost " . expand("%:r")
+augroup END
 
-        " Convert all text to encrypted text before writing
-        autocmd BufWritePre,FileWritePre    *.gpg set bin
-        autocmd BufWritePre,FileWritePre    *.gpg let shsave=&sh
-        autocmd BufWritePre,FileWritePre    *.gpg let &sh='sh'
-        autocmd BufWritePre,FileWritePre    *.gpg '[,']!gpg --encrypt
-            \   --default-recipient-self 2>/dev/null
-        autocmd BufWritePre,FileWritePre    *.gpg let &sh=shsave
+" Support for gpg-encrypted files.
+augroup local_encrypted
+    " First, remove all autocmds in this group.
+    autocmd!
 
-        " Undo the encryption so we are back in the normal text, directly
-        " after the file has been written.
-        autocmd BufWritePost,FileWritePost  *.gpg   silent u
-        autocmd BufWritePost,FileWritePost  *.gpg set nobin
-    augroup END
+    " First make sure nothing is written to ~/.viminfo while editing
+    " an encrypted file.
+    autocmd BufReadPre,FileReadPre      *.gpg set viminfo=
+    " We don't want a swap file, as it writes unencrypted data to disk
+    autocmd BufReadPre,FileReadPre      *.gpg set noswapfile
+    " Switch to binary mode to read the encrypted file
+    autocmd BufReadPre,FileReadPre      *.gpg set bin
+    autocmd BufReadPre,FileReadPre      *.gpg let ch_save = &ch|set ch=2
+    autocmd BufReadPre,FileReadPre      *.gpg let shsave=&sh
+    autocmd BufReadPre,FileReadPre      *.gpg let &sh='sh'
+    autocmd BufReadPre,FileReadPre      *.gpg let ch_save = &ch|set ch=2
+    autocmd BufReadPost,FileReadPost    *.gpg '[,']!gpg --decrypt
+        \   --default-recipient-self 2> /dev/null
+    autocmd BufReadPost,FileReadPost    *.gpg let &sh=shsave
 
-else
+    " Switch to normal mode for editing
+    autocmd BufReadPost,FileReadPost    *.gpg set nobin
+    autocmd BufReadPost,FileReadPost    *.gpg let &ch = ch_save|
+        \   unlet ch_save
+    autocmd BufReadPost,FileReadPost    *.gpg execute
+        \   ":doautocmd BufReadPost " . expand("%:r")
 
-    set autoindent                " Always set autoindenting on.
+    " Convert all text to encrypted text before writing
+    autocmd BufWritePre,FileWritePre    *.gpg set bin
+    autocmd BufWritePre,FileWritePre    *.gpg let shsave=&sh
+    autocmd BufWritePre,FileWritePre    *.gpg let &sh='sh'
+    autocmd BufWritePre,FileWritePre    *.gpg '[,']!gpg --encrypt
+        \   --default-recipient-self 2>/dev/null
+    autocmd BufWritePre,FileWritePre    *.gpg let &sh=shsave
 
-endif " has("autocmd")
+    " Undo the encryption so we are back in the normal text, directly
+    " after the file has been written.
+    autocmd BufWritePost,FileWritePost  *.gpg   silent u
+    autocmd BufWritePost,FileWritePost  *.gpg set nobin
+augroup END
 
 " =============================================================
 " Status line

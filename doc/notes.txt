@@ -901,7 +901,9 @@ To invoke the project window: >
     :Project
 
 Local customizations:
-  <F8>      - toggles the project window on and off.
+  <F8>            - toggles the project window on and off.
+  CTRL-Q CTRL-P   - toggles the project window on and off.
+  CTRL-Q P        - toggles the project window on and off.
 
 Version 1.4.1 from http://www.vim.org/scripts/script.php?script_id=69
 
@@ -1089,7 +1091,9 @@ TAGLIST                                                 *notes_taglist*
   Source code browser                                   |taglist.txt|
 
 Local customizations:
-  <s-F8>    - toggle the taglist (:TlistToggle)
+  <s-F8>        - toggle the taglist (:TlistToggle)
+  CTRL-Q CTRL-T - toggle the taglist (:TlistToggle)
+  CTRL-Q T      - toggle the taglist (:TlistToggle)
 
 Version 45 from http://www.vim.org/scripts/script.php?script_id=273
 
