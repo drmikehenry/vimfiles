@@ -59,9 +59,6 @@ nnoremap <leader>w <C-w>v<C-w>l
 nnoremap / /\v
 vnoremap / /\v
 
-" A short cut to turn off highlighted matches
-nnoremap <leader><space> :noh<cr>
-
 " Another way to toggle the taglist
 nmap <silent> <Leader>t :TlistToggle<CR>
 
