@@ -2,16 +2,16 @@ if has("mac") || has("macunix")
     let Tlist_Ctags_Cmd='/Users/jszakmeister/.local/bin/ctags'
 endif
 
+" Some reminders of the tag-related shortcuts, since I tend to check my
+" configuration first.
 " C-] - go to definition
 " C-T - Jump back from the definition.
 " C-W C-] - Open the definition in a horizontal split
 
-" Add these lines in vimrc
-map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
-map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
-
 " C-\ - Open the definition in a new tab
 " A-] - Open the definition in a vertical split
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
 " Emulate SlickEdit w/Emacs bindings: Use Ctrl-. and Ctrl-,
 " to pop in and out of the tags
