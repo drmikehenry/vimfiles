@@ -58,10 +58,3 @@ nnoremap <leader>w <C-w>v<C-w>l
 " / insert a /v in front of the regex.
 nnoremap / /\v
 vnoremap / /\v
-
-" Another way to toggle the taglist
-nmap <silent> <Leader>t :TlistToggle<CR>
-
-" Another way to toggle the project listing
-nmap <silent> <Leader>p <Plug>ToggleProject
-
