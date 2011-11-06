@@ -1896,6 +1896,17 @@ augroup local_vimrc
     " Show diffs when writing commit messages for git.
     autocmd FileType gitcommit DiffGitCached | wincmd J | wincmd p | resize 15
 
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event
+    " handler (happens when dropping a file on gvim).
+    "
+    " Keep this before the other BufReadPost autocmds, otherwise it will
+    " take precedence over them.
+    autocmd BufReadPost *
+                \ if line("'\"") > 0 && line("'\"") <= line("$") |
+                \   exe "normal g`\"" |
+                \ endif
+
     " Make sure we start at the top of the commit message when doing
     " a git commit.
     autocmd BufReadPost COMMIT_EDITMSG exe "normal! gg"
@@ -1916,14 +1927,6 @@ augroup local_vimrc
                         \call winrestview(b:winview) |
                         \endif
     endif
-
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event
-    " handler (happens when dropping a file on gvim).
-    autocmd BufReadPost *
-                \ if line("'\"") > 0 && line("'\"") <= line("$") |
-                \   exe "normal g`\"" |
-                \ endif
 
 augroup END
 
