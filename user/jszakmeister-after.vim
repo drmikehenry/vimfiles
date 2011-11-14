@@ -58,3 +58,7 @@ nnoremap <leader>w <C-w>v<C-w>l
 " / insert a /v in front of the regex.
 nnoremap / /\v
 vnoremap / /\v
+
+" Highlight Clojure's builtins and turn on rainbow parens
+let g:vimclojure#HighlightBuiltins=1
+let g:vimclojure#ParenRainbow=1
