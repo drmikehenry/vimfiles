@@ -31,10 +31,12 @@ if !has("gui_running")
         hi SpellCap   ctermbg=17
 
         " The highlighting for going past the rightmost column is also
-        " hard to read in a black terminal.  Tweak them too.
-        hi HG_Subtle  ctermfg=yellow ctermbg=52
-        hi HG_Warning ctermfg=yellow ctermbg=52
-        hi HG_Error   ctermfg=red    ctermbg=195
+        " hard to read (or to harsh to read) in a black terminal.  Tweak
+        " them too.
+        hi HG_Subtle        ctermfg=yellow ctermbg=52
+        hi HG_Warning       ctermfg=yellow ctermbg=52
+        hi HG_Error         ctermfg=red    ctermbg=195
+        hi Highlight_tabs   ctermbg=236
     endif
 endif
 
