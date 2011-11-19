@@ -20,6 +20,22 @@ map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
 if !has("gui_running")
     colorscheme elflord
+
+    if &t_Co > 255
+        " The highlighting scheme sucks for spelling errors.  Tweak them
+        " to be more readable.  Only do this for terminals that have
+        " 256 colors or better... which happens to be most of mine.
+        hi SpellBad   ctermbg=52
+        hi SpellRare  ctermbg=53
+        hi SpellLocal ctermbg=23
+        hi SpellCap   ctermbg=17
+
+        " The highlighting for going past the rightmost column is also
+        " hard to read in a black terminal.  Tweak them too.
+        hi HG_Subtle  ctermfg=yellow ctermbg=52
+        hi HG_Warning ctermfg=yellow ctermbg=52
+        hi HG_Error   ctermfg=red    ctermbg=195
+    endif
 endif
 
 if has("mac") || has("macunix")
