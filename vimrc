@@ -1396,7 +1396,7 @@ nnoremap <silent> <C-Q>t        :TlistToggle<CR>
 " UltiSnips
 " -------------------------------------------------------------
 if !exists('$ULTISNIPS')
-    let $ULTISNIPS=$VIMFILES . "/UltiSnips-1.5"
+    let $ULTISNIPS=$VIMFILES . "/UltiSnips-1.6"
 endif
 
 " Paths found earlier in runtimepath have higher snippet priority.

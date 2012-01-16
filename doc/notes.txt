@@ -1188,7 +1188,7 @@ scripts is used to define snippets.  For example, the file
 ~/.vim/UltiSnips by executing "make", followed in Vim by :UltiSnipsReset to
 reload the snippets.
 
-Version 1.3 from http://www.vim.org/scripts/script.php?script_id=2715
+Version 1.6 from http://www.vim.org/scripts/script.php?script_id=2715
 
 Installation:
 - If upgrading, remove ~/.vim/UltiSnips-old.version/
