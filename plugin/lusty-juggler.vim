@@ -1,4 +1,4 @@
-"    Copyright: Copyright (C) 2008-2010 Stephen Bach
+"    Copyright: Copyright (C) 2008-2011 Stephen Bach
 "               Permission is hereby granted to use and distribute this code,
 "               with or without modifications, provided that this copyright
 "               notice is copied with it. Like anything else that's free,
@@ -11,10 +11,11 @@
 "  Description: Dynamic Buffer Switcher Vim Plugin
 "   Maintainer: Stephen Bach <this-file@sjbach.com>
 " Contributors: Juan Frias, Bartosz Leper, Marco Barberis, Vincent Driessen,
-"               Martin Wache, Johannes Holzfuß
+"               Martin Wache, Johannes Holzfuß, Adam Rutkowski, Carlo Teubner,
+"               lilydjwg, Leonid Shevtsov, Giuseppe Rota, Göran Gustafsson
 "
-" Release Date: December 16, 2010
-"      Version: 1.2
+" Release Date: November 25, 2011
+"      Version: 1.4
 "
 "        Usage:
 "                 <Leader>lj  - Opens the buffer juggler.
@@ -23,7 +24,9 @@
 "
 "                 ":LustyJuggler"
 "
-"               (Personally, I map this to ,j)
+"               To suppress the default mapping, set this option:
+"
+"                 let g:LustyJugglerDefaultMappings = 0
 "
 "               When launched, the command bar at bottom is replaced with a
 "               new bar showing the names of currently-opened buffers in
@@ -42,7 +45,8 @@
 "
 "               If you want to switch to that buffer, press "f" or "4" again
 "               or press "<ENTER>".  Alternatively, press one of the other
-"               mapped keys to highlight another buffer.
+"               mapped keys to highlight another buffer.  To open the buffer
+"               in a new split, press "b" for horizontal or "v" for vertical.
 "
 "               To display the key with the name of the buffer, add one of
 "               the following lines to your .vimrc:
@@ -74,13 +78,13 @@
 "               immediately switch to your previously used buffer:
 "
 "                 ":LustyJugglePrevious"
-"               
+"
 "               This is similar to the ":b#" command, but accounts for the
 "               common situation where the previously used buffer (#) has
 "               been killed and is thus inaccessible.  In that case, it will
 "               instead switch to the buffer used before that one (and on down
 "               the line if that buffer has been killed too).
-"               
+"
 "
 " Install Details:
 "
@@ -116,7 +120,6 @@
 " GetLatestVimScripts: 2050 1 :AutoInstall: lusty-juggler.vim
 "
 " TODO:
-" - save and restore mappings
 " - Add TAB recognition back.
 " - Add option to open buffer immediately when mapping is pressed (but not
 "   release the juggler until the confirmation press).
@@ -155,7 +158,7 @@ if !has("ruby")
   if !exists("g:LustyExplorerSuppressRubyWarning") ||
       \ g:LustyExplorerSuppressRubyWarning == "0"
   if !exists("g:LustyJugglerSuppressRubyWarning") ||
-      \ g:LustyJugglerSuppressRubyWarning == "0" 
+      \ g:LustyJugglerSuppressRubyWarning == "0"
     echohl ErrorMsg
     echon "Sorry, LustyJuggler requires ruby.  "
     echon "Here are some tips for adding it:\n"
@@ -212,7 +215,13 @@ endfunction
 
 
 " Default mappings.
-nmap <silent> <Leader>lj :LustyJuggler<CR>
+if !exists("g:LustyJugglerDefaultMappings")
+  let g:LustyJugglerDefaultMappings = 1
+endif
+
+if g:LustyJugglerDefaultMappings == 1
+  nmap <silent> <Leader>lj :LustyJuggler<CR>
+endif
 
 " Vim-to-ruby function calls.
 function! s:LustyJugglerStart()
@@ -241,6 +250,7 @@ augroup End
 
 " Used to work around a flaw in Vim's ruby bindings.
 let s:maparg_holder = 0
+let s:maparg_dict_holder = { }
 
 ruby << EOF
 
@@ -289,6 +299,11 @@ module VIM
     nonzero? evaluate('has("syntax")')
   end
 
+  def self.has_ext_maparg?
+    # The 'dict' parameter to mapargs() was introduced in Vim 7.3.32
+    nonzero? evaluate('v:version > 703 || (v:version == 703 && has("patch32"))')
+  end
+
   def self.columns
     evaluate("&columns").to_i
   end
@@ -316,8 +331,9 @@ module VIM
   end
 
   def self.filename_escape(s)
-    # Escape slashes, open square braces, spaces, sharps, and double quotes.
-    s.gsub(/\\/, '\\\\\\').gsub(/[\[ #"]/, '\\\\\0')
+    # Escape slashes, open square braces, spaces, sharps, double quotes and
+    # percent signs.
+    s.gsub(/\\/, '\\\\\\').gsub(/[\[ #"%]/, '\\\\\0')
   end
 
   def self.regex_escape(s)
@@ -559,7 +575,18 @@ class LustyJuggler
       map_key("<CR>", ":call <SID>LustyJugglerKeyPressed('ENTER')<CR>")
       map_key("<Tab>", ":call <SID>LustyJugglerKeyPressed('TAB')<CR>")
 
+      # Split opener keys
+      map_key("v", ":call <SID>LustyJugglerKeyPressed('v')<CR>")
+      map_key("b", ":call <SID>LustyJugglerKeyPressed('b')<CR>")
+
+      # Left and Right keys
+      map_key("<Esc>OD", ":call <SID>LustyJugglerKeyPressed('Left')<CR>")
+      map_key("<Esc>OC", ":call <SID>LustyJugglerKeyPressed('Right')<CR>")
+      map_key("<Left>",  ":call <SID>LustyJugglerKeyPressed('Left')<CR>")
+      map_key("<Right>", ":call <SID>LustyJugglerKeyPressed('Right')<CR>")
+
       # Cancel keys.
+      map_key("i", ":call <SID>LustyJugglerCancel()<CR>")
       map_key("q", ":call <SID>LustyJugglerCancel()<CR>")
       map_key("<Esc>", ":call <SID>LustyJugglerCancel()<CR>")
       map_key("<C-c>", ":call <SID>LustyJugglerCancel()<CR>")
@@ -579,6 +606,17 @@ class LustyJuggler
       elsif @last_pressed and (@@KEYS[c] == @last_pressed or c == 'ENTER')
         choose(@last_pressed)
         cleanup()
+      elsif @last_pressed and %w(v b).include?(c)
+        c=='v' ? vsplit(@last_pressed) : hsplit(@last_pressed)
+        cleanup()
+      elsif c == 'Left'
+        @last_pressed = (@last_pressed.nil?) ? 0 : (@last_pressed)
+        @last_pressed = (@last_pressed - 1) < 1 ? $lj_buffer_stack.length : (@last_pressed - 1)
+        print_buffer_list(@last_pressed)
+      elsif c == 'Right'
+        @last_pressed = (@last_pressed.nil?) ? 0 : (@last_pressed)
+        @last_pressed = (@last_pressed + 1) > $lj_buffer_stack.length ? 1 : (@last_pressed + 1)
+        print_buffer_list(@last_pressed)
       else
         @last_pressed = @@KEYS[c]
         print_buffer_list(@last_pressed)
@@ -600,12 +638,20 @@ class LustyJuggler
       unmap_key("<CR>")
       unmap_key("<Tab>")
 
+      unmap_key("v")
+      unmap_key("b")
+
+      unmap_key("i")
       unmap_key("q")
       unmap_key("<Esc>")
       unmap_key("<C-c>")
       unmap_key("<BS>")
       unmap_key("<Del>")
       unmap_key("<C-h>")
+      unmap_key("<Esc>OC")
+      unmap_key("<Esc>OD")
+      unmap_key("<Left>")
+      unmap_key("<Right>")
 
       @running = false
       VIM::message ''
@@ -637,38 +683,51 @@ class LustyJuggler
       buf = $lj_buffer_stack.num_at_pos(i)
       VIM::command "b #{buf}"
     end
+    
+    def vsplit(i)
+      buf = $lj_buffer_stack.num_at_pos(i)
+      VIM::command "vert sb #{buf}"
+    end
+    
+    def hsplit(i)
+      buf = $lj_buffer_stack.num_at_pos(i)
+      VIM::command "sb #{buf}"
+    end
 
     def map_key(key, action)
-      ['n','v','o','i','c','l'].each do |mode|
+      ['n','s','x','o','i','c','l'].each do |mode|
         VIM::command "let s:maparg_holder = maparg('#{key}', '#{mode}')"
         if VIM::evaluate_bool("s:maparg_holder != ''")
-          @key_mappings_map[key] << [mode, VIM::evaluate('s:maparg_holder')]
+          orig_rhs = VIM::evaluate("s:maparg_holder")
+          if VIM::has_ext_maparg?
+            VIM::command "let s:maparg_dict_holder = maparg('#{key}', '#{mode}', 0, 1)"
+            nore    = VIM::evaluate_bool("s:maparg_dict_holder['noremap']") ? 'nore'      : ''
+            silent  = VIM::evaluate_bool("s:maparg_dict_holder['silent']")  ? ' <silent>' : ''
+            expr    = VIM::evaluate_bool("s:maparg_dict_holder['expr']")    ? ' <expr>'   : ''
+            buffer  = VIM::evaluate_bool("s:maparg_dict_holder['buffer']")  ? ' <buffer>' : ''
+            restore_cmd = "#{mode}#{nore}map#{silent}#{expr}#{buffer} #{key} #{orig_rhs}"
+          else
+            nore = LustyJ::starts_with?(orig_rhs, '<Plug>') ? '' : 'nore'
+            restore_cmd = "#{mode}#{nore}map <silent> #{key} #{orig_rhs}"
+          end
+          @key_mappings_map[key] << [ mode, restore_cmd ]
         end
         VIM::command "#{mode}noremap <silent> #{key} #{action}"
       end
     end
 
     def unmap_key(key)
-      modes_with_mappings_for_key = \
-        { 'n' => false,
-          'v' => false,
-          'o' => false,
-          'i' => false,
-          'c' => false,
-          'l' => false }
+      #first, unmap lusty_juggler's maps
+      ['n','s','x','o','i','c','l'].each do |mode|
+        VIM::command "#{mode}unmap <silent> #{key}"
+      end
 
       if @key_mappings_map.has_key?(key)
         @key_mappings_map[key].each do |a|
-          mode = a[0]
-          action = a[1]
-          VIM::command "#{mode}noremap <silent> #{key} #{action}"
-          modes_with_mappings_for_key[mode] = true
-        end
-      end
-
-      modes_with_mappings_for_key.each_pair do |mode, had_mapping|
-        unless had_mapping
-          VIM::command "#{mode}unmap <silent> #{key}"
+          mode, restore_cmd = *a
+          # for mappings that have on the rhs \|, the \ is somehow stripped
+          restore_cmd.gsub!("|", "\\|")
+          VIM::command restore_cmd
         end
       end
     end
@@ -739,7 +798,7 @@ class BufferItem < BarItem
         slash_color = @@SLASH_COLOR
       end
 
-      pieces = @str.split(File::SEPARATOR, -1) 
+      pieces = @str.split(File::SEPARATOR, -1)
 
       @array = []
       @array << dir_color
