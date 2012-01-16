@@ -1,7 +1,7 @@
 " NEVERNESS colour scheme
 " Author:      Yann GOLANSKI
-" Version:     1.1
-" Last Change: 22 May 2006
+" Version:     1.2
+" Last Change: 13 Jan 2010
 " url http://web.njit.edu/~kevin/rgb.txt.html
 
 set background=dark
@@ -13,67 +13,67 @@ endif
 let g:colors_name = 'neverness'
 
 " Comments: grey
-hi Comment        ctermfg=DarkCyan ctermbg=black  guifg=#848484 guibg=#000000 gui=none 
+hi Comment        ctermfg=DarkCyan     guifg=#848484 guibg=#000000 gui=none 
 
 " Constants: SkyBlue
-hi Boolean        ctermfg=Cyan      ctermbg=black  guifg=#87ceeb guibg=#000000 gui=none
-hi Character      ctermfg=Cyan      ctermbg=black  guifg=#87ceeb guibg=#000000 gui=none
-hi Constant       ctermfg=Cyan      ctermbg=black  guifg=#87ceeb guibg=#000000 gui=none
-hi Float          ctermfg=Cyan      ctermbg=black  guifg=#87ceeb guibg=#000000 gui=none
-hi Number         ctermfg=Cyan      ctermbg=black  guifg=#87ceeb guibg=#000000 gui=none
-hi String         ctermfg=Cyan      ctermbg=black  guifg=#87ceeb guibg=#000000 gui=none
+hi Boolean        ctermfg=Cyan          guifg=#87ceeb guibg=#000000 gui=none
+hi Character      ctermfg=Cyan          guifg=#87ceeb guibg=#000000 gui=none
+hi Constant       ctermfg=Cyan          guifg=#87ceeb guibg=#000000 gui=none
+hi Float          ctermfg=Cyan          guifg=#87ceeb guibg=#000000 gui=none
+hi Number         ctermfg=Cyan          guifg=#87ceeb guibg=#000000 gui=none
+hi String         ctermfg=Cyan          guifg=#87ceeb guibg=#000000 gui=none
 
 " Identifier: SteelBlue1
-hi Identifier     ctermfg=LightCyan ctermbg=black  guifg=#63b8ff guibg=#000000 gui=none
-hi Function       ctermfg=LightCyan ctermbg=black  guifg=#63b8ff guibg=#000000 gui=none
+hi Identifier     ctermfg=LightCyan     guifg=#63b8ff guibg=#000000 gui=none
+hi Function       ctermfg=LightCyan     guifg=#63b8ff guibg=#000000 gui=none
 
 " Statement: SteelBlue
-hi Conditional    ctermfg=DarkBlue  ctermbg=black  guifg=#4682b4 guibg=#000000 gui=bold
-hi Exception      ctermfg=DarkBlue  ctermbg=black  guifg=#4682b4 guibg=#000000 gui=bold
-hi Keyword        ctermfg=DarkBlue  ctermbg=black  guifg=#4682b4 guibg=#000000 gui=bold
-hi Label          ctermfg=DarkBlue  ctermbg=black  guifg=#4682b4 guibg=#000000 gui=bold
-hi Operator       ctermfg=DarkBlue  ctermbg=black  guifg=#4682b4 guibg=#000000 gui=bold
-hi Repeat         ctermfg=DarkBlue  ctermbg=black  guifg=#4682b4 guibg=#000000 gui=bold
-hi Statement      ctermfg=DarkBlue  ctermbg=black  guifg=#4682b4 guibg=#000000 gui=bold
+hi Conditional    ctermfg=DarkBlue      guifg=#4682b4 guibg=#000000 gui=bold
+hi Exception      ctermfg=DarkBlue      guifg=#4682b4 guibg=#000000 gui=bold
+hi Keyword        ctermfg=DarkBlue      guifg=#4682b4 guibg=#000000 gui=bold
+hi Label          ctermfg=DarkBlue      guifg=#4682b4 guibg=#000000 gui=bold
+hi Operator       ctermfg=DarkBlue      guifg=#4682b4 guibg=#000000 gui=bold
+hi Repeat         ctermfg=DarkBlue      guifg=#4682b4 guibg=#000000 gui=bold
+hi Statement      ctermfg=DarkBlue      guifg=#4682b4 guibg=#000000 gui=bold
 
 " PreProc: DarkOrchid1
-hi PreProc        ctermfg=DarkGreen ctermbg=black  guifg=#bf3eff guibg=#000000 gui=none
-hi Include        ctermfg=DarkGreen ctermbg=black  guifg=#bf3eff guibg=#000000 gui=none
-hi Define         ctermfg=DarkGreen ctermbg=black  guifg=#bf3eff guibg=#000000 gui=none
-hi Macro          ctermfg=DarkGreen ctermbg=black  guifg=#bf3eff guibg=#000000 gui=none
-hi PreCondit      ctermfg=DarkGreen ctermbg=black  guifg=#bf3eff guibg=#000000 gui=none
+hi PreProc        ctermfg=DarkGreen     guifg=#bf3eff guibg=#000000 gui=none
+hi Include        ctermfg=DarkGreen     guifg=#bf3eff guibg=#000000 gui=none
+hi Define         ctermfg=DarkGreen     guifg=#bf3eff guibg=#000000 gui=none
+hi Macro          ctermfg=DarkGreen     guifg=#bf3eff guibg=#000000 gui=none
+hi PreCondit      ctermfg=DarkGreen     guifg=#bf3eff guibg=#000000 gui=none
 
 " Type: orchid2
-hi Type           ctermfg=DarkGreen ctermbg=black  guifg=#ee7ae9 guibg=#000000 gui=bold
-hi StorageClass   ctermfg=DarkGreen ctermbg=black  guifg=#ee7ae9 guibg=#000000 gui=bold
-hi Structure      ctermfg=DarkGreen ctermbg=black  guifg=#ee7ae9 guibg=#000000 gui=bold
-hi Typedef        ctermfg=DarkGreen ctermbg=black  guifg=#ee7ae9 guibg=#000000 gui=bold
+hi Type           ctermfg=DarkGreen     guifg=#ee7ae9 guibg=#000000 gui=bold
+hi StorageClass   ctermfg=DarkGreen     guifg=#ee7ae9 guibg=#000000 gui=bold
+hi Structure      ctermfg=DarkGreen     guifg=#ee7ae9 guibg=#000000 gui=bold
+hi Typedef        ctermfg=DarkGreen     guifg=#ee7ae9 guibg=#000000 gui=bold
 
 " Special: cyan2
-hi Special        ctermfg=DarkGray  ctermbg=black  guifg=#00eeee guibg=#000000 gui=none
-hi SpecialChar    ctermfg=DarkGray  ctermbg=black  guifg=#00eeee guibg=#000000 gui=none
-hi Tag            ctermfg=DarkGray  ctermbg=black  guifg=#00eeee guibg=#000000 gui=none
-hi SpecialComment ctermfg=DarkGray  ctermbg=black  guifg=#00eeee guibg=#000000 gui=none
-hi Delimiter      ctermfg=DarkGray  ctermbg=black  guifg=#00eeee guibg=#000000 gui=none
-hi Debug          ctermfg=DarkGray  ctermbg=black  guifg=#00eeee guibg=#000000 gui=none
+hi Special        ctermfg=DarkGray      guifg=#00eeee guibg=#000000 gui=none
+hi SpecialChar    ctermfg=DarkGray      guifg=#00eeee guibg=#000000 gui=none
+hi Tag            ctermfg=DarkGray      guifg=#00eeee guibg=#000000 gui=none
+hi SpecialComment ctermfg=DarkGray      guifg=#00eeee guibg=#000000 gui=none
+hi Delimiter      ctermfg=DarkGray      guifg=#00eeee guibg=#000000 gui=none
+hi Debug          ctermfg=DarkGray      guifg=#00eeee guibg=#000000 gui=none
 
 " Underline: NavajoWhite2
-hi Underlined     ctermfg=LightGray ctermbg=black  guifg=#eecfa1 guibg=#000000 gui=none
+hi Underlined     ctermfg=LightGray     guifg=#eecfa1 guibg=#000000 gui=none
 
 " Ignore: black
-hi Ignore         ctermfg=LightGray ctermbg=black  guifg=#ffffff guibg=#000000 gui=none
+hi Ignore         ctermfg=LightGray     guifg=#ffffff guibg=#000000 gui=none
 
 " Error: red
-hi Error          ctermfg=LightGray ctermbg=black  guifg=#ff0000 guibg=#232323 gui=bold
+hi Error          ctermfg=LightGray     guifg=#ff0000 guibg=#232323 gui=bold
 
 " To do: SlateGray3
-hi Todo           ctermfg=LightMagenta ctermbg=black  guifg=#9fb6cd guibg=#232323 gui=none
+hi Todo           ctermfg=LightMagenta     guifg=#9fb6cd guibg=#232323 gui=none
 
 " Spelling...
-hi SpellBad    ctermfg=DarkRed    ctermbg=black
-hi SpellCap    ctermfg=DarkBlue   ctermbg=black
-hi SpellRare   ctermfg=DarkYellow ctermbg=black
-hi SpellLocal  ctermfg=DarkGreen  ctermbg=black
+hi SpellBad    ctermfg=DarkRed      ctermbg=black
+hi SpellCap    ctermfg=DarkBlue     ctermbg=black
+hi SpellRare   ctermfg=DarkYellow   ctermbg=black
+hi SpellLocal  ctermfg=DarkGreen    ctermbg=black
 
 " "set cursorline"  and "set cursorcolumn" options.
 hi lCursor        guifg=#43705a guibg=#e6fff3 gui=none
@@ -81,8 +81,8 @@ hi CursorColumn   guibg=#222222 gui=none
 hi CursorLine     guibg=#222222 gui=none
 
 " Line number.
-"hi LineNr         ctermfg=DarkMagenta ctermbg=black  guifg=#4682b4 guibg=#000000 gui=bold
-hi LineNr         ctermfg=DarkMagenta ctermbg=black  guifg=#213d54 guibg=#000000 gui=none
+"hi LineNr         ctermfg=DarkMagenta     guifg=#4682b4 guibg=#000000 gui=bold
+hi LineNr         ctermfg=DarkMagenta     guifg=#2b506e guibg=#000000 gui=none
 
 " Normal colour: just white thank you.
 hi Normal         guifg=#ffffff guibg=#000000 gui=none
@@ -114,3 +114,28 @@ hi Visual         guifg=#e6fff3 guibg=#61a181 gui=none
 hi VisualNOS      guifg=#9bcfb5 guibg=#000000 gui=none
 hi WarningMsg     guifg=#BF3EFF guibg=#000000 gui=bold
 hi WildMenu       guifg=#43705a guibg=#e6fff3 gui=none
+
+" OTL
+hi normal guifg=white guibg=black	ctermfg=white ctermbg=black
+hi VertSplit guifg=white guibg=black	ctermfg=white ctermbg=black
+hi Folded guifg=darkcyan guibg=bg	ctermfg=cyan ctermbg=black
+hi FoldColumn guifg=darkcyan guibg=bg	ctermfg=cyan ctermbg=black
+
+hi def OL0 ctermfg=1 cterm=bold gui=bold guifg=#36648B term=reverse
+hi def OL1 ctermfg=4 cterm=bold gui=bold guifg=#4682B4 term=reverse
+hi def OL2 ctermfg=2 cterm=bold gui=bold guifg=#4F94CD term=reverse
+hi def OL3 ctermfg=3 cterm=bold gui=bold guifg=#5CACEE term=reverse
+hi def OL4 ctermfg=5 cterm=bold gui=bold guifg=#63B8FF term=reverse
+hi def OL5 ctermfg=6 cterm=bold gui=bold guifg=#708090 term=reverse
+hi def OL6 ctermfg=1 cterm=bold gui=bold guifg=#6C7B8B term=reverse
+hi def OL7 ctermfg=4 cterm=bold gui=bold guifg=#9FB6CD term=reverse
+hi def OL8 ctermfg=2 cterm=bold gui=bold guifg=#B9D3EE term=reverse
+hi def OL9 ctermfg=3 cterm=bold gui=bold guifg=#C6E2FF term=reverse
+
+
+" PMenu from Sam Grönblom <sgronblo@gmail.com>
+hi PmenuSel    ctermfg=Black ctermbg=Cyan      guifg=#000000 guibg=#87ceeb gui=none
+hi Pmenu       ctermfg=White ctermbg=DarkBlue  guifg=#000000 guibg=#4682b4 gui=none
+hi PmenuSbar   ctermfg=White ctermbg=LightCyan guifg=#ffffff guibg=#848484 gui=none
+hi PmenuThumb  ctermfg=White ctermbg=DarkGreen guifg=#ffffff guibg=#87ceeb gui=none
+

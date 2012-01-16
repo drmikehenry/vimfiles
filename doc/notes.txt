@@ -241,7 +241,7 @@ Schemes recommended by Matt Gilbert:
 - ps_color
 - darkblue2
 
-Version 7.01 from http://www.vim.org/scripts/script.php?script_id=625
+Version 8.03 from http://www.vim.org/scripts/script.php?script_id=625
 
 Installation:
 - Unzip in ~/.vim/
