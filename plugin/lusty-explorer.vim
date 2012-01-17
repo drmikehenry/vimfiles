@@ -1,4 +1,4 @@
-"    Copyright: Copyright (C) 2007-2010 Stephen Bach
+"    Copyright: Copyright (C) 2007-2011 Stephen Bach
 "               Permission is hereby granted to use and distribute this code,
 "               with or without modifications, provided that this copyright
 "               notice is copied with it. Like anything else that's free,
@@ -16,9 +16,11 @@
 "               Matt Tolton, Björn Winckler, sowill, David Brown
 "               Brett DiFrischia, Ali Asad Lotia, Kenneth Love, Ben Boeckel,
 "               robquant, lilydjwg, Martin Wache, Johannes Holzfuß
+"               Donald Curtis, Jan Zwiener, Giuseppe Rota, Toby O'Connell,
+"               Göran Gustafsson
 "
-" Release Date: December 16, 2010
-"      Version: 4.0
+" Release Date: November 25, 2011
+"      Version: 4.2
 "
 "        Usage:
 "                 <Leader>lf  - Opens the filesystem explorer.
@@ -30,12 +32,14 @@
 "
 "               You can also use the commands:
 "
-"                 ":LustyFilesystemExplorer"
+"                 ":LustyFilesystemExplorer [optional-path]"
 "                 ":LustyFilesystemExplorerFromHere"
 "                 ":LustyBufferExplorer"
 "                 ":LustyBufferGrep"
 "
-"               (Personally, I map these to ,f ,r ,b and ,g)
+"               To suppress the default mappings, set this option:
+"
+"                 let g:LustyExplorerDefaultMappings = 0
 "
 "               When launched, a new window appears at bottom presenting a
 "               table of files/dirs or buffers, and in the status bar a
@@ -59,6 +63,8 @@
 "
 "                 <C-n>    select [n]ext match
 "                 <C-p>    select [p]revious match
+"                 <C-f>    select [f]orward one column
+"                 <C-b>    select [b]ack one column
 "
 "                 <C-u>    clear prompt
 "
@@ -242,8 +248,8 @@ let g:loaded_lustyexplorer = "yep"
 
 " Commands.
 command LustyBufferExplorer :call <SID>LustyBufferExplorerStart()
-command LustyFilesystemExplorer :call <SID>LustyFilesystemExplorerStart()
-command LustyFilesystemExplorerFromHere :call <SID>LustyFilesystemExplorerFromHereStart()
+command -nargs=? LustyFilesystemExplorer :call <SID>LustyFilesystemExplorerStart("<args>")
+command LustyFilesystemExplorerFromHere :call <SID>LustyFilesystemExplorerStart(expand("%:p:h"))
 command LustyBufferGrep :call <SID>LustyBufferGrepStart()
 
 " Deprecated command names.
@@ -263,18 +269,20 @@ endfunction
 
 
 " Default mappings.
-nmap <silent> <Leader>lf :LustyFilesystemExplorer<CR>
-nmap <silent> <Leader>lr :LustyFilesystemExplorerFromHere<CR>
-nmap <silent> <Leader>lb :LustyBufferExplorer<CR>
-nmap <silent> <Leader>lg :LustyBufferGrep<CR>
+if !exists("g:LustyExplorerDefaultMappings")
+  let g:LustyExplorerDefaultMappings = 1
+endif
+
+if g:LustyExplorerDefaultMappings == 1
+  nmap <silent> <Leader>lf :LustyFilesystemExplorer<CR>
+  nmap <silent> <Leader>lr :LustyFilesystemExplorerFromHere<CR>
+  nmap <silent> <Leader>lb :LustyBufferExplorer<CR>
+  nmap <silent> <Leader>lg :LustyBufferGrep<CR>
+endif
 
 " Vim-to-ruby function calls.
-function! s:LustyFilesystemExplorerStart()
-  ruby LustyE::profile() { $lusty_filesystem_explorer.run_from_wd }
-endfunction
-
-function! s:LustyFilesystemExplorerFromHereStart()
-  ruby LustyE::profile() { $lusty_filesystem_explorer.run_from_here }
+function! s:LustyFilesystemExplorerStart(path)
+  exec "ruby LustyE::profile() { $lusty_filesystem_explorer.run_from_path('".a:path."') }"
 endfunction
 
 function! s:LustyBufferExplorerStart()
@@ -370,6 +378,11 @@ module VIM
     nonzero? evaluate('has("syntax")')
   end
 
+  def self.has_ext_maparg?
+    # The 'dict' parameter to mapargs() was introduced in Vim 7.3.32
+    nonzero? evaluate('v:version > 703 || (v:version == 703 && has("patch32"))')
+  end
+
   def self.columns
     evaluate("&columns").to_i
   end
@@ -397,8 +410,9 @@ module VIM
   end
 
   def self.filename_escape(s)
-    # Escape slashes, open square braces, spaces, sharps, and double quotes.
-    s.gsub(/\\/, '\\\\\\').gsub(/[\[ #"]/, '\\\\\0')
+    # Escape slashes, open square braces, spaces, sharps, double quotes and
+    # percent signs.
+    s.gsub(/\\/, '\\\\\\').gsub(/[\[ #"%]/, '\\\\\0')
   end
 
   def self.regex_escape(s)
@@ -819,11 +833,51 @@ class Explorer
           @selected_index = 0
         when 14               # C-n (select next)
           @selected_index = \
-            (@selected_index + 1) % @current_sorted_matches.size
+            if @current_sorted_matches.size.zero?
+              0
+            else
+              (@selected_index + 1) % @current_sorted_matches.size
+            end
           refresh_mode = :no_recompute
         when 16               # C-p (select previous)
           @selected_index = \
-            (@selected_index - 1) % @current_sorted_matches.size
+            if @current_sorted_matches.size.zero?
+              0
+            else
+              (@selected_index - 1) % @current_sorted_matches.size
+            end
+          refresh_mode = :no_recompute
+        when 6                # C-f (select right)
+          @selected_index = \
+            if @row_count.nil? || @row_count.zero?
+              0
+            else
+              columns = \
+                (@current_sorted_matches.size.to_f / @row_count.to_f).ceil
+              cur_column = @selected_index / @row_count
+              cur_row = @selected_index % @row_count
+              new_column = (cur_column + 1) % columns
+              if (new_column + 1) * (cur_row + 1) > @current_sorted_matches.size
+                new_column = 0
+              end
+              new_column * @row_count + cur_row
+            end
+          refresh_mode = :no_recompute
+        when 2                # C-b (select left)
+          @selected_index = \
+            if @row_count.nil? || @row_count.zero?
+              0
+            else
+              columns = \
+                (@current_sorted_matches.size.to_f / @row_count.to_f).ceil
+              cur_column = @selected_index / @row_count
+              cur_row = @selected_index % @row_count
+              new_column = (cur_column - 1) % columns
+              if (new_column + 1) * (cur_row + 1) > @current_sorted_matches.size
+                new_column = columns - 2
+              end
+              new_column * @row_count + cur_row
+            end
           refresh_mode = :no_recompute
         when 15               # C-o choose in new horizontal split
           choose(:new_split)
@@ -867,7 +921,7 @@ class Explorer
 
       on_refresh()
       highlight_selected_index() if VIM::has_syntax?
-      @display.print @current_sorted_matches.map { |x| x.label }
+      @row_count = @display.print @current_sorted_matches.map { |x| x.label }
       @prompt.print Display.max_width
     end
 
@@ -1053,21 +1107,15 @@ class FilesystemExplorer < Explorer
       super
     end
 
-    def run_from_here
+    def run_from_path(path)
       return if @running
-      start_path = if $curbuf.name.nil?
-                     VIM::getcwd()
-                   else
-                     VIM::evaluate("expand('%:p:h')")
-                   end
-
-      @prompt.set!(start_path + File::SEPARATOR)
-      run()
-    end
-
-    def run_from_wd
-      return if @running
-      @prompt.set!(VIM::getcwd() + File::SEPARATOR)
+      if path.empty?
+        path = VIM::getcwd()
+      end
+      if path.respond_to?(:force_encoding)
+        path = path.force_encoding(VIM::evaluate('&enc'))
+      end
+      @prompt.set!(path + File::SEPARATOR)
       run()
     end
 
@@ -1810,6 +1858,10 @@ class Display
         VIM::command 'highlight link LustyFileWithSwap WarningMsg'
         VIM::command 'highlight link LustyNoEntries ErrorMsg'
         VIM::command 'highlight link LustyTruncated Visual'
+
+        if VIM::exists? '*clearmatches'
+          VIM::evaluate 'clearmatches()'
+        end
       end
 
       #
@@ -1848,12 +1900,22 @@ class Display
       VIM::command "#{map} <C-w>    :call <SID>#{prefix}KeyPressed(23)<CR>"
       VIM::command "#{map} <C-n>    :call <SID>#{prefix}KeyPressed(14)<CR>"
       VIM::command "#{map} <C-p>    :call <SID>#{prefix}KeyPressed(16)<CR>"
+      VIM::command "#{map} <C-f>    :call <SID>#{prefix}KeyPressed(6)<CR>"
+      VIM::command "#{map} <C-b>    :call <SID>#{prefix}KeyPressed(2)<CR>"
       VIM::command "#{map} <C-o>    :call <SID>#{prefix}KeyPressed(15)<CR>"
       VIM::command "#{map} <C-t>    :call <SID>#{prefix}KeyPressed(20)<CR>"
       VIM::command "#{map} <C-v>    :call <SID>#{prefix}KeyPressed(22)<CR>"
       VIM::command "#{map} <C-e>    :call <SID>#{prefix}KeyPressed(5)<CR>"
       VIM::command "#{map} <C-r>    :call <SID>#{prefix}KeyPressed(18)<CR>"
       VIM::command "#{map} <C-u>    :call <SID>#{prefix}KeyPressed(21)<CR>"
+      VIM::command "#{map} <Esc>OD  :call <SID>#{prefix}KeyPressed(2)<CR>"
+      VIM::command "#{map} <Esc>OC  :call <SID>#{prefix}KeyPressed(6)<CR>"
+      VIM::command "#{map} <Esc>OA  :call <SID>#{prefix}KeyPressed(16)<CR>"
+      VIM::command "#{map} <Esc>OB  :call <SID>#{prefix}KeyPressed(14)<CR>"
+      VIM::command "#{map} <Left>   :call <SID>#{prefix}KeyPressed(2)<CR>"
+      VIM::command "#{map} <Right>  :call <SID>#{prefix}KeyPressed(6)<CR>"
+      VIM::command "#{map} <Up>     :call <SID>#{prefix}KeyPressed(16)<CR>"
+      VIM::command "#{map} <Down>   :call <SID>#{prefix}KeyPressed(14)<CR>"
     end
 
     def print(strings)
@@ -1889,6 +1951,7 @@ class Display
       end
 
       print_rows(rows, truncated)
+      row_count
     end
 
     def close

@@ -1396,7 +1396,7 @@ nnoremap <silent> <C-Q>t        :TlistToggle<CR>
 " UltiSnips
 " -------------------------------------------------------------
 if !exists('$ULTISNIPS')
-    let $ULTISNIPS=$VIMFILES . "/UltiSnips-1.5"
+    let $ULTISNIPS=$VIMFILES . "/UltiSnips-1.6"
 endif
 
 " Paths found earlier in runtimepath have higher snippet priority.
@@ -2080,7 +2080,9 @@ if has("gui_running")
 
     " Setup nice fonts.
     if has("gui_gtk2")
-        set guifont=Inconsolata\ Medium\ 12,Bitstream\ Vera\ Sans\ Mono\ 12
+        set guifont=PragmataPro\ 12,
+                    \Inconsolata\ Medium\ 12,
+                    \Bitstream\ Vera\ Sans\ Mono\ 12
 
     elseif has("x11")
         set guifont=-*-lucidatypewriter-medium-r-normal-*-*-100-*-*-m-*-*

@@ -31,8 +31,8 @@ hi Question                  gui=NONE guifg=#008050 guibg=NONE
 " Completion Popup Menu
 hi Pmenu                     gui=NONE guifg=#303040 guibg=#ccff00
 hi PmenuSel                  gui=NONE guifg=#303040 guibg=#ffff00
-" hi PmenuSbar  scrollbar  |hl-PmenuSbar|
-" hi PmenuThumb thumb of the scrollbar  |hl-PmenuThumb|
+" hi PmenuSbar	scrollbar  |hl-PmenuSbar|
+" hi PmenuThumb	thumb of the scrollbar  |hl-PmenuThumb|
 
 " Split area
 hi StatusLine                gui=ITALIC guifg=white   guibg=#8090a0
@@ -90,21 +90,21 @@ hi Keyword                   gui=None guifg=DarkBlue guibg=bg
 hi Exception                 gui=None guifg=DarkBlue guibg=bg
 hi Function                  gui=BOLD guifg=#3E0F70
 
-hi! link String Constant
+hi! link String	Constant
 hi! link SpecialComment Comment
-hi! link Character      Constant
-hi! link Boolean        Constant
-hi! link Float          Number
-hi! link Label          Statement
-hi! link Include        PreProc
-hi! link Define PreProc
-hi! link Macro          PreProc
-hi! link PreCondit      PreProc
-hi! link StorageClass   Type
-hi! link Structure      Type
-hi! link Typedef        Type
-hi! link SpecialChar    Special
-hi! link Debug          Special
+hi! link Character	Constant
+hi! link Boolean	Constant
+hi! link Float		Number
+hi! link Label		Statement
+hi! link Include	PreProc
+hi! link Define	PreProc
+hi! link Macro		PreProc
+hi! link PreCondit	PreProc
+hi! link StorageClass	Type
+hi! link Structure	Type
+hi! link Typedef	Type
+hi! link SpecialChar	Special
+hi! link Debug		Special
 
 " HTML
 hi htmlLink                  gui=UNDERLINE guifg=#0000ff guibg=NONE

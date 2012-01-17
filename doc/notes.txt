@@ -241,7 +241,7 @@ Schemes recommended by Matt Gilbert:
 - ps_color
 - darkblue2
 
-Version 7.01 from http://www.vim.org/scripts/script.php?script_id=625
+Version 8.03 from http://www.vim.org/scripts/script.php?script_id=625
 
 Installation:
 - Unzip in ~/.vim/
@@ -260,7 +260,7 @@ Note Command-t's default key sequence, <Leader>t, is taken by Align plugin.
 
 Find more information in the |command-t| help page.
 
-Version 1.2.1 from http://www.vim.org/scripts/script.php?script_id=3025
+Version 1.3.1 from http://www.vim.org/scripts/script.php?script_id=3025
 
 Installation:
 
@@ -653,12 +653,14 @@ Usage (taken from lusty-explorer.vim):
 
 You can also use the commands:
 
-  ":LustyFilesystemExplorer"
+  ":LustyFilesystemExplorer [optional-path]"
   ":LustyFilesystemExplorerFromHere"
   ":LustyBufferExplorer"
   ":LustyBufferGrep"
 
-(Personally, I map these to ,f ,r ,b and ,g)
+To suppress the default mappings, set this option:
+
+  let g:LustyExplorerDefaultMappings = 0
 
 When launched, a new window appears at bottom presenting a
 table of files/dirs or buffers, and in the status bar a
@@ -682,6 +684,8 @@ grep).  Special keys include:
 
   <C-n>    select [n]ext match
   <C-p>    select [p]revious match
+  <C-f>    select [f]orward one column
+  <C-b>    select [b]ack one column
 
   <C-u>    clear prompt
 
@@ -756,7 +760,9 @@ Usage (taken from lusty-juggler.vim):
 
          ":LustyJuggler"
 
-       (Personally, I map this to ,j)
+       To suppress the default mapping, set this option:
+
+         let g:LustyJugglerDefaultMappings = 0
 
        When launched, the command bar at bottom is replaced with a
        new bar showing the names of currently-opened buffers in
@@ -775,7 +781,8 @@ Usage (taken from lusty-juggler.vim):
 
        If you want to switch to that buffer, press "f" or "4" again
        or press "<ENTER>".  Alternatively, press one of the other
-       mapped keys to highlight another buffer.
+       mapped keys to highlight another buffer.  To open the buffer
+       in a new split, press "b" for horizontal or "v" for vertical.
 
        To display the key with the name of the buffer, add one of
        the following lines to your .vimrc:
@@ -807,7 +814,7 @@ Bonus: This plugin also includes the following command, which will
        immediately switch to your previously used buffer:
 
          ":LustyJugglePrevious"
-       
+
        This is similar to the ":b#" command, but accounts for the
        common situation where the previously used buffer (#) has
        been killed and is thus inaccessible.  In that case, it will
@@ -818,7 +825,7 @@ Bonus: This plugin also includes the following command, which will
 Development versions found at: http://github.com/sjbach/lusty
 
 Released versions appear here:
-Version 1.2 from http://www.vim.org/scripts/script.php?script_id=2050
+Version 1.4 from http://www.vim.org/scripts/script.php?script_id=2050
 
 Installation:
 - Install in ~/.vim/plugin
@@ -1188,7 +1195,7 @@ scripts is used to define snippets.  For example, the file
 ~/.vim/UltiSnips by executing "make", followed in Vim by :UltiSnipsReset to
 reload the snippets.
 
-Version 1.3 from http://www.vim.org/scripts/script.php?script_id=2715
+Version 1.6 from http://www.vim.org/scripts/script.php?script_id=2715
 
 Installation:
 - If upgrading, remove ~/.vim/UltiSnips-old.version/
