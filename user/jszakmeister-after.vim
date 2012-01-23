@@ -21,6 +21,13 @@ map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 if !has("gui_running")
     colorscheme elflord
 
+    if (has("mac") || has("macunix")) && $TERM_PROGRAM == "iTerm.app"
+        " This works only in iTerm... but that's what I use on the Mac.
+        " Set the cursor to a vertical line in insert mode.
+        let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+        let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+    endif
+
     if &t_Co > 255
         " The highlighting scheme sucks for spelling errors.  Tweak them
         " to be more readable.  Only do this for terminals that have
