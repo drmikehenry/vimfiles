@@ -79,11 +79,6 @@ map <leader>s :call ToggleScratch()<CR>
 " Split the window vertically, and go to it.
 nnoremap <leader>w <C-w>v<C-w>l
 
-" Use a regex format that I already know well by having
-" / insert a /v in front of the regex.
-nnoremap / /\v
-vnoremap / /\v
-
 " Highlight Clojure's builtins and turn on rainbow parens
 let g:vimclojure#HighlightBuiltins=1
 let g:vimclojure#ParenRainbow=1
