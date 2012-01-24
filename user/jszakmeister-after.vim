@@ -87,3 +87,9 @@ vnoremap / /\v
 " Highlight Clojure's builtins and turn on rainbow parens
 let g:vimclojure#HighlightBuiltins=1
 let g:vimclojure#ParenRainbow=1
+
+" I keep my nailgun client in ~/.local/bin.  If it's there, then let
+" VimClojure know.
+if executable(expand("~/.local/bin/ng"))
+    let g:vimclojure#NailgunClient=expand("~/.local/bin/ng")
+endif
