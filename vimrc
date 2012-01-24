@@ -1639,7 +1639,9 @@ function! SetupRstSyntax()
         execute cmd
         hi link embeddedSyntax SpecialComment
     endfunction
-    for lang in split("cpp html python java")
+    " NOTE: Embedding java causes spell checking to be disabled, because
+    " the syntax file for java monkeys with the spell checking settings.
+    for lang in split("cpp html python")
         call SyntaxInclude('embedded_' . lang, lang)
         call l:EmbedSourceAs(lang, lang)
     endfor
