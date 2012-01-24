@@ -93,3 +93,6 @@ let g:vimclojure#ParenRainbow=1
 if executable(expand("~/.local/bin/ng"))
     let g:vimclojure#NailgunClient=expand("~/.local/bin/ng")
 endif
+
+" I often want to close a buffer without closing the window
+nnoremap <leader><leader>d :BD<CR>
