@@ -1639,7 +1639,9 @@ function! SetupRstSyntax()
         execute cmd
         hi link embeddedSyntax SpecialComment
     endfunction
-    for lang in split("cpp html python java")
+    " NOTE: Embedding java causes spell checking to be disabled, because
+    " the syntax file for java monkeys with the spell checking settings.
+    for lang in split("cpp html python")
         call SyntaxInclude('embedded_' . lang, lang)
         call l:EmbedSourceAs(lang, lang)
     endfor
@@ -2080,9 +2082,22 @@ if has("gui_running")
 
     " Setup nice fonts.
     if has("gui_gtk2")
-        set guifont=PragmataPro\ 12,
-                    \Inconsolata\ Medium\ 12,
-                    \Bitstream\ Vera\ Sans\ Mono\ 12
+
+        " The documentation for 'guifont' claims that fonts can be
+        " comma-separated, and that the first font to be found will
+        " be used.  This doesn't seem to be the case for me.  When
+        " the first font isn't available, no other fonts are tried,
+        " and Vim falls back to a default font.  So, this ugly
+        " hack lets me try PragmataPro at home but still have reasonable
+        " fonts elsewhere.
+        " TODO: Find a better solution fallback fonts.
+        if filereadable($HOME . "/.fonts/p/PragmataPro.ttf")
+            set guifont=PragmataPro\ 12
+        else
+            set guifont=DejaVu\ Sans\ Mono\ 12
+            "set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
+            "set guifont=Inconsolata\ Medium\ 13
+        endif
 
     elseif has("x11")
         set guifont=-*-lucidatypewriter-medium-r-normal-*-*-100-*-*-m-*-*
