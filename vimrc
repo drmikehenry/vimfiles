@@ -1362,7 +1362,8 @@ xmap <Leader>s <Plug>Vsurround
 " -------------------------------------------------------------
 
 " Must have ctags of some kind or keep plugin from running.
-if !executable("ctags") && !executable("ctags.exe")
+let usingTaglist = executable("ctags") || executable("ctags.exe")
+if !usingTaglist
     let loaded_taglist = 'no'
 endif
 
@@ -2018,7 +2019,9 @@ if has('statusline') && version >= 700
     set statusline+=\                              " Space
 
 "   set statusline+=%{strlen(&ft)?&ft:'none'},     " File type
-    set statusline+=%(%{Tlist_Get_Tagname_By_Line()}%) " Function name
+    if usingTaglist
+        set statusline+=%(%{Tlist_Get_Tagname_By_Line()}%) " Function name
+    endif
 "   set statusline+=,%{SyntaxItem()}               " Syntax group under cursor
     set statusline+=\                              " Space
 
