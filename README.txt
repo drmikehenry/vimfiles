@@ -92,3 +92,20 @@ following methods for informing Vim:
     set runtimepath+=c:\vimfiles\after
 
   - Now move the checkout of ``vimfiles`` to become ``C:\vimfiles``.
+
+ctags support
+-------------
+
+For ctags support, ensure that Exuberant ctags.exe is in the PATH.  This will
+enable the TagList plugin.
+
+Ruby-based plugins
+------------------
+
+Install the Ruby programming language for Windows to enable the Ruby-based
+plugins (e.g., Lusty Explorer) to work.  Ensure the Ruby interpreter is in the
+PATH.  Also, ensure your build of Gvim for Windows includes the Ruby
+interpreter. (Note: the "Vim without Cream" build does *not* include Ruby).
+To see if Ruby is included, run the following from within Gvim::
+
+  :echo has("ruby")
