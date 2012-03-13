@@ -91,3 +91,15 @@ endif
 
 " I often want to close a buffer without closing the window
 nnoremap <leader><leader>d :BD<CR>
+
+function! SetupManPager()
+    setlocal nonu nolist
+    nnoremap <Space> <PageDown>
+    nnoremap b <PageUp>
+    nnoremap q :quit<CR>
+endfunction
+command! SetupManPager call SetupManPager()
+
+augroup jszakmeister_vimrc
+    autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
+augroup END
