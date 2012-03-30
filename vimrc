@@ -942,8 +942,10 @@ endfunction
 " set tags+=/usr/local/share/ctags/qt4
 "
 " Start at working directory or directory of currently open file
-" and search upward, stopping at $HOME.
-set tags=./tags;$HOME
+" and search upward, stopping at $HOME.  Secondly, search for a
+" tags file upward from the current working directory, but stop
+" at $HOME.
+set tags=./tags;$HOME,tags;$HOME
 
 " Use the following settings in a .ctags file.  With the
 " --extra=+f, filenames are tags, too, so the following
