@@ -1898,8 +1898,11 @@ augroup local_vimrc
     " First, remove all autocmds in this group.
     autocmd!
 
-    " Show diffs when writing commit messages for git.
-    autocmd FileType gitcommit DiffGitCached | wincmd J | wincmd p | resize 15
+    " Show diffs when writing commit messages for git, and turn on
+    " spell checking.
+    autocmd FileType gitcommit
+                \ DiffGitCached | wincmd J | wincmd p |
+                \ resize 15 | setlocal spell
 
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event
