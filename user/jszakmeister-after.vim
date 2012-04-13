@@ -18,9 +18,9 @@ map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 "nnoremap <C-.> :tag
 "nnoremap <C-,> :pop
 
-if !has("gui_running")
-    colorscheme elflord
+colorscheme szakdark
 
+if !has("gui_running")
     if (has("mac") || has("macunix")) && $TERM_PROGRAM == "iTerm.app"
         " This works only in iTerm... but that's what I use on the Mac.
         " Set the cursor to a vertical line in insert mode.
