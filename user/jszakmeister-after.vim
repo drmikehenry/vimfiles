@@ -48,7 +48,11 @@ if !has("gui_running")
 endif
 
 if has("mac") || has("macunix")
-    set guifont=Droid\ Sans\ Mono:h14,Inconsolata:h16
+    if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf"))
+        set guifont=Droid\ Sans\ Mono\ Slashed\ for\ Powerline:h14
+    else
+        set guifont=Droid\ Sans\ Mono:h14,Inconsolata:h16
+    endif
     " let Grep_Xargs_Options = -0
 endif
 
@@ -109,3 +113,11 @@ set wildignore+=target/**,asset-cache
 
 " I regularly create tmp folders that I don't want searched
 set wildignore+=tmp
+
+" Turn on fancy symbols on the status line
+if has("gui_running")
+    if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf"))
+        let g:Powerline_symbols = 'fancy'
+    endif
+    "let g:Powerline_symbols = 'unicode'
+endif
