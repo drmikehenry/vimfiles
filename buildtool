@@ -178,7 +178,8 @@ function build()
             make install DESTDIR=`pwd`/DESTDIR && \
             find DESTDIR -type d -print0 | xargs -0 chmod go-w && \
             echo "  Creating tar from $VIMDIR/DESTDIR" && \
-            tar -C DESTDIR --owner=root --group=root -zcf $TARNAME . && \
+            tar -C DESTDIR --numeric-owner --owner=0 --group=0 \
+                -zcf $TARNAME . && \
             echo "  Created archive $VIMDIR/$TARNAME"
     )
 }
