@@ -238,7 +238,7 @@ CTRLP                                                   *notes_ctrlp*
   Fuzzy matches for files, buffers, etc.
 
 
-Version 2012-04-25 from https://github.com/MarcWeber
+Version 2012-04-25 from https://github.com/kien/ctrlp.vim.git
 
 Installation:
 - Unpack to ~/.vim/bundle/ctrlp
