@@ -10,6 +10,7 @@
     bufmru - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
+    CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsampler|
     Command-T - File finder a la TextMate Command-T     |notes_command-t|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
@@ -231,6 +232,18 @@ Installation:
 - Install as ~/.vim/scripts/closetag.vim
 - In ~/.vim/scripts.vim, source the script as part of per-filetype setup: >
     runtime scripts/closetag.vim
+
+------------------------------------------------------------------------------
+CTRLP                                                   *notes_ctrlp*
+  Fuzzy matches for files, buffers, etc.
+
+
+Version 2012-04-25 from https://github.com/MarcWeber
+
+Installation:
+- Unpack to ~/.vim/bundle/ctrlp
+- Add above directory to runtimepath
+- :helptags ~/.vim/bundle/ctrlp/doc
 
 ------------------------------------------------------------------------------
 COLORSAMPLERPACK                                        *notes_colorsampler*

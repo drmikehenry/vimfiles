@@ -1184,6 +1184,72 @@ nnoremap <Leader><Leader>r :CommandT %:h<CR>
 nnoremap <Leader><Leader>b :CommandTBuffer<CR>
 
 " -------------------------------------------------------------
+" CtrlP
+" -------------------------------------------------------------
+
+set runtimepath+=$VIMFILES/bundle/ctrlp
+
+" No default mappings.
+let g:ctrlp_map = ''
+
+" Directory mode for launching ':CtrlP' with no directory argument:
+"   0 - Don't manage the working directory (Vim's CWD will be used).
+"       Same as ':CtrlP $PWD'.
+"   1 - The parent directory of the current file.
+"       Same as ':CtrlP %:h'
+"   2 - Nearest ancestor that contains a "root marker", taken first from any
+"       markers in the list specified in g:ctrlp_root_markers, then from the
+"       built-in list of markers, currently set to:
+"         root.dir .git/ .hg/ .svn/ .bzr/ _darcs/
+"       Same as ':CtrlPRoot'
+let g:ctrlp_working_path_mode = 0
+
+" Set to list of marker directories used for ':CtrlPRoot'.
+" A marker signifies that the containing parent directory is a "root".  Each
+" marker is probed from current working directory all the way up, and if
+" the marker is not found, then the next marker is checked.
+let g:ctrlp_root_markers = []
+
+" :C [path]  ==> :CtrlP [path]
+command! -n=? -com=dir C call ctrlp#init(0, <q-args>)
+
+" :CD [path]  ==> :CtrlPDir [path]
+command! -n=? -com=dir CD call ctrlp#init(ctrlp#dir#id(), <q-args>)
+
+nnoremap <C-P><C-B> :<C-U>CtrlPBookmarkDir<CR>
+nnoremap <C-P>c     :<C-U>CtrlPChange<CR>
+nnoremap <C-P>C     :<C-U>CtrlPChangeAll<CR>
+nnoremap <C-P><C-D> :<C-U>CtrlPDir<CR>
+nnoremap <C-P><C-F> :<C-U>CtrlP %:h<CR>
+nnoremap <C-P><C-L> :<C-U>CtrlPLine<CR>
+nnoremap <C-P><C-M> :<C-U>CtrlPMRU<CR>
+nnoremap <C-P>m     :<C-U>CtrlPMixed<CR>
+
+" Mnemonic: "open files"
+nnoremap <C-P><C-O> :<C-U>CtrlPBuffer<CR>
+nnoremap <C-P><C-P> :<C-U>CtrlP<CR>
+nnoremap <C-P><C-Q> :<C-U>CtrlPQuickfix<CR>
+nnoremap <C-P><C-R> :<C-U>CtrlPRoot<CR>
+nnoremap <C-P><C-T> :<C-U>CtrlPTag<CR>
+nnoremap <C-P>t     :<C-U>CtrlPBufTag<CR>
+nnoremap <C-P>T     :<C-U>CtrlPBufTagAll<CR>
+nnoremap <C-P><C-U> :<C-U>CtrlPUndo<CR>
+
+" Reverse move and history binding pairs:
+" - For consistency with other plugins that use <C-N>/<C-P> for moving around.
+" - Because <C-J> is bound to the tmux prefix key, so it's best to map
+"   that key to a less-used function.
+let g:ctrlp_prompt_mappings = {
+    \ 'PrtSelectMove("j")':   ['<C-N>', '<down>'],
+    \ 'PrtSelectMove("k")':   ['<C-P>', '<up>'],
+    \ 'PrtHistory(-1)':       ['<C-J>'],
+    \ 'PrtHistory(1)':        ['<C-K>'],
+    \ }
+
+" Maximum height of filename window.
+let g:ctrlp_max_height = 50
+
+" -------------------------------------------------------------
 " EnhancedCommentify
 " -------------------------------------------------------------
 
@@ -1415,8 +1481,6 @@ set runtimepath+=$VIMFILES/local
 " The "clearsnippets" directory wipes out default snippets.
 set runtimepath+=$VIMFILES/clearsnippets
 set runtimepath+=$ULTISNIPS
-"inoremap <C-J> <C-R>=UltiSnips_JumpForwards()<cr>
-"snoremap <C-J> <ESC>:call UltiSnips_JumpForwards()<cr>
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
