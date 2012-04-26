@@ -1,7 +1,7 @@
 *notes.txt*     Notes on Vim installation and usage
 
 *notes*
-                                                          
+
 1.  Introduction                                        |notes_intro|
 2.  Installation                                        |notes_installation|
 3.  Plugins                                             |notes_plugins|
@@ -80,7 +80,7 @@ One fix appears to be the following symlink: >
 
   ln -s /usr/lib64/python2.6/config /usr/lib/python2.6/config
 
-Inspiration taken from: 
+Inspiration taken from:
   http://users.skynet.be/antoine.mechelynck/vim/compunix.htm
 
 The detailed steps for download and building Vim are captured in
@@ -107,7 +107,7 @@ To register as the system alternative: >
     update-alternatives --install /usr/bin/$i $i /usr/local/bin/$i 500
   done
 
-If /usr/share/applications/*gvim.desktop exists, it may be necessary to 
+If /usr/share/applications/*gvim.desktop exists, it may be necessary to
 update this line: >
     Exec=gvim -f %F
 
@@ -138,7 +138,7 @@ Clone the repository via: >
 ==============================================================================
 3.  Plugins                                             *notes_plugins*
 
-For help with plugins: 
+For help with plugins:
 
 - Adding local help files |add-local-help|
 
@@ -161,7 +161,7 @@ Installation:
     :RmVimball Align-xxx_yyy
     :n
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 BUFEXPLORER                                             *notes_bufexplorer*
@@ -240,6 +240,41 @@ CTRLP                                                   *notes_ctrlp*
 
 Version 2012-04-25 from https://github.com/kien/ctrlp.vim.git
 
+Local customizations:
+
+- Commands:
+
+    :C [path]  ==> :CtrlP [path]
+    :CD [path]  ==> :CtrlPDir [path]
+
+- Normal-mode mappings:
+
+    CTRL-P CTRL-B        CtrlPBookmarkDir
+    CTRL-P c             CtrlPChange
+    CTRL-P C             CtrlPChangeAll
+    CTRL-P CTRL-D        CtrlPDir
+    CTRL-P CTRL-F        CtrlP %:h
+    CTRL-P CTRL-L        CtrlPLine
+    CTRL-P CTRL-M        CtrlPMRU
+    CTRL-P m             CtrlPMixed
+
+    " Mnemonic: buffers are "Open" files.
+    CTRL-P CTRL-O        CtrlPBuffer
+    CTRL-P CTRL-P        CtrlP
+    CTRL-P CTRL-Q        CtrlPQuickfix
+    CTRL-P CTRL-R        CtrlPRoot
+    CTRL-P CTRL-T        CtrlPTag
+    CTRL-P t             CtrlPBufTag
+    CTRL-P T             CtrlPBufTagAll
+    CTRL-P CTRL-U        CtrlPUndo
+
+- When CtrlP is active, the pair CTRL-N/CTRL-P moves the cursor vertically to
+  make a select, and CTRL-J/CTRL-K move through the command prompt history.
+
+  This is for consistency with other plugins that use CTRL-N/CTRL-P for moving
+  around, and to avoid binding a commonly used function to the tmux prefix key
+  (CTRL-J).
+
 Installation:
 - Unpack to ~/.vim/bundle/ctrlp
 - Add above directory to runtimepath
@@ -263,7 +298,7 @@ Installation:
 COMMAND-T                                               *notes_command-t*
   File finder a la TextMate Command-T                   |command-t|
 
-Usage: 
+Usage:
 
 :CommandT         Launch relative to current working directory
 :CommandT dir     Launch relative to directory "dir"
@@ -285,7 +320,7 @@ Note Something hangs when opening the Vimball, and CTRL-C may
     vim command-t-1.2.1.vba
     RmVimball command-t
     :so %
-    :q 
+    :q
 
 - Contains C code that must be compiled: >
 
@@ -391,7 +426,7 @@ Installation:
 
     vim fontsize-0.1.0.vba
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 FSWITCH                                                 *notes_fswitch*
@@ -399,7 +434,7 @@ FSWITCH                                                 *notes_fswitch*
 
 Usage:
 
-Mapping       Command       
+Mapping       Command
 \of           :FSHere      Other file "here" (current window)
 
 \oh           :FSLeft      Other file into existing window on left
@@ -427,7 +462,7 @@ Installation:
     vim FSwitch-0.9.2.vba.gz
     :RmVimball FSwitch          (if upgrading)
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 GENUTILS                                                *notes_genutils*
@@ -583,8 +618,8 @@ Get this output: >
 Using KeepCase or KeepCaseSameLen defined here, do a substitution like this: >
     %s/\u\<old_word\>/\=KeepCaseSameLen(submatch(0), 'new_word')/g
 
-KeepCase(original_word, new_word)  
-  returns the new word maintaining case 
+KeepCase(original_word, new_word)
+  returns the new word maintaining case
   simply uses heuristics to work out some different common situations
     given   NewWord
     Word    --> Newword
@@ -593,7 +628,7 @@ KeepCase(original_word, new_word)
     WoRd    --> NewWord
     woRd    --> newWord
 
-KeepCaseSameLen(original_word, new_word)    
+KeepCaseSameLen(original_word, new_word)
   Returns the new word maintaining case
     Keeps the case exactly the same letter-for-letter
     It does work if the words aren't the same length, as it truncates or
@@ -649,13 +684,13 @@ Installation:
 
     vim loremipsum.vba.gz
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 LUSTYEXPLORER                                           *notes_lustyexplorer*
   LustyExplorer - File/buffer switcher w/incr. search
 
-Usage (taken from lusty-explorer.vim): 
+Usage (taken from lusty-explorer.vim):
 
   <Leader>lf  - Opens the filesystem explorer.
   <Leader>lr  - Opens the filesystem explorer from the
@@ -871,7 +906,7 @@ Installation:
 ------------------------------------------------------------------------------
 NETRW                                                   *notes_netrw*
   File reading and writing across networks              |netrw|
-  
+
 Version 128 from http://www.vim.org/scripts/script.php?script_id=1075
 (Also check Dr. Chip's site: http://mysite.verizon.net/astronaut/vim/#NETRW)
 
@@ -885,7 +920,7 @@ Installation:
 
     vim netrw.vba.gz
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 OMNICPPCOMPLETE                                         *notes_omnicppcomplete*
@@ -975,7 +1010,7 @@ Installation:
 
     vim RunView.vba.gz
     :so %
-    :q 
+    :q
 
 Local customizations: >
   " Setup Bash as default view to run.
@@ -1130,7 +1165,7 @@ The file taglist.vim should be patched as follows: >
                call s:Tlist_Window_Goto_Window()
   -            close
   +            call s:Tlist_Exe_Cmd_No_Acmds('close')
-   
+
                " Go back to the window displaying the selected file
                let wnum = bufwinnr(a:filename)
 
@@ -1322,7 +1357,7 @@ Installation:
 
     vim vis.vba.gz
     :so %
-    :q 
+    :q
 
 Version 20a from section "Visual Block Commands" at
 http://mysite.verizon.net/astronaut/vim/index.html
@@ -1367,7 +1402,7 @@ Installation:
 
     vim visincr.vba.gz
     :so %
-    :q 
+    :q
 
 Version 20b from section "Visual Incrementing" at
 http://mysite.verizon.net/astronaut/vim/index.html
@@ -1405,7 +1440,7 @@ Installation:
 
     vim vissort.vba.gz
     :so %
-    :q 
+    :q
 
 Version 4c from section "Visual Block Sorting" at
 http://mysite.verizon.net/astronaut/vim/index.html
@@ -1425,7 +1460,7 @@ Installation:
 
     vim visswap.vba.gz
     :so %
-    :q 
+    :q
 
 Version 4e from section "Visual Mode Based Swap" at
 http://mysite.verizon.net/astronaut/vim/index.html
@@ -1663,8 +1698,8 @@ Use the mapping \z after a search to fold all but the matching lines.
 Pasting lines into Vim
 
 When pasting lines copied from outside Vim, the content is subject to
-auto-indentation at each <CR>.  The |'paste'| variable may be set to 
-prevent these unintended effects during pasting.  
+auto-indentation at each <CR>.  The |'paste'| variable may be set to
+prevent these unintended effects during pasting.
 
 Press <S-F12> key to toggle the state of the |'paste'| variable; it may be set
 or cleared manually via: >
@@ -1828,8 +1863,8 @@ Displaying characters under cursor: >
 Quitting with non-zero return code
 
 When using Vim as the "fix command" editor in Bash (via the ``fc`` command
-or via ``Ctrl-x Ctrl-e`` - "man bash" for details on fc), a successful 
-return code tells Bash to execute the commands.  This is somewhat 
+or via ``Ctrl-x Ctrl-e`` - "man bash" for details on fc), a successful
+return code tells Bash to execute the commands.  This is somewhat
 counter-intuitive when mixed with Vim's :qa! syntax which means "throw away
 all my changes."  But Vim has a "throw away all my changes and return failure"
 command: >
