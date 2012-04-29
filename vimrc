@@ -2065,6 +2065,10 @@ set laststatus=2
 " in the terminal emulator, it's necessary to either restart the shell or update
 " the environment variable accordingly.
 
+if $TERM == 'cygwin'
+    set background=light
+endif
+
 " Choose a light color scheme only for light-background environments.
 if &background == 'light' || has("gui_running")
     colorscheme nuvola
