@@ -1,11 +1,30 @@
 " vim:tw=80:ts=4:sts=4:sw=4:et:ai
 
+" Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
+set nocompatible
+
+" -------------------------------------------------------------
+" runtimepath manipulation
+" -------------------------------------------------------------
+
+function! RtpPrepend(path)
+    if isdirectory(a:path)
+        let &runtimepath = a:path . "," . &runtimepath
+        if isdirectory(a:path . '/after')
+            let &runtimepath = &runtimepath . "," . a:path . "/after"
+        endif
+    endif
+endfunction
+
 " Set environment variable to directory containing this vimrc.
-" On Unix, expect ~/.vim; on Windows, expect $HOME/vimfiles.
+" Expect absolute directory $HOME/.vim on Unix ($HOME/vimfiles on Windows).
 " Note: using an environment variable instead of normal Vim variable
 " because environment variables are expanded in values used with
 " setting 'runtimepath' later.
-let $VIMFILES=expand("<sfile>:h")
+let $VIMFILES=expand("<sfile>:p:h")
+
+" If local customizations directory exists, it takes precedence.
+call RtpPrepend($VIMFILES . "/local")
 
 " Provide for per-user hook points before and after common vimrc.
 " User may supply a "-before.vim" hook that runs before the main contents
@@ -50,17 +69,23 @@ if $VIMRC_AFTER == ""
 endif
 
 " Prepend per-user directory to runtimepath (provides the highest priority).
-if isdirectory($VIMUSERFILES . "/" . $VIMUSER)
-    set runtimepath^=$VIMUSERFILES/$VIMUSER
-endif
+call RtpPrepend($VIMUSERFILES . "/" . $VIMUSER)
 
 " If it exists, source the specified "-before.vim" hook.
 if filereadable($VIMRC_BEFORE)
     source $VIMRC_BEFORE
 endif
 
-" Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
-set nocompatible
+" -------------------------------------------------------------
+" Pathogen plugin management
+" -------------------------------------------------------------
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+call pathogen#infect()
+
+" Bundles in the "pre-bundle" directories will come earlier in the path
+" than those in "bundle" directories.
+call pathogen#infect('pre-bundle')
+
 
 " Number of lines of VIM history to remember.
 set history=500
@@ -816,11 +841,6 @@ set smartcase
 " Do not wrap around buffer when searching.
 set nowrapscan
 
-" Enable syntax highlighting and search highlighting when colors available.
-if &t_Co > 2 || has("gui_running")
-    syntax on
-    set hlsearch
-endif
 
 " Escape passed-in string for use as a search expression.
 function! MakeSearchString(str)
@@ -1184,6 +1204,70 @@ nnoremap <Leader><Leader>r :CommandT %:h<CR>
 nnoremap <Leader><Leader>b :CommandTBuffer<CR>
 
 " -------------------------------------------------------------
+" CtrlP
+" -------------------------------------------------------------
+
+" No default mappings.
+let g:ctrlp_map = ''
+
+" Directory mode for launching ':CtrlP' with no directory argument:
+"   0 - Don't manage the working directory (Vim's CWD will be used).
+"       Same as ':CtrlP $PWD'.
+"   1 - The parent directory of the current file.
+"       Same as ':CtrlP %:h'
+"   2 - Nearest ancestor that contains a "root marker", taken first from any
+"       markers in the list specified in g:ctrlp_root_markers, then from the
+"       built-in list of markers, currently set to:
+"         root.dir .git/ .hg/ .svn/ .bzr/ _darcs/
+"       Same as ':CtrlPRoot'
+let g:ctrlp_working_path_mode = 0
+
+" Set to list of marker directories used for ':CtrlPRoot'.
+" A marker signifies that the containing parent directory is a "root".  Each
+" marker is probed from current working directory all the way up, and if
+" the marker is not found, then the next marker is checked.
+let g:ctrlp_root_markers = []
+
+" :C [path]  ==> :CtrlP [path]
+command! -n=? -com=dir C call ctrlp#init(0, <q-args>)
+
+" :CD [path]  ==> :CtrlPDir [path]
+command! -n=? -com=dir CD call ctrlp#init(ctrlp#dir#id(), <q-args>)
+
+nnoremap <C-P><C-B> :<C-U>CtrlPBookmarkDir<CR>
+nnoremap <C-P>c     :<C-U>CtrlPChange<CR>
+nnoremap <C-P>C     :<C-U>CtrlPChangeAll<CR>
+nnoremap <C-P><C-D> :<C-U>CtrlPDir<CR>
+nnoremap <C-P><C-F> :<C-U>CtrlP %:h<CR>
+nnoremap <C-P><C-L> :<C-U>CtrlPLine<CR>
+nnoremap <C-P><C-M> :<C-U>CtrlPMRU<CR>
+nnoremap <C-P>m     :<C-U>CtrlPMixed<CR>
+
+" Mnemonic: "open files"
+nnoremap <C-P><C-O> :<C-U>CtrlPBuffer<CR>
+nnoremap <C-P><C-P> :<C-U>CtrlP<CR>
+nnoremap <C-P><C-Q> :<C-U>CtrlPQuickfix<CR>
+nnoremap <C-P><C-R> :<C-U>CtrlPRoot<CR>
+nnoremap <C-P><C-T> :<C-U>CtrlPTag<CR>
+nnoremap <C-P>t     :<C-U>CtrlPBufTag<CR>
+nnoremap <C-P>T     :<C-U>CtrlPBufTagAll<CR>
+nnoremap <C-P><C-U> :<C-U>CtrlPUndo<CR>
+
+" Reverse move and history binding pairs:
+" - For consistency with other plugins that use <C-N>/<C-P> for moving around.
+" - Because <C-J> is bound to the tmux prefix key, so it's best to map
+"   that key to a less-used function.
+let g:ctrlp_prompt_mappings = {
+    \ 'PrtSelectMove("j")':   ['<C-N>', '<down>'],
+    \ 'PrtSelectMove("k")':   ['<C-P>', '<up>'],
+    \ 'PrtHistory(-1)':       ['<C-J>'],
+    \ 'PrtHistory(1)':        ['<C-K>'],
+    \ }
+
+" Maximum height of filename window.
+let g:ctrlp_max_height = 50
+
+" -------------------------------------------------------------
 " EnhancedCommentify
 " -------------------------------------------------------------
 
@@ -1398,25 +1482,12 @@ nnoremap <silent> <C-Q>t        :TlistToggle<CR>
 " -------------------------------------------------------------
 " UltiSnips
 " -------------------------------------------------------------
-if !exists('$ULTISNIPS')
-    let $ULTISNIPS=$VIMFILES . "/UltiSnips-1.6"
-endif
 
 " Paths found earlier in runtimepath have higher snippet priority.
-" Therefore, put the distribution snippets in $ULTISNIPS last, and put
-" the "clearsnippets" path just before this to allow wiping of the
-" default snippets that come with UltiSnips.
-" Per-user customization will have highest priority because the per-user
-" directory was prepended to runtimepath.
+" In order to remove snippets distributed with UltiSnips, the
+" directory "pre-bundle/clearsnippets" will be earlier in the
+" runtimepath.
 
-" Local customizations.
-set runtimepath+=$VIMFILES/local
-
-" The "clearsnippets" directory wipes out default snippets.
-set runtimepath+=$VIMFILES/clearsnippets
-set runtimepath+=$ULTISNIPS
-"inoremap <C-J> <C-R>=UltiSnips_JumpForwards()<cr>
-"snoremap <C-J> <ESC>:call UltiSnips_JumpForwards()<cr>
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
@@ -1456,30 +1527,6 @@ nmap <silent> <Leader>sv <C-W>o<Plug>VCSVimDiff<C-W>H<C-W>w
 " :nnoremap <C-W><C-T>   :WMToggle<CR>
 " :nnoremap <C-W><C-F>   :FirstExplorerWindow<CR>
 " :nnoremap <C-W><C-B>   :BottomExplorerWindow<CR>
-
-" -------------------------------------------------------------
-" XPTemplate
-" -------------------------------------------------------------
-
-" TODO Decide on XPTemplate
-"if !exists('$XPTPATH')
-"    let $XPTPATH=$VIMFILES . "/xpt"
-"endif
-"set runtimepath+=$XPTPATH
-
-" Key to launch templates (defaults to <C-\>).
-"let g:xptemplate_key = '<Tab>'
-
-" 0 - Don't cancel template due to text changes outside placeholders.
-" 1 - Cancel template rendering on "incautious" text changes outside
-"     placeholders.
-" 2 - Cancel template rendering if any changes occur outside placeholders.
-" Defaults to 2.
-let g:xptemplate_strict = 2
-
-" Set to 1 for automatic brace completion (default 0).
-" TODO Seems to have problems when enabled.
-let g:xptemplate_brace_complete = 0
 
 " =============================================================
 " Language setup
@@ -1889,7 +1936,14 @@ runtime ftplugin/man.vim
 " Use the default filetype settings, so that mail gets 'tw' set to 72,
 " 'cindent' is on in C files, etc.
 " Also load indent files, to automatically do language-dependent indenting.
+" NOTE: This must be done *after* all bundles have been loaded.
 filetype plugin indent on
+
+" Enable syntax highlighting and search highlighting when colors available.
+if &t_Co > 2 || has("gui_running")
+    syntax on
+    set hlsearch
+endif
 
 " Extended filetype detection by extensions is found in
 " filetype.vim
@@ -1932,7 +1986,7 @@ augroup local_vimrc
     " issued).  This fix restores the buffer's position.
     if v:version >= 700
             autocmd BufLeave * let b:winview = winsaveview()
-            autocmd BufEnter * if (exists('b:winview')) |
+            autocmd BufEnter * if (!&diff && exists('b:winview')) |
                         \call winrestview(b:winview) |
                         \endif
     endif

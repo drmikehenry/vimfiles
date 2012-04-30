@@ -1,7 +1,7 @@
 *notes.txt*     Notes on Vim installation and usage
 
 *notes*
-                                                          
+
 1.  Introduction                                        |notes_intro|
 2.  Installation                                        |notes_installation|
 3.  Plugins                                             |notes_plugins|
@@ -10,6 +10,7 @@
     bufmru - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
+    CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsampler|
     Command-T - File finder a la TextMate Command-T     |notes_command-t|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
@@ -29,6 +30,7 @@
     Matchit - Extended matching with '%'                |notes_matchit|
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
+    Pathogen - Runtime path management for bundles      |notes_pathogen|
     Project - Managing "projects" of files              |notes_project|
     Python - Python Syntax file with folding            |notes_python|
     PythonComplete - Python Omnicompletion              |notes_pythoncomplete|
@@ -79,7 +81,7 @@ One fix appears to be the following symlink: >
 
   ln -s /usr/lib64/python2.6/config /usr/lib/python2.6/config
 
-Inspiration taken from: 
+Inspiration taken from:
   http://users.skynet.be/antoine.mechelynck/vim/compunix.htm
 
 The detailed steps for download and building Vim are captured in
@@ -106,7 +108,7 @@ To register as the system alternative: >
     update-alternatives --install /usr/bin/$i $i /usr/local/bin/$i 500
   done
 
-If /usr/share/applications/*gvim.desktop exists, it may be necessary to 
+If /usr/share/applications/*gvim.desktop exists, it may be necessary to
 update this line: >
     Exec=gvim -f %F
 
@@ -137,9 +139,31 @@ Clone the repository via: >
 ==============================================================================
 3.  Plugins                                             *notes_plugins*
 
-For help with plugins: 
+For help with plugins:
 
 - Adding local help files |add-local-help|
+
+General bundle installation instructions: *bundle_installation*
+- Move to bundle directory: >
+  cd ~/.vim/bundle
+- Move existing bundle (if any) to a backup directory (optional): >
+  mv bundle-name bundle-name~
+- Remove existing bundle (if any): >
+  git rm -rf bundle-name
+- Acquire latest version using one of these techniques: >
+  git clone https://github.com/tpope/bundle-name
+  tar -zxf .../bundle-name-x.y.z.tar.gz
+- Rename extracted directory (if desirable), e.g.: >
+  mv Bundle-Name-x.y.z bundle-name
+- Remove unwanted hidden directories: >
+  cd bundle-name
+  rm -rf {.git,.bzr,.hg,.svn,.gitignore}
+- Add clean bundle tree to Git: >
+  git add .
+- Process help tags (if any) in Vim: >
+  vim '+Helptags|q'
+- Force-add any documentation tag files: >
+  git add -f doc/tag*
 
 Installed plugins:
 
@@ -160,7 +184,7 @@ Installation:
     :RmVimball Align-xxx_yyy
     :n
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 BUFEXPLORER                                             *notes_bufexplorer*
@@ -233,6 +257,49 @@ Installation:
     runtime scripts/closetag.vim
 
 ------------------------------------------------------------------------------
+CTRLP                                                   *notes_ctrlp*
+  Fuzzy matches for files, buffers, etc.                |ctrlp|
+
+Local customizations:
+
+- Commands:
+
+    :C [path]  ==> :CtrlP [path]
+    :CD [path]  ==> :CtrlPDir [path]
+
+- Normal-mode mappings:
+
+    CTRL-P CTRL-B        CtrlPBookmarkDir
+    CTRL-P c             CtrlPChange
+    CTRL-P C             CtrlPChangeAll
+    CTRL-P CTRL-D        CtrlPDir
+    CTRL-P CTRL-F        CtrlP %:h
+    CTRL-P CTRL-L        CtrlPLine
+    CTRL-P CTRL-M        CtrlPMRU
+    CTRL-P m             CtrlPMixed
+    CTRL-P CTRL-O        CtrlPBuffer    ; Mnemonic: buffers are "Open" files.
+    CTRL-P CTRL-P        CtrlP          ; From current working directory.
+    CTRL-P CTRL-Q        CtrlPQuickfix
+    CTRL-P CTRL-R        CtrlPRoot      ; From nearest enclosing project root.
+    CTRL-P CTRL-T        CtrlPTag
+    CTRL-P t             CtrlPBufTag
+    CTRL-P T             CtrlPBufTagAll
+    CTRL-P CTRL-U        CtrlPUndo
+
+- When CtrlP is active, the pair CTRL-N/CTRL-P moves the cursor vertically to
+  make a select, and CTRL-J/CTRL-K move through the command prompt history.
+
+  This is for consistency with other plugins that use CTRL-N/CTRL-P for moving
+  around, and to avoid binding a commonly used function to the tmux prefix key
+  (CTRL-J).
+
+
+Version 2012-04-29 from https://github.com/kien/ctrlp.vim
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 COLORSAMPLERPACK                                        *notes_colorsampler*
   Color schemes and theme menu
 
@@ -250,7 +317,7 @@ Installation:
 COMMAND-T                                               *notes_command-t*
   File finder a la TextMate Command-T                   |command-t|
 
-Usage: 
+Usage:
 
 :CommandT         Launch relative to current working directory
 :CommandT dir     Launch relative to directory "dir"
@@ -272,7 +339,7 @@ Note Something hangs when opening the Vimball, and CTRL-C may
     vim command-t-1.2.1.vba
     RmVimball command-t
     :so %
-    :q 
+    :q
 
 - Contains C code that must be compiled: >
 
@@ -378,7 +445,7 @@ Installation:
 
     vim fontsize-0.1.0.vba
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 FSWITCH                                                 *notes_fswitch*
@@ -386,7 +453,7 @@ FSWITCH                                                 *notes_fswitch*
 
 Usage:
 
-Mapping       Command       
+Mapping       Command
 \of           :FSHere      Other file "here" (current window)
 
 \oh           :FSLeft      Other file into existing window on left
@@ -414,7 +481,7 @@ Installation:
     vim FSwitch-0.9.2.vba.gz
     :RmVimball FSwitch          (if upgrading)
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 GENUTILS                                                *notes_genutils*
@@ -570,8 +637,8 @@ Get this output: >
 Using KeepCase or KeepCaseSameLen defined here, do a substitution like this: >
     %s/\u\<old_word\>/\=KeepCaseSameLen(submatch(0), 'new_word')/g
 
-KeepCase(original_word, new_word)  
-  returns the new word maintaining case 
+KeepCase(original_word, new_word)
+  returns the new word maintaining case
   simply uses heuristics to work out some different common situations
     given   NewWord
     Word    --> Newword
@@ -580,7 +647,7 @@ KeepCase(original_word, new_word)
     WoRd    --> NewWord
     woRd    --> newWord
 
-KeepCaseSameLen(original_word, new_word)    
+KeepCaseSameLen(original_word, new_word)
   Returns the new word maintaining case
     Keeps the case exactly the same letter-for-letter
     It does work if the words aren't the same length, as it truncates or
@@ -636,13 +703,13 @@ Installation:
 
     vim loremipsum.vba.gz
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 LUSTYEXPLORER                                           *notes_lustyexplorer*
   LustyExplorer - File/buffer switcher w/incr. search
 
-Usage (taken from lusty-explorer.vim): 
+Usage (taken from lusty-explorer.vim):
 
   <Leader>lf  - Opens the filesystem explorer.
   <Leader>lr  - Opens the filesystem explorer from the
@@ -858,7 +925,7 @@ Installation:
 ------------------------------------------------------------------------------
 NETRW                                                   *notes_netrw*
   File reading and writing across networks              |netrw|
-  
+
 Version 128 from http://www.vim.org/scripts/script.php?script_id=1075
 (Also check Dr. Chip's site: http://mysite.verizon.net/astronaut/vim/#NETRW)
 
@@ -872,7 +939,7 @@ Installation:
 
     vim netrw.vba.gz
     :so %
-    :q 
+    :q
 
 ------------------------------------------------------------------------------
 OMNICPPCOMPLETE                                         *notes_omnicppcomplete*
@@ -899,6 +966,15 @@ Version 0.41 from http://www.vim.org/scripts/script.php?script_id=1520
 Installation:
 - Unzip in ~/.vim/
 - :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+PATHOGEN                                                *notes_pathogen*
+  Runtime path management for bundles                   |notes_pathogen|
+
+Version 2012-04-29 from https://github.com/tpope/vim-pathogen
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 PROJECT                                                 *notes_project*
@@ -962,7 +1038,7 @@ Installation:
 
     vim RunView.vba.gz
     :so %
-    :q 
+    :q
 
 Local customizations: >
   " Setup Bash as default view to run.
@@ -1117,7 +1193,7 @@ The file taglist.vim should be patched as follows: >
                call s:Tlist_Window_Goto_Window()
   -            close
   +            call s:Tlist_Exe_Cmd_No_Acmds('close')
-   
+
                " Go back to the window displaying the selected file
                let wnum = bufwinnr(a:filename)
 
@@ -1177,16 +1253,17 @@ followed by <C-Tab>.
 Custom additional command to reset and reload snippets: >
     UltiSnipsReset
 
-Snippets live in two places:
+Snippets live in any "UltiSnips" subdirectory on the 'runtimepath'.  Snippets
+earlier in the 'runtimepath' take precedence.  For example:
 
 - ~/.vim/UltiSnips         - Snippets common to all configurations
 - ~/.vim/local/UltiSnips   - Optional snippets local to an installation
 
 For select languages, the default snippets provided by UltiSnips are
-overridden by local snippets.  This is accomplished by putting the
-directory ~/.vim/clearsnippets into the &runtimepath before the new
-locally defined snippets.  In this directory are snippets files using
-the "clearsnippets" directive to wipe out the default snippets.
+overridden by local snippets.  This is accomplished by putting the directory
+~/.vim/pre-bundle/clearsnippets into the 'runtimepath' before the new locally
+defined snippets.  In this directory are snippets files using the
+"clearsnippets" directive to wipe out the default snippets.
 
 To avoid rampant duplication when defining snippets, a custom set of Python
 scripts is used to define snippets.  For example, the file
@@ -1195,12 +1272,10 @@ scripts is used to define snippets.  For example, the file
 ~/.vim/UltiSnips by executing "make", followed in Vim by :UltiSnipsReset to
 reload the snippets.
 
-Version 1.6 from http://www.vim.org/scripts/script.php?script_id=2715
+Version 2.1 from http://www.vim.org/scripts/script.php?script_id=2715
 
 Installation:
-- If upgrading, remove ~/.vim/UltiSnips-old.version/
-- Unpack in ~/.vim/, creating ~/.vim/UltiSnips-x.y/
-- Update $ULTISNIPS variable in ~/.vim/vimrc for new directory name
+- Follow bundle installation instructions (|bundle_installation|).
 - See ~/.vim/vimrc for detailed configuration steps
 
 ------------------------------------------------------------------------------
@@ -1309,7 +1384,7 @@ Installation:
 
     vim vis.vba.gz
     :so %
-    :q 
+    :q
 
 Version 20a from section "Visual Block Commands" at
 http://mysite.verizon.net/astronaut/vim/index.html
@@ -1354,7 +1429,7 @@ Installation:
 
     vim visincr.vba.gz
     :so %
-    :q 
+    :q
 
 Version 20b from section "Visual Incrementing" at
 http://mysite.verizon.net/astronaut/vim/index.html
@@ -1392,7 +1467,7 @@ Installation:
 
     vim vissort.vba.gz
     :so %
-    :q 
+    :q
 
 Version 4c from section "Visual Block Sorting" at
 http://mysite.verizon.net/astronaut/vim/index.html
@@ -1412,7 +1487,7 @@ Installation:
 
     vim visswap.vba.gz
     :so %
-    :q 
+    :q
 
 Version 4e from section "Visual Mode Based Swap" at
 http://mysite.verizon.net/astronaut/vim/index.html
@@ -1650,8 +1725,8 @@ Use the mapping \z after a search to fold all but the matching lines.
 Pasting lines into Vim
 
 When pasting lines copied from outside Vim, the content is subject to
-auto-indentation at each <CR>.  The |'paste'| variable may be set to 
-prevent these unintended effects during pasting.  
+auto-indentation at each <CR>.  The |'paste'| variable may be set to
+prevent these unintended effects during pasting.
 
 Press <S-F12> key to toggle the state of the |'paste'| variable; it may be set
 or cleared manually via: >
@@ -1815,8 +1890,8 @@ Displaying characters under cursor: >
 Quitting with non-zero return code
 
 When using Vim as the "fix command" editor in Bash (via the ``fc`` command
-or via ``Ctrl-x Ctrl-e`` - "man bash" for details on fc), a successful 
-return code tells Bash to execute the commands.  This is somewhat 
+or via ``Ctrl-x Ctrl-e`` - "man bash" for details on fc), a successful
+return code tells Bash to execute the commands.  This is somewhat
 counter-intuitive when mixed with Vim's :qa! syntax which means "throw away
 all my changes."  But Vim has a "throw away all my changes and return failure"
 command: >
