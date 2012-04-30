@@ -2000,7 +2000,7 @@ augroup local_vimrc
     " issued).  This fix restores the buffer's position.
     if v:version >= 700
             autocmd BufLeave * let b:winview = winsaveview()
-            autocmd BufEnter * if (exists('b:winview')) |
+            autocmd BufEnter * if (!&diff && exists('b:winview')) |
                         \call winrestview(b:winview) |
                         \endif
     endif
