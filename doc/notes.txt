@@ -258,7 +258,7 @@ Installation:
 
 ------------------------------------------------------------------------------
 CTRLP                                                   *notes_ctrlp*
-  Fuzzy matches for files, buffers, etc.
+  Fuzzy matches for files, buffers, etc.                |ctrlp|
 
 Local customizations:
 
@@ -277,12 +277,10 @@ Local customizations:
     CTRL-P CTRL-L        CtrlPLine
     CTRL-P CTRL-M        CtrlPMRU
     CTRL-P m             CtrlPMixed
-
-    " Mnemonic: buffers are "Open" files.
-    CTRL-P CTRL-O        CtrlPBuffer
-    CTRL-P CTRL-P        CtrlP
+    CTRL-P CTRL-O        CtrlPBuffer    ; Mnemonic: buffers are "Open" files.
+    CTRL-P CTRL-P        CtrlP          ; From current working directory.
     CTRL-P CTRL-Q        CtrlPQuickfix
-    CTRL-P CTRL-R        CtrlPRoot
+    CTRL-P CTRL-R        CtrlPRoot      ; From nearest enclosing project root.
     CTRL-P CTRL-T        CtrlPTag
     CTRL-P t             CtrlPBufTag
     CTRL-P T             CtrlPBufTagAll
