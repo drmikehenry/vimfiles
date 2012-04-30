@@ -1,5 +1,8 @@
 " vim:tw=80:ts=4:sts=4:sw=4:et:ai
 
+" Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
+set nocompatible
+
 " Set environment variable to directory containing this vimrc.
 " On Unix, expect ~/.vim; on Windows, expect $HOME/vimfiles.
 " Note: using an environment variable instead of normal Vim variable
@@ -59,8 +62,6 @@ if filereadable($VIMRC_BEFORE)
     source $VIMRC_BEFORE
 endif
 
-" Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
-set nocompatible
 
 " Number of lines of VIM history to remember.
 set history=500
@@ -816,11 +817,6 @@ set smartcase
 " Do not wrap around buffer when searching.
 set nowrapscan
 
-" Enable syntax highlighting and search highlighting when colors available.
-if &t_Co > 2 || has("gui_running")
-    syntax on
-    set hlsearch
-endif
 
 " Escape passed-in string for use as a search expression.
 function! MakeSearchString(str)
@@ -1476,7 +1472,9 @@ endif
 " directory was prepended to runtimepath.
 
 " Local customizations.
-set runtimepath+=$VIMFILES/local
+if isdirectory($VIMFILES . '/local')
+    set runtimepath+=$VIMFILES/local
+endif
 
 " The "clearsnippets" directory wipes out default snippets.
 set runtimepath+=$VIMFILES/clearsnippets
@@ -1952,7 +1950,14 @@ runtime ftplugin/man.vim
 " Use the default filetype settings, so that mail gets 'tw' set to 72,
 " 'cindent' is on in C files, etc.
 " Also load indent files, to automatically do language-dependent indenting.
+" NOTE: This must be done *after* all bundles have been loaded.
 filetype plugin indent on
+
+" Enable syntax highlighting and search highlighting when colors available.
+if &t_Co > 2 || has("gui_running")
+    syntax on
+    set hlsearch
+endif
 
 " Extended filetype detection by extensions is found in
 " filetype.vim
