@@ -353,6 +353,7 @@ bufexplorer-usage	bufexplorer.txt	/*bufexplorer-usage*
 bufexplorer-windowlayout	bufexplorer.txt	/*bufexplorer-windowlayout*
 bufexplorer.txt	bufexplorer.txt	/*bufexplorer.txt*
 buffer-explorer	bufexplorer.txt	/*buffer-explorer*
+bundle_installation	notes.txt	/*bundle_installation*
 clj-nailgun-server	clojure.txt	/*clj-nailgun-server*
 clojure.vim	clojure.txt	/*clojure.vim*
 command-t	command-t.txt	/*command-t*

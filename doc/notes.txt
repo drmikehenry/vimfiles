@@ -238,9 +238,6 @@ Installation:
 CTRLP                                                   *notes_ctrlp*
   Fuzzy matches for files, buffers, etc.
 
-
-Version 2012-04-25 from https://github.com/kien/ctrlp.vim.git
-
 Local customizations:
 
 - Commands:
@@ -276,10 +273,11 @@ Local customizations:
   around, and to avoid binding a commonly used function to the tmux prefix key
   (CTRL-J).
 
+
+Version 2012-04-29 from https://github.com/kien/ctrlp.vim
+
 Installation:
-- Unpack to ~/.vim/bundle/ctrlp
-- Add above directory to runtimepath
-- :helptags ~/.vim/bundle/ctrlp/doc
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 COLORSAMPLERPACK                                        *notes_colorsampler*
@@ -953,20 +951,27 @@ Installation:
 PATHOGEN                                                *notes_pathogen*
   Runtime path management for bundles                   |notes_pathogen|
 
+General Pathogen bundle installation instructions: *bundle_installation*
+- Remove existing bundle (if any): >
+  cd ~/.vim/bundle
+  git rm -rf bundle-name
+- Acquire latest version using one of these techniques: >
+  git clone https://github.com/tpope/bundle-name
+  tar -zxf .../bundle-name-x.y.z.tar.gz
+- Rename extracted directory (if desirable), e.g.: >
+  mv Bundle-Name-x.y.z bundle-name
+- Remove unwanted hidden directories: >
+  cd bundle-name
+  rm -rf {.git,.bzr,.hg,.svn,.gitignore}
+- Process help tags (if any) in Vim: >
+  vim '+Helptags|q'
+- Force-add all files with Git (ensures "tags" files are included): >
+  git add -f .
+
 Version 2012-04-29 from https://github.com/tpope/vim-pathogen
 
 Installation:
-- Remove existing bundle (if any): >
-  cd ~/.vim/bundle
-  rm -rf vim-pathogen
-- Clone latest version: >
-  git clone git@github.com:tpope/vim-pathogen
-- Remove .git directory: >
-  rm -rf vim-pathogen/.git
-- Process help tags (if any) in Vim: >
-  :Helptags
-- Force-add all files with Git: >
-  git add -f vim-pathogen
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 PROJECT                                                 *notes_project*
@@ -1267,17 +1272,7 @@ reload the snippets.
 Version 1.6 from http://www.vim.org/scripts/script.php?script_id=2715
 
 Installation:
-- If upgrading, remove old bundle: >
-    rm -rf ~/.vim/bundle/ultisnips
-- Unpack in temporary directory, e.g.: >
-    cd ~/tmp
-    tar -zxf UltiSnips-1.6.tar.gz
-- Move to bundle directory: >
-    mv ~/tmp/UltiSnips-1.6 ~/.vim/bundle/ultisnips
-- Regenerate all help tags inside Vim: >
-    :Helptags
-- Add to git, forcing to include any tags: >
-    git add -f ~/.vim/bundle/ultisnips
+- Follow bundle installation instructions (|bundle_installation|).
 - See ~/.vim/vimrc for detailed configuration steps
 
 ------------------------------------------------------------------------------
