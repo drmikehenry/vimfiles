@@ -1519,30 +1519,6 @@ nmap <silent> <Leader>sv <C-W>o<Plug>VCSVimDiff<C-W>H<C-W>w
 " :nnoremap <C-W><C-F>   :FirstExplorerWindow<CR>
 " :nnoremap <C-W><C-B>   :BottomExplorerWindow<CR>
 
-" -------------------------------------------------------------
-" XPTemplate
-" -------------------------------------------------------------
-
-" TODO Decide on XPTemplate
-"if !exists('$XPTPATH')
-"    let $XPTPATH=$VIMFILES . "/xpt"
-"endif
-"set runtimepath+=$XPTPATH
-
-" Key to launch templates (defaults to <C-\>).
-"let g:xptemplate_key = '<Tab>'
-
-" 0 - Don't cancel template due to text changes outside placeholders.
-" 1 - Cancel template rendering on "incautious" text changes outside
-"     placeholders.
-" 2 - Cancel template rendering if any changes occur outside placeholders.
-" Defaults to 2.
-let g:xptemplate_strict = 2
-
-" Set to 1 for automatic brace completion (default 0).
-" TODO Seems to have problems when enabled.
-let g:xptemplate_brace_complete = 0
-
 " =============================================================
 " Language setup
 " =============================================================
