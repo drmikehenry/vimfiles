@@ -3,12 +3,28 @@
 " Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
 set nocompatible
 
+" -------------------------------------------------------------
+" runtimepath manipulation
+" -------------------------------------------------------------
+
+function! RtpPrepend(path)
+    if isdirectory(a:path)
+        let &runtimepath = a:path . "," . &runtimepath
+        if isdirectory(a:path . '/after')
+            let &runtimepath = &runtimepath . "," . a:path . "/after"
+        endif
+    endif
+endfunction
+
 " Set environment variable to directory containing this vimrc.
-" On Unix, expect ~/.vim; on Windows, expect $HOME/vimfiles.
+" Expect absolute directory $HOME/.vim on Unix ($HOME/vimfiles on Windows).
 " Note: using an environment variable instead of normal Vim variable
 " because environment variables are expanded in values used with
 " setting 'runtimepath' later.
-let $VIMFILES=expand("<sfile>:h")
+let $VIMFILES=expand("<sfile>:p:h")
+
+" If local customizations directory exists, it takes precedence.
+call RtpPrepend($VIMFILES . "/local")
 
 " Provide for per-user hook points before and after common vimrc.
 " User may supply a "-before.vim" hook that runs before the main contents
@@ -53,14 +69,22 @@ if $VIMRC_AFTER == ""
 endif
 
 " Prepend per-user directory to runtimepath (provides the highest priority).
-if isdirectory($VIMUSERFILES . "/" . $VIMUSER)
-    set runtimepath^=$VIMUSERFILES/$VIMUSER
-endif
+call RtpPrepend($VIMUSERFILES . "/" . $VIMUSER)
 
 " If it exists, source the specified "-before.vim" hook.
 if filereadable($VIMRC_BEFORE)
     source $VIMRC_BEFORE
 endif
+
+" -------------------------------------------------------------
+" Pathogen plugin management
+" -------------------------------------------------------------
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+call pathogen#infect()
+
+" Bundles in the "pre-bundle" directories will come earlier in the path
+" than those in "bundle" directories.
+call pathogen#infect('pre-bundle')
 
 
 " Number of lines of VIM history to remember.
@@ -1183,8 +1207,6 @@ nnoremap <Leader><Leader>b :CommandTBuffer<CR>
 " CtrlP
 " -------------------------------------------------------------
 
-set runtimepath+=$VIMFILES/bundle/ctrlp
-
 " No default mappings.
 let g:ctrlp_map = ''
 
@@ -1460,25 +1482,12 @@ nnoremap <silent> <C-Q>t        :TlistToggle<CR>
 " -------------------------------------------------------------
 " UltiSnips
 " -------------------------------------------------------------
-if !exists('$ULTISNIPS')
-    let $ULTISNIPS=$VIMFILES . "/UltiSnips-1.6"
-endif
 
 " Paths found earlier in runtimepath have higher snippet priority.
-" Therefore, put the distribution snippets in $ULTISNIPS last, and put
-" the "clearsnippets" path just before this to allow wiping of the
-" default snippets that come with UltiSnips.
-" Per-user customization will have highest priority because the per-user
-" directory was prepended to runtimepath.
+" In order to remove snippets distributed with UltiSnips, the
+" directory "pre-bundle/clearsnippets" will be earlier in the
+" runtimepath.
 
-" Local customizations.
-if isdirectory($VIMFILES . '/local')
-    set runtimepath+=$VIMFILES/local
-endif
-
-" The "clearsnippets" directory wipes out default snippets.
-set runtimepath+=$VIMFILES/clearsnippets
-set runtimepath+=$ULTISNIPS
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"

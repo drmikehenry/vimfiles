@@ -30,6 +30,7 @@
     Matchit - Extended matching with '%'                |notes_matchit|
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
+    Pathogen - Runtime path management for bundles      |notes_pathogen|
     Project - Managing "projects" of files              |notes_project|
     Python - Python Syntax file with folding            |notes_python|
     PythonComplete - Python Omnicompletion              |notes_pythoncomplete|
@@ -949,6 +950,25 @@ Installation:
 - :helptags ~/.vim/doc
 
 ------------------------------------------------------------------------------
+PATHOGEN                                                *notes_pathogen*
+  Runtime path management for bundles                   |notes_pathogen|
+
+Version 2012-04-29 from https://github.com/tpope/vim-pathogen
+
+Installation:
+- Remove existing bundle (if any): >
+  cd ~/.vim/bundle
+  rm -rf vim-pathogen
+- Clone latest version: >
+  git clone git@github.com:tpope/vim-pathogen
+- Remove .git directory: >
+  rm -rf vim-pathogen/.git
+- Process help tags (if any) in Vim: >
+  :Helptags
+- Force-add all files with Git: >
+  git add -f vim-pathogen
+
+------------------------------------------------------------------------------
 PROJECT                                                 *notes_project*
   Managing "projects" of files                          |project|
 
@@ -1225,16 +1245,17 @@ followed by <C-Tab>.
 Custom additional command to reset and reload snippets: >
     UltiSnipsReset
 
-Snippets live in two places:
+Snippets live in any "UltiSnips" subdirectory on the 'runtimepath'.  Snippets
+earlier in the 'runtimepath' take precedence.  For example:
 
 - ~/.vim/UltiSnips         - Snippets common to all configurations
 - ~/.vim/local/UltiSnips   - Optional snippets local to an installation
 
 For select languages, the default snippets provided by UltiSnips are
-overridden by local snippets.  This is accomplished by putting the
-directory ~/.vim/clearsnippets into the &runtimepath before the new
-locally defined snippets.  In this directory are snippets files using
-the "clearsnippets" directive to wipe out the default snippets.
+overridden by local snippets.  This is accomplished by putting the directory
+~/.vim/pre-bundle/clearsnippets into the 'runtimepath' before the new locally
+defined snippets.  In this directory are snippets files using the
+"clearsnippets" directive to wipe out the default snippets.
 
 To avoid rampant duplication when defining snippets, a custom set of Python
 scripts is used to define snippets.  For example, the file
@@ -1246,9 +1267,17 @@ reload the snippets.
 Version 1.6 from http://www.vim.org/scripts/script.php?script_id=2715
 
 Installation:
-- If upgrading, remove ~/.vim/UltiSnips-old.version/
-- Unpack in ~/.vim/, creating ~/.vim/UltiSnips-x.y/
-- Update $ULTISNIPS variable in ~/.vim/vimrc for new directory name
+- If upgrading, remove old bundle: >
+    rm -rf ~/.vim/bundle/ultisnips
+- Unpack in temporary directory, e.g.: >
+    cd ~/tmp
+    tar -zxf UltiSnips-1.6.tar.gz
+- Move to bundle directory: >
+    mv ~/tmp/UltiSnips-1.6 ~/.vim/bundle/ultisnips
+- Regenerate all help tags inside Vim: >
+    :Helptags
+- Add to git, forcing to include any tags: >
+    git add -f ~/.vim/bundle/ultisnips
 - See ~/.vim/vimrc for detailed configuration steps
 
 ------------------------------------------------------------------------------
