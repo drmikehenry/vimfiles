@@ -1491,7 +1491,6 @@ nnoremap <silent> <C-Q>t        :TlistToggle<CR>
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-command! UltiSnipsReset py UltiSnips_Manager.reset()
 
 " -------------------------------------------------------------
 " vis
