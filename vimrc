@@ -1855,6 +1855,7 @@ command! SetupCpp call SetupCpp()
 " -------------------------------------------------------------
 function! SetupClojure()
     call SetupSource()
+    setlocal ts=2 sts=2 sw=2
 endfunction
 command! SetupClojure call SetupClojure()
 
