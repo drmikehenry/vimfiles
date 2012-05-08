@@ -1250,9 +1250,6 @@ Configured as follows:
 To see snippets whose triggers begin with a given prefix, type the prefix
 followed by <C-Tab>.
 
-Custom additional command to reset and reload snippets: >
-    UltiSnipsReset
-
 Snippets live in any "UltiSnips" subdirectory on the 'runtimepath'.  Snippets
 earlier in the 'runtimepath' take precedence.  For example:
 
@@ -1269,8 +1266,7 @@ To avoid rampant duplication when defining snippets, a custom set of Python
 scripts is used to define snippets.  For example, the file
 ~/.vim/UltiSnips/c.snippets.py generates the snippets found in
 ~/.vim/UltiSnips/c.snippets.  All snippets make be "built" via the Makefile in
-~/.vim/UltiSnips by executing "make", followed in Vim by :UltiSnipsReset to
-reload the snippets.
+~/.vim/UltiSnips by executing "make".
 
 Version 2.1 from http://www.vim.org/scripts/script.php?script_id=2715
 
