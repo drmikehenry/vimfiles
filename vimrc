@@ -1975,6 +1975,12 @@ augroup local_vimrc
     " Do the same for Subversion.
     autocmd BufReadPost svn-commit.tmp exe "normal! gg"
 
+    " Set the text width for commit messages in Subversion.  It turns out
+    " that Vim has a file type mapping for Subversion commits: svn.  Set it
+    " to the same width as Git commit messages, 72.  Turn on spell-checking
+    " as well.
+    autocmd FileType svn setlocal tw=72 spell
+
     " Use tabs in gitconfig and .gitconfig.
     autocmd FileType gitconfig setlocal noexpandtab
     autocmd FileType .gitconfig setlocal noexpandtab
