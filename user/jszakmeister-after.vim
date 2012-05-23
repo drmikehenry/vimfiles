@@ -70,6 +70,9 @@ set nowrap
 set grepprg=ack
 set grepformat=%f:%l:%m
 
+" Be compatible with both grep on Linux and Mac
+let Grep_Xargs_Options = '-0'
+
 " Add a method to switch to the scratch buffer
 function! ToggleScratch()
     if expand('%') == g:ScratchBufferName
