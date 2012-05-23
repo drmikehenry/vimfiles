@@ -96,6 +96,9 @@ nnoremap <leader>w <C-w>v<C-w>l
 let g:vimclojure#HighlightBuiltins=1
 let g:vimclojure#ParenRainbow=1
 
+" Treat forms that start with def as lispwords
+let g:vimclojure#FuzzyIndent=1
+
 " I keep my nailgun client in ~/.local/bin.  If it's there, then let
 " VimClojure know.
 if executable(expand("~/.local/bin/ng"))
