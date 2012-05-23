@@ -125,3 +125,9 @@ set wildignore+=target/**,asset-cache
 
 " I regularly create tmp folders that I don't want searched
 set wildignore+=tmp
+
+" Shortcut for clearing CtrlP caches
+nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
+
+" Use CtrlP in place of Command-T
+nnoremap <Leader><Leader>t :<C-U>CtrlP<CR>
