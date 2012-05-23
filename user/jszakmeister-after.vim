@@ -67,8 +67,10 @@ endif
 set nowrap
 
 " Use ack for grep
-set grepprg=ack
-set grepformat=%f:%l:%m
+if executable('ack')
+    set grepprg=ack
+    set grepformat=%f:%l:%m
+endif
 
 " Be compatible with both grep on Linux and Mac
 let Grep_Xargs_Options = '-0'
