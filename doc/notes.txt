@@ -30,6 +30,7 @@
     Matchit - Extended matching with '%'                |notes_matchit|
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
+    Paredit - Structured editing of Lisp S-expressions  |notes_paredit|
     Pathogen - Runtime path management for bundles      |notes_pathogen|
     Project - Managing "projects" of files              |notes_project|
     Python - Python Syntax file with folding            |notes_python|
@@ -966,6 +967,20 @@ Version 0.41 from http://www.vim.org/scripts/script.php?script_id=1520
 Installation:
 - Unzip in ~/.vim/
 - :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+PAREDIT                                               *notes_paredit*
+  Structured editing of Lisp S-expressions in Vim     |paredit|
+
+Paredit tries to maintain a balanced state of matched characters, similar to
+paredit.el for Emacs.  This is helpful for Lisp programming languages like
+Clojure.
+
+Version 0.9.6 from http://www.vim.org/scripts/script.php?script_id=3988
+
+Installation (via pathogen):
+- Unzip in ~/.vim/bundle
+- :Helptags
 
 ------------------------------------------------------------------------------
 PATHOGEN                                                *notes_pathogen*

@@ -819,6 +819,7 @@ notes_markdown	notes.txt	/*notes_markdown*
 notes_matchit	notes.txt	/*notes_matchit*
 notes_netrw	notes.txt	/*notes_netrw*
 notes_omnicppcomplete	notes.txt	/*notes_omnicppcomplete*
+notes_paredit	notes.txt	/*notes_paredit*
 notes_pathogen	notes.txt	/*notes_pathogen*
 notes_plugins	notes.txt	/*notes_plugins*
 notes_project	notes.txt	/*notes_project*
