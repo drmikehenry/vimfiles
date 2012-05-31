@@ -131,3 +131,4 @@ nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
 
 " Use CtrlP in place of Command-T
 nnoremap <Leader><Leader>t :<C-U>CtrlP<CR>
+nnoremap <Leader><Leader>b :<C-U>CtrlPBuffer<CR>
