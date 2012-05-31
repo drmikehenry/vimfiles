@@ -132,3 +132,9 @@ nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
 " Use CtrlP in place of Command-T
 nnoremap <Leader><Leader>t :<C-U>CtrlP<CR>
 nnoremap <Leader><Leader>b :<C-U>CtrlPBuffer<CR>
+
+" On remote systems, I like to chnge the background color so that I remember I'm
+" on a remote system. :-)  This does break when you sudo su to root though.
+if !empty($SSH_TTY)
+    hi Normal guibg=#0d280d
+endif
