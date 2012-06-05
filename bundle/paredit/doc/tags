@@ -1,3 +1,4 @@
+g:paredit_electric_return	paredit.txt	/*g:paredit_electric_return*
 g:paredit_leader	paredit.txt	/*g:paredit_leader*
 g:paredit_matchlines	paredit.txt	/*g:paredit_matchlines*
 g:paredit_mode	paredit.txt	/*g:paredit_mode*

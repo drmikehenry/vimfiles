@@ -976,10 +976,10 @@ Paredit tries to maintain a balanced state of matched characters, similar to
 paredit.el for Emacs.  This is helpful for Lisp programming languages like
 Clojure.
 
-Version 0.9.6 from http://www.vim.org/scripts/script.php?script_id=3988
+Version 0.9.7 from http://www.vim.org/scripts/script.php?script_id=3988
 
 Installation (via pathogen):
-- Unzip in ~/.vim/bundle
+- Unzip in ~/.vim/bundle/paredit
 - :Helptags
 
 ------------------------------------------------------------------------------
