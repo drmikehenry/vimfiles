@@ -1,7 +1,7 @@
 " paredit.vim:
 "               Paredit mode for Slimv
-" Version:      0.9.7
-" Last Change:  22 May 2012
+" Version:      0.9.8
+" Last Change:  06 Jun 2012
 " Maintainer:   Tamas Kovacs <kovisoft at gmail dot com>
 " License:      This file is placed in the public domain.
 "               No warranty, express or implied.
@@ -75,6 +75,7 @@ let s:yank_pos           = []
 
 " Buffer specific initialization
 function! PareditInitBuffer()
+    let b:paredit_init = 1
     " Make sure to include special characters in 'iskeyword'
     " in case they are accidentally removed
     " Also define regular expressions to identify special characters used by paredit
@@ -101,7 +102,7 @@ function! PareditInitBuffer()
     if g:paredit_mode
         " Paredit mode is on: add buffer specific keybindings
         inoremap <buffer> <expr>   (            PareditInsertOpening('(',')')
-        inoremap <buffer> <silent> )            <C-O>:<C-U>call PareditInsertClosing('(',')')<CR>
+        inoremap <buffer> <silent> )            <C-O>:let save_ve=&ve<CR><C-O>:set ve=onemore<CR><C-O>:<C-U>call PareditInsertClosing('(',')')<CR><C-O>:let &ve=save_ve<CR>
         inoremap <buffer> <expr>   "            PareditInsertQuotes()
         inoremap <buffer> <expr>   <BS>         PareditBackspace(0)
         inoremap <buffer> <expr>   <Del>        PareditDel()
@@ -137,9 +138,9 @@ function! PareditInitBuffer()
         execute 'nmap     <buffer> <silent> ' . g:paredit_leader.'I   :<C-U>call PareditRaise()<CR>'
         if &ft == 'clojure'
             inoremap <buffer> <expr>   [            PareditInsertOpening('[',']')
-            inoremap <buffer> <silent> ]            <C-O>:<C-U>call PareditInsertClosing('[',']')<CR>
+            inoremap <buffer> <silent> ]            <C-O>:let save_ve=&ve<CR><C-O>:set ve=onemore<CR><C-O>:<C-U>call PareditInsertClosing('[',']')<CR><C-O>:let &ve=save_ve<CR>
             inoremap <buffer> <expr>   {            PareditInsertOpening('{','}')
-            inoremap <buffer> <silent> }            <C-O>:<C-U>call PareditInsertClosing('{','}')<CR>
+            inoremap <buffer> <silent> }            <C-O>:let save_ve=&ve<CR><C-O>:set ve=onemore<CR><C-O>:<C-U>call PareditInsertClosing('{','}')<CR><C-O>:let &ve=save_ve<CR>
             execute 'nnoremap <buffer> <silent> ' . g:paredit_leader.'w[  :<C-U>call PareditWrap("[","]")<CR>'
             execute 'vnoremap <buffer> <silent> ' . g:paredit_leader.'w[  :<C-U>call PareditWrapSelection("[","]")<CR>'
             execute 'nnoremap <buffer> <silent> ' . g:paredit_leader.'w{  :<C-U>call PareditWrap("{","}")<CR>'
@@ -357,7 +358,10 @@ endfunction
 
 " Toggle paredit mode
 function! PareditToggle()
-    let g:paredit_mode = 1 - g:paredit_mode
+    " Don't disable paredit if it was not initialized yet for the current buffer
+    if exists( 'b:paredit_init') || g:paredit_mode == 0
+        let g:paredit_mode = 1 - g:paredit_mode
+    endif
     echo g:paredit_mode ? 'Paredit mode on' : 'Paredit mode off'
     call PareditInitBuffer()
 endfunction
@@ -547,6 +551,10 @@ function! PareditFindOpening( open, close, select )
         normal! lvh
         let &ve = save_ve
         call searchpair( open, '', close, 'bW', s:skip_sc )
+        if &selection == 'inclusive'
+            " Trim last character from the selection, it will be included anyway
+            normal! oho
+        endif
     endif
 endfunction
 
@@ -635,6 +643,30 @@ function! PareditInsertOpening( open, close )
     return retval
 endfunction
 
+" Re-gather electric returns up
+function! s:ReGatherUp()
+    if g:paredit_electric_return && getline('.') =~ '^\s*)'
+        " Re-gather electric returns in the current line for ')'
+        normal! k
+        while getline( line('.') ) =~ '^\s*$'
+            " Delete all empty lines
+            normal! ddk
+        endwhile
+        normal! Jl
+    elseif g:paredit_electric_return && getline('.') =~ '^\s*\(\]\|}\)' && &ft == 'clojure' 
+        " Re-gather electric returns in the current line for ']' and '}'
+        normal! k
+        while getline( line('.') ) =~ '^\s*$'
+            " Delete all empty lines
+            normal! ddk
+        endwhile
+        call setline( line('.'), substitute( line, '\s*$', '', 'g' ) )
+        normal! Jxl
+    endif
+    " Already have the desired character, move right
+    call feedkeys( "\<Right>", 'n' )
+endfunction
+
 " Insert closing type of a paired character, like ) or ].
 function! PareditInsertClosing( open, close )
     if !g:paredit_mode || s:InsideComment() || s:InsideString() || !s:IsBalanced()
@@ -648,12 +680,7 @@ function! PareditInsertClosing( open, close )
         call feedkeys( a:close, 'n' )
         return
     elseif line[pos] == a:close
-        if g:paredit_electric_return && line =~ '^\s*)'
-            " Re-gather electric returns in the current line
-            normal! kJl
-        endif
-        " Already have the desired character, move right
-        call feedkeys( "\<Right>", 'n' )
+        call s:ReGatherUp()
         return
     endif
     let open  = escape( a:open , '[]' )
@@ -661,11 +688,21 @@ function! PareditInsertClosing( open, close )
     let newpos = searchpairpos( open, '', close, 'nW', s:skip_sc )
     if g:paredit_electric_return && newpos[0] > line('.')
         " Closing paren is in a line below, check if there are electric returns to re-gather
-        let nextline = getline( line('.') + 1 )
-        let nextline = substitute( nextline, '\s', '', 'g' )
+        while getline('.') =~ '^\s*$'
+            " Delete all empty lines above the cursor
+            normal! ddk
+        endwhile
+        let oldpos = getpos( '.' ) 
+        normal! j
+        while getline('.') =~ '^\s*$'
+            " Delete all empty lines below the cursor
+            normal! dd
+        endwhile
+        let nextline = substitute( getline('.'), '\s', '', 'g' )
+        call setpos( '.', oldpos )
         if len(nextline) > 0 && nextline[0] == ')'
             " Re-gather electric returns in the line of the closing ')'
-            call setline( line('.'), substitute( line, '\s*$', '', 'g' ) )
+            call setline( line('.'), substitute( getline('.'), '\s*$', '', 'g' ) )
             normal! Jl
             call feedkeys( "\<Right>", 'n' )
             return
@@ -679,12 +716,10 @@ function! PareditInsertClosing( open, close )
         endif
     elseif g:paredit_electric_return && line =~ '^\s*)'
         " Re-gather electric returns in the current line
-        normal! kJl
-        call feedkeys( "\<Right>", 'n' )
+        call s:ReGatherUp()
         return
     endif
-    if newpos[0] > 0
-        call setpos( '.', [0, newpos[0], newpos[1], 0] )
+    if searchpair( open, '', close, 'W', s:skip_sc ) > 0
         call feedkeys( "\<Right>", 'n' )
     endif
     "TODO: indent after going to closing character
