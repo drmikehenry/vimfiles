@@ -47,17 +47,20 @@ if !has("gui_running")
     endif
 endif
 
-if has("mac") || has("macunix")
-    " Turn on fancy symbols on the status line
-    if has("gui_running")
-        if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf"))
+" Turn on fancy symbols on the status line
+if has("gui_running")
+    if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf")) ||
+       \ filereadable(expand("~/.fonts/DroidSansMonoSlashed-Powerline.ttf"))
+        if has("mac") || has("macunix")
             set guifont=Droid\ Sans\ Mono\ Slashed\ for\ Powerline:h14
-            let g:Powerline_symbols = 'fancy'
         else
-            set guifont=Droid\ Sans\ Mono:h14,Inconsolata:h16
+            set guifont=Droid\ Sans\ Mono\ Slashed\ for\ Powerline\ 14
         endif
+
+        let g:Powerline_symbols = 'fancy'
+    elseif has("mac") || has("macunix")
+        set guifont=Droid\ Sans\ Mono:h16,Inconsolata:h16
     endif
-    " let Grep_Xargs_Options = -0
 endif
 
 if has("gui_macvim")
