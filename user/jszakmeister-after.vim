@@ -26,6 +26,10 @@ if !has("gui_running")
         " Set the cursor to a vertical line in insert mode.
         let &t_SI = "\<Esc>]50;CursorShape=1\x7"
         let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+    elseif $COLORTERM == "gnome-terminal"
+        if &t_Co <= 16
+            set t_Co = 256
+        endif
     endif
 
     if &t_Co > 255
