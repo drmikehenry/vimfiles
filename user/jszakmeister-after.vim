@@ -131,7 +131,7 @@ augroup END
 set wildignore+=target/**,asset-cache
 
 " I regularly create tmp folders that I don't want searched
-set wildignore+=tmp
+set wildignore+=tmp,.lein-cljsbuild*,*.egg-info
 
 " Shortcut for clearing CtrlP caches
 nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
