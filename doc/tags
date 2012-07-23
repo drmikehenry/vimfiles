@@ -807,6 +807,7 @@ notes_fontsize	notes.txt	/*notes_fontsize*
 notes_fswitch	notes.txt	/*notes_fswitch*
 notes_genutils	notes.txt	/*notes_genutils*
 notes_grep	notes.txt	/*notes_grep*
+notes_gundo	notes.txt	/*notes_gundo*
 notes_headerguard	notes.txt	/*notes_headerguard*
 notes_installation	notes.txt	/*notes_installation*
 notes_intro	notes.txt	/*notes_intro*
