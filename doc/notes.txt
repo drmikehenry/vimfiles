@@ -20,6 +20,7 @@
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
     Genutils - Generic utility functions                |notes_genutils|
     Grep - Wrapper for grep/xargs                       |notes_grep|
+    Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
     LookupFile - Lookup files, buffer, etc.             |notes_lookupfile|
@@ -581,6 +582,18 @@ Installation:
 
 Version 1.9 from http://www.vim.org/scripts/script.php?script_id=311
 
+------------------------------------------------------------------------------
+GUNDO                                                   *notes_gundo*
+  Visualize your undo tree                              |gundo|
+
+Gundo is a Vim plugin for visualizing your undo tree to make it usable.
+
+To toggle the undo view, use :GundoToggle.
+
+Version 2.4.0 from http://www.vim.org/scripts/script.php?script_id=3304
+
+- Unzipped into ~/.vim/bundle.
+- :Helptags
 ------------------------------------------------------------------------------
 HEADERGUARD                                             *notes_headerguard*
   Add guards for header files                           |headerguard|
@@ -1265,9 +1278,6 @@ Configured as follows:
 To see snippets whose triggers begin with a given prefix, type the prefix
 followed by <C-Tab>.
 
-Custom additional command to reset and reload snippets: >
-    UltiSnipsReset
-
 Snippets live in any "UltiSnips" subdirectory on the 'runtimepath'.  Snippets
 earlier in the 'runtimepath' take precedence.  For example:
 
@@ -1284,8 +1294,7 @@ To avoid rampant duplication when defining snippets, a custom set of Python
 scripts is used to define snippets.  For example, the file
 ~/.vim/UltiSnips/c.snippets.py generates the snippets found in
 ~/.vim/UltiSnips/c.snippets.  All snippets make be "built" via the Makefile in
-~/.vim/UltiSnips by executing "make", followed in Vim by :UltiSnipsReset to
-reload the snippets.
+~/.vim/UltiSnips by executing "make".
 
 Version 2.1 from http://www.vim.org/scripts/script.php?script_id=2715
 
