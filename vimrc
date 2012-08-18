@@ -1931,18 +1931,18 @@ runtime ftplugin/man.vim
 " Autocmds
 " =============================================================
 
-" Enable file type detection.
-" Use the default filetype settings, so that mail gets 'tw' set to 72,
-" 'cindent' is on in C files, etc.
-" Also load indent files, to automatically do language-dependent indenting.
 " NOTE: This must be done *after* all bundles have been loaded.
-filetype plugin indent on
-
 " Enable syntax highlighting and search highlighting when colors available.
 if &t_Co > 2 || has("gui_running")
     syntax on
     set hlsearch
 endif
+
+" Enable file type detection.
+" Use the default filetype settings, so that mail gets 'tw' set to 72,
+" 'cindent' is on in C files, etc.
+" Also load indent files, to automatically do language-dependent indenting.
+filetype plugin indent on
 
 " Extended filetype detection by extensions is found in
 " filetype.vim
