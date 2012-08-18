@@ -1543,9 +1543,9 @@ set spelllang=en_us
 "highlight HG_Background gui=BOLD guibg=#EFEFF7
 
 function! HighlightDefineGroups()
-    hi HG_Subtle ctermfg=yellow ctermbg=white guibg=#efeff7
-    hi HG_Warning ctermfg=yellow ctermbg=white guibg=#ffffdd
-    hi HG_Error   ctermfg=red    ctermbg=white guibg=#ffe0e0
+    hi HG_Subtle ctermfg=yellow  ctermbg=lightgray guibg=#efeff7
+    hi HG_Warning ctermfg=yellow ctermbg=lightgray guibg=#ffffdd
+    hi HG_Error   ctermfg=red    ctermbg=lightgray guibg=#ffe0e0
 endfunction
 
 :autocmd ColorScheme * call HighlightDefineGroups()
