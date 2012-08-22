@@ -102,6 +102,18 @@ Unpack, configure, build, and create binary and source tarballs: >
 Installation of final tarball is done as follows: >
     sudo tar -C / -zxf vim73/vim-7.3.patchlevel.i386.tar.gz
 
+After installation on Linux, the distro-provided global vimrc file will not be
+used, so Vim will come up in VI-compatible mode for users (e.g. root) that
+don't have a ~/.vimrc file.  To use the distro's global vimrc file, create a
+symlink $VIM/vimrc (/usr/local/share/vim/vimrc) that points to the
+distro-provided global vimrc.
+
+On Fedora: >
+    ln -s /etc/vimrc /usr/local/share/vim/vimrc
+
+On Ubuntu: >
+    ln -s /etc/vim/vimrc /usr/local/share/vim/vimrc
+
 To register as the system alternative: >
 
   for i in gvim gview gvimdiff; do
