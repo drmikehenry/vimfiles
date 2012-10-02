@@ -14,7 +14,7 @@ augroup filetypedetect
     au BufNewFile,BufRead *.txt setfiletype text
     au BufNewFile,BufRead *.wiki setfiletype Wikipedia
     au BufNewFile,BufRead *.{md,mkd,mdwn,mdown,markdown} setfiletype mkd
-    au BufNewFile,BufRead *.{rest} setfiletype rst
+    au BufNewFile,BufRead *.rest setfiletype rst
     au BufNewFile,BufRead bash-fc-*
                 \ unlet g:is_kornshell
                 \ | let g:is_bash=1
