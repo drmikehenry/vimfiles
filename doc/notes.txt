@@ -150,6 +150,97 @@ Clone the repository via: >
   cd ~/build
   hg clone https://vim.googlecode.com/hg/ vim
 
+Windows build notes:
+--------------------
+
+These are very green at present.
+
+Follow instructions found here:
+http://cream.cvs.sourceforge.net/viewvc/cream/misc/
+
+In particular, vim-build.bat is the main build script, and
+vim-build-INSTALLS.txt has some pre-requisites.
+
+Acquire and install the following dependencies:
+
+- Cygwin:
+
+  - URL: http://www.cygwin.com/
+
+  - Install to c:\cygwin or ensure that Cygwin's bin directory is in PATH.
+
+  - Install base packages plus:
+
+    - binutils
+    - gcc
+    - make
+
+- Nullsoft installer:
+
+  - URL: http://nsis.sourceforge.net/Download
+
+  - Install to default location or customize NSIS variable.
+
+- Python 2.7:
+
+  - URL: Python
+
+  - Use 32-bit standard distribution.
+
+  - Install to default location or customize PYTHON variable.
+
+- Perl 5.8:
+
+  - Prefer 32-bit Strawberry Perl distribution.
+
+  - URL: http://strawberryperl.com/
+
+  - Install to default location or customize PERL variable.
+
+- Lua
+
+  - Use Lua's Windows installer.
+
+  - URL: http://code.google.com/p/luaforwindows/
+    http://luaforwindows.googlecode.com/files/LuaForWindows_v5.1.4-46.exe
+
+  - Also requires VC2005 runtime:
+    http://luaforwindows.googlecode.com/files/vcredist_x86.exe
+    Place this in same directory with LUA installer and it will automatically
+    be installed along with Lua.
+
+  - Install to default location or customize LUA variable.
+
+- Mercurial:
+
+  - Use Inno Setup installer (either 32-bit or 64-bit).
+
+  - URL: http://mercurial.selenic.com/
+
+  - Allow installer to update PATH.
+
+
+...FROM HERE DOWN CURRENTLY FAIL...
+
+o Ruby 1.8
+  * Fix  C:\ruby\lib\ruby\1.8\i386-mingw32\config.h
+
+      1: #if _MSC_VER != 1200
+      2: #error MSC version unmatch
+      3: #endif
+
+    to
+
+      1: /*#if _MSC_VER != 1200
+      2: #error MSC version unmatch
+      3: #endif*/
+
+o TCL 8.5
+  * Use ActiveState one-click installer (no registration required)
+
+o MZScheme 4.2 (now Racket (from PLT), not the entire PLT Scheme installer, just the MZ package)
+
+
 ==============================================================================
 3.  Plugins                                             *notes_plugins*
 
