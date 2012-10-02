@@ -9,16 +9,16 @@ let g:is_kornshell = 1
 
 augroup filetypedetect
     au!
-    au BufNewFile,BufRead *.cxx setf cpp
-    au BufNewFile,BufRead *.dxy setf c
-    au BufNewFile,BufRead *.txt setf text
-    au BufNewFile,BufRead *.wiki setf Wikipedia
-    au BufNewFile,BufRead *.{md,mkd,mdwn,mdown,markdown} setf mkd
-    au BufNewFile,BufRead *.{rest} setf rst
-    au BufNewFile,BufRead bash-fc-* unlet g:is_kornshell | let g:is_bash=1 | setf sh | setl nospell | setl tw=0 | Highlight no*
-    au BufNewFile,BufRead *.cljs setf clojure
+    au BufNewFile,BufRead *.cxx setfiletype cpp
+    au BufNewFile,BufRead *.dxy setfiletype c
+    au BufNewFile,BufRead *.txt setfiletype text
+    au BufNewFile,BufRead *.wiki setfiletype Wikipedia
+    au BufNewFile,BufRead *.{md,mkd,mdwn,mdown,markdown} setfiletype mkd
+    au BufNewFile,BufRead *.{rest} setfiletype rst
+    au BufNewFile,BufRead bash-fc-* unlet g:is_kornshell | let g:is_bash=1 | setfiletype sh | setlocal nospell | setlocal tw=0 | Highlight no*
+    au BufNewFile,BufRead *.cljs setfiletype clojure
 
     " Use the copy and overwrite mechanism on crontab files, otherwise crontab
     " may not see the changes we make.
-    au FileType crontab setl backupcopy=yes
+    au FileType crontab setlocal backupcopy=yes
 augroup END
