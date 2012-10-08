@@ -1371,7 +1371,7 @@ scripts is used to define snippets.  For example, the file
 ~/.vim/UltiSnips/c.snippets.  All snippets make be "built" via the Makefile in
 ~/.vim/UltiSnips by executing "make".
 
-Version 2.1 from http://www.vim.org/scripts/script.php?script_id=2715
+Version 2.2 from http://www.vim.org/scripts/script.php?script_id=2715
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
