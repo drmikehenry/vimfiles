@@ -1127,25 +1127,25 @@ command! QuickFixWinToggle :call QuickFixWinToggle()
 
 " Like windo but restore the current window.
 function! WinDo(command)
-  let currwin=winnr()
-  execute 'windo ' . a:command
-  execute currwin . 'wincmd w'
+    let currwin=winnr()
+    execute 'windo ' . a:command
+    execute currwin . 'wincmd w'
 endfunction
 com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
 
 " Like bufdo but restore the current buffer.
 function! BufDo(command)
-  let currBuff=bufnr("%")
-  execute 'bufdo if &bt==""|set ei-=Syntax|' . a:command . '|endif'
-  execute 'buffer ' . currBuff
+    let currBuff=bufnr("%")
+    execute 'bufdo if &bt==""|set ei-=Syntax|' . a:command . '|endif'
+    execute 'buffer ' . currBuff
 endfunction
 com! -nargs=+ -complete=command Bufdo call BufDo(<q-args>)
 
 " Like tabdo but restore the current tab.
 function! TabDo(command)
-  let currTab=tabpagenr()
-  execute 'tabdo ' . a:command
-  execute 'tabn ' . currTab
+    let currTab=tabpagenr()
+    execute 'tabdo ' . a:command
+    execute 'tabn ' . currTab
 endfunction
 com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 
@@ -1722,48 +1722,49 @@ command! SetupRst call SetupRst()
 
 " Modified from $VIM/indent/rst.vim
 function! GetRSTIndent()
-  let lnum = prevnonblank(v:lnum - 1)
-  if lnum == 0
-    return 0
-  endif
-
-  let ind = indent(lnum)
-  let line = getline(lnum)
-
-  " Trying to avoid having extra indentation when typing a simple list
-  " like this:
-  "   - one
-  "   - two
-  "   - three
-  "
-  " So, only indent if the current line to be indented is non-blank.
-  if getline(v:lnum) !~ '^\s*$'
-      if line =~ '^\s*[-*+]\s'
-        let ind = ind + 2
-      elseif line =~ '^\s*\d\+.\s'
-        let ind = ind + matchend(substitute(line, '^\s*', '', ''), '\d\+.\s\+')
-      endif
-  endif
-
-  let line = getline(v:lnum - 1)
-
-  if line =~ '^\s*$'
-    execute lnum
-    call search('^\s*\%([-*+]\s\|\d\+.\s\|\.\.\|$\)', 'bW')
-    let line = getline('.')
-    if line =~ '^\s*[-*+]'
-      let ind = ind - 2
-    elseif line =~ '^\s*\d\+\.\s'
-      let ind = ind - matchend(substitute(line, '^\s*', '', ''),
-            \ '\d\+\.\s\+')
-    elseif line =~ '^\s*\.\.'
-      let ind = ind - 3
-    else
-      let ind = ind
+    let lnum = prevnonblank(v:lnum - 1)
+    if lnum == 0
+        return 0
     endif
-  endif
 
-  return ind
+    let ind = indent(lnum)
+    let line = getline(lnum)
+
+    " Trying to avoid having extra indentation when typing a simple list
+    " like this:
+    "   - one
+    "   - two
+    "   - three
+    "
+    " So, only indent if the current line to be indented is non-blank.
+    if getline(v:lnum) !~ '^\s*$'
+        if line =~ '^\s*[-*+]\s'
+            let ind = ind + 2
+        elseif line =~ '^\s*\d\+.\s'
+            let ind = ind + matchend(substitute(line, '^\s*', '', ''),
+                        \ '\d\+.\s\+')
+        endif
+    endif
+
+    let line = getline(v:lnum - 1)
+
+    if line =~ '^\s*$'
+        execute lnum
+        call search('^\s*\%([-*+]\s\|\d\+.\s\|\.\.\|$\)', 'bW')
+        let line = getline('.')
+        if line =~ '^\s*[-*+]'
+            let ind = ind - 2
+        elseif line =~ '^\s*\d\+\.\s'
+            let ind = ind - matchend(substitute(line, '^\s*', '', ''),
+                        \ '\d\+\.\s\+')
+        elseif line =~ '^\s*\.\.'
+            let ind = ind - 3
+        else
+            let ind = ind
+        endif
+    endif
+
+    return ind
 endfunction
 
 " -------------------------------------------------------------
