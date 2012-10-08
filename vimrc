@@ -1720,53 +1720,6 @@ function! SetupRst()
 endfunction
 command! SetupRst call SetupRst()
 
-" Modified from $VIM/indent/rst.vim
-function! GetRSTIndent()
-    let lnum = prevnonblank(v:lnum - 1)
-    if lnum == 0
-        return 0
-    endif
-
-    let ind = indent(lnum)
-    let line = getline(lnum)
-
-    " Trying to avoid having extra indentation when typing a simple list
-    " like this:
-    "   - one
-    "   - two
-    "   - three
-    "
-    " So, only indent if the current line to be indented is non-blank.
-    if getline(v:lnum) !~ '^\s*$'
-        if line =~ '^\s*[-*+]\s'
-            let ind = ind + 2
-        elseif line =~ '^\s*\d\+.\s'
-            let ind = ind + matchend(substitute(line, '^\s*', '', ''),
-                        \ '\d\+.\s\+')
-        endif
-    endif
-
-    let line = getline(v:lnum - 1)
-
-    if line =~ '^\s*$'
-        execute lnum
-        call search('^\s*\%([-*+]\s\|\d\+.\s\|\.\.\|$\)', 'bW')
-        let line = getline('.')
-        if line =~ '^\s*[-*+]'
-            let ind = ind - 2
-        elseif line =~ '^\s*\d\+\.\s'
-            let ind = ind - matchend(substitute(line, '^\s*', '', ''),
-                        \ '\d\+\.\s\+')
-        elseif line =~ '^\s*\.\.'
-            let ind = ind - 3
-        else
-            let ind = ind
-        endif
-    endif
-
-    return ind
-endfunction
-
 " -------------------------------------------------------------
 " Setup for Wikipedia.
 " -------------------------------------------------------------
