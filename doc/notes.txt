@@ -96,11 +96,11 @@ source: >
 Unpack, configure, build, and create binary and source tarballs: >
 
   cd ~/build
-  rm -rf vim7.3
+  rm -rf vim-7.3
   ~/.vim/buildtool 7.3
 
 Installation of final tarball is done as follows: >
-    sudo tar -C / -zxf vim73/vim-7.3.patchlevel.i386.tar.gz
+    sudo tar -C / -zxf vim-7.3/vim-7.3.patchlevel.i386.tar.gz
 
 After installation on Linux, the distro-provided global vimrc file will not be
 used, so Vim will come up in VI-compatible mode for users (e.g. root) that
