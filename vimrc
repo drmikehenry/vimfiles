@@ -1531,7 +1531,9 @@ nmap <silent> <Leader>sv <C-W>o<Plug>VCSVimDiff<C-W>H<C-W>w
 " Language setup
 " =============================================================
 
+" Override spell-checking in per-user settings if desired.
 set spelllang=en_us
+set spell
 
 " =============================================================
 " Highlight setup
@@ -1640,7 +1642,7 @@ function! SetupMail()
     " The 'w' flag causes problems for wrapping when manual editing strips
     " out a trailing space.  Better to avoid the flag...
     " set formatoptions+=w
-    setlocal tw=64 sw=2 sts=2 et ai spell
+    setlocal tw=64 sw=2 sts=2 et ai
 endfunction
 command! SetupMail call SetupMail()
 
@@ -1656,7 +1658,7 @@ command! SetupText call SetupText()
 " Setup for general source code.
 " -------------------------------------------------------------
 function! SetupSource()
-    setlocal tw=80 ts=4 sts=4 sw=4 et ai spell
+    setlocal tw=80 ts=4 sts=4 sw=4 et ai
     Highlight longlines tabs trailingspace
 endfunction
 command! SetupSource call SetupSource()
@@ -1665,7 +1667,7 @@ command! SetupSource call SetupSource()
 " Setup for markup languages like HTML, XML, ....
 " -------------------------------------------------------------
 function! SetupMarkup()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai spell
+    setlocal tw=80 ts=2 sts=2 sw=2 et ai
     runtime scripts/closetag.vim
     runtime scripts/xml.vim
 endfunction
@@ -1714,7 +1716,7 @@ endfunction
 command! SetupRstSyntax call SetupRstSyntax()
 
 function! SetupRst()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai spell
+    setlocal tw=80 ts=2 sts=2 sw=2 et ai
 endfunction
 command! SetupRst call SetupRst()
 
@@ -1768,7 +1770,7 @@ endfunction
 " Setup for Wikipedia.
 " -------------------------------------------------------------
 function! SetupWikipedia()
-    setlocal tw=0 ts=2 sts=2 sw=2 et ai spell
+    setlocal tw=0 ts=2 sts=2 sw=2 et ai
     " Setup angle brackets as matched pairs for '%'.
     setlocal matchpairs+=<:>
 endfunction
@@ -1983,11 +1985,10 @@ augroup local_vimrc
     " First, remove all autocmds in this group.
     autocmd!
 
-    " Show diffs when writing commit messages for git, and turn on
-    " spell checking.
+    " Show diffs when writing commit messages for git.
     autocmd FileType gitcommit
                 \ DiffGitCached | wincmd J | wincmd p |
-                \ resize 15 | setlocal spell
+                \ resize 15
 
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event
@@ -2009,9 +2010,8 @@ augroup local_vimrc
 
     " Set the text width for commit messages in Subversion.  It turns out
     " that Vim has a file type mapping for Subversion commits: svn.  Set it
-    " to the same width as Git commit messages, 72.  Turn on spell-checking
-    " as well.
-    autocmd FileType svn setlocal tw=72 spell
+    " to the same width as Git commit messages, 72.
+    autocmd FileType svn setlocal tw=72
 
     " Use tabs in gitconfig and .gitconfig.
     autocmd FileType gitconfig setlocal noexpandtab
