@@ -397,7 +397,7 @@ Local customizations:
   (CTRL-J).
 
 
-Version 2012-04-29 from https://github.com/kien/ctrlp.vim
+Version 2012-10-08 from https://github.com/kien/ctrlp.vim
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

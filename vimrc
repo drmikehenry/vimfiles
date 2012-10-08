@@ -1213,13 +1213,6 @@ let g:ctrlp_map = ''
 " Directory mode for launching ':CtrlP' with no directory argument:
 "   0 - Don't manage the working directory (Vim's CWD will be used).
 "       Same as ':CtrlP $PWD'.
-"   1 - The parent directory of the current file.
-"       Same as ':CtrlP %:h'
-"   2 - Nearest ancestor that contains a "root marker", taken first from any
-"       markers in the list specified in g:ctrlp_root_markers, then from the
-"       built-in list of markers, currently set to:
-"         root.dir .git/ .hg/ .svn/ .bzr/ _darcs/
-"       Same as ':CtrlPRoot'
 let g:ctrlp_working_path_mode = 0
 
 " Set to list of marker directories used for ':CtrlPRoot'.

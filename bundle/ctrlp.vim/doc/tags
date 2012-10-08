@@ -1,7 +1,11 @@
 'ctrl-p'	ctrlp.txt	/*'ctrl-p'*
 'ctrlp'	ctrlp.txt	/*'ctrlp'*
 'ctrlp-<c-p>'	ctrlp.txt	/*'ctrlp-<c-p>'*
+'ctrlp-autocompletion'	ctrlp.txt	/*'ctrlp-autocompletion'*
 'ctrlp-fullregexp'	ctrlp.txt	/*'ctrlp-fullregexp'*
+'ctrlp-pasting'	ctrlp.txt	/*'ctrlp-pasting'*
+'ctrlp-wildignore'	ctrlp.txt	/*'ctrlp-wildignore'*
+'g:ctrlp_abbrev'	ctrlp.txt	/*'g:ctrlp_abbrev'*
 'g:ctrlp_arg_map'	ctrlp.txt	/*'g:ctrlp_arg_map'*
 'g:ctrlp_buffer_func'	ctrlp.txt	/*'g:ctrlp_buffer_func'*
 'g:ctrlp_buftag_ctags_bin'	ctrlp.txt	/*'g:ctrlp_buftag_ctags_bin'*
@@ -13,8 +17,8 @@
 'g:ctrlp_cmd'	ctrlp.txt	/*'g:ctrlp_cmd'*
 'g:ctrlp_custom_ignore'	ctrlp.txt	/*'g:ctrlp_custom_ignore'*
 'g:ctrlp_default_input'	ctrlp.txt	/*'g:ctrlp_default_input'*
-'g:ctrlp_dotfiles'	ctrlp.txt	/*'g:ctrlp_dotfiles'*
 'g:ctrlp_follow_symlinks'	ctrlp.txt	/*'g:ctrlp_follow_symlinks'*
+'g:ctrlp_key_loop'	ctrlp.txt	/*'g:ctrlp_key_loop'*
 'g:ctrlp_lazy_update'	ctrlp.txt	/*'g:ctrlp_lazy_update'*
 'g:ctrlp_map'	ctrlp.txt	/*'g:ctrlp_map'*
 'g:ctrlp_match_func'	ctrlp.txt	/*'g:ctrlp_match_func'*
@@ -30,14 +34,17 @@
 'g:ctrlp_mruf_include'	ctrlp.txt	/*'g:ctrlp_mruf_include'*
 'g:ctrlp_mruf_max'	ctrlp.txt	/*'g:ctrlp_mruf_max'*
 'g:ctrlp_mruf_relative'	ctrlp.txt	/*'g:ctrlp_mruf_relative'*
+'g:ctrlp_open_func'	ctrlp.txt	/*'g:ctrlp_open_func'*
 'g:ctrlp_open_multiple_files'	ctrlp.txt	/*'g:ctrlp_open_multiple_files'*
 'g:ctrlp_open_new_file'	ctrlp.txt	/*'g:ctrlp_open_new_file'*
 'g:ctrlp_prompt_mappings'	ctrlp.txt	/*'g:ctrlp_prompt_mappings'*
 'g:ctrlp_regexp'	ctrlp.txt	/*'g:ctrlp_regexp'*
 'g:ctrlp_reuse_window'	ctrlp.txt	/*'g:ctrlp_reuse_window'*
 'g:ctrlp_root_markers'	ctrlp.txt	/*'g:ctrlp_root_markers'*
+'g:ctrlp_show_hidden'	ctrlp.txt	/*'g:ctrlp_show_hidden'*
 'g:ctrlp_status_func'	ctrlp.txt	/*'g:ctrlp_status_func'*
 'g:ctrlp_switch_buffer'	ctrlp.txt	/*'g:ctrlp_switch_buffer'*
+'g:ctrlp_tabpage_position'	ctrlp.txt	/*'g:ctrlp_tabpage_position'*
 'g:ctrlp_use_caching'	ctrlp.txt	/*'g:ctrlp_use_caching'*
 'g:ctrlp_use_migemo'	ctrlp.txt	/*'g:ctrlp_use_migemo'*
 'g:ctrlp_user_command'	ctrlp.txt	/*'g:ctrlp_user_command'*
@@ -81,6 +88,7 @@ ctrlp-miscellaneous-configs	ctrlp.txt	/*ctrlp-miscellaneous-configs*
 ctrlp-options	ctrlp.txt	/*ctrlp-options*
 ctrlp.txt	ctrlp.txt	/*ctrlp.txt*
 g:ctrlp_dont_split	ctrlp.txt	/*g:ctrlp_dont_split*
+g:ctrlp_dotfiles	ctrlp.txt	/*g:ctrlp_dotfiles*
 g:ctrlp_highlight_match	ctrlp.txt	/*g:ctrlp_highlight_match*
 g:ctrlp_jump_to_buffer	ctrlp.txt	/*g:ctrlp_jump_to_buffer*
 g:ctrlp_live_update	ctrlp.txt	/*g:ctrlp_live_update*
