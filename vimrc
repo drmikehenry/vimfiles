@@ -1636,7 +1636,7 @@ command! -nargs=* -complete=custom,HighlightArgs
 " Setup for plain text.
 " -------------------------------------------------------------
 function! SetupText()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai spelllang=en_us
+    setlocal tw=80 ts=2 sts=2 sw=2 et ai
 endfunction
 command! SetupText call SetupText()
 
@@ -1644,7 +1644,7 @@ command! SetupText call SetupText()
 " Setup for general source code.
 " -------------------------------------------------------------
 function! SetupSource()
-    setlocal tw=80 ts=4 sts=4 sw=4 et ai spell spelllang=en_us
+    setlocal tw=80 ts=4 sts=4 sw=4 et ai spell
     Highlight longlines tabs trailingspace
 endfunction
 command! SetupSource call SetupSource()
@@ -1653,7 +1653,7 @@ command! SetupSource call SetupSource()
 " Setup for markup languages like HTML, XML, ....
 " -------------------------------------------------------------
 function! SetupMarkup()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai spell spelllang=en_us
+    setlocal tw=80 ts=2 sts=2 sw=2 et ai spell
     runtime scripts/closetag.vim
     runtime scripts/xml.vim
 endfunction
@@ -1702,7 +1702,7 @@ endfunction
 command! SetupRstSyntax call SetupRstSyntax()
 
 function! SetupRst()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai spell spelllang=en_us
+    setlocal tw=80 ts=2 sts=2 sw=2 et ai spell
 endfunction
 command! SetupRst call SetupRst()
 
@@ -1756,7 +1756,7 @@ endfunction
 " Setup for Wikipedia.
 " -------------------------------------------------------------
 function! SetupWikipedia()
-    setlocal tw=0 ts=2 sts=2 sw=2 et ai spell spelllang=en_us
+    setlocal tw=0 ts=2 sts=2 sw=2 et ai spell
     " Setup angle brackets as matched pairs for '%'.
     setlocal matchpairs+=<:>
 endfunction
