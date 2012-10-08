@@ -1775,6 +1775,25 @@ endfunction
 command! SetupWikipedia call SetupWikipedia()
 
 " -------------------------------------------------------------
+" Setup for Bash "fixcommand" mode using "fc" command.
+" -------------------------------------------------------------
+function! SetupBashFixcommand()
+    " Generally this mode is for "one-shot" editing using Bash's "fc"
+    " command.  It won't be used for a long-running editing session
+    " with multiple files, so it's OK to change the global shell defaults
+    " (which is good, because this would be painful otherwise).
+    unlet g:is_kornshell
+    let g:is_bash=1
+    setfiletype sh
+
+    " Spell-checking is not very useful in large Bash one-liners.
+    setlocal nospell
+    setlocal tw=0
+    Highlight no*
+endfunction
+command! SetupBashFixcommand call SetupBashFixcommand()
+
+" -------------------------------------------------------------
 " Setup for C code.
 " -------------------------------------------------------------
 
