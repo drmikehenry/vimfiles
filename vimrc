@@ -1344,7 +1344,7 @@ command! A FSHere
 " Grep
 " -------------------------------------------------------------
 
-let Grep_Skip_Dirs = '.svn .bzr .git .hg build bak export'
+let Grep_Skip_Dirs = '.svn .bzr .git .hg build bak export .undo'
 let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
     \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc build.out doxy.out'
 
