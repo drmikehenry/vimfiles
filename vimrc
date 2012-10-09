@@ -117,6 +117,9 @@ set timeoutlen=3000
 " and 150 ms ==> 80 words per minute.
 set ttimeoutlen=150
 
+" Configure special terminal keys.
+runtime termsupport.vim
+
 " Disallow octal numbers for increment/decrement (CTRL-A/CTRL-X).
 set nrformats-=octal
 
