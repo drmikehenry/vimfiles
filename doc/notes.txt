@@ -18,11 +18,9 @@
     Extline - for extending lines                       |notes_extline|
     Fontsize - increment/decrement font size            |notes_fontsize|
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
-    Genutils - Generic utility functions                |notes_genutils|
     Grep - Wrapper for grep/xargs                       |notes_grep|
     Headerguard - Add guards for header files           |notes_headerguard|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
-    LookupFile - Lookup files, buffer, etc.             |notes_lookupfile|
     LoremIpsum - Generate dummy text                    |notes_loremipsum|
     LustyExplorer - File/buffer switcher w/incr. search |notes_lustyexplorer|
     LustyJuggler - Quick access to recent buffers       |notes_lustyjuggler|
@@ -587,18 +585,6 @@ Installation:
     :q
 
 ------------------------------------------------------------------------------
-GENUTILS                                                *notes_genutils*
-  Generic utility functions
-
-
-Required by several of Hari Krishna Dana's plugins, e.g. LookupFile.
-
-Version 2.5 from http://www.vim.org/scripts/script.php?script_id=197
-
-Installation:
-- Unzip in ~/.vim/
-
-------------------------------------------------------------------------------
 GREP                                                    *notes_grep*
   Wrapper for grep/xargs                                |grep-plugin|
 
@@ -760,27 +746,6 @@ Installation:
 - Install keepcase.vim in ~/.vim/plugin
 
 Version 2.0 from http://www.vim.org/scripts/script.php?script_id=6
-
-------------------------------------------------------------------------------
-LOOKUPFILE                                              *notes_lookupfile*
-  Lookup files, buffer, etc.                            |lookupfile.txt|
-
-Version 1.8 from http://www.vim.org/scripts/script.php?script_id=1581
-
-Press <F5> for :LookupFile command (most recently Lookup operation).
-
-This plugin needs more time for evaluation and configuration.
-
-Commands       Meaning
-:LUBufs        Lookup buffers
-:LUWalk        Walk filesystem
-:LUPath        Lookup in 'path'
-:LUArgs        Lookup in :args
-:LUTags        Lookup in tag file
-
-Installation:
-- Unzip in ~/.vim/
-- :helptags ~/.vim/doc
 
 ------------------------------------------------------------------------------
 LOREMIPSUM                                              *notes_loremipsum*
