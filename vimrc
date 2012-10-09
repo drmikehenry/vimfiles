@@ -117,6 +117,9 @@ set timeoutlen=3000
 " and 150 ms ==> 80 words per minute.
 set ttimeoutlen=150
 
+" Configure special terminal keys.
+runtime termsupport.vim
+
 " Disallow octal numbers for increment/decrement (CTRL-A/CTRL-X).
 set nrformats-=octal
 
@@ -235,8 +238,8 @@ nnoremap <F9> :wall<bar>make<CR>
 inoremap <F9> <ESC>:wall<bar>make<CR>
 
 " Execute current buffer.
-nnoremap <s-F9> :wall<bar>! %:p<CR>
-inoremap <s-F9> <ESC>:wall<bar>! %:p<CR>
+nnoremap <F5> :wall<bar>! %:p<CR>
+inoremap <F5> <ESC>:wall<bar>! %:p<CR>
 
 " Signal fifo using fifosignal script.
 nnoremap <F12> :wall<bar>call system("fifosignal")<CR>
@@ -1127,25 +1130,25 @@ command! QuickFixWinToggle :call QuickFixWinToggle()
 
 " Like windo but restore the current window.
 function! WinDo(command)
-  let currwin=winnr()
-  execute 'windo ' . a:command
-  execute currwin . 'wincmd w'
+    let currwin=winnr()
+    execute 'windo ' . a:command
+    execute currwin . 'wincmd w'
 endfunction
 com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
 
 " Like bufdo but restore the current buffer.
 function! BufDo(command)
-  let currBuff=bufnr("%")
-  execute 'bufdo if &bt==""|set ei-=Syntax|' . a:command . '|endif'
-  execute 'buffer ' . currBuff
+    let currBuff=bufnr("%")
+    execute 'bufdo if &bt==""|set ei-=Syntax|' . a:command . '|endif'
+    execute 'buffer ' . currBuff
 endfunction
 com! -nargs=+ -complete=command Bufdo call BufDo(<q-args>)
 
 " Like tabdo but restore the current tab.
 function! TabDo(command)
-  let currTab=tabpagenr()
-  execute 'tabdo ' . a:command
-  execute 'tabn ' . currTab
+    let currTab=tabpagenr()
+    execute 'tabdo ' . a:command
+    execute 'tabn ' . currTab
 endfunction
 com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 
@@ -1213,13 +1216,6 @@ let g:ctrlp_map = ''
 " Directory mode for launching ':CtrlP' with no directory argument:
 "   0 - Don't manage the working directory (Vim's CWD will be used).
 "       Same as ':CtrlP $PWD'.
-"   1 - The parent directory of the current file.
-"       Same as ':CtrlP %:h'
-"   2 - Nearest ancestor that contains a "root marker", taken first from any
-"       markers in the list specified in g:ctrlp_root_markers, then from the
-"       built-in list of markers, currently set to:
-"         root.dir .git/ .hg/ .svn/ .bzr/ _darcs/
-"       Same as ':CtrlPRoot'
 let g:ctrlp_working_path_mode = 0
 
 " Set to list of marker directories used for ':CtrlPRoot'.
@@ -1344,7 +1340,7 @@ command! A FSHere
 " Grep
 " -------------------------------------------------------------
 
-let Grep_Skip_Dirs = '.svn .bzr .git .hg build bak export'
+let Grep_Skip_Dirs = '.svn .bzr .git .hg build bak export .undo'
 let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
     \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc build.out doxy.out'
 
@@ -1475,7 +1471,7 @@ let Tlist_Inc_Winwidth = 0
 let Tlist_Close_On_Select = 1
 let Tlist_WinWidth = 40
 
-nnoremap <silent> <s-F8>        :TlistToggle<CR>
+nnoremap <silent> <S-F8>        :TlistToggle<CR>
 nnoremap <silent> <C-Q><C-T>    :TlistToggle<CR>
 nnoremap <silent> <C-Q>t        :TlistToggle<CR>
 
@@ -1531,7 +1527,9 @@ nmap <silent> <Leader>sv <C-W>o<Plug>VCSVimDiff<C-W>H<C-W>w
 " Language setup
 " =============================================================
 
+" Override spell-checking in per-user settings if desired.
 set spelllang=en_us
+set spell
 
 " =============================================================
 " Highlight setup
@@ -1633,10 +1631,22 @@ command! -nargs=* -complete=custom,HighlightArgs
             \ Highlight call Highlight(<f-args>)
 
 " -------------------------------------------------------------
+" Setup for mail.
+" -------------------------------------------------------------
+function! SetupMail()
+    " Use the 'w' flag in formatoptions to setup format=flowed editing.
+    " The 'w' flag causes problems for wrapping when manual editing strips
+    " out a trailing space.  Better to avoid the flag...
+    " set formatoptions+=w
+    setlocal tw=64 sw=2 sts=2 et ai
+endfunction
+command! SetupMail call SetupMail()
+
+" -------------------------------------------------------------
 " Setup for plain text.
 " -------------------------------------------------------------
 function! SetupText()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai spelllang=en_us
+    setlocal tw=80 ts=2 sts=2 sw=2 et ai
 endfunction
 command! SetupText call SetupText()
 
@@ -1644,7 +1654,7 @@ command! SetupText call SetupText()
 " Setup for general source code.
 " -------------------------------------------------------------
 function! SetupSource()
-    setlocal tw=80 ts=4 sts=4 sw=4 et ai spell spelllang=en_us
+    setlocal tw=80 ts=4 sts=4 sw=4 et ai
     Highlight longlines tabs trailingspace
 endfunction
 command! SetupSource call SetupSource()
@@ -1653,7 +1663,7 @@ command! SetupSource call SetupSource()
 " Setup for markup languages like HTML, XML, ....
 " -------------------------------------------------------------
 function! SetupMarkup()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai spell spelllang=en_us
+    setlocal tw=80 ts=2 sts=2 sw=2 et ai
     runtime scripts/closetag.vim
     runtime scripts/xml.vim
 endfunction
@@ -1702,65 +1712,38 @@ endfunction
 command! SetupRstSyntax call SetupRstSyntax()
 
 function! SetupRst()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai spell spelllang=en_us
+    setlocal tw=80 ts=2 sts=2 sw=2 et ai
 endfunction
 command! SetupRst call SetupRst()
-
-" Modified from $VIM/indent/rst.vim
-function! GetRSTIndent()
-  let lnum = prevnonblank(v:lnum - 1)
-  if lnum == 0
-    return 0
-  endif
-
-  let ind = indent(lnum)
-  let line = getline(lnum)
-
-  " Trying to avoid having extra indentation when typing a simple list
-  " like this:
-  "   - one
-  "   - two
-  "   - three
-  "
-  " So, only indent if the current line to be indented is non-blank.
-  if getline(v:lnum) !~ '^\s*$'
-      if line =~ '^\s*[-*+]\s'
-        let ind = ind + 2
-      elseif line =~ '^\s*\d\+.\s'
-        let ind = ind + matchend(substitute(line, '^\s*', '', ''), '\d\+.\s\+')
-      endif
-  endif
-
-  let line = getline(v:lnum - 1)
-
-  if line =~ '^\s*$'
-    execute lnum
-    call search('^\s*\%([-*+]\s\|\d\+.\s\|\.\.\|$\)', 'bW')
-    let line = getline('.')
-    if line =~ '^\s*[-*+]'
-      let ind = ind - 2
-    elseif line =~ '^\s*\d\+\.\s'
-      let ind = ind - matchend(substitute(line, '^\s*', '', ''),
-            \ '\d\+\.\s\+')
-    elseif line =~ '^\s*\.\.'
-      let ind = ind - 3
-    else
-      let ind = ind
-    endif
-  endif
-
-  return ind
-endfunction
 
 " -------------------------------------------------------------
 " Setup for Wikipedia.
 " -------------------------------------------------------------
 function! SetupWikipedia()
-    setlocal tw=0 ts=2 sts=2 sw=2 et ai spell spelllang=en_us
+    setlocal tw=0 ts=2 sts=2 sw=2 et ai
     " Setup angle brackets as matched pairs for '%'.
     setlocal matchpairs+=<:>
 endfunction
 command! SetupWikipedia call SetupWikipedia()
+
+" -------------------------------------------------------------
+" Setup for Bash "fixcommand" mode using "fc" command.
+" -------------------------------------------------------------
+function! SetupBashFixcommand()
+    " Generally this mode is for "one-shot" editing using Bash's "fc"
+    " command.  It won't be used for a long-running editing session
+    " with multiple files, so it's OK to change the global shell defaults
+    " (which is good, because this would be painful otherwise).
+    unlet g:is_kornshell
+    let g:is_bash=1
+    setfiletype sh
+
+    " Spell-checking is not very useful in large Bash one-liners.
+    setlocal nospell
+    setlocal tw=0
+    Highlight no*
+endfunction
+command! SetupBashFixcommand call SetupBashFixcommand()
 
 " -------------------------------------------------------------
 " Setup for C code.
@@ -1952,11 +1935,10 @@ augroup local_vimrc
     " First, remove all autocmds in this group.
     autocmd!
 
-    " Show diffs when writing commit messages for git, and turn on
-    " spell checking.
+    " Show diffs when writing commit messages for git.
     autocmd FileType gitcommit
                 \ DiffGitCached | wincmd J | wincmd p |
-                \ resize 15 | setlocal spell
+                \ resize 15
 
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event
@@ -1978,9 +1960,8 @@ augroup local_vimrc
 
     " Set the text width for commit messages in Subversion.  It turns out
     " that Vim has a file type mapping for Subversion commits: svn.  Set it
-    " to the same width as Git commit messages, 72.  Turn on spell-checking
-    " as well.
-    autocmd FileType svn setlocal tw=72 spell
+    " to the same width as Git commit messages, 72.
+    autocmd FileType svn setlocal tw=72
 
     " Use tabs in gitconfig and .gitconfig.
     autocmd FileType gitconfig setlocal noexpandtab

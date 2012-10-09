@@ -181,7 +181,7 @@ typedef struct ${1:name}
 
 # Pre-processor.
 bsnip("inc", r"""#include 'Header.h'""", r"""
-#include "${1:`!p res=fn.split('.')[-2]+'.h'`}"
+#include "${1:`!p res=re.sub(r'\.[^.]+$', '', fn)+'.h'`}"
 """)
 
 bsnip("Inc", "#include <Header.h>", r"""

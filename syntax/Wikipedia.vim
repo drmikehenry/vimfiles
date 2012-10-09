@@ -24,7 +24,6 @@ endif
 syn case ignore
 
 syn spell toplevel
-set spell
 
 " tags
 syn region  htmlString   contained start=+"+ end=+"+ contains=htmlSpecialChar

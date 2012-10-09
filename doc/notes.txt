@@ -18,12 +18,10 @@
     Extline - for extending lines                       |notes_extline|
     Fontsize - increment/decrement font size            |notes_fontsize|
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
-    Genutils - Generic utility functions                |notes_genutils|
     Grep - Wrapper for grep/xargs                       |notes_grep|
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
-    LookupFile - Lookup files, buffer, etc.             |notes_lookupfile|
     LoremIpsum - Generate dummy text                    |notes_loremipsum|
     LustyExplorer - File/buffer switcher w/incr. search |notes_lustyexplorer|
     LustyJuggler - Quick access to recent buffers       |notes_lustyjuggler|
@@ -98,11 +96,11 @@ source: >
 Unpack, configure, build, and create binary and source tarballs: >
 
   cd ~/build
-  rm -rf vim7.3
+  rm -rf vim-7.3
   ~/.vim/buildtool 7.3
 
 Installation of final tarball is done as follows: >
-    sudo tar -C / -zxf vim73/vim-7.3.patchlevel.i386.tar.gz
+    sudo tar -C / -zxf vim-7.3/vim-7.3.patchlevel.i386.tar.gz
 
 After installation on Linux, the distro-provided global vimrc file will not be
 used, so Vim will come up in VI-compatible mode for users (e.g. root) that
@@ -399,7 +397,7 @@ Local customizations:
   (CTRL-J).
 
 
-Version 2012-04-29 from https://github.com/kien/ctrlp.vim
+Version 2012-10-08 from https://github.com/kien/ctrlp.vim
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -589,18 +587,6 @@ Installation:
     :q
 
 ------------------------------------------------------------------------------
-GENUTILS                                                *notes_genutils*
-  Generic utility functions
-
-
-Required by several of Hari Krishna Dana's plugins, e.g. LookupFile.
-
-Version 2.5 from http://www.vim.org/scripts/script.php?script_id=197
-
-Installation:
-- Unzip in ~/.vim/
-
-------------------------------------------------------------------------------
 GREP                                                    *notes_grep*
   Wrapper for grep/xargs                                |grep-plugin|
 
@@ -774,27 +760,6 @@ Installation:
 - Install keepcase.vim in ~/.vim/plugin
 
 Version 2.0 from http://www.vim.org/scripts/script.php?script_id=6
-
-------------------------------------------------------------------------------
-LOOKUPFILE                                              *notes_lookupfile*
-  Lookup files, buffer, etc.                            |lookupfile.txt|
-
-Version 1.8 from http://www.vim.org/scripts/script.php?script_id=1581
-
-Press <F5> for :LookupFile command (most recently Lookup operation).
-
-This plugin needs more time for evaluation and configuration.
-
-Commands       Meaning
-:LUBufs        Lookup buffers
-:LUWalk        Walk filesystem
-:LUPath        Lookup in 'path'
-:LUArgs        Lookup in :args
-:LUTags        Lookup in tag file
-
-Installation:
-- Unzip in ~/.vim/
-- :helptags ~/.vim/doc
 
 ------------------------------------------------------------------------------
 LOREMIPSUM                                              *notes_loremipsum*
@@ -1305,7 +1270,7 @@ TAGLIST                                                 *notes_taglist*
   Source code browser                                   |taglist.txt|
 
 Local customizations:
-  <s-F8>        - toggle the taglist (:TlistToggle)
+  <S-F8>        - toggle the taglist (:TlistToggle)
   CTRL-Q CTRL-T - toggle the taglist (:TlistToggle)
   CTRL-Q T      - toggle the taglist (:TlistToggle)
 
@@ -1399,7 +1364,7 @@ scripts is used to define snippets.  For example, the file
 ~/.vim/UltiSnips/c.snippets.  All snippets make be "built" via the Makefile in
 ~/.vim/UltiSnips by executing "make".
 
-Version 2.1 from http://www.vim.org/scripts/script.php?script_id=2715
+Version 2.2 from http://www.vim.org/scripts/script.php?script_id=2715
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1652,7 +1617,7 @@ Building and Running
 
 Press <F9> to save all buffers and execute :make in current directory.
 
-Press <S-F9> to execute current buffer (useful when editing Python scripts,
+Press <F5> to execute current buffer (useful when editing Python scripts,
 for example).
 
 Press <F12> to execute the fifosignal command (a separate program).  Useful
