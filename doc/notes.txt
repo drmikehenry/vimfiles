@@ -1242,7 +1242,7 @@ TAGLIST                                                 *notes_taglist*
   Source code browser                                   |taglist.txt|
 
 Local customizations:
-  <s-F8>        - toggle the taglist (:TlistToggle)
+  <S-F8>        - toggle the taglist (:TlistToggle)
   CTRL-Q CTRL-T - toggle the taglist (:TlistToggle)
   CTRL-Q T      - toggle the taglist (:TlistToggle)
 
@@ -1589,7 +1589,7 @@ Building and Running
 
 Press <F9> to save all buffers and execute :make in current directory.
 
-Press <S-F9> to execute current buffer (useful when editing Python scripts,
+Press <F5> to execute current buffer (useful when editing Python scripts,
 for example).
 
 Press <F12> to execute the fifosignal command (a separate program).  Useful

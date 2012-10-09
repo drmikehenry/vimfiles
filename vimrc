@@ -238,8 +238,8 @@ nnoremap <F9> :wall<bar>make<CR>
 inoremap <F9> <ESC>:wall<bar>make<CR>
 
 " Execute current buffer.
-nnoremap <s-F9> :wall<bar>! %:p<CR>
-inoremap <s-F9> <ESC>:wall<bar>! %:p<CR>
+nnoremap <F5> :wall<bar>! %:p<CR>
+inoremap <F5> <ESC>:wall<bar>! %:p<CR>
 
 " Signal fifo using fifosignal script.
 nnoremap <F12> :wall<bar>call system("fifosignal")<CR>
@@ -1471,7 +1471,7 @@ let Tlist_Inc_Winwidth = 0
 let Tlist_Close_On_Select = 1
 let Tlist_WinWidth = 40
 
-nnoremap <silent> <s-F8>        :TlistToggle<CR>
+nnoremap <silent> <S-F8>        :TlistToggle<CR>
 nnoremap <silent> <C-Q><C-T>    :TlistToggle<CR>
 nnoremap <silent> <C-Q>t        :TlistToggle<CR>
 
