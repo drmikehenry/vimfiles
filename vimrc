@@ -1225,10 +1225,10 @@ let g:ctrlp_working_path_mode = 0
 let g:ctrlp_root_markers = []
 
 " :C [path]  ==> :CtrlP [path]
-command! -n=? -com=dir C call ctrlp#init(0, <q-args>)
+command! -n=? -com=dir C CtrlP <args>
 
 " :CD [path]  ==> :CtrlPDir [path]
-command! -n=? -com=dir CD call ctrlp#init(ctrlp#dir#id(), <q-args>)
+command! -n=? -com=dir CD CtrlPDir <args>
 
 nnoremap <C-P><C-B> :<C-U>CtrlPBookmarkDir<CR>
 nnoremap <C-P>c     :<C-U>CtrlPChange<CR>
