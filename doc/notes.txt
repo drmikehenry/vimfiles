@@ -1410,7 +1410,7 @@ Maps work on file associated with current buffer
 The ex commands allow additional parameters which are generally passed to
 the underlying source control system.
 
-Version 1.99.37 from http://www.vim.org/scripts/script.php?script_id=90
+Version 1.99.46 from http://www.vim.org/scripts/script.php?script_id=90
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

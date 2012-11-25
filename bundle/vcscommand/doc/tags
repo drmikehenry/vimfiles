@@ -32,10 +32,13 @@ VCSCommandDiffSplit	vcscommand.txt	/*VCSCommandDiffSplit*
 VCSCommandDisableAll	vcscommand.txt	/*VCSCommandDisableAll*
 VCSCommandDisableExtensionMappings	vcscommand.txt	/*VCSCommandDisableExtensionMappings*
 VCSCommandDisableMappings	vcscommand.txt	/*VCSCommandDisableMappings*
+VCSCommandDisableMenu	vcscommand.txt	/*VCSCommandDisableMenu*
 VCSCommandEdit	vcscommand.txt	/*VCSCommandEdit*
 VCSCommandEnableBufferSetup	vcscommand.txt	/*VCSCommandEnableBufferSetup*
 VCSCommandMapPrefix	vcscommand.txt	/*VCSCommandMapPrefix*
 VCSCommandMappings	vcscommand.txt	/*VCSCommandMappings*
+VCSCommandMenuPriority	vcscommand.txt	/*VCSCommandMenuPriority*
+VCSCommandMenuRoot	vcscommand.txt	/*VCSCommandMenuRoot*
 VCSCommandResultBufferNameExtension	vcscommand.txt	/*VCSCommandResultBufferNameExtension*
 VCSCommandResultBufferNameFunction	vcscommand.txt	/*VCSCommandResultBufferNameFunction*
 VCSCommandSVKExec	vcscommand.txt	/*VCSCommandSVKExec*
@@ -44,6 +47,7 @@ VCSCommandSVNDiffOpt	vcscommand.txt	/*VCSCommandSVNDiffOpt*
 VCSCommandSVNExec	vcscommand.txt	/*VCSCommandSVNExec*
 VCSCommandSplit	vcscommand.txt	/*VCSCommandSplit*
 VCSCommandVCSTypeOverride	vcscommand.txt	/*VCSCommandVCSTypeOverride*
+VCSCommandVCSTypePreference	vcscommand.txt	/*VCSCommandVCSTypePreference*
 b:VCSCommandCommand	vcscommand.txt	/*b:VCSCommandCommand*
 b:VCSCommandOriginalBuffer	vcscommand.txt	/*b:VCSCommandOriginalBuffer*
 b:VCSCommandSourceFile	vcscommand.txt	/*b:VCSCommandSourceFile*
