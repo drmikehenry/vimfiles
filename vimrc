@@ -1527,9 +1527,7 @@ nmap <silent> <Leader>sv <C-W>o<Plug>VCSVimDiff<C-W>H<C-W>w
 " Language setup
 " =============================================================
 
-" Override spell-checking in per-user settings if desired.
 set spelllang=en_us
-set spell
 
 " =============================================================
 " Highlight setup
@@ -1631,6 +1629,77 @@ command! -nargs=* -complete=custom,HighlightArgs
             \ Highlight call Highlight(<f-args>)
 
 " -------------------------------------------------------------
+" Spell-checking.
+" -------------------------------------------------------------
+
+" 0 - Disable changing of 'spell' option for all filetypes.
+" 1 - Enable changing of 'spell' option, subject to g:SpellMap below.
+" Override this in per-user configuration files to disable automatic setup of
+" spell-checking:
+"   let g:Spell = 0
+let g:Spell = 1
+
+" Determines spell-check setting for a file.
+" Starting with an initial key, the dictionary is used to map the key to a
+" subsequent key until the key is not found.  Then, if the key is
+" "<on>", spell-checking will be turned on for this file; if the key is
+" "<off>", spell-checking will be turned off for this file; otherwise, nothing
+" is done.
+" Keys are either filetypes (as found in &filetype) or strings of the form
+" "<group_or_directive>".  Groups are useful to allow control of similar
+" filetypes.  Some expected groups are:
+"
+" - "<source>"      Source files
+" - "<*>"           Used when &filetype is not in g:SpellMap
+"
+" The initial key is one of the following:
+" - &filetype           (if &filetype is in g:SpellMap)
+" - b:SpellType         (if b:SpellType exists)
+" - "<*>"               (otherwise)
+" Examples:
+"   Turn off spell-checking for just "C" source code:
+"     let g:SpellMap["c"] = "<off>"
+"   Turn off spell-checking for the entire "<source>" group:
+"     let g:SpellMap["<source>"] = "<off>"
+
+let g:SpellMap = {}
+
+" Adjust 'spell' setting for file (see g:SpellMap for details).
+" Generally called from autocmd on filetype change.
+function! SetSpell()
+    " Bail out if 'spell' setting is globally disabled.
+    if ! g:Spell
+        return
+    endif
+
+    " Track keys we've seen before.
+    let l:sawKey = {}
+
+    if has_key(g:SpellMap, &filetype)
+        let key = &filetype
+    elseif exists("b:SpellType")
+        let key = b:SpellType
+    else
+        let key = "<*>"
+    endif
+
+    while has_key(g:SpellMap, key)
+        if has_key(l:sawKey, key)
+            echoerr "Loop in g:SpellMap for key:" key
+            return
+        endif
+        let l:sawKey[key] = 1
+        let key = g:SpellMap[key]
+    endwhile
+
+    if key == "<on>"
+        setl spell
+    elseif key == "<off>"
+        setl nospell
+    endif
+endfunction
+
+" -------------------------------------------------------------
 " Setup for mail.
 " -------------------------------------------------------------
 function! SetupMail()
@@ -1641,14 +1710,17 @@ function! SetupMail()
     setlocal tw=64 sw=2 sts=2 et ai
 endfunction
 command! SetupMail call SetupMail()
+let g:SpellMap["mail"] = "<on>"
 
 " -------------------------------------------------------------
 " Setup for plain text.
 " -------------------------------------------------------------
 function! SetupText()
     setlocal tw=80 ts=2 sts=2 sw=2 et ai
+    let b:SpellType = "<text>"
 endfunction
 command! SetupText call SetupText()
+let g:SpellMap["<text>"] = "<on>"
 
 " -------------------------------------------------------------
 " Setup for general source code.
@@ -1656,8 +1728,10 @@ command! SetupText call SetupText()
 function! SetupSource()
     setlocal tw=80 ts=4 sts=4 sw=4 et ai
     Highlight longlines tabs trailingspace
+    let b:SpellType = "<source>"
 endfunction
 command! SetupSource call SetupSource()
+let g:SpellMap["<source>"] = "<on>"
 
 " -------------------------------------------------------------
 " Setup for markup languages like HTML, XML, ....
@@ -1666,8 +1740,10 @@ function! SetupMarkup()
     setlocal tw=80 ts=2 sts=2 sw=2 et ai
     runtime scripts/closetag.vim
     runtime scripts/xml.vim
+    let b:SpellType = "<markup>"
 endfunction
 command! SetupMarkup call SetupMarkup()
+let g:SpellMap["<markup>"] = "<on>"
 
 " -------------------------------------------------------------
 " Setup for Markdown.
@@ -1715,6 +1791,7 @@ function! SetupRst()
     setlocal tw=80 ts=2 sts=2 sw=2 et ai
 endfunction
 command! SetupRst call SetupRst()
+let g:SpellMap["rst"] = "<on>"
 
 " -------------------------------------------------------------
 " Setup for Wikipedia.
@@ -1725,6 +1802,7 @@ function! SetupWikipedia()
     setlocal matchpairs+=<:>
 endfunction
 command! SetupWikipedia call SetupWikipedia()
+let g:SpellMap["Wikipedia"] = "<on>"
 
 " -------------------------------------------------------------
 " Setup for Bash "fixcommand" mode using "fc" command.
@@ -1738,8 +1816,6 @@ function! SetupBashFixcommand()
     let g:is_bash=1
     setfiletype sh
 
-    " Spell-checking is not very useful in large Bash one-liners.
-    setlocal nospell
     setlocal tw=0
     Highlight no*
 endfunction
@@ -1929,6 +2005,13 @@ filetype plugin indent on
 
 " Extended filetype detection by extensions is found in
 " filetype.vim
+
+" Spell-check autocmd group.
+augroup local_spell
+    " First, remove all autocmds in this group.
+    autocmd!
+    autocmd FileType * call SetSpell()
+augroup END
 
 " Put these in an autocmd group, so that we can delete them easily.
 augroup local_vimrc

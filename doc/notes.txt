@@ -1598,6 +1598,31 @@ http://mysite.verizon.net/astronaut/vim/index.html
 4.  Customizations                                      *notes_customizations*
 
 ------------------------------------------------------------------------------
+Spell checking
+
+In order to allow per-user overriding of spell-check settings, there are two
+variables for configuring spell-checking.  Adjust these variables in per-user
+configuration files (e.g., ~/.vim/user/someuser-after.vim).
+
+To disable automatic configuration of the 'spell' setting entirely: >
+
+  let g:Spell = 0
+
+To turn off spell-checking for just "C" source code: >
+  let g:SpellMap["c"] = "<off>"
+
+Turn off spell-checking for the entire "<source>" group: >
+  let g:SpellMap["<source>"] = "<off>"
+
+Turn on spell-checking for files of type "javascript": >
+  let g:SpellMap["javascript"] = "<on>"
+
+Add "perl" filetype to the "<source>" group: >
+  let g:SpellMap["perl"] = "<source>"
+
+See g:SpellMap documentation in vimrc for more detail.
+
+------------------------------------------------------------------------------
 Buffer switchers and filesystem navigators
 
 Lusty Juggler - rapidly switch among buffers
