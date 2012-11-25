@@ -1413,8 +1413,7 @@ the underlying source control system.
 Version 1.99.37 from http://www.vim.org/scripts/script.php?script_id=90
 
 Installation:
-- Unzip in ~/.vim/
-- :helptags ~/.vim/doc
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 VIMBALL                                                 *notes_vimball*
