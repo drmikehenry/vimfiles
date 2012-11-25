@@ -961,6 +961,12 @@ function! s:SortSelect()
     call s:ReSortListing()
 endfunction
 
+" ReverseSortSelect {{{2
+function! s:ReverseSortSelect()
+    let g:bufExplorerSortBy = get(s:sort_by, index(s:sort_by, g:bufExplorerSortBy) - 1, s:sort_by[-1])
+    call s:ReSortListing()
+endfunction
+
 " ReSortListing {{{2
 function! s:ReSortListing()
     setlocal modifiable
