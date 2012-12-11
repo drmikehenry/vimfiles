@@ -22,6 +22,7 @@
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
+    Localvimrc - Override settings via local files      |notes_localvimrc|
     LoremIpsum - Generate dummy text                    |notes_loremipsum|
     LustyExplorer - File/buffer switcher w/incr. search |notes_lustyexplorer|
     LustyJuggler - Quick access to recent buffers       |notes_lustyjuggler|
@@ -72,9 +73,12 @@ or, for more automation: >
     sudo apt-get build-dep vim-gnome
 
 Prerequisites for Fedora: >
-    sudo yum install -y ruby ruby-devel perl-ExtUtils-Embed
-    sudo yum install -y gtk+-devel gtk2-devel
+    sudo yum install -y ruby ruby-devel perl-ExtUtils-Embed python-devel
+    sudo yum install -y gtk+-devel gtk2-devel gpm gpm-devel
+or, for more automation: >
+    sudo yum-builddep -y vim-X11
 
+(Note: this fix is obsolete in modern Vim.)
 On 64-bit Linux, Python libraries live in /usr/lib64/pythonx.y,
 and Vim's configuration script doesn't find the config directory.
 One fix appears to be the following symlink: >
@@ -258,8 +262,12 @@ General bundle installation instructions: *bundle_installation*
   tar -zxf .../bundle-name-x.y.z.tar.gz
 - Rename extracted directory (if desirable), e.g.: >
   mv Bundle-Name-x.y.z bundle-name
-- Remove unwanted hidden directories: >
+- Enter new bundle directory: >
   cd bundle-name
+- Switch to tag (if appropriate): >
+  git checkout v2.1.0
+- Test bundle until satisfied.
+- Remove unwanted hidden directories: >
   rm -rf {.git,.bzr,.hg,.svn,.gitignore}
 - Add clean bundle tree to Git: >
   git add .
@@ -760,6 +768,36 @@ Installation:
 - Install keepcase.vim in ~/.vim/plugin
 
 Version 2.0 from http://www.vim.org/scripts/script.php?script_id=6
+
+------------------------------------------------------------------------------
+LOCALVIMRC                                              *notes_localvimrc*
+  Override settings via local files                     |localvimrc.txt|
+
+At startup, searches for and sources .lvimrc files starting from the root
+directory down to the current working directory.  Then, for each file that is
+opened, searches for and sources .lvimrc files from the root directory down to
+the file's containing directory.
+
+The .lvimrc files are sourced by default using |:sandbox| (though this may be
+changed via g:localvimrc_sandbox).  At present, Vim restricts the use of
+|:setlocal| in a sandbox, so to change buffer-local properties, use |:set|
+instead.
+
+For example, to use 8-character tabs in "C" source files, create a .lvimrc
+file in a parent directory containing the source files.  The .lvimrc file
+might contain: >
+
+  if &filetype == 'c'
+      set tabstop=8 noexpandtab
+  endif
+
+To re-use a group of settings, create a function (say, in the global vimrc
+file), then call it from the .lvimrc files.
+
+Version 2.1.0 from git://github.com/embear/vim-localvimrc.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 LOREMIPSUM                                              *notes_loremipsum*
@@ -1586,6 +1624,31 @@ http://mysite.verizon.net/astronaut/vim/index.html
 
 ==============================================================================
 4.  Customizations                                      *notes_customizations*
+
+------------------------------------------------------------------------------
+Spell checking
+
+In order to allow per-user overriding of spell-check settings, there are two
+variables for configuring spell-checking.  Adjust these variables in per-user
+configuration files (e.g., ~/.vim/user/someuser-after.vim).
+
+To disable automatic configuration of the 'spell' setting entirely: >
+
+  let g:Spell = 0
+
+To turn off spell-checking for just "C" source code: >
+  let g:SpellMap["c"] = "<off>"
+
+Turn off spell-checking for the entire "<source>" group: >
+  let g:SpellMap["<source>"] = "<off>"
+
+Turn on spell-checking for files of type "javascript": >
+  let g:SpellMap["javascript"] = "<on>"
+
+Add "perl" filetype to the "<source>" group: >
+  let g:SpellMap["perl"] = "<source>"
+
+See g:SpellMap documentation in vimrc for more detail.
 
 ------------------------------------------------------------------------------
 Buffer switchers and filesystem navigators
