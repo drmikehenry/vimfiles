@@ -140,6 +140,10 @@ nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
 nnoremap <Leader><Leader>t :<C-U>CtrlP<CR>
 nnoremap <Leader><Leader>b :<C-U>CtrlPBuffer<CR>
 
+" Don't open multiple files in vertical splits.  Just open them, and re-use the
+" buffer already at the front.
+let g:ctrlp_open_multiple_files = '1vr'
+
 " On remote systems, I like to chnge the background color so that I remember I'm
 " on a remote system. :-)  This does break when you sudo su to root though.
 if !empty($SSH_TTY)
