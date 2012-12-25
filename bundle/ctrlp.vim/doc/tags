@@ -34,6 +34,7 @@
 'g:ctrlp_mruf_include'	ctrlp.txt	/*'g:ctrlp_mruf_include'*
 'g:ctrlp_mruf_max'	ctrlp.txt	/*'g:ctrlp_mruf_max'*
 'g:ctrlp_mruf_relative'	ctrlp.txt	/*'g:ctrlp_mruf_relative'*
+'g:ctrlp_mruf_save_on_update'	ctrlp.txt	/*'g:ctrlp_mruf_save_on_update'*
 'g:ctrlp_open_func'	ctrlp.txt	/*'g:ctrlp_open_func'*
 'g:ctrlp_open_multiple_files'	ctrlp.txt	/*'g:ctrlp_open_multiple_files'*
 'g:ctrlp_open_new_file'	ctrlp.txt	/*'g:ctrlp_open_new_file'*
