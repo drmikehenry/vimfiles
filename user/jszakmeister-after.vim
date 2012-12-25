@@ -149,7 +149,7 @@ set nocscopetag
 let g:ctrlp_open_multiple_files = '1vr'
 
 " Gundo mapping
-nnoremap <Leader><Leader>g :GundoToggle<CR>
+nnoremap <Leader><Leader>u :GundoToggle<CR>
 
 " On remote systems, I like to chnge the background color so that I remember I'm
 " on a remote system. :-)  This does break when you sudo su to root though.
