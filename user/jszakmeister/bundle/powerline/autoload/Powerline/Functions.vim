@@ -2,14 +2,24 @@
 autocmd CursorHold,BufWritePost,InsertLeave * unlet! b:statusline_trailing_space_warning
 
 function! Powerline#Functions#GetFilepath() " {{{
-	let relpath = expand('%')
+	" Recalculate the filepath when cwd changes.
+	let cwd = getcwd()
+	if exists("b:Powerline_cwd") && cwd != b:Powerline_cwd
+		unlet! b:Powerline_filepath
+	endif
+	let b:Powerline_cwd = cwd
 
-	if empty(relpath)
+	if exists('b:Powerline_filepath')
+		return b:Powerline_filepath
+	endif
+
+	let dirsep = has('win32') && ! &shellslash ? '\' : '/'
+	let filepath = expand('%:p')
+
+	if empty(filepath)
 		return ''
 	endif
 
-	let headpath = substitute(expand('%:h'), escape($HOME, '\'), '~', '')
-	let fullpath = substitute(expand('%:p:h'), escape($HOME, '\'), '~', '')
 	let ret = ''
 
 	if g:Powerline_stl_path_style == 'short'
@@ -17,25 +27,30 @@ function! Powerline#Functions#GetFilepath() " {{{
 		" full name, and the subsequent directories are shortened to their
 		" first letter, i.e. "/home/user/foo/foo/bar/baz.vim" becomes
 		" "~/foo/f/b/baz.vim"
-		let fpath = split(headpath, '/')
+		"
+		" This displays the shortest possible path, relative to ~ or the
+		" current directory.
+		let mod = (exists('+acd') && &acd) ? ':~:h' : ':~:.:h'
+		let fpath = split(fnamemodify(filepath, mod), dirsep)
 		let fpath_shortparts = map(fpath[1:], 'v:val[0]')
-		let ret = join(extend([fpath[0]], fpath_shortparts), '/') .'/'
+		let ret = join(extend([fpath[0]], fpath_shortparts), dirsep) . dirsep
 	elseif g:Powerline_stl_path_style == 'relative'
 		" Display a relative path, similar to the %f statusline item
-		let ret = headpath .'/'
+		let ret = fnamemodify(filepath, ':~:.:h') . dirsep
 	elseif g:Powerline_stl_path_style == 'full'
 		" Display the full path, similar to the %F statusline item
-		let ret = fullpath .'/'
+		let ret = fnamemodify(filepath, ':h') . dirsep
 	endif
 
-	if ret == './'
-		return ''
+	if ret == ('.' . dirsep)
+		let ret = ''
 	endif
 
+	let b:Powerline_filepath = ret
 	return ret
 endfunction " }}}
 function! Powerline#Functions#GetShortPath(threshold) " {{{
-	let fullpath = split(substitute(expand('%:p:h'), $HOME, '~', 'g'), '/')
+	let fullpath = split(expand('%:~'), '[/\\]')
 
 	if len(fullpath) > a:threshold
 		let fullpath = [fullpath[0], '…'] +  fullpath[-a:threshold + 1 :]
@@ -46,31 +61,25 @@ endfunction " }}}
 function! Powerline#Functions#GetMode() " {{{
 	let mode = mode()
 
-	if mode =~# '\v(v|V|)'
-		" Visual mode
-		if mode ==# 'v'
-			let mode = 'VISUAL'
-		elseif mode ==# 'V'
-			let mode = 'V·LINE'
-		elseif mode ==# ''
-			let mode = 'V·BLOCK'
-		endif
-	elseif mode =~# '\v(s|S|)'
-		" Select mode
-		if mode ==# 's'
-			let mode = 'SELECT'
-		elseif mode ==# 'S'
-			let mode = 'S·LINE'
-		elseif mode ==# ''
-			let mode = 'S·BLOCK'
-		endif
+	if mode ==# 'v'
+		let mode = get(g:, "Powerline_mode_v", "VISUAL")
+	elseif mode ==# 'V'
+		let mode = get(g:, "Powerline_mode_V", "V⋅LINE")
+	elseif mode ==# ''
+		let mode = get(g:, "Powerline_mode_cv", "V⋅BLOCK")
+	elseif mode ==# 's'
+		let mode = get(g:, "Powerline_mode_s", "SELECT")
+	elseif mode ==# 'S'
+		let mode = get(g:, "Powerline_mode_S", "S⋅LINE")
+	elseif mode ==# ''
+		let mode = get(g:, "Powerline_mode_cs", "S⋅BLOCK")
 	elseif mode =~# '\vi'
-		let mode = 'INSERT' " Insert mode
+		let mode = get(g:, "Powerline_mode_i", "INSERT")
 	elseif mode =~# '\v(R|Rv)'
-		let mode = 'REPLACE' " Replace mode
+		let mode = get(g:, "Powerline_mode_R", "REPLACE")
 	else
 		" Fallback to normal mode
-		let mode = ' N ' " Normal (current)
+		let mode = get(g:, "Powerline_mode_n", "NORMAL")
 	endif
 
 	return mode
