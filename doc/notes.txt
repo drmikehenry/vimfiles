@@ -30,6 +30,7 @@
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
     Pathogen - Runtime path management for bundles      |notes_pathogen|
+    Powerline - The ultimate vim statusline utility     |notes_powerline|
     Project - Managing "projects" of files              |notes_project|
     Python - Python Syntax file with folding            |notes_python|
     PythonComplete - Python Omnicompletion              |notes_pythoncomplete|
@@ -1078,6 +1079,43 @@ PATHOGEN                                                *notes_pathogen*
   Runtime path management for bundles                   |notes_pathogen|
 
 Version 2012-04-29 from https://github.com/tpope/vim-pathogen
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+POWERLINE                                               *notes_powerline*
+  The ultimate vim statusline utility                   |Powerline.txt|
+
+The default setup is actually very good.  If you find yourself tweaking the
+segments that are available though, make sure to run :PowerlineClearCache,
+otherwise you may not see your settings take effect.
+
+Also, the GUI version can make use of a "fancy" patched font.
+|Powerline-symbols-fancy| provides some information, but the README in
+bundle/vim-powerline/fontpatches/README.rst provides more information.
+If you use Droid Sans Mono as your font, a patched version of the font is
+available here:
+  https://github.com/jszakmeister/etc/blob/master/fonts/DroidSansMonoSlashed-Powerline.ttf
+
+You can also use the following block on Linux and Mac OS X to help detect the
+font and use it: >
+
+    " Turn on fancy symbols on the status line
+    if has("gui_running")
+        if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf")) ||
+           \ filereadable(expand("~/.fonts/DroidSansMonoSlashed-Powerline.ttf"))
+            if has("mac") || has("macunix")
+                set guifont=Droid\ Sans\ Mono\ Slashed\ for\ Powerline:h14
+            else
+                set guifont=Droid\ Sans\ Mono\ Slashed\ for\ Powerline\ 14
+            endif
+
+            let g:Powerline_symbols = 'fancy'
+        endif
+    endif
+<
+Version 2012-08-17 from https://github.com/Lokaltog/vim-powerline
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
