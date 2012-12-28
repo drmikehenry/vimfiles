@@ -1,3 +1,15 @@
+if $VIMMACHINE == ""
+    let $VIMMACHINE=substitute(system("uname -n"), "\n", "", "")
+endif
+
+let s:VIMMACHINE_CONFIG = $VIMUSERFILES . "/" . $VIMUSER .
+    \ "/machine/" . $VIMMACHINE . ".vim"
+
+" If a machine local config exists, source it.
+if filereadable(s:VIMMACHINE_CONFIG)
+    execute "source " . s:VIMMACHINE_CONFIG
+endif
+
 if has("mac") || has("macunix")
     let Tlist_Ctags_Cmd='/Users/jszakmeister/.local/bin/ctags'
 endif
