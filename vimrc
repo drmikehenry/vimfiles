@@ -68,6 +68,11 @@ if $VIMRC_AFTER == ""
     let $VIMRC_AFTER=expand("$VIMUSERFILES/$VIMUSER-after.vim")
 endif
 
+" VIMRC_BUNDLE points to the user's bundle area.
+if $VIMRC_BUNDLE == ""
+    let $VIMRC_BUNDLE=expand("$VIMUSERFILES/$VIMUSER/bundle")
+endif
+
 " Prepend per-user directory to runtimepath (provides the highest priority).
 call RtpPrepend($VIMUSERFILES . "/" . $VIMUSER)
 
@@ -86,6 +91,10 @@ call pathogen#infect()
 " than those in "bundle" directories.
 call pathogen#infect('pre-bundle')
 
+" A bundle area specific to a user.
+if isdirectory($VIMRC_BUNDLE)
+    call pathogen#infect($VIMRC_BUNDLE)
+endif
 
 " Number of lines of VIM history to remember.
 set history=500
@@ -1345,6 +1354,12 @@ let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
     \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc build.out doxy.out'
 
 " -------------------------------------------------------------
+" Gundo
+" -------------------------------------------------------------
+
+nnoremap <Leader><Leader>u  :GundoToggle<CR>
+
+" -------------------------------------------------------------
 " lookupfile
 " -------------------------------------------------------------
 
@@ -2227,7 +2242,7 @@ if has("gui_running")
         " hack lets me try PragmataPro at home but still have reasonable
         " fonts elsewhere.
         " TODO: Find a better solution fallback fonts.
-        if filereadable($HOME . "/.fonts/p/PragmataPro.ttf")
+        if len(glob($HOME . "/.fonts/p/PragmataPro*.ttf"))
             set guifont=PragmataPro\ 12
         else
             set guifont=DejaVu\ Sans\ Mono\ 12

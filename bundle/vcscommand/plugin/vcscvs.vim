@@ -2,10 +2,9 @@
 "
 " CVS extension for VCSCommand.
 "
-" Version:       VCS development
 " Maintainer:    Bob Hiestand <bob.hiestand@gmail.com>
 " License:
-" Copyright (c) 2007 Bob Hiestand
+" Copyright (c) Bob Hiestand
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
 " of this software and associated documentation files (the "Software"), to
@@ -90,7 +89,9 @@ if v:version < 700
 	finish
 endif
 
-runtime plugin/vcscommand.vim
+if !exists('g:loaded_VCSCommand')
+	runtime plugin/vcscommand.vim
+endif
 
 if !executable(VCSCommandGetOption('VCSCommandCVSExec', 'cvs'))
 	" CVS is not installed
@@ -110,7 +111,7 @@ let s:cvsFunctions = {}
 " Returns the executable used to invoke cvs suitable for use in a shell
 " command.
 function! s:Executable()
-	return shellescape(VCSCommandGetOption('VCSCommandCVSExec', 'cvs'))
+	return VCSCommandGetOption('VCSCommandCVSExec', 'cvs')
 endfunction
 
 " Function: s:DoCommand(cmd, cmdName, statusText, options) {{{2
@@ -181,7 +182,7 @@ endfunction
 " Function: s:cvsFunctions.Annotate(argList) {{{2
 function! s:cvsFunctions.Annotate(argList)
 	if len(a:argList) == 0
-		if &filetype == 'CVSannotate'
+		if &filetype ==? 'cvsannotate'
 			" This is a CVSAnnotate buffer.  Perform annotation of the version
 			" indicated by the current line.
 			let caption = matchstr(getline('.'),'\v^[0-9.]+')
@@ -411,35 +412,42 @@ com! CVSWatchers call s:CVSWatchers()
 " Section: Plugin command mappings {{{1
 
 let s:cvsExtensionMappings = {}
-let mappingInfo = [
-			\['CVSEdit', 'CVSEdit', 'e'],
-			\['CVSEditors', 'CVSEditors', 'E'],
-			\['CVSUnedit', 'CVSUnedit', 't'],
-			\['CVSWatchers', 'CVSWatchers', 'wv'],
-			\['CVSWatchAdd', 'CVSWatch add', 'wa'],
-			\['CVSWatchOff', 'CVSWatch off', 'wf'],
-			\['CVSWatchOn', 'CVSWatch on', 'wn'],
-			\['CVSWatchRemove', 'CVSWatch remove', 'wr']
-			\]
+if !exists("no_plugin_maps")
+	let mappingInfo = [
+				\['CVSEdit', 'CVSEdit', 'e'],
+				\['CVSEditors', 'CVSEditors', 'E'],
+				\['CVSUnedit', 'CVSUnedit', 't'],
+				\['CVSWatchers', 'CVSWatchers', 'wv'],
+				\['CVSWatchAdd', 'CVSWatch add', 'wa'],
+				\['CVSWatchOff', 'CVSWatch off', 'wf'],
+				\['CVSWatchOn', 'CVSWatch on', 'wn'],
+				\['CVSWatchRemove', 'CVSWatch remove', 'wr']
+				\]
 
-for [pluginName, commandText, shortCut] in mappingInfo
-	execute 'nnoremap <silent> <Plug>' . pluginName . ' :' . commandText . '<CR>'
-	if !hasmapto('<Plug>' . pluginName)
-		let s:cvsExtensionMappings[shortCut] = commandText
-	endif
-endfor
-
-" Section: Menu items {{{1
-amenu <silent> &Plugin.VCS.CVS.&Edit       <Plug>CVSEdit
-amenu <silent> &Plugin.VCS.CVS.Ed&itors    <Plug>CVSEditors
-amenu <silent> &Plugin.VCS.CVS.Unedi&t     <Plug>CVSUnedit
-amenu <silent> &Plugin.VCS.CVS.&Watchers   <Plug>CVSWatchers
-amenu <silent> &Plugin.VCS.CVS.WatchAdd    <Plug>CVSWatchAdd
-amenu <silent> &Plugin.VCS.CVS.WatchOn     <Plug>CVSWatchOn
-amenu <silent> &Plugin.VCS.CVS.WatchOff    <Plug>CVSWatchOff
-amenu <silent> &Plugin.VCS.CVS.WatchRemove <Plug>CVSWatchRemove
+	for [pluginName, commandText, shortCut] in mappingInfo
+		execute 'nnoremap <silent> <Plug>' . pluginName . ' :' . commandText . '<CR>'
+		if !hasmapto('<Plug>' . pluginName)
+			let s:cvsExtensionMappings[shortCut] = commandText
+		endif
+	endfor
+endif
 
 " Section: Plugin Registration {{{1
 let s:VCSCommandUtility = VCSCommandRegisterModule('CVS', expand('<sfile>'), s:cvsFunctions, s:cvsExtensionMappings)
+
+" Section: Menu items {{{1
+for [s:shortcut, s:command] in [
+			\['CVS.&Edit', '<Plug>CVSEdit'],
+			\['CVS.Ed&itors', '<Plug>CVSEditors'],
+			\['CVS.Unedi&t', '<Plug>CVSUnedit'],
+			\['CVS.&Watchers', '<Plug>CVSWatchers'],
+			\['CVS.WatchAdd', '<Plug>CVSWatchAdd'],
+			\['CVS.WatchOn', '<Plug>CVSWatchOn'],
+			\['CVS.WatchOff', '<Plug>CVSWatchOff'],
+			\['CVS.WatchRemove', '<Plug>CVSWatchRemove']
+			\]
+	call s:VCSCommandUtility.addMenuItem(s:shortcut, s:command)
+endfor
+unlet s:shortcut s:command
 
 let &cpo = s:save_cpo
