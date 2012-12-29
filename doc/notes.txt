@@ -299,9 +299,7 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Version 7.3.0 from http://www.vim.org/scripts/script.php?script_id=42
-
-With small patch to fix broken "S" mapping.
+Version 7.3.2 from http://www.vim.org/scripts/script.php?script_id=42
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
