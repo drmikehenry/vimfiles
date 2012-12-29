@@ -2227,7 +2227,7 @@ if has("gui_running")
         " hack lets me try PragmataPro at home but still have reasonable
         " fonts elsewhere.
         " TODO: Find a better solution fallback fonts.
-        if filereadable($HOME . "/.fonts/p/PragmataPro.ttf")
+        if len(glob($HOME . "/.fonts/p/PragmataPro*.ttf"))
             set guifont=PragmataPro\ 12
         else
             set guifont=DejaVu\ Sans\ Mono\ 12

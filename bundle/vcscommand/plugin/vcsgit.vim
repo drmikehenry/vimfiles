@@ -2,10 +2,9 @@
 "
 " git extension for VCSCommand.
 "
-" Version:       VCS development
 " Maintainer:    Bob Hiestand <bob.hiestand@gmail.com>
 " License:
-" Copyright (c) 2008 Bob Hiestand
+" Copyright (c) Bob Hiestand
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
 " of this software and associated documentation files (the "Software"), to
@@ -49,7 +48,9 @@ if v:version < 700
 	finish
 endif
 
-runtime plugin/vcscommand.vim
+if !exists('g:loaded_VCSCommand')
+	runtime plugin/vcscommand.vim
+endif
 
 if !executable(VCSCommandGetOption('VCSCommandGitExec', 'git'))
 	" git is not installed
@@ -69,7 +70,7 @@ let s:gitFunctions = {}
 " Returns the executable used to invoke git suitable for use in a shell
 " command.
 function! s:Executable()
-	return shellescape(VCSCommandGetOption('VCSCommandGitExec', 'git'))
+	return VCSCommandGetOption('VCSCommandGitExec', 'git')
 endfunction
 
 " Function: s:DoCommand(cmd, cmdName, statusText, options) {{{2
@@ -128,11 +129,11 @@ endfunction
 
 " Function: s:gitFunctions.Commit(argList) {{{2
 function! s:gitFunctions.Commit(argList)
-	let resultBuffer = s:DoCommand('commit -F "' . a:argList[0] . '"', 'commit', '', {})
-	if resultBuffer == 0
+	try
+		return s:DoCommand('commit -F "' . a:argList[0] . '"', 'commit', '', {})
+	catch /\m^Version control command failed.*nothing\%( added\)\? to commit/
 		echomsg 'No commit needed.'
-	endif
-	return resultBuffer
+	endtry
 endfunction
 
 " Function: s:gitFunctions.Delete() {{{2
