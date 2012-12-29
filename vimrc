@@ -867,9 +867,9 @@ endfunction
 
 " Initiate search of visual selection (forward '*' or backward '#').
 " E.g.:
-"   xnoremap <expr> * <SID>VisualSearch('*')
-"   xnoremap <expr> # <SID>VisualSearch('#')
-function! <SID>VisualSearch(direction)
+"   xnoremap <expr> * VisualSearch('*')
+"   xnoremap <expr> # VisualSearch('#')
+function! VisualSearch(direction)
     if a:direction == '#'
         let l:rhs = "y?"
     else
@@ -880,7 +880,7 @@ function! <SID>VisualSearch(direction)
 endfunction
 
 " Setup @/ to given pattern, enable highlighting and add to search history.
-function! <SID>SetSearch(pattern)
+function! SetSearch(pattern)
     let @/ = a:pattern
     call histadd("search", a:pattern)
     set hlsearch
@@ -889,8 +889,8 @@ function! <SID>SetSearch(pattern)
 endfunction
 
 " Set search register @/ to unnamed ("scratch") register and highlight.
-command! MatchScratch     call <SID>SetSearch(MakeSearchString(@"))
-command! MatchScratchWord call <SID>SetSearch("\\<".MakeSearchString(@")."\\>")
+command! MatchScratch     call SetSearch(MakeSearchString(@"))
+command! MatchScratchWord call SetSearch("\\<".MakeSearchString(@")."\\>")
 
 " Map normal-mode '*' to just highlight, not search for next.
 " Note: Yank into @a to avoid clobbering register 0 (saving and restoring @a).
@@ -902,20 +902,20 @@ xnoremap <silent> *  <ESC>:let temp_a=@a<CR>gv"ay:MatchScratch<CR>
             \:let @a=temp_a<CR>
 
 " Setup :Regrep command to search for visual selection.
-function! <SID>VisualRegrep()
+function! VisualRegrep()
     return "y:MatchScratch\<CR>" .
                 \ ":Regrep \<C-R>=MakeEgrepString(@\")\<CR>"
 endfunction
 
 " Setup :Regrep command to search for complete word under cursor.
-function! <SID>NormalRegrep()
+function! NormalRegrep()
     return "yiw:MatchScratchWord\<CR>" .
                 \ ":Regrep \\<\<C-R>=MakeEgrepString(@\")\<CR>\\>"
 endfunction
 
 " :Regrep of visual selection or current word under cursor.
-vnoremap <expr> <F3> <SID>VisualRegrep()
-nnoremap <expr> <F3> <SID>NormalRegrep()
+vnoremap <expr> <F3> VisualRegrep()
+nnoremap <expr> <F3> NormalRegrep()
 
 " Folding all but matching lines.
 " Taken from Wiki tip http://vim.wikia.com/wiki/VimTip282.
