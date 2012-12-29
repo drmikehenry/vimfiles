@@ -1380,6 +1380,7 @@ let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
 " -------------------------------------------------------------
 
 nnoremap <Leader><Leader>u  :GundoToggle<CR>
+let g:gundo_close_on_revert = 1
 
 " -------------------------------------------------------------
 " lookupfile
