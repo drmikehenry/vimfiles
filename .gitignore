@@ -5,3 +5,4 @@ spell
 *.o
 *.so
 *.pyc
+*.cache
