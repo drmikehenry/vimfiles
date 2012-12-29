@@ -19,6 +19,7 @@
     Fontsize - increment/decrement font size            |notes_fontsize|
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
     Grep - Wrapper for grep/xargs                       |notes_grep|
+    Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
     Localvimrc - Override settings via local files      |notes_localvimrc|
@@ -676,6 +677,18 @@ Installation:
 
 Version 1.9 from http://www.vim.org/scripts/script.php?script_id=311
 
+------------------------------------------------------------------------------
+GUNDO                                                   *notes_gundo*
+  Visualize your undo tree                              |gundo|
+
+Gundo is a Vim plugin for visualizing your undo tree to make it usable.
+
+To toggle the undo view, use :GundoToggle.
+
+Version 2.4.0 from http://www.vim.org/scripts/script.php?script_id=3304
+
+- Unzipped into ~/.vim/bundle.
+- :Helptags
 ------------------------------------------------------------------------------
 HEADERGUARD                                             *notes_headerguard*
   Add guards for header files                           |headerguard|
