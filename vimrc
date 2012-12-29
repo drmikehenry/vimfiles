@@ -990,6 +990,22 @@ nnoremap <expr> <C-w>f empty(taglist(expand('<cfile>'))) ?
 " Convenience for building tag files in current directory.
 command! Ctags :wall|silent! !gentags
 
+" The :tjump command is more convenient than :tag because it will pop up a
+" menu if and only if multiple tags match.  Exchange the default meaning
+" of CTRL-] and friends to use :tjump for the more convenient keystrokes,
+" and to allow the old behavior via tha "g"-prefixed less-convenient keystrokes.
+" Additionally, map the mouse to use the :tjump variants.
+
+nnoremap g<C-]>   <C-]>
+xnoremap g<C-]>   <C-]>
+nnoremap  <C-]>  g<C-]>
+xnoremap  <C-]>  g<C-]>
+
+nnoremap g<LeftMouse>   g<C-]>
+xnoremap g<LeftMouse>   g<C-]>
+nnoremap <C-LeftMouse>  g<C-]>
+xnoremap <C-LeftMouse>  g<C-]>
+
 " =============================================================
 " Cscope
 " =============================================================
@@ -1000,15 +1016,21 @@ if has("cscope")
     " 1 ==> search tag file(s) first, then cscope database(s) if no matches.
     set cscopetagorder=0
 
-    " When set, the commands :tag, CTRL-], and "vim -t" will use :cstag
-    " instead of regular :tag.
-    " NOTE: When there are multiple tag matches, the normal :tag command will
-    " jump to the first match.  The normal :tselect command (mapped to g])
-    " will always provide a menu of tags, even if there is only one match.
-    " But the :cstag command is smarter, and provides a menu only if there
-    " are multiple matches.  So even if the cscope tool is not installed,
-    " the cscopetag option improves the behavior of :tag.
-    set cscopetag
+    " Do not set 'cscopetag'.  This option is intended to be a convenient way
+    " to cause :tag, CTRL-], and "vim -t" to use the :cstag command and thus
+    " consider cscope tags in addition to standard tags, but there are
+    " side-effects that are hard to work around.  In particular, the :cstag
+    " command behaves like :tjump, which is mostly a good thing in that a menu
+    " pops up whenever there are multiple matching tags.  But this breaks the
+    " ability to jump to the nth tag using ":{count}tag {ident}", and since the
+    " change is hard-coded into the :tag command, there is no decent
+    " work-around for certain scripts (such as the CtrlP plugin) that want to
+    " programmatically select the nth tag.  Instead of setting 'cscopetag', use
+    " mappings to avoid this unintentional breakage while still getting the
+    " beneficial behavior of :tjump.
+
+    " Because the system vimrc may turn on 'cscopetag', turn it off here.
+    set nocscopetag
 
     " Turn off warnings for default cscope.out files.
     set nocscopeverbose
