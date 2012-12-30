@@ -182,3 +182,6 @@ nnoremap <Leader><Leader>q :call QuickFixWinToggle()<CR>
 if !empty($SSH_TTY)
     hi Normal guibg=#0d280d
 endif
+
+" Powerline
+call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
