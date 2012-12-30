@@ -1478,40 +1478,25 @@ let g:runview_filtcmd="bash"
 xmap <Leader>s <Plug>Vsurround
 
 " -------------------------------------------------------------
-" taglist
+" Tagbar
 " -------------------------------------------------------------
 
 " Must have ctags of some kind or keep plugin from running.
-let usingTaglist = executable("ctags") || executable("ctags.exe")
-if !usingTaglist
-    let loaded_taglist = 'no'
+let usingTagbar = executable("ctags") || executable("ctags.exe")
+if !usingTagbar
+    " Tagbar doesn't actually care about the value... only the existence
+    " of the variable.
+    let g:loaded_tagbar = 'no'
 endif
 
-" Taglist settings
-"   Tlist_Display_Prototype - show function prototype in taglist (verbose).
-"     **Note** When set, overrides display of scope.
-"   Tlist_Display_Tag_Scope - show tag scope next to the tag name.
-"   Tlist_Process_File_Always - always generate tags for file.
-"   Tlist_Use_Right_Window - put taglist on the right.
-"   Tlist_Close_On_Select - close the TlistWindow when jumping to a tag.
-"   Tlist_Inc_Winwidth - allow Tlist to widen the gvim window.
-"   Tlist_GainFocus_On_ToggleOpen - when toggled open, Tlist gets focus.
+" Tagbar settings
+let g:tagbar_width = 40
+let g:tagbar_autoclose = 1
+let g:tagbar_autofocus = 1
 
-let Tlist_Display_Prototype = 0
-let Tlist_Display_Tag_Scope = 1
-let Tlist_Process_File_Always = 1
-
-" Buggy behavior when using right-side window: changes the column width
-" of text buffer from 80 to 79.
-let Tlist_Use_Right_Window = 0
-let Tlist_GainFocus_On_ToggleOpen = 1
-let Tlist_Inc_Winwidth = 0
-let Tlist_Close_On_Select = 1
-let Tlist_WinWidth = 40
-
-nnoremap <silent> <S-F8>        :TlistToggle<CR>
-nnoremap <silent> <C-Q><C-T>    :TlistToggle<CR>
-nnoremap <silent> <C-Q>t        :TlistToggle<CR>
+nnoremap <silent> <S-F8>        :TagbarToggle<CR>
+nnoremap <silent> <C-Q><C-T>    :TagbarToggle<CR>
+nnoremap <silent> <C-Q>t        :TagbarToggle<CR>
 
 " -------------------------------------------------------------
 " UltiSnips
@@ -2186,8 +2171,8 @@ if has('statusline') && version >= 700
     set statusline+=\                              " Space
 
 "   set statusline+=%{strlen(&ft)?&ft:'none'},     " File type
-    if usingTaglist
-        set statusline+=%(%{Tlist_Get_Tagname_By_Line()}%) " Function name
+    if usingTagbar
+        set statusline+=%{tagbar#currenttag('[%s]','')} " Function name
     endif
 "   set statusline+=,%{SyntaxItem()}               " Syntax group under cursor
     set statusline+=\                              " Space

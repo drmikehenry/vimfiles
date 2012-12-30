@@ -44,8 +44,8 @@
     Surround - Manipulating "surroundings"              |notes_surround|
     Svn - View Subversion diffs while writing commit log|notes_svn|
     SwapIt - Cycle through related words                |notes_swapit|
+    Tagbar - Source code browser                        |notes_tagbar|
     TagSignature - Balloon signatures for tags          |notes_tagsignature|
-    TagList - Source code browser                       |notes_taglist|
     TextObj-Indent - Indentation-based text objects     |notes_textobj-indent|
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
     UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
@@ -1324,35 +1324,18 @@ Installation:
 - Copy to ~/.vim/plugin/tag_signature.vim
 
 ------------------------------------------------------------------------------
-TAGLIST                                                 *notes_taglist*
-  Source code browser                                   |taglist.txt|
+TAGBAR                                                  *notes_tagbar*
+  Source code browser                                   |tagbar.txt|
 
 Local customizations:
-  <S-F8>        - toggle the taglist (:TlistToggle)
-  CTRL-Q CTRL-T - toggle the taglist (:TlistToggle)
-  CTRL-Q T      - toggle the taglist (:TlistToggle)
+  <S-F8>        - toggle the tagbar (:TagbarToggle)
+  CTRL-Q CTRL-T - toggle the tagbar (:TagbarToggle)
+  CTRL-Q T      - toggle the tagbar (:TagbarToggle)
 
-Version 45 from http://www.vim.org/scripts/script.php?script_id=273
+Version 2012-11-22 (feebffcd) from https://github.com/majutsushi/tagbar
 
 Installation:
-- Unzip in ~/.vim/
-- :helptags ~/.vim/doc
-
-The file taglist.vim should be patched as follows: >
-  --- taglist.vim (revision 478)
-  +++ taglist.vim (working copy)
-  @@ -3289,7 +3289,7 @@
-           " tag is selected, close the taglist  window
-           if g:Tlist_Close_On_Select
-               call s:Tlist_Window_Goto_Window()
-  -            close
-  +            call s:Tlist_Exe_Cmd_No_Acmds('close')
-
-               " Go back to the window displaying the selected file
-               let wnum = bufwinnr(a:filename)
-
-This avoids an unfortunate interaction with the BufEnter/BufLeave
-autocommands designed to keep Vim 7+ from scrolling the buffer.
+- Follow bundle installation instructions (|bundle_installation|).
 
 Requires ctags.exe to be in the path.  Generally this comes with Linux
 distributions.  Compiled binaries may be found at
