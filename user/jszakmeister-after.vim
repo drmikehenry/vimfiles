@@ -16,6 +16,7 @@ endif
 
 if has("mac") || has("macunix")
     let Tlist_Ctags_Cmd='/Users/jszakmeister/.local/bin/ctags'
+    let g:tagbar_ctags_bin = '/Users/jszakmeister/.local/bin/ctags'
 endif
 
 " Some reminders of the tag-related shortcuts, since I tend to check my
