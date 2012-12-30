@@ -184,4 +184,10 @@ if !empty($SSH_TTY)
 endif
 
 " Powerline
+
+" Add back in a few segments...
+call Pl#Theme#InsertSegment('mode_indicator', 'after', 'paste_indicator')
+call Pl#Theme#InsertSegment('filetype', 'before', 'scrollpercent')
+call Pl#Theme#InsertSegment('fileformat', 'before', 'filetype')
+
 call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
