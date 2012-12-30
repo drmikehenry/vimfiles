@@ -2196,6 +2196,12 @@ endif
 if &background == 'light' || has("gui_running")
     colorscheme nuvola
 endif
+
+" Only use the nuvola powerline scheme if the gui is running
+if has("gui_running")
+    let g:Powerline_colorscheme = 'nuvola'
+endif
+
 " colorscheme nuvola    " nice, light, pretty (Matt Gilbert pick)
 " colorscheme habilight " modified nuvola, some new features
 " colorscheme ps_color  " somewhat dark
