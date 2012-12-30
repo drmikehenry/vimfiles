@@ -2,10 +2,9 @@
 "
 " SVN extension for VCSCommand.
 "
-" Version:       VCS development
 " Maintainer:    Bob Hiestand <bob.hiestand@gmail.com>
 " License:
-" Copyright (c) 2007 Bob Hiestand
+" Copyright (c) Bob Hiestand
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
 " of this software and associated documentation files (the "Software"), to
@@ -51,7 +50,9 @@ if v:version < 700
 	finish
 endif
 
-runtime plugin/vcscommand.vim
+if !exists('g:loaded_VCSCommand')
+	runtime plugin/vcscommand.vim
+endif
 
 if !executable(VCSCommandGetOption('VCSCommandSVNExec', 'svn'))
 	" SVN is not installed
@@ -71,7 +72,7 @@ let s:svnFunctions = {}
 " Returns the executable used to invoke git suitable for use in a shell
 " command.
 function! s:Executable()
-	return shellescape(VCSCommandGetOption('VCSCommandSVNExec', 'svn'))
+	return VCSCommandGetOption('VCSCommandSVNExec', 'svn')
 endfunction
 
 " Function: s:DoCommand(cmd, cmdName, statusText, options) {{{2
@@ -90,22 +91,17 @@ endfunction
 
 " Function: s:svnFunctions.Identify(buffer) {{{2
 function! s:svnFunctions.Identify(buffer)
-	let fileName = resolve(bufname(a:buffer))
-	if isdirectory(fileName)
-		let directoryName = fileName
-	else
-		let directoryName = fnamemodify(fileName, ':h')
-	endif
-	if strlen(directoryName) > 0
-		let svnDir = directoryName . '/.svn'
-	else
-		let svnDir = '.svn'
-	endif
-	if isdirectory(svnDir)
-		return 1
-	else
-		return 0
-	endif
+	let oldCwd = VCSCommandChangeToCurrentFileDir(resolve(bufname(a:buffer)))
+	try
+		call s:VCSCommandUtility.system(s:Executable() . ' info .')
+		if(v:shell_error)
+			return 0
+		else
+			return g:VCSCOMMAND_IDENTIFY_EXACT
+		endif
+	finally
+		call VCSCommandChdir(oldCwd)
+	endtry
 endfunction
 
 " Function: s:svnFunctions.Add() {{{2
@@ -116,7 +112,7 @@ endfunction
 " Function: s:svnFunctions.Annotate(argList) {{{2
 function! s:svnFunctions.Annotate(argList)
 	if len(a:argList) == 0
-		if &filetype == 'SVNannotate'
+		if &filetype ==? 'svnannotate'
 			" Perform annotation of the version indicated by the current line.
 			let caption = matchstr(getline('.'),'\v^\s+\zs\d+')
 			let options = ' -r' . caption
@@ -188,7 +184,7 @@ endfunction
 function! s:svnFunctions.GetBufferInfo()
 	let originalBuffer = VCSCommandGetOriginalBuffer(bufnr('%'))
 	let fileName = bufname(originalBuffer)
-	let statusText = s:VCSCommandUtility.system(s:Executable() . ' status --non-interactive -vu -- "' . fileName . '"')
+	let statusText = s:VCSCommandUtility.system(s:Executable() . ' status --non-interactive -v -- "' . fileName . '"')
 	if(v:shell_error)
 		return []
 	endif
@@ -198,12 +194,14 @@ function! s:svnFunctions.GetBufferInfo()
 		return ['Unknown']
 	endif
 
-	let [flags, revision, repository] = matchlist(statusText, '^\(.\{8}\)\s\+\(\S\+\)\s\+\(\S\+\)\s\+\(\S\+\)\s')[1:3]
+	let [flags, revision, repository] = matchlist(statusText, '^\(.\{9}\)\s*\(\d\+\)\s\+\(\d\+\)')[1:3]
 	if revision == ''
 		" Error
 		return ['Unknown']
 	elseif flags =~ '^A'
 		return ['New', 'New']
+	elseif flags =~ '*'
+		return [revision, repository, '*']
 	else
 		return [revision, repository]
 	endif
@@ -258,7 +256,7 @@ endfunction
 " Function: s:svnFunctions.Status(argList) {{{2
 function! s:svnFunctions.Status(argList)
 	let options = ['-u', '-v']
-	if len(a:argList) == 0
+	if len(a:argList) != 0
 		let options = a:argList
 	endif
 	return s:DoCommand(join(['status --non-interactive'] + options, ' '), 'status', join(options, ' '), {})
