@@ -164,17 +164,9 @@ nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
 nnoremap <Leader><Leader>t :<C-U>CtrlP<CR>
 nnoremap <Leader><Leader>b :<C-U>CtrlPBuffer<CR>
 
-" Unset cscopetag as it gets in the way of CtrlPTag, and pops up a menu when it
-" really shouldn't.
-set nocscopetag
-
 " Don't open multiple files in vertical splits.  Just open them, and re-use the
 " buffer already at the front.
 let g:ctrlp_open_multiple_files = '1vr'
-
-" Gundo mapping
-nnoremap <Leader><Leader>u :GundoToggle<CR>
-let g:gundo_close_on_revert = 1
 
 " Add a mapping for the Quickfix window.  Unfortunately, C-Q doesn't appear to
 " work in a terminal.
