@@ -1,10 +1,8 @@
 " Vim syntax file
-" Language:	CVS annotate output
-" Maintainer:	Bob Hiestand <bob.hiestand@gmail.com>
-" Remark:	Used by the cvscommand plugin.  Originally written by Mathieu
-" Clabaut
+" Language:	VCS commit file
+" Maintainer:	Bob Hiestand (bob.hiestand@gmail.com)
 " License:
-" Copyright (c) 2007 Bob Hiestand
+" Copyright (c) Bob Hiestand
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
 " of this software and associated documentation files (the "Software"), to
@@ -24,22 +22,10 @@
 " FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 " IN THE SOFTWARE.
 
-if version < 600
-	syntax clear
-elseif exists("b:current_syntax")
+if exists("b:current_syntax")
 	finish
 endif
 
-syn match cvsDate 	/\d\d-...-\d\d/ 		contained
-syn match cvsName  	/(\S* /hs=s+1,he=e-1 		contained nextgroup=cvsDate
-syn match cvsVer 	/^\d\+\(\.\d\+\)\+/ 		contained nextgroup=cvsName
-syn region cvsHead 	start="^\d\+\.\d\+" end="):" 	contains=cvsVer,cvsName,cvsDate
-
-if !exists("did_cvsannotate_syntax_inits")
-	let did_cvsannotate_syntax_inits = 1
-	hi link cvsDate 	Comment
-	hi link cvsName	Type
-	hi link cvsVer	Statement
-endif
-
-let b:current_syntax="CVSAnnotate"
+syntax region vcsComment start="^VCS: " end="$"
+highlight link vcsComment Comment
+let b:current_syntax = "vcscommit"

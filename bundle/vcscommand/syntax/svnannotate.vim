@@ -1,9 +1,9 @@
 " Vim syntax file
-" Language:	git annotate output
+" Language:	SVN annotate output
 " Maintainer:	Bob Hiestand <bob.hiestand@gmail.com>
 " Remark:	Used by the vcscommand plugin.
 " License:
-" Copyright (c) 2009 Bob Hiestand
+" Copyright (c) Bob Hiestand
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
 " of this software and associated documentation files (the "Software"), to
@@ -27,18 +27,14 @@ if exists("b:current_syntax")
 	finish
 endif
 
-syn region gitName start="(\@<=" end="\( \d\d\d\d-\)\@=" contained
-syn match gitCommit /^\^\?\x\+/ contained
-syn match gitDate /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d [+-]\d\d\d\d/ contained
-syn match gitLineNumber /\d\+)\@=/ contained
-syn region gitAnnotation start="^" end=") " oneline keepend contains=gitCommit,gitLineNumber,gitDate,gitName
+syn match svnName /\S\+/ contained
+syn match svnVer /^\s*\zs\d\+/ contained nextgroup=svnName skipwhite
+syn match svnHead /^\s*\d\+\s\+\S\+/ contains=svnVer,svnName
 
-if !exists("did_gitannotate_syntax_inits")
-	let did_gitannotate_syntax_inits = 1
-	hi link gitName Type
-	hi link gitCommit Statement
-	hi link gitDate Comment
-	hi link gitLineNumber Label
+if !exists("did_svnannotate_syntax_inits")
+	let did_svnannotate_syntax_inits = 1
+	hi link svnName Type
+	hi link svnVer Statement
 endif
 
-let b:current_syntax="gitAnnotate"
+let b:current_syntax="svnAnnotate"

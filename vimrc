@@ -68,6 +68,11 @@ if $VIMRC_AFTER == ""
     let $VIMRC_AFTER=expand("$VIMUSERFILES/$VIMUSER-after.vim")
 endif
 
+" VIMRC_BUNDLE points to the user's bundle area.
+if $VIMRC_BUNDLE == ""
+    let $VIMRC_BUNDLE=expand("$VIMUSERFILES/$VIMUSER/bundle")
+endif
+
 " Prepend per-user directory to runtimepath (provides the highest priority).
 call RtpPrepend($VIMUSERFILES . "/" . $VIMUSER)
 
@@ -86,6 +91,10 @@ call pathogen#infect()
 " than those in "bundle" directories.
 call pathogen#infect('pre-bundle')
 
+" A bundle area specific to a user.
+if isdirectory($VIMRC_BUNDLE)
+    call pathogen#infect($VIMRC_BUNDLE)
+endif
 
 " Number of lines of VIM history to remember.
 set history=500
@@ -858,9 +867,9 @@ endfunction
 
 " Initiate search of visual selection (forward '*' or backward '#').
 " E.g.:
-"   xnoremap <expr> * <SID>VisualSearch('*')
-"   xnoremap <expr> # <SID>VisualSearch('#')
-function! <SID>VisualSearch(direction)
+"   xnoremap <expr> * VisualSearch('*')
+"   xnoremap <expr> # VisualSearch('#')
+function! VisualSearch(direction)
     if a:direction == '#'
         let l:rhs = "y?"
     else
@@ -871,7 +880,7 @@ function! <SID>VisualSearch(direction)
 endfunction
 
 " Setup @/ to given pattern, enable highlighting and add to search history.
-function! <SID>SetSearch(pattern)
+function! SetSearch(pattern)
     let @/ = a:pattern
     call histadd("search", a:pattern)
     set hlsearch
@@ -880,8 +889,8 @@ function! <SID>SetSearch(pattern)
 endfunction
 
 " Set search register @/ to unnamed ("scratch") register and highlight.
-command! MatchScratch     call <SID>SetSearch(MakeSearchString(@"))
-command! MatchScratchWord call <SID>SetSearch("\\<".MakeSearchString(@")."\\>")
+command! MatchScratch     call SetSearch(MakeSearchString(@"))
+command! MatchScratchWord call SetSearch("\\<".MakeSearchString(@")."\\>")
 
 " Map normal-mode '*' to just highlight, not search for next.
 " Note: Yank into @a to avoid clobbering register 0 (saving and restoring @a).
@@ -893,20 +902,20 @@ xnoremap <silent> *  <ESC>:let temp_a=@a<CR>gv"ay:MatchScratch<CR>
             \:let @a=temp_a<CR>
 
 " Setup :Regrep command to search for visual selection.
-function! <SID>VisualRegrep()
+function! VisualRegrep()
     return "y:MatchScratch\<CR>" .
                 \ ":Regrep \<C-R>=MakeEgrepString(@\")\<CR>"
 endfunction
 
 " Setup :Regrep command to search for complete word under cursor.
-function! <SID>NormalRegrep()
+function! NormalRegrep()
     return "yiw:MatchScratchWord\<CR>" .
                 \ ":Regrep \\<\<C-R>=MakeEgrepString(@\")\<CR>\\>"
 endfunction
 
 " :Regrep of visual selection or current word under cursor.
-vnoremap <expr> <F3> <SID>VisualRegrep()
-nnoremap <expr> <F3> <SID>NormalRegrep()
+vnoremap <expr> <F3> VisualRegrep()
+nnoremap <expr> <F3> NormalRegrep()
 
 " Folding all but matching lines.
 " Taken from Wiki tip http://vim.wikia.com/wiki/VimTip282.
@@ -981,6 +990,22 @@ nnoremap <expr> <C-w>f empty(taglist(expand('<cfile>'))) ?
 " Convenience for building tag files in current directory.
 command! Ctags :wall|silent! !gentags
 
+" The :tjump command is more convenient than :tag because it will pop up a
+" menu if and only if multiple tags match.  Exchange the default meaning
+" of CTRL-] and friends to use :tjump for the more convenient keystrokes,
+" and to allow the old behavior via tha "g"-prefixed less-convenient keystrokes.
+" Additionally, map the mouse to use the :tjump variants.
+
+nnoremap g<C-]>   <C-]>
+xnoremap g<C-]>   <C-]>
+nnoremap  <C-]>  g<C-]>
+xnoremap  <C-]>  g<C-]>
+
+nnoremap g<LeftMouse>   g<C-]>
+xnoremap g<LeftMouse>   g<C-]>
+nnoremap <C-LeftMouse>  g<C-]>
+xnoremap <C-LeftMouse>  g<C-]>
+
 " =============================================================
 " Cscope
 " =============================================================
@@ -991,15 +1016,21 @@ if has("cscope")
     " 1 ==> search tag file(s) first, then cscope database(s) if no matches.
     set cscopetagorder=0
 
-    " When set, the commands :tag, CTRL-], and "vim -t" will use :cstag
-    " instead of regular :tag.
-    " NOTE: When there are multiple tag matches, the normal :tag command will
-    " jump to the first match.  The normal :tselect command (mapped to g])
-    " will always provide a menu of tags, even if there is only one match.
-    " But the :cstag command is smarter, and provides a menu only if there
-    " are multiple matches.  So even if the cscope tool is not installed,
-    " the cscopetag option improves the behavior of :tag.
-    set cscopetag
+    " Do not set 'cscopetag'.  This option is intended to be a convenient way
+    " to cause :tag, CTRL-], and "vim -t" to use the :cstag command and thus
+    " consider cscope tags in addition to standard tags, but there are
+    " side-effects that are hard to work around.  In particular, the :cstag
+    " command behaves like :tjump, which is mostly a good thing in that a menu
+    " pops up whenever there are multiple matching tags.  But this breaks the
+    " ability to jump to the nth tag using ":{count}tag {ident}", and since the
+    " change is hard-coded into the :tag command, there is no decent
+    " work-around for certain scripts (such as the CtrlP plugin) that want to
+    " programmatically select the nth tag.  Instead of setting 'cscopetag', use
+    " mappings to avoid this unintentional breakage while still getting the
+    " beneficial behavior of :tjump.
+
+    " Because the system vimrc may turn on 'cscopetag', turn it off here.
+    set nocscopetag
 
     " Turn off warnings for default cscope.out files.
     set nocscopeverbose
@@ -1343,6 +1374,13 @@ command! A FSHere
 let Grep_Skip_Dirs = '.svn .bzr .git .hg build bak export .undo'
 let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
     \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc build.out doxy.out'
+
+" -------------------------------------------------------------
+" Gundo
+" -------------------------------------------------------------
+
+nnoremap <Leader><Leader>u  :GundoToggle<CR>
+let g:gundo_close_on_revert = 1
 
 " -------------------------------------------------------------
 " lookupfile
@@ -2233,7 +2271,7 @@ if has("gui_running")
         " hack lets me try PragmataPro at home but still have reasonable
         " fonts elsewhere.
         " TODO: Find a better solution fallback fonts.
-        if filereadable($HOME . "/.fonts/p/PragmataPro.ttf")
+        if len(glob($HOME . "/.fonts/p/PragmataPro*.ttf"))
             set guifont=PragmataPro\ 12
         else
             set guifont=DejaVu\ Sans\ Mono\ 12
