@@ -168,6 +168,10 @@ nnoremap <Leader><Leader>b :<C-U>CtrlPBuffer<CR>
 " buffer already at the front.
 let g:ctrlp_open_multiple_files = '1vr'
 
+" Add some mappings for Regrep since I don't use the function keys.
+vnoremap <expr> <Leader><Leader>g VisualRegrep()
+nnoremap <expr> <Leader><Leader>g NormalRegrep()
+
 " Add a mapping for the Quickfix window.  Unfortunately, C-Q doesn't appear to
 " work in a terminal.
 nnoremap <Leader><Leader>q :call QuickFixWinToggle()<CR>
