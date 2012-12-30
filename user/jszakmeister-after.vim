@@ -183,6 +183,46 @@ if !empty($SSH_TTY)
     hi Normal guibg=#0d280d
 endif
 
+" Redefine a few functions because I want tabstops to always be 8
+
+" -------------------------------------------------------------
+" Setup for plain text.
+" -------------------------------------------------------------
+function! SetupText()
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
+    let b:SpellType = "<text>"
+endfunction
+
+" -------------------------------------------------------------
+" Setup for general source code.
+" -------------------------------------------------------------
+function! SetupSource()
+    setlocal tw=80 ts=8 sts=4 sw=4 et ai
+    Highlight longlines tabs trailingspace
+    let b:SpellType = "<source>"
+endfunction
+
+" -------------------------------------------------------------
+" Setup for markup languages like HTML, XML, ....
+" -------------------------------------------------------------
+function! SetupMarkup()
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
+    runtime scripts/closetag.vim
+    runtime scripts/xml.vim
+    let b:SpellType = "<markup>"
+endfunction
+
+" -------------------------------------------------------------
+" Setup for Markdown.
+" -------------------------------------------------------------
+function! SetupMarkdown()
+    call SetupMarkup()
+endfunction
+
+function! SetupRst()
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
+endfunction
+
 " Powerline
 
 " Add back in a few segments...
