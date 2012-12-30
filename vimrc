@@ -949,7 +949,7 @@ set clipboard=unnamed
 
 " taken from tip #330 - setup sometime...
 " map <F11> :call InvertPasteAndMouse()<CR>
-fun! InvertPasteAndMouse()
+function! InvertPasteAndMouse()
     if &mouse == ''
         set mouse=a | set nopaste
         echo "mouse mode on, paste mode off"
@@ -2157,7 +2157,7 @@ function! SyntaxItem()
 endfunction
 
 " Function used to display utf-8 sequence.
-fun! ShowUtf8Sequence()
+function! ShowUtf8Sequence()
     try
         let p = getpos('.')
         redir => utfseq
