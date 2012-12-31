@@ -2266,7 +2266,8 @@ endif
 
 " Only use the nuvola powerline scheme if the gui is running
 if has("gui_running")
-    let g:Powerline_colorscheme = 'nuvola'
+    " TODO Try out nuvola powerline colorscheme sometime.
+    "let g:Powerline_colorscheme = 'nuvola'
 endif
 
 " colorscheme nuvola    " nice, light, pretty (Matt Gilbert pick)
