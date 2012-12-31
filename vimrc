@@ -949,7 +949,7 @@ set clipboard=unnamed
 
 " taken from tip #330 - setup sometime...
 " map <F11> :call InvertPasteAndMouse()<CR>
-fun! InvertPasteAndMouse()
+function! InvertPasteAndMouse()
     if &mouse == ''
         set mouse=a | set nopaste
         echo "mouse mode on, paste mode off"
@@ -2142,7 +2142,7 @@ function! SyntaxItem()
 endfunction
 
 " Function used to display utf-8 sequence.
-fun! ShowUtf8Sequence()
+function! ShowUtf8Sequence()
     try
         let p = getpos('.')
         redir => utfseq
@@ -2248,6 +2248,13 @@ endif
 if &background == 'light' || has("gui_running")
     colorscheme nuvola
 endif
+
+" Only use the nuvola powerline scheme if the gui is running
+if has("gui_running")
+    " TODO Try out nuvola powerline colorscheme sometime.
+    "let g:Powerline_colorscheme = 'nuvola'
+endif
+
 " colorscheme nuvola    " nice, light, pretty (Matt Gilbert pick)
 " colorscheme habilight " modified nuvola, some new features
 " colorscheme ps_color  " somewhat dark
