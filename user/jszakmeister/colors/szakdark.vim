@@ -240,3 +240,22 @@ hi htmlH3           guifg=#e0e0e0     guibg=#303058     gui=NONE      ctermfg=NO
 hi htmlH4           guifg=#e0e0e0     guibg=#202040     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
 hi htmlH5           guifg=#e0e0e0     guibg=#181830     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
 hi htmlH6           guifg=#e0e0e0     guibg=#101020     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
+
+" Diff support
+highlight DiffAdd       term=reverse    cterm=bold  ctermbg=darkgreen   ctermfg=white   guibg=#003800 guifg=white
+highlight DiffChange    term=reverse    cterm=bold  ctermbg=cyan        ctermfg=black
+highlight DiffText      term=reverse    cterm=bold  ctermbg=gray        ctermfg=black
+highlight DiffDelete    term=reverse                ctermbg=red         ctermfg=black   guibg=#480000 guifg=white
+highlight diffFile                                  ctermbg=black       ctermfg=yellow  guifg=yellow3
+highlight link diffAdded DiffAdd
+highlight link diffRemoved DiffDelete
+
+if &t_Co > 255
+    highlight DiffAdd       ctermbg=22      ctermfg=white
+    highlight DiffChange    ctermbg=37      ctermfg=black
+    highlight DiffText      ctermbg=235     ctermfg=black
+    highlight DiffDelete    ctermbg=52      ctermfg=gray
+endif
+
+" Better looking SignColumn
+hi! link SignColumn LineNr
