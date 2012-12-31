@@ -2030,6 +2030,41 @@ function! SetupVhdl()
 endfunction
 command! SetupVhdl call SetupVhdl()
 
+" -------------------------------------------------------------
+" Setup for Linux Kernel Sources
+" -------------------------------------------------------------
+function! SetupKernelSource()
+    setlocal ts=8 sts=8 sw=8 tw=80
+
+    " Don't expand tabs to spaces
+    setlocal noexpandtab
+
+    " Enable automatic C program indenting.
+    setlocal cindent
+
+    " Don't outdent function return types.
+    setlocal cinoptions+=t0
+
+    " No extra indentation for case labels.
+    setlocal cinoptions+=:0
+
+    " No extra indentation for "public", "protected", "private" labels.
+    setlocal cinoptions+=g0
+
+    " Line up function args.
+    setlocal cinoptions+=(0
+
+    " Setup formatoptions:
+    "   c - auto-wrap comments to textwidth.
+    "   r - automatically insert comment leader when pressing <Enter>.
+    "   o - automatically insert comment leader after 'o' or 'O'.
+    "   q - allow formatting of comments with 'gq'.
+    "   l - long lines are not broken in insert mode.
+    "   n - recognize numbered lists.
+    "   t - autowrap using textwidth,
+    setlocal formatoptions=croqlnt
+endfunction
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
