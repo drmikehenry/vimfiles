@@ -259,3 +259,12 @@ endif
 
 " Better looking SignColumn
 hi! link SignColumn LineNr
+
+" ColorColumn
+if exists('+colorcolumn')
+    if &t_Co > 255 || has("gui_running")
+        highlight ColorColumn ctermbg=237 guibg=#3a3a3a
+    else
+        highlight ColorColumn ctermbg=8
+    endif
+endif
