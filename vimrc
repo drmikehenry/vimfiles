@@ -693,6 +693,9 @@ set wildignore=*.o,*.obj,*.a,*.lib,*.so,*~,*.bak,*.swp,tags,*.opt,*.ncb
             \,*.plg,*.elf,cscope.out,*.ecc,*.exe,*.ilk,*.pyc
             \,export,build,_build
 
+" Ignore some Linux-kernel artifacts
+set wildignore+=*.ko,*.mod.c,*.order,modules.builtin
+
 " Make sure Command-T ignores some java-related bits.
 set wildignore+=*.class,classes/**,*.jar
 
