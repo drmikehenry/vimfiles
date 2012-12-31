@@ -257,3 +257,9 @@ function! ShowAvailableColors()
     nohlsearch
 endfunction
 command! ShowAvailableColors call ShowAvailableColors()
+
+" Set colorcolumn, if available
+if exists('+colorcolumn')
+    " This sets it to textwidth+1
+    set colorcolumn=+1
+endif
