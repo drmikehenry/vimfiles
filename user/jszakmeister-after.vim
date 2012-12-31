@@ -213,3 +213,10 @@ call Pl#Theme#InsertSegment('filetype', 'before', 'scrollpercent')
 call Pl#Theme#InsertSegment('fileformat', 'before', 'filetype')
 
 call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
+
+function! ShowHighlightGroup()
+    echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+        \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+        \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
+endfunction
+command! ShowHighlightGroup call ShowHighlightGroup()
