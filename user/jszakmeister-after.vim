@@ -131,8 +131,9 @@ endfunction
 command! SetupManPager call SetupManPager()
 
 augroup jszakmeister_vimrc
+    autocmd!
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
-augroup end
+augroup END
 
 " Make Command-T ignore some Clojure/Java-related bits.
 set wildignore+=target/**,asset-cache
