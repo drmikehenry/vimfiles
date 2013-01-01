@@ -408,8 +408,22 @@ Local customizations:
 Version 2012-12-21 (675faa77) from https://github.com/kien/ctrlp.vim
 
 Installation:
-- Follow bundle installation instructions (|bundle_installation|).
+- Follow bundle installation instructions (|bundle_installation|), with one
+  exception.  You need to apply the following patch to allow centering of
+  the selected tag: >
 
+  diff --git a/bundle/ctrlp.vim/autoload/ctrlp/tag.vim b/bundle/ctrlp.vim/autoload/ctrlp/tag.vim
+  index 83921a5..2288681 100644
+  --- a/bundle/ctrlp.vim/autoload/ctrlp/tag.vim
+  +++ b/bundle/ctrlp.vim/autoload/ctrlp/tag.vim
+  @@ -108,6 +108,7 @@ fu! ctrlp#tag#accept(mode, str)
+    el
+      exe cmd tg
+    en
+  +	sil! norm! zvzz
+    cal ctrlp#setlcdir()
+   endf
+<
 ------------------------------------------------------------------------------
 COLORSAMPLERPACK                                        *notes_colorsampler*
   Color schemes and theme menu
