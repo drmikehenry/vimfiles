@@ -1744,7 +1744,7 @@ let g:SpellMap["mail"] = "<on>"
 " Setup for plain text.
 " -------------------------------------------------------------
 function! SetupText()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
     let b:SpellType = "<text>"
 endfunction
 command! SetupText call SetupText()
@@ -1754,7 +1754,7 @@ let g:SpellMap["<text>"] = "<on>"
 " Setup for general source code.
 " -------------------------------------------------------------
 function! SetupSource()
-    setlocal tw=80 ts=4 sts=4 sw=4 et ai
+    setlocal tw=80 ts=8 sts=4 sw=4 et ai
     Highlight longlines tabs trailingspace
     let b:SpellType = "<source>"
 endfunction
@@ -1765,7 +1765,7 @@ let g:SpellMap["<source>"] = "<on>"
 " Setup for markup languages like HTML, XML, ....
 " -------------------------------------------------------------
 function! SetupMarkup()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
     runtime scripts/closetag.vim
     runtime scripts/xml.vim
     let b:SpellType = "<markup>"
@@ -1816,7 +1816,7 @@ endfunction
 command! SetupRstSyntax call SetupRstSyntax()
 
 function! SetupRst()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
 endfunction
 command! SetupRst call SetupRst()
 let g:SpellMap["rst"] = "<on>"
@@ -1825,7 +1825,7 @@ let g:SpellMap["rst"] = "<on>"
 " Setup for Wikipedia.
 " -------------------------------------------------------------
 function! SetupWikipedia()
-    setlocal tw=0 ts=2 sts=2 sw=2 et ai
+    setlocal tw=0 ts=8 sts=2 sw=2 et ai
     " Setup angle brackets as matched pairs for '%'.
     setlocal matchpairs+=<:>
 endfunction
@@ -1942,7 +1942,7 @@ command! SetupCpp call SetupCpp()
 " -------------------------------------------------------------
 function! SetupClojure()
     SetupSource
-    setlocal ts=2 sts=2 sw=2
+    setlocal ts=8 sts=2 sw=2
 endfunction
 command! SetupClojure call SetupClojure()
 
