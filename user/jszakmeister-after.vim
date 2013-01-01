@@ -215,6 +215,12 @@ call Pl#Theme#InsertSegment('fileformat', 'before', 'filetype')
 
 call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
 
+if !has("gui_running")
+    let g:Powerline_symbols_override = {
+        \ 'BRANCH': [0x2442],
+        \ }
+endif
+
 function! ShowHighlightGroup()
     echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
         \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
