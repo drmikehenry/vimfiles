@@ -693,7 +693,7 @@ set wildignore=*.o,*.obj,*.a,*.lib,*.so,*~,*.bak,*.swp,tags,*.opt,*.ncb
             \,*.plg,*.elf,cscope.out,*.ecc,*.exe,*.ilk,*.pyc
             \,export,build,_build
 
-" Ignore some Linux-kernel artifacts
+" Ignore some Linux-kernel artifacts.
 set wildignore+=*.ko,*.mod.c,*.order,modules.builtin
 
 " Make sure Command-T ignores some java-related bits.
@@ -2016,12 +2016,12 @@ endfunction
 command! SetupVhdl call SetupVhdl()
 
 " -------------------------------------------------------------
-" Setup for Linux Kernel Sources
+" Setup for Linux Kernel Sources.
 " -------------------------------------------------------------
 function! SetupKernelSource()
     setlocal ts=8 sts=8 sw=8 tw=80
 
-    " Don't expand tabs to spaces
+    " Don't expand tabs to spaces.
     setlocal noexpandtab
 
     " Enable automatic C program indenting.
