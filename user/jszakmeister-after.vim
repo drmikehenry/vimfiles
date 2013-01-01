@@ -135,7 +135,7 @@ augroup jszakmeister_vimrc
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
 augroup END
 
-" Make Command-T ignore some Clojure/Java-related bits.
+" Ignore some Clojure/Java-related files.
 set wildignore+=target/**,asset-cache
 
 " I regularly create tmp folders that I don't want searched
@@ -143,10 +143,6 @@ set wildignore+=tmp,.lein-*,*.egg-info,.*.swo
 
 " Shortcut for clearing CtrlP caches
 nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
-
-" Use CtrlP in place of Command-T
-nnoremap <Leader><Leader>t :<C-U>CtrlP<CR>
-nnoremap <Leader><Leader>b :<C-U>CtrlPBuffer<CR>
 
 " Don't open multiple files in vertical splits.  Just open them, and re-use the
 " buffer already at the front.

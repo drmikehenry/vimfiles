@@ -696,7 +696,7 @@ set wildignore=*.o,*.obj,*.a,*.lib,*.so,*~,*.bak,*.swp,tags,*.opt,*.ncb
 " Ignore some Linux-kernel artifacts.
 set wildignore+=*.ko,*.mod.c,*.order,modules.builtin
 
-" Make sure Command-T ignores some java-related bits.
+" Ignore some java-related files.
 set wildignore+=*.class,classes/**,*.jar
 
 " Want sessionoptions to contain:
@@ -1222,25 +1222,6 @@ augroup END
 let g:bufmru_nummarks = 0
 
 " -------------------------------------------------------------
-" Command-T
-" -------------------------------------------------------------
-
-" Maximum number of files to find (default 10000).
-let g:CommandTMaxFiles=30000
-
-" Set to 1 to anchor match window at the top.
-let g:CommandTMatchWindowAtTop = 1
-
-" Quick-access (default \t is mapped by Align plugin).
-nnoremap <Leader><Leader>t :CommandT<CR>
-
-" Launch relative to current buffer.
-nnoremap <Leader><Leader>r :CommandT %:h<CR>
-
-" Launch fuzzy search over buffers.
-nnoremap <Leader><Leader>b :CommandTBuffer<CR>
-
-" -------------------------------------------------------------
 " CtrlP
 " -------------------------------------------------------------
 
@@ -1282,6 +1263,17 @@ nnoremap <C-P><C-T> :<C-U>CtrlPTag<CR>
 nnoremap <C-P>t     :<C-U>CtrlPBufTag<CR>
 nnoremap <C-P>T     :<C-U>CtrlPBufTagAll<CR>
 nnoremap <C-P><C-U> :<C-U>CtrlPUndo<CR>
+
+" Transitional mappings to migrate from historical Command-T functionality.
+" At first, redirect to CtrlP equivalent functionality.  Later, just
+" provide an error message.  Eventually, remove this mappings.
+nnoremap <leader><leader>t :<C-U>echoe "Use CTRL-P CTRL-P instead"<Bar>
+            \ sleep 1<Bar>
+            \ CtrlP<CR>
+
+nnoremap <leader><leader>b :<C-U>echoe "Use CTRL-P CTRL-O instead"<Bar>
+            \ sleep 1<Bar>
+            \ CtrlPBuffer<CR>
 
 " Reverse move and history binding pairs:
 " - For consistency with other plugins that use <C-N>/<C-P> for moving around.

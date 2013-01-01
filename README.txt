@@ -31,9 +31,6 @@ Next, choose one of these methods:
 - Manual method::
 
     cp ~/.vim/home.vimrc ~/.vimrc
-    cd ~/.vim/ruby/command-t
-    ruby extconf.rb
-    make
 
 To setup for Windows
 ====================
