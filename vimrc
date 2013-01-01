@@ -1249,7 +1249,7 @@ nnoremap <C-P><C-B> :<C-U>CtrlPBookmarkDir<CR>
 nnoremap <C-P>c     :<C-U>CtrlPChange<CR>
 nnoremap <C-P>C     :<C-U>CtrlPChangeAll<CR>
 nnoremap <C-P><C-D> :<C-U>CtrlPDir<CR>
-nnoremap <C-P><C-F> :<C-U>CtrlP %:h<CR>
+nnoremap <C-P><C-F> :<C-U>CtrlPCurFile<CR>
 nnoremap <C-P><C-L> :<C-U>CtrlPLine<CR>
 nnoremap <C-P><C-M> :<C-U>CtrlPMRU<CR>
 nnoremap <C-P>m     :<C-U>CtrlPMixed<CR>
