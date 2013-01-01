@@ -1,1 +1,1 @@
-call SetupVhdl()
+SetupVhdl

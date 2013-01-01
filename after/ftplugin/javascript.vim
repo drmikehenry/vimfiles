@@ -1,1 +1,1 @@
-call SetupJavaScript()
+SetupJavaScript

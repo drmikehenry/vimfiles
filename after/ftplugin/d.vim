@@ -1,3 +1,3 @@
-call SetupD()
+SetupD
 " OmniCppComplete initialization
 call omni#cpp#complete#Init()

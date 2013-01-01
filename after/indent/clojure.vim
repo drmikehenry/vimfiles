@@ -1,1 +1,1 @@
-call SetupClojure()
+SetupClojure

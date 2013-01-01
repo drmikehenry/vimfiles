@@ -191,7 +191,7 @@ endfunction
 " Setup for Markdown.
 " -------------------------------------------------------------
 function! SetupMarkdown()
-    call SetupMarkup()
+    SetupMarkup
 endfunction
 
 function! SetupRst()

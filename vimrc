@@ -1777,7 +1777,7 @@ let g:SpellMap["<markup>"] = "<on>"
 " Setup for Markdown.
 " -------------------------------------------------------------
 function! SetupMarkdown()
-    call SetupMarkup()
+    SetupMarkup
 endfunction
 command! SetupMarkdown call SetupMarkdown()
 
@@ -1875,7 +1875,7 @@ function! IndentC()
 endfunction
 
 function! SetupC()
-    call SetupSource()
+    SetupSource
     Highlight commas keywordspace longlines tabs trailingspace
     setlocal indentexpr=IndentC()
 
@@ -1933,7 +1933,7 @@ command! SetupC call SetupC()
 " Setup for C++ code.
 " -------------------------------------------------------------
 function! SetupCpp()
-    call SetupC()
+    SetupC
 endfunction
 command! SetupCpp call SetupCpp()
 
@@ -1941,7 +1941,7 @@ command! SetupCpp call SetupCpp()
 " Setup for general Clojure code.
 " -------------------------------------------------------------
 function! SetupClojure()
-    call SetupSource()
+    SetupSource
     setlocal ts=2 sts=2 sw=2
 endfunction
 command! SetupClojure call SetupClojure()
@@ -1950,7 +1950,7 @@ command! SetupClojure call SetupClojure()
 " Setup for D code.
 " -------------------------------------------------------------
 function! SetupD()
-    call SetupC()
+    SetupC
 endfunction
 command! SetupD call SetupD()
 
@@ -1958,7 +1958,7 @@ command! SetupD call SetupD()
 " Setup for JavaScript.
 " -------------------------------------------------------------
 function! SetupJavaScript()
-    call SetupSource()
+    SetupSource
 
     " Map CTRL-O_CR to append ';' to the end of line, then do CR.
     inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
@@ -1970,7 +1970,7 @@ command! SetupJavaScript call SetupJavaScript()
 " Setup for Python.
 " -------------------------------------------------------------
 function! SetupPython()
-    call SetupSource()
+    SetupSource
 
     " Python always thinks tabs are 8 characters wide.
     setlocal ts=8
@@ -1988,7 +1988,7 @@ command! SetupPython call SetupPython()
 " Setup for VHDL.
 " -------------------------------------------------------------
 function! SetupVhdl()
-    call SetupSource()
+    SetupSource
 
     setlocal comments=b:--
 

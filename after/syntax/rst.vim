@@ -1,1 +1,1 @@
-call SetupRstSyntax()
+SetupRstSyntax

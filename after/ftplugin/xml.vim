@@ -1,1 +1,1 @@
-call SetupMarkup()
+SetupMarkup

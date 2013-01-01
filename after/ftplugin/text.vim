@@ -1,1 +1,1 @@
-call SetupText()
+SetupText

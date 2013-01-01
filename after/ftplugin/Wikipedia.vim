@@ -1,1 +1,1 @@
-call SetupWikipedia()
+SetupWikipedia
