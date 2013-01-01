@@ -144,10 +144,6 @@ set wildignore+=tmp,.lein-*,*.egg-info,.*.swo
 " Shortcut for clearing CtrlP caches
 nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
 
-" Don't open multiple files in vertical splits.  Just open them, and re-use the
-" buffer already at the front.
-let g:ctrlp_open_multiple_files = '1vr'
-
 " Add some mappings for Regrep since I don't use the function keys.
 vnoremap <expr> <Leader><Leader>g VisualRegrep()
 nnoremap <expr> <Leader><Leader>g NormalRegrep()

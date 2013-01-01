@@ -1239,6 +1239,10 @@ let g:ctrlp_working_path_mode = 0
 " the marker is not found, then the next marker is checked.
 let g:ctrlp_root_markers = []
 
+" Don't open multiple files in vertical splits.  Just open them, and re-use the
+" buffer already at the front.
+let g:ctrlp_open_multiple_files = '1vr'
+
 " :C [path]  ==> :CtrlP [path]
 command! -n=? -com=dir C CtrlP <args>
 
