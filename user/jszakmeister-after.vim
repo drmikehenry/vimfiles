@@ -3,7 +3,7 @@
 let g:SZAK_BIGGER_FONT=""
 
 if $VIMMACHINE == ""
-    let $VIMMACHINE=substitute(system("uname -n"), "\n", "", "")
+    let $VIMMACHINE=hostname()
 endif
 
 let s:VIMMACHINE_CONFIG = $VIMUSERFILES . "/" . $VIMUSER .
