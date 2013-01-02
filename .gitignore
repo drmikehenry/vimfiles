@@ -1,6 +1,3 @@
-ruby/command-t/Makefile
-ruby/command-t/*.log
-ruby/command-t/ext.bundle
 spell
 *.o
 *.so

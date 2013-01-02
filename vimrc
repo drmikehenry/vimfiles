@@ -693,10 +693,10 @@ set wildignore=*.o,*.obj,*.a,*.lib,*.so,*~,*.bak,*.swp,tags,*.opt,*.ncb
             \,*.plg,*.elf,cscope.out,*.ecc,*.exe,*.ilk,*.pyc
             \,export,build,_build
 
-" Ignore some Linux-kernel artifacts
+" Ignore some Linux-kernel artifacts.
 set wildignore+=*.ko,*.mod.c,*.order,modules.builtin
 
-" Make sure Command-T ignores some java-related bits.
+" Ignore some java-related files.
 set wildignore+=*.class,classes/**,*.jar
 
 " Want sessionoptions to contain:
@@ -1222,25 +1222,6 @@ augroup END
 let g:bufmru_nummarks = 0
 
 " -------------------------------------------------------------
-" Command-T
-" -------------------------------------------------------------
-
-" Maximum number of files to find (default 10000).
-let g:CommandTMaxFiles=30000
-
-" Set to 1 to anchor match window at the top.
-let g:CommandTMatchWindowAtTop = 1
-
-" Quick-access (default \t is mapped by Align plugin).
-nnoremap <Leader><Leader>t :CommandT<CR>
-
-" Launch relative to current buffer.
-nnoremap <Leader><Leader>r :CommandT %:h<CR>
-
-" Launch fuzzy search over buffers.
-nnoremap <Leader><Leader>b :CommandTBuffer<CR>
-
-" -------------------------------------------------------------
 " CtrlP
 " -------------------------------------------------------------
 
@@ -1258,6 +1239,10 @@ let g:ctrlp_working_path_mode = 0
 " the marker is not found, then the next marker is checked.
 let g:ctrlp_root_markers = []
 
+" Don't open multiple files in vertical splits.  Just open them, and re-use the
+" buffer already at the front.
+let g:ctrlp_open_multiple_files = '1vr'
+
 " :C [path]  ==> :CtrlP [path]
 command! -n=? -com=dir C CtrlP <args>
 
@@ -1268,7 +1253,7 @@ nnoremap <C-P><C-B> :<C-U>CtrlPBookmarkDir<CR>
 nnoremap <C-P>c     :<C-U>CtrlPChange<CR>
 nnoremap <C-P>C     :<C-U>CtrlPChangeAll<CR>
 nnoremap <C-P><C-D> :<C-U>CtrlPDir<CR>
-nnoremap <C-P><C-F> :<C-U>CtrlP %:h<CR>
+nnoremap <C-P><C-F> :<C-U>CtrlPCurFile<CR>
 nnoremap <C-P><C-L> :<C-U>CtrlPLine<CR>
 nnoremap <C-P><C-M> :<C-U>CtrlPMRU<CR>
 nnoremap <C-P>m     :<C-U>CtrlPMixed<CR>
@@ -1282,6 +1267,17 @@ nnoremap <C-P><C-T> :<C-U>CtrlPTag<CR>
 nnoremap <C-P>t     :<C-U>CtrlPBufTag<CR>
 nnoremap <C-P>T     :<C-U>CtrlPBufTagAll<CR>
 nnoremap <C-P><C-U> :<C-U>CtrlPUndo<CR>
+
+" Transitional mappings to migrate from historical Command-T functionality.
+" At first, redirect to CtrlP equivalent functionality.  Later, just
+" provide an error message.  Eventually, remove this mappings.
+nnoremap <leader><leader>t :<C-U>echoe "Use CTRL-P CTRL-P instead"<Bar>
+            \ sleep 1<Bar>
+            \ CtrlP<CR>
+
+nnoremap <leader><leader>b :<C-U>echoe "Use CTRL-P CTRL-O instead"<Bar>
+            \ sleep 1<Bar>
+            \ CtrlPBuffer<CR>
 
 " Reverse move and history binding pairs:
 " - For consistency with other plugins that use <C-N>/<C-P> for moving around.
@@ -1748,7 +1744,7 @@ let g:SpellMap["mail"] = "<on>"
 " Setup for plain text.
 " -------------------------------------------------------------
 function! SetupText()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
     let b:SpellType = "<text>"
 endfunction
 command! SetupText call SetupText()
@@ -1758,7 +1754,7 @@ let g:SpellMap["<text>"] = "<on>"
 " Setup for general source code.
 " -------------------------------------------------------------
 function! SetupSource()
-    setlocal tw=80 ts=4 sts=4 sw=4 et ai
+    setlocal tw=80 ts=8 sts=4 sw=4 et ai
     Highlight longlines tabs trailingspace
     let b:SpellType = "<source>"
 endfunction
@@ -1769,7 +1765,7 @@ let g:SpellMap["<source>"] = "<on>"
 " Setup for markup languages like HTML, XML, ....
 " -------------------------------------------------------------
 function! SetupMarkup()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
     runtime scripts/closetag.vim
     runtime scripts/xml.vim
     let b:SpellType = "<markup>"
@@ -1781,7 +1777,7 @@ let g:SpellMap["<markup>"] = "<on>"
 " Setup for Markdown.
 " -------------------------------------------------------------
 function! SetupMarkdown()
-    call SetupMarkup()
+    SetupMarkup
 endfunction
 command! SetupMarkdown call SetupMarkdown()
 
@@ -1820,7 +1816,7 @@ endfunction
 command! SetupRstSyntax call SetupRstSyntax()
 
 function! SetupRst()
-    setlocal tw=80 ts=2 sts=2 sw=2 et ai
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
 endfunction
 command! SetupRst call SetupRst()
 let g:SpellMap["rst"] = "<on>"
@@ -1829,7 +1825,7 @@ let g:SpellMap["rst"] = "<on>"
 " Setup for Wikipedia.
 " -------------------------------------------------------------
 function! SetupWikipedia()
-    setlocal tw=0 ts=2 sts=2 sw=2 et ai
+    setlocal tw=0 ts=8 sts=2 sw=2 et ai
     " Setup angle brackets as matched pairs for '%'.
     setlocal matchpairs+=<:>
 endfunction
@@ -1879,7 +1875,7 @@ function! IndentC()
 endfunction
 
 function! SetupC()
-    call SetupSource()
+    SetupSource
     Highlight commas keywordspace longlines tabs trailingspace
     setlocal indentexpr=IndentC()
 
@@ -1937,7 +1933,7 @@ command! SetupC call SetupC()
 " Setup for C++ code.
 " -------------------------------------------------------------
 function! SetupCpp()
-    call SetupC()
+    SetupC
 endfunction
 command! SetupCpp call SetupCpp()
 
@@ -1945,8 +1941,8 @@ command! SetupCpp call SetupCpp()
 " Setup for general Clojure code.
 " -------------------------------------------------------------
 function! SetupClojure()
-    call SetupSource()
-    setlocal ts=2 sts=2 sw=2
+    SetupSource
+    setlocal ts=8 sts=2 sw=2
 endfunction
 command! SetupClojure call SetupClojure()
 
@@ -1954,7 +1950,7 @@ command! SetupClojure call SetupClojure()
 " Setup for D code.
 " -------------------------------------------------------------
 function! SetupD()
-    call SetupC()
+    SetupC
 endfunction
 command! SetupD call SetupD()
 
@@ -1962,7 +1958,7 @@ command! SetupD call SetupD()
 " Setup for JavaScript.
 " -------------------------------------------------------------
 function! SetupJavaScript()
-    call SetupSource()
+    SetupSource
 
     " Map CTRL-O_CR to append ';' to the end of line, then do CR.
     inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
@@ -1974,7 +1970,7 @@ command! SetupJavaScript call SetupJavaScript()
 " Setup for Python.
 " -------------------------------------------------------------
 function! SetupPython()
-    call SetupSource()
+    SetupSource
 
     " Python always thinks tabs are 8 characters wide.
     setlocal ts=8
@@ -1992,7 +1988,7 @@ command! SetupPython call SetupPython()
 " Setup for VHDL.
 " -------------------------------------------------------------
 function! SetupVhdl()
-    call SetupSource()
+    SetupSource
 
     setlocal comments=b:--
 
@@ -2016,12 +2012,12 @@ endfunction
 command! SetupVhdl call SetupVhdl()
 
 " -------------------------------------------------------------
-" Setup for Linux Kernel Sources
+" Setup for Linux Kernel Sources.
 " -------------------------------------------------------------
 function! SetupKernelSource()
     setlocal ts=8 sts=8 sw=8 tw=80
 
-    " Don't expand tabs to spaces
+    " Don't expand tabs to spaces.
     setlocal noexpandtab
 
     " Enable automatic C program indenting.

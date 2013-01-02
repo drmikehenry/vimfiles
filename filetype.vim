@@ -15,7 +15,7 @@ augroup filetypedetect
     au BufNewFile,BufRead *.wiki setfiletype Wikipedia
     au BufNewFile,BufRead *.{md,mkd,mdwn,mdown,markdown} setfiletype mkd
     au BufNewFile,BufRead *.rest setfiletype rst
-    au BufNewFile,BufRead bash-fc-* call SetupBashFixcommand()
+    au BufNewFile,BufRead bash-fc-* SetupBashFixcommand
     au BufNewFile,BufRead *.cljs setfiletype clojure
 
     " Use the copy and overwrite mechanism on crontab files, otherwise crontab

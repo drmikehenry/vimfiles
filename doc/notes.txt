@@ -12,7 +12,6 @@
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsampler|
-    Command-T - File finder a la TextMate Command-T     |notes_command-t|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
     EnhancedCommentify - comment lines in a program     |notes_enhcommentify|
     Eunuch - helpers for UNIX                           |notes_eunuch|
@@ -438,40 +437,6 @@ Version 8.03 from http://www.vim.org/scripts/script.php?script_id=625
 
 Installation:
 - Unzip in ~/.vim/
-
-------------------------------------------------------------------------------
-COMMAND-T                                               *notes_command-t*
-  File finder a la TextMate Command-T                   |command-t|
-
-Usage:
-
-:CommandT         Launch relative to current working directory
-:CommandT dir     Launch relative to directory "dir"
-:CommandTFlush    Flush Command-T's file cache
-
-Note Command-t's default key sequence, <Leader>t, is taken by Align plugin.
-
-Find more information in the |command-t| help page.
-
-Version 1.3.1 from http://www.vim.org/scripts/script.php?script_id=3025
-
-Installation:
-
-Note Something hangs when opening the Vimball, and CTRL-C may
-       be required before sourcing.
-
-- Distributed as a |vimball|  >
-
-    vim command-t-1.2.1.vba
-    RmVimball command-t
-    :so %
-    :q
-
-- Contains C code that must be compiled: >
-
-    cd ~/.vim/ruby/command-t
-    ruby extconf.rb
-    make
 
 ------------------------------------------------------------------------------
 DUAL                                                    *notes_dual*
@@ -1722,12 +1687,6 @@ BufMRU - most-recently-used buffer switcher
 Buf Explorer - display all buffers in a list, switch or delete buffers, etc.
 
   \be    Invoke BufExplorer.
-
-Command-T - fuzzy search across entire file tree at once
-
-  \\t    Launch relative to current working directory.
-  \\r    Launch relative to current buffer.
-  \\b    Launch fuzzy search over buffers.
 
 ------------------------------------------------------------------------------
 Building and Running

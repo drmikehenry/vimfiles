@@ -1,1 +1,1 @@
-call SetupMarkdown()
+SetupMarkdown

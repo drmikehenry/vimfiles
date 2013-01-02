@@ -1,1 +1,1 @@
-call SetupPython()
+SetupPython

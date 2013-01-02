@@ -48,11 +48,5 @@ def main():
         vimrcLines.insert(0, runtimeLine)
         writeLines(vimrcPath, vimrcLines)
 
-    ctPath = os.path.expanduser("~/.vim/ruby/command-t")
-    if os.path.isdir(ctPath):
-        os.chdir(ctPath)
-        sys.stdout.write(runArgs(["ruby", "extconf.rb"]))
-        sys.stdout.write(runArgs(["make"]))
-
 if __name__ == '__main__':
     main()

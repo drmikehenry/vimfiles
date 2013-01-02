@@ -135,7 +135,7 @@ augroup jszakmeister_vimrc
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
 augroup END
 
-" Make Command-T ignore some Clojure/Java-related bits.
+" Ignore some Clojure/Java-related files.
 set wildignore+=target/**,asset-cache
 
 " I regularly create tmp folders that I don't want searched
@@ -143,14 +143,6 @@ set wildignore+=tmp,.lein-*,*.egg-info,.*.swo
 
 " Shortcut for clearing CtrlP caches
 nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
-
-" Use CtrlP in place of Command-T
-nnoremap <Leader><Leader>t :<C-U>CtrlP<CR>
-nnoremap <Leader><Leader>b :<C-U>CtrlPBuffer<CR>
-
-" Don't open multiple files in vertical splits.  Just open them, and re-use the
-" buffer already at the front.
-let g:ctrlp_open_multiple_files = '1vr'
 
 " Add some mappings for Regrep since I don't use the function keys.
 vnoremap <expr> <Leader><Leader>g VisualRegrep()
@@ -165,46 +157,6 @@ nnoremap <Leader><Leader>q :call QuickFixWinToggle()<CR>
 if !empty($SSH_TTY)
     hi Normal guibg=#0d280d
 endif
-
-" Redefine a few functions because I want tabstops to always be 8
-
-" -------------------------------------------------------------
-" Setup for plain text.
-" -------------------------------------------------------------
-function! SetupText()
-    setlocal tw=80 ts=8 sts=2 sw=2 et ai
-    let b:SpellType = "<text>"
-endfunction
-
-" -------------------------------------------------------------
-" Setup for general source code.
-" -------------------------------------------------------------
-function! SetupSource()
-    setlocal tw=80 ts=8 sts=4 sw=4 et ai
-    Highlight longlines tabs trailingspace
-    let b:SpellType = "<source>"
-endfunction
-
-" -------------------------------------------------------------
-" Setup for markup languages like HTML, XML, ....
-" -------------------------------------------------------------
-function! SetupMarkup()
-    setlocal tw=80 ts=8 sts=2 sw=2 et ai
-    runtime scripts/closetag.vim
-    runtime scripts/xml.vim
-    let b:SpellType = "<markup>"
-endfunction
-
-" -------------------------------------------------------------
-" Setup for Markdown.
-" -------------------------------------------------------------
-function! SetupMarkdown()
-    call SetupMarkup()
-endfunction
-
-function! SetupRst()
-    setlocal tw=80 ts=8 sts=2 sw=2 et ai
-endfunction
 
 " Powerline
 
