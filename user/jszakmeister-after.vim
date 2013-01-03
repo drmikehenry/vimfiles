@@ -14,7 +14,7 @@ if filereadable(s:VIMMACHINE_CONFIG)
     execute "source " . s:VIMMACHINE_CONFIG
 endif
 
-if has("mac") || has("macunix")
+if has("macunix")
     let Tlist_Ctags_Cmd='/Users/jszakmeister/.local/bin/ctags'
     let g:tagbar_ctags_bin = '/Users/jszakmeister/.local/bin/ctags'
 endif
@@ -41,7 +41,7 @@ endif
 colorscheme szakdark
 
 if !has("gui_running")
-    if (has("mac") || has("macunix")) && $TERM_PROGRAM == "iTerm.app"
+    if has("macunix") && $TERM_PROGRAM == "iTerm.app"
         " This works only in iTerm... but that's what I use on the Mac.
         " Set the cursor to a vertical line in insert mode.
         let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -68,7 +68,7 @@ if has("gui_running")
         let g:Powerline_symbols = 'fancy'
     endif
 
-    if has("mac") || has("macunix")
+    if has("macunix")
         let fontstring=join(map(copy(fontname), 'v:val . ":h" . fontsize'), ",")
     else
         let fontstring=join(map(copy(fontname), 'v:val . " " . fontsize'), ",")
