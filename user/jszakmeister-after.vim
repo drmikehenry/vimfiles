@@ -122,8 +122,9 @@ if executable(expand("~/.local/bin/ng"))
     let g:vimclojure#NailgunClient=expand("~/.local/bin/ng")
 endif
 
-" I often want to close a buffer without closing the window
-nnoremap <leader><leader>d :BD<CR>
+" I often want to close a buffer without closing the window.  Using
+" :BW also drops the associated metadata.
+nnoremap <leader><leader>d :BW<CR>
 
 function! SetupManPager()
     setlocal nonu nolist
