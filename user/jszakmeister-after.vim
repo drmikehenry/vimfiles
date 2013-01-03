@@ -30,10 +30,13 @@ endif
 map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
-" Emulate SlickEdit w/Emacs bindings: Use Ctrl-. and Ctrl-,
-" to pop in and out of the tags
-"nnoremap <C-.> :tag
-"nnoremap <C-,> :pop
+" Tunn off the scrollbars... I don't need them.
+if has("gui_running")
+    set guioptions-=R
+    set guioptions-=r
+    set guioptions-=L
+    set guioptions-=l
+endif
 
 colorscheme szakdark
 
