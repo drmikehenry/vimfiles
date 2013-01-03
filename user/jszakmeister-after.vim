@@ -231,3 +231,11 @@ if exists('+colorcolumn')
     " This sets it to textwidth+1
     set colorcolumn=+1
 endif
+
+" Size for the big screen.
+function! BigScreenTv()
+    set columns=120
+    set lines=36
+    let &guifont = substitute(&guifont, ':h\([^:]*\)', ':h25', '')
+endfunction
+command! BigScreenTv call BigScreenTv()
