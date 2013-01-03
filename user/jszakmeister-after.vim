@@ -53,29 +53,34 @@ if !has("gui_running")
     endif
 endif
 
-" Turn on fancy symbols on the status line
-if has("gui_running")
-    let fontname=["Droid Sans Mono", "Inconsolata"]
-    if g:SZAK_BIGGER_FONT == "true"
-        let fontsize="16"
-    else
-        let fontsize="14"
-    endif
+function! SetFont()
+    " Turn on fancy symbols on the status line
+    if has("gui_running")
+        let fontname=["Droid Sans Mono", "Inconsolata"]
+        if g:SZAK_BIGGER_FONT == "true"
+            let fontsize="16"
+        else
+            let fontsize="14"
+        endif
 
-    if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf")) ||
-       \ filereadable(expand("~/.fonts/DroidSansMonoSlashed-Powerline.ttf"))
-        let fontname=["Droid Sans Mono Slashed for Powerline"]
-        let g:Powerline_symbols = 'fancy'
-    endif
+        if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf")) ||
+           \ filereadable(expand("~/.fonts/DroidSansMonoSlashed-Powerline.ttf"))
+            let fontname=["Droid Sans Mono Slashed for Powerline"]
+            let g:Powerline_symbols = 'fancy'
+        endif
 
-    if has("macunix")
-        let fontstring=join(map(copy(fontname), 'v:val . ":h" . fontsize'), ",")
-    else
-        let fontstring=join(map(copy(fontname), 'v:val . " " . fontsize'), ",")
-    endif
+        if has("macunix")
+            let fontstring=join(map(copy(fontname), 'v:val . ":h" . fontsize'), ",")
+        else
+            let fontstring=join(map(copy(fontname), 'v:val . " " . fontsize'), ",")
+        endif
 
-    let &guifont=fontstring
-endif
+        let &guifont=fontstring
+    endif
+endfunction
+command! SetFont call SetFont()
+
+SetFont
 
 if has("gui_macvim")
     set macmeta
