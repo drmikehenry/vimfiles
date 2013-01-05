@@ -19,9 +19,11 @@ hi Normal           guifg=#bbbbbb     guibg=#0d0d0d     gui=NONE      ctermfg=NO
 hi NonText          guifg=#070707     guibg=black       gui=NONE      ctermfg=black       ctermbg=NONE        cterm=NONE
 
 hi Cursor           guifg=black       guibg=white       gui=NONE      ctermfg=black       ctermbg=white       cterm=reverse
-hi LineNr           guifg=#3D3D3D     guibg=black       gui=NONE      ctermfg=darkgray    ctermbg=NONE        cterm=NONE
+hi LineNr           guifg=#4e4e4e     guibg=#262626     gui=NONE      ctermfg=239         ctermbg=235         cterm=NONE
+hi FoldColumn       guifg=#878700     guibg=#262626     gui=NONE      ctermfg=100         ctermbg=235         cterm=NONE
+hi SignColumn       guifg=#00afff     guibg=#262626     gui=NONE      ctermfg=39          ctermbg=235         cterm=NONE
 
-hi VertSplit        guifg=#202020     guibg=#202020     gui=NONE      ctermfg=darkgray    ctermbg=darkgray    cterm=NONE
+hi VertSplit        guifg=#c6c6c6     guibg=#767676     gui=NONE      ctermfg=251         ctermbg=243         cterm=NONE
 hi StatusLine       guifg=#CCCCCC     guibg=#202020     gui=italic    ctermfg=white       ctermbg=darkgray    cterm=NONE
 hi StatusLineNC     guifg=black       guibg=#202020     gui=NONE      ctermfg=blue        ctermbg=darkgray    cterm=NONE
 
@@ -205,9 +207,6 @@ if &t_Co > 255
     highlight DiffText      ctermbg=235     ctermfg=black
     highlight DiffDelete    ctermbg=52      ctermfg=gray
 endif
-
-" Better looking SignColumn
-hi! link SignColumn LineNr
 
 " ColorColumn
 if exists('+colorcolumn')
