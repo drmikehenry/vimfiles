@@ -1193,10 +1193,10 @@ REPEAT                                                  *notes_repeat*
 Plugins need to support this feature explicitly (such as the
 surround plugin).
 
-Version 1.0 from http://www.vim.org/scripts/script.php?script_id=2136
+Version 1.1 (a81bef76) from https://github.com/tpope/vim-repeat
 
 Installation:
-- Copy to ~/.vim/plugin/repeat.vim.
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 RUNVIEW                                                 *notes_runview*
@@ -1269,11 +1269,10 @@ See |surround.txt| for more complete examples and documentation.
 Local customization: Disabled visual-mode "s" mapping as it will be
 removed eventually.  Instead, use visual-mode "S".
 
-Version 1.90 from http://www.vim.org/scripts/script.php?script_id=1697
+Version 2.0 (0b2c9ff9) from https://github.com/tpope/vim-surround
 
 Installation:
-- Unzip to as ~/.vim
-- :helptags ~/.vim/doc
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 SVN                                                     *notes_svn*
