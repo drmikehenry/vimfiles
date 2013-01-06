@@ -1782,6 +1782,14 @@ endfunction
 command! SetupMarkdown call SetupMarkdown()
 
 " -------------------------------------------------------------
+" Setup LessCSS.
+" -------------------------------------------------------------
+function! SetupLess()
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
+endfunction
+command! SetupLess call SetupLess()
+
+" -------------------------------------------------------------
 " Setup for reStructuredText.
 " -------------------------------------------------------------
 function! SetupRstSyntax()
