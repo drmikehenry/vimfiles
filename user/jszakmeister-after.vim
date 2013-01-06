@@ -19,6 +19,16 @@ if has("macunix")
     let g:tagbar_ctags_bin = '/Users/jszakmeister/.local/bin/ctags'
 endif
 
+if filereadable(expand("$HOME/.local/bin/git"))
+    let g:fugitive_git_executable = expand("$HOME/.local/bin/git")
+    let g:Gitv_GitExecutable = g:fugitive_git_executable
+endif
+
+" Gitv
+let g:Gitv_WipeAllOnClose = 1
+let g:Gitv_OpenHorizontal = 1
+let g:Gitv_OpenPreviewOnLaunch = 1
+
 " Some reminders of the tag-related shortcuts, since I tend to check my
 " configuration first.
 " C-] - go to definition
