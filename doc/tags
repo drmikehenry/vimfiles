@@ -214,10 +214,8 @@ blocksort	vissort.txt	/*blocksort*
 bundle_installation	notes.txt	/*bundle_installation*
 clj-nailgun-server	clojure.txt	/*clj-nailgun-server*
 clojure.vim	clojure.txt	/*clojure.vim*
-cs	surround.txt	/*cs*
 dav	pi_netrw.txt	/*dav*
 davs	pi_netrw.txt	/*davs*
-ds	surround.txt	/*ds*
 eb	clojure.txt	/*eb*
 ef	clojure.txt	/*ef*
 el	clojure.txt	/*el*
@@ -365,8 +363,6 @@ headerguard-installation	headerguard.txt	/*headerguard-installation*
 headerguard-intro	headerguard.txt	/*headerguard-intro*
 headerguard.txt	headerguard.txt	/*headerguard.txt*
 http	pi_netrw.txt	/*http*
-i_CTRL-G_S	surround.txt	/*i_CTRL-G_S*
-i_CTRL-G_s	surround.txt	/*i_CTRL-G_s*
 ji	clojure.txt	/*ji*
 jw	clojure.txt	/*jw*
 li	clojure.txt	/*li*
@@ -696,14 +692,6 @@ scp	pi_netrw.txt	/*scp*
 sftp	pi_netrw.txt	/*sftp*
 si	clojure.txt	/*si*
 sr	clojure.txt	/*sr*
-surround	surround.txt	/*surround*
-surround-author	surround.txt	/*surround-author*
-surround-customizing	surround.txt	/*surround-customizing*
-surround-issues	surround.txt	/*surround-issues*
-surround-mappings	surround.txt	/*surround-mappings*
-surround-replacements	surround.txt	/*surround-replacements*
-surround-targets	surround.txt	/*surround-targets*
-surround.txt	surround.txt	/*surround.txt*
 sw	clojure.txt	/*sw*
 swapit-annoyances	swapit.txt	/*swapit-annoyances*
 swapit-bugs	swapit.txt	/*swapit-bugs*
@@ -759,7 +747,6 @@ textobj-user-interface	textobj-user.txt	/*textobj-user-interface*
 textobj-user-introduction	textobj-user.txt	/*textobj-user-introduction*
 textobj-user.txt	textobj-user.txt	/*textobj-user.txt*
 tr	clojure.txt	/*tr*
-vS	surround.txt	/*vS*
 v_:B	vis.txt	/*v_:B*
 v_[%	matchit.txt	/*v_[%*
 v_]%	matchit.txt	/*v_]%*
@@ -769,7 +756,6 @@ v_c-y	visswap.txt	/*v_c-y*
 v_g%	matchit.txt	/*v_g%*
 v_vr	visswap.txt	/*v_vr*
 vba	pi_vimball.txt	/*vba*
-vgS	surround.txt	/*vgS*
 vimball	pi_vimball.txt	/*vimball*
 vimball-contents	pi_vimball.txt	/*vimball-contents*
 vimball-extract	pi_vimball.txt	/*vimball-extract*
@@ -846,8 +832,3 @@ visswap.txt	visswap.txt	/*visswap.txt*
 visswap_V	visswap.txt	/*visswap_V*
 visswap_ctrl-v	visswap.txt	/*visswap_ctrl-v*
 visswap_v	visswap.txt	/*visswap_v*
-vs	surround.txt	/*vs*
-yS	surround.txt	/*yS*
-ySS	surround.txt	/*ySS*
-ys	surround.txt	/*ys*
-yss	surround.txt	/*yss*
