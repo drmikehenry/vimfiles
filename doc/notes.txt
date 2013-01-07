@@ -17,6 +17,7 @@
     Eunuch - helpers for UNIX                           |notes_eunuch|
     Extline - for extending lines                       |notes_extline|
     Fontsize - increment/decrement font size            |notes_fontsize|
+    Fugitive - A wrapper for Git in Vim                 |notes_fugitive|
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
     Grep - Wrapper for grep/xargs                       |notes_grep|
     Gundo - Visualize your undo tree                    |notes_gundo|
@@ -593,6 +594,25 @@ Installation:
     :RmVimball FSwitch          (if upgrading)
     :so %
     :q
+
+------------------------------------------------------------------------------
+FUGITIVE                                                *notes_fugitive*
+  A wrapper for Git in Vim                              |fugitive|
+
+See |fugitive-commands| for more information on the commands, but some of the
+more useful ones are:
+
+  :Gdiff    Perform a diff of the working file with HEAD
+  :Gblame   To see what commits modified a set of lines
+  :Glog     To get a log of commits that affect the current file
+  :Gstatus  To view the current state, stage changes, and many other things.
+            See |fugitive-:Gstatus| for more information
+  :Git      Run an arbitrary git command from within Vim
+
+Version 2012-12-31 (582eb0d3) from git://github.com/tpope/vim-fugitive.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 GREP                                                    *notes_grep*
