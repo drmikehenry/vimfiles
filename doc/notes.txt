@@ -1142,6 +1142,12 @@ font and use it: >
         endif
     endif
 <
+
+If you don't want to use Powerline, you can add the following to your
+user/$VIMUSER-before.vim: >
+
+    let g:Powerline_loaded = 0
+<
 Version 2012-08-17 from https://github.com/Lokaltog/vim-powerline
 
 Installation:
