@@ -14,6 +14,7 @@
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsampler|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
     EnhancedCommentify - comment lines in a program     |notes_enhcommentify|
+    Endwise - End certain structures automatically      |notes_endwise|
     Eunuch - helpers for UNIX                           |notes_eunuch|
     Extline - for extending lines                       |notes_extline|
     Fontsize - increment/decrement font size            |notes_fontsize|
@@ -499,6 +500,25 @@ Installation:
   rm -rf EnhancedCommentify-2.3/*
 - Remove license file clutter: >
   rm LICENSE.EnhancedCommentify
+
+------------------------------------------------------------------------------
+ENDWISE                                                 *notes_endwise*
+  End certain structures automatically
+
+This is a simple plugin that helps to end certain structures automatically. In
+Ruby, this means adding end after if, do, def and several other keywords. In
+Vimscript, this amounts to appropriately adding endfunction, endif, etc.
+There's also Bourne shell, VB (don't ask), C/C++ preprocessor, and Lua
+support.
+
+This plugin does remap <CR> in insert mode.  It also adds a <C-X><CR> mapping
+to force inserting an end.  However, it the forced version isn't always
+correct.
+
+Version 2013-01-01 (fd869a75) from https://github.com/tpope/vim-endwise
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 EUNUCH                                                  *notes_eunuch*
