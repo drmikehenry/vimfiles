@@ -1294,27 +1294,15 @@ let g:ctrlp_prompt_mappings = {
 let g:ctrlp_max_height = 50
 
 " -------------------------------------------------------------
-" EnhancedCommentify
+" tcomment
 " -------------------------------------------------------------
 
-" 'g:EnhCommentifyRespectIndent'    string (default 'No')
-" Respect the indent of a line. The comment leader is inserted correctly
-" indented, not at the beginning of the line.
-let g:EnhCommentifyRespectIndent = 'Yes'
+" Don't comment blank lines.
+let g:tcommentBlankLines = 0
 
-" 'g:EnhCommentifyPretty'           string (default: 'No')
-" Add a whitespace between comment strings and code.
-let g:EnhCommentifyPretty = 'Yes'
-
-" 'g:EnhCommentifyMultiPartBlocks'  string (default: 'No')
-" When using a language with multipart-comments commenting a visual
-" block will result in the whole block commented in unit, not line
-" by line.
-let g:EnhCommentifyMultiPartBlocks = 'Yes'
-
-" 'g:EnhCommentifyBindInInsert'
-" Add keybindings in insert mode
-let g:EnhCommentifyBindInInsert = 'No'
+" Turn off the <c-_> and <Leader>_ mappings.
+let g:tcommentMapLeader1 = ''
+let g:tcommentMapLeader2 = ''
 
 " -------------------------------------------------------------
 " fswitch
@@ -1530,8 +1518,8 @@ xmap <silent> <C-T> <Plug>VisualSwap
 " vcscommand
 " -------------------------------------------------------------
 
-" Use \s for vcscommand sets.  Avoids conflict with EnhancedCommentify's \c
-" and feels more like "svn".
+" Use \s for vcscommand sets.  This was originally done to avoid
+" a conflict with EnhancedCommentify's \c and feels more like "svn".
 let VCSCommandMapPrefix = '<Leader>s'
 
 " When doing diff, force two-window layout with old on left.
