@@ -216,3 +216,7 @@ if exists('+colorcolumn')
         highlight ColorColumn ctermbg=8
     endif
 endif
+
+" Tagbar
+hi TagbarSignature  guifg=#7f7f7f     guibg=NONE        gui=NONE      ctermfg=darkgray    ctermbg=NONE        cterm=NONE
+hi TagbarHighlight  guifg=white       guibg=#af5f00     gui=NONE      ctermfg=white       ctermbg=130         cterm=NONE
