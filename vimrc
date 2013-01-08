@@ -2094,7 +2094,9 @@ augroup local_vimrc
 
     " Make sure we start at the top of the commit message when doing
     " a git commit.
-    autocmd BufReadPost COMMIT_EDITMSG exe "normal! gg"
+    autocmd BufReadPost COMMIT_EDITMSG,NOTES_EDITMSG,TAG_EDITMSG
+                \ exe "normal! gg"
+    autocmd BufReadPost MERGE_MSG,SQUASH_MSG exe "normal! gg"
 
     " Show diffs when writing commit messages for git.  Before we did this
     " on the FileType gitcommit, but that interferes with fugitive's :Gstatus
@@ -2102,6 +2104,9 @@ augroup local_vimrc
     " buffer unusable.
     autocmd BufReadPost COMMIT_EDITMSG
                 \ DiffGitCached | wincmd J | wincmd p | resize 15
+    autocmd BufReadPost MERGE_MSG,SQUASH_MSG
+                \ set ft=gitcommit | DiffGitCached |
+                \ wincmd J | wincmd p | resize 15
 
     " Do the same for Subversion.
     autocmd BufReadPost svn-commit.tmp exe "normal! gg"
