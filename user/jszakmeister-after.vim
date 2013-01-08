@@ -1,6 +1,6 @@
 " Set up some variables that can be overridden by a machine specific
 " configuration file.
-let g:SZAK_BIGGER_FONT=""
+let g:SZAK_FONT_SIZE = 14
 
 if $VIMMACHINE == ""
     let $VIMMACHINE=hostname()
@@ -67,11 +67,6 @@ function! SetFont()
     " Turn on fancy symbols on the status line
     if has("gui_running")
         let fontname=["Droid Sans Mono", "Inconsolata"]
-        if g:SZAK_BIGGER_FONT == "true"
-            let fontsize="16"
-        else
-            let fontsize="14"
-        endif
 
         if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf")) ||
            \ filereadable(expand("~/.fonts/DroidSansMonoSlashed-Powerline.ttf"))
@@ -80,9 +75,11 @@ function! SetFont()
         endif
 
         if has("macunix")
-            let fontstring=join(map(copy(fontname), 'v:val . ":h" . fontsize'), ",")
+            let fontstring=join(map(
+                        \ copy(fontname), 'v:val . ":h" . g:SZAK_FONT_SIZE'), ",")
         else
-            let fontstring=join(map(copy(fontname), 'v:val . " " . fontsize'), ",")
+            let fontstring=join(map(
+                        \ copy(fontname), 'v:val . " " . g:SZAK_FONT_SIZE'), ",")
         endif
 
         let &guifont=fontstring
