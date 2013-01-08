@@ -13,7 +13,6 @@
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsampler|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
-    EnhancedCommentify - comment lines in a program     |notes_enhcommentify|
     Endwise - End certain structures automatically      |notes_endwise|
     Eunuch - helpers for UNIX                           |notes_eunuch|
     Extline - for extending lines                       |notes_extline|
@@ -482,25 +481,6 @@ CTRL-L *          Force Chapter heading (level 0)
 CTRL-L 0
 
 (Custom plugin)
-
-------------------------------------------------------------------------------
-ENHANCEDCOMMENTIFY                                      *notes_enhcommentify*
-  Comment lines in a program                            |EnhancedCommentify|
-
-Toggles comments on current line or in visual range: >
-    \x  - toggle comment, stay on current line
-    \c  - toggle comment, move down one line
-
-Version 2.3 from http://www.vim.org/scripts/script.php?script_id=23
-
-Installation:
-- Untar in ~/.vim/
-- Copy contents from EnhancedCommentify-2.3: >
-  cp -a EnhancedCommentify-2.3/* .
-- Remove EnhancedCommentify-2.3: >
-  rm -rf EnhancedCommentify-2.3/*
-- Remove license file clutter: >
-  rm LICENSE.EnhancedCommentify
 
 ------------------------------------------------------------------------------
 ENDWISE                                                 *notes_endwise*
@@ -1412,6 +1392,41 @@ Installation:
 Requires ctags.exe to be in the path.  Generally this comes with Linux
 distributions.  Compiled binaries may be found at
 http://ctags.sourceforge.net/
+
+------------------------------------------------------------------------------
+TCOMMENT                                                *notes_tcomment*
+  Comment lines in a program                            |tcomment.txt|
+
+An extensible & universal comment vim-plugin that also handles embedded
+filetypes.
+
+As operator (the prefix can be customized via |g:tcommentMapLeaderOp1|
+and |g:tcommentMapLeaderOp2|):
+
+    gc{motion}          - Toggle comments (for small comments within one line
+                          the &filetype_inline style will be used, if
+                          defined)
+    gc<Count>c{motion}  - Toggle comment text with count argument
+                          (see |tcomment#Comment()|)
+    gcc                 - Toggle comment for the current line
+    gC{motion}          - Comment region
+    gCc                 - Comment the current line
+
+In visual mode:
+
+    gc           - Toggle comments
+    gC           - Comment selected text
+
+Local customizations:
+
+Blank lines are not commented, and the <c-_> and <Leader>_ mappings are turned
+off.  'gc' will do what you want most of the time.
+
+Version 2013-01-06 (b18839a7) from git://github.com/tomtom/tcomment_vim.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+- Removed the spec/ directory before 'git add'ing the bundle.
 
 ------------------------------------------------------------------------------
 TEXTOBJ-INDENT                                          *notes_textobj-indent*
