@@ -2081,11 +2081,6 @@ augroup local_vimrc
     " First, remove all autocmds in this group.
     autocmd!
 
-    " Show diffs when writing commit messages for git.
-    autocmd FileType gitcommit
-                \ DiffGitCached | wincmd J | wincmd p |
-                \ resize 15
-
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event
     " handler (happens when dropping a file on gvim).
@@ -2099,7 +2094,19 @@ augroup local_vimrc
 
     " Make sure we start at the top of the commit message when doing
     " a git commit.
-    autocmd BufReadPost COMMIT_EDITMSG exe "normal! gg"
+    autocmd BufReadPost COMMIT_EDITMSG,NOTES_EDITMSG,TAG_EDITMSG
+                \ exe "normal! gg"
+    autocmd BufReadPost MERGE_MSG,SQUASH_MSG exe "normal! gg"
+
+    " Show diffs when writing commit messages for git.  Before we did this
+    " on the FileType gitcommit, but that interferes with fugitive's :Gstatus
+    " command, since the index file gets marked with gitcommit, and makes the
+    " buffer unusable.
+    autocmd BufReadPost COMMIT_EDITMSG
+                \ DiffGitCached | wincmd J | wincmd p | resize 15
+    autocmd BufReadPost MERGE_MSG,SQUASH_MSG
+                \ set ft=gitcommit | DiffGitCached |
+                \ wincmd J | wincmd p | resize 15
 
     " Do the same for Subversion.
     autocmd BufReadPost svn-commit.tmp exe "normal! gg"
