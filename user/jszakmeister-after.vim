@@ -160,17 +160,19 @@ endif
 
 " Powerline
 
-" Add back in a few segments...
-call Pl#Theme#InsertSegment('mode_indicator', 'after', 'paste_indicator')
-call Pl#Theme#InsertSegment('filetype', 'before', 'scrollpercent')
-call Pl#Theme#InsertSegment('fileformat', 'before', 'filetype')
+if exists("g:Powerline_loaded") && g:Powerline_loaded
+    " Add back in a few segments...
+    call Pl#Theme#InsertSegment('mode_indicator', 'after', 'paste_indicator')
+    call Pl#Theme#InsertSegment('filetype', 'before', 'scrollpercent')
+    call Pl#Theme#InsertSegment('fileformat', 'before', 'filetype')
 
-call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
+    call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
 
-if !has("gui_running")
-    let g:Powerline_symbols_override = {
-        \ 'BRANCH': [0x2442],
-        \ }
+    if !has("gui_running")
+        let g:Powerline_symbols_override = {
+            \ 'BRANCH': [0x2442],
+            \ }
+    endif
 endif
 
 function! ShowHighlightGroup()
