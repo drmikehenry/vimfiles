@@ -1474,7 +1474,7 @@ let g:runview_filtcmd="bash"
 " surround
 " -------------------------------------------------------------
 
-xmap <Leader>s <Plug>Vsurround
+" No customizations.
 
 " -------------------------------------------------------------
 " Tagbar
