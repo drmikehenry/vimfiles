@@ -1215,6 +1215,13 @@ augroup local_bufExplorer
 augroup END
 
 " -------------------------------------------------------------
+" bufkill
+" -------------------------------------------------------------
+
+" Don't define the slew of extra mappings built into this plugin.
+let g:BufKillCreateMappings = 0
+
+" -------------------------------------------------------------
 " bufmru
 " -------------------------------------------------------------
 " Set to 1 to pre-load the number marks into buffers.
