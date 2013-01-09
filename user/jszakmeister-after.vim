@@ -1,9 +1,9 @@
 " Set up some variables that can be overridden by a machine specific
 " configuration file.
-let g:SZAK_BIGGER_FONT=""
+let g:SZAK_FONT_SIZE = 14
 
 if $VIMMACHINE == ""
-    let $VIMMACHINE=substitute(system("uname -n"), "\n", "", "")
+    let $VIMMACHINE=hostname()
 endif
 
 let s:VIMMACHINE_CONFIG = $VIMUSERFILES . "/" . $VIMUSER .
@@ -14,10 +14,20 @@ if filereadable(s:VIMMACHINE_CONFIG)
     execute "source " . s:VIMMACHINE_CONFIG
 endif
 
-if has("mac") || has("macunix")
+if has("macunix")
     let Tlist_Ctags_Cmd='/Users/jszakmeister/.local/bin/ctags'
     let g:tagbar_ctags_bin = '/Users/jszakmeister/.local/bin/ctags'
 endif
+
+if filereadable(expand("$HOME/.local/bin/git"))
+    let g:fugitive_git_executable = expand("$HOME/.local/bin/git")
+    let g:Gitv_GitExecutable = g:fugitive_git_executable
+endif
+
+" Gitv
+let g:Gitv_WipeAllOnClose = 1
+let g:Gitv_OpenHorizontal = 1
+let g:Gitv_OpenPreviewOnLaunch = 1
 
 " Some reminders of the tag-related shortcuts, since I tend to check my
 " configuration first.
@@ -30,15 +40,18 @@ endif
 map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
-" Emulate SlickEdit w/Emacs bindings: Use Ctrl-. and Ctrl-,
-" to pop in and out of the tags
-"nnoremap <C-.> :tag
-"nnoremap <C-,> :pop
+" Tunn off the scrollbars... I don't need them.
+if has("gui_running")
+    set guioptions-=R
+    set guioptions-=r
+    set guioptions-=L
+    set guioptions-=l
+endif
 
 colorscheme szakdark
 
 if !has("gui_running")
-    if (has("mac") || has("macunix")) && $TERM_PROGRAM == "iTerm.app"
+    if has("macunix") && $TERM_PROGRAM == "iTerm.app"
         " This works only in iTerm... but that's what I use on the Mac.
         " Set the cursor to a vertical line in insert mode.
         let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -50,29 +63,31 @@ if !has("gui_running")
     endif
 endif
 
-" Turn on fancy symbols on the status line
-if has("gui_running")
-    let fontname=["Droid Sans Mono", "Inconsolata"]
-    if g:SZAK_BIGGER_FONT == "true"
-        let fontsize="16"
-    else
-        let fontsize="14"
-    endif
+function! SetFont()
+    " Turn on fancy symbols on the status line
+    if has("gui_running")
+        let fontname=["Droid Sans Mono", "Inconsolata"]
 
-    if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf")) ||
-       \ filereadable(expand("~/.fonts/DroidSansMonoSlashed-Powerline.ttf"))
-        let fontname=["Droid Sans Mono Slashed for Powerline"]
-        let g:Powerline_symbols = 'fancy'
-    endif
+        if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf")) ||
+           \ filereadable(expand("~/.fonts/DroidSansMonoSlashed-Powerline.ttf"))
+            let fontname=["Droid Sans Mono Slashed for Powerline"]
+            let g:Powerline_symbols = 'fancy'
+        endif
 
-    if has("mac") || has("macunix")
-        let fontstring=join(map(copy(fontname), 'v:val . ":h" . fontsize'), ",")
-    else
-        let fontstring=join(map(copy(fontname), 'v:val . " " . fontsize'), ",")
-    endif
+        if has("macunix")
+            let fontstring=join(map(
+                        \ copy(fontname), 'v:val . ":h" . g:SZAK_FONT_SIZE'), ",")
+        else
+            let fontstring=join(map(
+                        \ copy(fontname), 'v:val . " " . g:SZAK_FONT_SIZE'), ",")
+        endif
 
-    let &guifont=fontstring
-endif
+        let &guifont=fontstring
+    endif
+endfunction
+command! SetFont call SetFont()
+
+SetFont
 
 if has("gui_macvim")
     set macmeta
@@ -119,8 +134,9 @@ if executable(expand("~/.local/bin/ng"))
     let g:vimclojure#NailgunClient=expand("~/.local/bin/ng")
 endif
 
-" I often want to close a buffer without closing the window
-nnoremap <leader><leader>d :BD<CR>
+" I often want to close a buffer without closing the window.  Using
+" :BW also drops the associated metadata.
+nnoremap <leader><leader>d :BW<CR>
 
 function! SetupManPager()
     setlocal nonu nolist
@@ -224,3 +240,11 @@ if exists('+colorcolumn')
     " This sets it to textwidth+1
     set colorcolumn=+1
 endif
+
+" Size for the big screen.
+function! BigScreenTv()
+    set columns=120
+    set lines=36
+    let &guifont = substitute(&guifont, ':h\([^:]*\)', ':h25', '')
+endfunction
+command! BigScreenTv call BigScreenTv()

@@ -1,1 +1,1 @@
-let g:SZAK_BIGGER_FONT="true"
+let g:SZAK_FONT_SIZE = 16
