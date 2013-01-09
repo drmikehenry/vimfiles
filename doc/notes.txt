@@ -355,7 +355,10 @@ See also:
 :bd       - delete a buffer, closing window (vim built-in)    |:bdelete|
 :bw       - wipe a buffer, closing window (vim built-in)      |:buwipe|
 
-Version 1.1 from http://vim.sourceforge.net/scripts/script.php?script_id=1147
+Version 1.11 from http://vim.sourceforge.net/scripts/script.php?script_id=1147
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 CLOSETAG                                                *notes_closetag*
@@ -1301,9 +1304,6 @@ Usage (An asterisk (*) is used to denote the cursor position):
   my $str = *whee!;         vllllS'     my $str = 'whee!';
 
 See |surround.txt| for more complete examples and documentation.
-
-Local customization: Disabled visual-mode "s" mapping as it will be
-removed eventually.  Instead, use visual-mode "S".
 
 Version 2.0 (0b2c9ff9) from https://github.com/tpope/vim-surround
 
