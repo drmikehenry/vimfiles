@@ -39,6 +39,33 @@ if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
 endif
 set list
 
+" Allow Vim to go fullscreen under Mac and Linux.
+if has("gui_macvim")
+    " grow to maximum horizontal width on entering fullscreen mode
+    set fuopt+=maxhorz
+
+    " This needs to go in a gvimrc, otherwise the macmenu defaults
+    " clobber my setting.  Not sure how I want to do this just yet.
+    " " free up Command-F
+    " macmenu Edit.Find.Find\.\.\. key=<nop>
+
+    " " toggle fullscreen mode
+    " map <D-f> :set invfu<CR>
+    nnoremap <Leader><Leader>f :set invfu<CR>
+endif
+
+if has("unix")
+    let s:os = substitute(system('uname'), "\n", "", "")
+    if v:version >= 703 && s:os == "Linux" && has("gui_running")
+        function! ToggleFullScreen()
+           call system("wmctrl -i -r ".v:windowid." -b toggle,fullscreen")
+           redraw
+        endfunction
+
+        nnoremap <Leader><Leader>f call ToggleFullScreen()<CR>
+    endif
+endif
+
 " Gitv
 let g:Gitv_WipeAllOnClose = 1
 let g:Gitv_OpenHorizontal = 1
