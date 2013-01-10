@@ -24,6 +24,13 @@ if filereadable(expand("$HOME/.local/bin/git"))
     let g:Gitv_GitExecutable = g:fugitive_git_executable
 endif
 
+" Make Y work the way I expect it to: yank to the end of the line.
+nnoremap Y y$
+
+" Keep the block highlighted while shifting.
+vnoremap < <gv
+vnoremap > >gv
+
 " Gitv
 let g:Gitv_WipeAllOnClose = 1
 let g:Gitv_OpenHorizontal = 1
@@ -40,7 +47,7 @@ let g:Gitv_OpenPreviewOnLaunch = 1
 map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
-" Tunn off the scrollbars... I don't need them.
+" Turn off the scrollbars... I don't need them.
 if has("gui_running")
     set guioptions-=R
     set guioptions-=r
