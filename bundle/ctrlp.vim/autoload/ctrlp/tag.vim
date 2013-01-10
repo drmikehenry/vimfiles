@@ -104,11 +104,14 @@ fu! ctrlp#tag#accept(mode, str)
 		if cmd != ''
 			exe cmd
 		en
-		exe fnd[1].'ta' tg
+		let save_cst = &cst
+		set cst&
+		cal feedkeys(":".fnd[1]."ta ".tg."\r", 'nt')
+		let &cst = save_cst
 	el
-		exe cmd tg
+		cal feedkeys(":".cmd." ".tg."\r", 'nt')
 	en
-	sil! norm! zvzz
+	sil! cal feedkeys("zz", 'nt')
 	cal ctrlp#setlcdir()
 endf
 
