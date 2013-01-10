@@ -1,0 +1,5 @@
+commit 78303a2b5fe4fcfecda0de1c7832fad60859fb63
+Author: Kien N <contact@ndkien.com>
+Date:   Wed Jan 9 20:29:05 2013 +0700
+
+    The message can be useful
