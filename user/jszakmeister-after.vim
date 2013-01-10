@@ -31,6 +31,14 @@ nnoremap Y y$
 vnoremap < <gv
 vnoremap > >gv
 
+" Turn on list, and setup the listchars.
+set listchars=tab:▸\ ,trail:·,extends:>,precedes:<,nbsp:·
+if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
+    let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
+    let &fillchars = "vert:\u259a,fold:\u00b7"
+endif
+set list
+
 " Gitv
 let g:Gitv_WipeAllOnClose = 1
 let g:Gitv_OpenHorizontal = 1
