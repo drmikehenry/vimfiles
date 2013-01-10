@@ -211,7 +211,7 @@ endif
 " ColorColumn
 if exists('+colorcolumn')
     if &t_Co > 255 || has("gui_running")
-        highlight ColorColumn ctermbg=237 guibg=#3a3a3a
+        highlight ColorColumn ctermbg=52 guibg=#5f0000
     else
         highlight ColorColumn ctermbg=8
     endif
