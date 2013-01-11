@@ -35,7 +35,7 @@ vnoremap > >gv
 set listchars=tab:▸\ ,trail:·,extends:>,precedes:<,nbsp:·
 if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
     let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
-    let &fillchars = "vert:\u259a,fold:\u00b7"
+    let &fillchars = "vert:\u254e,fold:\u00b7"
 endif
 set list
 
