@@ -105,16 +105,39 @@ if !has("gui_running")
     endif
 endif
 
+function! HasFont(filename)
+    if has("macunix")
+        let l:search_paths = ["~/Library/Fonts", "/Library/Fonts"]
+    else
+        let l:search_paths = ["~/.fonts", "/usr/share/fonts"]
+    endif
+
+    for path in l:search_paths
+        let path = expand(path)
+        if filereadable(expand(path . "/**/" . a:filename))
+            return 1
+        endif
+    endfor
+
+    return 0
+endfunction
+
 function! SetFont()
     " Turn on fancy symbols on the status line
     if has("gui_running")
-        let fontname=["Droid Sans Mono", "Inconsolata"]
+        let powerline_fonts=[
+                    \   ["DejaVu Sans Mono", "DejaVuSansMono-Powerline.ttf"],
+                    \   ["Droid Sans Mono", "DroidSansMono-Powerline.ttf"],
+                    \   ]
+        let fontname=map(copy(powerline_fonts), 'v:val[0]')
 
-        if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf")) ||
-           \ filereadable(expand("~/.fonts/DroidSansMonoSlashed-Powerline.ttf"))
-            let fontname=["Droid Sans Mono Slashed for Powerline"]
-            let g:Powerline_symbols = 'fancy'
-        endif
+        for font in powerline_fonts
+            if HasFont(font[1])
+                let fontname=[font[0] . " for Powerline"]
+                let g:Powerline_symbols = 'fancy'
+                break
+            endif
+        endfor
 
         if has("macunix")
             let fontstring=join(map(
