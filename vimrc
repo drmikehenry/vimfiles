@@ -2069,6 +2069,7 @@ function! SetupKernelSource()
     "   t - autowrap using textwidth,
     setlocal formatoptions=croqlnt
 endfunction
+command! SetupKernelSource call SetupKernelSource()
 
 " Source support for :Man command.
 runtime ftplugin/man.vim
