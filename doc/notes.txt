@@ -2139,4 +2139,4 @@ command: >
 This command is the same as :qa! but returns failure so Bash will ignore
 the edited command.
 
-  vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:nospell:
+  vim:sw=2:sts=2:et:ai:tw=78:fo=tcq2:ft=help:nospell:
