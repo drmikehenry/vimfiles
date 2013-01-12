@@ -16,6 +16,19 @@ function! RtpPrepend(path)
     endif
 endfunction
 
+
+" -------------------------------------------------------------
+" Customizing environment variables
+" -------------------------------------------------------------
+" NOTE: Several environment variables follow that may be customized.
+" These may be set via the operating system's standard methods, but that can
+" require logging out to take full effect.  As an alternative, it's safe to
+" put this kind of override directly in ~/.vimrc (%USERPROFILE%\_vimrc on
+" Windows).  The ~/.vim/setup.py script will not clobber such customizations.
+" For example, you might include the following to try out another user's
+" settings:
+"   let $VIMUSER = "anotheruser"
+
 " Set environment variable to directory containing this vimrc.
 " Expect absolute directory $HOME/.vim on Unix ($HOME/vimfiles on Windows).
 " Note: using an environment variable instead of normal Vim variable

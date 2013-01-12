@@ -1719,6 +1719,35 @@ http://mysite.verizon.net/astronaut/vim/index.html
 4.  Customizations                                      *notes_customizations*
 
 ------------------------------------------------------------------------------
+Per-user overrides
+
+There are several ways for an individual user to customize the common
+settings.
+
+At the top of the vimrc file is a section on configuring locations for
+additional vimrc files.  The vimrc file lives in the VIMFILES directory, which
+is ~/.vim on Unix and in %USERPROFILE%\vimfiles on Windows, where USERPROFILE
+is an environment variable that often points to "C:\Documents and
+Settings\USERNAME" or "C:\Documents\USERNAME", though the location may vary.
+
+The VIMUSER variable defaults to the name of the logged-in user, but it may be
+changed in order to use the per-user settings of another user (for example, to
+allow root to use another user's settings).
+
+Based on VIMUSER, the vimrc will look for "before" and "after" scripts that
+will be sourced, if they exist, before and after the main vimrc.
+
+On useful place to override VIMUSER (or other environment variables) is in
+~/.vimrc (Unix) or %USERPROFILE%\_vimrc (Windows).  These files are normally
+configured as extremely thin wrappers that invoke the source-controlled main
+vimrc file.  But it's safe to put assignments like the following in ~/.vimrc,
+as the ~/.vim/setup.py script will not clobber them: >
+
+  let $VIMUSER = "username"
+
+See the logic at the top of the main vimrc for more details.
+
+------------------------------------------------------------------------------
 Spell checking
 
 In order to allow per-user overriding of spell-check settings, there are two
