@@ -89,6 +89,9 @@ if exists('+colorcolumn')
     set colorcolumn=+1
 endif
 
+" Make splits appear on the right.
+set splitright
+
 " Turn on cursor shapes under iTerm, and use 256 colors under gnome-terminal.
 " For some reason, gnome-terminal says xterm-color even though it supports
 " xterm-256color.
