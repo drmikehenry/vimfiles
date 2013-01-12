@@ -74,6 +74,21 @@ if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
 endif
 set list
 
+" I dislike wrapping being on by default.
+set nowrap
+
+" Ignore some Clojure/Java-related files.
+set wildignore+=target/**,asset-cache
+
+" I regularly create tmp folders that I don't want searched.
+set wildignore+=tmp,.lein-*,*.egg-info,.*.swo
+
+" Set colorcolumn, if available.
+if exists('+colorcolumn')
+    " This sets it to textwidth+1
+    set colorcolumn=+1
+endif
+
 " Turn on cursor shapes under iTerm, and use 256 colors under gnome-terminal.
 " For some reason, gnome-terminal says xterm-color even though it supports
 " xterm-256color.
@@ -90,6 +105,10 @@ if !has("gui_running")
     endif
 endif
 
+" -------------------------------------------------------------
+" GUI options
+" -------------------------------------------------------------
+
 " Turn off the scrollbars... I don't need them.
 if has("gui_running")
     set guioptions-=R
@@ -104,24 +123,10 @@ if has("gui_macvim")
     set macmeta
 endif
 
-set nowrap
-
-" Ignore some Clojure/Java-related files.
-set wildignore+=target/**,asset-cache
-
-" I regularly create tmp folders that I don't want searched.
-set wildignore+=tmp,.lein-*,*.egg-info,.*.swo
-
 " On remote systems, I like to change the background color so that I remember
 " I'm on a remote system. :-)  This does break when you sudo su to root though.
 if !empty($SSH_TTY)
     hi Normal guibg=#0d280d
-endif
-
-" Set colorcolumn, if available.
-if exists('+colorcolumn')
-    " This sets it to textwidth+1
-    set colorcolumn=+1
 endif
 
 " -------------------------------------------------------------
