@@ -1488,9 +1488,23 @@ let g:tagbar_width = 40
 let g:tagbar_autoclose = 1
 let g:tagbar_autofocus = 1
 
-nnoremap <silent> <S-F8>        :TagbarToggle<CR>
-nnoremap <silent> <C-Q><C-T>    :TagbarToggle<CR>
-nnoremap <silent> <C-Q>t        :TagbarToggle<CR>
+" Tagbar appears to disable autocmds while popping open the Tagbar window.  So,
+" tell Powerline to update the statusline automatically.  g:Powerline_loaded
+" is typically set after all this setup is done.  If it's present, then we
+" assume the user has turned off Powerline.
+
+if !exists("g:Powerline_loaded")
+    nnoremap <silent> <S-F8>
+                \ :TagbarToggle<CR>:call Pl#UpdateStatusline(1)<CR>
+    nnoremap <silent> <C-Q><C-T>
+                \ :TagbarToggle<CR>:call Pl#UpdateStatusline(1)<CR>
+    nnoremap <silent> <C-Q>t
+                \ :TagbarToggle<CR>:call Pl#UpdateStatusline(1)<CR>
+else
+    nnoremap <silent> <S-F8>        :TagbarToggle<CR>
+    nnoremap <silent> <C-Q><C-T>    :TagbarToggle<CR>
+    nnoremap <silent> <C-Q>t        :TagbarToggle<CR>
+endif
 
 " -------------------------------------------------------------
 " UltiSnips
