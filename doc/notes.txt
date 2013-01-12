@@ -827,7 +827,11 @@ might contain: >
 To re-use a group of settings, create a function (say, in the global vimrc
 file), then call it from the .lvimrc files.
 
-Version 2.1.0 from git://github.com/embear/vim-localvimrc.git
+Version 2013-01-12 (516ec0f5) from git://github.com/embear/vim-localvimrc.git
+
+Local customizations:
+
+- Enabled persistence by default, which also required adding '!' to viminfo.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1179,7 +1183,7 @@ font and use it: >
 If you don't want to use Powerline, you can add the following to your
 user/$VIMUSER-before.vim: >
 
-    let g:Powerline_loaded = 0
+    let g:EnablePowerline = 0
 <
 Version 2012-08-17 from https://github.com/Lokaltog/vim-powerline
 
@@ -2139,4 +2143,4 @@ command: >
 This command is the same as :qa! but returns failure so Bash will ignore
 the edited command.
 
-  vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:nospell:
+  vim:sw=2:sts=2:et:ai:tw=78:fo=tcq2:ft=help:nospell:

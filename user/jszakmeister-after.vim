@@ -241,7 +241,7 @@ endif
 
 " Powerline
 
-if exists("g:Powerline_loaded") && g:Powerline_loaded
+if g:EnablePowerline
     " Add back in a few segments...
     call Pl#Theme#InsertSegment('mode_indicator', 'after', 'paste_indicator')
     call Pl#Theme#InsertSegment('filetype', 'before', 'scrollpercent')
