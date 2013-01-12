@@ -1391,6 +1391,14 @@ nnoremap <Leader><Leader>u  :GundoToggle<CR>
 let g:gundo_close_on_revert = 1
 
 " -------------------------------------------------------------
+" localvimrc
+" -------------------------------------------------------------
+
+" Enable persistence of our decisions.
+set viminfo+=!
+let g:localvimrc_persistent = 2
+
+" -------------------------------------------------------------
 " lookupfile
 " -------------------------------------------------------------
 
