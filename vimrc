@@ -1200,6 +1200,20 @@ command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
 " =============================================================
 
 " -------------------------------------------------------------
+" Plugin enables
+" -------------------------------------------------------------
+
+" To disable one of the specified plugins below, define the corresponding
+" g:EnableXxx variables below to be 0 (typically, this would be done in
+" the per-user VIMRC_BEFORE file; see top of this file).
+" For example, to disable the Powerline plugin, use the following:
+"   let g:EnablePowerline = 0
+
+if !exists("g:EnablePowerline")
+    let g:EnablePowerline = 1
+endif
+
+" -------------------------------------------------------------
 " BufExplorer
 " -------------------------------------------------------------
 let g:bufExplorerShowRelativePath = 1
@@ -1475,7 +1489,14 @@ let g:runview_filtcmd="bash"
 " Tagbar
 " -------------------------------------------------------------
 
-" Must have ctags of some kind, or else must keep plugin from running.
+" Wrapper to update Powerline's status line if Powerline is enabled.
+function! UpdatePowerlineStatus()
+    if g:EnablePowerline
+        call Pl#UpdateStatusline(1)
+    endif
+endfunction
+
+" Must have ctags of some kind or keep plugin from running.
 let usingTagbar = executable("ctags") || executable("ctags.exe")
 if !usingTagbar
     " Tagbar doesn't actually care about the value... only the existence
@@ -1488,9 +1509,9 @@ let g:tagbar_width = 40
 let g:tagbar_autoclose = 1
 let g:tagbar_autofocus = 1
 
-nnoremap <silent> <S-F8>        :TagbarToggle<CR>
-nnoremap <silent> <C-Q><C-T>    :TagbarToggle<CR>
-nnoremap <silent> <C-Q>t        :TagbarToggle<CR>
+nnoremap <silent> <S-F8>     :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
+nnoremap <silent> <C-Q><C-T> :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
+nnoremap <silent> <C-Q>t     :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
 
 " -------------------------------------------------------------
 " UltiSnips
@@ -2257,8 +2278,7 @@ set laststatus=2
 " Powerline
 " =============================================================
 
-" Allow user's to opt-out of using Powerline.
-if exists("g:Powerline_loaded") && g:Powerline_loaded
+if g:EnablePowerline
     " Remove segments that are redundant (like "mode_indicator") or
     " which are essentially static indicators that don't warrant taking
     " up room.
@@ -2277,6 +2297,9 @@ if exists("g:Powerline_loaded") && g:Powerline_loaded
     call Pl#Theme#RemoveSegment('syntastic:errors')
     call Pl#Theme#InsertSegment('syntastic:errors', 'before',
                 \               'tagbar:currenttag')
+else
+    " Powerline will not load if this variable is defined:
+    let g:Powerline_loaded = 1
 endif
 
 " =============================================================
