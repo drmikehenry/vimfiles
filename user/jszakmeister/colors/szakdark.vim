@@ -61,7 +61,7 @@ if &t_Co > 255 || has("gui_running")
     " hard to read (or to harsh to read) in a black terminal.  Tweak
     " them too.
     hi HG_Subtle        ctermfg=white   ctermbg=52  guibg=red       guifg=white
-    hi HG_Warning       ctermfg=white   ctermbg=136 guibg=gold3     guifg=white
+    hi HG_Warning       ctermfg=white   ctermbg=136 guibg=#505000   guifg=lightgray
     hi HG_Error         ctermfg=white   ctermbg=160 guibg=red       guifg=white
     hi Highlight_tabs                   ctermbg=236 guibg=#303030   guifg=white
 endif
@@ -220,3 +220,7 @@ endif
 " Tagbar
 hi TagbarSignature  guifg=#7f7f7f     guibg=NONE        gui=NONE      ctermfg=darkgray    ctermbg=NONE        cterm=NONE
 hi TagbarHighlight  guifg=white       guibg=#af5f00     gui=NONE      ctermfg=white       ctermbg=130         cterm=NONE
+
+" BufExplorer
+hi bufExplorerMapping   guifg=gray      ctermfg=gray
+hi bufExplorerHelp      guifg=#6c6c6c   ctermfg=242
