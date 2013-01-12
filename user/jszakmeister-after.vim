@@ -163,7 +163,7 @@ function! SetFont()
     if has("gui_running")
         let powerline_fonts=[
                     \   ["DejaVu Sans Mono", "DejaVuSansMono-Powerline.ttf"],
-                    \   ["Droid Sans Mono", "DroidSansMono-Powerline.ttf"],
+                    \   ["Droid Sans Mono", "DroidSansMonoSlashed-Powerline.ttf"],
                     \   ]
         let fontname=map(copy(powerline_fonts), 'v:val[0]')
 
