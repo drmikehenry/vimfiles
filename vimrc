@@ -2258,7 +2258,7 @@ set laststatus=2
 " =============================================================
 
 " Allow user's to opt-out of using Powerline.
-if exists("g:Powerline_loaded") && g:Powerline_loaded
+if !exists("g:Powerline_loaded")
     " Remove segments that are redundant (like "mode_indicator") or
     " which are essentially static indicators that don't warrant taking
     " up room.
