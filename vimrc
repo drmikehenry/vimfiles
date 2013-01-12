@@ -1475,7 +1475,7 @@ let g:runview_filtcmd="bash"
 " Tagbar
 " -------------------------------------------------------------
 
-" Must have ctags of some kind or keep plugin from running.
+" Must have ctags of some kind, or else must keep plugin from running.
 let usingTagbar = executable("ctags") || executable("ctags.exe")
 if !usingTagbar
     " Tagbar doesn't actually care about the value... only the existence
