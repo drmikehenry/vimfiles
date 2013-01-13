@@ -1283,24 +1283,31 @@ command! -n=? -com=dir C CtrlP <args>
 " :CD [path]  ==> :CtrlPDir [path]
 command! -n=? -com=dir CD CtrlPDir <args>
 
-nnoremap <C-P><C-B> :<C-U>CtrlPBookmarkDir<CR>
-nnoremap <C-P>c     :<C-U>CtrlPChange<CR>
-nnoremap <C-P>C     :<C-U>CtrlPChangeAll<CR>
-nnoremap <C-P><C-D> :<C-U>CtrlPDir<CR>
-nnoremap <C-P><C-F> :<C-U>CtrlPCurFile<CR>
-nnoremap <C-P><C-L> :<C-U>CtrlPLine<CR>
-nnoremap <C-P><C-M> :<C-U>CtrlPMRU<CR>
-nnoremap <C-P>m     :<C-U>CtrlPMixed<CR>
+" Define prefix mapping for CtrlP plugin so that buffer-local mappings
+" for CTRL-P (such as in Tagbar) will override all CtrlP plugin mappings.
+nmap <C-P> <SNR>CtrlP.....
+
+" An incomplete mapping should do nothing.
+nnoremap <SNR>CtrlP.....      <Nop>
+
+nnoremap <SNR>CtrlP.....<C-B> :<C-U>CtrlPBookmarkDir<CR>
+nnoremap <SNR>CtrlP.....c     :<C-U>CtrlPChange<CR>
+nnoremap <SNR>CtrlP.....C     :<C-U>CtrlPChangeAll<CR>
+nnoremap <SNR>CtrlP.....<C-D> :<C-U>CtrlPDir<CR>
+nnoremap <SNR>CtrlP.....<C-F> :<C-U>CtrlPCurFile<CR>
+nnoremap <SNR>CtrlP.....<C-L> :<C-U>CtrlPLine<CR>
+nnoremap <SNR>CtrlP.....<C-M> :<C-U>CtrlPMRU<CR>
+nnoremap <SNR>CtrlP.....m     :<C-U>CtrlPMixed<CR>
 
 " Mnemonic: "open files"
-nnoremap <C-P><C-O> :<C-U>CtrlPBuffer<CR>
-nnoremap <C-P><C-P> :<C-U>CtrlP<CR>
-nnoremap <C-P><C-Q> :<C-U>CtrlPQuickfix<CR>
-nnoremap <C-P><C-R> :<C-U>CtrlPRoot<CR>
-nnoremap <C-P><C-T> :<C-U>CtrlPTag<CR>
-nnoremap <C-P>t     :<C-U>CtrlPBufTag<CR>
-nnoremap <C-P>T     :<C-U>CtrlPBufTagAll<CR>
-nnoremap <C-P><C-U> :<C-U>CtrlPUndo<CR>
+nnoremap <SNR>CtrlP.....<C-O> :<C-U>CtrlPBuffer<CR>
+nnoremap <SNR>CtrlP.....<C-P> :<C-U>CtrlP<CR>
+nnoremap <SNR>CtrlP.....<C-Q> :<C-U>CtrlPQuickfix<CR>
+nnoremap <SNR>CtrlP.....<C-R> :<C-U>CtrlPRoot<CR>
+nnoremap <SNR>CtrlP.....<C-T> :<C-U>CtrlPTag<CR>
+nnoremap <SNR>CtrlP.....t     :<C-U>CtrlPBufTag<CR>
+nnoremap <SNR>CtrlP.....T     :<C-U>CtrlPBufTagAll<CR>
+nnoremap <SNR>CtrlP.....<C-U> :<C-U>CtrlPUndo<CR>
 
 " Transitional mappings to migrate from historical Command-T functionality.
 " At first, redirect to CtrlP equivalent functionality.  Later, just
