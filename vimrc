@@ -2401,7 +2401,7 @@ if has("gui_running")
         " fonts elsewhere.
         " TODO: Find a better solution fallback fonts.
         if len(glob($HOME . "/.fonts/p/PragmataPro*.ttf"))
-            set guifont=PragmataPro\ 12
+            set guifont=PragmataPro\ 14
         else
             set guifont=DejaVu\ Sans\ Mono\ 12
             "set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
