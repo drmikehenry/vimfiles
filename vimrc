@@ -2122,40 +2122,61 @@ augroup local_spell
     autocmd FileType * call SetSpell()
 augroup END
 
+function! AutoRestoreLastCursorPosition()
+    " If possible, jump to last known cursor position for this file,
+    " but exempt certain filenames that change outside of Vim between edits,
+    " such as Subversion commit message files, since the previous cursor
+    " position will be unrelated to the new file contents.
+    " Avoid jumping if the position would be invalid for this file.
+    if line("'\"") > 0 && line("'\"") <= line("$")
+        let name = expand("%:t")
+
+        " Exempt Subversion commit message files.
+        if name == "svn-commit"
+            return
+        endif
+
+        " Exempt Git commit message files.
+        if name == "COMMIT_EDITMSG" ||
+                \ name == "NOTES_EDITMSG" ||
+                \ name == "TAG_EDITMSG" ||
+                \ name == "MERGE_MSG" ||
+                \ name == "SQUASH_MSG"
+            return
+        endif
+
+        exe "normal g`\""
+    endif
+endfunction
+
+function! AutoOpenGitDiff()
+    " Show diffs for this Git commit.
+    " To work around an unfortunate interaction with the fugitive plugin,
+    " invoke this feature only when there is just one window, which occurs
+    " when Vim is invoked from the shell for "git commit" and the like.  When
+    " the fugitive plugin opens a commit for the :Gstatus or :Gcommit commands,
+    " there will be at least two windows open.
+    if winnr("$") == 1
+        DiffGitCached
+        wincmd J
+        wincmd p
+        resize 15
+    endif
+endfunction
+
 " Put these in an autocmd group, so that we can delete them easily.
 augroup local_vimrc
     " First, remove all autocmds in this group.
     autocmd!
 
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event
-    " handler (happens when dropping a file on gvim).
-    "
-    " Keep this before the other BufReadPost autocmds, otherwise it will
-    " take precedence over them.
-    autocmd BufReadPost *
-                \ if line("'\"") > 0 && line("'\"") <= line("$") |
-                \   exe "normal g`\"" |
-                \ endif
+    " BufReadPost auto-commands are done in order, so keep the more
+    " generic patterns first so the later ones may override.
 
-    " Make sure we start at the top of the commit message when doing
-    " a git commit.
-    autocmd BufReadPost COMMIT_EDITMSG,NOTES_EDITMSG,TAG_EDITMSG
-                \ exe "normal! gg"
-    autocmd BufReadPost MERGE_MSG,SQUASH_MSG exe "normal! gg"
+    " When editing a file, jump to the last known cursor position.
+    autocmd BufReadPost * call AutoRestoreLastCursorPosition()
 
-    " Show diffs when writing commit messages for git.  Before we did this
-    " on the FileType gitcommit, but that interferes with fugitive's :Gstatus
-    " command, since the index file gets marked with gitcommit, and makes the
-    " buffer unusable.
-    autocmd BufReadPost COMMIT_EDITMSG
-                \ DiffGitCached | wincmd J | wincmd p | resize 15
-    autocmd BufReadPost MERGE_MSG,SQUASH_MSG
-                \ set ft=gitcommit | DiffGitCached |
-                \ wincmd J | wincmd p | resize 15
-
-    " Do the same for Subversion.
-    autocmd BufReadPost svn-commit.tmp exe "normal! gg"
+    " Automatically open a diff window for Git commits.
+    autocmd FileType gitcommit call AutoOpenGitDiff()
 
     " Set the text width for commit messages in Subversion.  It turns out
     " that Vim has a file type mapping for Subversion commits: svn.  Set it
