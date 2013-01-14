@@ -283,7 +283,6 @@ if g:EnablePowerline
     " Add back in a few segments...
     call Pl#Theme#InsertSegment('mode_indicator', 'after', 'paste_indicator')
     call Pl#Theme#InsertSegment('filetype', 'before', 'scrollpercent')
-    call Pl#Theme#InsertSegment('fileformat', 'before', 'filetype')
 
     call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
 
@@ -292,6 +291,16 @@ if g:EnablePowerline
             \ 'BRANCH': [0x2442],
             \ }
     endif
+
+    let g:Powerline_mode_n = 'N'
+    let g:Powerline_mode_i = 'I'
+    let g:Powerline_mode_R = 'R'
+    let g:Powerline_mode_v = 'V'
+    let g:Powerline_mode_V = 'V⋅LINE'
+    let g:Powerline_mode_cv = 'V⋅BLOCK'
+    let g:Powerline_mode_s = 'SELECT'
+    let g:Powerline_mode_S = 'S⋅LINE'
+    let g:Powerline_mode_cs = 'S⋅BLOCK'
 endif
 
 " =============================================================
