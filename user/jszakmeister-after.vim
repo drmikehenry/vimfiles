@@ -62,6 +62,18 @@ nnoremap <expr> <Leader><Leader>g NormalRegrep()
 " work in a terminal.
 nnoremap <Leader><Leader>q :call QuickFixWinToggle()<CR>
 
+" Copies a selection to the clipboard, with 4 spaces added to the front.
+" This makes it easier to paste into a markdown-enabled form, like on
+" StackOverflow and on GitHub.
+function! CopyForMarkdown() range
+    let lines = getline(a:firstline, a:lastline)
+    call map(lines, '"    " . v:val')
+    let @+ = join(lines, "\n") . "\n"
+endfunction
+command! -range CopyForMarkdown <line1>,<line2>call CopyForMarkdown()
+
+vnoremap <Leader><Leader>cm :CopyForMarkdown<CR>
+
 " =============================================================
 " Options
 " =============================================================
