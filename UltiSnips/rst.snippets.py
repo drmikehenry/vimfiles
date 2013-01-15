@@ -29,10 +29,10 @@ def tsnip(trigger, desc, char, withOverline=False, flags="b", aliases=[],
 
 tsnip("part",       "Part title",        "#", withOverline=True)
 tsnip("chap",       "Chapter title",     "*", withOverline=True)
-tsnip("sect",       "Section",           "=")
-tsnip("subsec",     "Subsection",        "-")
-tsnip("subsubsec",  "Sub-subsection",    "^")
-tsnip("para",       "Paragraph",         '"')
+tsnip("sect",       "Section",           "=", aliases=["h1"])
+tsnip("subsec",     "Subsection",        "-", aliases=["h2"])
+tsnip("subsubsec",  "Sub-subsection",    "^", aliases=["h3"])
+tsnip("para",       "Paragraph",         '"', aliases=["h4"])
 
 
 # Directives.
@@ -46,25 +46,21 @@ $0
 bsnip("code", "code block", r"""
 .. code-block:: ${1:python}
 
-   ${2:code goes here}
-
-$0
+   $0
 """)
 
 # Admonitions.
 
 bsnip("warn", "Warning Admonition", r"""
 .. warning::
-   ${1:text goes here}
 
-$0
+   $0
 """)
 
 bsnip("note", "Note Admonition", r"""
 .. note::
-   ${1:text goes here}
 
-$0
+   $0
 """)
 
 # Markup.
