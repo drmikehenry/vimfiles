@@ -2099,6 +2099,15 @@ function! SetupKernelSource()
 endfunction
 command! SetupKernelSource call SetupKernelSource()
 
+" -------------------------------------------------------------
+" Setup for Makefiles.
+" -------------------------------------------------------------
+function! SetupMake()
+    " Vim's defaults are mostly good.
+    setlocal ts=8 tw=80
+endfunction
+command! SetupMake call SetupMake()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
