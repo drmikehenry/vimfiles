@@ -1,20 +1,15 @@
-" Set up some variables that can be overridden by a machine specific
-" configuration file.
+" =============================================================
+" Variables
+" =============================================================
+
+" Default font size.
 let g:SZAK_FONT_SIZE = 14
 
-if $VIMMACHINE == ""
-    let $VIMMACHINE=hostname()
-endif
+" =============================================================
+" Detect custom exectuables
+" =============================================================
 
-let s:VIMMACHINE_CONFIG = $VIMUSERFILES . "/" . $VIMUSER .
-    \ "/machine/" . $VIMMACHINE . ".vim"
-
-" If a machine local config exists, source it.
-if filereadable(s:VIMMACHINE_CONFIG)
-    execute "source " . s:VIMMACHINE_CONFIG
-endif
-
-if has("macunix")
+if filereadable(expand("$HOME/.local/bin/ctags"))
     let Tlist_Ctags_Cmd='/Users/jszakmeister/.local/bin/ctags'
     let g:tagbar_ctags_bin = '/Users/jszakmeister/.local/bin/ctags'
 endif
@@ -24,10 +19,16 @@ if filereadable(expand("$HOME/.local/bin/git"))
     let g:Gitv_GitExecutable = g:fugitive_git_executable
 endif
 
-" Gitv
-let g:Gitv_WipeAllOnClose = 1
-let g:Gitv_OpenHorizontal = 1
-let g:Gitv_OpenPreviewOnLaunch = 1
+" =============================================================
+" Mappings
+" =============================================================
+
+" Make Y work the way I expect it to: yank to the end of the line.
+nnoremap Y y$
+
+" Keep the block highlighted while shifting.
+vnoremap < <gv
+vnoremap > >gv
 
 " Some reminders of the tag-related shortcuts, since I tend to check my
 " configuration first.
@@ -40,16 +41,72 @@ let g:Gitv_OpenPreviewOnLaunch = 1
 map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
-" Tunn off the scrollbars... I don't need them.
-if has("gui_running")
-    set guioptions-=R
-    set guioptions-=r
-    set guioptions-=L
-    set guioptions-=l
+" The next several entries are taken from:
+"     <http://stevelosh.com/blog/2010/09/coming-home-to-vim/>
+
+" Split the window vertically, and go to it.
+nnoremap <leader>w <C-w>v<C-w>l
+
+" I often want to close a buffer without closing the window.  Using
+" :BW also drops the associated metadata.
+nnoremap <leader><leader>d :BW<CR>
+
+" Shortcut for clearing CtrlP caches
+nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
+
+" Add some mappings for Regrep since I don't use the function keys.
+vnoremap <expr> <Leader><Leader>g VisualRegrep()
+nnoremap <expr> <Leader><Leader>g NormalRegrep()
+
+" Add a mapping for the Quickfix window.  Unfortunately, C-Q doesn't appear to
+" work in a terminal.
+nnoremap <Leader><Leader>q :call QuickFixWinToggle()<CR>
+
+" Copies a selection to the clipboard, with 4 spaces added to the front.
+" This makes it easier to paste into a markdown-enabled form, like on
+" StackOverflow and on GitHub.
+function! CopyForMarkdown() range
+    let lines = getline(a:firstline, a:lastline)
+    call map(lines, '"    " . v:val')
+    let @+ = join(lines, "\n") . "\n"
+endfunction
+command! -range CopyForMarkdown <line1>,<line2>call CopyForMarkdown()
+
+vnoremap <Leader><Leader>cm :CopyForMarkdown<CR>
+
+" =============================================================
+" Options
+" =============================================================
+
+" Turn on list, and setup the listchars.
+set listchars=tab:▸\ ,trail:·,extends:>,precedes:<,nbsp:·
+if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
+    let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
+    let &fillchars = "vert:\u254e,fold:\u00b7"
+endif
+set list
+
+" I dislike wrapping being on by default.
+set nowrap
+
+" Ignore some Clojure/Java-related files.
+set wildignore+=target/**,asset-cache
+
+" I regularly create tmp folders that I don't want searched.
+set wildignore+=tmp,.lein-*,*.egg-info,.*.swo
+
+" Set colorcolumn, if available.
+if exists('+colorcolumn')
+    " This sets it to textwidth+1
+    set colorcolumn=+1
 endif
 
-colorscheme szakdark
+" Make splits appear on the right.
+set splitright
 
+" Turn on cursor shapes under iTerm, and use 256 colors under gnome-terminal.
+" For some reason, gnome-terminal says xterm-color even though it supports
+" xterm-256color.
 if !has("gui_running")
     if has("macunix") && $TERM_PROGRAM == "iTerm.app"
         " This works only in iTerm... but that's what I use on the Mac.
@@ -63,16 +120,72 @@ if !has("gui_running")
     endif
 endif
 
+" -------------------------------------------------------------
+" GUI options
+" -------------------------------------------------------------
+
+" Turn off the scrollbars... I don't need them.
+if has("gui_running")
+    set guioptions-=R
+    set guioptions-=r
+    set guioptions-=L
+    set guioptions-=l
+endif
+
+colorscheme szakdark
+
+if has("gui_macvim")
+    set macmeta
+endif
+
+" On remote systems, I like to change the background color so that I remember
+" I'm on a remote system. :-)  This does break when you sudo su to root though.
+if !empty($SSH_TTY)
+    hi Normal guibg=#0d280d
+endif
+
+" -------------------------------------------------------------
+" Font selection
+" -------------------------------------------------------------
+
+" Helper to aid in locating Powerline-enabled fonts in standard directory
+" locations.
+function! HasFont(filename)
+    if has("macunix")
+        let l:search_paths = ["~/Library/Fonts", "/Library/Fonts"]
+    else
+        let l:search_paths = ["~/.fonts", "/usr/share/fonts"]
+    endif
+
+    for path in l:search_paths
+        let path = expand(path)
+        if filereadable(expand(path . "/**/" . a:filename))
+            return 1
+        endif
+    endfor
+
+    return 0
+endfunction
+
+" Searches for several Powerline-enabled fonts.  If it finds one, it'll choose
+" it and turn on fancy symbols for Powerline.  Otherwise, fallback to a normal
+" font, and use unicode symbols for Powerline.
 function! SetFont()
     " Turn on fancy symbols on the status line
     if has("gui_running")
-        let fontname=["Droid Sans Mono", "Inconsolata"]
+        let powerline_fonts=[
+                    \   ["DejaVu Sans Mono", "DejaVuSansMono-Powerline.ttf"],
+                    \   ["Droid Sans Mono", "DroidSansMonoSlashed-Powerline.ttf"],
+                    \   ]
+        let fontname=map(copy(powerline_fonts), 'v:val[0]')
 
-        if filereadable(expand("~/Library/Fonts/DroidSansMonoSlashed-Powerline.ttf")) ||
-           \ filereadable(expand("~/.fonts/DroidSansMonoSlashed-Powerline.ttf"))
-            let fontname=["Droid Sans Mono Slashed for Powerline"]
-            let g:Powerline_symbols = 'fancy'
-        endif
+        for font in powerline_fonts
+            if HasFont(font[1])
+                let fontname=[font[0] . " for Powerline"]
+                let g:Powerline_symbols = 'fancy'
+                break
+            endif
+        endfor
 
         if has("macunix")
             let fontstring=join(map(
@@ -87,13 +200,66 @@ function! SetFont()
 endfunction
 command! SetFont call SetFont()
 
-SetFont
+autocmd GUIEnter * SetFont
 
+" =============================================================
+" Fullscreen
+" =============================================================
+
+" Allow Vim to go fullscreen under Mac and Linux.
 if has("gui_macvim")
-    set macmeta
+    " grow to maximum horizontal width on entering fullscreen mode
+    set fuopt+=maxhorz
+
+    " This needs to go in a gvimrc, otherwise the macmenu defaults
+    " clobber my setting.  Not sure how I want to do this just yet.
+    " " free up Command-F
+    " macmenu Edit.Find.Find\.\.\. key=<nop>
+
+    " " toggle fullscreen mode
+    " map <D-f> :set invfu<CR>
+    nnoremap <Leader><Leader>f :set invfu<CR>
 endif
 
-set nowrap
+if has("unix")
+    let s:os = substitute(system('uname'), "\n", "", "")
+    if v:version >= 703 && s:os == "Linux" && has("gui_running")
+        function! ToggleFullScreen()
+           call system("wmctrl -i -r ".v:windowid." -b toggle,fullscreen")
+           redraw
+        endfunction
+
+        nnoremap <Leader><Leader>f call ToggleFullScreen()<CR>
+    endif
+endif
+
+" =============================================================
+" Setup routines
+" =============================================================
+
+function! SetupManPager()
+    setlocal nonu nolist
+    nnoremap <Space> <PageDown>
+    nnoremap b <PageUp>
+    nnoremap q :quit<CR>
+endfunction
+command! SetupManPager call SetupManPager()
+
+" =============================================================
+" Plugin settings
+" =============================================================
+
+" -------------------------------------------------------------
+" Gitv
+" -------------------------------------------------------------
+
+let g:Gitv_WipeAllOnClose = 1
+let g:Gitv_OpenHorizontal = 1
+let g:Gitv_OpenPreviewOnLaunch = 1
+
+" -------------------------------------------------------------
+" Grep
+" -------------------------------------------------------------
 
 " Use ack for grep
 if executable('ack')
@@ -104,22 +270,9 @@ endif
 " Be compatible with both grep on Linux and Mac
 let Grep_Xargs_Options = '-0'
 
-" Add a method to switch to the scratch buffer
-function! ToggleScratch()
-    if expand('%') == g:ScratchBufferName
-        quit
-    else
-        Sscratch
-    endif
-endfunction
-
-map <leader>s :call ToggleScratch()<CR>
-
-" The next several entries are taken from:
-"     <http://stevelosh.com/blog/2010/09/coming-home-to-vim/>
-
-" Split the window vertically, and go to it.
-nnoremap <leader>w <C-w>v<C-w>l
+" -------------------------------------------------------------
+" VimClojure
+" -------------------------------------------------------------
 
 " Highlight Clojure's builtins and turn on rainbow parens
 let g:vimclojure#HighlightBuiltins=1
@@ -134,53 +287,14 @@ if executable(expand("~/.local/bin/ng"))
     let g:vimclojure#NailgunClient=expand("~/.local/bin/ng")
 endif
 
-" I often want to close a buffer without closing the window.  Using
-" :BW also drops the associated metadata.
-nnoremap <leader><leader>d :BW<CR>
-
-function! SetupManPager()
-    setlocal nonu nolist
-    nnoremap <Space> <PageDown>
-    nnoremap b <PageUp>
-    nnoremap q :quit<CR>
-endfunction
-command! SetupManPager call SetupManPager()
-
-augroup jszakmeister_vimrc
-    autocmd!
-    autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
-augroup END
-
-" Ignore some Clojure/Java-related files.
-set wildignore+=target/**,asset-cache
-
-" I regularly create tmp folders that I don't want searched
-set wildignore+=tmp,.lein-*,*.egg-info,.*.swo
-
-" Shortcut for clearing CtrlP caches
-nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
-
-" Add some mappings for Regrep since I don't use the function keys.
-vnoremap <expr> <Leader><Leader>g VisualRegrep()
-nnoremap <expr> <Leader><Leader>g NormalRegrep()
-
-" Add a mapping for the Quickfix window.  Unfortunately, C-Q doesn't appear to
-" work in a terminal.
-nnoremap <Leader><Leader>q :call QuickFixWinToggle()<CR>
-
-" On remote systems, I like to chnge the background color so that I remember I'm
-" on a remote system. :-)  This does break when you sudo su to root though.
-if !empty($SSH_TTY)
-    hi Normal guibg=#0d280d
-endif
-
+" -------------------------------------------------------------
 " Powerline
+" -------------------------------------------------------------
 
 if g:EnablePowerline
     " Add back in a few segments...
     call Pl#Theme#InsertSegment('mode_indicator', 'after', 'paste_indicator')
     call Pl#Theme#InsertSegment('filetype', 'before', 'scrollpercent')
-    call Pl#Theme#InsertSegment('fileformat', 'before', 'filetype')
 
     call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
 
@@ -189,7 +303,30 @@ if g:EnablePowerline
             \ 'BRANCH': [0x2442],
             \ }
     endif
+
+    let g:Powerline_mode_n = 'N'
+    let g:Powerline_mode_i = 'I'
+    let g:Powerline_mode_R = 'R'
+    let g:Powerline_mode_v = 'V'
+    let g:Powerline_mode_V = 'V⋅LINE'
+    let g:Powerline_mode_cv = 'V⋅BLOCK'
+    let g:Powerline_mode_s = 'SELECT'
+    let g:Powerline_mode_S = 'S⋅LINE'
+    let g:Powerline_mode_cs = 'S⋅BLOCK'
 endif
+
+" =============================================================
+" Autocommands
+" =============================================================
+
+augroup jszakmeister_vimrc
+    autocmd!
+    autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
+augroup END
+
+" =============================================================
+" Commands
+" =============================================================
 
 function! ShowHighlightGroup()
     echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
@@ -235,12 +372,6 @@ function! ShowAvailableColors()
 endfunction
 command! ShowAvailableColors call ShowAvailableColors()
 
-" Set colorcolumn, if available
-if exists('+colorcolumn')
-    " This sets it to textwidth+1
-    set colorcolumn=+1
-endif
-
 " Size for the big screen.
 function! BigScreenTv()
     set columns=120
@@ -248,3 +379,19 @@ function! BigScreenTv()
     let &guifont = substitute(&guifont, ':h\([^:]*\)', ':h25', '')
 endfunction
 command! BigScreenTv call BigScreenTv()
+
+" =============================================================
+" Machine Specific Settings
+" =============================================================
+
+if $VIMMACHINE == ""
+    let $VIMMACHINE=hostname()
+endif
+
+let s:VIMMACHINE_CONFIG = $VIMUSERFILES . "/" . $VIMUSER .
+    \ "/machine/" . $VIMMACHINE . ".vim"
+
+" If a machine local config exists, source it.
+if filereadable(s:VIMMACHINE_CONFIG)
+    execute "source " . s:VIMMACHINE_CONFIG
+endif

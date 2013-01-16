@@ -1,0 +1,1 @@
+let g:SZAK_FONT_SIZE = 15

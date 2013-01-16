@@ -28,7 +28,7 @@ hi StatusLine       guifg=#CCCCCC     guibg=#202020     gui=italic    ctermfg=wh
 hi StatusLineNC     guifg=black       guibg=#202020     gui=NONE      ctermfg=blue        ctermbg=darkgray    cterm=NONE
 
 hi Folded           guifg=#a0a8b0     guibg=#384048     gui=NONE      ctermfg=NONE        ctermbg=darkgray    cterm=NONE
-hi Title            guifg=#f6f3e8     guibg=NONE        gui=bold      ctermfg=NONE        ctermbg=NONE        cterm=NONE
+hi Title            guifg=#e3dab7     guibg=NONE        gui=NONE      ctermfg=223         ctermbg=NONE        cterm=NONE
 hi Visual           guifg=NONE        guibg=#262D51     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=REVERSE
 
 hi SpecialKey       guifg=#303030     guibg=#1c1c1c     gui=NONE      ctermfg=236         ctermbg=234         cterm=NONE
@@ -61,7 +61,7 @@ if &t_Co > 255 || has("gui_running")
     " hard to read (or to harsh to read) in a black terminal.  Tweak
     " them too.
     hi HG_Subtle        ctermfg=white   ctermbg=52  guibg=red       guifg=white
-    hi HG_Warning       ctermfg=white   ctermbg=136 guibg=gold3     guifg=white
+    hi HG_Warning       ctermfg=white   ctermbg=136 guibg=#505000   guifg=lightgray
     hi HG_Error         ctermfg=white   ctermbg=160 guibg=red       guifg=white
     hi Highlight_tabs                   ctermbg=236 guibg=#303030   guifg=white
 endif
@@ -211,7 +211,7 @@ endif
 " ColorColumn
 if exists('+colorcolumn')
     if &t_Co > 255 || has("gui_running")
-        highlight ColorColumn ctermbg=237 guibg=#3a3a3a
+        highlight ColorColumn ctermbg=52 guibg=#5f0000
     else
         highlight ColorColumn ctermbg=8
     endif
@@ -220,3 +220,7 @@ endif
 " Tagbar
 hi TagbarSignature  guifg=#7f7f7f     guibg=NONE        gui=NONE      ctermfg=darkgray    ctermbg=NONE        cterm=NONE
 hi TagbarHighlight  guifg=white       guibg=#af5f00     gui=NONE      ctermfg=white       ctermbg=130         cterm=NONE
+
+" BufExplorer
+hi bufExplorerMapping   guifg=gray      ctermfg=gray
+hi bufExplorerHelp      guifg=#6c6c6c   ctermfg=242
