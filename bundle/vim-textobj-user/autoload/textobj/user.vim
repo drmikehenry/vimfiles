@@ -1,7 +1,7 @@
 " textobj-user - Support for user-defined text objects
-" Version: 0.3.8
-" Copyright (C) 2007-2008 kana <http://whileimautomaton.net/>
-" License: MIT license  {{{
+" Version: @@VERSION@@
+" Copyright (C) 2007-2012 Kana Natsuno <http://whileimautomaton.net/>
+" License: So-called MIT/X license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
 "     "Software"), to deal in the Software without restriction, including
@@ -394,16 +394,16 @@ function! s:plugin.define_interface_key_mappings()  "{{{3
       elseif has_key(specs, '*pattern*')
         if spec_name =~# '^move-[npNP]$'
           let flags = ''
-          let flags .= (spec_name =~ '[pP]$' ? 'b' : '')
-          let flags .= (spec_name =~ '[NP]$' ? 'e' : '')
+          let flags .= (spec_name =~# '[pP]$' ? 'b' : '')
+          let flags .= (spec_name =~# '[NP]$' ? 'e' : '')
           let impl_fname = 'move'
         elseif spec_name ==# 'select'
           let flags = ''
           let impl_fname = 'select'
         elseif spec_name =~# '^select-[ai]$'
           let flags = ''
-          let flags .= (spec_name =~ 'a$' ? 'a' : '')
-          let flags .= (spec_name =~ 'i$' ? 'i' : '')
+          let flags .= (spec_name =~# 'a$' ? 'a' : '')
+          let flags .= (spec_name =~# 'i$' ? 'i' : '')
           let impl_fname = 'select_pair'
         else
           echoerr 'Unknown spec:' string(spec_name)
@@ -466,20 +466,24 @@ endfunction
 
 
 function! s:noremap(forced_p, lhs, rhs)
-  call s:_map(['nnoremap', 'vnoremap', 'onoremap'], a:forced_p, a:lhs, a:rhs)
+  let v = s:proper_visual_mode(a:lhs)
+  call s:_map(['nnoremap', v.'noremap', 'onoremap'], a:forced_p, a:lhs, a:rhs)
 endfunction
 
 function! s:objnoremap(forced_p, lhs, rhs)
-  call s:_map(['vnoremap', 'onoremap'], a:forced_p, a:lhs, a:rhs)
+  let v = s:proper_visual_mode(a:lhs)
+  call s:_map([v.'noremap', 'onoremap'], a:forced_p, a:lhs, a:rhs)
 endfunction
 
 
 function! s:map(forced_p, lhs, rhs)
-  call s:_map(['nmap', 'vmap', 'omap'], a:forced_p, a:lhs, a:rhs)
+  let v = s:proper_visual_mode(a:lhs)
+  call s:_map(['nmap', v.'map', 'omap'], a:forced_p, a:lhs, a:rhs)
 endfunction
 
 function! s:objmap(forced_p, lhs, rhs)
-  call s:_map(['vmap', 'omap'], a:forced_p, a:lhs, a:rhs)
+  let v = s:proper_visual_mode(a:lhs)
+  call s:_map([v.'map', 'omap'], a:forced_p, a:lhs, a:rhs)
 endfunction
 
 
@@ -504,6 +508,12 @@ endfunction
 
 
 " Etc  "{{{2
+
+function! textobj#user#_sid()
+  return maparg('<SID>', 'n')
+endfunction
+nnoremap <SID>  <SID>
+
 
 function! s:prepare_movement(previous_mode)
   if a:previous_mode ==# 'v'
@@ -534,7 +544,7 @@ function! s:snr_prefix(sfile)
 
   for line in split(result, '\n')
     let _ = matchlist(line, '^\s*\(\d\+\):\s*\(.*\)$')
-    if a:sfile ==# _[2]
+    if s:normalize_path(a:sfile) ==# s:normalize_path(_[2])
       return printf("\<SNR>%d_", _[1])
     endif
   endfor
@@ -543,10 +553,38 @@ function! s:snr_prefix(sfile)
 endfunction
 
 
+function! s:normalize_path(unnormalized_path)
+  return substitute(fnamemodify(a:unnormalized_path, ':p'), '\\', '/', 'g')
+endfunction
+
+
 function! s:wise(default)
   return (exists('v:motion_force') && v:motion_force != ''
   \       ? v:motion_force
   \       : a:default)
+endfunction
+
+
+function! s:proper_visual_mode(lhs)
+  " Return the mode prefix of proper "visual" mode for a:lhs key sequence.
+  " a:lhs should not be defined in Select mode if a:lhs starts with
+  " a printable character.  Otherwise a:lhs may be defined in Select mode.
+
+  " a:lhs may be prefixed with :map-arguments such as <buffer>.
+  " It's necessary to remove them to determine the first character in a:lhs.
+  let s1 = substitute(
+  \   a:lhs,
+  \   '\v^(\<(buffer|silent|special|script|expr|unique)\>\s*)*',
+  \   '',
+  \   ''
+  \ )
+  " All characters in a:lhs are printable characters, so it's necessary to
+  " convert <>-escaped notation into corresponding characters.
+  let s2 = substitute(s1,
+  \                   '^\(<[^<>]\+>\)',
+  \                   '\=eval("\"\\" . submatch(1) . "\"")',
+  \                   '')
+  return s2 =~# '^\p' ? 'x' : 'v'
 endfunction
 
 

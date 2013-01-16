@@ -1,6 +1,6 @@
-" textobj-indent - Text objects for indented blocks of lines
-" Version: 0.0.3
-" Copyright (C) 2008 kana <http://whileimautomaton.net/>
+" Vim additional ftplugin: c/textobj-function
+" Version 0.1.1
+" Copyright (C) 2007-2009 kana <http://whileimautomaton.net/>
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -21,49 +21,64 @@
 "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
-if exists('g:loaded_textobj_indent')  "{{{1
-  finish
+
+if !exists('*g:textobj_function_c_select')
+  function! g:textobj_function_c_select(object_type)
+    return s:select_{a:object_type}()
+  endfunction
+
+  function! s:select_a()
+    if line('.') != '}'
+      normal ][
+    endif
+    let e = getpos('.')
+    normal [[
+    normal! k$%0k
+    let b = getpos('.')
+
+    if 1 < e[1] - b[1]  " is ther some code?
+      return ['V', b, e]
+    else
+      return 0
+    endif
+  endfunction
+
+  function! s:select_i()
+    if line('.') != '}'
+      normal ][
+    endif
+    let e = getpos('.')
+    normal [[
+    let b = getpos('.')
+
+    if 1 < e[1] - b[1]  " is ther some code?
+      call setpos('.', b)
+      normal! j0
+      let b = getpos('.')
+      call setpos('.', e)
+      normal! k$
+      let e = getpos('.')
+      return ['V', b, e]
+    else
+      return 0
+    endif
+  endfunction
 endif
 
 
 
 
+let b:textobj_function_select = function('g:textobj_function_c_select')
 
 
 
 
-" Interface  "{{{1
-
-call textobj#user#plugin('indent', {
-\      '-': {
-\        'select-a': 'ai',  '*select-a-function*': 'textobj#indent#select_a',
-\        'select-i': 'ii',  '*select-i-function*': 'textobj#indent#select_i',
-\      },
-\      'same': {
-\        'select-a': 'aI',
-\        '*select-a-function*': 'textobj#indent#select_same_a',
-\        'select-i': 'iI',
-\        '*select-i-function*': 'textobj#indent#select_same_i',
-\      }
-\    })
-
-
-
-
-
-
-
-
-" Fin.  "{{{1
-
-let g:loaded_textobj_indent = 1
-
-
-
-
-
-
-
+if exists('b:undo_ftplugin')
+  let b:undo_ftplugin .= '|'
+else
+  let b:undo_ftplugin = ''
+endif
+let b:undo_ftplugin .= 'unlet b:textobj_function_select'
 
 " __END__
 " vim: foldmethod=marker
