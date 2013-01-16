@@ -2167,15 +2167,13 @@ endfunction
 
 function! AutoOpenGitDiff()
     " Show diffs for this Git commit.
-    " To work around an unfortunate interaction with the fugitive plugin,
-    " invoke this feature only when there is just one window, which occurs
-    " when Vim is invoked from the shell for "git commit" and the like.  When
-    " the fugitive plugin opens a commit for the :Gstatus or :Gcommit commands,
-    " there will be at least two windows open.
-    if winnr("$") == 1
+    " The fugitive plugin uses a previewwindow for the :Gstatus command,
+    " but it sets the filetype of that windows to 'gitcommit', so don't
+    " open a diff window if the gitcommit is in a previewindow.
+    if ! &previewwindow
         DiffGitCached
-        wincmd J
         wincmd p
+        wincmd K
         resize 15
     endif
 endfunction
