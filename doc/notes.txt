@@ -48,6 +48,7 @@
     SwapIt - Cycle through related words                |notes_swapit|
     Tagbar - Source code browser                        |notes_tagbar|
     TagSignature - Balloon signatures for tags          |notes_tagsignature|
+    TextObj-Function - Function-based text objects      |notes_textobj-func|
     TextObj-Indent - Indentation-based text objects     |notes_textobj-indent|
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
     UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
@@ -1431,6 +1432,25 @@ Version 2013-01-06 (b18839a7) from git://github.com/tomtom/tcomment_vim.git
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 - Removed the spec/ directory before 'git add'ing the bundle.
+
+------------------------------------------------------------------------------
+TEXTOBJ-FUNCTION                                        *notes_textobj-func*
+  Function-based text objects                           |textobj-function.txt|
+
+Support for text objects based on functions.  Currently, only C and VimScript
+are supported.
+
+Use "f" for text objects based on functions.
+
+    vif   - Select the contents of a function
+    vaf   - Select the entire function
+
+To add more language support, see |textobj-function-customizing|.
+
+Version 0.1.1 (3d4ef916) from git://github.com/kana/vim-textobj-function.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 TEXTOBJ-INDENT                                          *notes_textobj-indent*

@@ -596,6 +596,7 @@ notes_swapit	notes.txt	/*notes_swapit*
 notes_tagbar	notes.txt	/*notes_tagbar*
 notes_tagsignature	notes.txt	/*notes_tagsignature*
 notes_tcomment	notes.txt	/*notes_tcomment*
+notes_textobj-func	notes.txt	/*notes_textobj-func*
 notes_textobj-indent	notes.txt	/*notes_textobj-indent*
 notes_textobj-user	notes.txt	/*notes_textobj-user*
 notes_tips	notes.txt	/*notes_tips*
