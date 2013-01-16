@@ -1463,12 +1463,10 @@ Use "i" for text objects based on indentation.
 E.g., to select block:
     vii
 
-Version 0.0.3 from http://www.vim.org/scripts/script.php?script_id=2484
+Version 0.0.5 (a17bd544) from git://github.com/kana/vim-textobj-indent.git
 
 Installation:
-- Requires textobj-user support
-- Unzip in ~/.vim/ (note unfortunate directory prefix vim-textobj-indent-0.0.3)
-- :helptags ~/.vim/doc
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 TEXTOBJ-USER                                            *notes_textobj-user*
