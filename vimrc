@@ -2178,6 +2178,15 @@ function! AutoOpenGitDiff()
     endif
 endfunction
 
+function! AutoCloseGitDiff()
+    " Close any preview window when finished with a 'gitcommit' buffer.
+    " Since :DiffGitCached uses a preview window for diffs, this will
+    " close out any diff window that might be hanging around.
+    if &ft == 'gitcommit'
+        pclose
+    endif
+endfunction
+
 " Put these in an autocmd group, so that we can delete them easily.
 augroup local_vimrc
     " First, remove all autocmds in this group.
@@ -2191,6 +2200,9 @@ augroup local_vimrc
 
     " Automatically open a diff window for Git commits.
     autocmd FileType gitcommit call AutoOpenGitDiff()
+
+    " Automatically close diff window after a Git commit.
+    autocmd BufUnload * call AutoCloseGitDiff()
 
     " Set the text width for commit messages in Subversion.  It turns out
     " that Vim has a file type mapping for Subversion commits: svn.  Set it
