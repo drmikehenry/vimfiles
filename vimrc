@@ -2168,8 +2168,7 @@ function! AutoRestoreLastCursorPosition()
         if name == "COMMIT_EDITMSG" ||
                 \ name == "NOTES_EDITMSG" ||
                 \ name == "TAG_EDITMSG" ||
-                \ name == "MERGE_MSG" ||
-                \ name == "SQUASH_MSG"
+                \ name == "MERGE_MSG"
             return
         endif
 
