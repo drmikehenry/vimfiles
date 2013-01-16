@@ -48,6 +48,7 @@
     SwapIt - Cycle through related words                |notes_swapit|
     Tagbar - Source code browser                        |notes_tagbar|
     TagSignature - Balloon signatures for tags          |notes_tagsignature|
+    TextObj-Function - Function-based text objects      |notes_textobj-func|
     TextObj-Indent - Indentation-based text objects     |notes_textobj-indent|
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
     UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
@@ -1433,6 +1434,25 @@ Installation:
 - Removed the spec/ directory before 'git add'ing the bundle.
 
 ------------------------------------------------------------------------------
+TEXTOBJ-FUNCTION                                        *notes_textobj-func*
+  Function-based text objects                           |textobj-function.txt|
+
+Support for text objects based on functions.  Currently, only C and VimScript
+are supported.
+
+Use "f" for text objects based on functions.
+
+    vif   - Select the contents of a function
+    vaf   - Select the entire function
+
+To add more language support, see |textobj-function-customizing|.
+
+Version 0.1.1 (3d4ef916) from git://github.com/kana/vim-textobj-function.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 TEXTOBJ-INDENT                                          *notes_textobj-indent*
   Indentation-based text objects                        |textobj-indent.txt|
 
@@ -1443,25 +1463,22 @@ Use "i" for text objects based on indentation.
 E.g., to select block:
     vii
 
-Version 0.0.3 from http://www.vim.org/scripts/script.php?script_id=2484
+Version 0.0.5 (a17bd544) from git://github.com/kana/vim-textobj-indent.git
 
 Installation:
-- Requires textobj-user support
-- Unzip in ~/.vim/ (note unfortunate directory prefix vim-textobj-indent-0.0.3)
-- :helptags ~/.vim/doc
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 TEXTOBJ-USER                                            *notes_textobj-user*
   Library support for user-defined text objects         |textobj-user.txt|
 
 Library to support construction of user-defined text objects; by itself,
-library is not terribly useful.  Enables things like |textobj-indent|
+library is not terribly useful.  Enables things like |textobj-indent|.
 
-Version 0.3.8 from http://www.vim.org/scripts/script.php?script_id=2100
+Version 0.3.12 (1b738334) from git://github.com/kana/vim-textobj-user.git
 
 Installation:
-- Unzip in ~/.vim/ (note unfortunate directory prefix vim-textobj-user-0.3.8)
-- :helptags ~/.vim/doc
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 ULTISNIPS                                               *notes_ultisnips*

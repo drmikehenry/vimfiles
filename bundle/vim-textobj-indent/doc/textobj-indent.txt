@@ -1,9 +1,9 @@
 *textobj-indent.txt*	Text objects for indented blocks of lines
 
-Version 0.0.3
+Version 0.0.5
 Script ID: 2484
-Copyright (C) 2008 kana <http://whileimautomaton.net/>
-License: MIT license  {{{
+Copyright (C) 2008-2012 Kana Natsuno <http://whileimautomaton.net/>
+License: So-called MIT/X license  {{{
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
     "Software"), to deal in the Software without restriction, including
@@ -28,9 +28,8 @@ CONTENTS					*textobj-indent-contents*
 
 Introduction		|textobj-indent-introduction|
 Interface		|textobj-indent-interface|
-  Commands		  |textobj-indent-commands|
-  Functions		  |textobj-indent-functions|
   Mappings		  |textobj-indent-mappings|
+Customizing		|textobj-indent-customizing|
 Bugs			|textobj-indent-bugs|
 Changelog		|textobj-indent-changelog|
 
@@ -85,7 +84,7 @@ and "_" means a space to indent)
 	  __...
 	  endif
 <
-More variants are also available.  See |textobj-indnet-mapping| for the
+More variants are also available.  See |textobj-indent-mappings| for the
 details.
 
 
@@ -205,6 +204,15 @@ BUGS						*textobj-indent-bugs*
 
 ==============================================================================
 CHANGELOG					*textobj-indent-changelog*
+
+0.0.5	2012-03-30T21:47:34+09:00	      *textobj-indent-changelog-0.0.5*
+	- Fix typos in the document.  Thanks to Ujihisa and John Tyree for
+	  reporting the mistake.
+	- Revise |textobj-indent-contents|.
+
+0.0.4	2012-03-24T14:48:22+09:00	      *textobj-indent-changelog-0.0.4*
+	- Refine the document a bit.
+	- Refine the internal structure a bit.
 
 0.0.3	2009-08-30T12:06:37+09:00	      *textobj-indent-changelog-0.0.3*
 	Incompatible changes:
