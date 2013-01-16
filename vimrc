@@ -2108,6 +2108,16 @@ function! SetupMake()
 endfunction
 command! SetupMake call SetupMake()
 
+" -------------------------------------------------------------
+" Setup for help files.
+" -------------------------------------------------------------
+function! SetupHelp()
+    " This helps make it easier to jump to tags while editing help files,
+    " since a number of tags contain a hyphen.
+    setlocal iskeyword=!-~,^*,^\|,^\",192-255
+endfunction
+command! SetupHelp call SetupHelp()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
