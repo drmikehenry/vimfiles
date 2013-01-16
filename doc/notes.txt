@@ -1455,13 +1455,12 @@ TEXTOBJ-USER                                            *notes_textobj-user*
   Library support for user-defined text objects         |textobj-user.txt|
 
 Library to support construction of user-defined text objects; by itself,
-library is not terribly useful.  Enables things like |textobj-indent|
+library is not terribly useful.  Enables things like |textobj-indent|.
 
-Version 0.3.8 from http://www.vim.org/scripts/script.php?script_id=2100
+Version 0.3.12 (1b738334) from git://github.com/kana/vim-textobj-user.git
 
 Installation:
-- Unzip in ~/.vim/ (note unfortunate directory prefix vim-textobj-user-0.3.8)
-- :helptags ~/.vim/doc
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 ULTISNIPS                                               *notes_ultisnips*
