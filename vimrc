@@ -2114,7 +2114,9 @@ command! SetupMake call SetupMake()
 function! SetupHelp()
     " This helps make it easier to jump to tags while editing help files,
     " since a number of tags contain a hyphen.
-    setlocal iskeyword=!-~,^*,^\|,^\",192-255
+    " The "@" adds in all "alphabetic" characters, including
+    " accented characters beyond ASCII a-z and A-Z.
+    setlocal iskeyword=@,!-~,^*,^\|,^\",192-255
 endfunction
 command! SetupHelp call SetupHelp()
 
