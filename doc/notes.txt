@@ -967,7 +967,7 @@ Buffer Grep:
 Development versions found at: http://github.com/sjbach/lusty
 
 Released versions appear here:
-Version 4.0 from http://www.vim.org/scripts/script.php?script_id=1890
+Version 4.3 from http://www.vim.org/scripts/script.php?script_id=1890
 
 Installation:
 - Install in ~/.vim/plugin
@@ -1050,7 +1050,7 @@ Bonus: This plugin also includes the following command, which will
 Development versions found at: http://github.com/sjbach/lusty
 
 Released versions appear here:
-Version 1.4 from http://www.vim.org/scripts/script.php?script_id=2050
+Version 1.5.1 from http://www.vim.org/scripts/script.php?script_id=2050
 
 Installation:
 - Install in ~/.vim/plugin
