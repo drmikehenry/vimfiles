@@ -21,8 +21,8 @@ augroup filetypedetect
     " Setup Git-related filetypes.
     au BufNewFile,BufRead *.git/MERGE_MSG setfiletype gitcommit
     au BufNewFile,BufRead *.git/modules/**/MERGE_MSG setfiletype gitcommit
-    au BufNewFile,BufRead *.git/TAG_EDITMSG setfiletype gitcommit
-    au BufNewFile,BufRead *.git/modules/**/TAG_EDITMSG setfiletype gitcommit
+    au BufNewFile,BufRead *.git/TAG_EDITMSG setfiletype gitrelated
+    au BufNewFile,BufRead *.git/modules/**/TAG_EDITMSG setfiletype gitrelated
     au BufNewFile,BufRead *.git/NOTES_EDITMSG setfiletype gitrelated
     au BufNewFile,BufRead *.git/modules/**/NOTES_EDITMSG setfiletype gitrelated
 

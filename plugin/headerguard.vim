@@ -92,7 +92,7 @@ function! s:HeaderguardAdd()
         call cursor(1, 1)
     endif
 endfunction
-command! HeaderguardAdd call s:HeaderguardAdd()
+command! -bar HeaderguardAdd call s:HeaderguardAdd()
 
 " Restore saved 'cpoptions'.
 let cpoptions = s:save_cpoptions

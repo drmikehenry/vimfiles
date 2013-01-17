@@ -320,7 +320,7 @@ function! s:Qf2Args()
     endfor
 endfunction
 
-command! Qf2Args call s:Qf2Args()
+command! -bar Qf2Args call s:Qf2Args()
 
 " Setup n and N for browsing to next or previous search match with automatic
 " scrolling to the center of the window.
@@ -479,7 +479,7 @@ function! StripTrailingWhitespace()
     let &l:foldenable = saveFoldEnable
     call winrestview(savePos)
 endfunction
-command! StripTrailingWhitespace  call StripTrailingWhitespace()
+command! -bar StripTrailingWhitespace  call StripTrailingWhitespace()
 
 nnoremap <Leader><Leader>$  :StripTrailingWhitespace<CR>
 
@@ -905,8 +905,8 @@ function! SetSearch(pattern)
 endfunction
 
 " Set search register @/ to unnamed ("scratch") register and highlight.
-command! MatchScratch     call SetSearch(MakeSearchString(@"))
-command! MatchScratchWord call SetSearch("\\<".MakeSearchString(@")."\\>")
+command! -bar MatchScratch     call SetSearch(MakeSearchString(@"))
+command! -bar MatchScratchWord call SetSearch("\\<".MakeSearchString(@")."\\>")
 
 " Map normal-mode '*' to just highlight, not search for next.
 " Note: Yank into @a to avoid clobbering register 0 (saving and restoring @a).
@@ -1004,7 +1004,7 @@ nnoremap <expr> <C-w>f empty(taglist(expand('<cfile>'))) ?
             \ "\<C-w>f" : ":stj <C-r><C-f><CR>"
 
 " Convenience for building tag files in current directory.
-command! Ctags :wall|silent! !gentags
+command! -bar Ctags :wall|silent! !gentags
 
 " The :tjump command is more convenient than :tag because it will pop up a
 " menu if and only if multiple tags match.  Exchange the default meaning
@@ -1150,19 +1150,19 @@ endfunction
 command! -nargs=? L call s:L(<f-args>)
 
 " Make 1-column-wide layout.
-command! L1 call s:L(1)
+command! -bar L1 call s:L(1)
 
 " Make 2-column-wide layout.
-command! L2 call s:L(2)
+command! -bar L2 call s:L(2)
 
 " Make 3-column-wide layout.
-command! L3 call s:L(3)
+command! -bar L3 call s:L(3)
 
 " Make 4-column-wide layout.
-command! L4 call s:L(4)
+command! -bar L4 call s:L(4)
 
 " Make 5-column-wide layout.
-command! L5 call s:L(5)
+command! -bar L5 call s:L(5)
 
 " Toggle quickfix window.
 function! QuickFixWinToggle()
@@ -1173,7 +1173,7 @@ function! QuickFixWinToggle()
     endif
 endfunction
 nnoremap <silent> <C-Q><C-Q> :call QuickFixWinToggle()<CR>
-command! QuickFixWinToggle :call QuickFixWinToggle()
+command! -bar QuickFixWinToggle :call QuickFixWinToggle()
 
 " Like windo but restore the current window.
 function! WinDo(command)
@@ -1205,8 +1205,8 @@ com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 
 " Taken from :help :DiffOrig.  Shows unsaved differences between
 " this buffer and original file.
-command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-            \ | wincmd p | diffthis
+command! -bar DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ 
+            \ | diffthis | wincmd p | diffthis
 
 " =============================================================
 " Plugins
@@ -1393,7 +1393,7 @@ nmap <silent> <Leader>oj :FSBelow<cr>
 nmap <silent> <Leader>oJ :FSSplitBelow<cr>
 
 " Compatibility for old Alternate.vim plugin.
-command! A FSHere
+command! -bar A FSHere
 
 " -------------------------------------------------------------
 " Grep
@@ -1781,7 +1781,7 @@ function! SetupMail()
     " set formatoptions+=w
     setlocal tw=64 sw=2 sts=2 et ai
 endfunction
-command! SetupMail call SetupMail()
+command! -bar SetupMail call SetupMail()
 let g:SpellMap["mail"] = "<on>"
 
 " -------------------------------------------------------------
@@ -1791,7 +1791,7 @@ function! SetupText()
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
     let b:SpellType = "<text>"
 endfunction
-command! SetupText call SetupText()
+command! -bar SetupText call SetupText()
 let g:SpellMap["<text>"] = "<on>"
 
 " -------------------------------------------------------------
@@ -1802,7 +1802,7 @@ function! SetupSource()
     Highlight longlines tabs trailingspace
     let b:SpellType = "<source>"
 endfunction
-command! SetupSource call SetupSource()
+command! -bar SetupSource call SetupSource()
 let g:SpellMap["<source>"] = "<on>"
 
 " -------------------------------------------------------------
@@ -1814,7 +1814,7 @@ function! SetupMarkup()
     runtime scripts/xml.vim
     let b:SpellType = "<markup>"
 endfunction
-command! SetupMarkup call SetupMarkup()
+command! -bar SetupMarkup call SetupMarkup()
 let g:SpellMap["<markup>"] = "<on>"
 
 " -------------------------------------------------------------
@@ -1823,7 +1823,7 @@ let g:SpellMap["<markup>"] = "<on>"
 function! SetupMarkdown()
     SetupMarkup
 endfunction
-command! SetupMarkdown call SetupMarkdown()
+command! -bar SetupMarkdown call SetupMarkdown()
 
 " -------------------------------------------------------------
 " Setup LessCSS.
@@ -1831,7 +1831,7 @@ command! SetupMarkdown call SetupMarkdown()
 function! SetupLess()
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
 endfunction
-command! SetupLess call SetupLess()
+command! -bar SetupLess call SetupLess()
 
 " -------------------------------------------------------------
 " Setup for reStructuredText.
@@ -1865,12 +1865,12 @@ function! SetupRstSyntax()
     " have both C and CPP active at the same time.
     call l:EmbedSourceAs('c', 'cpp')
 endfunction
-command! SetupRstSyntax call SetupRstSyntax()
+command! -bar SetupRstSyntax call SetupRstSyntax()
 
 function! SetupRst()
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
 endfunction
-command! SetupRst call SetupRst()
+command! -bar SetupRst call SetupRst()
 let g:SpellMap["rst"] = "<on>"
 
 " -------------------------------------------------------------
@@ -1881,7 +1881,7 @@ function! SetupWikipedia()
     " Setup angle brackets as matched pairs for '%'.
     setlocal matchpairs+=<:>
 endfunction
-command! SetupWikipedia call SetupWikipedia()
+command! -bar SetupWikipedia call SetupWikipedia()
 let g:SpellMap["Wikipedia"] = "<on>"
 
 " -------------------------------------------------------------
@@ -1899,7 +1899,7 @@ function! SetupBashFixcommand()
     setlocal tw=0
     Highlight no*
 endfunction
-command! SetupBashFixcommand call SetupBashFixcommand()
+command! -bar SetupBashFixcommand call SetupBashFixcommand()
 
 " -------------------------------------------------------------
 " Setup for C code.
@@ -1979,7 +1979,7 @@ function! SetupC()
     inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
     vnoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
 endfunction
-command! SetupC call SetupC()
+command! -bar SetupC call SetupC()
 
 " -------------------------------------------------------------
 " Setup for C++ code.
@@ -1987,7 +1987,7 @@ command! SetupC call SetupC()
 function! SetupCpp()
     SetupC
 endfunction
-command! SetupCpp call SetupCpp()
+command! -bar SetupCpp call SetupCpp()
 
 " -------------------------------------------------------------
 " Setup for general Clojure code.
@@ -1996,7 +1996,7 @@ function! SetupClojure()
     SetupSource
     setlocal ts=8 sts=2 sw=2
 endfunction
-command! SetupClojure call SetupClojure()
+command! -bar SetupClojure call SetupClojure()
 
 " -------------------------------------------------------------
 " Setup for D code.
@@ -2004,7 +2004,7 @@ command! SetupClojure call SetupClojure()
 function! SetupD()
     SetupC
 endfunction
-command! SetupD call SetupD()
+command! -bar SetupD call SetupD()
 
 " -------------------------------------------------------------
 " Setup for Git-related files (e.g., "COMMIT_EDITMSG").
@@ -2013,7 +2013,7 @@ function! SetupGit()
     SetupText
     setlocal tw=72
 endfunction
-command! SetupGit call SetupGit()
+command! -bar SetupGit call SetupGit()
 
 " -------------------------------------------------------------
 " Setup for JavaScript.
@@ -2025,7 +2025,7 @@ function! SetupJavaScript()
     inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
     vnoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
 endfunction
-command! SetupJavaScript call SetupJavaScript()
+command! -bar SetupJavaScript call SetupJavaScript()
 
 " -------------------------------------------------------------
 " Setup for Python.
@@ -2043,7 +2043,7 @@ function! SetupPython()
     inoremap <buffer> <C-O><CR> <C-\><C-N>A:<CR>
     vnoremap <buffer> <C-O><CR> <C-\><C-N>A:<CR>
 endfunction
-command! SetupPython call SetupPython()
+command! -bar SetupPython call SetupPython()
 
 " -------------------------------------------------------------
 " Setup for Subversion commit files.
@@ -2052,7 +2052,7 @@ function! SetupSvn()
     SetupText
     setlocal tw=72
 endfunction
-command! SetupSvn call SetupSvn()
+command! -bar SetupSvn call SetupSvn()
 
 " -------------------------------------------------------------
 " Setup for VHDL.
@@ -2079,7 +2079,7 @@ function! SetupVhdl()
     xnoremap <buffer> <leader>pm :s/^\(\s*\)\(\w\+\)\(\s*\)\(=>\<bar>:\).*
                 \/\1\2\3=> \2,/<CR>
 endfunction
-command! SetupVhdl call SetupVhdl()
+command! -bar SetupVhdl call SetupVhdl()
 
 " -------------------------------------------------------------
 " Setup for Linux Kernel Sources.
@@ -2115,7 +2115,7 @@ function! SetupKernelSource()
     "   t - autowrap using textwidth,
     setlocal formatoptions=croqlnt
 endfunction
-command! SetupKernelSource call SetupKernelSource()
+command! -bar SetupKernelSource call SetupKernelSource()
 
 " -------------------------------------------------------------
 " Setup for Makefiles.
@@ -2124,7 +2124,7 @@ function! SetupMake()
     " Vim's defaults are mostly good.
     setlocal ts=8 tw=80
 endfunction
-command! SetupMake call SetupMake()
+command! -bar SetupMake call SetupMake()
 
 " -------------------------------------------------------------
 " Setup for help files.
@@ -2136,7 +2136,7 @@ function! SetupHelp()
     " accented characters beyond ASCII a-z and A-Z.
     setlocal iskeyword=@,!-~,^*,^\|,^\",192-255
 endfunction
-command! SetupHelp call SetupHelp()
+command! -bar SetupHelp call SetupHelp()
 
 " Source support for :Man command.
 runtime ftplugin/man.vim
@@ -2203,10 +2203,10 @@ augroup local_vimrc
     " generally fire before BufReadPost events.
 
     " Start at top-of-file for Subversion commit messages.
-    autocmd FileType svn let b:startAtTop = 1 | SetupSvn
+    autocmd FileType svn SetupSvn | let b:startAtTop = 1
 
     " Start at top-of-file for Git-related files.
-    autocmd FileType gitcommit,gitrelated let b:startAtTop = 1 | SetupGit
+    autocmd FileType gitcommit,gitrelated SetupGit | let b:startAtTop = 1
 
     " When editing a file, jump to the last known cursor position.
     autocmd BufReadPost * call AutoRestoreLastCursorPosition()
