@@ -198,7 +198,7 @@ function! SetFont()
         let &guifont=fontstring
     endif
 endfunction
-command! SetFont call SetFont()
+command! -bar SetFont call SetFont()
 
 autocmd GUIEnter * SetFont
 
@@ -243,7 +243,7 @@ function! SetupManPager()
     nnoremap b <PageUp>
     nnoremap q :quit<CR>
 endfunction
-command! SetupManPager call SetupManPager()
+command! -bar SetupManPager call SetupManPager()
 
 " =============================================================
 " Plugin settings
@@ -333,7 +333,7 @@ function! ShowHighlightGroup()
         \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
         \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
 endfunction
-command! ShowHighlightGroup call ShowHighlightGroup()
+command! -bar ShowHighlightGroup call ShowHighlightGroup()
 
 function! ShowAvailableColors()
     " Optional: First enter ":let g:rgb_fg=1" to highlight foreground only.
@@ -370,7 +370,7 @@ function! ShowAvailableColors()
     1
     nohlsearch
 endfunction
-command! ShowAvailableColors call ShowAvailableColors()
+command! -bar ShowAvailableColors call ShowAvailableColors()
 
 " Size for the big screen.
 function! BigScreenTv()
@@ -378,7 +378,7 @@ function! BigScreenTv()
     set lines=36
     let &guifont = substitute(&guifont, ':h\([^:]*\)', ':h25', '')
 endfunction
-command! BigScreenTv call BigScreenTv()
+command! -bar BigScreenTv call BigScreenTv()
 
 " =============================================================
 " Machine Specific Settings
