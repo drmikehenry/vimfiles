@@ -380,6 +380,35 @@ function! BigScreenTv()
 endfunction
 command! BigScreenTv call BigScreenTv()
 
+" -------------------------------------------------------------
+" Toggling diffs for printing.
+" -------------------------------------------------------------
+
+" Colors used when print colors is toggled
+let s:diffAddColors = ["#00ff00", "NONE"]
+let s:diffDeleteColors = ["#ff0000", "NONE"]
+
+function! s:GetFgBgColor(name)
+    let l:hlId = hlID(a:name)
+    let l:fgColor = synIDattr(l:hlId, 'fg#')
+    let l:fgColor = empty(l:fgColor) ? "NONE" : l:fgColor
+    let l:bgColor = synIDattr(l:hlId, 'bg#')
+    let l:bgColor = empty(l:bgColor) ? "NONE" : l:bgColor
+
+    return [l:fgColor, l:bgColor]
+endfunction
+
+function! TogglePrintColors()
+    let l:savedColors = s:GetFgBgColor('DiffAdd')
+    exe ":hi DiffAdd guifg=" . s:diffAddColors[0] . " guibg=" . s:diffAddColors[1]
+    let s:diffAddColors = l:savedColors
+
+    let l:savedColors = s:GetFgBgColor('DiffDelete')
+    exe ":hi DiffDelete guifg=" . s:diffDeleteColors[0] . " guibg=" . s:diffDeleteColors[1]
+    let s:diffDeleteColors = l:savedColors
+endfunction
+command! TogglePrintColors call TogglePrintColors()
+
 " =============================================================
 " Machine Specific Settings
 " =============================================================
