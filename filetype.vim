@@ -19,10 +19,12 @@ augroup filetypedetect
     au BufNewFile,BufRead *.cljs setfiletype clojure
 
     " Setup Git-related filetypes.
-    au BufNewFile,BufRead *.git/MERGE_MSG                       setf gitcommit
-    au BufNewFile,BufRead *.git/modules/**/MERGE_MSG            setf gitcommit
-    au BufNewFile,BufRead *.git/SQUASH_MSG                      setf gitcommit
-    au BufNewFile,BufRead *.git/modules/**/SQUASH_MSG           setf gitcommit
+    au BufNewFile,BufRead *.git/MERGE_MSG setfiletype gitcommit
+    au BufNewFile,BufRead *.git/modules/**/MERGE_MSG setfiletype gitcommit
+    au BufNewFile,BufRead *.git/TAG_EDITMSG setfiletype gitcommit
+    au BufNewFile,BufRead *.git/modules/**/TAG_EDITMSG setfiletype gitcommit
+    au BufNewFile,BufRead *.git/NOTES_EDITMSG setfiletype gitrelated
+    au BufNewFile,BufRead *.git/modules/**/NOTES_EDITMSG setfiletype gitrelated
 
     " Use the copy and overwrite mechanism on crontab files, otherwise crontab
     " may not see the changes we make.

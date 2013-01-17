@@ -1,4 +1,4 @@
-"    Copyright: Copyright (C) 2007-2011 Stephen Bach
+"    Copyright: Copyright (C) 2007-2012 Stephen Bach
 "               Permission is hereby granted to use and distribute this code,
 "               with or without modifications, provided that this copyright
 "               notice is copied with it. Like anything else that's free,
@@ -17,10 +17,10 @@
 "               Brett DiFrischia, Ali Asad Lotia, Kenneth Love, Ben Boeckel,
 "               robquant, lilydjwg, Martin Wache, Johannes Holzfuß
 "               Donald Curtis, Jan Zwiener, Giuseppe Rota, Toby O'Connell,
-"               Göran Gustafsson
+"               Göran Gustafsson, Joel Elkins
 "
-" Release Date: November 25, 2011
-"      Version: 4.2
+" Release Date: February 24, 2012
+"      Version: 4.3
 "
 "        Usage:
 "                 <Leader>lf  - Opens the filesystem explorer.
@@ -282,7 +282,9 @@ endif
 
 " Vim-to-ruby function calls.
 function! s:LustyFilesystemExplorerStart(path)
-  exec "ruby LustyE::profile() { $lusty_filesystem_explorer.run_from_path('".a:path."') }"
+  ruby LustyE::profile() {
+       \  $lusty_filesystem_explorer.run_from_path(VIM::evaluate("a:path"))
+       \}
 endfunction
 
 function! s:LustyBufferExplorerStart()
@@ -409,12 +411,6 @@ module VIM
     s.gsub("'", "''")
   end
 
-  def self.filename_escape(s)
-    # Escape slashes, open square braces, spaces, sharps, double quotes and
-    # percent signs.
-    s.gsub(/\\/, '\\\\\\').gsub(/[\[ #"%]/, '\\\\\0')
-  end
-
   def self.regex_escape(s)
     s.gsub(/[\]\[.~"^$\\*]/,'\\\\\0')
   end
@@ -468,6 +464,27 @@ else
   module VIM
     def self.strwidth(s)
       s.length
+    end
+  end
+end
+
+if VIM::exists?("*fnameescape")
+  module VIM
+    def self.filename_escape(s)
+      # Escape slashes, open square braces, spaces, sharps, double
+      # quotes and percent signs, and remove leading ./ for files in
+      # pwd.
+      single_quote_escaped = single_quote_escape(s)
+      evaluate("fnameescape('#{single_quote_escaped}')").sub(/^\.\//,"")
+    end
+  end
+else
+  module VIM
+    def self.filename_escape(s)
+      # Escape slashes, open square braces, spaces, sharps, double
+      # quotes and percent signs, and remove leading ./ for files in
+      # pwd.
+      s.gsub(/\\/, '\\\\\\').gsub(/[\[ #"%]/, '\\\\\0').sub(/^\.\//,"")
     end
   end
 end
@@ -1234,17 +1251,22 @@ class FilesystemExplorer < Explorer
           view_str << File::SEPARATOR
         end
 
-        Dir.foreach(view_str) do |name|
-          next if name == "."   # Skip pwd
-          next if name == ".." and LustyE::option_set?("AlwaysShowDotFiles")
+        begin
+          Dir.foreach(view_str) do |name|
+            next if name == "."   # Skip pwd
+            next if name == ".." and LustyE::option_set?("AlwaysShowDotFiles")
 
-          # Hide masked files.
-          next if FileMasks.masked?(name)
+            # Hide masked files.
+            next if FileMasks.masked?(name)
 
-          if FileTest.directory?(view_str + name)
-            name << File::SEPARATOR
+            if FileTest.directory?(view_str + name)
+              name << File::SEPARATOR
+            end
+            entries << FilesystemEntry.new(name)
           end
-          entries << FilesystemEntry.new(name)
+        rescue Errno::EACCES
+          # TODO: show "-- PERMISSION DENIED --"
+          return []
         end
         @memoized_dir_contents[view] = entries
       end
@@ -1289,7 +1311,7 @@ class FilesystemExplorer < Explorer
     def open_entry(entry, open_mode)
       path = view_path() + entry.label
 
-      if File.directory?(path)
+      if File.directory?(path.to_s)
         # Recurse into the directory instead of opening it.
         @prompt.set!(path.to_s)
         @selected_index = 0
@@ -1304,8 +1326,8 @@ class FilesystemExplorer < Explorer
 
     def load_file(path_str, open_mode)
       LustyE::assert($curwin == @calling_window)
-      # Escape for Vim and remove leading ./ for files in pwd.
-      filename_escaped = VIM::filename_escape(path_str).sub(/^\.\//,"")
+      filename_escaped = VIM::filename_escape(path_str)
+      # Escape single quotes again since we may have just left ruby for Vim.
       single_quote_escaped = VIM::single_quote_escape(filename_escaped)
       sanitized = VIM::evaluate "fnamemodify('#{single_quote_escaped}', ':.')"
       cmd = case open_mode
@@ -1818,6 +1840,10 @@ class Display
       VIM::command "setlocal nobuflisted"
       VIM::command "setlocal textwidth=0"
       VIM::command "setlocal noreadonly"
+
+      if VIM::exists? '&relativenumber'
+        VIM::command "setlocal norelativenumber"
+      end
 
       # Non-buffer-local (Vim is annoying).
       # (Update SavedSettings if adding to below.)
