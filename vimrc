@@ -2007,6 +2007,15 @@ endfunction
 command! SetupD call SetupD()
 
 " -------------------------------------------------------------
+" Setup for Git-related files (e.g., "COMMIT_EDITMSG").
+" -------------------------------------------------------------
+function! SetupGit()
+    SetupText
+    setlocal tw=72
+endfunction
+command! SetupGit call SetupGit()
+
+" -------------------------------------------------------------
 " Setup for JavaScript.
 " -------------------------------------------------------------
 function! SetupJavaScript()
@@ -2035,6 +2044,15 @@ function! SetupPython()
     vnoremap <buffer> <C-O><CR> <C-\><C-N>A:<CR>
 endfunction
 command! SetupPython call SetupPython()
+
+" -------------------------------------------------------------
+" Setup for Subversion commit files.
+" -------------------------------------------------------------
+function! SetupSvn()
+    SetupText
+    setlocal tw=72
+endfunction
+command! SetupSvn call SetupSvn()
 
 " -------------------------------------------------------------
 " Setup for VHDL.
@@ -2143,35 +2161,13 @@ filetype plugin indent on
 " Extended filetype detection by extensions is found in
 " filetype.vim
 
-" Spell-check autocmd group.
-augroup local_spell
-    " First, remove all autocmds in this group.
-    autocmd!
-    autocmd FileType * call SetSpell()
-augroup END
-
 function! AutoRestoreLastCursorPosition()
-    " If possible, jump to last known cursor position for this file,
-    " but exempt certain filenames that change outside of Vim between edits,
-    " such as Subversion commit message files, since the previous cursor
-    " position will be unrelated to the new file contents.
+    " If b:startAtTop exists, jump to the top of the file; otherwise,
+    " if possible, jump to last known cursor position for this file.
     " Avoid jumping if the position would be invalid for this file.
-    if line("'\"") > 0 && line("'\"") <= line("$")
-        let name = expand("%:t")
-
-        " Exempt Subversion commit message files.
-        if name == "svn-commit"
-            return
-        endif
-
-        " Exempt Git commit message files.
-        if name == "COMMIT_EDITMSG" ||
-                \ name == "NOTES_EDITMSG" ||
-                \ name == "TAG_EDITMSG" ||
-                \ name == "MERGE_MSG"
-            return
-        endif
-
+    if exists("b:startAtTop")
+        normal gg
+    elseif line("'\"") > 0 && line("'\"") <= line("$")
         exe "normal g`\""
     endif
 endfunction
@@ -2203,26 +2199,27 @@ augroup local_vimrc
     " First, remove all autocmds in this group.
     autocmd!
 
-    " BufReadPost auto-commands are done in order, so keep the more
-    " generic patterns first so the later ones may override.
+    " Auto-commands are done in order; however, note that FileType events
+    " generally fire before BufReadPost events.
+
+    " Start at top-of-file for Subversion commit messages.
+    autocmd FileType svn let b:startAtTop = 1 | SetupSvn
+
+    " Start at top-of-file for Git-related files.
+    autocmd FileType gitcommit,gitrelated let b:startAtTop = 1 | SetupGit
 
     " When editing a file, jump to the last known cursor position.
     autocmd BufReadPost * call AutoRestoreLastCursorPosition()
 
-    " Automatically open a diff window for Git commits.
+
+    " Open a diff window for Git commits.
     autocmd FileType gitcommit call AutoOpenGitDiff()
 
-    " Automatically close diff window after a Git commit.
+    " Close diff window after a Git commit.
     autocmd BufUnload * call AutoCloseGitDiff()
 
-    " Set the text width for commit messages in Subversion.  It turns out
-    " that Vim has a file type mapping for Subversion commits: svn.  Set it
-    " to the same width as Git commit messages, 72.
-    autocmd FileType svn setlocal tw=72
-
-    " Use tabs in gitconfig and .gitconfig.
+    " Use tabs for gitconfig files.
     autocmd FileType gitconfig setlocal noexpandtab
-    autocmd FileType .gitconfig setlocal noexpandtab
 
     " By default, when Vim switches buffers in a window, the new buffer's
     " cursor position is scrolled to the center (as if 'zz' had been
@@ -2275,6 +2272,16 @@ augroup local_encrypted
     " after the file has been written.
     autocmd BufWritePost,FileWritePost  *.gpg   silent u
     autocmd BufWritePost,FileWritePost  *.gpg set nobin
+augroup END
+
+" Spell-check autocmd group.
+" This group should come after most FileType-related auto-commands, since
+" these other auto-commands might influence whether spell-checking should
+" be on.
+augroup local_spell
+    " First, remove all autocmds in this group.
+    autocmd!
+    autocmd FileType * call SetSpell()
 augroup END
 
 " =============================================================
