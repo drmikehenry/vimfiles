@@ -2203,7 +2203,7 @@ augroup local_vimrc
     " generally fire before BufReadPost events.
 
     " Start at top-of-file for Subversion commit messages.
-    autocmd FileType svn SetpSvn | let b:startAtTop = 1
+    autocmd FileType svn SetupSvn | let b:startAtTop = 1
 
     " Start at top-of-file for Git-related files.
     autocmd FileType gitcommit,gitrelated SetupGit | let b:startAtTop = 1
