@@ -30,6 +30,9 @@ nnoremap Y y$
 vnoremap < <gv
 vnoremap > >gv
 
+" Visually select the text that was last edited/pasted.
+nnoremap gV `[v`]
+
 " Some reminders of the tag-related shortcuts, since I tend to check my
 " configuration first.
 " C-] - go to definition
