@@ -1865,6 +1865,9 @@ function! SetupRstSyntax()
     " is based on the C highlighting, and it doesn't like to
     " have both C and CPP active at the same time.
     call l:EmbedSourceAs('c', 'cpp')
+
+    " Re-synchronize syntax highlighting from start of file.
+    syntax sync fromstart
 endfunction
 command! -bar SetupRstSyntax call SetupRstSyntax()
 
