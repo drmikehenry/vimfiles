@@ -2198,6 +2198,21 @@ function! AutoCloseGitDiff()
     endif
 endfunction
 
+" Save current view settings.
+function! AutoSaveWinView()
+    let b:winview = winsaveview()
+endfunction
+
+" Restore current view settings.
+function! AutoRestoreWinView()
+    if exists('b:winview')
+        if (!&diff)
+            call winrestview(b:winview)
+        endif
+        unlet b:winview
+    endif
+endfunction
+
 " Put these in an autocmd group, so that we can delete them easily.
 augroup local_vimrc
     " First, remove all autocmds in this group.
@@ -2228,12 +2243,8 @@ augroup local_vimrc
     " By default, when Vim switches buffers in a window, the new buffer's
     " cursor position is scrolled to the center (as if 'zz' had been
     " issued).  This fix restores the buffer's position.
-    if v:version >= 700
-            autocmd BufLeave * let b:winview = winsaveview()
-            autocmd BufEnter * if (!&diff && exists('b:winview')) |
-                        \call winrestview(b:winview) |
-                        \endif
-    endif
+    autocmd BufLeave * call AutoSaveWinView()
+    autocmd BufEnter * call AutoRestoreWinView()
 
 augroup END
 
