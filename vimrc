@@ -136,8 +136,9 @@ set timeoutlen=3000
 " 'ttimeoutlen' milliseconds, you'll get <Home> instead of opening a new
 " line above and inserting "H".
 " Note: 120 words per minute ==> 10 character per second ==> 100 ms between,
-" and 150 ms ==> 80 words per minute.
-set ttimeoutlen=150
+" and 50 ms ==> 240 words per minute.
+" Also, Tim Pope's vim-sensible plugin uses 50 ms as a reasonable value.
+set ttimeoutlen=50
 
 " Configure special terminal keys.
 runtime termsupport.vim
