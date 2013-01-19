@@ -736,7 +736,7 @@ set sessionoptions=blank,buffers,curdir,folds,help,resize,slash
 
 
 " Setup undofile capability if available.
-if v:version >= 703
+if exists("&undodir")
     set undofile
     set undodir=$VIMFILES/.undo
 endif
