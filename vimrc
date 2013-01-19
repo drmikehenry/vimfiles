@@ -491,11 +491,11 @@ onoremap Q gq
 
 " Rewrap a paragraph of text via Meta-Q or <Leader>q (emulates Emacs's Meta-Q
 " and TextMate's Ctrl-Q).
-nnoremap <M-q>      gqip
-nnoremap <Leader>q  gqip
-xnoremap <M-q>      gq
-xnoremap <Leader>q  gq
-inoremap <M-q>      <ESC>gqipA
+nnoremap <expr> <M-q>      &tw > 0 ?       "gqip$" :       "vip:join\<CR>$"
+nnoremap <expr> <Leader>q  &tw > 0 ?       "gqip$" :       "vip:join\<CR>$"
+xnoremap <expr> <M-q>      &tw > 0 ?       "gq$"   :          ":join<CR>$"
+xnoremap <expr> <Leader>q  &tw > 0 ?       "gq$"   :          ":join<CR>$"
+inoremap <expr> <M-q>      &tw > 0 ? "\<Esc>gqipA" : "\<Esc>vip:join\<CR>A"
 
 function! ClosestPos(positions)
     let closestLine = 0
