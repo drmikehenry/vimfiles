@@ -1143,7 +1143,7 @@ Installation (via pathogen):
 PATHOGEN                                                *notes_pathogen*
   Runtime path management for bundles                   |notes_pathogen|
 
-Version 2012-04-29 from https://github.com/tpope/vim-pathogen
+Version 2013-01-19 from https://github.com/tpope/vim-pathogen
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
