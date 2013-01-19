@@ -1885,14 +1885,19 @@ that selecting a visual range first followed by typing
 <Leader><Leader>$ is mapped to :StripTrailingWhitespace for convenience.
 
 ------------------------------------------------------------------------------
-Re-formatting paragraphs
+Re-formatting text
 
 The useless key "Q" is mapped to the "gq" reformatting operator.  Pressing
 "QQ" on a line reformats that line.  Pressing "Q" in visual mode reformats the
 selection.
 
-<M-q> is mapped to "gqip", which formats an "inner paragraph" similar to the
-Emacs feature bound to the same key.
+<M-q> is mapped in normal, visual, and insert modes to reformat the current
+"inner paragraph" (as defined by Vim's paragraph operator, |ip|).  When the
+'textwidth' option is non-zero (which is typical), the paragraph will be
+re-wrapped to that width; otherwise, the paragraph will be joined into a
+single long line.
+
+For normal and visual modes, <Leader>q does the same as <M-q>.
 
 ------------------------------------------------------------------------------
 Moving "out" hierarchically

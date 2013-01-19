@@ -491,11 +491,11 @@ onoremap Q gq
 
 " Rewrap a paragraph of text via Meta-Q or <Leader>q (emulates Emacs's Meta-Q
 " and TextMate's Ctrl-Q).
-nnoremap <M-q>      gqip
-nnoremap <Leader>q  gqip
-xnoremap <M-q>      gq
-xnoremap <Leader>q  gq
-inoremap <M-q>      <ESC>gqipA
+nnoremap <expr> <M-q>      &tw > 0 ?       "gqip$" :       "vip:join\<CR>$"
+nnoremap <expr> <Leader>q  &tw > 0 ?       "gqip$" :       "vip:join\<CR>$"
+xnoremap <expr> <M-q>      &tw > 0 ?       "gq$"   :          ":join<CR>$"
+xnoremap <expr> <Leader>q  &tw > 0 ?       "gq$"   :          ":join<CR>$"
+inoremap <expr> <M-q>      &tw > 0 ? "\<Esc>gqipA" : "\<Esc>vip:join\<CR>A"
 
 function! ClosestPos(positions)
     let closestLine = 0
@@ -736,7 +736,7 @@ set sessionoptions=blank,buffers,curdir,folds,help,resize,slash
 
 
 " Setup undofile capability if available.
-if v:version >= 703
+if exists("&undodir")
     set undofile
     set undodir=$VIMFILES/.undo
 endif
@@ -2198,6 +2198,21 @@ function! AutoCloseGitDiff()
     endif
 endfunction
 
+" Save current view settings.
+function! AutoSaveWinView()
+    let b:winview = winsaveview()
+endfunction
+
+" Restore current view settings.
+function! AutoRestoreWinView()
+    if exists('b:winview')
+        if (!&diff)
+            call winrestview(b:winview)
+        endif
+        unlet b:winview
+    endif
+endfunction
+
 " Put these in an autocmd group, so that we can delete them easily.
 augroup local_vimrc
     " First, remove all autocmds in this group.
@@ -2228,12 +2243,8 @@ augroup local_vimrc
     " By default, when Vim switches buffers in a window, the new buffer's
     " cursor position is scrolled to the center (as if 'zz' had been
     " issued).  This fix restores the buffer's position.
-    if v:version >= 700
-            autocmd BufLeave * let b:winview = winsaveview()
-            autocmd BufEnter * if (!&diff && exists('b:winview')) |
-                        \call winrestview(b:winview) |
-                        \endif
-    endif
+    autocmd BufLeave * call AutoSaveWinView()
+    autocmd BufEnter * call AutoRestoreWinView()
 
 augroup END
 
