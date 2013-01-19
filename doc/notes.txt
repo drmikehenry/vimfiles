@@ -305,7 +305,7 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Version 7.3.2 from http://www.vim.org/scripts/script.php?script_id=42
+Version 7.3.3 from http://www.vim.org/scripts/script.php?script_id=42
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1143,7 +1143,7 @@ Installation (via pathogen):
 PATHOGEN                                                *notes_pathogen*
   Runtime path management for bundles                   |notes_pathogen|
 
-Version 2012-04-29 from https://github.com/tpope/vim-pathogen
+Version 2013-01-19 from https://github.com/tpope/vim-pathogen
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
