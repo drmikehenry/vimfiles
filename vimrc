@@ -2142,6 +2142,84 @@ function! SetupHelp()
 endfunction
 command! -bar SetupHelp call SetupHelp()
 
+" -------------------------------------------------------------
+" Setup for C projects following the GNU Coding Standards
+" -------------------------------------------------------------
+function! SetupGnuSource()
+    " Don't expand tabs to spaces.
+    setlocal noexpandtab
+
+    " Turn off our own indent rules.  Reset it to Vim's default.
+    setlocal indentexpr&
+
+    " Taken from: http://gcc.gnu.org/wiki/FormattingCodeForGCC
+    setlocal cindent
+
+    " Don't outdent function return types.
+    setlocal cinoptions=t0
+
+    " No extra indentation for "public", "protected", "private" labels.
+    setlocal cinoptions+=g0
+
+    " Amount added after normal indent.
+    setlocal cinoptions+=>2s
+
+    " If statements without braces aren't indented as far.
+    setlocal cinoptions+=n-1s
+
+    " Opening branch are indented from if statement.
+    setlocal cinoptions+={1s
+
+    " Bring back the indentation inside a function.
+    setlocal cinoptions+=^-1s
+
+    " Indent case labels slightly.
+    setlocal cinoptions+=:1s
+
+    " Indent case statements from the case label.
+    setlocal cinoptions+==1s
+
+    " Place scope decorations in the same column as braces.
+    setlocal cinoptions+=g0
+
+    " Indent statements after scope declaration.
+    setlocal cinoptions+=h1s
+
+    " K&R-style parameter declarations get 5 spaces.
+    setlocal cinoptions+=p5
+
+    " Indent continuation lines.
+    setlocal cinoptions+=+1s
+
+    " Line up the first characters when you are continuing inside a statement
+    " with parens.
+    setlocal cinoptions+=(0
+
+    " Second level of parens works the same way as above.
+    setlocal cinoptions+=u0
+
+    " If there's leading whitespace between the paren and first non-white
+    " character, the ignore them when deciding where to continue.
+    setlocal cinoptions+=w1
+
+    " Line a closing paren that starts at the beginning of a line with the start
+    " of the line that contains the matching opening paren.
+    setlocal cinoptions+=m1
+
+    setlocal sw=2 sts=2 tw=79
+
+    " Setup formatoptions:
+    "   c - auto-wrap comments to textwidth.
+    "   r - automatically insert comment leader when pressing <Enter>.
+    "   o - automatically insert comment leader after 'o' or 'O'.
+    "   q - allow formatting of comments with 'gq'.
+    "   l - long lines are not broken in insert mode.
+    "   n - recognize numbered lists.
+    "   t - autowrap using textwidth,
+    setlocal formatoptions=croqlnt
+endfunction
+command! -bar SetupGnuSource call SetupGnuSource()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
