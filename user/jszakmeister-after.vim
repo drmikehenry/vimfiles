@@ -30,6 +30,9 @@ nnoremap Y y$
 vnoremap < <gv
 vnoremap > >gv
 
+" Visually select the text that was last edited/pasted.
+nnoremap gV `[v`]
+
 " Some reminders of the tag-related shortcuts, since I tend to check my
 " configuration first.
 " C-] - go to definition
@@ -379,6 +382,68 @@ function! BigScreenTv()
     let &guifont = substitute(&guifont, ':h\([^:]*\)', ':h25', '')
 endfunction
 command! -bar BigScreenTv call BigScreenTv()
+
+" -------------------------------------------------------------
+" Toggling diffs for printing.
+" -------------------------------------------------------------
+
+" Colors used when print colors is toggled
+let s:diffAddColors = ["#00ff00", "NONE"]
+let s:diffDeleteColors = ["#ff0000", "NONE"]
+
+function! s:GetFgBgColor(name)
+    let l:hlId = hlID(a:name)
+    let l:fgColor = synIDattr(l:hlId, 'fg#')
+    let l:fgColor = empty(l:fgColor) ? "NONE" : l:fgColor
+    let l:bgColor = synIDattr(l:hlId, 'bg#')
+    let l:bgColor = empty(l:bgColor) ? "NONE" : l:bgColor
+
+    return [l:fgColor, l:bgColor]
+endfunction
+
+function! TogglePrintColors()
+    let l:savedColors = s:GetFgBgColor('DiffAdd')
+    exe ":hi DiffAdd guifg=" . s:diffAddColors[0] . " guibg=" . s:diffAddColors[1]
+    let s:diffAddColors = l:savedColors
+
+    let l:savedColors = s:GetFgBgColor('DiffDelete')
+    exe ":hi DiffDelete guifg=" . s:diffDeleteColors[0] . " guibg=" . s:diffDeleteColors[1]
+    let s:diffDeleteColors = l:savedColors
+endfunction
+command! TogglePrintColors call TogglePrintColors()
+
+" This was taken from the Vim wiki:
+"   http://vim.wikia.com/wiki/Pretty-formatting_XML
+"
+" It requires xmllint, but that's fine by me.
+function! DoPrettyXML()
+    " save the filetype so we can restore it later
+    let l:origft = &ft
+    set ft=
+    " delete the xml header if it exists. This will
+    " permit us to surround the document with fake tags
+    " without creating invalid xml.
+    1s/<?xml .*?>//e
+    " insert fake tags around the entire document.
+    " This will permit us to pretty-format excerpts of
+    " XML that may contain multiple top-level elements.
+    0put ='<PrettyXML>'
+    $put ='</PrettyXML>'
+    silent %!xmllint --format -
+    " xmllint will insert an <?xml?> header. it's easy enough to delete
+    " if you don't want it.
+    " delete the fake tags
+    2d
+    $d
+    " restore the 'normal' indentation, which is one extra level
+    " too deep due to the extra tags we wrapped around the document.
+    silent %<
+    " back to home
+    1
+    " restore the filetype
+    exe "set ft=" . l:origft
+endfunction
+command! -bar PrettyXML call DoPrettyXML()
 
 " =============================================================
 " Machine Specific Settings
