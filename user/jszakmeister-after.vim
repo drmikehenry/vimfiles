@@ -107,20 +107,10 @@ endif
 " Make splits appear on the right.
 set splitright
 
-" Turn on cursor shapes under iTerm, and use 256 colors under gnome-terminal.
 " For some reason, gnome-terminal says xterm-color even though it supports
 " xterm-256color.
-if !has("gui_running")
-    if has("macunix") && $TERM_PROGRAM == "iTerm.app"
-        " This works only in iTerm... but that's what I use on the Mac.
-        " Set the cursor to a vertical line in insert mode.
-        let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-        let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-    elseif $COLORTERM == "gnome-terminal"
-        if &t_Co <= 16
-            set t_Co=256
-        endif
-    endif
+if !has("gui_running") && $COLORTERM == "gnome-terminal" && &t_Co <= 16
+    set t_Co=256
 endif
 
 " -------------------------------------------------------------
