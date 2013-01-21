@@ -1,3 +1,7 @@
+" Set the color scheme early on, so at least I have that when other things go
+" wrong.
+colorscheme szakdark
+
 " =============================================================
 " Variables
 " =============================================================
@@ -124,8 +128,6 @@ if has("gui_running")
     set guioptions-=L
     set guioptions-=l
 endif
-
-colorscheme szakdark
 
 if has("gui_macvim")
     set macmeta
