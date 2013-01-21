@@ -435,6 +435,53 @@ function! DoPrettyXML()
 endfunction
 command! -bar PrettyXML call DoPrettyXML()
 
+" -------------------------------------------------------------
+" GrabGithubIssueSnippet
+" -------------------------------------------------------------
+
+python << endpython
+def getIssueData(apiUrl, repo, issueNumber):
+    import requests
+    import json
+    import types
+
+    if apiUrl.endswith('/'):
+        apiUrl = apiUrl.rstrip('/')
+
+    r = requests.get('%s/repos/%s/issues/%s' % (apiUrl, repo, issueNumber))
+    return json.loads(r.text)
+endpython
+
+function! GrabGithubIssueSnippet(repo, issueNumber)
+    if exists('b:gh_api_url')
+        let l:gh_api_url = b:gh_api_url
+    else
+        let l:gh_api_url = 'https://api.github.com/'
+    endif
+
+python << endpython
+data = getIssueData(vim.eval("l:gh_api_url"),
+                    vim.eval("a:repo"),
+                    vim.eval("a:issueNumber"))
+issueUrl = data['html_url']
+title = data['title']
+
+vim.command("let l:issueUrl = '%s'" % issueUrl)
+vim.command("let l:title = '%s'" % title)
+endpython
+
+    return "#" . a:issueNumber . ": " . l:title . "\n" . "<" . l:issueUrl . ">"
+endfunction
+
+function! GrabIssueSnippetFromCurrentRepo(issueNumber)
+    if !exists("b:gh_repo")
+        echoerr "You must define 'b:gh_repo' first!"
+    endif
+    return GrabGithubIssueSnippet(b:gh_repo, a:issueNumber)
+endfunction
+command! -nargs=1 GrabGithubIssueSnippet
+            \ :execute "normal! a" . GrabIssueSnippetFromCurrentRepo(<args>)
+
 " =============================================================
 " Machine Specific Settings
 " =============================================================
