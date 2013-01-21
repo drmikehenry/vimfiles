@@ -51,6 +51,7 @@
     TextObj-Function - Function-based text objects      |notes_textobj-func|
     TextObj-Indent - Indentation-based text objects     |notes_textobj-indent|
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
+    ToggleCursor - Changes cursor shape in terminal     |notes_togglecursor|
     UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
     vcscommand - Version Control System integration     |notes_vcscommand|
     VimBall - Vim "package manager"                     |notes_vimball|
@@ -1476,6 +1477,22 @@ Library to support construction of user-defined text objects; by itself,
 library is not terribly useful.  Enables things like |textobj-indent|.
 
 Version 0.3.12 (1b738334) from git://github.com/kana/vim-textobj-user.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+TOGGLECURSOR                                            *notes_togglecursor*
+  Changes terminal cursor shape in insert mode          |togglecursor|
+
+On supported terminals, it will change the cursor when you enter insert mode.
+Currently, the supported terminals are iTerm2 (for the Mac), and Konsole.
+Xterm is partially supported as well (it will use an underline versus a line
+cursor by default).  This technique also works with tmux, although you may
+need version 1.7 or better.
+
+Version 0.1.0 (34373bd2) from
+git://github.com/jszakmeister/vim-togglecursor.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
