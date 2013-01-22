@@ -594,6 +594,7 @@ notes_textobj-func	notes.txt	/*notes_textobj-func*
 notes_textobj-indent	notes.txt	/*notes_textobj-indent*
 notes_textobj-user	notes.txt	/*notes_textobj-user*
 notes_tips	notes.txt	/*notes_tips*
+notes_togglecursor	notes.txt	/*notes_togglecursor*
 notes_ultisnips	notes.txt	/*notes_ultisnips*
 notes_vcscommand	notes.txt	/*notes_vcscommand*
 notes_vimball	notes.txt	/*notes_vimball*
