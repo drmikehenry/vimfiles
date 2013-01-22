@@ -1,18 +1,29 @@
 " Tag Signature Balloon
 "   Author: A. S. Budden
-"## Date::   4th September 2009      ##
-"## RevTag:: r319                    ##
+"## Date::   15th August 2012        ##
 
-if &cp || exists("g:loaded_tag_signature") || ! has('balloon_eval')
+if v:version < 700
 	finish
 endif
+
+try
+	if &cp || ! has('balloon_eval') || (exists('g:loaded_tag_signature') && (g:plugin_development_mode != 1))
+		throw "Already loaded"
+	endif
+catch
+	finish
+endtry
 let g:loaded_tag_signature = 1
 
 if !exists('g:TagSignatureAllowFileLoading')
 	let g:TagSignatureAllowFileLoading = 1
 endif
 
-function! FindTypeTag(cmd, filename)
+if !exists('g:TagSignatureMaxMatches')
+	let g:TagSignatureMaxMatches = 1
+endif
+
+function! FindTypeTag(cmd, filename, maxlines)
 	let s = ""
 	let SearchString = substitute(a:cmd, '/\(.*\)/', '\1', '')
 	let FileContents = readfile(a:filename)
@@ -30,12 +41,20 @@ function! FindTypeTag(cmd, filename)
 					if FileContents[StartIndex] =~ 'typedef'
 						" We've found the start and end
 						let s = FileContents[StartIndex]
-						if (index - StartIndex) > 20
-							for i in range(StartIndex+1, StartIndex+5)
+						if a:maxlines <= 6
+							let s = s . "\n\t\t" . "... [skipped] ... " . "\n" . FileContents[index]
+						elseif (index - StartIndex) > a:maxlines
+							if a:maxlines < 12
+								let BlockSize = (a:maxlines / 2) - 1
+							else
+								let BlockSize = 5
+							endif
+
+							for i in range(StartIndex+1, StartIndex+BlockSize)
 								let s = s . "\n" . FileContents[i]
 							endfor
 							let s = s . "\n\n\t\t... [skipped] ...\n\n"
-							for i in range(index-6, index)
+							for i in range(index-BlockSize, index)
 								let s = s . "\n" . FileContents[i]
 							endfor
 						else
@@ -76,60 +95,82 @@ function! GetTagSignature()
 	endif
 
 	let TagList = taglist('^' . v:beval_text . '$')
-	let s = ""
+	let result = ""
+
+	let MaxLines = 20 / g:TagSignatureMaxMatches
 
 	if len(TagList) > 0
-		if TagList[0]['cmd'] =~ '^\d\+$'
-			" Handle links to specific lines in a source file
-			let LineNum = str2nr(TagList[0]['cmd'])
-			let FileName = TagList[0]['filename']
-			if bufexists(FileName) && (len(getbufline(FileName, LineNum)) > 0)
-				" An open source file
-				let s = getbufline(FileName, LineNum)[0]
-			elseif (g:TagSignatureAllowFileLoading == 1) && filereadable(FileName)
-				" A non-open source file
-				let s = readfile(FileName, '', LineNum)[LineNum-1]
-			endif
-		elseif index(keys(s:CStyleFunctionKindLookup), &ft) != -1
-					\ && index(s:CStyleFunctionKindLookup[&ft], TagList[0]['kind']) != -1
-					\ && has_key(TagList[0], 'signature')
-			" Handle functions (combine the signature and name)
-			let s = substitute(TagList[0]['cmd'], '^/\^\(.*\)\$/$', '\1', '')
-			let ReturnType = substitute(s, '^\(.\{-}\)\s\+' . TagList[0]['name'] . '.*', '\1', '')
-			if ReturnType != s
-				let s = ReturnType . " " . TagList[0]['name'] . TagList[0]['signature']
-				if len(s) > 60
-					let s = substitute(s, ',\s\+', ',\n\t\t', 'g')
+		let IndexCount = len(TagList)
+		if IndexCount > g:TagSignatureMaxMatches
+			let IndexCount = g:TagSignatureMaxMatches
+		endif
+
+		let result = ""
+
+		let Index = 0
+		while Index < IndexCount
+			let s = ""
+
+			if TagList[Index]['cmd'] =~ '^\d\+$'
+				" Handle links to specific lines in a source file
+				let LineNum = str2nr(TagList[Index]['cmd'])
+				let FileName = TagList[Index]['filename']
+				if bufexists(FileName) && (len(getbufline(FileName, LineNum)) > 0)
+					" An open source file
+					let s = getbufline(FileName, LineNum)[0]
+				elseif (g:TagSignatureAllowFileLoading == 1) && filereadable(FileName)
+					" A non-open source file
+					let s = readfile(FileName, '', LineNum)[LineNum-1]
+				endif
+			elseif index(keys(s:CStyleFunctionKindLookup), &ft) != -1
+						\ && index(s:CStyleFunctionKindLookup[&ft], TagList[Index]['kind']) != -1
+						\ && has_key(TagList[Index], 'signature')
+				" Handle functions (combine the signature and name)
+				let s = substitute(TagList[Index]['cmd'], '^/\^\(.*\)\$/$', '\1', '')
+				let ReturnType = substitute(s, '^\(.\{-}\)\s\+' . TagList[Index]['name'] . '.*', '\1', '')
+				if ReturnType != s
+					let s = ReturnType . " " . TagList[Index]['name'] . TagList[Index]['signature']
+					if len(s) > 60
+						let s = substitute(s, ',\s\+', ',\n\t\t', 'g')
+					endif
+				endif
+			elseif TagList[Index]['kind'] == 't'
+				if index(keys(s:CStyleTypeKindLookup), &ft) != -1
+					" Typedefs - experimental
+					let s = FindTypeTag(TagList[Index]['cmd'], TagList[Index]['filename'], MaxLines)
+				endif
+			elseif TagList[Index]['kind'] == 'e'
+				let s = ""
+				if has_key(TagList[Index], 'enum')
+					let EnumName = 'typeref:enum:' . TagList[Index]['kind']['enum']
+					" Ideally, we now find the typeref, but there's no built
+					" in way to parse the tags file and it could be rather
+					" slow reading it line-by-line.  Perhaps a separately built
+					" database would be useful?
+					"
+					" If it works, find 'cmd' and 'filename' and pass to
+					" let s = FindTypeTag(cmd, filename)
 				endif
 			endif
-		elseif TagList[0]['kind'] == 't'
-			if index(keys(s:CStyleTypeKindLookup), &ft) != -1
-				" Typedefs - experimental
-				let s = FindTypeTag(TagList[0]['cmd'], TagList[0]['filename'])
-			endif
-		elseif TagList[0]['kind'] == 'e'
-			let s = ""
-			if has_key(TagList[0], 'enum')
-				let EnumName = 'typeref:enum:' . TagList[0]['kind']['enum']
-				" Ideally, we now find the typeref, but there's no built
-				" in way to parse the tags file and it could be rather
-				" slow reading it line-by-line.  Perhaps a separately built
-				" database would be useful?
-				"
-				" If it works, find 'cmd' and 'filename' and pass to
-				" let s = FindTypeTag(cmd, filename)
-			endif
-		endif
 
-		if s == ""
-			" Handle everything else
-			let s = substitute(TagList[0]['cmd'], '^/\^\(.*\)\$/$', '\1', '')
-		endif
+			if s == ""
+				" Handle everything else
+				let s = substitute(TagList[Index]['cmd'], '^/\^\(.*\)\$/$', '\1', '')
+			endif
 
-		" Strip leading and trailing spaces
-		let s = substitute(s, '^\s*\(.\{-}\)\s*$/', '\1', '')
+			" Strip leading and trailing spaces
+			let s = substitute(s, '^\s*\(.\{-}\)\s*$/', '\1', '')
+
+			let Index += 1
+
+			if Index < IndexCount
+				let s .= "\n======================\n"
+			endif
+
+			let result .= s
+		endwhile
 	endif
-	return s
+	return result
 endfunction
 
 set bexpr=GetTagSignature()
