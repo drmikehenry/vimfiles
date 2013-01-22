@@ -1376,7 +1376,7 @@ TAGSIGNATURE                                            *notes_tagsignature*
 Displays the signature of a tag when you hover the mouse over that tag.
 Requires a tags file.
 
-Version r319 from http://www.vim.org/scripts/script.php?script_id=2714
+Version r714 from http://www.vim.org/scripts/script.php?script_id=2714
 
 Installation:
 - Copy to ~/.vim/plugin/tag_signature.vim
