@@ -1085,7 +1085,7 @@ Installation:
 NETRW                                                   *notes_netrw*
   File reading and writing across networks              |netrw|
 
-Version 128 from http://www.vim.org/scripts/script.php?script_id=1075
+Version 147d from http://www.vim.org/scripts/script.php?script_id=1075
 (Also check Dr. Chip's site: http://mysite.verizon.net/astronaut/vim/#NETRW)
 
 Use <Leader>fe to invoke :Explore.  This will explore in the directory
@@ -1097,8 +1097,10 @@ Installation:
 - Distributed as a |vimball|  >
 
     vim netrw.vba.gz
-    :so %
+    :UseVimball ~/.vim/bundle/netrw
     :q
+- Did not add .VimballRecord, since it's easy to remove bundles.
+- Run :Helptags
 
 ------------------------------------------------------------------------------
 OMNICPPCOMPLETE                                         *notes_omnicppcomplete*
