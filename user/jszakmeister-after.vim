@@ -408,6 +408,10 @@ function! TogglePrintColors()
 endfunction
 command! TogglePrintColors call TogglePrintColors()
 
+" -------------------------------------------------------------
+" PrettyXML
+" -------------------------------------------------------------
+
 " This was taken from the Vim wiki:
 "   http://vim.wikia.com/wiki/Pretty-formatting_XML
 "
