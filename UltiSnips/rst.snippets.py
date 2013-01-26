@@ -46,7 +46,7 @@ $0
 bsnip("code", "code block", r"""
 .. code-block:: ${1:python}
 
-   $0
+    $0
 """)
 
 # Admonitions.
@@ -54,13 +54,13 @@ bsnip("code", "code block", r"""
 bsnip("warn", "Warning Admonition", r"""
 .. warning::
 
-   $0
+    $0
 """)
 
 bsnip("note", "Note Admonition", r"""
 .. note::
 
-   $0
+    $0
 """)
 
 # Markup.
