@@ -195,8 +195,6 @@ function! SetFont()
 endfunction
 command! -bar SetFont call SetFont()
 
-autocmd GUIEnter * SetFont
-
 " =============================================================
 " Fullscreen
 " =============================================================
@@ -243,6 +241,12 @@ command! -bar SetupManPager call SetupManPager()
 " =============================================================
 " Plugin settings
 " =============================================================
+
+" -------------------------------------------------------------
+" CtrlP
+" -------------------------------------------------------------
+
+nnoremap <SNR>CtrlP.....<C-s>     :<C-U>CtrlPRTS<CR>
 
 " -------------------------------------------------------------
 " Gitv
@@ -499,3 +503,8 @@ let s:VIMMACHINE_CONFIG = $VIMUSERFILES . "/" . $VIMUSER .
 if filereadable(s:VIMMACHINE_CONFIG)
     execute "source " . s:VIMMACHINE_CONFIG
 endif
+
+" This needs to happen here so that the Powerline variables are set correctly
+" before the plugin loads.  It needs to come after the machine scripts, so that
+" they have an opportunity to adjust the desired font size.
+SetFont
