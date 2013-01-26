@@ -327,6 +327,14 @@ augroup END
 " Commands
 " =============================================================
 
+function! SourceRange() range
+    let l:regSave = @"
+    execute a:firstline . "," . a:lastline . 'y"'
+    @"
+    let @" = l:regSave
+endfunction
+command! -range=% Source <line1>,<line2>call SourceRange()
+
 function! ShowHighlightGroup()
     echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
         \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
