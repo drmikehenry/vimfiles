@@ -2259,7 +2259,15 @@ function! AutoOpenGitDiff()
     " The fugitive plugin uses a previewwindow for the :Gstatus command,
     " but it sets the filetype of that windows to 'gitcommit', so don't
     " open a diff window if the gitcommit is in a previewindow.
-    if ! &previewwindow
+    " Also, when using ``:Gedit :``,  the .git/index file is opened
+    " in a regular window using filetype 'gitcommit', so avoid opening
+    " a diff window in that case as well, as suggested by Tim Pope here:
+    " https://github.com/tpope/vim-fugitive/issues/294#issuecomment-12474356
+    " Note that checking for 'index' is not sufficient in itself, because
+    " using :Gstatus followed by attempting a commit via ``cc`` does not
+    " work properly in that event (the COMMIT_MSG window will not have
+    " the correct contents).
+    if ! &previewwindow && expand('%:t') !~# 'index'
         DiffGitCached
         wincmd p
         wincmd K
