@@ -1543,6 +1543,34 @@ nnoremap <silent> <C-Q><C-T> :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
 nnoremap <silent> <C-Q>t     :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
 
 " -------------------------------------------------------------
+" textobj-diff
+" -------------------------------------------------------------
+
+" Don't use the many default global mappings.
+let g:textobj_diff_no_default_key_mappings = 1
+
+" Create buffer-local mappings for desired functionality.
+function! CreateTextobjDiffLocalMappings()
+    " Make file- and hunk-selection mappings for diffs.
+    for m in ['x', 'o']
+        let cmd = 'silent! ' . m . 'map <buffer> '
+        execute cmd . 'adf <Plug>(textobj-diff-file)'
+        execute cmd . 'idf <Plug>(textobj-diff-file)'
+        execute cmd . 'adh <Plug>(textobj-diff-hunk)'
+        execute cmd . 'idh <Plug>(textobj-diff-hunk)'
+    endfor
+    " Map ]] and friends to textobj-diff for jumping between hunks.
+    for m in ['n', 'x', 'o']
+        let cmd = 'silent! ' . m . 'map <buffer> '
+        execute cmd . '[] <Plug>(textobj-diff-hunk-P)'
+        execute cmd . ']] <Plug>(textobj-diff-hunk-n)'
+        execute cmd . '[[ <Plug>(textobj-diff-hunk-p)'
+        execute cmd . '][ <Plug>(textobj-diff-hunk-N)'
+    endfor
+endfunction
+
+
+" -------------------------------------------------------------
 " UltiSnips
 " -------------------------------------------------------------
 
@@ -2221,14 +2249,7 @@ endfunction
 command! -bar SetupGnuSource call SetupGnuSource()
 
 function! SetupDiff()
-    " Map ]] and friends to textobj-diff for jumping between hunks.
-    for m in ['n', 'x', 'o']
-        let cmd = 'silent! ' . m . 'map <buffer> '
-        execute l:cmd . '[] <Plug>(textobj-diff-hunk-P)'
-        execute l:cmd . ']] <Plug>(textobj-diff-hunk-n)'
-        execute l:cmd . '[[ <Plug>(textobj-diff-hunk-p)'
-        execute l:cmd . '][ <Plug>(textobj-diff-hunk-N)'
-    endfor
+    call CreateTextobjDiffLocalMappings()
 endfunction
 command! -bar SetupDiff call SetupDiff()
 

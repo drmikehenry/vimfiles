@@ -1456,21 +1456,12 @@ TEXTOBJ-DIFF                                            *notes_textobj-diff*
 Support for text objects based on diffs.  You can select hunks, or all hunks
 belonging to a file.
 
-Use "df" or "dH" for files containing hunks, and "dh" for individual hunks.
+Use "df" for files containing hunks, and "dh" for individual hunks.
 Currently, there is no difference between the contents of a hunk, and the
 entire hunk.  So 'vadh' and 'vidh' both select the entire hunk.
 
 Supports navigating between files and hunks with some movement mappings.  File
 mappings move based on diff or index lines.  Hunks look for '@@'.
-
-  <Leader>dfj   - Beginning of the next file.
-  <Leader>dfJ   - End of the next file.
-  <Leader>dfk   - Beginning of the previous file.
-  <Leader>dfK   - End of the previous file.
-  <Leader>dj    - Beginning of the next hunk.
-  <Leader>dJ    - End of the next hunk.
-  <Leader>dk    - Beginning of the previous file.
-  <Leader>dK    - End of the previous file.
 
 Version 0.0.2 (822ae0a1) from git://github.com/kana/vim-textobj-diff.git
 
@@ -1478,6 +1469,8 @@ Local customizations:
 
 - ]], ][, [[, and [] are mapped in diff files to help navigate between hunks
   of the diff.
+
+- The default global mappings have been disabled to conserve mappable keys.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
