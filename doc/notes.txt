@@ -48,6 +48,7 @@
     SwapIt - Cycle through related words                |notes_swapit|
     Tagbar - Source code browser                        |notes_tagbar|
     TagSignature - Balloon signatures for tags          |notes_tagsignature|
+    TextObj-Diff - Diff-based text objects              |notes_textobj-diff|
     TextObj-Function - Function-based text objects      |notes_textobj-func|
     TextObj-Indent - Indentation-based text objects     |notes_textobj-indent|
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
@@ -1447,6 +1448,39 @@ Version 2013-01-06 (b18839a7) from git://github.com/tomtom/tcomment_vim.git
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 - Removed the spec/ directory before 'git add'ing the bundle.
+
+------------------------------------------------------------------------------
+TEXTOBJ-DIFF                                            *notes_textobj-diff*
+  Diff-based text objects                               |textobj-diff.txt|
+
+Support for text objects based on diffs.  You can select hunks, or all hunks
+belonging to a file.
+
+Use "df" or "dH" for files containing hunks, and "dh" for individual hunks.
+Currently, there is no difference between the contents of a hunk, and the
+entire hunk.  So 'vadh' and 'vidh' both select the entire hunk.
+
+Supports navigating between files and hunks with some movement mappings.  File
+mappings move based on diff or index lines.  Hunks look for '@@'.
+
+  <Leader>dfj   - Beginning of the next file.
+  <Leader>dfJ   - End of the next file.
+  <Leader>dfk   - Beginning of the previous file.
+  <Leader>dfK   - End of the previous file.
+  <Leader>dj    - Beginning of the next hunk.
+  <Leader>dJ    - End of the next hunk.
+  <Leader>dk    - Beginning of the previous file.
+  <Leader>dK    - End of the previous file.
+
+Version 0.0.2 (822ae0a1) from git://github.com/kana/vim-textobj-diff.git
+
+Local customizations:
+
+- ]], ][, [[, and [] are mapped in diff files to help navigate between hunks
+  of the diff.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 TEXTOBJ-FUNCTION                                        *notes_textobj-func*
