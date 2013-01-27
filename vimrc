@@ -2220,6 +2220,18 @@ function! SetupGnuSource()
 endfunction
 command! -bar SetupGnuSource call SetupGnuSource()
 
+function! SetupDiff()
+    " Map ]] and friends to textobj-diff for jumping between hunks.
+    for m in ['n', 'x', 'o']
+        let cmd = 'silent! ' . m . 'map <buffer> '
+        execute l:cmd . '[] <Plug>(textobj-diff-hunk-P)'
+        execute l:cmd . ']] <Plug>(textobj-diff-hunk-n)'
+        execute l:cmd . '[[ <Plug>(textobj-diff-hunk-p)'
+        execute l:cmd . '][ <Plug>(textobj-diff-hunk-N)'
+    endfor
+endfunction
+command! -bar SetupDiff call SetupDiff()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
