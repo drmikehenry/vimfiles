@@ -1543,6 +1543,34 @@ nnoremap <silent> <C-Q><C-T> :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
 nnoremap <silent> <C-Q>t     :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
 
 " -------------------------------------------------------------
+" textobj-diff
+" -------------------------------------------------------------
+
+" Don't use the many default global mappings.
+let g:textobj_diff_no_default_key_mappings = 1
+
+" Create buffer-local mappings for desired functionality.
+function! CreateTextobjDiffLocalMappings()
+    " Make file- and hunk-selection mappings for diffs.
+    for m in ['x', 'o']
+        let cmd = 'silent! ' . m . 'map <buffer> '
+        execute cmd . 'adf <Plug>(textobj-diff-file)'
+        execute cmd . 'idf <Plug>(textobj-diff-file)'
+        execute cmd . 'adh <Plug>(textobj-diff-hunk)'
+        execute cmd . 'idh <Plug>(textobj-diff-hunk)'
+    endfor
+    " Map ]] and friends to textobj-diff for jumping between hunks.
+    for m in ['n', 'x', 'o']
+        let cmd = 'silent! ' . m . 'map <buffer> '
+        execute cmd . '[] <Plug>(textobj-diff-hunk-P)'
+        execute cmd . ']] <Plug>(textobj-diff-hunk-n)'
+        execute cmd . '[[ <Plug>(textobj-diff-hunk-p)'
+        execute cmd . '][ <Plug>(textobj-diff-hunk-N)'
+    endfor
+endfunction
+
+
+" -------------------------------------------------------------
 " UltiSnips
 " -------------------------------------------------------------
 
@@ -2220,6 +2248,11 @@ function! SetupGnuSource()
 endfunction
 command! -bar SetupGnuSource call SetupGnuSource()
 
+function! SetupDiff()
+    call CreateTextobjDiffLocalMappings()
+endfunction
+command! -bar SetupDiff call SetupDiff()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
@@ -2259,7 +2292,15 @@ function! AutoOpenGitDiff()
     " The fugitive plugin uses a previewwindow for the :Gstatus command,
     " but it sets the filetype of that windows to 'gitcommit', so don't
     " open a diff window if the gitcommit is in a previewindow.
-    if ! &previewwindow
+    " Also, when using ``:Gedit :``,  the .git/index file is opened
+    " in a regular window using filetype 'gitcommit', so avoid opening
+    " a diff window in that case as well, as suggested by Tim Pope here:
+    " https://github.com/tpope/vim-fugitive/issues/294#issuecomment-12474356
+    " Note that checking for 'index' is not sufficient in itself, because
+    " using :Gstatus followed by attempting a commit via ``cc`` does not
+    " work properly in that event (the COMMIT_MSG window will not have
+    " the correct contents).
+    if ! &previewwindow && expand('%:t') !~# 'index'
         DiffGitCached
         wincmd p
         wincmd K
