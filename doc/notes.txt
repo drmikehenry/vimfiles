@@ -40,8 +40,9 @@
     PythonComplete - Python Omnicompletion              |notes_pythoncomplete|
     Repeat - Repeat operations for supported plugins    |notes_repeat|
     RunView - Run lines through filter into buffer      |notes_runview|
-    Selfdot - Changes "." to "self." in Python          |notes_selfdot|
+    Scriptease - Debugging tools for Vimscripts         |notes_scriptease|
     ScrollColor - Scroll through color schemes          |notes_scrollcolor|
+    Selfdot - Changes "." to "self." in Python          |notes_selfdot|
     SuperTab - Use <TAB> for all completion             |notes_supertab|
     Surround - Manipulating "surroundings"              |notes_surround|
     Svn - View Subversion diffs while writing commit log|notes_svn|
@@ -307,7 +308,7 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Version 7.3.3 from http://www.vim.org/scripts/script.php?script_id=42
+Version 7.3.4 from http://www.vim.org/scripts/script.php?script_id=42
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1262,19 +1263,37 @@ Local customizations: >
   let g:runview_filtcmd="bash"
 
 ------------------------------------------------------------------------------
-SELFDOT                                                 *notes_selfdot*
-  Changes "." to "self." in Python                      |notes_selfdot|
+SCRIPTEASE                                              *notes_scriptease*
+  Debugging tools for Vimscripts                        |scriptease|
 
-(Temporarily removed, as it's not Python-specific and is impossible
-to work around.)
+Usage:
 
-Pressing "." in insert mode will cause "self." to be inserted
-in cases where "." would be a syntax error in Python.
+  |:PP|           Pretty print.
+  |:PPmsg|        Pretty print the value of {expr} using |:echomsg|.
+  |:Runtime|      Reload runtime files.  Like |:runtime!|, but it unlets any
+                include guards first.
+  |:Disarm|       Remove a runtime file's maps, commands, and autocommands,
+                effectively disabling it.
+  |:Scriptnames|  Load |:scriptnames| into the quickfix list.
+  |:Verbose|      Capture the output of a `:verbose` invocation into the
+                preview window.
+  |:Time|         Measure how long a command takes.
+  |:Breakadd|     Like its lowercase cousin, but makes it much easier to set
+                breakpoints inside functions.  Also |:Breakdel|.
+  |:Vedit|        Edit a file relative the runtime path. For example,
+                ":Vedit plugin/scriptease.vim". Also, |:Vsplit|,
+                |:Vtabedit|, etc.
+  |K|             Look up the |:help| for the VimL construct under the cursor.
+  |zS|            Show the active syntax highlighting groups under the cursor.
+  |g!|            Eval a motion or selection as VimL and replace it with the
+                result.  This is handy for doing math, even outside of VimL.
+                It's so handy, in fact, that it probably deserves its own
+                plugin.
 
-Version 1.0.2 from http://www.vim.org/scripts/script.php?script_id=2911
+Version 1.0 (47872691) from git://github.com/tpope/vim-scriptease.git
 
 Installation:
-- Copy to ~/.vim/plugin
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 SCROLLCOLOR                                             *notes_scrollcolor*
@@ -1297,6 +1316,21 @@ Installation:
     map \n
     map \p
     map \c
+
+------------------------------------------------------------------------------
+SELFDOT                                                 *notes_selfdot*
+  Changes "." to "self." in Python                      |notes_selfdot|
+
+(Temporarily removed, as it's not Python-specific and is impossible
+to work around.)
+
+Pressing "." in insert mode will cause "self." to be inserted
+in cases where "." would be a syntax error in Python.
+
+Version 1.0.2 from http://www.vim.org/scripts/script.php?script_id=2911
+
+Installation:
+- Copy to ~/.vim/plugin
 
 ------------------------------------------------------------------------------
 SURROUND                                                *notes_surround*
