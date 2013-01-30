@@ -1087,7 +1087,7 @@ Installation:
 NETRW                                                   *notes_netrw*
   File reading and writing across networks              |netrw|
 
-Version 128 from http://www.vim.org/scripts/script.php?script_id=1075
+Version 147d from http://www.vim.org/scripts/script.php?script_id=1075
 (Also check Dr. Chip's site: http://mysite.verizon.net/astronaut/vim/#NETRW)
 
 Use <Leader>fe to invoke :Explore.  This will explore in the directory
@@ -1099,8 +1099,28 @@ Installation:
 - Distributed as a |vimball|  >
 
     vim netrw.vba.gz
-    :so %
+    :UseVimball ~/.vim/bundle/netrw
     :q
+
+- Did not add .VimballRecord, since it's easy to remove bundles.
+- Run :Helptags
+- Patched with the following to fix an error with options being clobbered: >
+
+  diff --git a/bundle/netrw/autoload/netrw.vim b/bundle/netrw/autoload/netrw.vim
+  index aeea0f4..c3fc141 100644
+  --- a/bundle/netrw/autoload/netrw.vim
+  +++ b/bundle/netrw/autoload/netrw.vim
+  @@ -653,7 +653,10 @@ fun! s:NetrwOptionRestore(vt)
+     " Moved the filetype detect here from NetrwGetFile() because remote files
+     " were having their filetype detect-generated settings overwritten by
+     " NetrwOptionRestore.
+  -  filetype detect
+  +  if &ft != "netrw"
+  +"   call Decho("(NetrwOptionRestore) filetype detect  (ft=".&ft.")")
+  +   filetype detect
+  +  endif
+   "  call Dret("s:NetrwOptionRestore : tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> modified=".&modified." modifiable=".&modifiable." readonly=".&readonly)
+   endfun
 
 ------------------------------------------------------------------------------
 OMNICPPCOMPLETE                                         *notes_omnicppcomplete*

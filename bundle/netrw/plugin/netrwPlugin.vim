@@ -1,9 +1,9 @@
 " netrwPlugin.vim: Handles file transfer and remote directory listing across a network
 "            PLUGIN SECTION
-" Date:		Apr 07, 2008
-" Maintainer:	Charles E Campbell, Jr <NdrOchip@ScampbellPfamily.AbizM-NOSPAM>
+" Date:		Dec 06, 2012
+" Maintainer:	Charles E Campbell <NdrOchip@ScampbellPfamily.AbizM-NOSPAM>
 " GetLatestVimScripts: 1075 1 :AutoInstall: netrw.vim
-" Copyright:    Copyright (C) 1999-2005 Charles E. Campbell, Jr. {{{1
+" Copyright:    Copyright (C) 1999-2012 Charles E. Campbell {{{1
 "               Permission is hereby granted to use and distribute this code,
 "               with or without modifications, provided that this copyright
 "               notice is copied with it. Like anything else that's free,
@@ -16,19 +16,16 @@
 "  But be doers of the Word, and not only hearers, deluding your own selves {{{1
 "  (James 1:22 RSV)
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-" ---------------------------------------------------------------------
 " Load Once: {{{1
 if &cp || exists("g:loaded_netrwPlugin")
  finish
 endif
-let g:loaded_netrwPlugin = "v128"
-let s:keepcpo            = &cpo
-if v:version < 700
- echohl WarningMsg | echo "***netrw*** you need vim version 7.0 for this version of netrw" | echohl None
+let g:loaded_netrwPlugin = "v147d"
+if v:version < 702
+ echohl WarningMsg | echo "***netrw*** you need vim version 7.2 for this version of netrw" | echohl None
  finish
 endif
-let s:keepcpo= &cpo
+let s:keepcpo = &cpo
 set cpo&vim
 
 " ---------------------------------------------------------------------
@@ -37,29 +34,28 @@ set cpo&vim
 " Local Browsing: {{{2
 augroup FileExplorer
  au!
- au BufEnter * silent! call s:LocalBrowse(expand("<amatch>"))
+" au BufReadCmd *[/\\]	sil! call s:LocalBrowse(expand("<amatch>")) 
+" au BufEnter *[^/\\]	sil! call s:LocalBrowse(expand("<amatch>"))
+" au VimEnter *[^/\\]	sil! call s:VimEnter(expand("<amatch>"))
+ au BufEnter *	sil! call s:LocalBrowse(expand("<amatch>"))
+ au VimEnter *	sil! call s:VimEnter(expand("<amatch>"))
  if has("win32") || has("win95") || has("win64") || has("win16")
-  au BufEnter .* silent! call s:LocalBrowse(expand("<amatch>"))
+  au BufEnter .* sil! call s:LocalBrowse(expand("<amatch>"))
  endif
 augroup END
 
 " Network Browsing Reading Writing: {{{2
 augroup Network
  au!
- if has("win32") || has("win95") || has("win64") || has("win16")
-  au BufReadCmd  file://*		exe "silent doau BufReadPre ".netrw#RFC2396(expand("<amatch>"))|exe 'e '.substitute(netrw#RFC2396(expand("<amatch>")),'file://\(.*\)','\1',"")|exe "bwipe ".expand("<amatch>")|exe "silent doau BufReadPost ".netrw#RFC2396(expand("<amatch>"))
- else
-  au BufReadCmd  file://*		exe "silent doau BufReadPre ".netrw#RFC2396(expand("<amatch>"))|exe 'e '.substitute(netrw#RFC2396(expand("<amatch>")),'file://\(.*\)','\1',"")|exe "bwipe ".expand("<amatch>")|exe "silent doau BufReadPost ".netrw#RFC2396(expand("<amatch>"))
-  au BufReadCmd  file://localhost/*	exe "silent doau BufReadPre ".netrw#RFC2396(expand("<amatch>"))|exe 'e '.substitute(netrw#RFC2396(expand("<amatch>")),'file://localhost/\(.*\)','\1',"")|exe "bwipe ".substitute(expand("<amatch>"),'file://\(\k\+@\)\=','','')|exe "silent doau BufReadPost ".netrw#RFC2396(expand("<amatch>"))
- endif
- au BufReadCmd   ftp://*,rcp://*,scp://*,http://*,dav://*,davs://*,rsync://*,sftp://*	exe "silent doau BufReadPre ".expand("<amatch>")|exe '2Nread "'.expand("<amatch>").'"'|exe "silent doau BufReadPost ".expand("<amatch>")
- au FileReadCmd  ftp://*,rcp://*,scp://*,http://*,dav://*,davs://*,rsync://*,sftp://*	exe "silent doau FileReadPre ".expand("<amatch>")|exe 'Nread "'   .expand("<amatch>").'"'|exe "silent doau FileReadPost ".expand("<amatch>")
- au BufWriteCmd  ftp://*,rcp://*,scp://*,dav://*,davs://*,rsync://*,sftp://*		exe "silent doau BufWritePre ".expand("<amatch>")|exe 'Nwrite "' .expand("<amatch>").'"'|exe "silent doau BufWritePost ".expand("<amatch>")
- au FileWriteCmd ftp://*,rcp://*,scp://*,dav://*,davs://*,rsync://*,sftp://*		exe "silent doau FileWritePre ".expand("<amatch>")|exe "'[,']".'Nwrite "' .expand("<amatch>").'"'|exe "silent doau FileWritePost ".expand("<amatch>")
+ au BufReadCmd   file://*		call netrw#FileUrlRead(expand("<amatch>"))
+ au BufReadCmd   ftp://*,rcp://*,scp://*,http://*,https://*,dav://*,davs://*,rsync://*,sftp://*	exe "sil doau BufReadPre ".fnameescape(expand("<amatch>"))|call netrw#Nread(2,expand("<amatch>"))|exe "sil doau BufReadPost ".fnameescape(expand("<amatch>"))
+ au FileReadCmd  ftp://*,rcp://*,scp://*,http://*,https://*,dav://*,davs://*,rsync://*,sftp://*	exe "sil doau FileReadPre ".fnameescape(expand("<amatch>"))|call netrw#Nread(1,expand("<amatch>"))|exe "sil doau FileReadPost ".fnameescape(expand("<amatch>"))
+ au BufWriteCmd  ftp://*,rcp://*,scp://*,dav://*,davs://*,rsync://*,sftp://*			exe "sil doau BufWritePre ".fnameescape(expand("<amatch>"))|exe 'Nwrite '.fnameescape(expand("<amatch>"))|exe "sil doau BufWritePost ".fnameescape(expand("<amatch>"))
+ au FileWriteCmd ftp://*,rcp://*,scp://*,dav://*,davs://*,rsync://*,sftp://*			exe "sil doau FileWritePre ".fnameescape(expand("<amatch>"))|exe "'[,']".'Nwrite '.fnameescape(expand("<amatch>"))|exe "sil doau FileWritePost ".fnameescape(expand("<amatch>"))
  try
-  au SourceCmd    ftp://*,rcp://*,scp://*,http://*,dav://*,davs://*,rsync://*,sftp://*	exe 'Nsource "'.expand("<amatch>").'"'
+  au SourceCmd   ftp://*,rcp://*,scp://*,http://*,https://*,dav://*,davs://*,rsync://*,sftp://*	exe 'Nsource '.fnameescape(expand("<amatch>"))
  catch /^Vim\%((\a\+)\)\=:E216/
-  au SourcePre    ftp://*,rcp://*,scp://*,http://*,dav://*,davs://*,rsync://*,sftp://*	exe 'Nsource "'.expand("<amatch>").'"'
+  au SourcePre   ftp://*,rcp://*,scp://*,http://*,https://*,dav://*,davs://*,rsync://*,sftp://*	exe 'Nsource '.fnameescape(expand("<amatch>"))
  endtry
 augroup END
 
@@ -83,7 +79,7 @@ com! -nargs=0	NetrwSettings	call netrwSettings#NetrwSettings()
 com! -bang	NetrwClean	call netrw#NetrwClean(<bang>0)
 
 " Maps:
-if !exists("g:netrw_nogx") && maparg('g','n') == ""
+if !exists("g:netrw_nogx") && maparg('gx','n') == ""
  if !hasmapto('<Plug>NetrwBrowseX')
   nmap <unique> gx <Plug>NetrwBrowseX
  endif
@@ -102,13 +98,21 @@ fun! s:LocalBrowse(dirname)
    " string is the current directory and not checking would break
    " things such as the help command.
    if a:dirname != '' && isdirectory(a:dirname)
-    silent! call netrw#LocalBrowseCheck(a:dirname)
+    sil! call netrw#LocalBrowseCheck(a:dirname)
    endif
   elseif isdirectory(a:dirname)
 "   echomsg "dirname<".dirname."> isdir"
-   silent! call netrw#LocalBrowseCheck(a:dirname)
+   sil! call netrw#LocalBrowseCheck(a:dirname)
   endif
   " not a directory, ignore it
+endfun
+
+" ---------------------------------------------------------------------
+" s:VimEnter: {{{2
+fun! s:VimEnter(dirname)
+  let curwin= winnr()
+  windo if a:dirname != expand("%")|call s:LocalBrowse(expand("%:p"))|endif
+  exe curwin."wincmd w"
 endfun
 
 " ---------------------------------------------------------------------
@@ -154,24 +158,6 @@ fun! NetUserPass(...)
  endif
 "  call Dret("NetUserPass")
 endfun
-
-" ------------------------------------------------------------------------
-" NetReadFixup: this sort of function is typically written by the user {{{1
-"               to handle extra junk that their system's ftp dumps
-"               into the transfer.  This function is provided as an
-"               example and as a fix for a Windows 95 problem: in my
-"               experience, win95's ftp always dumped four blank lines
-"               at the end of the transfer.
-if has("win95") && exists("g:netrw_win95ftp") && g:netrw_win95ftp
- fun! NetReadFixup(method, line1, line2)
-"   call Dfunc("NetReadFixup(method<".a:method."> line1=".a:line1." line2=".a:line2.")")
-   if method == 3   " ftp (no <.netrc>)
-    let fourblanklines= line2 - 3
-    silent fourblanklines.",".line2."g/^\s*/d"
-   endif
-"   call Dret("NetReadFixup")
- endfun
-endif
 
 " ------------------------------------------------------------------------
 " Modelines And Restoration: {{{1
