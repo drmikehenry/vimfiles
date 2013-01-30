@@ -1099,8 +1099,26 @@ Installation:
     vim netrw.vba.gz
     :UseVimball ~/.vim/bundle/netrw
     :q
+
 - Did not add .VimballRecord, since it's easy to remove bundles.
 - Run :Helptags
+- Patched with the following to fix an error with options being clobbered: >
+
+  diff --git a/bundle/netrw/autoload/netrw.vim b/bundle/netrw/autoload/netrw.vim
+  index aeea0f4..c3fc141 100644
+  --- a/bundle/netrw/autoload/netrw.vim
+  +++ b/bundle/netrw/autoload/netrw.vim
+  @@ -653,7 +653,10 @@ fun! s:NetrwOptionRestore(vt)
+     " Moved the filetype detect here from NetrwGetFile() because remote files
+     " were having their filetype detect-generated settings overwritten by
+     " NetrwOptionRestore.
+  -  filetype detect
+  +  if &ft != "netrw"
+  +"   call Decho("(NetrwOptionRestore) filetype detect  (ft=".&ft.")")
+  +   filetype detect
+  +  endif
+   "  call Dret("s:NetrwOptionRestore : tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> modified=".&modified." modifiable=".&modifiable." readonly=".&readonly)
+   endfun
 
 ------------------------------------------------------------------------------
 OMNICPPCOMPLETE                                         *notes_omnicppcomplete*

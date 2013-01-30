@@ -653,7 +653,10 @@ fun! s:NetrwOptionRestore(vt)
   " Moved the filetype detect here from NetrwGetFile() because remote files
   " were having their filetype detect-generated settings overwritten by
   " NetrwOptionRestore.
-  filetype detect
+  if &ft != "netrw"
+"   call Decho("(NetrwOptionRestore) filetype detect  (ft=".&ft.")")
+   filetype detect
+  endif
 "  call Dret("s:NetrwOptionRestore : tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> modified=".&modified." modifiable=".&modifiable." readonly=".&readonly)
 endfun
 
