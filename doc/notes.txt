@@ -326,17 +326,16 @@ Usage:
 
   in BUFMRU MODE:
   f  b              reach more MRU buffers (forward/backward)
-  e  <Enter>        accept current choice
-  !                 accept current choice (an abandoned modified buffer
-                        becomes hidden)
-  q  <Esc>          quit the mode, go back to start buffer (forcibly)
-  y                 copy file name
+  <Enter>           accept current choice
+  q                 quit the mode, go back to start buffer (forcibly)
 
   The mode times out after 'timeoutlen' ms.  A key not mapped in the mode
   (e.g. <Space>) quits the mode and executes as usual.
 
-After yanking the filename, in insert mode CTRL-R=@@<CR> will put it in your
-buffer.
+Note: All unneeded keys are unmapped in Bufmru mode to avoid collisions with
+console-mode Vim's Arrow keys (and other sequences that start with <Escape>).
+This maximizes buffer switching speed without needing to press the
+often-redundant <Enter> to exit Bufmru mode.
 
 Version 3.3 from http://www.vim.org/scripts/script.php?script_id=2346
 
