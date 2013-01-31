@@ -2114,6 +2114,36 @@ endfunction
 command! -bar SetupVhdl call SetupVhdl()
 
 " -------------------------------------------------------------
+" Setup for Vim C-code Source (the source code for Vim itself).
+" -------------------------------------------------------------
+function! SetupVimC()
+    setlocal ts=8 sts=4 sw=4 tw=80
+
+    " Don't expand tabs to spaces.
+    setlocal noexpandtab
+
+    " Enable automatic C program indenting.
+    setlocal cindent
+
+    " Use default C-style comments with leading "*" characters.
+    setlocal comments&
+
+    " Use default indentation options.
+    setlocal cinoptions&
+
+    " Setup formatoptions:
+    "   c - auto-wrap comments to textwidth.
+    "   r - automatically insert comment leader when pressing <Enter>.
+    "   o - automatically insert comment leader after 'o' or 'O'.
+    "   q - allow formatting of comments with 'gq'.
+    "   l - long lines are not broken in insert mode.
+    "   n - recognize numbered lists.
+    "   t - autowrap using textwidth,
+    setlocal formatoptions=croqlnt
+endfunction
+command! -bar SetupVimC call SetupVimC()
+
+" -------------------------------------------------------------
 " Setup for Linux Kernel Sources.
 " -------------------------------------------------------------
 function! SetupKernelSource()
