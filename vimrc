@@ -977,6 +977,29 @@ function! InvertPasteAndMouse()
 endfunction
 
 " =============================================================
+" :redir helpers
+" =============================================================
+
+" Redirect to register "x":
+"   Redir @x
+" Redirect to global variable "v":
+"   Redir => v
+" Disable previous redirection (any of these):
+"   Redir
+"   Redir end
+"   Redir END
+" While redirected, the 'more' option is reset to avoid the need
+" to press <Space> after each screen of output.
+command! -nargs=* -bar Redir 
+            \ if <q-args> == "" || <q-args> ==? "end" |
+            \   set nomore | 
+            \   redir END |
+            \ else |
+            \   redir <args> | 
+            \   set nomore | 
+            \ endif
+
+" =============================================================
 " Tags
 " =============================================================
 
