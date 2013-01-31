@@ -990,13 +990,13 @@ endfunction
 "   Redir END
 " While redirected, the 'more' option is reset to avoid the need
 " to press <Space> after each screen of output.
-command! -nargs=* -bar Redir 
+command! -nargs=* -bar Redir
             \ if <q-args> == "" || <q-args> ==? "end" |
-            \   set nomore | 
+            \   set nomore |
             \   redir END |
             \ else |
-            \   redir <args> | 
-            \   set nomore | 
+            \   redir <args> |
+            \   set nomore |
             \ endif
 
 " =============================================================
@@ -1229,7 +1229,7 @@ com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 
 " Taken from :help :DiffOrig.  Shows unsaved differences between
 " this buffer and original file.
-command! -bar DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ 
+command! -bar DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
             \ | diffthis | wincmd p | diffthis
 
 " =============================================================
