@@ -298,9 +298,11 @@ if g:EnablePowerline
     call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
 
     if !has("gui_running")
-        let g:Powerline_symbols_override = {
-            \ 'BRANCH': [0x2442],
-            \ }
+        if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
+            let g:Powerline_symbols_override = {
+                \ 'BRANCH': [0x2442],
+                \ }
+        endif
     endif
 
     let g:Powerline_mode_n = 'N'
