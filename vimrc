@@ -1282,15 +1282,14 @@ let g:bufmru_nummarks = 0
 function! BufmruUnmap()
     " Remove undesirable mappings, keeping the bare minimum for fast buffer
     " switching without needing the press <Enter> to exit bufmru "mode".
-    let s:seq = maparg('<Space>', 'n')
-    if s:seq =~# '.*idxz.*'
-        let s:seq = matchstr(s:seq, '<SNR>\d\+_m_')
-        execute "silent! nunmap " . s:seq . "e"
-        execute "silent! nunmap " . s:seq . "!"
-        execute "silent! nunmap " . s:seq . "<Esc>"
-        execute "silent! nunmap " . s:seq . "y"
+    let seq = maparg('<Space>', 'n')
+    if seq =~# '.*idxz.*'
+        let seq = matchstr(seq, '<SNR>\d\+_m_')
+        execute "silent! nunmap " . seq . "e"
+        execute "silent! nunmap " . seq . "!"
+        execute "silent! nunmap " . seq . "<Esc>"
+        execute "silent! nunmap " . seq . "y"
     endif
-    unlet s:seq
 endfunction
 
 augroup local_bufmru
