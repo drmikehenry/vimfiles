@@ -316,6 +316,18 @@ if g:EnablePowerline
     let g:Powerline_colorscheme = 'szakdark'
 endif
 
+" -------------------------------------------------------------
+" Syntastic
+" -------------------------------------------------------------
+
+if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
+    let g:syntastic_error_symbol='✗'
+    let g:syntastic_warning_symbol='⚠'
+endif
+
+let g:syntastic_enable_balloons = 1
+let g:syntastic_quiet_warnings=1
+
 " =============================================================
 " Autocommands
 " =============================================================
