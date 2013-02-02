@@ -15,9 +15,11 @@ g:bufExplorerFindActive	bufexplorer.txt	/*g:bufExplorerFindActive*
 g:bufExplorerFuncRef	bufexplorer.txt	/*g:bufExplorerFuncRef*
 g:bufExplorerReverseSort	bufexplorer.txt	/*g:bufExplorerReverseSort*
 g:bufExplorerShowDirectories	bufexplorer.txt	/*g:bufExplorerShowDirectories*
+g:bufExplorerShowNoName	bufexplorer.txt	/*g:bufExplorerShowNoName*
 g:bufExplorerShowRelativePath	bufexplorer.txt	/*g:bufExplorerShowRelativePath*
 g:bufExplorerShowTabBuffer	bufexplorer.txt	/*g:bufExplorerShowTabBuffer*
 g:bufExplorerShowUnlisted	bufexplorer.txt	/*g:bufExplorerShowUnlisted*
+g:bufExplorerSortBy	bufexplorer.txt	/*g:bufExplorerSortBy*
 g:bufExplorerSortBy	bufexplorer.txt	/*g:bufExplorerSortBy*
 g:bufExplorerSplitBelow	bufexplorer.txt	/*g:bufExplorerSplitBelow*
 g:bufExplorerSplitHorzSize	bufexplorer.txt	/*g:bufExplorerSplitHorzSize*
