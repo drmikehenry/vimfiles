@@ -1715,6 +1715,38 @@ nmap <silent> <C-Q><C-P>  <Plug>ToggleProject
 nmap <silent> <C-Q>p      <Plug>ToggleProject
 
 " -------------------------------------------------------------
+" Rainbow Parentheses
+" -------------------------------------------------------------
+
+if &t_Co >= 256 || has("gui_running")
+    let g:rbpt_colorpairs = [
+                \ [129,         'purple'],
+                \ ['magenta',   'magenta1'],
+                \ [111,         'slateblue1'],
+                \ ['cyan',      'cyan1'],
+                \ [48,          'springgreen1'],
+                \ ['green',     'green1'],
+                \ [154,         'greenyellow'],
+                \ ['yellow',    'yellow1'],
+                \ [214,         'orange1'],
+                \ ]
+else
+    let g:rbpt_colorpairs = [
+                \ ['magenta',   'purple'],
+                \ ['cyan',      'magenta1'],
+                \ ['green',     'slateblue1'],
+                \ ['yellow',    'cyan1'],
+                \ ['red',       'springgreen1'],
+                \ ['magenta',   'green1'],
+                \ ['cyan',      'greenyellow'],
+                \ ['green',     'yellow1'],
+                \ ['yellow',    'orange1'],
+                \ ]
+endif
+
+let g:rbpt_max = 9
+
+" -------------------------------------------------------------
 " RunView
 " -------------------------------------------------------------
 
@@ -2353,6 +2385,11 @@ command! -bar SetupCpp call SetupCpp()
 function! SetupClojure()
     SetupSource
     setlocal ts=8 sts=2 sw=2
+
+    RainbowParenthesesLoadRound
+    RainbowParenthesesLoadSquare
+    RainbowParenthesesLoadBraces
+    RainbowParenthesesActivate
 endfunction
 command! -bar SetupClojure call SetupClojure()
 

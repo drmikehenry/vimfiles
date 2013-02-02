@@ -40,6 +40,7 @@
     Python - Python Syntax file with folding            |notes_python|
     PythonComplete - Python Omnicompletion              |notes_pythoncomplete|
     Repeat - Repeat operations for supported plugins    |notes_repeat|
+    Rainbow Parenthesis - Highlight nested parens       |notes_rainbow-parens|
     RunView - Run lines through filter into buffer      |notes_runview|
     Scriptease - Debugging tools for Vimscripts         |notes_scriptease|
     ScrollColor - Scroll through color schemes          |notes_scrollcolor|
@@ -1280,6 +1281,45 @@ Version 0.9 from http://www.vim.org/scripts/script.php?script_id=1542
 
 Installation:
 - Install as ~/.vim/autoload/pythoncomplete.vim
+
+------------------------------------------------------------------------------
+RAINBOW PARENTHESES                                     *notes_rainbow-parens*
+  Highlight nested parens
+
+You can adjust the colors by setting g:rbpt_colorpairs: >
+  let g:rbpt_colorpairs = [
+      \ ['brown',       'RoyalBlue3'],
+      \ ['Darkblue',    'SeaGreen3'],
+      \ ['darkgray',    'DarkOrchid3'],
+      \ ['darkgreen',   'firebrick3'],
+      \ ['darkcyan',    'RoyalBlue3'],
+      \ ['darkred',     'SeaGreen3'],
+      \ ['darkmagenta', 'DarkOrchid3'],
+      \ ['brown',       'firebrick3'],
+      \ ['gray',        'RoyalBlue3'],
+      \ ['black',       'SeaGreen3'],
+      \ ['darkmagenta', 'DarkOrchid3'],
+      \ ['Darkblue',    'firebrick3'],
+      \ ['darkgreen',   'RoyalBlue3'],
+      \ ['darkcyan',    'SeaGreen3'],
+      \ ['darkred',     'DarkOrchid3'],
+      \ ['red',         'firebrick3'],
+      \ ]
+
+The maximum number of levels is controlled via g:rbpt_max.  Finally,
+g:rbpt_loadcmd_toggle controls the initial state on startup.
+
+Local customizations:
+
+- Turn on rainbow parens when editing Clojure and ClojureScript source code.
+- Adjusted the colors to match what was used in VimClojure, and made them
+  take advantage of a 256-color terminal, if available.
+
+Version 2013-03-04 (eb8baa54) from:
+  git://github.com/kien/rainbow_parentheses.vim
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 REPEAT                                                  *notes_repeat*
