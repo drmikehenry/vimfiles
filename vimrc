@@ -489,13 +489,25 @@ nnoremap Q gq
 xnoremap Q gq
 onoremap Q gq
 
-" Rewrap a paragraph of text via Meta-Q or <Leader>q (emulates Emacs's Meta-Q
-" and TextMate's Ctrl-Q).
-nnoremap <expr> <M-q>      &tw > 0 ?       "gqip$" :       "vip:join\<CR>$"
-nnoremap <expr> <Leader>q  &tw > 0 ?       "gqip$" :       "vip:join\<CR>$"
-xnoremap <expr> <M-q>      &tw > 0 ?       "gq$"   :          ":join<CR>$"
-xnoremap <expr> <Leader>q  &tw > 0 ?       "gq$"   :          ":join<CR>$"
-inoremap <expr> <M-q>      &tw > 0 ? "\<Esc>gqipA" : "\<Esc>vip:join\<CR>A"
+" Paragraph re-wrapping, similar to Emacs's Meta-Q and TextMate's Ctrl-Q.
+function! RewrapParagraphExpr()
+    return (&tw > 0 ? "gqip" : "vip:join\<CR>") . "$"
+endfunction
+
+function! RewrapParagraphExprVisual()
+    return (&tw > 0 ? "gq"   :    ":join\<CR>") . "$"
+endfunction
+
+function! RewrapParagraphExprInsert()
+    " Include undo point via CTRL-G u.
+    return "\<C-G>u\<Esc>" . RewrapParagraphExpr() . "A"
+endfunction
+
+nnoremap <expr> <M-q>      RewrapParagraphExpr()
+nnoremap <expr> <Leader>q  RewrapParagraphExpr()
+xnoremap <expr> <M-q>      RewrapParagraphExprVisual()
+xnoremap <expr> <Leader>q  RewrapParagraphExprVisual()
+inoremap <expr> <M-q>      RewrapParagraphExprInsert()
 
 function! ClosestPos(positions)
     let closestLine = 0
