@@ -91,17 +91,7 @@ endfunction
 " This function only returns an inexact match due to the detection method used
 " by git, which simply traverses the directory structure upward.
 function! s:gitFunctions.Identify(buffer)
-	let oldCwd = VCSCommandChangeToCurrentFileDir(resolve(bufname(a:buffer)))
-	try
-		call s:VCSCommandUtility.system(s:Executable() . ' rev-parse --is-inside-work-tree')
-		if(v:shell_error)
-			return 0
-		else
-			return g:VCSCOMMAND_IDENTIFY_INEXACT
-		endif
-	finally
-		call VCSCommandChdir(oldCwd)
-	endtry
+	return VCSCommandIdentifyFromRoot(a:buffer, s:Executable() . ' rev-parse --show-toplevel')
 endfunction
 
 " Function: s:gitFunctions.Add(argList) {{{2

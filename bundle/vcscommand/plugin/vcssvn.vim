@@ -97,7 +97,7 @@ function! s:svnFunctions.Identify(buffer)
 		if(v:shell_error)
 			return 0
 		else
-			return g:VCSCOMMAND_IDENTIFY_EXACT
+			return 1
 		endif
 	finally
 		call VCSCommandChdir(oldCwd)
