@@ -17,6 +17,7 @@ augroup filetypedetect
     au BufNewFile,BufRead *.rest setfiletype rst
     au BufNewFile,BufRead bash-fc-* SetupBashFixcommand
     au BufNewFile,BufRead *.cljs setfiletype clojure
+    au BufNewFile,BufRead svn-prop*.tmp setfiletype svn
 
     " Setup Git-related filetypes.
     au BufNewFile,BufRead *.git/MERGE_MSG setfiletype gitcommit
