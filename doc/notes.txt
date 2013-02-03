@@ -1670,6 +1670,31 @@ Version 0.1.1 (3d4ef916) from git://github.com/kana/vim-textobj-function.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
+- Patched with the following to fix a bug when at the end of a function.
+  Patch was submitted upstream too, but there's been no movement on it.
+
+diff --git a/after/ftplugin/c/textobj-function.vim b/after/ftplugin/c/textobj-function.vim
+index cdecf34..c3e8023 100644
+--- a/after/ftplugin/c/textobj-function.vim
++++ b/after/ftplugin/c/textobj-function.vim
+@@ -28,7 +28,7 @@ if !exists('*g:textobj_function_c_select')
+   endfunction
+ 
+   function! s:select_a()
+-    if line('.') != '}'
++    if getline('.') != '}'
+       normal ][
+     endif
+     let e = getpos('.')
+@@ -44,7 +44,7 @@ if !exists('*g:textobj_function_c_select')
+   endfunction
+ 
+   function! s:select_i()
+-    if line('.') != '}'
++    if getline('.') != '}'
+       normal ][
+     endif
+     let e = getpos('.')
 
 ------------------------------------------------------------------------------
 TEXTOBJ-INDENT                                          *notes_textobj-indent*
