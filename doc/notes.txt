@@ -2385,6 +2385,17 @@ Options include: >
     tabs
     trailingspace
 
+------------------------------------------------------------------------------
+Help file toggling
+
+The following mappings toggle the help window on and off:
+
+  <F1>
+  <C-Q><C-H>
+  <C-Q>h
+
+If the help window is already open, it will be closed; otherwise, the most
+recent help file will be re-opened.
 
 ==============================================================================
 5.  Tips                                                *notes_tips*

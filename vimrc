@@ -2253,6 +2253,49 @@ function! SetupHelp()
 endfunction
 command! -bar SetupHelp call SetupHelp()
 
+" Last active help buffer number (0 if none).
+let g:LastHelpBuf = 0
+augroup local_help
+    autocmd!
+
+    " Store last active help buffer number when leaving the help window.
+    autocmd WinLeave * if &bt == "help" | let g:LastHelpBuf = bufnr("%") | endif
+augroup END
+
+" Return window number of active help window (0 if no active windows).
+function! FindHelpWindow()
+    let win = 1
+    while win <= winnr("$")
+        let buf = winbufnr(win)
+        if getbufvar(buf, "&buftype") == "help"
+            return win
+        endif
+        let win += 1
+    endwhile
+    return 0
+endfunction
+
+" If help window is active, close it; otherwise, re-open recent help buffer.
+function! HelpToggle()
+    let win = FindHelpWindow()
+    if win > 0
+        execute win . "wincmd w"
+        wincmd c
+        wincmd p
+    elseif g:LastHelpBuf > 0
+        split
+        execute g:LastHelpBuf . "buffer"
+    else
+        help
+    endif
+endfunction
+command! -bar HelpToggle call HelpToggle()
+
+nnoremap <F1>       :<C-U>HelpToggle<CR>
+nnoremap <C-Q>h     :<C-U>HelpToggle<CR>
+nnoremap <C-Q><C-H> :<C-U>HelpToggle<CR>
+
+
 " -------------------------------------------------------------
 " Setup for C projects following the GNU Coding Standards
 " -------------------------------------------------------------
