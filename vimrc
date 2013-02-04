@@ -2262,6 +2262,22 @@ augroup local_help
     autocmd WinLeave * if &bt == "help" | let g:LastHelpBuf = bufnr("%") | endif
 augroup END
 
+" Return buffer number of recent help window (0 if no help buffers).
+function! FindRecentHelpBuf()
+    let buf = 1
+    let recentHelpBuf = 0
+    while buf <= bufnr("$")
+        if getbufvar(buf, "&buftype") == "help"
+            let recentHelpBuf = buf
+            if recentHelpBuf == g:LastHelpBuf
+                break
+            endif
+        endif
+        let buf += 1
+    endwhile
+    return recentHelpBuf
+endfunction
+
 " Return window number of active help window (0 if no active windows).
 function! FindHelpWindow()
     let win = 1
@@ -2278,13 +2294,14 @@ endfunction
 " If help window is active, close it; otherwise, re-open recent help buffer.
 function! HelpToggle()
     let win = FindHelpWindow()
+    let recentHelpBuf = FindRecentHelpBuf()
     if win > 0
         execute win . "wincmd w"
         wincmd c
         wincmd p
-    elseif g:LastHelpBuf > 0
+    elseif recentHelpBuf > 0
         split
-        execute g:LastHelpBuf . "buffer"
+        execute recentHelpBuf . "buffer"
     else
         help
     endif
