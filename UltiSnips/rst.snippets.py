@@ -69,3 +69,6 @@ wsnip("f", "File markup", r"""
 :file:\`${1:path}\`$0
 """)
 
+wsnip("cmd", "Command markup", r"""
+:command:\`${1:command}\`$0
+""")
