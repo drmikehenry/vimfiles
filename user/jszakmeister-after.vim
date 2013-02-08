@@ -65,10 +65,6 @@ nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
 vnoremap <expr> <Leader><Leader>g VisualRegrep()
 nnoremap <expr> <Leader><Leader>g NormalRegrep()
 
-" Add a mapping for the Quickfix window.  Unfortunately, C-Q doesn't appear to
-" work in a terminal.
-nnoremap <Leader><Leader>q :call QuickFixWinToggle()<CR>
-
 " Copies a selection to the clipboard, with 4 spaces added to the front.
 " This makes it easier to paste into a markdown-enabled form, like on
 " StackOverflow and on GitHub.
