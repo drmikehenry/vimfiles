@@ -357,6 +357,7 @@ notes_tcomment	notes.txt	/*notes_tcomment*
 notes_textobj-diff	notes.txt	/*notes_textobj-diff*
 notes_textobj-func	notes.txt	/*notes_textobj-func*
 notes_textobj-indent	notes.txt	/*notes_textobj-indent*
+notes_textobj-rst	notes.txt	/*notes_textobj-rst*
 notes_textobj-user	notes.txt	/*notes_textobj-user*
 notes_tips	notes.txt	/*notes_tips*
 notes_togglecursor	notes.txt	/*notes_togglecursor*
