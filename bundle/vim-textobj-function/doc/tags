@@ -12,6 +12,8 @@ textobj-function-c-changelog	textobj-function-c.txt	/*textobj-function-c-changel
 textobj-function-c-changelog-0.0	textobj-function-c.txt	/*textobj-function-c-changelog-0.0*
 textobj-function-c-changelog-0.1.0	textobj-function-c.txt	/*textobj-function-c-changelog-0.1.0*
 textobj-function-c-changelog-0.1.1	textobj-function-c.txt	/*textobj-function-c-changelog-0.1.1*
+textobj-function-c-changelog-0.1.2	textobj-function-c.txt	/*textobj-function-c-changelog-0.1.2*
+textobj-function-c-changelog-0.1.3	textobj-function-c.txt	/*textobj-function-c-changelog-0.1.3*
 textobj-function-c-contents	textobj-function-c.txt	/*textobj-function-c-contents*
 textobj-function-c-interface	textobj-function-c.txt	/*textobj-function-c-interface*
 textobj-function-c-introduction	textobj-function-c.txt	/*textobj-function-c-introduction*
@@ -20,6 +22,8 @@ textobj-function-changelog	textobj-function.txt	/*textobj-function-changelog*
 textobj-function-changelog-0.0	textobj-function.txt	/*textobj-function-changelog-0.0*
 textobj-function-changelog-0.1.0	textobj-function.txt	/*textobj-function-changelog-0.1.0*
 textobj-function-changelog-0.1.1	textobj-function.txt	/*textobj-function-changelog-0.1.1*
+textobj-function-changelog-0.1.2	textobj-function.txt	/*textobj-function-changelog-0.1.2*
+textobj-function-changelog-0.1.3	textobj-function.txt	/*textobj-function-changelog-0.1.3*
 textobj-function-contents	textobj-function.txt	/*textobj-function-contents*
 textobj-function-customizing	textobj-function.txt	/*textobj-function-customizing*
 textobj-function-interface	textobj-function.txt	/*textobj-function-interface*
@@ -32,6 +36,8 @@ textobj-function-vim-changelog	textobj-function-vim.txt	/*textobj-function-vim-c
 textobj-function-vim-changelog-0.0	textobj-function-vim.txt	/*textobj-function-vim-changelog-0.0*
 textobj-function-vim-changelog-0.1.0	textobj-function-vim.txt	/*textobj-function-vim-changelog-0.1.0*
 textobj-function-vim-changelog-0.1.1	textobj-function-vim.txt	/*textobj-function-vim-changelog-0.1.1*
+textobj-function-vim-changelog-0.1.2	textobj-function-vim.txt	/*textobj-function-vim-changelog-0.1.2*
+textobj-function-vim-changelog-0.1.3	textobj-function-vim.txt	/*textobj-function-vim-changelog-0.1.3*
 textobj-function-vim-contents	textobj-function-vim.txt	/*textobj-function-vim-contents*
 textobj-function-vim-interface	textobj-function-vim.txt	/*textobj-function-vim-interface*
 textobj-function-vim-introduction	textobj-function-vim.txt	/*textobj-function-vim-introduction*
