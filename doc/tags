@@ -248,7 +248,6 @@ g:alignmaps_euronumber	Align.txt	/*g:alignmaps_euronumber*
 g:alignmaps_usanumber	Align.txt	/*g:alignmaps_usanumber*
 g:bufExplorerShowNoName	notes.txt	/*g:bufExplorerShowNoName*
 g:bufExplorerShowRelativePath	notes.txt	/*g:bufExplorerShowRelativePath*
-g:bufExplorerSortBy	notes.txt	/*g:bufExplorerSortBy*
 g:loremipsum_files	loremipsum.txt	/*g:loremipsum_files*
 g:loremipsum_marker	loremipsum.txt	/*g:loremipsum_marker*
 g:loremipsum_paragraph_template	loremipsum.txt	/*g:loremipsum_paragraph_template*

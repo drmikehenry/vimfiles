@@ -317,10 +317,10 @@ The following patch fixes a number of issues.  Primarily it restores
 the ability to view "No Name" buffers which was lost in version 7.3.0.
 
 diff --git a/bundle/bufexplorer/doc/bufexplorer.txt b/bundle/bufexplorer/doc/bufexplorer.txt
-index b66e823..5b51613 100644
+index b66e823..f999f69 100644
 --- a/bundle/bufexplorer/doc/bufexplorer.txt
 +++ b/bundle/bufexplorer/doc/bufexplorer.txt
-@@ -161,6 +161,13 @@ To control whether to show directories in the buffer list or not, use: >
+@@ -161,6 +161,12 @@ To control whether to show directories in the buffer list or not, use: >
    let g:bufExplorerShowDirectories=0   " Don't show directories.
  The default is to show directories.
  
@@ -330,7 +330,6 @@ index b66e823..5b51613 100644
 +  let g:bufExplorerShowNoName=1      " Show "No Name" buffers.
 +The default is to show "No Name" buffers.
 +
-+                                                          *g:bufExplorerSortBy*
                                                  *g:bufExplorerShowRelativePath*
  To control whether to show absolute paths or relative to the current
  directory, use: >

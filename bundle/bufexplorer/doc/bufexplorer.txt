@@ -167,7 +167,6 @@ To control whether to show "No Name" buffers or not, use: >
   let g:bufExplorerShowNoName=1      " Show "No Name" buffers.
 The default is to show "No Name" buffers.
 
-                                                          *g:bufExplorerSortBy*
                                                 *g:bufExplorerShowRelativePath*
 To control whether to show absolute paths or relative to the current
 directory, use: >
