@@ -1,7 +1,7 @@
 " Vim additional ftplugin: c/textobj-function
-" Version 0.1.1
-" Copyright (C) 2007-2009 kana <http://whileimautomaton.net/>
-" License: MIT license  {{{
+" Version 0.1.3
+" Copyright (C) 2007-2013 Kana Natsuno <http://whileimautomaton.net/>
+" License: So-called MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
 "     "Software"), to deal in the Software without restriction, including
@@ -36,7 +36,7 @@ if !exists('*g:textobj_function_c_select')
     normal! k$%0k
     let b = getpos('.')
 
-    if 1 < e[1] - b[1]  " is ther some code?
+    if 1 < e[1] - b[1]  " is there some code?
       return ['V', b, e]
     else
       return 0
@@ -51,7 +51,7 @@ if !exists('*g:textobj_function_c_select')
     normal [[
     let b = getpos('.')
 
-    if 1 < e[1] - b[1]  " is ther some code?
+    if 1 < e[1] - b[1]  " is there some code?
       call setpos('.', b)
       normal! j0
       let b = getpos('.')
