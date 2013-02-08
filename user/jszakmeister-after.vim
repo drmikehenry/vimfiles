@@ -512,6 +512,25 @@ endfunction
 command! -nargs=1 GrabGithubIssueSnippet
             \ :execute "normal! a" . GrabIssueSnippetFromCurrentRepo(<args>)
 
+" -------------------------------------------------------------
+" GrabMap
+" -------------------------------------------------------------
+
+function! GrabMap()
+    let l:save_a = @a
+    let @a = ''
+    redir @A
+    map
+    redir END
+    enew
+    set buftype=nofile
+    set bufhidden=hide
+    setlocal noswapfile
+    execute 'normal 0"ap'
+    let @a = l:save_a
+endfunction
+command! GrabMap :call GrabMap()
+
 " =============================================================
 " Machine Specific Settings
 " =============================================================
