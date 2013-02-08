@@ -24,8 +24,8 @@ hi FoldColumn       guifg=#878700     guibg=#262626     gui=NONE      ctermfg=10
 hi SignColumn       guifg=#00afff     guibg=#262626     gui=NONE      ctermfg=39          ctermbg=235         cterm=NONE
 
 hi VertSplit        guifg=#c6c6c6     guibg=#767676     gui=NONE      ctermfg=251         ctermbg=243         cterm=NONE
-hi StatusLine       guifg=#CCCCCC     guibg=#202020     gui=italic    ctermfg=white       ctermbg=darkgray    cterm=NONE
-hi StatusLineNC     guifg=black       guibg=#202020     gui=NONE      ctermfg=blue        ctermbg=darkgray    cterm=NONE
+hi StatusLine       guifg=#d0d0d0     guibg=#626262     gui=NONE      ctermfg=252         ctermbg=241         cterm=NONE
+hi StatusLineNC     guifg=#767676     guibg=#3a3a3a     gui=italic    ctermfg=243         ctermbg=237         cterm=NONE
 
 hi Folded           guifg=#a0a8b0     guibg=#384048     gui=NONE      ctermfg=NONE        ctermbg=darkgray    cterm=NONE
 hi Title            guifg=#e3dab7     guibg=NONE        gui=NONE      ctermfg=223         ctermbg=NONE        cterm=NONE
