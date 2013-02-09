@@ -1265,7 +1265,9 @@ endif
 " -------------------------------------------------------------
 " BufExplorer
 " -------------------------------------------------------------
+
 let g:bufExplorerShowRelativePath = 1
+let g:bufExplorerShowNoName = 1
 
 " Unmap Surround plugin's "ds" mapping during BufExplorer operation.
 augroup local_bufExplorer
