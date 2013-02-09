@@ -1,0 +1,63 @@
+*textobj-rst.txt*  Text objects and section jumping for reStructuredText
+
+Author:  John Szakmeister <john@szakmeister.net>
+License: Same terms as Vim itself (see |license|)
+
+This plugin depends on Kana's vim-textobj-user library, which is available
+here:
+
+- https://github.com/kana/vim-textobj-user, or
+- http://www.vim.org/scripts/script.php?script_id=2100
+
+==============================================================================
+INTRODUCTION                                     *textobj-rst*
+
+The goal is to make it easier to select logical blocks of text in
+reStructuredText.  At the moment, it only works with sections, though I'd like
+to extend it to block directives and lists too.
+
+Additionally, the plugin provides the ability to jump section to section like
+you would functions in Vim, with |[[|, |]]|, |[]|, and |][|.
+
+==============================================================================
+MAPPINGS                                         *textobj-rst-mappings*
+
+The plugin adds mappings for jumping between sections in normal, visual, and
+operator pending mode:
+
+* |]]| - Jump to the next section.
+* |[[| - Jump to the previous section.
+* |[]| - Jump to the end of the previous section.
+* |][| - Jump to the end of the next section.
+
+To select an entire section, use 'vars'.  To select everything in the section,
+minus the section heading, use 'virs'.
+
+The mappings are buffer-local and only get set for the 'rst' FileType.
+
+==============================================================================
+LIMITATIONS                                      *textobj-rst-limitations*
+
+At the moment, this plugin doesn't make any attempt to heuristically determine
+the type of headings that you're using.  It assumes that the headings are in
+the following order:
+
+- hashes (#)
+- asterisks (*)
+- equals (=)
+- minuses (-)
+- carets (^)
+- quotes (")
+
+The hierarchy is used to select the entire block.  For instance, having the
+cursor in a top-level section and then typing 'vars' will select the entire
+section, including all sub-sections.
+
+==============================================================================
+ABOUT                                            *textobj-rst-about*
+
+Grab the latest version or report a bug on GitHub:
+
+https://github.com/jszakmeister/vim-textobj-rst
+
+vim:ft=help

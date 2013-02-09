@@ -52,6 +52,7 @@
     TextObj-Diff - Diff-based text objects              |notes_textobj-diff|
     TextObj-Function - Function-based text objects      |notes_textobj-func|
     TextObj-Indent - Indentation-based text objects     |notes_textobj-indent|
+    TextObj-Rst - Text objects for reStructuredText     |notes_textobj-rst|
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
     ToggleCursor - Changes cursor shape in terminal     |notes_togglecursor|
     UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
@@ -1559,6 +1560,25 @@ E.g., to select block:
     vii
 
 Version 0.0.5 (a17bd544) from git://github.com/kana/vim-textobj-indent.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+TEXTOBJ-RST                                             *notes_textobj-rst*
+  Text objects for reStructuredText                     |textobj-rst.txt|
+
+Support for text objects based on reStructuredText sections.  Also maps |[[|,
+|]]|, |[]|, and |][| to help navigate between sections and the end of
+sections.
+
+Use "rs" for text objects based on sections.
+
+E.g., to select the contents of a section:
+    virs
+
+Version 0.2.0 (72c511b7) from
+git://github.com/jszakmeister/vim-textobj-rst.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
