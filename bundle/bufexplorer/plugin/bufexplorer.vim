@@ -10,7 +10,7 @@
 " Name Of File: bufexplorer.vim
 "  Description: Buffer Explorer Vim Plugin
 "   Maintainer: Jeff Lanzarotta (delux256-vim at yahoo dot com)
-" Last Changed: Monday, 28 Jan 2013
+" Last Changed: Friday, 08 Feb 2013
 "      Version: See g:bufexplorer_version for version number.
 "        Usage: This file should reside in the plugin directory and be
 "               automatically sourced.
@@ -49,7 +49,7 @@ endif
 "2}}}
 
 " Version number
-let g:bufexplorer_version = "7.3.4"
+let g:bufexplorer_version = "7.3.5"
 
 " Check for Vim version {{{2
 if v:version < 700
@@ -239,8 +239,8 @@ function! s:ShouldIgnore(buf)
         return 1
     endif
 
-    " Ignore unlisted buffers.
-    if buflisted(a:buf) == 0
+    " Ignore buffers with no name.
+    if empty(bufname(a:buf)) == 1
         return 1
     endif
 
@@ -396,10 +396,14 @@ function! s:DisplayBufferList()
 
     call s:SetupSyntax()
     call s:MapKeys()
+
+"NEW
     " Wipe out any existing lines in case BufExplorer buffer exists and the
-    " user has changed any global settings that might reduce the number of
+    " user had changed any global settings that might reduce the number of
     " lines needed in the buffer.
     keepjumps 1,$d _
+"NEW
+
     call setline(1, s:CreateHelp())
     call s:BuildBufferList()
     call cursor(s:firstBufferLine, 1)
@@ -587,8 +591,9 @@ function! s:GetBufferInfo(bufnr)
     " Loop over each line in the buffer.
     for buf in split(bufoutput, '\n')
         let bits = split(buf, '"')
-        " Use first and last components after the split on '"', in case
-        " a filename with an embedded '"' is present.
+
+        " Use first and last components after the split on '"', in case a
+        " filename with an embedded '"' is present.
         let b = {"attributes": bits[0], "line": substitute(bits[-1], '\s*', '', '')}
 
         let name = bufname(str2nr(b.attributes))
@@ -596,6 +601,7 @@ function! s:GetBufferInfo(bufnr)
         if b.hasNoName
             let name = "[No Name]"
         endif
+
         for [key, val] in items(s:types)
             let b[key] = fnamemodify(name, val)
         endfor
@@ -1145,7 +1151,7 @@ call s:Set("g:bufExplorerShowDirectories", 1)       " (Dir's are added by comman
 call s:Set("g:bufExplorerShowRelativePath", 0)      " Show listings with relative or absolute paths?
 call s:Set("g:bufExplorerShowTabBuffer", 0)         " Show only buffer(s) for this tab?
 call s:Set("g:bufExplorerShowUnlisted", 0)          " Show unlisted buffers?
-call s:Set("g:bufExplorerShowNoName", 1)            " Show "No Name" buffers?
+call s:Set("g:bufExplorerShowNoName", 0)            " Show "No Name" buffers?
 call s:Set("g:bufExplorerSortBy", "mru")            " Sorting methods are in s:sort_by:
 call s:Set("g:bufExplorerSplitBelow", &splitbelow)  " Should horizontal splits be below or above current window?
 call s:Set("g:bufExplorerSplitOutPathName", 1)      " Split out path and file name?
