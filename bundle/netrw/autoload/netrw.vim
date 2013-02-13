@@ -1,7 +1,7 @@
 " netrw.vim: Handles file transfer and remote directory listing across
 "            AUTOLOAD SECTION
-" Date:		Jan 24, 2013
-" Version:	147d	ASTRO-ONLY
+" Date:		Feb 11, 2013
+" Version:	147e	ASTRO-ONLY
 " Maintainer:	Charles E Campbell <NdrOchip@ScampbellPfamily.AbizM-NOSPAM>
 " GetLatestVimScripts: 1075 1 :AutoInstall: netrw.vim
 " Copyright:    Copyright (C) 1999-2012 Charles E. Campbell {{{1
@@ -22,7 +22,7 @@
 if &cp || exists("g:loaded_netrw")
   finish
 endif
-let g:loaded_netrw = "v147d"
+let g:loaded_netrw = "v147e"
 if v:version < 702
  echohl WarningMsg
  echo "***warning*** this version of netrw needs vim 7.2"
@@ -693,7 +693,7 @@ fun! s:NetrwSafeOptions()
   " allow the user to override safe options
 "  call Decho("ft<".&ft."> ei=".&ei)
   if &ft == "netrw"
-"   call Decho("do any netrw FileType autocmds")
+"   call Decho("do any netrw FileType autocmds (doau FileType netrw)")
    sil! keepalt keepj doau FileType netrw
   endif
 
@@ -2827,7 +2827,7 @@ fun! s:NetrwBrowse(islocal,dirname)
 "   call Decho("(NetrwBrowse) 2match none")
    2match none
   endif
-  if reusing
+  if reusing && line("$") > 1
    call s:NetrwOptionRestore("w:")
 "   call Decho("(NetrwBrowse) setl noma nomod nowrap")
    setl noma nomod nowrap
@@ -3008,12 +3008,13 @@ fun! s:NetrwGetBuffer(islocal,dirname)
 "   call Decho("(NetrwGetBuffer) case liststyle=treelist: find NetrwTreeList buffer if there is one")
    if exists("w:netrw_treebufnr") && w:netrw_treebufnr > 0
 "    call Decho("(NetrwGetBuffer)   re-use w:netrw_treebufnr=".w:netrw_treebufnr)
+    sil keepj %d
     let eikeep= &ei
     set ei=all
     exe "sil! b ".w:netrw_treebufnr
     let &ei= eikeep
-"    call Dret("s:NetrwGetBuffer 1<buffer not cleared> : bufnum#".w:netrw_treebufnr."<NetrwTreeListing>")
-    return 1
+"    call Dret("s:NetrwGetBuffer 0<buffer cleared> : bufnum#".w:netrw_treebufnr."<NetrwTreeListing>")
+    return 0
    endif
    let bufnum= -1
 "   call Decho("(NetrwGetBuffer)   liststyle=TREE but w:netrw_treebufnr doesn't exist")
@@ -4229,11 +4230,14 @@ fun! netrw#Explore(indx,dosplit,style,...)
    endif
 
 "   call Decho("(Explore) curdir<".curdir.">")
-   if has("win32") || has("win95") || has("win64") || has("win16")
-    keepj call search('\<'.substitute(curdir,'^.*[/\\]','','e').'\>','cW')
-   else
-    keepj call search('\<'.substitute(curdir,'^.*/','','e').'\>','cW')
-   endif
+   " ---------------------------------------------------------------------
+   " Jan 24, 2013: not sure why the following was present.  See P08-Ingelrest
+"   if has("win32") || has("win95") || has("win64") || has("win16")
+"    keepj call search('\<'.substitute(curdir,'^.*[/\\]','','e').'\>','cW')
+"   else
+"    keepj call search('\<'.substitute(curdir,'^.*/','','e').'\>','cW')
+"   endif
+   " ---------------------------------------------------------------------
 
   " starpat=1: Explore *//pattern  (current directory only search for files containing pattern)
   " starpat=2: Explore **//pattern (recursive descent search for files containing pattern)
@@ -6632,6 +6636,7 @@ fun! s:NetrwRefresh(islocal,dirname)
 "  call Decho("clear buffer<".expand("%")."> with :%d")
   let ykeep      = @@
   let screenposn = netrw#NetrwSavePosn()
+"  call Decho("clearing buffer prior to refresh")
   sil! keepj %d
   if a:islocal
    keepj call netrw#LocalBrowseCheck(a:dirname)
@@ -8559,13 +8564,13 @@ fun! netrw#NetrwRestorePosn(...)
   endif
 
   let &ei= eikeep
-"  call Dret("netrw#NetrwRestorePosn")
+"  call Dret("netrw#NetrwRestorePosn : line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol())
 endfun
 
 " ---------------------------------------------------------------------
 " netrw#NetrwSavePosn: saves position of cursor on screen {{{2
 fun! netrw#NetrwSavePosn()
-"  call Dfunc("netrw#NetrwSavePosn()")
+"  call Dfunc("netrw#NetrwSavePosn() line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol())
   " Save current line and column
   let w:netrw_winnr= winnr()
   let w:netrw_line = line(".")
