@@ -65,10 +65,6 @@ nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
 vnoremap <expr> <Leader><Leader>g VisualRegrep()
 nnoremap <expr> <Leader><Leader>g NormalRegrep()
 
-" Add a mapping for the Quickfix window.  Unfortunately, C-Q doesn't appear to
-" work in a terminal.
-nnoremap <Leader><Leader>q :call QuickFixWinToggle()<CR>
-
 " Copies a selection to the clipboard, with 4 spaces added to the front.
 " This makes it easier to paste into a markdown-enabled form, like on
 " StackOverflow and on GitHub.
@@ -515,6 +511,25 @@ function! GrabIssueSnippetFromCurrentRepo(issueNumber)
 endfunction
 command! -nargs=1 GrabGithubIssueSnippet
             \ :execute "normal! a" . GrabIssueSnippetFromCurrentRepo(<args>)
+
+" -------------------------------------------------------------
+" GrabMap
+" -------------------------------------------------------------
+
+function! GrabMap()
+    let l:save_a = @a
+    let @a = ''
+    redir @A
+    map
+    redir END
+    enew
+    set buftype=nofile
+    set bufhidden=hide
+    setlocal noswapfile
+    execute 'normal 0"ap'
+    let @a = l:save_a
+endfunction
+command! GrabMap :call GrabMap()
 
 " =============================================================
 " Machine Specific Settings
