@@ -2398,6 +2398,11 @@ function! SetupDiff()
 endfunction
 command! -bar SetupDiff call SetupDiff()
 
+function! SetupAsm()
+    SetupSource
+endfunction
+command! -bar SetupAsm call SetupAsm()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
