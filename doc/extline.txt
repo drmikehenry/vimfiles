@@ -1,6 +1,6 @@
 *extline.txt*      Plugin for extending lines (e.g., underlined titles)
 
-*extline*          Version 0.1.1
+*extline*          Version 0.1.2
 
 ==============================================================================
 1.  Introduction                                    |extline-intro|
