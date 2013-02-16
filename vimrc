@@ -1600,6 +1600,24 @@ nnoremap <silent> <S-F8>     :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
 nnoremap <silent> <C-Q><C-T> :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
 nnoremap <silent> <C-Q>t     :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
 
+" Support for reStructuredText, if available.
+if executable("rst2ctags")
+    " tagbar settings
+    let g:tagbar_type_rst = {
+        \ 'ctagstype': 'rst',
+        \ 'ctagsbin' : 'rst2ctags',
+        \ 'ctagsargs' : '-f - --sort=yes',
+        \ 'kinds' : [
+            \ 's:sections',
+            \ 'i:images'
+        \ ],
+        \ 'sro' : '|',
+        \ 'kind2scope' : {
+            \ 's' : 'section',
+        \ },
+    \ }
+endif
+
 " -------------------------------------------------------------
 " textobj-diff
 " -------------------------------------------------------------

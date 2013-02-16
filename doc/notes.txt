@@ -1451,6 +1451,9 @@ Requires ctags.exe to be in the path.  Generally this comes with Linux
 distributions.  Compiled binaries may be found at
 http://ctags.sourceforge.net/
 
+Added support for reStructuredText using rst2ctags.  rst2ctags can be found
+at https://bitbucket.org/bernh/rst2ctags
+
 ------------------------------------------------------------------------------
 TCOMMENT                                                *notes_tcomment*
   Comment lines in a program                            |tcomment.txt|
