@@ -1059,6 +1059,31 @@ Installation:
 - Install in ~/.vim/plugin
 
 ------------------------------------------------------------------------------
+MANPAGEVIEW                                             *notes_manpageview*
+  File reading and writing across networks              |manpageview|
+
+Version 25f from http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
+
+Installation:
+- Distributed as a |vimball|  >
+
+    mkdir ~/.vim/bundle/manpageview
+    vim manpageview.vba.gz
+    :UseVimball ~/.vim/bundle/manpageview
+    :q
+
+- Remove .VimballRecord: >
+    rm ~/.vim/bundle/manpageview/.VimballRecord
+
+- Update help tags: >
+    vim '+:Helptags|q'
+
+- Add bundle and helptags: >
+    git add ~/.vim/bundle/manpageview
+    git add -f ~/.vim/bundle/manpageview/doc/tags
+
+------------------------------------------------------------------------------
+
 MARKDOWN                                                *notes_markdown*
   Markdown syntax highlighting
 
@@ -1098,12 +1123,16 @@ To dismiss netrw buffer, simply wipe it via :bwipe or similar.
 Installation:
 - Distributed as a |vimball|  >
 
+    mkdir ~/.vim/bundle/netrw
     vim netrw.vba.gz
     :UseVimball ~/.vim/bundle/netrw
     :q
 
-- Did not add .VimballRecord, since it's easy to remove bundles.
-- Run :Helptags
+- Remove .VimballRecord: >
+    rm ~/.vim/bundle/netrw/.VimballRecord
+
+- Update help tags: >
+    vim '+:Helptags|q'
 
 ------------------------------------------------------------------------------
 OMNICPPCOMPLETE                                         *notes_omnicppcomplete*
