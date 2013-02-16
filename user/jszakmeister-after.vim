@@ -77,6 +77,9 @@ command! -range CopyForMarkdown <line1>,<line2>call CopyForMarkdown()
 
 vnoremap <Leader><Leader>cm :CopyForMarkdown<CR>
 
+" Allow . to work over visual ranges.
+vnoremap . :normal .<CR>
+
 " =============================================================
 " Options
 " =============================================================
