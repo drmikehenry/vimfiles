@@ -1509,6 +1509,32 @@ let g:LustyJugglerAltTabMode = 1
 nnoremap <silent> <M-s> :LustyJuggler<CR>
 
 " -------------------------------------------------------------
+" manpageview
+" -------------------------------------------------------------
+
+let g:manpageview_winopen = "reuse"
+
+function! CheckManpageview()
+    let isMan = maparg("\<Space>", "n") ==? "<C-F>"
+    let isInfo = maparg("H", "n") =~? "manpageview"
+    if isMan
+        nnoremap <silent> <buffer> b           <C-B>
+        nnoremap <silent> <buffer> f           <C-F>
+        nnoremap <silent> <buffer> <           gg
+        nnoremap <silent> <buffer> >           G
+    endif
+    if isMan || isInfo
+        nnoremap <silent> <buffer> q           :q<CR>
+    endif
+endfunction
+
+augroup local_manpageview
+    autocmd!
+
+    autocmd FileType man,info call CheckManpageview()
+augroup END
+
+" -------------------------------------------------------------
 " netrw
 " -------------------------------------------------------------
 nmap <silent> <Leader>fe :Explore<CR>
