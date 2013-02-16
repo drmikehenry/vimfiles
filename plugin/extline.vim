@@ -1,13 +1,12 @@
 " Vim global plugin for extending lines (e.g., underlined titles).
-" Version:      0.1.1
-" Last Change:  September 11, 2009
+" Version:      0.1.2
+" Last Change:  February 16, 2013
 " Maintainer:   Michael Henry (vim at drmikehenry.com)
 " License:      This file is placed in the public domain.
 
-" TODO re-enable this
-"if exists('loaded_extline')
-    "finish
-"endif
+if exists('loaded_extline')
+    finish
+endif
 let loaded_extline = 1
 
 
@@ -140,11 +139,11 @@ function! s:UpdateTitle(tg)
         exe (titleLineNum - 1) . 's/^.*/\=lineText/g'
     endif
     exe titleLineNum
-    normal $
+    normal! $
     if underChar != ''
         let lineText = titlePrefix . repeat(underChar, titleLen)
         exe (titleLineNum + 1) . 's/^.*/\=lineText/g'
-        normal $
+        normal! $
     endif
 endfunction
 
@@ -179,7 +178,7 @@ function! s:MakeHline()
     if monochar != ''
         let lineText = (t . repeat(monochar, 80))[:77]
         exe 's/^.*/' . escape(lineText, '/') . '/g'
-        normal $
+        normal! $
     endif
 endfunction
 
