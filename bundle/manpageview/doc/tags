@@ -33,12 +33,12 @@ manpageview-copyright	manpageview.txt	/*manpageview-copyright*
 manpageview-extend	manpageview.txt	/*manpageview-extend*
 manpageview-format	manpageview.txt	/*manpageview-format*
 manpageview-history	manpageview.txt	/*manpageview-history*
-manpageview-history	manpageview.txt	/*manpageview-history*
 manpageview-info	manpageview.txt	/*manpageview-info*
 manpageview-man	manpageview.txt	/*manpageview-man*
 manpageview-open	manpageview.txt	/*manpageview-open*
 manpageview-options	manpageview.txt	/*manpageview-options*
 manpageview-pagedown	manpageview.txt	/*manpageview-pagedown*
+manpageview-pagehistory	manpageview.txt	/*manpageview-pagehistory*
 manpageview-pageup	manpageview.txt	/*manpageview-pageup*
 manpageview-perl	manpageview.txt	/*manpageview-perl*
 manpageview-php	manpageview.txt	/*manpageview-php*

@@ -22,6 +22,7 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 	     Extending ManPageView..................: |manpageview-extend|
 	     Manpageview Suggestion.................: |manpageview-suggest|
 	     From the Shell.........................: |manpageview-shell|
+	     Page history...........................: |manpageview-pagehistory|
 	3. ManPageView Options......................: |manpageview-options|
 	4. ManPageView History......................: |manpageview-history|
 
@@ -216,7 +217,7 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 	manpageview instead.
 
 						*:Manprv* *:Mannxt*
-	MANPAGEVIEW HISTORY			*manpageview-history*
+	MANPAGEVIEW PAGE HISTORY		*manpageview-pagehistory*
 
 	Manpageview keeps track of successful (ie. not empty) pages; you may
 	use >
