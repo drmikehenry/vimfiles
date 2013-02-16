@@ -327,7 +327,30 @@ if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
 endif
 
 let g:syntastic_enable_balloons = 1
-let g:syntastic_quiet_warnings=1
+let g:syntastic_quiet_warnings = 1
+
+function! ReplacePowerlineSyntastic()
+    function! Powerline#Functions#syntastic#GetErrors(line_symbol) " {{{
+        if ! exists('g:syntastic_stl_format')
+            " Syntastic hasn't been loaded yet
+            return ''
+        endif
+
+        " Temporarily change syntastic output format
+        let old_stl_format = g:syntastic_stl_format
+        if exists('g:Powerline_syntastic_stl_format')
+            let g:syntastic_stl_format = g:Powerline_syntastic_stl_format
+        else
+            let g:syntastic_stl_format = '%E{%ee}%B{ }%W{%ww}'
+        endif
+
+        let ret = SyntasticStatuslineFlag()
+
+        let g:syntastic_stl_format = old_stl_format
+
+        return ret
+    endfunction " }}}
+endfunction
 
 " =============================================================
 " Autocommands
@@ -336,6 +359,7 @@ let g:syntastic_quiet_warnings=1
 augroup jszakmeister_vimrc
     autocmd!
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
+    autocmd VimEnter * call ReplacePowerlineSyntastic()
 augroup END
 
 " =============================================================
