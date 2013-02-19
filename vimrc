@@ -1602,21 +1602,25 @@ nnoremap <silent> <C-Q>t     :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
 
 " Support for reStructuredText, if available.
 if executable("rst2ctags")
-    " tagbar settings
-    let g:tagbar_type_rst = {
-        \ 'ctagstype': 'rst',
-        \ 'ctagsbin' : 'rst2ctags',
-        \ 'ctagsargs' : '-f - --sort=yes',
-        \ 'kinds' : [
-            \ 's:sections',
-            \ 'i:images'
-        \ ],
-        \ 'sro' : '|',
-        \ 'kind2scope' : {
-            \ 's' : 'section',
-        \ },
-    \ }
+    let g:rst2ctags = 'rst2ctags'
+else
+    let g:rst2ctags = $VIMFILES . '/tool/rst2ctags/rst2ctags.py'
 endif
+
+" tagbar settings
+let g:tagbar_type_rst = {
+    \ 'ctagstype': 'rst',
+    \ 'ctagsbin' : g:rst2ctags,
+    \ 'ctagsargs' : '-f - --sort=yes',
+    \ 'kinds' : [
+        \ 's:sections',
+        \ 'i:images'
+    \ ],
+    \ 'sro' : '|',
+    \ 'kind2scope' : {
+        \ 's' : 'section',
+    \ },
+\ }
 
 " -------------------------------------------------------------
 " textobj-diff
