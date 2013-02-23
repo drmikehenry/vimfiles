@@ -138,6 +138,11 @@ if !empty($SSH_TTY)
     hi Normal guibg=#0d280d
 endif
 
+" Set the width to accommodate a full 80 column view + tagbar + some change.
+if has("gui_running")
+    set columns=132
+endif
+
 " -------------------------------------------------------------
 " Font selection
 " -------------------------------------------------------------
