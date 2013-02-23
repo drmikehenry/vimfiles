@@ -156,7 +156,7 @@ function configure()
             --enable-tclinterp     \
             --enable-rubyinterp     \
             --enable-cscope     \
-            --with-compiledby=drmikehenry@drmikehenry.com     \
+            --with-compiledby=vim@drmikehenry.com     \
 
     )
 }
