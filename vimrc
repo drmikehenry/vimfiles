@@ -2717,6 +2717,15 @@ if has("gui_running")
     " added to the clipboard (on Windows) or the primary selection (on Unix).
     set guioptions-=a
 
+    " 'L' causes a left-side scrollbar to automatically appear when a
+    " vertical split is created.  Unfortunately, there is a timing bug of
+    " some kind in Vim that sometimes prevents 'columns' from being
+    " properly maintained when the comings and goings of the scrollbar
+    " change the width of the GUI frame.  The right-side scrollbar still
+    " functions properly for the active window, so there's no need for the
+    " left-side scrollbar anyway.
+    set guioptions-=L
+
     " Number of lines of text overall.
     set lines=50
 
