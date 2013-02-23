@@ -327,7 +327,7 @@ endif
 " -------------------------------------------------------------
 
 if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
-    let g:syntastic_error_symbol='✗'
+    let g:syntastic_error_symbol='✘'
     let g:syntastic_warning_symbol='⚠'
 endif
 
