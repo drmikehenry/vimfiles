@@ -7,7 +7,11 @@ colorscheme szakdark
 " =============================================================
 
 " Default font size.
-let g:SZAK_FONT_SIZE = 14
+if has("gui_win32")
+    let g:SZAK_FONT_SIZE = 11
+else
+    let g:SZAK_FONT_SIZE = 14
+endif
 
 " =============================================================
 " Detect custom exectuables
@@ -77,6 +81,12 @@ command! -range CopyForMarkdown <line1>,<line2>call CopyForMarkdown()
 
 vnoremap <Leader><Leader>cm :CopyForMarkdown<CR>
 
+function! UnmapUnwanted()
+    " Unmap one of AlignMap's mappings... I don't use it, and it delays the above
+    " mapping.
+    unmap <leader>w=
+endfunction
+
 " Allow . to work over visual ranges.
 vnoremap . :normal .<CR>
 
@@ -138,6 +148,11 @@ if !empty($SSH_TTY)
     hi Normal guibg=#0d280d
 endif
 
+" Set the width to accommodate a full 80 column view + tagbar + some change.
+if has("gui_running")
+    set columns=132
+endif
+
 " -------------------------------------------------------------
 " Font selection
 " -------------------------------------------------------------
@@ -147,6 +162,8 @@ endif
 function! HasFont(filename)
     if has("macunix")
         let l:search_paths = ["~/Library/Fonts", "/Library/Fonts"]
+    elseif has("gui_win32")
+        let l:search_paths = [expand("$windir/Fonts")]
     else
         let l:search_paths = ["~/.fonts", "/usr/share/fonts"]
     endif
@@ -181,7 +198,7 @@ function! SetFont()
             endif
         endfor
 
-        if has("macunix")
+        if has("macunix") || has("gui_win32")
             let fontstring=join(map(
                         \ copy(fontname), 'v:val . ":h" . g:SZAK_FONT_SIZE'), ",")
         else
@@ -322,12 +339,13 @@ endif
 " -------------------------------------------------------------
 
 if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
-    let g:syntastic_error_symbol='✗'
+    let g:syntastic_error_symbol='✘'
     let g:syntastic_warning_symbol='⚠'
 endif
 
 let g:syntastic_enable_balloons = 1
 let g:syntastic_quiet_warnings = 1
+let g:syntastic_enable_highlighting = 0
 
 function! ReplacePowerlineSyntastic()
     function! Powerline#Functions#syntastic#GetErrors(line_symbol) " {{{
@@ -360,6 +378,7 @@ augroup jszakmeister_vimrc
     autocmd!
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
     autocmd VimEnter * call ReplacePowerlineSyntastic()
+    autocmd VimEnter * call UnmapUnwanted()
 augroup END
 
 " =============================================================
