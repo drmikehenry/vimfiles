@@ -1428,24 +1428,10 @@ Local customizations:
   CTRL-Q CTRL-T - toggle the tagbar (:TagbarToggle)
   CTRL-Q T      - toggle the tagbar (:TagbarToggle)
 
-Version 2012-11-22 (feebffcd) from https://github.com/majutsushi/tagbar
+Version 2013-02-26 (cc222f5d) from https://github.com/majutsushi/tagbar
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
-- Add the following patch to fix an issue with current tag showing up in
-  unsupported files: >
-
-  diff --git a/bundle/tagbar/autoload/tagbar.vim b/bundle/tagbar/autoload/tagbar.vim
-  index 7edc25d..99464b7 100644
-  --- a/bundle/tagbar/autoload/tagbar.vim
-  +++ b/bundle/tagbar/autoload/tagbar.vim
-  @@ -3056,6 +3056,7 @@ function! s:AutoUpdate(fname, force) abort
-       " Don't do anything if the file isn't supported
-       if !s:IsValidFile(a:fname, sftype)
-           call s:LogDebugMessage('Not a valid file, stopping processing')
-  +        call s:known_files.setCurrent({})
-           return
-       endif
 
 Requires ctags.exe to be in the path.  Generally this comes with Linux
 distributions.  Compiled binaries may be found at
