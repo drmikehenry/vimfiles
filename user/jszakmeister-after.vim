@@ -339,6 +339,7 @@ endif
 
 let g:syntastic_enable_balloons = 1
 let g:syntastic_quiet_warnings = 1
+let g:syntastic_enable_highlighting = 0
 
 function! ReplacePowerlineSyntastic()
     function! Powerline#Functions#syntastic#GetErrors(line_symbol) " {{{
