@@ -81,6 +81,12 @@ command! -range CopyForMarkdown <line1>,<line2>call CopyForMarkdown()
 
 vnoremap <Leader><Leader>cm :CopyForMarkdown<CR>
 
+function! UnmapUnwanted()
+    " Unmap one of AlignMap's mappings... I don't use it, and it delays the above
+    " mapping.
+    unmap <leader>w=
+endfunction
+
 " Allow . to work over visual ranges.
 vnoremap . :normal .<CR>
 
@@ -372,6 +378,7 @@ augroup jszakmeister_vimrc
     autocmd!
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
     autocmd VimEnter * call ReplacePowerlineSyntastic()
+    autocmd VimEnter * call UnmapUnwanted()
 augroup END
 
 " =============================================================
