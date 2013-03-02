@@ -612,6 +612,7 @@ function!  s:IdentifyVCSType(buffer)
 		if len(preferences) > 0
 			if type(preferences) == 1
 				let listPreferences = split(preferences, '\W\+')
+				unlet preferences
 				let preferences = listPreferences
 			endif
 			for preferred in preferences
