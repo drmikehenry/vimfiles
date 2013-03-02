@@ -7,7 +7,11 @@ colorscheme szakdark
 " =============================================================
 
 " Default font size.
-let g:SZAK_FONT_SIZE = 14
+if has("gui_win32")
+    let g:SZAK_FONT_SIZE = 11
+else
+    let g:SZAK_FONT_SIZE = 14
+endif
 
 " =============================================================
 " Detect custom exectuables
@@ -152,6 +156,8 @@ endif
 function! HasFont(filename)
     if has("macunix")
         let l:search_paths = ["~/Library/Fonts", "/Library/Fonts"]
+    elseif has("gui_win32")
+        let l:search_paths = [expand("$windir/Fonts")]
     else
         let l:search_paths = ["~/.fonts", "/usr/share/fonts"]
     endif
@@ -186,7 +192,7 @@ function! SetFont()
             endif
         endfor
 
-        if has("macunix")
+        if has("macunix") || has("gui_win32")
             let fontstring=join(map(
                         \ copy(fontname), 'v:val . ":h" . g:SZAK_FONT_SIZE'), ",")
         else
