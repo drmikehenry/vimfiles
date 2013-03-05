@@ -38,7 +38,6 @@ manpageview-man	manpageview.txt	/*manpageview-man*
 manpageview-open	manpageview.txt	/*manpageview-open*
 manpageview-options	manpageview.txt	/*manpageview-options*
 manpageview-pagedown	manpageview.txt	/*manpageview-pagedown*
-manpageview-pagehistory	manpageview.txt	/*manpageview-pagehistory*
 manpageview-pageup	manpageview.txt	/*manpageview-pageup*
 manpageview-perl	manpageview.txt	/*manpageview-perl*
 manpageview-php	manpageview.txt	/*manpageview-php*

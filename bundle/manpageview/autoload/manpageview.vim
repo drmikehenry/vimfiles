@@ -1,7 +1,7 @@
 " manpagevim : extra commands for manual-handling
 " Author:	Charles E. Campbell
-" Date:		Feb 08, 2013
-" Version:	25f	ASTRO-ONLY
+" Date:		Mar 02, 2013
+" Version:	25g	ASTRO-ONLY
 "
 " Please read :help manpageview for usage, options, etc
 " COMBAK: get K on a latex command to work
@@ -15,7 +15,7 @@
 if &cp || exists("g:loaded_manpageview")
  finish
 endif
-let g:loaded_manpageview = "v25f"
+let g:loaded_manpageview = "v25g"
 if v:version < 702
  echohl WarningMsg
  echo "***warning*** this version of manpageview needs vim 7.2 or later"
@@ -804,7 +804,11 @@ fun! manpageview#KMap(usecWORD)
   else
    let book= v:count
    if book == 0
-    let book= "3"
+	if getline(".") =~ '\<'.expand("<cword>").'\s\+(\d\+)'
+	 let book= substitute(getline("."),'\<'.expand("<cword>").'\s\+(\(\d\+\)).*$','\1','') + 0
+	else
+     let book= "3"
+	endif
    elseif book > 0
     let book= string(book)
    else

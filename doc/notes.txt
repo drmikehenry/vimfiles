@@ -1062,7 +1062,7 @@ Installation:
 MANPAGEVIEW                                             *notes_manpageview*
   File reading and writing across networks              |manpageview|
 
-Version 25f from http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
+Version 25g from http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
 
 Installation:
 - Distributed as a |vimball|  >
@@ -1071,49 +1071,6 @@ Installation:
     vim manpageview.vba.gz
     :UseVimball ~/.vim/bundle/manpageview
     :q
-
-- Apply patch to fix duplicate tags: >
-
-    diff --git a/bundle/manpageview/doc/manpageview.txt b/bundle/manpageview/doc/manpageview.txt
-    index d585e01..3ff24d4 100644
-    --- a/bundle/manpageview/doc/manpageview.txt
-    +++ b/bundle/manpageview/doc/manpageview.txt
-    @@ -22,6 +22,7 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
-                 Extending ManPageView..................: |manpageview-extend|
-                 Manpageview Suggestion.................: |manpageview-suggest|
-                 From the Shell.........................: |manpageview-shell|
-    +	     Page history...........................: |manpageview-pagehistory|
-            3. ManPageView Options......................: |manpageview-options|
-            4. ManPageView History......................: |manpageview-history|
-     
-    @@ -216,7 +217,7 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
-            manpageview instead.
-     
-                                                    *:Manprv* *:Mannxt*
-    -	MANPAGEVIEW HISTORY			*manpageview-history*
-    +	MANPAGEVIEW PAGE HISTORY		*manpageview-pagehistory*
-     
-            Manpageview keeps track of successful (ie. not empty) pages; you may
-            use >
-    diff --git a/bundle/manpageview/doc/tags b/bundle/manpageview/doc/tags
-    index 71c46f3..5a2f163 100644
-    --- a/bundle/manpageview/doc/tags
-    +++ b/bundle/manpageview/doc/tags
-    @@ -33,12 +33,12 @@ manpageview-copyright	manpageview.txt	/*manpageview-copyright*
-     manpageview-extend	manpageview.txt	/*manpageview-extend*
-     manpageview-format	manpageview.txt	/*manpageview-format*
-     manpageview-history	manpageview.txt	/*manpageview-history*
-    -manpageview-history	manpageview.txt	/*manpageview-history*
-     manpageview-info	manpageview.txt	/*manpageview-info*
-     manpageview-man	manpageview.txt	/*manpageview-man*
-     manpageview-open	manpageview.txt	/*manpageview-open*
-     manpageview-options	manpageview.txt	/*manpageview-options*
-     manpageview-pagedown	manpageview.txt	/*manpageview-pagedown*
-    +manpageview-pagehistory	manpageview.txt	/*manpageview-pagehistory*
-     manpageview-pageup	manpageview.txt	/*manpageview-pageup*
-     manpageview-perl	manpageview.txt	/*manpageview-perl*
-     manpageview-php	manpageview.txt	/*manpageview-php*
-  
 
 - Remove .VimballRecord: >
     rm ~/.vim/bundle/manpageview/.VimballRecord
