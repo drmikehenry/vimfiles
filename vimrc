@@ -34,7 +34,7 @@ endfunction
 " Note: using an environment variable instead of normal Vim variable
 " because environment variables are expanded in values used with
 " setting 'runtimepath' later.
-let $VIMFILES=expand("<sfile>:p:h")
+let $VIMFILES = expand("<sfile>:p:h")
 
 " If local customizations directory exists, it takes precedence.
 call RtpPrepend($VIMFILES . "/local")
@@ -61,29 +61,29 @@ call RtpPrepend($VIMFILES . "/local")
 " which case it may live as a branch of vimfiles), or it may live elsewhere
 " to be separately source-controlled.
 if $VIMUSERFILES == ""
-    let $VIMUSERFILES=expand("$VIMFILES/user")
+    let $VIMUSERFILES = expand("$VIMFILES/user")
 endif
 
 " VIMUSER defaults to the logged-in user, but may be overridden to allow
 " multiple user to share the same overrides (e.g., to let "root" share settings
 " with another user).
 if $VIMUSER == ""
-    let $VIMUSER=expand("$USER")
+    let $VIMUSER = expand("$USER")
 endif
 
 " VIMRC_BEFORE points directly to the "-before.vim" script to execute.
 if $VIMRC_BEFORE == ""
-    let $VIMRC_BEFORE=expand("$VIMUSERFILES/$VIMUSER-before.vim")
+    let $VIMRC_BEFORE = expand("$VIMUSERFILES/$VIMUSER-before.vim")
 endif
 
 " VIMRC_AFTER points directly to the "-after.vim" script to execute.
 if $VIMRC_AFTER == ""
-    let $VIMRC_AFTER=expand("$VIMUSERFILES/$VIMUSER-after.vim")
+    let $VIMRC_AFTER = expand("$VIMUSERFILES/$VIMUSER-after.vim")
 endif
 
 " VIMRC_BUNDLE points to the user's bundle area.
 if $VIMRC_BUNDLE == ""
-    let $VIMRC_BUNDLE=expand("$VIMUSERFILES/$VIMUSER/bundle")
+    let $VIMRC_BUNDLE = expand("$VIMUSERFILES/$VIMUSER/bundle")
 endif
 
 " Prepend per-user directory to runtimepath (provides the highest priority).
