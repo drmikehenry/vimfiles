@@ -1680,7 +1680,7 @@ the underlying source control system.
 Version 2c1dc008d4eeb7204f01c01f71cb8a01c066e9d0
 from git://github.com/drmikehenry/vcscommand.vim.git
 
-(Originally version 1.99.46 
+(Originally version 1.99.46
 from http://www.vim.org/scripts/script.php?script_id=90)
 
 Installation:
@@ -1871,31 +1871,90 @@ http://mysite.verizon.net/astronaut/vim/index.html
 ------------------------------------------------------------------------------
 Per-user overrides
 
-There are several ways for an individual user to customize the common
-settings.
+In order to allow per-user customizations while still sharing the bulk
+of the vimfiles configuration, a "vimuser" concept is defined based on
+environment variables.
 
-At the top of the vimrc file is a section on configuring locations for
-additional vimrc files.  The vimrc file lives in the VIMFILES directory, which
-is ~/.vim on Unix and in %USERPROFILE%\vimfiles on Windows, where USERPROFILE
-is an environment variable that often points to "C:\Documents and
-Settings\USERNAME" or "C:\Documents\USERNAME", though the location may vary.
-
-The VIMUSER variable defaults to the name of the logged-in user, but it may be
-changed in order to use the per-user settings of another user (for example, to
-allow root to use another user's settings).
-
-Based on VIMUSER, the vimrc will look for "before" and "after" scripts that
-will be sourced, if they exist, before and after the main vimrc.
-
-On useful place to override VIMUSER (or other environment variables) is in
-~/.vimrc (Unix) or %USERPROFILE%\_vimrc (Windows).  These files are normally
-configured as extremely thin wrappers that invoke the source-controlled main
-vimrc file.  But it's safe to put assignments like the following in ~/.vimrc,
-as the ~/.vim/setup.py script will not clobber them: >
+These environment variables may be set outside of Vim using standard
+operating-system methods.  In addition, it may be convenient to set them in
+the ~/.vimrc (%USERPROFILE%\_vimrc on Windows) file before the "runtime vimrc"
+command invokes the main "vimrc" file, since no logout/login is required to
+make the settings take effect.  It's safe to put assignments like the
+following in ~/.vimrc, as the ~/.vim/setup.py script will not clobber them: >
 
   let $VIMUSER = "username"
 
-See the logic at the top of the main vimrc for more details.
+The environment variables are:
+
+VIMFILES
+  The directory holding the main "vimrc" file.  Typically this will be one of
+  the following:
+    ~/.vim                            Unix, OS/X
+    %USERPROFILE%\_vimrc              Windows
+
+  On Windows, USERPROFILE is an environment variable that often points to
+  "C:\Documents and Settings\USERNAME" or "C:\Documents\USERNAME", though the
+  location may vary.
+
+VIMUSERFILES
+  Directory holding the per-user directory for each user.  If not set, this
+  defaults to the first existing directory in this list:
+
+  For Unix and OS/X:
+
+    ~/.vimuser
+    ~/.vim/user
+
+  For Windows:
+
+    %USERPROFILE%\_vimuser
+    %USERPROFILE%\_vimfiles/user
+
+  The first directory lives outside of the $VIMFILES area, which makes it easy
+  to maintain the user settings completely outside the source-controlled
+  $VIMFILES tree.  The second directory is more convenient for users
+  maintaining a fork of the $VIMFILES tree.
+
+VIMUSER
+  Name of the user running Vim.  This defaults to the logged-in user, but
+  it may be changed to allow one user to activate another user's settings
+  (e.g., to allow "root" to share another user's customizations).
+
+The directory $VIMUSERFILES/$VIMUSER specifies a per-user runtime directory.
+This directory will be added to 'runtimepath'.  For example, the Unix user
+"someuser"  will have 'runtimepath' agumented with the first-existing
+directory in the below list:
+
+  ~/.vimuser/someuser
+  ~/.vim/user/someuser
+
+VIMRC_BEFORE, VIMRC_AFTER
+  These point to "-before.vim" and "-after.vim" scripts.  If these files
+  exist, they will be sourced before or after the main "vimrc" file.  The
+  "-before.vim" hook is useful for changing things like <Leader> so that it
+  will be used by mappings in the main "vimrc".  Most other settings are best
+  overridden in the "-after.vim" script.
+
+  By default, these files are named "vimrc-before.vim" and "vimrc-after.vim",
+  and are located in the $VIMUSERFILES/$VIMUSER directory.  For example, the
+  "-before.vim" script for the Unix user "someuser" would live at the first
+  existing location in this list:
+
+    ~/.vimuser/someuser/vimrc-before.vim
+    ~/.vim/user/someuser/vimrc-before.vim
+
+  Note: For backward compatibility, the following files are also checked:
+
+    $VIMUSERFILES/$VIMUSER-before.vim
+    $VIMUSERFILES/$VIMUSER-after
+
+  These are not preferred, as they are not easily source-controlled along with
+  the other per-user files in $VIMUSERFILES/$VIMUSER/.
+
+VIMRC_BUNDLE
+  Per-user "bundle" directory (for use with |pathogen|).  This exists because
+  it may be desirable to keep bundles in a separate location, outside the
+  normal $VIMUSERFILES/$VIMUSER directory.
 
 ------------------------------------------------------------------------------
 Spell checking
