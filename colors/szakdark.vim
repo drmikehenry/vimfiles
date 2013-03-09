@@ -224,3 +224,9 @@ hi TagbarHighlight  guifg=white       guibg=#af5f00     gui=NONE      ctermfg=wh
 " BufExplorer
 hi bufExplorerMapping   guifg=gray      ctermfg=gray
 hi bufExplorerHelp      guifg=#6c6c6c   ctermfg=242
+
+" Syntastic
+hi SyntasticErrorSign   guifg=white     guibg=#af0000   ctermfg=white   ctermbg=124
+hi SyntasticWarningSign guifg=white     guibg=#aaaa00   ctermfg=white   ctermbg=136
+hi SyntasticErrorLine   guibg=#3f0000   ctermbg=52
+hi SyntasticWarningLine guibg=#2f2f00   ctermbg=58
