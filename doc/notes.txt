@@ -1896,6 +1896,11 @@ VIMFILES
   "C:\Documents and Settings\USERNAME" or "C:\Documents\USERNAME", though the
   location may vary.
 
+VIMUSER
+  Name of the user running Vim.  This defaults to the logged-in user, but
+  it may be changed to allow one user to activate another user's settings
+  (e.g., to allow "root" to share another user's customizations).
+
 VIMUSERFILES
   Directory holding the per-user directory for each user.  If not set, this
   defaults to the first existing directory in this list:
@@ -1903,29 +1908,24 @@ VIMUSERFILES
   For Unix and OS/X:
 
     ~/.vimuser
-    ~/.vim/user
+    ~/.vim/user/$VIMUSER
 
   For Windows:
 
     %USERPROFILE%\_vimuser
-    %USERPROFILE%\_vimfiles/user
+    %USERPROFILE%\_vimfiles\user\$VIMUSER
 
   The first directory lives outside of the $VIMFILES area, which makes it easy
   to maintain the user settings completely outside the source-controlled
   $VIMFILES tree.  The second directory is more convenient for users
   maintaining a fork of the $VIMFILES tree.
 
-VIMUSER
-  Name of the user running Vim.  This defaults to the logged-in user, but
-  it may be changed to allow one user to activate another user's settings
-  (e.g., to allow "root" to share another user's customizations).
-
-The directory $VIMUSERFILES/$VIMUSER specifies a per-user runtime directory.
-This directory will be added to 'runtimepath'.  For example, the Unix user
+The directory $VIMUSERFILES specifies a per-user runtime directory.  This
+directory will be added to 'runtimepath'.  For example, the Unix user
 "someuser"  will have 'runtimepath' agumented with the first-existing
 directory in the below list:
 
-  ~/.vimuser/someuser
+  ~/.vimuser
   ~/.vim/user/someuser
 
 VIMRC_BEFORE, VIMRC_AFTER
@@ -1936,25 +1936,29 @@ VIMRC_BEFORE, VIMRC_AFTER
   overridden in the "-after.vim" script.
 
   By default, these files are named "vimrc-before.vim" and "vimrc-after.vim",
-  and are located in the $VIMUSERFILES/$VIMUSER directory.  For example, the
-  "-before.vim" script for the Unix user "someuser" would live at the first
-  existing location in this list:
+  and are located in the $VIMUSERFILES directory, at these locations:
+  
+    $VIMUSERFILES/vimrc-before.vim
+    $VIMUSERFILES/vimrc-after.vim
+  
+  For example, the "-before.vim" script for the Unix user "someuser" would be
+  at one of the following two locations (depending whether ~/.vimuser exists):
 
-    ~/.vimuser/someuser/vimrc-before.vim
+    ~/.vimuser/vimrc-before.vim
     ~/.vim/user/someuser/vimrc-before.vim
 
-  Note: For backward compatibility, the following files are also checked:
+  Note: It's preferrable to keep all of the per-user files within
+  $VIMUSERFILES; however, for backward compatibility, the following locations
+  are also checked for "-before.vim" and "-after.vim" scripts, but only when
+  VIMUSERFILES is allowed to default to $VIMFILES/user/$VIMUSER:
 
-    $VIMUSERFILES/$VIMUSER-before.vim
-    $VIMUSERFILES/$VIMUSER-after
-
-  These are not preferred, as they are not easily source-controlled along with
-  the other per-user files in $VIMUSERFILES/$VIMUSER/.
+    $VIMFILES/user/$VIMUSER-before.vim
+    $VIMFILES/user/$VIMUSER-after.vim
 
 VIMRC_BUNDLE
   Per-user "bundle" directory (for use with |pathogen|).  This exists because
   it may be desirable to keep bundles in a separate location, outside the
-  normal $VIMUSERFILES/$VIMUSER directory.
+  normal $VIMUSERFILES directory.  It defaults to $VIMUSERFILES/bundle.
 
 ------------------------------------------------------------------------------
 Spell checking
