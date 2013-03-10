@@ -1659,6 +1659,24 @@ let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
+function! CustomizeUltiSnipsSearchDir(entering)
+    if a:entering
+        let b:SavedUltiSnipsSnippetDirectories = g:UltiSnipsSnippetDirectories
+        if exists("b:UltiSnipsSnippetDirectories")
+            let g:UltiSnipsSnippetDirectories = b:UltiSnipsSnippetDirectories
+        endif
+    elseif exists("b:SavedUltiSnipsSnippetDirectories")
+        " Restore setting.
+        let g:UltiSnipsSnippetDirectories = b:SavedUltiSnipsSnippetDirectories
+    endif
+endfunction
+
+augroup local_ultiSnips
+    autocmd!
+    autocmd BufEnter * call CustomizeUltiSnipsSearchDir(1)
+    autocmd BufLeave * call CustomizeUltiSnipsSearchDir(0)
+augroup END
+
 " -------------------------------------------------------------
 " vis
 " -------------------------------------------------------------
