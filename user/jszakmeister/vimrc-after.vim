@@ -591,7 +591,7 @@ if $VIMMACHINE == ""
     let $VIMMACHINE=hostname()
 endif
 
-let s:VIMMACHINE_CONFIG = $VIMUSERFILES . "/" . $VIMUSER .
+let s:VIMMACHINE_CONFIG = $VIMUSERFILES . "/" .
     \ "/machine/" . $VIMMACHINE . ".vim"
 
 " If a machine local config exists, source it.
