@@ -1631,8 +1631,14 @@ else
     let g:rst2ctags = $VIMFILES . '/tool/rst2ctags/rst2ctags.py'
 endif
 
-" tagbar settings
-let g:tagbar_type_rst = {
+" Local tagbar settings.  Assign g:tagbar_type_rst to this value to enable
+" support for .rst files in tagbar as follows:
+" let g:tagbar_type_rst = g:local_tagbar_type_rst
+"
+" TODO rst2ctags is too slow to use at present; revisit if/when a faster
+" solution is found.
+
+let g:local_tagbar_type_rst = {
     \ 'ctagstype': 'rst',
     \ 'ctagsbin' : g:rst2ctags,
     \ 'ctagsargs' : '-f - --sort=yes',
