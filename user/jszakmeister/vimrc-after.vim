@@ -292,6 +292,42 @@ endif
 let Grep_Xargs_Options = '-0'
 
 " -------------------------------------------------------------
+" Netrw
+" -------------------------------------------------------------
+
+let g:netrw_nogx = 1
+
+function! SmartOpen()
+    if mode() ==# 'n'
+        let uri = expand("<cWORD>")
+        if match(uri, "://")
+            let uri = expand("<cfile>")
+        endif
+    else
+        let uri = s:get_selected_text()
+    endif
+
+    call netrw#NetrwBrowseX(uri, 0)
+endfunction
+command! -bar SmartOpen call SmartOpen()
+
+" Get selected text in visual mode.
+function! s:get_selected_text()
+    let save_z = getreg('z', 1)
+    let save_z_type = getregtype('z')
+
+    try
+        normal! gv"zy
+        return @z
+    finally
+        call setreg('z', save_z, save_z_type)
+    endtry
+endfunction
+
+nmap gx :SmartOpen<CR>
+vmap gx :SmartOpen<CR>
+
+" -------------------------------------------------------------
 " VimClojure
 " -------------------------------------------------------------
 
