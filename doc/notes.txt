@@ -22,6 +22,7 @@
     Grep - Wrapper for grep/xargs                       |notes_grep|
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
+    JavaComplete - Java Omnicompletion                  |notes_javacomplete|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
     Less - Syntax highlighting for LessCSS              |notes_less|
     Localvimrc - Override settings via local files      |notes_localvimrc|
@@ -719,6 +720,7 @@ Version 2.4.0 from http://www.vim.org/scripts/script.php?script_id=3304
 
 - Unzipped into ~/.vim/bundle.
 - :Helptags
+
 ------------------------------------------------------------------------------
 HEADERGUARD                                             *notes_headerguard*
   Add guards for header files                           |headerguard|
@@ -728,6 +730,17 @@ To add or update a header guard in a .h file: >
     :HeaderguardAdd
 
 Version 0.1.0 from http://www.vim.org/scripts/script.php?script_id=2021
+
+------------------------------------------------------------------------------
+JAVACOMPLETE                                           *notes_javacomplete*
+  Java Omnicompletion
+
+Version 0.77.1.2 from
+http://vim.sourceforge.net/scripts/script.php?script_id=1785
+
+Installation:
+- Unzipped into ~/.vim/bundle/javacomplete
+- :Helptags
 
 ------------------------------------------------------------------------------
 KEEPCASE                                                *notes_keepcase*

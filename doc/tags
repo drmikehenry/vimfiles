@@ -323,6 +323,7 @@ notes_gundo	notes.txt	/*notes_gundo*
 notes_headerguard	notes.txt	/*notes_headerguard*
 notes_installation	notes.txt	/*notes_installation*
 notes_intro	notes.txt	/*notes_intro*
+notes_javacomplete	notes.txt	/*notes_javacomplete*
 notes_keepcase	notes.txt	/*notes_keepcase*
 notes_less	notes.txt	/*notes_less*
 notes_localvimrc	notes.txt	/*notes_localvimrc*
