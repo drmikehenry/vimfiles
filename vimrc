@@ -2506,6 +2506,11 @@ function! SetupJava()
 endfunction
 command! -bar SetupJava call SetupJava()
 
+function! SetupTmux()
+    SetupSource
+endfunction
+command! -bar SetupTmux call SetupTmux()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
