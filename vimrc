@@ -2500,6 +2500,12 @@ function! SetupAsm()
 endfunction
 command! -bar SetupAsm call SetupAsm()
 
+function! SetupJava()
+    SetupSource
+    setlocal omnifunc=javacomplete#Complete
+endfunction
+command! -bar SetupJava call SetupJava()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
