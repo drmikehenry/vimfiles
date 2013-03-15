@@ -30,4 +30,7 @@ augroup filetypedetect
     " Use the copy and overwrite mechanism on crontab files, otherwise crontab
     " may not see the changes we make.
     au FileType crontab setlocal backupcopy=yes
+
+    " Setup tmux conf files.
+    au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
 augroup END
