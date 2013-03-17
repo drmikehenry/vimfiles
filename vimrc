@@ -947,12 +947,50 @@ endfunction
 vnoremap <expr> <F3> VisualRegrep()
 nnoremap <expr> <F3> NormalRegrep()
 
-" Folding all but matching lines.
-" Taken from Wiki tip http://vim.wikia.com/wiki/VimTip282.
+function! FoldShowExpr()
+    let maxLevel = 2
+    let level = 0
+    while level < maxLevel
+        if getline(v:lnum - level) =~ @/
+            break
+        endif
+        if level != 0 && (getline(v:lnum + level) =~ @/)
+            break
+        endif
+        let level = level + 1
+    endwhile
+    return level
+endfunction
 
-nnoremap <silent> <leader>z :setlocal foldexpr=(getline(v:lnum)=~@/)?
-            \0:(getline(v:lnum-1)=~@/)\\|\\|(getline(v:lnum+1)=~@/)?
-            \1:2 foldmethod=expr foldlevel=0 foldcolumn=0<CR>
+function! FoldHideExpr()
+    return (getline(v:lnum) =~ @/) ? 1 : 0
+endfunction
+
+function! FoldRegex(foldExprFunc, regex)
+    if a:regex != ""
+        let @/=a:regex
+        call histadd("search", a:regex)
+    endif
+    let &l:foldexpr = a:foldExprFunc . '()'
+    setlocal foldmethod=expr
+    setlocal foldlevel=0
+    setlocal foldcolumn=0
+    setlocal foldminlines=0
+    setlocal foldenable
+
+    " Return to manual folding now that folds have been applied.
+    setlocal foldmethod=manual
+endfunction
+
+" Search (and "show") regex; fold everything else.
+command! -nargs=? Foldsearch    call FoldRegex('FoldShowExpr', <q-args>)
+
+" Fold matching lines ("hide" the matches).
+command! -nargs=? Fold          call FoldRegex('FoldHideExpr', <q-args>)
+
+" Fold away comment lines (including blank lines).
+" TODO: Extend for more than just shell comments.
+command! -nargs=? Foldcomments  Fold ^\s*#\|^\s*$
 
 
 " ==============================================================

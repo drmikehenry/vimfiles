@@ -2346,6 +2346,24 @@ The following mappings toggle the help window on and off:
 If the help window is already open, it will be closed; otherwise, the most
 recent help file will be re-opened.
 
+------------------------------------------------------------------------------
+Folding by regular expression
+
+To fold away lines that match a regex, use the custom command :Fold: >
+    :Fold regex         ; lines matching regex are hidden
+    :Fold               ; use last search pattern (@/) for regex
+
+Use the custom command :Foldsearch to search for lines matching a regex and
+fold away everything else: >
+    :Foldsearch regex   ; show lines matching regex, and fold away all else
+    :Foldsearch         ; use last search pattern (@/) for regex
+
+With :Foldsearch, increasing the 'foldlevel' to 1 will show one line of
+context around all matches.
+
+To fold away comments and blank lines, use this custom command: >
+    :Foldcomments
+
 ==============================================================================
 5.  Tips                                                *notes_tips*
 
