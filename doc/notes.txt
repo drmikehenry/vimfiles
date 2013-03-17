@@ -63,8 +63,10 @@
     VisIncr - Increment visually selected areas         |notes_visincr|
     VisSort - Sort visually selected areas              |notes_vissort|
     VisSwap - Swap visually selected areas              |notes_visswap|
-4.  Customizations                                      |notes_customizations|
-5.  Tips                                                |notes_tips|
+4.  Extensions                                          |notes_extensions|
+    Tmux syntax - Syntax definitions for tmux.conf      |notes_tmux_syntax|
+5.  Customizations                                      |notes_customizations|
+6.  Tips                                                |notes_tips|
 
 
 ==============================================================================
@@ -1883,7 +1885,17 @@ Version 4e from section "Visual Mode Based Swap" at
 http://mysite.verizon.net/astronaut/vim/index.html
 
 ==============================================================================
-4.  Customizations                                      *notes_customizations*
+4.  Extensions                                          *notes_extensions*
+
+------------------------------------------------------------------------------
+TMUX SYNTAX                                             *notes_tmux_syntax*
+  Syntax definitions for tmux.conf
+
+Install: >
+    wget http://sourceforge.net/p/tmux/tmux-code/ci/master/tree/examples/tmux.vim\?format\=raw -O syntax/tmux.vim
+
+==============================================================================
+5.  Customizations                                      *notes_customizations*
 
 ------------------------------------------------------------------------------
 Per-user overrides
@@ -2365,7 +2377,7 @@ To fold away comments and blank lines, use this custom command: >
     :Foldcomments
 
 ==============================================================================
-5.  Tips                                                *notes_tips*
+6.  Tips                                                *notes_tips*
 
 Use the following command: >
     :help quickref
