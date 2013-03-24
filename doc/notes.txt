@@ -2376,6 +2376,14 @@ context around all matches.
 To fold away comments and blank lines, use this custom command: >
     :Foldcomments
 
+------------------------------------------------------------------------------
+Converting Unicode symbols to ASCII
+
+Use :Toascii to convert a range of lines (defaulting to the entire buffer)
+into ASCII.  Mainly this converts several kinds of quotes into ASCII quotes
+and generally maps some of the Unicode symbols in the range U+2000 through
+U+206F into ASCII equivalents.
+
 ==============================================================================
 6.  Tips                                                *notes_tips*
 

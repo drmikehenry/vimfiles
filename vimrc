@@ -992,6 +992,76 @@ command! -nargs=? Fold          call FoldRegex('FoldHideExpr', <q-args>)
 " TODO: Extend for more than just shell comments.
 command! -nargs=? Foldcomments  Fold ^\s*#\|^\s*$
 
+" Convert certain unicode characters to ASCII equivalents in range
+" from firstLine to lastLine, included.
+function! Toascii(firstLine, lastLine)
+    let prefix = "silent " . a:firstLine . "," . a:lastLine . "s"
+
+    " Spaces of non-zero width.
+    execute prefix . '/[\u2000-\u200a\u202f]/ /ge'
+
+    " Zero-width spaces and joiners.
+    execute prefix . '/[\u200b-\u200d]//ge'
+
+    " "M" dash converts to a double-dash.
+    execute prefix . '/[\u2014]/--/ge'
+
+    " Remaining hyphens and short dashes.
+    execute prefix . '/[\u2010-\u2015\u2027]/-/ge'
+
+    " Apostrophes.
+    execute prefix . '/[\u2018-\u201b]/' . "'" . '/ge'
+
+    " Double-quotes.
+    execute prefix . '/[\u201c-\u201f]/"/ge'
+
+    " Bullets.
+    execute prefix . '/[\u2022-\u2023\u204c\u204d]/-/ge'
+
+    " One-dot leader.
+    execute prefix . '/[\u2024]/./ge'
+
+    " Two-dot leader.
+    execute prefix . '/[\u2025]/../ge'
+
+    " Ellipsis.
+    execute prefix . '/[\u2026]/.../ge'
+
+    " Prime.
+    execute prefix . '/[\u2032]/' . "'" . '/ge'
+
+    " Double-prime.
+    execute prefix . '/[\u2033]/' . "''" . '/ge'
+
+    " Triple-prime.
+    execute prefix . '/[\u2034]/' . "'''" . '/ge'
+
+    " Reversed Prime.
+    execute prefix . '/[\u2035]/`/ge'
+
+    " Reversed double-prime.
+    execute prefix . '/[\u2036]/``/ge'
+
+    " Reversed triple-prime.
+    execute prefix . '/[\u2037]/```/ge'
+
+    " Caret
+    execute prefix . '/[\u2038]/^/ge'
+
+    " Left angle quotation mark.
+    execute prefix . '/[\u2039]/</ge'
+
+    " Right angle quotation mark.
+    execute prefix . '/[\u203a]/>/ge'
+
+    " Double exclamation mark.
+    execute prefix . '/[\u203c]/!!/ge'
+
+endfunction
+
+" Convert certain unicode characters to ASCII equivalents.
+command! -range=% Toascii  call Toascii(<line1>, <line2>)
+
 
 " ==============================================================
 " Buffer manipulation
