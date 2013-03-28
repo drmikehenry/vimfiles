@@ -56,6 +56,7 @@
     TextObj-Rst - Text objects for reStructuredText     |notes_textobj-rst|
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
     ToggleCursor - Changes cursor shape in terminal     |notes_togglecursor|
+    ToggleList - Toggles quickfix and location list     |notes_togglelist|
     UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
     vcscommand - Version Control System integration     |notes_vcscommand|
     VimBall - Vim "package manager"                     |notes_vimball|
@@ -1624,6 +1625,22 @@ need version 1.7 or better.
 
 Version 0.1.0 (34373bd2) from
 git://github.com/jszakmeister/vim-togglecursor.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+TOGGLELIST                                              *notes_togglelist*
+  Toggles quickfix and location list
+
+Local customizations:
+
+- Prevented default mappings.
+- Mapped ToggleQuickfixList to <C-Q><C-Q>.
+- Mapped ToggleLocationList to <C-Q><C-L>.
+
+Version 2013-02-07 (860defed) from
+git://github.com/milkypostman/vim-togglelist.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

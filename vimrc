@@ -1309,17 +1309,6 @@ command! -bar L4 call s:L(4)
 " Make 5-column-wide layout.
 command! -bar L5 call s:L(5)
 
-" Toggle quickfix window.
-function! QuickFixWinToggle()
-    if s:quickFixBufNum() > 0
-        cclose
-    else
-        botright copen
-    endif
-endfunction
-nnoremap <silent> <C-Q><C-Q> :call QuickFixWinToggle()<CR>
-command! -bar QuickFixWinToggle :call QuickFixWinToggle()
-
 " Like windo but restore the current window.
 function! WinDo(command)
     let currwin=winnr()
@@ -1787,6 +1776,17 @@ function! CreateTextobjDiffLocalMappings()
     endfor
 endfunction
 
+" -------------------------------------------------------------
+" ToggleList
+" -------------------------------------------------------------
+
+let g:toggle_list_no_mappings = 1
+
+nnoremap <silent> <C-Q><C-Q> :call ToggleQuickfixList()<CR>
+command! -bar QuickFixWinToggle :call ToggleQuickfixList()
+
+nnoremap <silent> <C-Q><C-L> :call ToggleLocationList()<CR>
+command! -bar LocationListWinToggle :call ToggleLocationList()
 
 " -------------------------------------------------------------
 " UltiSnips
