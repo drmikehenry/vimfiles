@@ -2343,6 +2343,14 @@ endfunction
 command! -bar SetupPython call SetupPython()
 
 " -------------------------------------------------------------
+" Setup for Ruby.
+" -------------------------------------------------------------
+function! SetupRuby()
+    SetupSource
+endfunction
+command! -bar SetupRuby call SetupRuby()
+
+" -------------------------------------------------------------
 " Setup for Subversion commit files.
 " -------------------------------------------------------------
 function! SetupSvn()
