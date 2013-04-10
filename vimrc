@@ -2313,6 +2313,11 @@ command! -bar SetupGit call SetupGit()
 function! SetupJavaScript()
     SetupSource
 
+    " Use 2-space indent for knife files, since it's the Chef default.
+    if match(expand("%:t"), "^knife-") != -1
+        setlocal sts=2 sw=2
+    endif
+
     " Map CTRL-O_CR to append ';' to the end of line, then do CR.
     inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
     vnoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
