@@ -765,7 +765,14 @@ set sessionoptions=blank,buffers,curdir,folds,help,resize,slash
 " Setup undofile capability if available.
 if exists("&undodir")
     set undofile
-    set undodir=$VIMFILES/.undo
+
+    if isdirectory(expand('$VIMFILES/.undo'))
+        set undodir=$VIMFILES/.undo
+    else
+        " Use silent! because mkdir() can fail if the directory already exists.
+        silent! call mkdir(expand('$VIM_CACHE_DIR/undo'), "p")
+        set undodir=$VIM_CACHE_DIR/.undo
+    endif
 endif
 
 " -------------------------------------------------------------
