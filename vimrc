@@ -34,6 +34,20 @@ let $VIMFILES = expand("<sfile>:p:h")
 " If local customizations directory exists, it takes precedence.
 call RtpPrepend($VIMFILES . "/local")
 
+" Setup an environment variable for cache-related bits.  This follows
+" XDG_CACHE_HOME by default, but can be overridden by the user.
+if $VIM_CACHE_DIR == ""
+    if $XDG_CACHE_HOME
+        let $VIM_CACHE_DIR = expand("$XDG_CACHE_HOME/vim")
+    else
+        if has("win32")
+            let $VIM_CACHE_DIR = expand("$USERPROFILE/.cache/vim")
+        else
+            let $VIM_CACHE_DIR = expand("$HOME/.cache/vim")
+        endif
+    endif
+endif
+
 " VIMUSER defaults to the logged-in user, but may be overridden to allow
 " multiple user to share the same overrides (e.g., to let "root" share settings
 " with another user).
@@ -751,7 +765,14 @@ set sessionoptions=blank,buffers,curdir,folds,help,resize,slash
 " Setup undofile capability if available.
 if exists("&undodir")
     set undofile
-    set undodir=$VIMFILES/.undo
+
+    if isdirectory(expand('$VIMFILES/.undo'))
+        set undodir=$VIMFILES/.undo
+    else
+        " Use silent! because mkdir() can fail if the directory already exists.
+        silent! call mkdir(expand('$VIM_CACHE_DIR/undo'), "p")
+        set undodir=$VIM_CACHE_DIR/.undo
+    endif
 endif
 
 " -------------------------------------------------------------

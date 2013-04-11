@@ -3,3 +3,4 @@ spell
 *.so
 *.pyc
 *.cache
+.undo
