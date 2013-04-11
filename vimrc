@@ -37,7 +37,7 @@ call RtpPrepend($VIMFILES . "/local")
 " Setup an environment variable for cache-related bits.  This follows
 " XDG_CACHE_HOME by default, but can be overridden by the user.
 if $VIM_CACHE_DIR == ""
-    if $XDG_CACHE_HOME
+    if $XDG_CACHE_HOME != ""
         let $VIM_CACHE_DIR = expand("$XDG_CACHE_HOME/vim")
     else
         if has("win32")
@@ -771,7 +771,7 @@ if exists("&undodir")
     else
         " Use silent! because mkdir() can fail if the directory already exists.
         silent! call mkdir(expand('$VIM_CACHE_DIR/undo'), "p")
-        set undodir=$VIM_CACHE_DIR/.undo
+        set undodir=$VIM_CACHE_DIR/undo
     endif
 endif
 
