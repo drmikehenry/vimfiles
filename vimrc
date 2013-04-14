@@ -2146,34 +2146,81 @@ command! -bar SetupLess call SetupLess()
 " -------------------------------------------------------------
 " Setup for reStructuredText.
 " -------------------------------------------------------------
+
+" Setup the default list of languages to highlight in code blocks.
+" NOTE: Embedding java causes spell checking to be disabled, because
+" the syntax file for java monkeys with the spell checking settings.
+" Also, having c and cpp in the list causes a double inclusion of
+" c.vim, which causes a problem with the embedded highlighting of c
+" and cpp blocks.
+let g:rst_syntax_code_list = ['vim', 'html', 'cpp', 'python']
+
+function! WarnRst()
+    " Complain if 'c' is in the list.  Users should just use 'cpp' instead, and
+    " we'll map c to cpp to avoid any issues with having both.
+    let cIndex = index(g:rst_syntax_code_list, 'c')
+    let cppIndex = index(g:rst_syntax_code_list, 'cpp')
+    if cIndex >= 0 && cppIndex >= 0
+        echoerr "Don't include 'c' and 'cpp' in g:rst_syntax_code_list, "
+                    \."include 'cpp' instead and c will be "
+                    \."mapped in for you.  Removing 'c'."
+        sleep 1
+
+        call remove(g:rst_syntax_code_list, cIndex)
+    endif
+endfunction
+
+augroup local_rst
+    autocmd!
+
+    " Jump in before Vim and potentially fix up g:rst_syntax_code_list before
+    " rst.vim can process it.
+    au BufNewFile,BufRead *.rst call WarnRst()
+augroup END
+
 function! SetupRstSyntax()
-    " Layout embedded source as follows:
-    " .. code-block:: lang
-    "     lang-specific source code here.
-    " ..
-    function! l:EmbedSourceAs(lang, asLang)
-        let cmd  = 'syntax region embedded_' . a:lang
-        let cmd .= ' matchgroup=embeddedSyntax'
-        let cmd .= ' start="^\z(\s*\)\.\.\s\+code-block::\s\+'
-        let cmd .= a:lang . '\s*$"'
-        " @todo Don't forget to highlight :options: lines
-        " such as :linenos:
-        let cmd .= ' skip="\n\z1\s\|\n\s*\n"'
-        let cmd .= ' end="$"'
-        let cmd .= ' contains=@embedded_' . a:asLang
-        execute cmd
-        hi link embeddedSyntax SpecialComment
-    endfunction
-    " NOTE: Embedding java causes spell checking to be disabled, because
-    " the syntax file for java monkeys with the spell checking settings.
-    for lang in split("cpp html python")
-        call SyntaxInclude('embedded_' . lang, lang)
-        call l:EmbedSourceAs(lang, lang)
+    " The Vim runtime grew support for embedding code blocks, but there are a
+    " couple of issues.  First, it marks the block with NoSpell, which we don't
+    " want.  Secondly, it doesn't work if you add 'c' to g:rst_syntax_code_list
+    " because of the double inclusion of c.vim.  Finally, the new support is
+    " only available in a newer Vim, and we'd like to support one that's not
+    " quite up to the same patch level.
+
+    " This is an older patch level that doesn't have the rstCodeBlock region.
+    " Let's define it.
+    if !hlexists("rstCodeBlock")
+        syn region rstCodeBlock contained matchgroup=rstDirective
+              \ start=+\%(sourcecode\|code\%(-block\)\=\)::\s+
+              \ skip=+^$+
+              \ end=+^\s\@!+
+
+        for code in g:rst_syntax_code_list
+            unlet! b:current_syntax
+            exe 'syn include @rst'.code.' syntax/'.code.'.vim'
+        endfor
+    endif
+
+    " Undo what syntax/rst.vim has done, and redo it so we can embed with spell
+    " checking turned on.
+    for code in g:rst_syntax_code_list
+        unlet! b:current_syntax
+        exe 'silent! syn clear rstDirective'.code
+        exe 'syn region rstDirective'.code.' matchgroup=rstDirective fold '
+                    \.'start=#\%(sourcecode\|code\%(-block\)\=\)::\s\+'.code.'\s*$# '
+                    \.'skip=#^$# '
+                    \.'end=#^\s\@!# contains=@rst'.code
     endfor
-    " Special-case C because Vim's syntax highlighting for cpp
-    " is based on the C highlighting, and it doesn't like to
-    " have both C and CPP active at the same time.
-    call l:EmbedSourceAs('c', 'cpp')
+    let b:current_syntax = 'rst'
+
+    " If 'cpp' was in the list, then alias 'c' to it without including c.vim
+    " again.
+    if index(g:rst_syntax_code_list, 'cpp') >= 0
+        syn region rstDirectivec matchgroup=rstDirective fold
+                    \ start=#\%(sourcecode\|code\%(-block\)\=\)::\s\+c\s*$#
+                    \ skip=#^$#
+                    \ end=#^\s\@!# contains=@rstcpp
+        syn cluster rstDirectives add=rstDirectivec
+    endif
 
     " Re-synchronize syntax highlighting from start of file.
     syntax sync fromstart
