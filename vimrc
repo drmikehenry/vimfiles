@@ -2143,6 +2143,20 @@ function! SetupLess()
 endfunction
 command! -bar SetupLess call SetupLess()
 
+" Disable the embedded syntax feature of newer syntax/rst.vim for a few reasons:
+" - It doesn't work with both "c" and "cpp" active simultaneously, since both
+"   rely on including syntax/c.vim, and the double inclusion of this file
+"   causes problems.
+" - It requires a fairly new Vim, and we'd like to support older ones, too.
+" - It marks the block with NoSpell, which we don't want.
+" - It's easier to disable the support in syntax/rst.vim entirely than to
+"   partially use it and work around its limitations.
+let g:rst_syntax_code_list = []
+
+" NOTE: Embedding java causes spell checking to be disabled, because
+" the syntax file for java monkeys with the spell checking settings.
+let g:rstEmbeddedLangs = ["c", "cpp", "html", "python"]
+
 " -------------------------------------------------------------
 " Setup for reStructuredText.
 " -------------------------------------------------------------
@@ -2154,7 +2168,8 @@ function! SetupRstSyntax()
     function! l:EmbedSourceAs(lang, asLang)
         let cmd  = 'syntax region embedded_' . a:lang
         let cmd .= ' matchgroup=embeddedSyntax'
-        let cmd .= ' start="^\z(\s*\)\.\.\s\+code-block::\s\+'
+        let cmd .= ' start="^\z(\s*\)\.\.\s\+'
+        let cmd .= '\%(sourcecode\|code-block\|code\)::\s\+'
         let cmd .= a:lang . '\s*$"'
         " @todo Don't forget to highlight :options: lines
         " such as :linenos:
@@ -2164,16 +2179,22 @@ function! SetupRstSyntax()
         execute cmd
         hi link embeddedSyntax SpecialComment
     endfunction
-    " NOTE: Embedding java causes spell checking to be disabled, because
-    " the syntax file for java monkeys with the spell checking settings.
-    for lang in split("cpp html python")
-        call SyntaxInclude('embedded_' . lang, lang)
-        call l:EmbedSourceAs(lang, lang)
+    let includedLangs = {}
+    for lang in g:rstEmbeddedLangs
+        let synLang = lang
+        if lang == "c"
+            " Special-case C because Vim's syntax highlighting for cpp
+            " is based on the C highlighting, and it doesn't like to
+            " have both C and CPP active at the same time.  Map C highlighting
+            " to CPP to avoid this problem.
+            let synLang = "cpp"
+        endif
+        if !has_key(includedLangs, synLang)
+            call SyntaxInclude('embedded_' . synLang, synLang)
+            let includedLangs[synLang] = 1
+        endif
+        call l:EmbedSourceAs(lang, synLang)
     endfor
-    " Special-case C because Vim's syntax highlighting for cpp
-    " is based on the C highlighting, and it doesn't like to
-    " have both C and CPP active at the same time.
-    call l:EmbedSourceAs('c', 'cpp')
 
     " Re-synchronize syntax highlighting from start of file.
     syntax sync fromstart
