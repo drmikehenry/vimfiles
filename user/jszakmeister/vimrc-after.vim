@@ -1,6 +1,10 @@
 " Set the color scheme early on, so at least I have that when other things go
 " wrong.
-colorscheme szakdark
+if &t_Co == 8
+    colorscheme elflord
+else
+    colorscheme szakdark
+endif
 
 " =============================================================
 " Variables
