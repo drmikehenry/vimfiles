@@ -2151,7 +2151,14 @@ command! -bar SetupLess call SetupLess()
 " - It marks the block with NoSpell, which we don't want.
 " - It's easier to disable the support in syntax/rst.vim entirely than to
 "   partially use it and work around its limitations.
-let g:rst_syntax_code_list = []
+function! DisableRstSyntaxCodeList()
+    if exists ("g:rst_syntax_code_list") && len(g:rst_syntax_code_list) > 0
+        echoerr "Disabling g:rst_syntax_code_list; use g:rstEmbeddedLangs"
+    endif
+    let g:rst_syntax_code_list = []
+endfunction
+
+call DisableRstSyntaxCodeList()
 
 " NOTE: Embedding java causes spell checking to be disabled, because
 " the syntax file for java monkeys with the spell checking settings.
@@ -2165,20 +2172,34 @@ function! SetupRstSyntax()
     " .. code-block:: lang
     "     lang-specific source code here.
     " ..
-    function! l:EmbedSourceAs(lang, asLang)
-        let cmd  = 'syntax region embedded_' . a:lang
-        let cmd .= ' matchgroup=embeddedSyntax'
+    function! l:EmbedCodeBlock(lang, synGroup)
+        if a:lang == ""
+            let region = "rstCodeBlock"
+            let regex = ".*"
+        else
+            let region = "rstDirective" . a:lang
+            let regex = a:lang
+        endif
+        silent! syn clear region
+        let cmd  = 'syntax region ' . region
+        let cmd .= ' matchgroup=rstDirective fold'
         let cmd .= ' start="^\z(\s*\)\.\.\s\+'
         let cmd .= '\%(sourcecode\|code-block\|code\)::\s\+'
-        let cmd .= a:lang . '\s*$"'
+        let cmd .= regex . '\s*$"'
         " @todo Don't forget to highlight :options: lines
         " such as :linenos:
         let cmd .= ' skip="\n\z1\s\|\n\s*\n"'
         let cmd .= ' end="$"'
-        let cmd .= ' contains=@embedded_' . a:asLang
+        if a:synGroup != ""
+            let cmd .= " contains=@" . a:synGroup
+        endif
         execute cmd
-        hi link embeddedSyntax SpecialComment
+        execute 'syntax cluster rstDirectives add=' . region
     endfunction
+
+    call DisableRstSyntaxCodeList()
+    " Handle unspecified languages first.
+    call l:EmbedCodeBlock("", "")
     let includedLangs = {}
     for lang in g:rstEmbeddedLangs
         let synLang = lang
@@ -2189,11 +2210,12 @@ function! SetupRstSyntax()
             " to CPP to avoid this problem.
             let synLang = "cpp"
         endif
+        let synGroup = "rst" . synLang
         if !has_key(includedLangs, synLang)
-            call SyntaxInclude('embedded_' . synLang, synLang)
+            call SyntaxInclude(synGroup, synLang)
             let includedLangs[synLang] = 1
         endif
-        call l:EmbedSourceAs(lang, synLang)
+        call l:EmbedCodeBlock(lang, synGroup)
     endfor
 
     " Re-synchronize syntax highlighting from start of file.
