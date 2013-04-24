@@ -1,7 +1,7 @@
 " paredit.vim:
 "               Paredit mode for Slimv
 " Version:      0.9.10
-" Last Change:  16 Dec 2012
+" Last Change:  12 Mar 2013
 " Maintainer:   Tamas Kovacs <kovisoft at gmail dot com>
 " License:      This file is placed in the public domain.
 "               No warranty, express or implied.
@@ -67,7 +67,7 @@ endif
 let s:skip_sc = '(synIDattr(synID(line("."), col("."), 0), "name") =~ "[Ss]tring\\|[Cc]omment\\|[Ss]pecial" || getline(line("."))[col(".")-2] == "\\")'
 
 " Valid macro prefix characters
-let s:any_macro_prefix   = "'" . '\|`\|#\|@\|\~\|,'
+let s:any_macro_prefix   = "'" . '\|`\|#\|@\|\~\|,\|\^'
 
 " Repeat count for some remapped edit functions (like 'd')
 let s:repeat             = 0
@@ -136,6 +136,7 @@ function! PareditInitBuffer()
         nnoremap <buffer> <silent> dd           :<C-U>call PareditDeleteLines()<CR>
         nnoremap <buffer> <silent> cc           :<C-U>call PareditChangeLines()<CR>
         nnoremap <buffer> <silent> cw           :<C-U>call PareditChangeSpec('cw',1)<CR>
+        nnoremap <buffer> <silent> cW           :set opfunc=PareditChange<CR>g@E
         nnoremap <buffer> <silent> cb           :<C-U>call PareditChangeSpec('cb',0)<CR>
         nnoremap <buffer> <silent> ciw          :<C-U>call PareditChangeSpec('ciw',1)<CR>
         nnoremap <buffer> <silent> caw          :<C-U>call PareditChangeSpec('caw',1)<CR>
@@ -214,6 +215,7 @@ function! PareditInitBuffer()
         silent! unmap  <buffer> dd
         silent! unmap  <buffer> cc
         silent! unmap  <buffer> cw
+        silent! unmap  <buffer> cW
         silent! unmap  <buffer> cb
         silent! unmap  <buffer> ciw
         silent! unmap  <buffer> caw
@@ -233,7 +235,7 @@ endfunction
 " Include all prefix and special characters in 'iskeyword'
 function! s:SetKeyword()
     let old_value = &iskeyword
-    if SlimvGetFiletype() =~ '.*\(clojure\|scheme\).*'
+    if &ft =~ '.*\(clojure\|scheme\).*'
         setlocal iskeyword+=+,-,*,/,%,<,=,>,:,$,?,!,@-@,94,~,#,\|,&
     else
         setlocal iskeyword+=+,-,*,/,%,<,=,>,:,$,?,!,@-@,94,~,#,\|,&,.,{,},[,]
@@ -272,13 +274,12 @@ function! PareditOpfunc( func, type, visualmode )
         if a:func == 'd'
             " Register "0 is corrupted by the above 'y' command
             call setreg( '0', save_0 ) 
-        elseif a:visualmode && len(getline("'>")) < col("'>") && len(putreg) > 0
+        elseif a:visualmode && &selection == "inclusive" && len(getline("'>")) < col("'>") && len(putreg) > 0
             " Remove extra space added at the end of line when selection=inclusive, all, or onemore
             let putreg = putreg[:-2]
         endif
 
         " Find and keep unbalanced matched characters in the region
-        let endingwhitespace = matchstr(putreg, "\\s*$")
         let instring = s:InsideString( line("'<"), col("'<") )
         if col("'>") > 1 && !s:InsideString( line("'<"), col("'<") - 1 )
             " We are at the beginning of the string
@@ -287,12 +288,9 @@ function! PareditOpfunc( func, type, visualmode )
         let matched = s:GetMatchedChars( putreg, instring, s:InsideComment( line("'<"), col("'<") ) )
         let matched = s:Unbalanced( matched )
         let matched = substitute( matched, '\s', '', 'g' )
-        if a:func == 'c'
-            let matched = matched . endingwhitespace
-        endif
 
         if matched == ''
-            if a:func == 'c' && (a:type == 'V' || a:type == 'char')
+            if a:func == 'c' && (a:type == 'v' || a:type == 'V' || a:type == 'char')
                 silent exe "normal! gvc"
             else
                 silent exe "normal! gvd"
@@ -306,6 +304,9 @@ function! PareditOpfunc( func, type, visualmode )
             endif
             if a:func == 'd'
                 let offs = offs - 1
+            elseif instring && matched == '"'
+                " Keep cursor inside the double quotes
+                let offs = offs + 1
             endif
             if offs > 0
                 silent exe "normal! " . string(offs) . "h"
@@ -479,6 +480,12 @@ function! s:InsideComment( ... )
         let line = substitute( line, '"[^"]*"', '', 'g' )
         return match( line, ';' ) >= 0
     endif
+    if s:SynIDMatch( 'clojureComment', l, c, 1 )
+        if strpart( getline(l), c-1, 2 ) == '#_' || strpart( getline(l), c-2, 2 ) == '#_'
+            " This is a commented out clojure form of type #_(...), treat it as regular form
+            return 0
+        endif
+    endif
     return s:SynIDMatch( '[Cc]omment', l, c, 1 )
 endfunction
 
@@ -494,7 +501,8 @@ function! s:InsideString( ... )
         let quotes = substitute( line, '[^"]', '', 'g' )
         return len(quotes) % 2
     endif
-    return s:SynIDMatch( '[Ss]tring', l, c, 0 )
+    " VimClojure and vim-clojure-static define special syntax for regexps
+    return s:SynIDMatch( '[Ss]tring\|clojureRegexp\|clojurePattern', l, c, 0 )
 endfunction
 
 " Is this a Slimv or VimClojure REPL buffer?
@@ -1362,11 +1370,13 @@ function! PareditMoveLeft()
     endif
     let line = getline( '.' )
     let c =  col( '.' ) - 1
-    if closing && line[c+1] !~ b:any_wsclose_char
+    if closing && c+1 < len(line) && line[c+1] !~ b:any_wsclose_char
         " Insert a space after if needed
         execute "normal! a "
         normal! h
     endif
+    let line = getline( '.' )
+    let c =  col( '.' ) - 1
     if !closing && c > 0 && line[c-len] !~ b:any_wsopen_char
         " Insert a space before if needed
         if len > 1
@@ -1377,7 +1387,6 @@ function! PareditMoveLeft()
             normal! l
         endif
     endif
-    return
 endfunction
 
 " Move delimiter one atom or s-expression to the right
@@ -1427,7 +1436,9 @@ function! PareditMoveRight()
             normal! l
         endif
     endif
-    if !opening && line[c+1] !~ b:any_wsclose_char
+    let line = getline( '.' )
+    let c =  col( '.' ) - 1
+    if !opening && c+1 < len(line) && line[c+1] !~ b:any_wsclose_char
         " Insert a space after if needed
         execute "normal! a "
         normal! h
