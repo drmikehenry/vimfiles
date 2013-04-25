@@ -2696,6 +2696,11 @@ function! SetupTmux()
 endfunction
 command! -bar SetupTmux call SetupTmux()
 
+function! SetupYaml()
+    SetupSource
+endfunction
+command! -bar SetupYaml call SetupYaml()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
