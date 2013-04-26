@@ -2805,7 +2805,7 @@ augroup local_vimrc
     autocmd BufUnload * call AutoCloseGitDiff()
 
     " Use tabs for gitconfig files.
-    autocmd FileType gitconfig setlocal noexpandtab
+    autocmd FileType gitconfig setlocal noexpandtab commentstring=#\ %s
 
     " By default, when Vim switches buffers in a window, the new buffer's
     " cursor position is scrolled to the center (as if 'zz' had been
