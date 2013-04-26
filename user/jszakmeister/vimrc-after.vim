@@ -124,6 +124,10 @@ endif
 " Make splits appear on the right.
 set splitright
 
+" Adjust the scrolling.
+set scrolloff=4
+set sidescrolloff=5
+
 " For some reason, gnome-terminal says xterm-color even though it supports
 " xterm-256color.
 if !has("gui_running") && $COLORTERM == "gnome-terminal" && &t_Co <= 16
