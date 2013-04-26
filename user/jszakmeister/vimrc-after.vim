@@ -435,6 +435,14 @@ augroup jszakmeister_vimrc
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
     autocmd VimEnter * call ReplacePowerlineSyntastic()
     autocmd VimEnter * call UnmapUnwanted()
+
+    " Set up syntax highlighting for e-mail and mutt.
+    autocmd BufRead,BufNewFile
+                \ .followup,.article,.letter,/tmp/pico*,nn.*,snd.*,/tmp/mutt*
+                \ :set ft=mail
+
+    " Add a mapping to make it easy to kill a VCS buffer
+    autocmd User VCSBufferCreated silent! nmap <unique> <buffer> q :bwipeout<CR>
 augroup END
 
 " =============================================================
