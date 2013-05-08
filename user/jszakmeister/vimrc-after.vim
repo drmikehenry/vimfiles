@@ -262,6 +262,12 @@ function! SetupManPager()
 endfunction
 command! -bar SetupManPager call SetupManPager()
 
+function! SetupAnt()
+    SetupMarkup
+    set sts=4 sw=4
+endfunction
+command! -bar SetupAnt call SetupAnt()
+
 " =============================================================
 " Plugin settings
 " =============================================================
@@ -443,6 +449,9 @@ augroup jszakmeister_vimrc
 
     " Add a mapping to make it easy to kill a VCS buffer
     autocmd User VCSBufferCreated silent! nmap <unique> <buffer> q :bwipeout<CR>
+
+    " Use slightly different settings for Ant's build.xml files.
+    autocmd BufRead,BufNewFile build.xml SetupAnt
 augroup END
 
 " =============================================================
