@@ -255,6 +255,7 @@ matchit-v_%	matchit.txt	/*matchit-v_%*
 matchit.txt	matchit.txt	/*matchit.txt*
 matchit.vim	matchit.txt	/*matchit.vim*
 notes	notes.txt	/*notes*
+notes-vim-redl	notes.txt	/*notes-vim-redl*
 notes.txt	notes.txt	/*notes.txt*
 notes_align	notes.txt	/*notes_align*
 notes_bufexplorer	notes.txt	/*notes_bufexplorer*
