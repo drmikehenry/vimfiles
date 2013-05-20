@@ -639,7 +639,6 @@ cnoremap <C-A>      <Home>
 cnoremap <C-B>      <Left>
 cnoremap <C-D>      <Del>
 cnoremap <C-F>      <Right>
-cnoremap <C-G>      <C-F>
 cnoremap <C-N>      <Down>
 cnoremap <C-P>      <Up>
 cnoremap <M-b>      <S-Left>
@@ -648,9 +647,12 @@ cnoremap <M-f>      <S-Right>
 cnoremap <C-O><C-A> <C-A>
 cnoremap <C-O><C-B> <C-B>
 cnoremap <C-O><C-D> <C-D>
-cnoremap <C-O><C-F> <C-F>
+cnoremap <C-O><C-F> <C-G>
 cnoremap <C-O><C-N> <C-N>
 cnoremap <C-O><C-P> <C-P>
+
+" Use CTRL-G to bring up the command-line window.
+let &cedit = "<C-G>"
 
 " Original meanings:
 " <C-A>   Insert all matching filenames.
