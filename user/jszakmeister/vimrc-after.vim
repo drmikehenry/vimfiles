@@ -268,6 +268,110 @@ function! SetupAnt()
 endfunction
 command! -bar SetupAnt call SetupAnt()
 
+function! StripJustBeforeCursor()
+    let currentLine = getline(".")
+    let curPos = getpos(".")
+    let matchRe = '\s*\%' . curPos[2] . 'c'
+    let start = match(currentLine, matchRe)
+    let end = matchend(currentLine, matchRe)
+    let newLine = substitute(currentLine, matchRe, "", "")
+    call setline(".", newLine)
+    call setpos(".", curPos)
+    return end - start
+endfunction
+
+function! StripJustAfterCursor()
+    let currentLine = getline(".")
+    let curPos = getpos(".")
+    let matchRe = '\%>' . curPos[2] . 'c\s*'
+    let newLine = substitute(currentLine, matchRe, "", "")
+    call setline(".", newLine)
+    call setpos(".", curPos)
+endfunction
+
+function! PareditForwardSlurp()
+    let savePos = getpos('.')
+
+    " We do this non-sense to make sure we're positioned on the final paren of
+    " the enclosing s-expression, even if it's empty.
+    call PareditFindOpening('(', ')', 0)
+    call PareditFindClosing('(', ')', 0)
+    call PareditMoveRight()
+
+    " Slurping into empty parens can add a space at the front.
+    call PareditFindOpening('(', ')', 0)
+    call StripJustAfterCursor()
+
+    " Re-indent the selection and go back to insert mode.
+    " normal! v)=
+    call setpos('.', savePos)
+endfunction
+
+function! PareditForwardBarf()
+    let savePos = getpos('.')
+
+    " We do this non-sense to make sure we're positioned on the final paren of
+    " the enclosing s-expression, even if it's empty.
+    call PareditFindOpening('(', ')', 0)
+    call PareditFindClosing('(', ')', 0)
+    call PareditMoveLeft()
+
+    " Check to see if our cursor position will still be valid.
+    let curPos = getpos('.')
+
+    if (curPos[1] < savePos[1])
+                \ || ((curPos[1] == savePos[1]) && (curPos[2] < savePos[2]))
+        let savePos = curPos
+    endif
+
+    " normal! v(=
+    call setpos('.', savePos)
+endfunction
+
+function! PareditBackwardSlurp()
+    let savePos = getpos('.')
+    call PareditFindOpening('(', ')', 0)
+    call PareditMoveLeft()
+
+    " Slurping into empty parens can add a space at the back.
+    call PareditFindClosing('(', ')', 0)
+    let numCharsRemoved = StripJustBeforeCursor()
+    let savePos[2] = savePos[2] - numCharsRemoved
+
+    " normal! v(=
+    call setpos('.', savePos)
+endfunction
+
+function! PareditBackwardBarf()
+    let savePos = getpos('.')
+    call PareditFindOpening('(', ')', 0)
+    call PareditMoveRight()
+
+    let curPos = getpos('.')
+
+    " If the starting paren is now at the cursor, or further into the line,
+    " let's cuddle against the start of the s-expression.
+    if (curPos[1] > savePos[1])
+                \ || ((curPos[1] == savePos[1]) && (curPos[2] >= savePos[2]))
+        let savePos = curPos
+        let savePos[2] = savePos[2] + 1
+    endif
+
+    " normal! v)=
+    call setpos('.', savePos)
+endfunction
+
+function! CustomSetupClojure()
+    call SetupClojure()
+
+    " Add the Emacs paredit bindings for slurpage and barfage.
+    inoremap <buffer> <C-Left> <C-\><C-O>:call PareditForwardBarf()<CR>
+    inoremap <buffer> <C-Right> <C-\><C-O>:call PareditForwardSlurp()<CR>
+    inoremap <buffer> <C-M-Left> <C-\><C-O>:call PareditBackwardSlurp()<CR>
+    inoremap <buffer> <C-M-Right> <C-\><C-O>:call PareditBackwardBarf()<CR>
+endfunction
+command! -bar SetupClojure call CustomSetupClojure()
+
 " =============================================================
 " Plugin settings
 " =============================================================
