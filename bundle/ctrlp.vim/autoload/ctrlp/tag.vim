@@ -111,7 +111,7 @@ fu! ctrlp#tag#accept(mode, str)
 	el
 		cal feedkeys(":".cmd." ".tg."\r", 'nt')
 	en
-	sil! cal feedkeys("zz", 'nt')
+	cal feedkeys("zz", 'nt')
 	cal ctrlp#setlcdir()
 endf
 
