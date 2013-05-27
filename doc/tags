@@ -351,6 +351,7 @@ notes_selfdot	notes.txt	/*notes_selfdot*
 notes_surround	notes.txt	/*notes_surround*
 notes_svn	notes.txt	/*notes_svn*
 notes_swapit	notes.txt	/*notes_swapit*
+notes_syntastic	notes.txt	/*notes_syntastic*
 notes_tagbar	notes.txt	/*notes_tagbar*
 notes_tagsignature	notes.txt	/*notes_tagsignature*
 notes_tcomment	notes.txt	/*notes_tcomment*
