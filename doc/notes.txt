@@ -1288,8 +1288,9 @@ Installation:
 RAINBOW PARENTHESES                                     *notes_rainbow-parens*
   Highlight nested parens
 
-You can adjust the colors by setting g:rbpt_colorpairs: >
-  let g:rbpt_colorpairs = [
+You can adjust the colors by setting g:rbpt_colorpairs_dark or
+g:rbpt_colorpairs_light, based on your background color, e.g.: >
+  let g:rbpt_colorpairs_dark = [
       \ ['brown',       'RoyalBlue3'],
       \ ['Darkblue',    'SeaGreen3'],
       \ ['darkgray',    'DarkOrchid3'],
@@ -1308,8 +1309,11 @@ You can adjust the colors by setting g:rbpt_colorpairs: >
       \ ['red',         'firebrick3'],
       \ ]
 
-The maximum number of levels is controlled via g:rbpt_max.  Finally,
-g:rbpt_loadcmd_toggle controls the initial state on startup.
+When the colorscheme changes, the 'background' option is used to select which
+of g:rbpt_colorpairs_dark or g:rbpt_colorpairs_light will be assigned to the
+plugin's global g:rbpt_colorpairs variable.  The maximum number of levels
+is automatically counted based on g:rbpt_colorpairs and stored in g:rbpt_max.
+Finally, g:rbpt_loadcmd_toggle controls the initial state on startup.
 
 Local customizations:
 

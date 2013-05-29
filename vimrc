@@ -1718,8 +1718,32 @@ nmap <silent> <C-Q>p      <Plug>ToggleProject
 " Rainbow Parentheses
 " -------------------------------------------------------------
 
+" Adapt rainbow parentheses colors for background color.
+" TODO this is not fully dynamic; the colors become permanent when the
+" plugin first loads.
+function! AdaptRainbow()
+    if &background == "dark"
+        let g:rbpt_colorpairs = g:rbpt_colorpairs_dark
+    else
+        let g:rbpt_colorpairs = g:rbpt_colorpairs_light
+    endif
+    let g:rbpt_max = len(g:rbpt_colorpairs)
+endfunction
+
 if &t_Co >= 256 || has("gui_running")
-    let g:rbpt_colorpairs = [
+    let g:rbpt_colorpairs_dark = [
+                \ [129,         'purple'],
+                \ ['magenta',   'magenta1'],
+                \ [111,         'slateblue1'],
+                \ ['cyan',      'cyan1'],
+                \ [48,          'springgreen1'],
+                \ ['green',     'green1'],
+                \ [154,         'greenyellow'],
+                \ ['yellow',    'yellow1'],
+                \ [214,         'orange1'],
+                \ ]
+    " TODO Choose better light-background colors for rainbow parentheses.
+    let g:rbpt_colorpairs_light = [
                 \ [129,         'purple'],
                 \ ['magenta',   'magenta1'],
                 \ [111,         'slateblue1'],
@@ -1731,7 +1755,19 @@ if &t_Co >= 256 || has("gui_running")
                 \ [214,         'orange1'],
                 \ ]
 else
-    let g:rbpt_colorpairs = [
+    let g:rbpt_colorpairs_dark = [
+                \ ['magenta',   'purple'],
+                \ ['cyan',      'magenta1'],
+                \ ['green',     'slateblue1'],
+                \ ['yellow',    'cyan1'],
+                \ ['red',       'springgreen1'],
+                \ ['magenta',   'green1'],
+                \ ['cyan',      'greenyellow'],
+                \ ['green',     'yellow1'],
+                \ ['yellow',    'orange1'],
+                \ ]
+    " TODO Choose better light-background colors for rainbow parentheses.
+    let g:rbpt_colorpairs_light = [
                 \ ['magenta',   'purple'],
                 \ ['cyan',      'magenta1'],
                 \ ['green',     'slateblue1'],
@@ -1743,8 +1779,14 @@ else
                 \ ['yellow',    'orange1'],
                 \ ]
 endif
+call AdaptRainbow()
 
-let g:rbpt_max = 9
+" Adapt colors of rainbow parentheses when colorscheme changes.
+augroup local_rainbow
+    autocmd!
+    autocmd ColorScheme * call AdaptRainbow()
+augroup END
+
 
 " -------------------------------------------------------------
 " RunView
@@ -3023,21 +3065,21 @@ if $TERM == 'cygwin'
     set background=light
 endif
 
-" Choose a light color scheme only for light-background environments.
-if &background == 'light' || has("gui_running")
+" Choose colorscheme based on background color.
+if &background == "light"
+    " Light scheme suggested by Matt Gilbert.
     colorscheme nuvola
+else
+    " Dark scheme maintained by John Szakmeister.
+    colorscheme szakdark
 endif
 
-" Only use the nuvola powerline scheme if the gui is running
+" Only use the nuvola powerline scheme if the gui is running.
 if has("gui_running")
     " TODO Try out nuvola powerline colorscheme sometime.
     "let g:Powerline_colorscheme = 'nuvola'
 endif
 
-" colorscheme nuvola    " nice, light, pretty (Matt Gilbert pick)
-" colorscheme habilight " modified nuvola, some new features
-" colorscheme ps_color  " somewhat dark
-" colorscheme darkblue2 " somewhat dark
 
 " =============================================================
 " GUI Setup
