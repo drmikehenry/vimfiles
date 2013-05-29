@@ -3,7 +3,7 @@
 Author:         Jan Larres <jan@majutsushi.net>
 Licence:        Vim licence, see |license|
 Homepage:       http://majutsushi.github.com/tagbar/
-Version:        2.4.1
+Version:        2.5
 
 ==============================================================================
 Contents                                            *tagbar* *tagbar-contents*
@@ -268,7 +268,7 @@ COMMANDS                                                     *tagbar-commands*
     an alias for ":TagbarOpen fjc".
 
 :TagbarTogglePause                                        *:TagbarTogglePause*
-    Freezes/Unfreezes the Tagbar window.  Stops the contents of the window 
+    Freezes/Unfreezes the Tagbar window.  Stops the contents of the window
     from changing when a different source file is selected.
 
 :TagbarSetFoldlevel[!] {number}                          *:TagbarSetFoldlevel*
@@ -635,7 +635,8 @@ you want to, by calling the tagbar#currenttag() function. The current tag is
 exactly the same as would be highlighted in the Tagbar window if it is open.
 It is defined as the nearest tag upwards in the file starting from the cursor
 position. This means that for example in a function it should usually be the
-name of the function.
+name of the function. You can define which tags will be shown in this manner,
+read |tagbar-extend| (especially the "kinds" entry) on how to do that.
 
 The function has the following signature:
 
@@ -657,6 +658,10 @@ tagbar#currenttag({format}, {default} [, {flags}])
     For example, if you put the following into your statusline: >
         %{tagbar#currenttag('[%s] ','')}
 <   then the function "myfunc" will be shown as "[myfunc()] ".
+
+Note that if there is an error when processing the current file no error
+message will be shown in order to not disrupt the statusline. If the function
+doesn't seem to work right open the Tagbar window to see any error messages.
 
 ==============================================================================
 6. Extending Tagbar                                            *tagbar-extend*
@@ -687,10 +692,9 @@ support package for the language. Some tips on how to write such a program are
 given at the end of this section.
 
 Before writing your own extension have a look at the wiki
-(https://github.com/majutsushi/tagbar/wiki/Support-for-additional-filetypes)
-or try googling for existing ones. If you do end up creating your own
-extension please consider adding it to the wiki so that others will be able to
-use it, too.
+(https://github.com/majutsushi/tagbar/wiki) or try googling for existing ones.
+If you do end up creating your own extension please consider adding it to the
+wiki so that others can benefit from it, too.
 
 Every type definition in Tagbar is a dictionary with the following keys:
 
@@ -788,6 +792,25 @@ ctagsargs: The arguments to be passed to the filetype-specific ctags program
 {optional} (without the filename). Make sure you set an option that makes the
            program output its data on stdout. Not used for the normal ctags
            program.
+
+           The value of ctagsargs may be a |List| of strings (a string for
+           each argument), or a single string (|expr-string|) of all the
+           arguments.
+
+           When the value of ctagsargs is a list, tagbar.vim takes care of
+           escaping each argument in the list as required for the current
+           'shell' type.
+
+           When the value of ctagsargs is a string, it must be properly
+           escaped (if required by the current shell type). The reason
+           tagbar.vim does not attempt to escape the string in this case is
+           because if there is a space, it is ambiguous as to whether the
+           space is delimiting an argument or included in the argument. To
+           avoid this amiguity, tagbar.vim expects the string to be already
+           escaped as required.
+
+           If special escaping is required for different OS shell types or if
+           in doubt, then it is recommended to define ctagsargs with a List.
 
 
 You then have to assign this dictionary to a variable in your vimrc with the
@@ -957,6 +980,30 @@ LaTeX parser that works better than the example configuration presented here.
 So if you are using a development build newer than that or a stable version
 newer than 5.8 you should use the built-in support instead of this example.
 
+Project-specific configuration~
+
+In addition to the normal global configuration it is also possible to have
+project-specific settings. This is mostly useful for additional ctags options,
+like for example macros to ignore. Or maybe you want to do things like folding
+certain tag kinds in some projects.
+
+In order to use this feature you need to create User |autocommand|s in an
+augroup called "TagbarProjects" and have it create a buffer-local variable
+called "b:tagbar_type". This variable has to hold a type definition just like
+the normal ones described in this chapter. This definition will then be
+applied only to the files matched by the autocommand.
+
+Note that there can be multiple definitions of the augroup with their own
+autocommands (for example in separate project directories); they will get
+merged automatically by Vim.
+
+Example:
+>
+    augroup TagbarProjects
+        autocmd User ~/myproject/*.c let b:tagbar_type = {'deffile' : '~/myproject/ctags.cnf'}
+    augroup END
+<
+
 Writing your own tag-generating program~
 If you want to write your own program for generating tags then here are some
 imporant tips to get it to integrate well with Tagbar:
@@ -1062,6 +1109,33 @@ file.
 
 ==============================================================================
 8. History                                                    *tagbar-history*
+
+2.5 (2013-03-25)
+    - New command :TagbarTogglePause to freeze Tagbar in its current state so
+      you can switch to other files while keeping the old information
+      displayed for reference. (Kian Ryan)
+    - New command :TagbarCurrentTag which reports the same information as
+      currenttag().
+    - New option tagbar_indent to configure the indentation depth of the tags.
+    - New option tagbar_show_visibility to allow disabling the visibility
+      symbols.
+    - Files are now cached locally to avoid additional slowdowns for slow
+      connections. This also makes it possible to use Tagbar with files
+      accessed through Netrw.
+    - Execute ctags again even if the previous run reported errors, in case it
+      was a parse error that has since been fixed. If the error persists,
+      don't display it again.
+    - Improved window switching and Vim exit behaviours. (Techlive Zheng)
+    - The currenttag() function now can show the prototype instead of the
+      actual tag, which can be useful in some cases where ctags doesn't report
+      all the interesting information.
+    - The prototype shown in the tooltip or command line should now always be
+      complete, even if it is spread out over more than one line in the source
+      file.
+    - The TagbarAccessPublic etc. highlight groups have been renamed to
+      TagbarVisibilityPublic etc. to keep them in line with standard
+      terminology. The old names are still supported.
+    - Various smaller improvements and bugfixes.
 
 2.4.1 (2012-07-16)
     - Fixed some bugs related to the currenttag() function when it was called
