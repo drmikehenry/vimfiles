@@ -94,6 +94,9 @@ endfunction
 " Allow . to work over visual ranges.
 vnoremap . :normal .<CR>
 
+" Yank to the system clipboard.
+vnoremap <Leader><Leader>y "+y
+
 " =============================================================
 " Options
 " =============================================================
