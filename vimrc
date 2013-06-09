@@ -2517,6 +2517,34 @@ endfunction
 command! -bar SetupJavaScript call SetupJavaScript()
 
 " -------------------------------------------------------------
+" Setup for LLVM source code.
+" -------------------------------------------------------------
+
+function! SetupLlvm()
+    SetupSource
+
+    set sts=2 sw=2 expandtab
+
+    " No extra indentation for case labels.
+    setlocal cinoptions+=:0
+
+    " No extra indentation for "public", "protected", "private" labels.
+    setlocal cinoptions+=g0
+
+    " Line up function args.
+    setlocal cinoptions+=(0
+
+    " Use a shiftwidth for argument indent, when the first parameter is not
+    " on the same line as the function.
+    setlocal cinoptions+=Ws
+
+    " Aligns the curly for a case statement with the case label, rather than the
+    " last statement.
+    setlocal cinoptions+=l1
+endfunction
+command! -bar SetupLlvm call SetupLlvm()
+
+" -------------------------------------------------------------
 " Setup for Python.
 " -------------------------------------------------------------
 function! SetupPython()
