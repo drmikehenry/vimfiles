@@ -49,6 +49,7 @@
     Surround - Manipulating "surroundings"              |notes_surround|
     Svn - View Subversion diffs while writing commit log|notes_svn|
     SwapIt - Cycle through related words                |notes_swapit|
+    Syntastic - Syntax checking hacks for Vim           |notes_syntastic|
     Tagbar - Source code browser                        |notes_tagbar|
     TagSignature - Balloon signatures for tags          |notes_tagsignature|
     TextObj-Diff - Diff-based text objects              |notes_textobj-diff|
@@ -1497,6 +1498,39 @@ For version 0.3, need the following patch: >
                    let in_visual = 1
                    exec 'norm! maviw"sp`[v`]'
                else
+------------------------------------------------------------------------------
+SYNTASTIC                                                *notes_syntastic*
+ Syntax checking hacks for vim                           |syntastic|
+
+Can launch "checkers" to verify syntax and hunt for errors when working with
+particular kinds of files.  For instance, it can run pylint, pyflakes, or pep8
+to check the syntax of your Python file and to hunt for other kinds of errors
+(unused imports, shadowing of variable names, etc.).
+
+To show a location list with the errors, use the |:Errors| command.  On
+actively checked file types, Syntastic will run the checkers whenever you
+save.  On passive file types, you can run them manually with
+|:SyntasticCheck|.  You can also toggle the mode for a buffer using
+|:SyntasticToggleMode|.
+
+Local customizations:
+- Turned off active mode for everything but vim, python, and ruby.  You can
+  set |g:syntastic_mode_map| if you need different behavior.
+- Turned off warnings (via |g:syntastic_quiet_warnings|) because some checkers
+  are really verbose (pylint, for example).
+- Enabled balloon support so that you can hover over the line with the error
+  and see what is wrong.
+- Disabled highlighting of the portion of the line containing the error.
+  It doesn't work very well, and uses the spell check highlighting by
+  default--which is confusing.
+- Customized the Powerline segment to use a shortened form for errors and
+  warnings.
+- Use nicer error and warning symbols where Vim can support it.
+
+Version 2013-05-27 (cc1b898c) from git://github.com/scrooloose/syntastic.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 TAGSIGNATURE                                            *notes_tagsignature*
