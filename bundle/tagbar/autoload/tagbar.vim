@@ -2269,7 +2269,8 @@ function! s:AddScopedTags(tags, processedtags, parent, depth,
             " alternatively in a conditional (Issue #139). The only way to
             " distinguish between them is by line number.
             let twins = filter(copy(realtags),
-                             \ "v:val.fullpath ==# '" . tag.fullpath . "'" .
+                             \ "v:val.fullpath ==# '" .
+                             \ substitute(tag.fullpath, "'", "''", 'g') . "'" .
                              \ " && v:val.fields.line != " . tag.fields.line)
             let maxline = line('$')
             for twin in twins
@@ -2348,8 +2349,9 @@ function! s:ProcessPseudoChildren(tags, tag, depth, typeinfo, fileinfo) abort
                            \ a:typeinfo, a:fileinfo, line('$'))
     endfor
 
-    let is_grandchild = 'v:val.depth > a:depth &&
-                       \ match(v:val.path, ''^\C'' . a:tag.fullpath) == 0'
+    let is_grandchild = 'v:val.depth > a:depth && ' .
+            \ 'match(v:val.path,' .
+            \ '''^\C'' . substitute(a:tag.fullpath, "''", "''''", "g")) == 0'
     let grandchildren = filter(copy(a:tags), is_grandchild)
     if !empty(grandchildren)
         call s:AddScopedTags(a:tags, a:tag.children, a:tag, a:depth + 1,
@@ -3748,6 +3750,17 @@ function! tagbar#currenttag(fmt, default, ...) abort
     else
         return a:default
     endif
+endfunction
+
+" tagbar#currentfile() {{{2
+function! tagbar#currentfile() abort
+    let filename = ''
+
+    if !empty(s:known_files.getCurrent())
+        let filename = fnamemodify(s:known_files.getCurrent().fpath, ':t')
+    endif
+
+    return filename
 endfunction
 
 " tagbar#gettypeconfig() {{{2
