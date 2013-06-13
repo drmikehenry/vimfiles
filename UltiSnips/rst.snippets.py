@@ -49,6 +49,11 @@ bsnip("code", "code block", r"""
     $0
 """)
 
+bsnip("l", "reference label", r"""
+.. _${1:label}:
+$0
+""")
+
 # Admonitions.
 
 bsnip("warn", "Warning Admonition", r"""
@@ -67,6 +72,10 @@ bsnip("note", "Note Admonition", r"""
 
 wsnip("f", "File markup", r"""
 :file:\`${1:path}\`$0
+""")
+
+wsnip("r", "Ref markup", r"""
+:ref:\`${1:label}\`$0
 """)
 
 wsnip("cmd", "Command markup", r"""
