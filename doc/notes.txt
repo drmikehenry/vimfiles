@@ -2429,16 +2429,28 @@ Performs the following:
 
   This leaves room for n windows with (n - 1) dividing lines between them.
 
-- Moves quickfix window to the bottom, re-sizes to 10 lines (if already open).
-- Makes all windows equally sized (via Ctrl-w_=).
 - Moves current window to the top (L1 only).
+- Moves quickfix window to the bottom and set to standard size (if already open).
+- Makes all windows equally sized (via Ctrl-w_=).
 
 *NOTE* If your Gvim window isn't positioned to span the edges of your monitor,
 the number of character columns may be truncated to keep Gvim on a single
 monitor.  To work around this, move Gvim to straddle the boundary between
 monitors before executing the above commands.
 
-<C-Q><C-Q>  Toggle the QuickFix window on or off (gvim only)
+<C-Q><C-L>  Toggle the Location window on or off
+<C-Q><C-Q>  Toggle the QuickFix window on or off
+
+NOTE See |notes_tips_xon_xoff| if <C-Q> doesn't work in console vim.
+
+The default heights of Location Windows and the QuickFix Window may be
+controlled by the following global variables: >
+
+  " Desired height of a Location List window.
+  let g:LocListWindowHeight = 5
+
+  " Desired height of QuickFix window.
+  let g:QuickFixWindowHeight = 10
 
 ------------------------------------------------------------------------------
 Alternatives to :bufdo, :windo, :tabdo
@@ -2478,6 +2490,8 @@ The following mappings toggle the help window on and off:
   <F1>
   <C-Q><C-H>
   <C-Q>h
+
+NOTE See |notes_tips_xon_xoff| if <C-Q> doesn't work in console vim.
 
 If the help window is already open, it will be closed; otherwise, the most
 recent help file will be re-opened.
@@ -2605,6 +2619,19 @@ So the above example becomes: >
     :Redir @a
     :map
     :Redir
+
+------------------------------------------------------------------------------
+Using <C-Q> and <C-S> in console Vim                    *notes_tips_xon_xoff*
+
+When using console Vim, <C-Q> and <C-S> are often trapped by the console
+(they're the standard ASCII XON and XOFF characters).  To allow them to be
+seen by console Vim on Linux, try the following in your ~/.bashrc: >
+
+  # Disable XON/XOFF so CTRL-Q and CTRL-S are available to Vim and friends
+  # when stdout is connected to a terminal.
+  test -t 0 && stty -ixon -ixoff
+
+This is unnecessary for Gvim.
 
 --
   vim:sw=2:sts=2:et:ai:tw=78:fo=tcq2:ft=help:nospell:

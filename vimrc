@@ -1257,6 +1257,12 @@ endif
 " Window manipulation
 " =============================================================
 
+" Desired height of QuickFix window.
+let g:QuickFixWindowHeight = 10
+
+" Desired height of a Location List window.
+let g:LocListWindowHeight = 5
+
 " Return buffer number of quickfix buffer (or zero if not found).
 function! s:quickFixBufNum()
     let qfBufNum = 0
@@ -1308,7 +1314,7 @@ function! s:L(...)
     if qfWinNum > 0
         execute qfWinNum . "wincmd w"
         execute "wincmd J"
-        execute "10wincmd _"
+        execute g:QuickFixWindowHeight . "wincmd _"
         execute "wincmd p"
     endif
 
@@ -1334,14 +1340,27 @@ command! -bar L5 call s:L(5)
 
 " Toggle quickfix window.
 function! QuickFixWinToggle()
-    if s:quickFixBufNum() > 0
-        cclose
-    else
-        botright copen
+    let numOpenWindows = winnr("$")
+    cclose
+    if numOpenWindows == winnr("$")
+        " Window was already closed, so open it.
+        execute "botright copen " . g:QuickFixWindowHeight
     endif
 endfunction
 nnoremap <silent> <C-Q><C-Q> :call QuickFixWinToggle()<CR>
 command! -bar QuickFixWinToggle :call QuickFixWinToggle()
+
+" Toggle location list window.
+function! LocListWinToggle()
+    let numOpenWindows = winnr("$")
+    lclose
+    if numOpenWindows == winnr("$")
+        " Window was already closed, so open it.
+        silent! execute "lopen " . g:LocListWindowHeight
+    endif
+endfunction
+nnoremap <silent> <C-Q><C-L> :call LocListWinToggle()<CR>
+command! -bar LocListWinToggle :call LocListWinToggle()
 
 " Like windo but restore the current window.
 function! WinDo(command)
@@ -1831,6 +1850,11 @@ function! ReplacePowerlineSyntastic()
     endfunction " }}}
 endfunction
 
+function! SyntasticFinalSetup()
+    let g:syntastic_loc_list_height = g:LocListWindowHeight
+    call ReplacePowerlineSyntastic()
+endfunction
+
 let g:syntastic_mode_map = {
             \ 'mode': 'passive',
             \ 'active_filetypes': ['python', 'ruby'],
@@ -1839,7 +1863,7 @@ let g:syntastic_mode_map = {
 
 augroup local_syntastic
     autocmd!
-    autocmd VimEnter * call ReplacePowerlineSyntastic()
+    autocmd VimEnter * call SyntasticFinalSetup()
 augroup END
 
 " -------------------------------------------------------------

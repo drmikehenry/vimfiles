@@ -315,6 +315,7 @@ notes_textobj-indent	notes.txt	/*notes_textobj-indent*
 notes_textobj-rst	notes.txt	/*notes_textobj-rst*
 notes_textobj-user	notes.txt	/*notes_textobj-user*
 notes_tips	notes.txt	/*notes_tips*
+notes_tips_xon_xoff	notes.txt	/*notes_tips_xon_xoff*
 notes_tmux_syntax	notes.txt	/*notes_tmux_syntax*
 notes_togglecursor	notes.txt	/*notes_togglecursor*
 notes_ultisnips	notes.txt	/*notes_ultisnips*
