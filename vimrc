@@ -280,41 +280,118 @@ inoremap <F5> <ESC>:wall<bar>! %:p<CR>
 nnoremap <F12> :wall<bar>call system("fifosignal")<CR>
 inoremap <F12> <ESC>:wall<bar>call system("fifosignal")<CR>
 
+" =============================================================
+" QuickFix/Location List support
+" =============================================================
+
+" Open QuickFix window using standard position and height.
+command! -bar Copen  execute "botright copen " . g:QuickFixWinHeight
+
+" Open Location List window using standard height.
+command! -bar Lopen  execute "lopen " . g:LocListWinHeight
+
+" Return 1 if current window is the QuickFix window.
+function! IsQuickFixWin()
+    if &buftype == "quickfix"
+        " This is either a QuickFix window or a Location List window.
+        " Try to open a location list; if this window *is* a location list,
+        " then this will succeed and the focus will stay on this window.
+        " If this is a QuickFix window, there will be an exception and the
+        " focus will stay on this window.
+        try
+            lopen
+        catch /E776:/
+            " This was a QuickFix window.
+            return 1
+        endtry
+    endif
+    return 0
+endfunction
+
+" Return 1 if current window is a Location List window.
+function! IsLocListWin()
+    return (&buftype == "quickfix" && !IsQuickFixWin())
+endfunction
+
+" Return window number of quickfix buffer (or zero if not found).
+function! GetQuickFixWinNum()
+    let qfWinNum = 0
+    let curWinNum = winnr()
+    for winNum in range(1, winnr("$"))
+        execute "noautocmd " . winNum . "wincmd w"
+        if IsQuickFixWin()
+            let qfWinNum = winNum
+            break
+        endif
+    endfor
+    execute "noautocmd " . curWinNum . "wincmd w"
+    return qfWinNum
+endfunction
+
+" Return 1 if current window's location list window is open.
+function! LocListWinIsOpen()
+    let curWinNum = winnr()
+    let numOpenWindows = winnr("$")
+    " Assume location list window is already open.
+    let isOpen = 1
+    try
+        noautocmd lopen
+    catch /E776:/
+        " No location list available; nothing was changed.
+        let isOpen = 0
+    endtry
+    if numOpenWindows != winnr("$")
+        " We just opened a new location list window.  Revert to original
+        " window and close the newly opened window.
+        noautocmd wincmd p
+        noautocmd lclose
+        let isOpen = 0
+    endif
+    return isOpen
+endfunction
+
+" Goto previous or next QuickFix or Location List message.
+"   messageType = "c" (for QuickFix) or "l" (for Location List).
+"   whichMessage = "previous" or "next".
+" Return 1 on successful move.
+function! GotoMessage(messageType, whichMessage)
+    try
+        execute a:messageType . a:whichMessage
+    catch /E553:/
+        echo "No " . a:whichMessage . " message"
+        return 0
+    endtry
+    normal zz
+    return 1
+endfunction
+
+" Goto previous "thing" (diff, Location List message, QuickFix message).
 function! GotoPrev()
     if &diff
         normal [czz
+    elseif LocListWinIsOpen()
+        call GotoMessage("l", "previous")
     else
-        botright copen
+        Copen
         wincmd p
-        try
-            cprev
-            normal zz
-        catch
-            echo "No previous QuickFix messages"
-        endtry
+        call GotoMessage("c", "previous")
     endif
 endfunction
 
+" Goto next "thing" (diff, Location List message, QuickFix message).
 function! GotoNext()
     if &diff
         normal ]czz
+    elseif LocListWinIsOpen()
+        call GotoMessage("l", "next")
     else
-        botright copen
+        Copen
         wincmd p
-        try
-            cnext
-            normal zz
-        catch
-            echo "No more QuickFix messages"
-        endtry
+        call GotoMessage("c", "next")
     endif
 endfunction
 
-" Setup message browsing using F4/Shift-F4.  If the current
-" window is in diff mode, does diff next/prev; otherwise,
-" does :cnext/:cprev for QuickFix messages, opening the
-" QuickFix window if necessary.
-" Automatically scrolls the message to the center of the window.
+" Setup previous/next browsing using F4/Shift-F4.
 inoremap <silent> <F4> <C-O>:call GotoNext()<CR>
 nnoremap <silent> <F4>      :call GotoNext()<CR>
 inoremap <silent> <S-F4> <C-O>:call GotoPrev()<CR>
@@ -1243,14 +1320,14 @@ if has("cscope")
     " t - text:     find all instances of the text.
     set cscopequickfix=c-,d-,e-,i-,s-,t-
 
-    nnoremap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>:bot copen<CR>
-    nnoremap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>:bot copen<CR>
-    nnoremap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>:bot copen<CR>
+    nnoremap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
     nnoremap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
     nnoremap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-    nnoremap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>:bot copen<CR>
-    nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>:bot copen<CR>
-    nnoremap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>:bot copen<CR>
+    nnoremap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>:Copen<CR>
+    nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
 endif
 
 " =============================================================
@@ -1258,32 +1335,10 @@ endif
 " =============================================================
 
 " Desired height of QuickFix window.
-let g:QuickFixWindowHeight = 10
+let g:QuickFixWinHeight = 10
 
 " Desired height of a Location List window.
-let g:LocListWindowHeight = 5
-
-" Return buffer number of quickfix buffer (or zero if not found).
-function! s:quickFixBufNum()
-    let qfBufNum = 0
-    for i in range(1, bufnr('$'))
-        if getbufvar(i, '&buftype') == 'quickfix'
-            let qfBufNum = i
-            break
-        endif
-    endfor
-    return qfBufNum
-endfunction
-
-" Return window number of quickfix buffer (or zero if not found).
-function! s:quickFixWinNum()
-    let qfWinNum = 0
-    let qfBufNum = s:quickFixBufNum()
-    if qfBufNum > 0
-        let qfWinNum = bufwinnr(qfBufNum)
-    endif
-    return qfWinNum
-endfunction
+let g:LocListWinHeight = 5
 
 " Re-layout windows in standard fashion.
 " If zero arguments are passed, leaves number of columns unchanged.
@@ -1310,15 +1365,26 @@ function! s:L(...)
             wincmd K
         endif
     endif
-    let qfWinNum = s:quickFixWinNum()
+
+    " Push QuickFix window (if any) to the bottom with standard size.
+    let qfWinNum = GetQuickFixWinNum()
     if qfWinNum > 0
-        execute qfWinNum . "wincmd w"
-        execute "wincmd J"
-        execute g:QuickFixWindowHeight . "wincmd _"
-        execute "wincmd p"
+        let startedInQuickFixWin = (qfWinNum == winnr())
+        if !startedInQuickFixWin
+            execute qfWinNum . "wincmd w"
+        endif
+        wincmd J
+        execute g:QuickFixWinHeight . "wincmd _"
+        if !startedInQuickFixWin
+            wincmd p
+        endif
     endif
 
-    " Make windows equally large.
+    " Resize any Location List windows to standard size.
+    let llCmd = g:LocListWinHeight . "wincmd _"
+    call WinDo("if IsLocListWin() | " . llCmd . " | endif")
+
+    " Make other windows equally large.
     execute "normal \<C-W>="
 endfunction
 command! -nargs=? L call s:L(<f-args>)
@@ -1344,7 +1410,7 @@ function! QuickFixWinToggle()
     cclose
     if numOpenWindows == winnr("$")
         " Window was already closed, so open it.
-        execute "botright copen " . g:QuickFixWindowHeight
+        Copen
     endif
 endfunction
 nnoremap <silent> <C-Q><C-Q> :call QuickFixWinToggle()<CR>
@@ -1356,7 +1422,7 @@ function! LocListWinToggle()
     lclose
     if numOpenWindows == winnr("$")
         " Window was already closed, so open it.
-        silent! execute "lopen " . g:LocListWindowHeight
+        silent! Lopen
     endif
 endfunction
 nnoremap <silent> <C-Q><C-L> :call LocListWinToggle()<CR>
@@ -1364,9 +1430,9 @@ command! -bar LocListWinToggle :call LocListWinToggle()
 
 " Like windo but restore the current window.
 function! WinDo(command)
-    let currwin=winnr()
+    let curWinNum = winnr()
     execute 'windo ' . a:command
-    execute currwin . 'wincmd w'
+    execute curWinNum . 'wincmd w'
 endfunction
 com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
 
@@ -1851,7 +1917,7 @@ function! ReplacePowerlineSyntastic()
 endfunction
 
 function! SyntasticFinalSetup()
-    let g:syntastic_loc_list_height = g:LocListWindowHeight
+    let g:syntastic_loc_list_height = g:LocListWinHeight
     call ReplacePowerlineSyntastic()
 endfunction
 

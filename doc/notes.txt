@@ -2174,8 +2174,10 @@ commonly used to trigger a build outside of Vim.  For example: >
 ------------------------------------------------------------------------------
 QuickFix window, diff mode
 
-Use <F4> and <S-F4> to navigate forward and backward through the QuickFix
-list, or through diffs when diff mode is active (:help :diffthis).
+Use <F4> and <S-F4> to navigate forward and backward.  When diff mode is
+active, browses through diff hunks; otherwise, when a Location List window is
+open, browses through the Location List; otherwise, opens and browses through
+the QuickFix list.
 
 Use :DiffOrig to compare unsaved changes against original on-disk.
 Use :diffoff to remove diff mode.
@@ -2447,10 +2449,10 @@ The default heights of Location Windows and the QuickFix Window may be
 controlled by the following global variables: >
 
   " Desired height of a Location List window.
-  let g:LocListWindowHeight = 5
+  let g:LocListWinHeight = 5
 
   " Desired height of QuickFix window.
-  let g:QuickFixWindowHeight = 10
+  let g:QuickFixWinHeight = 10
 
 ------------------------------------------------------------------------------
 Alternatives to :bufdo, :windo, :tabdo
