@@ -480,6 +480,15 @@ if g:EnablePowerline
     let g:Powerline_colorscheme = 'szakdark'
 endif
 
+
+" -------------------------------------------------------------
+" Syntastic
+" -------------------------------------------------------------
+
+let g:syntastic_mode_map['active_filetypes'] =
+            \ g:syntastic_mode_map['active_filetypes'] +
+            \ ['html', 'less', 'sh', 'zsh']
+
 " -------------------------------------------------------------
 " Tagbar
 " -------------------------------------------------------------
