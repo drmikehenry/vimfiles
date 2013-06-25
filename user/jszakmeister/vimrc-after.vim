@@ -418,6 +418,15 @@ let Grep_Xargs_Options = '-0'
 
 let g:netrw_nogx = 1
 
+" Setup xdg-open as the tool to open urls whenever we can, if nothing is set up.
+" This makes using 'gx' a little more sane environments outside of Gnome and
+" KDE.
+function! SetupBrowseX()
+    if !exists("g:netrw_browsex_viewer") && executable("xdg-open")
+        let g:netrw_browsex_viewer = "xdg-open"
+    endif
+endfunction
+
 function! SmartOpen()
     if mode() ==# 'n'
         let uri = expand("<cWORD>")
@@ -503,6 +512,7 @@ augroup jszakmeister_vimrc
     autocmd!
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
     autocmd VimEnter * call UnmapUnwanted()
+    autocmd VimEnter * call SetupBrowseX()
 
     " Set up syntax highlighting for e-mail and mutt.
     autocmd BufRead,BufNewFile
