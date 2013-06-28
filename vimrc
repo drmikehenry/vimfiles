@@ -2581,6 +2581,15 @@ endfunction
 command! -bar SetupD call SetupD()
 
 " -------------------------------------------------------------
+" Setup for GDB.
+" -------------------------------------------------------------
+function! SetupGdb()
+    SetupSource
+    setlocal commentstring=#\ %s
+endfunction
+command! -bar SetupGdb call SetupGdb()
+
+" -------------------------------------------------------------
 " Setup for Git-related files (e.g., "COMMIT_EDITMSG").
 " -------------------------------------------------------------
 function! SetupGit()
