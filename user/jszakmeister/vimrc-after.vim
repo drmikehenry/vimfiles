@@ -1,6 +1,6 @@
 " Set the color scheme early on, so at least I have that when other things go
 " wrong.
-if &t_Co == 8
+if !has("gui_running") && &t_Co == 8
     colorscheme elflord
 else
     colorscheme szakdark
