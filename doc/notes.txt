@@ -69,6 +69,7 @@
     VisSort - Sort visually selected areas              |notes_vissort|
     VisSwap - Swap visually selected areas              |notes_visswap|
 4.  Extensions                                          |notes_extensions|
+    C Additions - Extra syntax highlighting for C       |notes_c_additions|
     Tmux syntax - Syntax definitions for tmux.conf      |notes_tmux_syntax|
 5.  Customizations                                      |notes_customizations|
 6.  Tips                                                |notes_tips|
@@ -2010,6 +2011,16 @@ http://mysite.verizon.net/astronaut/vim/index.html
 
 ==============================================================================
 4.  Extensions                                          *notes_extensions*
+
+------------------------------------------------------------------------------
+C ADDITIONS                                              *notes_c_additions*
+  Extra syntax highlighting for C
+
+Taken from: http://www.vim.org/scripts/script.php?script_id=3064.
+
+Installation:
+- Download the new syntax file from the above url.
+- Install it into bundle/c-additions/after/syntax/.
 
 ------------------------------------------------------------------------------
 TMUX SYNTAX                                             *notes_tmux_syntax*
