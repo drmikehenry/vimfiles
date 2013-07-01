@@ -260,6 +260,7 @@ notes_align	notes.txt	/*notes_align*
 notes_bufexplorer	notes.txt	/*notes_bufexplorer*
 notes_bufkill	notes.txt	/*notes_bufkill*
 notes_bufmru	notes.txt	/*notes_bufmru*
+notes_c_additions	notes.txt	/*notes_c_additions*
 notes_closetag	notes.txt	/*notes_closetag*
 notes_colorsampler	notes.txt	/*notes_colorsampler*
 notes_ctrlp	notes.txt	/*notes_ctrlp*
