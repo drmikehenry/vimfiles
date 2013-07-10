@@ -11,10 +11,12 @@ endif
 " =============================================================
 
 " Default font size.
-if has("gui_win32")
-    let g:SZAK_FONT_SIZE = 11
-else
-    let g:SZAK_FONT_SIZE = 14
+if !exists("g:SZAK_FONT_SIZE")
+    if has("gui_win32")
+        let g:SZAK_FONT_SIZE = 11
+    else
+        let g:SZAK_FONT_SIZE = 14
+    endif
 endif
 
 " =============================================================
