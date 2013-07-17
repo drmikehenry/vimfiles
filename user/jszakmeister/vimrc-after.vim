@@ -161,11 +161,6 @@ if !empty($SSH_TTY)
     hi Normal guibg=#0d280d
 endif
 
-" Set the width to accommodate a full 80 column view + tagbar + some change.
-if has("gui_running")
-    set columns=132
-endif
-
 " -------------------------------------------------------------
 " Font selection
 " -------------------------------------------------------------
@@ -586,11 +581,24 @@ command! -bar ShowAvailableColors call ShowAvailableColors()
 
 " Size for the big screen.
 function! BigScreenTv()
-    set columns=120
-    set lines=36
-    let &guifont = substitute(&guifont, ':h\([^:]*\)', ':h25', '')
+    if has("gui_running")
+        set columns=120
+        set lines=36
+        let &guifont = substitute(&guifont, ':h\([^:]*\)', ':h25', '')
+    endif
 endfunction
 command! -bar BigScreenTv call BigScreenTv()
+
+function! RestoreSize()
+    if has("gui_running")
+        " Set the width to accommodate a full 80 column view + tagbar + some
+        " change.
+        set columns=132
+        set lines=50
+        SetFont
+    endif
+endfunction
+command! -bar RestoreSize call RestoreSize()
 
 " -------------------------------------------------------------
 " Toggling diffs for printing.
@@ -743,4 +751,4 @@ endif
 " This needs to happen here so that the Powerline variables are set correctly
 " before the plugin loads.  It needs to come after the machine scripts, so that
 " they have an opportunity to adjust the desired font size.
-SetFont
+RestoreSize
