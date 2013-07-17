@@ -582,20 +582,25 @@ command! -bar ShowAvailableColors call ShowAvailableColors()
 " Size for the big screen.
 function! BigScreenTv()
     if has("gui_running")
+        " Set the font first, and let Vim automatically scale back if there are
+        " too many rows and columns to fit on the screen.
+        let &guifont =
+                    \ substitute(&guifont, '.*\%(:h\| \)\zs[^:]*\ze$', '25', '')
+
         set columns=120
         set lines=36
-        let &guifont = substitute(&guifont, ':h\([^:]*\)', ':h25', '')
     endif
 endfunction
 command! -bar BigScreenTv call BigScreenTv()
 
 function! RestoreSize()
     if has("gui_running")
+        SetFont
+
         " Set the width to accommodate a full 80 column view + tagbar + some
         " change.
         set columns=132
         set lines=50
-        SetFont
     endif
 endfunction
 command! -bar RestoreSize call RestoreSize()
