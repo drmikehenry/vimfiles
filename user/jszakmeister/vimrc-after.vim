@@ -522,6 +522,9 @@ augroup jszakmeister_vimrc
 
     " Use slightly different settings for Ant's build.xml files.
     autocmd BufRead,BufNewFile build.xml SetupAnt
+
+    " Set makeprg for *.snippet.py files.
+    autocmd BufRead,BufNewFile *.snippets.py setlocal makeprg=make\ -C\ %:p:h
 augroup END
 
 " =============================================================
