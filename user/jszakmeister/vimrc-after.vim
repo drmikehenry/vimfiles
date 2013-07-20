@@ -741,6 +741,38 @@ function! GrabMap()
 endfunction
 command! GrabMap :call GrabMap()
 
+" -------------------------------------------------------------
+" ReadJinjaTemplate
+" -------------------------------------------------------------
+
+function! ReadJinjaTemplate(template)
+    if !filereadable(a:template)
+        echoerr "'" . a:template . "' doesn't exist or cannot be read."
+        return
+    endif
+
+python << endpython
+import jinja2
+import re
+import os
+
+f = open(vim.eval("a:template"), 'rb')
+buf = f.read()
+f.close()
+
+name = os.path.basename(vim.current.buffer.name or '')
+
+template = jinja2.Template(buf)
+buf = template.render(basename=name,
+                      name=name[0:name.find('.')]).encode(vim.eval("&encoding"))
+lines = buf.splitlines()
+
+vim.current.buffer[:] = lines
+endpython
+endfunction
+command! -nargs=1  -complete=file
+            \ ReadJinjaTemplate :call ReadJinjaTemplate(<f-args>)
+
 " =============================================================
 " Machine Specific Settings
 " =============================================================
