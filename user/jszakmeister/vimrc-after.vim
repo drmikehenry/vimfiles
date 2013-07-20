@@ -373,6 +373,32 @@ function! CustomSetupClojure()
 endfunction
 command! -bar SetupClojure call CustomSetupClojure()
 
+function! LocalSetupCompanyC()
+    " This is indented to be called from an .lvimrc file after SetupC has been
+    " called as part of opening the file.  This should be called from
+    " LocalSetupCompany.
+
+    " Indent case labels from the switch.
+    setlocal cinoptions+=:1s
+
+    " Line up function args, except when they start on a new line.
+    setlocal cinoptions+=(0
+    setlocal cinoptions+=Ws
+endfunction
+command! -bar LocalSetupCompanyC call LocalSetupCompanyC()
+
+function! LocalSetupCompany()
+    " You must call this via call LocalSetupCompany() from your .lvimrc if
+    " you have sandbox enabled (true by default).  Commands are not allowed
+    " in sandbox mode.
+    let b:UltiSnipsSnippetDirectories = ["UltiSnips", "snippets/company"]
+
+    if &filetype == 'c'
+        call LocalSetupCompanyC()
+    endif
+endfunction
+command! -bar LocalSetupCompany call LocalSetupCompany()
+
 " =============================================================
 " Plugin settings
 " =============================================================
