@@ -2599,6 +2599,15 @@ endfunction
 command! -bar SetupGit call SetupGit()
 
 " -------------------------------------------------------------
+" Setup for Haskell.
+" -------------------------------------------------------------
+function! SetupHaskell()
+    SetupSource
+
+endfunction
+command! -bar SetupHaskell call SetupHaskell()
+
+" -------------------------------------------------------------
 " Setup for JavaScript.
 " -------------------------------------------------------------
 function! SetupJavaScript()
