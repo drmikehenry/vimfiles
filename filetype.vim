@@ -9,6 +9,11 @@ let g:is_kornshell = 1
 
 augroup filetypedetect
     au!
+
+    " This needs to be before *.txt, otherwise CMakeLists.txt doesn't get the
+    " correct filetype.
+    au BufNewFile,BufRead CMakeLists.txt,*.cmake,*.cmake.in setfiletype cmake
+
     au BufNewFile,BufRead *.cxx setfiletype cpp
     au BufNewFile,BufRead *.dxy setfiletype c
     au BufNewFile,BufRead *.ll setfiletype llvm
