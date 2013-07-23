@@ -83,7 +83,7 @@ babbr("@pio",r"""
 """, flags="b!")
 
 bsnip("guard", "include guard", r"""
-#ifndef ${1:INCLUDED_${2:`!v toupper(expand('%<'))`}}
+#ifndef ${1:INCLUDED_${2:`!v toupper(expand('%:t:r'))`}}
 #define $1
 
 #ifdef __cplusplus
