@@ -26,23 +26,25 @@ def snip(trigger, desc, body, flags="", aliases=[], trimBody=True):
         put("""snippet %s "%s" %s\n%s\nendsnippet\n""" % (
             t, re.sub('"', '\\"', desc), flags, body))
 
-def bsnip(trigger, desc, body, flags="b", aliases=[], trimBody=True):
+def bsnip(trigger, desc, body, flags="", aliases=[], trimBody=True):
     """Beginning-of-line only."""
-    snip(trigger, desc, body, flags, aliases=aliases, trimBody=trimBody)
+    snip(trigger, desc, body, flags="b" + flags.replace("b", ""),
+            aliases=aliases, trimBody=trimBody)
 
-def wsnip(trigger, desc, body, flags="w", aliases=[], trimBody=True):
+def wsnip(trigger, desc, body, flags="", aliases=[], trimBody=True):
     """Word boundary."""
-    snip(trigger, desc, body, flags, aliases=aliases, trimBody=trimBody)
+    snip(trigger, desc, body, flags="w" + flags.replace("w", ""),
+            aliases=aliases, trimBody=trimBody)
 
 def abbr(trigger, value, flags="", aliases=[]):
     desc = bodyToDesc(value)
     snip(trigger, desc, value, flags=flags, aliases=aliases)
 
-def babbr(trigger, value, flags="b", aliases=[]):
+def babbr(trigger, value, flags="", aliases=[]):
     """Beginning-of-line only."""
-    abbr(trigger, value, flags=flags, aliases=aliases)
+    abbr(trigger, value, flags="b" + flags.replace("b", ""), aliases=aliases)
 
-def wabbr(trigger, value, flags="w", aliases=[]):
+def wabbr(trigger, value, flags="", aliases=[]):
     """Word boundary."""
-    abbr(trigger, value, flags=flags, aliases=aliases)
+    abbr(trigger, value, flags="w" + flags.replace("w", ""), aliases=aliases)
 
