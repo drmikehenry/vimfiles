@@ -89,3 +89,10 @@ Not Fully Determined
 Other Issues
 ------------
 """)
+
+
+# Markup
+
+wsnip("lit", "literal (code) markup", r"""
+\`\`${1:literal}\`\`$0
+""")
