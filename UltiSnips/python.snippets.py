@@ -167,7 +167,9 @@ $1 = property(**$1())
 
 ''', aliases=["@property", "prop", "@prop"])
 
-
+bsnip("pdb", "pdb.set_trace()", r"""
+import pdb; pdb.set_trace()
+""")
 
 # @todo Snippets for print, logging, formatting strings "%d,%d" % (a,b).
 '''
