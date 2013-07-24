@@ -373,6 +373,15 @@ function! CustomSetupClojure()
 endfunction
 command! -bar SetupClojure call CustomSetupClojure()
 
+function! CustomSetupCmake()
+    call SetupCmake()
+
+    " Line up function args, except when they start on a new line.
+    setlocal cinoptions+=(0
+    setlocal cinoptions+=Ws
+endfunction
+command! -bar SetupCmake call CustomSetupCmake()
+
 function! LocalSetupCompanyC()
     " This is indented to be called from an .lvimrc file after SetupC has been
     " called as part of opening the file.  This should be called from
