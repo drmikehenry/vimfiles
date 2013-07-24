@@ -2563,6 +2563,15 @@ endfunction
 command! -bar SetupClojure call SetupClojure()
 
 " -------------------------------------------------------------
+" Setup for CMake
+" -------------------------------------------------------------
+function! SetupCmake()
+    SetupSource
+    setlocal commentstring=#\ %s
+endfunction
+command! -bar SetupCmake call SetupCmake()
+
+" -------------------------------------------------------------
 " Setup for D code.
 " -------------------------------------------------------------
 function! SetupD()
