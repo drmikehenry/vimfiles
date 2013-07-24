@@ -2119,11 +2119,6 @@ VIMRC_BEFORE, VIMRC_AFTER
     $VIMFILES/user/$VIMUSER-before.vim
     $VIMFILES/user/$VIMUSER-after.vim
 
-VIMRC_BUNDLE
-  Per-user "bundle" directory (for use with |pathogen|).  This exists because
-  it may be desirable to keep bundles in a separate location, outside the
-  normal $VIMUSERFILES directory.  It defaults to $VIMUSERFILES/bundle.
-
 ------------------------------------------------------------------------------
 Spell checking
 

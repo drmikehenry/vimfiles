@@ -93,11 +93,6 @@ if $VIMRC_AFTER == ""
     endif
 endif
 
-" VIMRC_BUNDLE points to the user's bundle area.
-if $VIMRC_BUNDLE == ""
-    let $VIMRC_BUNDLE = expand("$VIMUSERFILES/bundle")
-endif
-
 " Prepend per-user directory to runtimepath (provides the highest priority).
 call RtpPrepend($VIMUSERFILES)
 
@@ -114,12 +109,7 @@ call pathogen#infect()
 
 " Bundles in the "pre-bundle" directories will come earlier in the path
 " than those in "bundle" directories.
-call pathogen#infect('pre-bundle')
-
-" A bundle area specific to a user.
-if isdirectory($VIMRC_BUNDLE)
-    call pathogen#infect($VIMRC_BUNDLE)
-endif
+call pathogen#infect('pre-bundle/{}')
 
 " Number of lines of VIM history to remember.
 set history=500
