@@ -113,3 +113,19 @@ bsnip("docstring", "docstring for func or type", r"""
 
 babbr("/**", "/** ${1:Brief description with period.} */", flags="b!")
 
+# Pre-processor.
+bsnip("inc", r"""#include 'Header.h'""", r"""
+#ifndef INCLUDED_${2:`!p res = t[2].rsplit('.')[0].upper().replace('/','_')`}
+#include "${2:${1:filename}.h}"
+#endif
+""", flags="b!")
+
+bsnip("Inc", "#include <Header.h>", r"""
+#ifndef INCLUDED_${2:`!p res = t[2].rsplit('.')[0].upper().replace('/','_')`}
+#include <${2:${1:filename}.h}>
+#endif
+""", flags="b!")
+
+bsnip("sysinc", "#include <SystemHeader.h>", r"""
+#include <${1:filename.h}>
+""", flags="b!")
