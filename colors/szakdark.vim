@@ -28,7 +28,7 @@ hi StatusLine       guifg=#d0d0d0     guibg=#626262     gui=NONE      ctermfg=25
 hi StatusLineNC     guifg=#767676     guibg=#3a3a3a     gui=italic    ctermfg=243         ctermbg=237         cterm=NONE
 
 hi Folded           guifg=#a0a8b0     guibg=#384048     gui=NONE      ctermfg=NONE        ctermbg=darkgray    cterm=NONE
-hi Title            guifg=#e3dab7     guibg=NONE        gui=NONE      ctermfg=223         ctermbg=NONE        cterm=NONE
+hi Title            guifg=#e3dab7     guibg=NONE        gui=BOLD      ctermfg=223         ctermbg=NONE        cterm=BOLD
 hi Visual           guifg=NONE        guibg=#262D51     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=REVERSE
 
 hi SpecialKey       guifg=#303030     guibg=#1c1c1c     gui=NONE      ctermfg=236         ctermbg=234         cterm=NONE
@@ -67,8 +67,8 @@ if &t_Co > 255 || has("gui_running")
 endif
 
 if version >= 700 " Vim 7.x specific colors
-  hi CursorLine     guifg=NONE        guibg=#121212     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=BOLD
-  hi CursorColumn   guifg=NONE        guibg=#121212     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=BOLD
+  hi CursorLine     guifg=NONE        guibg=#232323     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=BOLD
+  hi CursorColumn   guifg=NONE        guibg=#232323     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=BOLD
   hi MatchParen     guifg=#f6f3e8     guibg=#857b6f     gui=BOLD      ctermfg=white       ctermbg=darkgray    cterm=NONE
   hi Pmenu          guifg=#f6f3e8     guibg=#444444     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
   hi PmenuSel       guifg=#000000     guibg=#cae682     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
@@ -77,7 +77,7 @@ endif
 
 " Syntax highlighting
 hi Comment          guifg=#7C7C7C     guibg=NONE        gui=NONE      ctermfg=darkgray    ctermbg=NONE        cterm=NONE
-hi String           guifg=#A8FF60     guibg=NONE        gui=NONE      ctermfg=green       ctermbg=NONE        cterm=NONE
+hi String           guifg=#5ac600     guibg=NONE        gui=NONE      ctermfg=green       ctermbg=NONE        cterm=NONE
 hi Number           guifg=#FF73FD     guibg=NONE        gui=NONE      ctermfg=magenta     ctermbg=NONE        cterm=NONE
 
 hi Keyword          guifg=#96CBFE     guibg=NONE        gui=BOLD      ctermfg=blue        ctermbg=NONE        cterm=BOLD
@@ -122,7 +122,7 @@ hi rubyEscape                  guifg=white        guibg=NONE      gui=NONE      
 hi rubyInterpolationDelimiter  guifg=#00A0A0      guibg=NONE      gui=NONE      ctermfg=blue           ctermbg=NONE      cterm=NONE
 hi rubyControl                 guifg=#6699CC      guibg=NONE      gui=BOLD      ctermfg=blue           ctermbg=NONE      cterm=BOLD  "and break, etc
 "hi rubyGlobalVariable          guifg=#FFCCFF      guibg=NONE      gui=NONE      ctermfg=lightblue      ctermbg=NONE      cterm=NONE  "yield
-hi rubyStringDelimiter         guifg=#336633      guibg=NONE      gui=NONE      ctermfg=lightgreen     ctermbg=NONE      cterm=NONE
+hi rubyStringDelimiter         guifg=#4a934a      guibg=NONE      gui=NONE      ctermfg=lightgreen     ctermbg=NONE      cterm=NONE
 "rubyInclude
 "rubySharpBang
 "rubyAccess
