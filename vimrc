@@ -2061,6 +2061,15 @@ function! AutoLeaveUltiSnipsBuffer()
     endif
 endfunction
 
+" Helper to be called from your .lvimrc.
+function! AppendSnippetDirs(snippetDirs)
+    if type(a:snippetDirs) == type([])
+        let b:UltiSnipsSnippetDirectories += a:snippetDirs
+    else
+        let b:UltiSnipsSnippetDirectories += [a:snippetDirs]
+    endif
+endfunction
+
 augroup local_ultiSnips
     autocmd!
     autocmd BufEnter * call AutoEnterUltiSnipsBuffer()
