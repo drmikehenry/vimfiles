@@ -632,3 +632,39 @@ TEST_ASSERT_DOUBLE_IS_NEG_INF_MESSAGE(${1:actual}, ${2:message});
 bsnip("utadinm", "TEST_ASSERT_DOUBLE_IS_NAN_MESSAGE(actual, message)", r"""
 TEST_ASSERT_DOUBLE_IS_NAN_MESSAGE(${1:actual}, ${2:message});
 """)
+
+#---------------------------------------------------------
+# Custom snippets (not based on anything in the framework)
+#---------------------------------------------------------
+
+bsnip("usu", "void setUp(void)", r"""
+void
+setUp(void)
+{
+    $0
+}
+""")
+
+
+bsnip("utd", "void tearDown(void)", r"""
+void
+tearDown(void)
+{
+    $0
+}
+""")
+
+
+bsnip("utf", "void test_...(void)", r"""
+void
+test_${1:name}(void)
+{
+    $0
+}
+""")
+
+
+bsnip("utfd", "void test_...(void)", r"""
+void
+test_${1:name}(void);
+""")
