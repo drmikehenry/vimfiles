@@ -115,13 +115,13 @@ babbr("/**", "/** ${1:Brief description with period.} */", flags="b!")
 
 # Pre-processor.
 bsnip("inc", r"""#include 'Header.h'""", r"""
-#ifndef INCLUDED_${2:`!p res = t[2].rsplit('.')[0].upper().replace('/','_')`}
+#ifndef INCLUDED_${2:`!p import re; res = re.sub('[-/]', '_', t[2].rsplit('.')[0]).upper()`}
 #include "${2:${1:filename}.h}"
 #endif
 """, flags="b!")
 
 bsnip("Inc", "#include <Header.h>", r"""
-#ifndef INCLUDED_${2:`!p res = t[2].rsplit('.')[0].upper().replace('/','_')`}
+#ifndef INCLUDED_${2:`!p import re; res = re.sub('[-/]', '_', t[2].rsplit('.')[0]).upper()`}
 #include <${2:${1:filename}.h}>
 #endif
 """, flags="b!")
