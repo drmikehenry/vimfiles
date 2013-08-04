@@ -118,6 +118,103 @@ call pathogen#infect()
 call pathogen#infect('pre-bundle/{}')
 
 " =============================================================
+" Color schemes
+" =============================================================
+
+" Setup a color scheme early for better visibility of errors and to nail down
+" 'background' (which changes when a new colorscheme is selected).
+
+" If a user sets up a colorscheme in his "-before.vim" script (or early in his
+" ~/.vimrc file), the varible g:colors_name will be set and no default
+" colorscheme selection will take place.  To use no colorscheme at all, set
+" g:colors_name to the empty string.
+
+" If the user hadn't chosen a colorscheme, we setup a default.  Because in
+" general there is no good way to reliably detect console background color, we
+" default to assuming a dark background.  Vim does try to use the environment
+" variable COLORFGBG to guess the background color, but that variable is not
+" always set properly (especially after ``sudo`` or ``ssh``).
+
+" Provide a default colorscheme.
+if !exists("g:colors_name")
+    if &t_Co <= 8
+        " With only a few colors, it's better to use a simple colorscheme.
+        colorscheme elflord
+    else
+        " Dark scheme maintained by John Szakmeister.
+        colorscheme szakdark
+    endif
+endif
+
+" Provide a default Powerline colorscheme.
+if !exists("g:Powerline_colorscheme")
+    if &background == "dark"
+        let g:Powerline_colorscheme = 'szakdark'
+    else
+        " At present, we don't have complete support for light backgrounds
+        " (though 'nuvola' is a start at it).
+    endif
+endif
+
+" =============================================================
+" GUI Setup
+" =============================================================
+
+if has("gui_running")
+    " 'T' flag controls the toolbar (we don't need it).
+    set guioptions-=T
+
+    " 'a' is for Autoselect mode, in which selections will automatically be
+    " added to the clipboard (on Windows) or the primary selection (on Unix).
+    set guioptions-=a
+
+    " 'L' causes a left-side scrollbar to automatically appear when a
+    " vertical split is created.  Unfortunately, there is a timing bug of
+    " some kind in Vim that sometimes prevents 'columns' from being
+    " properly maintained when the comings and goings of the scrollbar
+    " change the width of the GUI frame.  The right-side scrollbar still
+    " functions properly for the active window, so there's no need for the
+    " left-side scrollbar anyway.
+    set guioptions-=L
+
+    " Number of lines of text overall.
+    set lines=50
+
+    " Setup nice fonts.
+    if has("gui_gtk2")
+
+        " The documentation for 'guifont' claims that fonts can be
+        " comma-separated, and that the first font to be found will
+        " be used.  This doesn't seem to be the case for me.  When
+        " the first font isn't available, no other fonts are tried,
+        " and Vim falls back to a default font.  So, this ugly
+        " hack lets me try PragmataPro at home but still have reasonable
+        " fonts elsewhere.
+        " TODO: Find a better solution fallback fonts.
+        if len(glob($HOME . "/.fonts/p/PragmataPro*.ttf"))
+            set guifont=PragmataPro\ 14
+        else
+            set guifont=DejaVu\ Sans\ Mono\ 12
+            "set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
+            "set guifont=Inconsolata\ Medium\ 13
+        endif
+
+    elseif has("x11")
+        set guifont=-*-lucidatypewriter-medium-r-normal-*-*-100-*-*-m-*-*
+
+    elseif has("win32")
+        try
+            set guifont=Bitstream_Vera_Sans_Mono:h12:cANSI
+        catch
+            set guifont=Lucida_Console:h12:cDEFAULT
+        endtry
+    else
+        " Non-X11 GUIs including Windows.
+        set guifont=Lucida_Console:h12:cDEFAULT
+    endif
+endif
+
+" =============================================================
 " General setup
 " =============================================================
 
@@ -3251,93 +3348,6 @@ if g:EnablePowerline
 else
     " Powerline will not load if this variable is defined:
     let g:Powerline_loaded = 1
-endif
-
-" =============================================================
-" Color schemes
-" =============================================================
-
-" The &background variable uses the environment variable COLORFGBG to determine
-" whether the background is dark or light.  After changing the background color
-" in the terminal emulator, it's necessary to either restart the shell or update
-" the environment variable accordingly.
-
-if $TERM == 'cygwin'
-    set background=light
-endif
-
-" Choose colorscheme based on background color.
-if &background == "light"
-    " Light scheme suggested by Matt Gilbert.
-    colorscheme nuvola
-else
-    " Dark scheme maintained by John Szakmeister.
-    colorscheme szakdark
-endif
-
-" Only use the nuvola powerline scheme if the gui is running.
-if has("gui_running")
-    " TODO Try out nuvola powerline colorscheme sometime.
-    "let g:Powerline_colorscheme = 'nuvola'
-endif
-
-
-" =============================================================
-" GUI Setup
-" =============================================================
-
-if has("gui_running")
-    " 'T' flag controls the toolbar (we don't need it).
-    set guioptions-=T
-
-    " 'a' is for Autoselect mode, in which selections will automatically be
-    " added to the clipboard (on Windows) or the primary selection (on Unix).
-    set guioptions-=a
-
-    " 'L' causes a left-side scrollbar to automatically appear when a
-    " vertical split is created.  Unfortunately, there is a timing bug of
-    " some kind in Vim that sometimes prevents 'columns' from being
-    " properly maintained when the comings and goings of the scrollbar
-    " change the width of the GUI frame.  The right-side scrollbar still
-    " functions properly for the active window, so there's no need for the
-    " left-side scrollbar anyway.
-    set guioptions-=L
-
-    " Number of lines of text overall.
-    set lines=50
-
-    " Setup nice fonts.
-    if has("gui_gtk2")
-
-        " The documentation for 'guifont' claims that fonts can be
-        " comma-separated, and that the first font to be found will
-        " be used.  This doesn't seem to be the case for me.  When
-        " the first font isn't available, no other fonts are tried,
-        " and Vim falls back to a default font.  So, this ugly
-        " hack lets me try PragmataPro at home but still have reasonable
-        " fonts elsewhere.
-        " TODO: Find a better solution fallback fonts.
-        if len(glob($HOME . "/.fonts/p/PragmataPro*.ttf"))
-            set guifont=PragmataPro\ 14
-        else
-            set guifont=DejaVu\ Sans\ Mono\ 12
-            "set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
-            "set guifont=Inconsolata\ Medium\ 13
-        endif
-
-    elseif has("x11")
-        set guifont=-*-lucidatypewriter-medium-r-normal-*-*-100-*-*-m-*-*
-
-    elseif has("win32")
-        try
-            set guifont=Bitstream_Vera_Sans_Mono:h12:cANSI
-        catch
-            set guifont=Lucida_Console:h12:cDEFAULT
-        endtry
-    else
-        " Non-X11 GUIs including Windows.
-        set guifont=Lucida_Console:h12:cDEFAULT
-    endif
 endif
 
 " If it exists, source the specified "-after.vim" hook.

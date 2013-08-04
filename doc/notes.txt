@@ -2120,6 +2120,16 @@ VIMRC_BEFORE, VIMRC_AFTER
     $VIMFILES/user/$VIMUSER-after.vim
 
 ------------------------------------------------------------------------------
+Colorschemes
+
+By default, vimfiles chooses a default colorscheme.  To override this,
+setup your preferred colorscheme either in a "-before.vim" file or in your
+~/.vimrc file (before "runtime vimrc").  For example, in your ~/.vimrc file: >
+
+  colorscheme nuvola
+  runtime vimrc
+
+------------------------------------------------------------------------------
 Spell checking
 
 In order to allow per-user overriding of spell-check settings, there are two
