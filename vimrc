@@ -1,5 +1,9 @@
 " vim:tw=80:ts=4:sts=4:sw=4:et:ai
 
+" =============================================================
+" Early Setup
+" =============================================================
+
 " Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
 set nocompatible
 
@@ -20,6 +24,7 @@ endfunction
 " -------------------------------------------------------------
 " Customizing environment variables
 " -------------------------------------------------------------
+
 " NOTE: Several environment variables follow that may be customized.
 " See doc/notes.txt in the |notes_customizations| section for details about
 " these variables.
@@ -104,12 +109,17 @@ endif
 " -------------------------------------------------------------
 " Pathogen plugin management
 " -------------------------------------------------------------
+
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 call pathogen#infect()
 
 " Bundles in the "pre-bundle" directories will come earlier in the path
 " than those in "bundle" directories.
 call pathogen#infect('pre-bundle/{}')
+
+" =============================================================
+" General setup
+" =============================================================
 
 " Number of lines of VIM history to remember.
 set history=500
@@ -148,9 +158,9 @@ runtime termsupport.vim
 " Disallow octal numbers for increment/decrement (CTRL-A/CTRL-X).
 set nrformats-=octal
 
-" =============================================================
+" -------------------------------------------------------------
 " File settings
-" =============================================================
+" -------------------------------------------------------------
 
 " Where file browser's directory should begin:
 "   last    - same directory as last file browser
@@ -177,9 +187,9 @@ set fileencodings=ucs-bom,utf-8,default,latin1
 " May also set 'bomb' to force use of a BOM (Byte Order Mark).
 " set fileencoding=
 
-" =============================================================
+" -------------------------------------------------------------
 " Display settings
-" =============================================================
+" -------------------------------------------------------------
 
 " Show "ruler" at bottom (cursor position et al.).
 set ruler
@@ -233,9 +243,9 @@ set sidescroll=0
 " set list
 set listchars=trail:·,nbsp:·,extends:>,precedes:<,eol:$
 
-" =============================================================
+" -------------------------------------------------------------
 " Menu settings
-" =============================================================
+" -------------------------------------------------------------
 
 anoremenu 10.332 &File.Close\ All<Tab>:%bdelete :%bdelete<CR>
 anoremenu 10.355 &File.Save\ A&ll<Tab>:wall :wall<CR>
@@ -246,9 +256,9 @@ anoremenu 10.355 &File.Save\ A&ll<Tab>:wall :wall<CR>
 "   menu - Alt-key combinations not used by menus are mappable.
 set winaltkeys=no
 
-" =============================================================
+" -------------------------------------------------------------
 " Key settings
-" =============================================================
+" -------------------------------------------------------------
 
 " Undo compiled-in mappings
 silent! unmap <C-x>
@@ -270,9 +280,9 @@ inoremap <F5> <ESC>:wall<bar>! %:p<CR>
 nnoremap <F12> :wall<bar>call system("fifosignal")<CR>
 inoremap <F12> <ESC>:wall<bar>call system("fifosignal")<CR>
 
-" =============================================================
+" -------------------------------------------------------------
 " QuickFix/Location List support
-" =============================================================
+" -------------------------------------------------------------
 
 " Open QuickFix window using standard position and height.
 command! -bar Copen  execute "botright copen " . g:QuickFixWinHeight
@@ -890,9 +900,9 @@ set complete=.,w,b,u,t
 
 " inoremap <expr> <m-;> pumvisible() ? "\<lt>c-n>" : "\<lt>c-x>\<lt>c-o>\<lt>c-n>\<lt>c-p>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>"
 
-" =============================================================
-" begin "inspired by mswin.vim"
-" =============================================================
+" -------------------------------------------------------------
+" Begin "inspired by mswin.vim"
+" -------------------------------------------------------------
 
 " Backspace in Visual mode does NOT delete selection (used for
 " shifting left).
@@ -950,9 +960,9 @@ if has("win32")
     nnoremap <M-Space> :simalt ~<CR>
 endif
 
-" =============================================================
-" end "inspired by mswin.vim"
-" =============================================================
+" -------------------------------------------------------------
+" End "inspired by mswin.vim"
+" -------------------------------------------------------------
 
 " Put from most recent yank instead of scratch register.
 vnoremap P "0P
@@ -1153,16 +1163,16 @@ endfunction
 command! -range=% Toascii  call Toascii(<line1>, <line2>)
 
 
-" ==============================================================
+" -------------------------------------------------------------
 " Buffer manipulation
-" =============================================================
+" -------------------------------------------------------------
 
 " Allow buffers to be hidden even if they have changes.
 set hidden
 
-" =============================================================
+" -------------------------------------------------------------
 " Paste setup
-" =============================================================
+" -------------------------------------------------------------
 
 " Setup a key to toggle "paste" mode (toggles between :set paste
 " and :set nopaste by executing :set invpaste).
@@ -1187,9 +1197,9 @@ function! InvertPasteAndMouse()
     endif
 endfunction
 
-" =============================================================
+" -------------------------------------------------------------
 " :redir helpers
-" =============================================================
+" -------------------------------------------------------------
 
 " Redirect to register "x":
 "   Redir @x
@@ -1210,9 +1220,9 @@ command! -nargs=* -bar Redir
             \   set nomore |
             \ endif
 
-" =============================================================
+" -------------------------------------------------------------
 " Tags
-" =============================================================
+" -------------------------------------------------------------
 
 " The semicolon gives permission to search up toward the root
 " directory.  When followed by a path, the upward search terminates
@@ -1257,9 +1267,9 @@ xnoremap g<LeftMouse>   g<C-]>
 nnoremap <C-LeftMouse>  g<C-]>
 xnoremap <C-LeftMouse>  g<C-]>
 
-" =============================================================
+" -------------------------------------------------------------
 " Cscope
-" =============================================================
+" -------------------------------------------------------------
 
 if has("cscope")
     set cscopeprg=/usr/bin/cscope
@@ -1320,9 +1330,9 @@ if has("cscope")
     nnoremap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
 endif
 
-" =============================================================
+" -------------------------------------------------------------
 " Window manipulation
-" =============================================================
+" -------------------------------------------------------------
 
 " Desired height of QuickFix window.
 let g:QuickFixWinHeight = 10
@@ -1442,9 +1452,9 @@ function! TabDo(command)
 endfunction
 com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 
-" =============================================================
+" -------------------------------------------------------------
 " Diff-related
-" =============================================================
+" -------------------------------------------------------------
 
 " Taken from :help :DiffOrig.  Shows unsaved differences between
 " this buffer and original file.
@@ -2112,14 +2122,14 @@ nmap <silent> <Leader>sv <C-W>o<Plug>VCSVimDiff<C-W>H<C-W>w
 " :nnoremap <C-W><C-B>   :BottomExplorerWindow<CR>
 
 " =============================================================
-" Language setup
+" Language and filetype setup
 " =============================================================
 
 set spelllang=en_us
 
-" =============================================================
+" -------------------------------------------------------------
 " Highlight setup
-" =============================================================
+" -------------------------------------------------------------
 
 " Define a nice highlighting color for matches.
 " From Nuvola:
