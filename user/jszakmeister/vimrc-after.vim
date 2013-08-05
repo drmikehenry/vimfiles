@@ -548,6 +548,26 @@ let g:tagbar_type_rst = g:local_tagbar_type_rst
 " Autocommands
 " =============================================================
 
+function! TriggerSpecificSnippetTemplate(snippetName)
+    let l:snippets = UltiSnips_SnippetsInCurrentScope()
+
+    if !has_key(l:snippets, a:snippetName)
+        return
+    endif
+
+    startinsert
+    call feedkeys(a:snippetName . "\<TAB>")
+endfunction
+
+function! TriggerSnippetTemplate()
+    " Looks for a snippet named "template_<filetype>.<ext>", and expands it
+    " if it exists.  The idea here is to provide a good default template for
+    " various file types.
+    let l:snippetName = "template_" . &filetype . "." . expand("%:p:e")
+
+    call TriggerSpecificSnippetTemplate(l:snippetName)
+endfunction
+
 augroup jszakmeister_vimrc
     autocmd!
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
