@@ -554,6 +554,10 @@ augroup jszakmeister_vimrc
     autocmd VimEnter * call UnmapUnwanted()
     autocmd VimEnter * call SetupBrowseX()
 
+    " The toggle help feature seems to reset list.  I really want it off for
+    " the help buffer though.
+    autocmd BufEnter * if &bt == "help" | setlocal nolist | endif
+
     " Set up syntax highlighting for e-mail and mutt.
     autocmd BufRead,BufNewFile
                 \ .followup,.article,.letter,/tmp/pico*,nn.*,snd.*,/tmp/mutt*
