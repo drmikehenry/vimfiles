@@ -129,3 +129,31 @@ bsnip("Inc", "#include <Header.h>", r"""
 bsnip("sysinc", "#include <SystemHeader.h>", r"""
 #include <${1:filename.h}>
 """, flags="b!")
+
+
+# Templates
+
+bsnip("template_c.c", ".c template (company)", r"""
+#ifndef INCLUDED_`!p import re; res = re.sub('[-/]', '_', t[1].rsplit('.')[0]).upper()`
+#include "${1:`!v expand('%:t:r')`.h}"
+#endif
+
+$0
+""", flags="!")
+
+bsnip("template_c.h", ".h template (company)", r"""
+#ifndef INCLUDED_${1:`!p import re; res = re.sub('[-/]', '_', vim.eval("expand('%:t:r')")).upper()`}
+#define INCLUDED_$1
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+$0
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* INCLUDED_$1 */
+""", flags="!")

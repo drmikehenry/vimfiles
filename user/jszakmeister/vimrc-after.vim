@@ -568,6 +568,21 @@ function! TriggerSnippetTemplate()
     call TriggerSpecificSnippetTemplate(l:snippetName)
 endfunction
 
+function! AddTemplateAutoCommands()
+    " This is called from after/plugin/loadtemplate.vim.  We do this to ensure
+    " that the .lvimrc is sourced before trying to load templates.  This will
+    " make sure that b:TemplateDir is set before we try to load a template.
+
+    augroup jszakmeister_vimrc
+        " Load a template for new header files.
+        autocmd BufNewFile *.h call TriggerSnippetTemplate()
+        autocmd BufNewFile *.c call TriggerSnippetTemplate()
+        autocmd BufNewFile *.snippets.py
+                    \ call TriggerSpecificSnippetTemplate(
+                    \   "template_snippets.py")
+    augroup END
+endfunction
+
 augroup jszakmeister_vimrc
     autocmd!
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
