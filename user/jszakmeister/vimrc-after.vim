@@ -382,6 +382,13 @@ function! CustomSetupCmake()
 endfunction
 command! -bar SetupCmake call CustomSetupCmake()
 
+function! CustomSetupHelp()
+    call SetupHelp()
+
+    setlocal nolist
+endfunction
+command! -bar SetupHelp call CustomSetupHelp()
+
 function! LocalSetupCompanyC()
     " This is indented to be called from an .lvimrc file after SetupC has been
     " called as part of opening the file.  This should be called from
