@@ -1704,7 +1704,7 @@ Xterm is partially supported as well (it will use an underline versus a line
 cursor by default).  This technique also works with tmux, although you may
 need version 1.7 or better.
 
-Version 0.1.0 (34373bd2) from
+Version 0.1.1 (a97b8bed) from
 git://github.com/jszakmeister/vim-togglecursor.git
 
 Installation:
