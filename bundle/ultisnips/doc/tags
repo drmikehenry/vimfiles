@@ -18,9 +18,11 @@ UltiSnips-helping	UltiSnips.txt	/*UltiSnips-helping*
 UltiSnips-installnupdate	UltiSnips.txt	/*UltiSnips-installnupdate*
 UltiSnips-interpolation	UltiSnips.txt	/*UltiSnips-interpolation*
 UltiSnips-mirrors	UltiSnips.txt	/*UltiSnips-mirrors*
+UltiSnips-other-plugins	UltiSnips.txt	/*UltiSnips-other-plugins*
 UltiSnips-placeholders	UltiSnips.txt	/*UltiSnips-placeholders*
 UltiSnips-plaintext-snippets	UltiSnips.txt	/*UltiSnips-plaintext-snippets*
 UltiSnips-python	UltiSnips.txt	/*UltiSnips-python*
+UltiSnips-python-module-path	UltiSnips.txt	/*UltiSnips-python-module-path*
 UltiSnips-python-warning	UltiSnips.txt	/*UltiSnips-python-warning*
 UltiSnips-replacement-string	UltiSnips.txt	/*UltiSnips-replacement-string*
 UltiSnips-requirements	UltiSnips.txt	/*UltiSnips-requirements*
@@ -30,6 +32,7 @@ UltiSnips-snippet-search-path	UltiSnips.txt	/*UltiSnips-snippet-search-path*
 UltiSnips-syntax	UltiSnips.txt	/*UltiSnips-syntax*
 UltiSnips-tabstops	UltiSnips.txt	/*UltiSnips-tabstops*
 UltiSnips-transformations	UltiSnips.txt	/*UltiSnips-transformations*
+UltiSnips-trigger-functions	UltiSnips.txt	/*UltiSnips-trigger-functions*
 UltiSnips-triggers	UltiSnips.txt	/*UltiSnips-triggers*
 UltiSnips-using-a-downloaded-packet	UltiSnips.txt	/*UltiSnips-using-a-downloaded-packet*
 UltiSnips-using-bzr	UltiSnips.txt	/*UltiSnips-using-bzr*
@@ -40,8 +43,8 @@ UltiSnips-warning-smappings	UltiSnips.txt	/*UltiSnips-warning-smappings*
 UltiSnips.txt	UltiSnips.txt	/*UltiSnips.txt*
 UltiSnips_AddSnippet	UltiSnips.txt	/*UltiSnips_AddSnippet*
 UltiSnips_Anon	UltiSnips.txt	/*UltiSnips_Anon*
+UltiSnips_SnippetsInCurrentScope	UltiSnips.txt	/*UltiSnips_SnippetsInCurrentScope*
 g:UltiSnipsEditSplit	UltiSnips.txt	/*g:UltiSnipsEditSplit*
 g:UltiSnipsSnippetsDir	UltiSnips.txt	/*g:UltiSnipsSnippetsDir*
 snippet	UltiSnips.txt	/*snippet*
 snippets	UltiSnips.txt	/*snippets*
-visual-mode	UltiSnips.txt	/*visual-mode*

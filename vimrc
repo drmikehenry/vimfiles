@@ -2170,32 +2170,6 @@ function! SetLocalSnippetDirectories(ultiSnipsSnippetDirectories)
     let b:UltiSnipsSnippetDirectories = a:ultiSnipsSnippetDirectories
 endfunction
 
-" Until UltiSnips acquires a method for setting buffer-local snippets paths,
-" the auto-commands below fake this feature by saving the global value of
-" g:UltiSnipsSnippetDirectories when entering a buffer and changing it to a
-" buffer-local setting, then restoring from the saved value when leaving the
-" buffer.
-
-" Save g:UltiSnipsSnippetDirectories when entering a buffer, and switch
-" g:UltiSnipsSnippetDirectories to a buffer-local value (if it exists).
-function! AutoEnterUltiSnipsBuffer()
-    let b:SavedUltiSnipsSnippetDirectories = g:UltiSnipsSnippetDirectories
-    if exists("b:UltiSnipsSnippetDirectories")
-        let g:UltiSnipsSnippetDirectories = b:UltiSnipsSnippetDirectories
-    endif
-endfunction
-
-" Restore g:UltiSnipsSnippetDirectories from saved value.
-function! AutoLeaveUltiSnipsBuffer()
-    " If somehow an autocmd got skipped and there is no saved value,
-    " revert to UltiSnip default value.
-    if exists("b:UltiSnipsSnippetDirectories")
-        let g:UltiSnipsSnippetDirectories = b:SavedUltiSnipsSnippetDirectories
-    else
-        let g:UltiSnipsSnippetDirectories = ["UltiSnips"]
-    endif
-endfunction
-
 " Helper to be called from your .lvimrc.
 function! AppendSnippetDirs(snippetDirs)
     if type(a:snippetDirs) == type([])
@@ -2204,12 +2178,6 @@ function! AppendSnippetDirs(snippetDirs)
         let b:UltiSnipsSnippetDirectories += [a:snippetDirs]
     endif
 endfunction
-
-augroup local_ultiSnips
-    autocmd!
-    autocmd BufEnter * call AutoEnterUltiSnipsBuffer()
-    autocmd BufLeave * call AutoLeaveUltiSnipsBuffer()
-augroup END
 
 " -------------------------------------------------------------
 " vis

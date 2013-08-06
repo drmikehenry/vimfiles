@@ -167,8 +167,8 @@ snip.rv = snip.fn and 'Hallo' or 'Nothin'
 endsnippet
 
 snippet div "XHTML <div>"
-<div${1: id="${2:name}"}>
-	$0
+<div`!p snip.rv=' id="' if t[1] else ""`${1:name}`!p snip.rv = '"' if t[1] else ""``!p snip.rv=' class="' if t[2] else ""`${2:name}`!p snip.rv = '"' if t[2] else ""`>
+   $0
 </div>
 endsnippet
 
@@ -234,7 +234,7 @@ snippet p "paragraph"
 endsnippet
 
 snippet li "list item"
-<li></li>
+<li>$0</li>
 endsnippet
 
 snippet ul "unordered list"
@@ -288,9 +288,6 @@ snippet html5 "HTML5 Template"
     <header>
         ${2}
     </header>
-    <content>
-        ${3}
-    </content>
     <footer>
         ${4}
     </footer>

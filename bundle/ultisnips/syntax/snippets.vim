@@ -12,16 +12,17 @@ syntax include @Viml syntax/vim.vim
 syn match snipComment "^#.*" contains=snipTODO
 syn keyword snipTODO FIXME NOTE NOTES TODO XXX contained
 
+syn match snipDocString '"[^"]*"$'
 syn match snipString '"[^"]*"'
 syn match snipTabsOnly "^\t\+$"
 
-syn match snipKeyword "\(\<\(end\)\?\(snippet\|global\)\>\)\|extends" contained
+syn match snipKeyword "\(\<\(end\)\?\(snippet\|global\)\>\)\|extends\|clearsnippets" contained
 
 " extends definitions
 syn match snipExtends "^extends.*" contains=snipKeyword
 
 " snippet definitions
-syn match snipStart "^snippet.*" contained contains=snipKeyword,snipString
+syn match snipStart "^snippet.*" contained contains=snipKeyword,snipDocString
 syn match snipEnd "^endsnippet" contained contains=snipKeyword
 syn region snipCommand contained keepend start="`" end="`" contains=snipPythonCommand,snipVimLCommand
 syn region snipPythonCommand contained keepend start="`!p" end="`" contained contains=@Python
@@ -36,10 +37,14 @@ syn match snipGlobalStart "^global.*" contained contains=snipKeyword,snipString
 syn match snipGlobalEnd "^endglobal" contained contains=snipKeyword
 syn region snipGlobal fold keepend start="^global" end="^endglobal" contains=snipGlobalStart,snipGlobalEnd,snipTabsOnly,snipCommand,snipVarExpansion,snipVar,@Python
 
+" snippet clearing
+syn match snipClear "^clearsnippets"
+
 " highlighting rules
 
 hi link snipComment      Comment
 hi link snipString       String
+hi link snipDocString    String
 hi link snipTabsOnly     Error
 
 hi link snipKeyword      Keyword
@@ -57,5 +62,7 @@ hi link snippet          Normal
 hi link snipGlobalStart  Statement
 hi link snipGlobalEnd    Statement
 hi link snipGlobal       Normal
+
+hi link snipClear        Statement
 
 let b:current_syntax = "snippet"

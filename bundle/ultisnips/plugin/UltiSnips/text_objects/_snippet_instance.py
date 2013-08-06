@@ -15,12 +15,12 @@ class SnippetInstance(EditableTextObject):
     also a TextObject because it has a start an end
     """
 
-    def __init__(self, parent, indent, initial_text, start, end, visual_content, last_re, globals):
+    def __init__(self, snippet, parent, indent, initial_text, start, end, visual_content, last_re, globals):
         if start is None:
             start = Position(0,0)
         if end is None:
             end = Position(0,0)
-
+        self.snippet = snippet
         self._cts = 0
 
         self.locals = {"match" : last_re}
@@ -74,7 +74,6 @@ class SnippetInstance(EditableTextObject):
             raise RuntimeError("The snippets content did not converge: Check for Cyclic dependencies "
                 "or random strings in your snippet. You can use 'if not snip.c' to make sure "
                 "to only expand random output once.")
-
         vc.to_vim()
         self._del_child(vc)
 
@@ -118,7 +117,7 @@ class _VimCursor(NoneditableTextObject):
 
     def __init__(self, parent):
         NoneditableTextObject.__init__(
-            self, parent, _vim.buf.cursor, _vim.buf.cursor, tiebreaker = Position(0,0),
+            self, parent, _vim.buf.cursor, _vim.buf.cursor, tiebreaker = Position(-1,-1),
         )
 
     def to_vim(self):
