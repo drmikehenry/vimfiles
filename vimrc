@@ -1868,6 +1868,34 @@ endfunc
 
 
 " -------------------------------------------------------------
+" Powerline
+" -------------------------------------------------------------
+
+if g:EnablePowerline
+    " Remove segments that are redundant (like "mode_indicator") or
+    " which are essentially static indicators that don't warrant taking
+    " up room.
+    call Pl#Theme#RemoveSegment('mode_indicator')
+    call Pl#Theme#RemoveSegment('fileformat')
+    call Pl#Theme#RemoveSegment('fileencoding')
+    call Pl#Theme#RemoveSegment('filetype')
+
+    " Move 'fileinfo' and 'syntastic:errors' after the Truncate() to keep the
+    " basename of the file visible as long as possible.  If we start using
+    " the Syntastic plugin, this may have to be adjusted so that syntastic
+    " output is truncated first.  This preserves the order found in Powerline's
+    " autoload/Powerline/Themes/default.vim file.
+    call Pl#Theme#RemoveSegment('fileinfo')
+    call Pl#Theme#InsertSegment('fileinfo', 'before', 'tagbar:currenttag')
+    call Pl#Theme#RemoveSegment('syntastic:errors')
+    call Pl#Theme#InsertSegment('syntastic:errors', 'before',
+                \               'tagbar:currenttag')
+else
+    " Powerline will not load if this variable is defined:
+    let g:Powerline_loaded = 1
+endif
+
+" -------------------------------------------------------------
 " Project
 " -------------------------------------------------------------
 
@@ -3321,34 +3349,6 @@ endif
 " 2 - always.
 set laststatus=2
 
-
-" =============================================================
-" Powerline
-" =============================================================
-
-if g:EnablePowerline
-    " Remove segments that are redundant (like "mode_indicator") or
-    " which are essentially static indicators that don't warrant taking
-    " up room.
-    call Pl#Theme#RemoveSegment('mode_indicator')
-    call Pl#Theme#RemoveSegment('fileformat')
-    call Pl#Theme#RemoveSegment('fileencoding')
-    call Pl#Theme#RemoveSegment('filetype')
-
-    " Move 'fileinfo' and 'syntastic:errors' after the Truncate() to keep the
-    " basename of the file visible as long as possible.  If we start using
-    " the Syntastic plugin, this may have to be adjusted so that syntastic
-    " output is truncated first.  This preserves the order found in Powerline's
-    " autoload/Powerline/Themes/default.vim file.
-    call Pl#Theme#RemoveSegment('fileinfo')
-    call Pl#Theme#InsertSegment('fileinfo', 'before', 'tagbar:currenttag')
-    call Pl#Theme#RemoveSegment('syntastic:errors')
-    call Pl#Theme#InsertSegment('syntastic:errors', 'before',
-                \               'tagbar:currenttag')
-else
-    " Powerline will not load if this variable is defined:
-    let g:Powerline_loaded = 1
-endif
 
 " If it exists, source the specified "-after.vim" hook.
 if filereadable($VIMRC_AFTER)
