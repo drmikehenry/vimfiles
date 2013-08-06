@@ -434,6 +434,19 @@ let g:Gitv_OpenHorizontal = 1
 let g:Gitv_OpenPreviewOnLaunch = 1
 
 " -------------------------------------------------------------
+" localvimrc
+" -------------------------------------------------------------
+
+let s:project_whitelist = [
+            \ 'jszakmeister',
+            \ 'intelesys',
+            \ 'git',
+            \ 'llvm',
+            \ ]
+let g:localvimrc_whitelist = resolve(expand('$HOME/projects/')) . '\(' .
+            \ join(s:project_whitelist, '\|') . '\)/.*'
+
+" -------------------------------------------------------------
 " manpageview
 " -------------------------------------------------------------
 
