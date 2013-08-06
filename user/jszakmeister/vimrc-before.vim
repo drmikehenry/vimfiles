@@ -2,6 +2,6 @@
 let mapleader=","
 
 " Don't use Powerline on 8-color terminals... it just doesn't look good.
-if &t_Co == 8
+if !has("gui_running") && &t_Co == 8
     let g:EnablePowerline = 0
 endif

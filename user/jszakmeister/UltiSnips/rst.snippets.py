@@ -89,3 +89,21 @@ Not Fully Determined
 Other Issues
 ------------
 """)
+
+bsnip("sh", "sh code block", r"""
+.. code-block:: sh
+
+    $0
+""", flags="!")
+
+bsnip("text", "text code block", r"""
+.. code-block:: text
+
+    $0
+""", flags="!")
+
+# Markup
+
+wsnip("lit", "literal (code) markup", r"""
+\`\`${1:literal}\`\`$0
+""")

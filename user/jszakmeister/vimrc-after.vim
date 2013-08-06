@@ -1,6 +1,6 @@
 " Set the color scheme early on, so at least I have that when other things go
 " wrong.
-if &t_Co == 8
+if !has("gui_running") && &t_Co == 8
     colorscheme elflord
 else
     colorscheme szakdark
@@ -11,10 +11,12 @@ endif
 " =============================================================
 
 " Default font size.
-if has("gui_win32")
-    let g:SZAK_FONT_SIZE = 11
-else
-    let g:SZAK_FONT_SIZE = 14
+if !exists("g:SZAK_FONT_SIZE")
+    if has("gui_win32")
+        let g:SZAK_FONT_SIZE = 11
+    else
+        let g:SZAK_FONT_SIZE = 14
+    endif
 endif
 
 " =============================================================
@@ -65,6 +67,7 @@ nnoremap <leader>w <C-w>v<C-w>l
 " I often want to close a buffer without closing the window.  Using
 " :BW also drops the associated metadata.
 nnoremap <leader><leader>d :BW<CR>
+nnoremap <leader><leader>D :BW!<CR>
 
 " Shortcut for clearing CtrlP caches
 nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
@@ -93,6 +96,9 @@ endfunction
 
 " Allow . to work over visual ranges.
 vnoremap . :normal .<CR>
+
+" Yank to the system clipboard.
+vnoremap <Leader><Leader>y "+y
 
 " =============================================================
 " Options
@@ -154,11 +160,6 @@ endif
 " I'm on a remote system. :-)  This does break when you sudo su to root though.
 if !empty($SSH_TTY)
     hi Normal guibg=#0d280d
-endif
-
-" Set the width to accommodate a full 80 column view + tagbar + some change.
-if has("gui_running")
-    set columns=132
 endif
 
 " -------------------------------------------------------------
@@ -372,6 +373,48 @@ function! CustomSetupClojure()
 endfunction
 command! -bar SetupClojure call CustomSetupClojure()
 
+function! CustomSetupCmake()
+    call SetupCmake()
+
+    " Line up function args, except when they start on a new line.
+    setlocal cinoptions+=(0
+    setlocal cinoptions+=Ws
+endfunction
+command! -bar SetupCmake call CustomSetupCmake()
+
+function! CustomSetupHelp()
+    call SetupHelp()
+
+    setlocal nolist
+endfunction
+command! -bar SetupHelp call CustomSetupHelp()
+
+function! LocalSetupCompanyC()
+    " This is indented to be called from an .lvimrc file after SetupC has been
+    " called as part of opening the file.  This should be called from
+    " LocalSetupCompany.
+
+    " Indent case labels from the switch.
+    setlocal cinoptions+=:1s
+
+    " Line up function args, except when they start on a new line.
+    setlocal cinoptions+=(0
+    setlocal cinoptions+=Ws
+endfunction
+command! -bar LocalSetupCompanyC call LocalSetupCompanyC()
+
+function! LocalSetupCompany()
+    " You must call this via call LocalSetupCompany() from your .lvimrc if
+    " you have sandbox enabled (true by default).  Commands are not allowed
+    " in sandbox mode.
+    let b:UltiSnipsSnippetDirectories = ["UltiSnips", "snippets/company"]
+
+    if &filetype == 'c'
+        call LocalSetupCompanyC()
+    endif
+endfunction
+command! -bar LocalSetupCompany call LocalSetupCompany()
+
 " =============================================================
 " Plugin settings
 " =============================================================
@@ -414,6 +457,15 @@ let Grep_Xargs_Options = '-0'
 " -------------------------------------------------------------
 
 let g:netrw_nogx = 1
+
+" Setup xdg-open as the tool to open urls whenever we can, if nothing is set up.
+" This makes using 'gx' a little more sane environments outside of Gnome and
+" KDE.
+function! SetupBrowseX()
+    if !exists("g:netrw_browsex_viewer") && executable("xdg-open")
+        let g:netrw_browsex_viewer = "xdg-open"
+    endif
+endfunction
 
 function! SmartOpen()
     if mode() ==# 'n'
@@ -477,6 +529,15 @@ if g:EnablePowerline
     let g:Powerline_colorscheme = 'szakdark'
 endif
 
+
+" -------------------------------------------------------------
+" Syntastic
+" -------------------------------------------------------------
+
+let g:syntastic_mode_map['active_filetypes'] =
+            \ g:syntastic_mode_map['active_filetypes'] +
+            \ ['html', 'less', 'sh', 'zsh']
+
 " -------------------------------------------------------------
 " Tagbar
 " -------------------------------------------------------------
@@ -487,10 +548,50 @@ let g:tagbar_type_rst = g:local_tagbar_type_rst
 " Autocommands
 " =============================================================
 
+function! TriggerSpecificSnippetTemplate(snippetName)
+    let l:snippets = UltiSnips_SnippetsInCurrentScope()
+
+    if !has_key(l:snippets, a:snippetName)
+        return
+    endif
+
+    startinsert
+    call feedkeys(a:snippetName . "\<TAB>")
+endfunction
+
+function! TriggerSnippetTemplate()
+    " Looks for a snippet named "template_<filetype>.<ext>", and expands it
+    " if it exists.  The idea here is to provide a good default template for
+    " various file types.
+    let l:snippetName = "template_" . &filetype . "." . expand("%:p:e")
+
+    call TriggerSpecificSnippetTemplate(l:snippetName)
+endfunction
+
+function! AddTemplateAutoCommands()
+    " This is called from after/plugin/loadtemplate.vim.  We do this to ensure
+    " that the .lvimrc is sourced before trying to load templates.  This will
+    " make sure that b:TemplateDir is set before we try to load a template.
+
+    augroup jszakmeister_vimrc
+        " Load a template for new header files.
+        autocmd BufNewFile *.h call TriggerSnippetTemplate()
+        autocmd BufNewFile *.c call TriggerSnippetTemplate()
+        autocmd BufNewFile *.snippets.py
+                    \ call TriggerSpecificSnippetTemplate(
+                    \   "template_snippets.py")
+    augroup END
+endfunction
+
 augroup jszakmeister_vimrc
     autocmd!
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
     autocmd VimEnter * call UnmapUnwanted()
+    autocmd VimEnter * call SetupBrowseX()
+
+    " The toggle help feature seems to reset list.  I really want it off for
+    " the help buffer though.
+    autocmd BufEnter * if &bt == "help" | setlocal nolist | endif
 
     " Set up syntax highlighting for e-mail and mutt.
     autocmd BufRead,BufNewFile
@@ -502,6 +603,9 @@ augroup jszakmeister_vimrc
 
     " Use slightly different settings for Ant's build.xml files.
     autocmd BufRead,BufNewFile build.xml SetupAnt
+
+    " Set makeprg for *.snippet.py files.
+    autocmd BufRead,BufNewFile *.snippets.py setlocal makeprg=make\ -C\ %:p:h
 augroup END
 
 " =============================================================
@@ -562,11 +666,29 @@ command! -bar ShowAvailableColors call ShowAvailableColors()
 
 " Size for the big screen.
 function! BigScreenTv()
-    set columns=120
-    set lines=36
-    let &guifont = substitute(&guifont, ':h\([^:]*\)', ':h25', '')
+    if has("gui_running")
+        " Set the font first, and let Vim automatically scale back if there are
+        " too many rows and columns to fit on the screen.
+        let &guifont =
+                    \ substitute(&guifont, '.*\%(:h\| \)\zs[^:]*\ze$', '25', '')
+
+        set columns=120
+        set lines=36
+    endif
 endfunction
 command! -bar BigScreenTv call BigScreenTv()
+
+function! RestoreSize()
+    if has("gui_running")
+        SetFont
+
+        " Set the width to accommodate a full 80 column view + tagbar + some
+        " change.
+        set columns=132
+        set lines=50
+    endif
+endfunction
+command! -bar RestoreSize call RestoreSize()
 
 " -------------------------------------------------------------
 " Toggling diffs for printing.
@@ -700,6 +822,38 @@ function! GrabMap()
 endfunction
 command! GrabMap :call GrabMap()
 
+" -------------------------------------------------------------
+" ReadJinjaTemplate
+" -------------------------------------------------------------
+
+function! ReadJinjaTemplate(template)
+    if !filereadable(a:template)
+        echoerr "'" . a:template . "' doesn't exist or cannot be read."
+        return
+    endif
+
+python << endpython
+import jinja2
+import re
+import os
+
+f = open(vim.eval("a:template"), 'rb')
+buf = f.read()
+f.close()
+
+name = os.path.basename(vim.current.buffer.name or '')
+
+template = jinja2.Template(buf)
+buf = template.render(basename=name,
+                      name=name[0:name.find('.')]).encode(vim.eval("&encoding"))
+lines = buf.splitlines()
+
+vim.current.buffer[:] = lines
+endpython
+endfunction
+command! -nargs=1  -complete=file
+            \ ReadJinjaTemplate :call ReadJinjaTemplate(<f-args>)
+
 " =============================================================
 " Machine Specific Settings
 " =============================================================
@@ -719,4 +873,4 @@ endif
 " This needs to happen here so that the Powerline variables are set correctly
 " before the plugin loads.  It needs to come after the machine scripts, so that
 " they have an opportunity to adjust the desired font size.
-SetFont
+RestoreSize
