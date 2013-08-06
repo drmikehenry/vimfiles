@@ -137,7 +137,7 @@ call pathogen#infect('pre-bundle/{}')
 
 " Provide a default colorscheme.
 if !exists("g:colors_name")
-    if &t_Co <= 8
+    if !has("gui_running") && &t_Co <= 8
         " With only a few colors, it's better to use a simple colorscheme.
         colorscheme elflord
     else
