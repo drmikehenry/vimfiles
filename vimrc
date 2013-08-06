@@ -459,10 +459,12 @@ endfunction
 function! GotoMessage(messageType, whichMessage)
     try
         execute a:messageType . a:whichMessage
-    catch /E553:/
+    catch /:E42:\|:E553:/
         echo "No " . a:whichMessage . " message"
         return 0
     endtry
+    " Echo empty line to clear possible previous message.
+    echo ""
     normal zz
     return 1
 endfunction
