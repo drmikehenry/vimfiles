@@ -62,6 +62,8 @@ EA = "#" # Expand anonymous
 COMPL_KW = chr(24)+chr(14)
 COMPL_ACCEPT = chr(25)
 
+NUMBER_OF_RETRIES_FOR_EACH_TEST = 4
+
 class VimInterface:
     def focus(title=None):
         pass
@@ -199,8 +201,8 @@ class VimInterfaceWindows(VimInterface):
 class _VimTest(unittest.TestCase):
     snippets = ("dummy", "donotdefine")
     snippets_test_file = ("", "", "")  # file type, file name, file content
-    text_before = " --- some text before --- "
-    text_after =  " --- some text after --- "
+    text_before = " --- some text before --- \n\n"
+    text_after =  "\n\n --- some text after --- "
     expected_error = ""
     wanted = ""
     keys = ""
@@ -215,20 +217,26 @@ class _VimTest(unittest.TestCase):
         self.vim.send(s)
 
     def send_py(self,s):
-        if sys.version_info < (3,0):
-            self.send(":py << EOF\n%s\nEOF\n" % s)
-        else:
-            self.send(":py3 << EOF\n%s\nEOF\n" % s)
+        # Do not delete the file so that Vim can safely read it.
+        with tempfile.NamedTemporaryFile(
+            prefix="UltiSnips_Python",suffix=".py", delete=False
+        ) as temporary_file:
+            temporary_file.write(s)
+            temporary_file.close()
+
+            if sys.version_info < (3,0):
+                self.send(":pyfile %s\n" % temporary_file.name)
+            else:
+                self.send(":py3file %s\n" % temporary_file.name)
 
     def send_keystrokes(self,s):
         self.vim.send_keystrokes(s, self.sleeptime)
 
     def check_output(self):
-        wanted = self.text_before + '\n\n' + self.wanted + \
-                '\n\n' + self.text_after
+        wanted = self.text_before + self.wanted + self.text_after
         if self.expected_error:
             wanted = wanted + "\n" + self.expected_error
-        for i in range(4):
+        for i in range(NUMBER_OF_RETRIES_FOR_EACH_TEST):
             if self.output != wanted:
                 # Redo this, but slower
                 self.sleeptime += 0.02
@@ -296,8 +304,8 @@ class _VimTest(unittest.TestCase):
             # Enter insert mode
             self.send("i")
 
-            self.send(self.text_before + '\n\n')
-            self.send('\n\n' + self.text_after)
+            self.send(self.text_before)
+            self.send(self.text_after)
 
             # Go to the middle of the buffer
             self.send(ESC + "ggjj")
@@ -1867,6 +1875,27 @@ class RecTabStops_MirroredZeroTS_ECR(_VimTest):
     keys = "m" + EX + "m1" + EX + "one" + JF + "two" + \
             JF + "three" + JF + "four" + JF + "end"
     wanted = "[ [ one three three two ] four ]end"
+class RecTabStops_ChildTriggerContainsParentTextObjects(_PS_Base):
+    # https://bugs.launchpad.net/ultisnips/+bug/1191617
+    snippets_test_file = ("all", "test_file", r"""
+global !p
+def complete(t, opts):
+ if t:
+   opts = [ q[len(t):] for q in opts if q.startswith(t) ]
+ if len(opts) == 0:
+   return ''
+ return opts[0] if len(opts) == 1 else "(" + '|'.join(opts) + ')'
+def autocomplete_options(t, string, attr=None):
+   return complete(t[1], [opt for opt in attr if opt not in string])
+endglobal
+snippet /form_for(.*){([^|]*)/ "form_for html options" rw!
+`!p
+auto = autocomplete_options(t, match.group(2), attr=["id: ", "class: ", "title:  "])
+snip.rv = "form_for" + match.group(1) + "{"`$1`!p if (snip.c != auto) : snip.rv=auto`
+endsnippet
+""")
+    keys = "form_for user, namespace: some_namespace, html: {i" + EX + "i" + EX
+    wanted = "form_for user, namespace: some_namespace, html: {(id: |class: |title:  )d: "
 # End: Recursive (Nested) Snippets  #}}}
 # List Snippets  {{{#
 class _ListAllSnippets(_VimTest):
@@ -2379,6 +2408,32 @@ class ProperIndenting_AutoIndentAndNewline_ECR(_VimTest):
         self.send(":set autoindent\n")
     def _options_off(self):
         self.send(":set noautoindent\n")
+# Test for bug 1073816
+class ProperIndenting_FirstLineInFile_ECR(_PS_Base):
+    text_before = ""
+    text_after = ""
+    snippets_test_file = ("all", "test_file", r"""
+global !p
+def complete(t, opts):
+  if t:
+    opts = [ m[len(t):] for m in opts if m.startswith(t) ]
+  if len(opts) == 1:
+    return opts[0]
+  elif len(opts) > 1:
+    return "(" + "|".join(opts) + ")"
+  else:
+    return ""
+endglobal
+
+snippet '^#?inc' "#include <>" !r
+#include <$1`!p snip.rv = complete(t[1], ['cassert', 'cstdio', 'cstdlib', 'cstring', 'fstream', 'iostream', 'sstream'])`>
+endsnippet
+        """)
+    keys = "inc" + EX + "foo"
+    wanted = "#include <foo>"
+class ProperIndenting_FirstLineInFileComplete_ECR(ProperIndenting_FirstLineInFile_ECR):
+    keys = "inc" + EX + "cstdl"
+    wanted = "#include <cstdlib>"
 # End: Proper Indenting  #}}}
 # Format options tests  {{{#
 class _FormatoptionsBase(_VimTest):
@@ -2605,6 +2660,16 @@ ${0}
     keys = "test" + EX + JF + "sub junk {}"
     wanted = "package c03;\nsub junk {}\n1;"
 # End: Folding Interaction  #}}}
+# Trailing whitespace {{{#
+class RemoveTrailingWhitespace(_VimTest):
+    snippets = ("test", """Hello\t ${1:default}\n$2""", "", "s")
+    wanted = """Hello\nGoodbye"""
+    keys = "test" + EX + BS + JF + "Goodbye"
+class LeaveTrailingWhitespace(_VimTest):
+    snippets = ("test", """Hello \t ${1:default}\n$2""")
+    wanted = """Hello \t \nGoodbye"""
+    keys = "test" + EX + BS + JF + "Goodbye"
+# End: Trailing whitespace }}}#
 
 # Cursor Movement  {{{#
 class CursorMovement_Multiline_ECR(_VimTest):
@@ -2951,6 +3016,42 @@ class DeleteCurrentTabStop3_JumpAround(_VimTest):
     wanted = "hello\nendworld"
 
 # End: Normal mode editing  #}}}
+
+class VerifyVimDict1(_VimTest):
+    """check:
+    correct type (4 means vim dictionary)
+    correct length of dictionary (in this case we have on element if the use same prefix, dictionary should have 1 element)
+    correct description (including the apostrophe)
+    if the prefix is mismatched no resulting dict should have 0 elements
+    """
+
+    snippets = ('testâ', 'abc123ά', '123\'êabc')
+    keys = ('test=(type(UltiSnips_SnippetsInCurrentScope()) . len(UltiSnips_SnippetsInCurrentScope()) . ' +
+       'UltiSnips_SnippetsInCurrentScope()["testâ"]' + ')\n' +
+       '=len(UltiSnips_SnippetsInCurrentScope())\n')
+
+    wanted = 'test41123\'êabc0'
+
+class VerifyVimDict2(_VimTest):
+    """check:
+    can use " in trigger
+    """
+
+    snippets = ('te"stâ', 'abc123ά', '123êabc')
+    akey = "'te{}stâ'".format('"')
+    keys = ('te"=(UltiSnips_SnippetsInCurrentScope()[{}]'.format(akey) + ')\n')
+    wanted = 'te"123êabc'
+
+class VerifyVimDict3(_VimTest):
+    """check:
+    can use ' in trigger
+    """
+
+    snippets = ("te'stâ", 'abc123ά', '123êabc')
+    akey = '"te{}stâ"'.format("'")
+    keys = ("te'=(UltiSnips_SnippetsInCurrentScope()[{}]".format(akey) + ')\n')
+    wanted = "te'123êabc"
+
 ###########################################################################
 #                               END OF TEST                               #
 ###########################################################################
