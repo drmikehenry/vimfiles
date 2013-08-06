@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Scan for a fifo to signal.
+# Usage:
+#   fifosignal [-n] [FIFOPATH]
+#
+# FIFOPATH - path and/or name of fifo to signal.
+#   When FIFOPATH points to a directory, the fifo name defaults to ".fifo";
+#   otherwise, the basename of FIFOPATH is used as the fifo name.
+#   The directory of FIFOPATH (defaulting to ".") is used as a starting point
+#   for searching for the fifo.  The search continues toward the root directory,
+#   stopping at the first directory containing the fifo name.
+#   When not provided, FIFOPATH defaults to ".fifo".
+#
+# OPTIONS:
+#   -n      Do not scan upward looking for the fifo.
+
+DEFAULT_FIFO_NAME=".fifo"
+
+if [ "$1" = "-n" ]; then
+    scanUpward=0
+    shift
+else
+    scanUpward=1
+fi
+
+fifo=${1:-$DEFAULT_FIFO_NAME}
+
+if [ -d "$fifo" ]; then
+    fifoDir=$fifo
+    fifoName=$DEFAULT_FIFO_NAME
+else
+    fifoDir=$(dirname "$fifo")
+    fifoName=$(basename "$fifo")
+fi
+
+if [ $scanUpward = 1 ]; then
+    here="$PWD"
+    cd "$fifoDir"
+    while [ ! -e "$fifoName" ]; do
+        cd ..
+        if [ "$PWD" == "/" ]; then
+            break
+        fi
+    done
+    fifoDir="$PWD"
+    cd "$here"
+fi
+
+fifo="$fifoDir/$fifoName"
+if [ -p "$fifo" ]; then
+    echo "signal" > "$fifo"
+    exit 0
+elif [ -e "$fifo" ]; then
+    echo "$fifo is not a fifo"
+    exit 1
+else
+    echo "$fifoName not found"
+    exit 1
+fi

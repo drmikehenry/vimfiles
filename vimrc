@@ -373,9 +373,14 @@ inoremap <F9> <ESC>:wall<bar>make<CR>
 nnoremap <F5> :wall<bar>! %:p<CR>
 inoremap <F5> <ESC>:wall<bar>! %:p<CR>
 
+" Return escaped path of directory containing current file.
+function! EscapedFileDir()
+    return shellescape(expand("%:p:h"))
+endfunction
+
 " Signal fifo using fifosignal script.
-nnoremap <F12> :wall<bar>call system("fifosignal")<CR>
-inoremap <F12> <ESC>:wall<bar>call system("fifosignal")<CR>
+nnoremap <F12> :wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
+inoremap <F12> <ESC>:wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
 
 " -------------------------------------------------------------
 " QuickFix/Location List support

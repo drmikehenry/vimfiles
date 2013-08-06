@@ -2188,6 +2188,15 @@ commonly used to trigger a build outside of Vim.  For example: >
 
     while fifowait; do echo "Building"; ./buildall; done
 
+Reference implementations of fifosignal and fifowait are found in
+$VIMFILES/tool/fifosignal.  Copy these to a directory in your path and ensure
+they are executable, e.g.: >
+
+  cp ~/.vim/tool/fifosignal/* ~/bin
+  chmod +x ~/bin/{fifosignal,fifowait}
+
+Note: At present, fifosignal and fifowait are Unix-only.
+
 ------------------------------------------------------------------------------
 QuickFix window, diff mode
 
