@@ -400,6 +400,20 @@ function! LocalSetupCompanyC()
     " Line up function args, except when they start on a new line.
     setlocal cinoptions+=(0
     setlocal cinoptions+=Ws
+
+    if matchend(bufname("%"), "\\.h") != -1
+        let b:fswitchdst = 'c,cpp'
+        let b:fswitchlocs =
+                    \   'reg:/include/src/'
+                    \ . ',ifrel:|include.*|../src/**|'
+                    \ . ',ifrel:|include|../src|'
+    elseif matchend(bufname("%"), "\\.\\(c\\|cpp\\)") != -1
+        let b:fswitchdst = 'h'
+        let b:fswitchlocs =
+                    \   ',reg:|src/[^/]*|include|'
+                    \ . ',ifrel:|src|include/**|'
+                    \ . ',ifrel:|src|../include|'
+    endif
 endfunction
 command! -bar LocalSetupCompanyC call LocalSetupCompanyC()
 
