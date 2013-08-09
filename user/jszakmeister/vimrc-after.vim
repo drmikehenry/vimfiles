@@ -575,7 +575,30 @@ let g:tagbar_type_rst = g:local_tagbar_type_rst
 " Autocommands
 " =============================================================
 
+function! IsCurrentBufferEmpty()
+    if line('$') == 1 && getline(1) == ''
+        return 1
+    endif
+
+    return 0
+endfunction
+
+if !exists("g:OnlyInsertTemplateOnEmptyBuffer")
+    let g:OnlyInsertTemplateOnEmptyBuffer = 1
+endif
+
 function! TriggerSpecificSnippetTemplate(snippetName)
+    " Only trigger if the buffer is empty, just in case something else is
+    " populating the buffer first.
+    if !IsCurrentBufferEmpty()
+        if g:OnlyInsertTemplateOnEmptyBuffer
+            return
+        else
+            " Delete all the content in the buffer.
+            1,$d
+        endif
+    endif
+
     let l:snippets = UltiSnips_SnippetsInCurrentScope()
 
     if !has_key(l:snippets, a:snippetName)
