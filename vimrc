@@ -7,6 +7,24 @@
 " Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
 set nocompatible
 
+" Use utf-8 encoding for all content.
+set encoding=utf-8
+
+" 'fileencodings' contains a list of possible encodings to try when reading
+" a file.  When 'encoding' is a unicode value (such as utf-8), the
+" value of fileencodings defaults to ucs-bom,utf-8,default,latin1.
+"   ucs-bom  Treat as unicode-encoded file if and only if BOM is present
+"   utf-8    Use utf-8 encoding
+"   default  Value from environment LANG
+"   latin1   8-bit encoding typical of DOS
+" Setting this value explicitly, though to the default value.
+set fileencodings=ucs-bom,utf-8,default,latin1
+
+" Leaving 'fileencoding' unset, as it defaults to the value of 'encoding'.
+" May set 'fileencoding' before writing a file to force a new encoding.
+" May also set 'bomb' to force use of a BOM (Byte Order Mark).
+" set fileencoding=
+
 " -------------------------------------------------------------
 " runtimepath manipulation
 " -------------------------------------------------------------
@@ -265,24 +283,6 @@ set nrformats-=octal
 "   current - current directory (pwd)
 "   {path}  - specified directory
 set browsedir=buffer
-
-" Use utf-8 encoding for all content.
-set encoding=utf-8
-
-" 'fileencodings' contains a list of possible encodings to try when reading
-" a file.  When 'encoding' is a unicode value (such as utf-8), the
-" value of fileencodings defaults to ucs-bom,utf-8,default,latin1.
-"   ucs-bom  Treat as unicode-encoded file if and only if BOM is present
-"   utf-8    Use utf-8 encoding
-"   default  Value from environment LANG
-"   latin1   8-bit encoding typical of DOS
-" Setting this value explicitly, though to the default value.
-set fileencodings=ucs-bom,utf-8,default,latin1
-
-" Leaving 'fileencoding' unset, as it defaults to the value of 'encoding'.
-" May set 'fileencoding' before writing a file to force a new encoding.
-" May also set 'bomb' to force use of a BOM (Byte Order Mark).
-" set fileencoding=
 
 " -------------------------------------------------------------
 " Display settings
