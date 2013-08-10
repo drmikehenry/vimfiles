@@ -33,7 +33,7 @@ hi Visual           guifg=NONE        guibg=#262D51     gui=NONE      ctermfg=NO
 
 hi SpecialKey       guifg=#303030     guibg=#1c1c1c     gui=NONE      ctermfg=236         ctermbg=234         cterm=NONE
 
-hi WildMenu         guifg=green       guibg=yellow      gui=NONE      ctermfg=black       ctermbg=yellow      cterm=NONE
+hi WildMenu         guifg=#e8e0c3     guibg=#222240     gui=NONE      ctermfg=187         ctermbg=17          cterm=NONE
 hi PmenuSbar        guifg=black       guibg=white       gui=NONE      ctermfg=black       ctermbg=white       cterm=NONE
 "hi Ignore           guifg=gray        guibg=black       gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
 
@@ -70,8 +70,8 @@ if version >= 700 " Vim 7.x specific colors
   hi CursorLine     guifg=NONE        guibg=#232323     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=BOLD
   hi CursorColumn   guifg=NONE        guibg=#232323     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=BOLD
   hi MatchParen     guifg=#f6f3e8     guibg=#857b6f     gui=BOLD      ctermfg=white       ctermbg=darkgray    cterm=NONE
-  hi Pmenu          guifg=#f6f3e8     guibg=#444444     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
-  hi PmenuSel       guifg=#000000     guibg=#cae682     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
+  hi Pmenu          guifg=#f6f3e8     guibg=#444444     gui=NONE      ctermfg=230         ctermbg=238         cterm=NONE
+  hi PmenuSel       guifg=#000000     guibg=#cae682     gui=NONE      ctermfg=black       ctermbg=192         cterm=NONE
   hi Search         guifg=NONE        guibg=#2F2F00     gui=underline ctermfg=NONE        ctermbg=NONE	      cterm=underline
 endif
 
