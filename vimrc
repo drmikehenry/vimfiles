@@ -249,7 +249,7 @@ set printoptions=paper:letter,duplex:off
 " Configure mapping timeout in milliseconds (default 1000).
 " Controls how long Vim waits for partially complete mapping
 " before timing out and using prefix directly.
-set timeoutlen=3000
+set timeout timeoutlen=3000
 
 " Configure keycode timeout in milliseconds (default -1).
 " Controls how long Vim waits for partially complete
@@ -265,7 +265,7 @@ set timeoutlen=3000
 " Note: 120 words per minute ==> 10 character per second ==> 100 ms between,
 " and 50 ms ==> 240 words per minute.
 " Also, Tim Pope's vim-sensible plugin uses 50 ms as a reasonable value.
-set ttimeoutlen=50
+set ttimeout ttimeoutlen=50
 
 " Configure special terminal keys.
 runtime termsupport.vim
