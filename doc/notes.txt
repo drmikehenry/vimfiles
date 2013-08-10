@@ -423,20 +423,20 @@ Local customizations:
   (CTRL-J).
 
 
-Version 2013-03-26 (287b9c12) from https://github.com/kien/ctrlp.vim
+Version 2013-07-29 (b5d3fe66a) from https://github.com/kien/ctrlp.vim
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|), with one
   exception.  You need to apply the following patch to allow centering of
   the selected tag: >
 
-  diff --git a/bundle/ctrlp.vim/autoload/ctrlp/tag.vim b/bundle/ctrlp.vim/autoload/ctrlp/tag.vim
-  index cd4d909..0d4caca 100644
-  --- a/bundle/ctrlp.vim/autoload/ctrlp/tag.vim
-  +++ b/bundle/ctrlp.vim/autoload/ctrlp/tag.vim
-  @@ -111,6 +111,7 @@ fu! ctrlp#tag#accept(mode, str)
-          el
-                  cal feedkeys(":".cmd." ".tg."\r", 'nt')
+  diff --git a/autoload/ctrlp/tag.vim b/autoload/ctrlp/tag.vim
+  index 626363a..5c89aad 100644
+  --- a/autoload/ctrlp/tag.vim
+  +++ b/autoload/ctrlp/tag.vim
+  @@ -121,6 +121,7 @@ fu! ctrlp#tag#accept(mode, str)
+                  en
+                  cal feedkeys(":".cmd." ".tg."\r".ext, 'nt')
           en
   +       cal feedkeys("zz", 'nt')
           cal ctrlp#setlcdir()

@@ -22,11 +22,9 @@
 'g:ctrlp_lazy_update'	ctrlp.txt	/*'g:ctrlp_lazy_update'*
 'g:ctrlp_map'	ctrlp.txt	/*'g:ctrlp_map'*
 'g:ctrlp_match_func'	ctrlp.txt	/*'g:ctrlp_match_func'*
-'g:ctrlp_match_window_bottom'	ctrlp.txt	/*'g:ctrlp_match_window_bottom'*
-'g:ctrlp_match_window_reversed'	ctrlp.txt	/*'g:ctrlp_match_window_reversed'*
+'g:ctrlp_match_window'	ctrlp.txt	/*'g:ctrlp_match_window'*
 'g:ctrlp_max_depth'	ctrlp.txt	/*'g:ctrlp_max_depth'*
 'g:ctrlp_max_files'	ctrlp.txt	/*'g:ctrlp_max_files'*
-'g:ctrlp_max_height'	ctrlp.txt	/*'g:ctrlp_max_height'*
 'g:ctrlp_max_history'	ctrlp.txt	/*'g:ctrlp_max_history'*
 'g:ctrlp_mruf_case_sensitive'	ctrlp.txt	/*'g:ctrlp_mruf_case_sensitive'*
 'g:ctrlp_mruf_default_order'	ctrlp.txt	/*'g:ctrlp_mruf_default_order'*
@@ -93,6 +91,9 @@ g:ctrlp_dotfiles	ctrlp.txt	/*g:ctrlp_dotfiles*
 g:ctrlp_highlight_match	ctrlp.txt	/*g:ctrlp_highlight_match*
 g:ctrlp_jump_to_buffer	ctrlp.txt	/*g:ctrlp_jump_to_buffer*
 g:ctrlp_live_update	ctrlp.txt	/*g:ctrlp_live_update*
+g:ctrlp_match_window_bottom	ctrlp.txt	/*g:ctrlp_match_window_bottom*
+g:ctrlp_match_window_reversed	ctrlp.txt	/*g:ctrlp_match_window_reversed*
+g:ctrlp_max_height	ctrlp.txt	/*g:ctrlp_max_height*
 g:ctrlp_mru_files	ctrlp.txt	/*g:ctrlp_mru_files*
 g:ctrlp_open_multi	ctrlp.txt	/*g:ctrlp_open_multi*
 g:ctrlp_persistent_input	ctrlp.txt	/*g:ctrlp_persistent_input*
