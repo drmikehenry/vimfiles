@@ -440,6 +440,19 @@ command! -bar LocalSetupCompany call LocalSetupCompany()
 nnoremap <SNR>CtrlP.....<C-s>     :<C-U>CtrlPRTS<CR>
 
 " -------------------------------------------------------------
+" Grep
+" -------------------------------------------------------------
+
+" Use ack for grep
+if executable('ack')
+    set grepprg=ack
+    set grepformat=%f:%l:%m
+endif
+
+" Be compatible with both grep on Linux and Mac
+let Grep_Xargs_Options = '-0'
+
+" -------------------------------------------------------------
 " Gitv
 " -------------------------------------------------------------
 
@@ -465,19 +478,6 @@ let g:localvimrc_whitelist = resolve(expand('$HOME/projects/')) . '\(' .
 " -------------------------------------------------------------
 
 " let g:manpageview_options= "-P 'cat -'"
-
-" -------------------------------------------------------------
-" Grep
-" -------------------------------------------------------------
-
-" Use ack for grep
-if executable('ack')
-    set grepprg=ack
-    set grepformat=%f:%l:%m
-endif
-
-" Be compatible with both grep on Linux and Mac
-let Grep_Xargs_Options = '-0'
 
 " -------------------------------------------------------------
 " Netrw
