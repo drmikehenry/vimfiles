@@ -354,6 +354,51 @@ set winaltkeys=no
 " Key settings
 " -------------------------------------------------------------
 
+" Avoid the following key settings for maximum portability across terminal
+" types.  "No codes" means the terminal generates nothing for the given keys.
+" "Aliased code" means the key generates the same code as another key, making
+" the two keys indistinguishable (and the aliased key useless).
+"
+" gnome-terminal (TERM=xterm, COLORTERM=gnome-terminal):
+" - No codes:
+"   <F10>       (reserved for menu)
+"   <S-F10>     (reserved for context menu)
+"   <S-Home>    (reserved for scrollback)
+"   <S-End>     (reserved for scrollback)
+"
+" Linux console (TERM=linux):
+" - No codes:
+"   <S-F9>
+"   <S-F10>
+"   <S-F11>
+"   <S-F12>
+" - Aliased codes:
+"   <S-Home>    (same as <Home>)
+"   <S-End>     (same as <End>)
+"
+" PuTTY (all except "SCO" mode) (TERM=putty, TERM=putty-256color):
+" - Aliased codes:
+"   <S-F1>      (same as <F11>)
+"   <S-F2>      (same as <F12>)
+"   <S-F11>     (same as <F11>)
+"   <S-F12>     (same as <F12>)
+"   <S-Home>    (same as <Home>)
+"   <S-End>     (same as <End>)
+"
+" PuTTY "SCO" mode (TERM=putty-sco):
+" - Aliased codes:
+"   <Delete>    (same as <Backspace>)
+"   <S-Home>    (same as <Home>)
+"   <S-End>     (same as <End>)
+"
+" rxvt (TERM=rxvt, TERM=rxvt-unicode):
+" - No codes:
+"   <S-Home>    (reserved for scrollback for rxvt-unicode only)
+"   <S-End>     (reserved for scrollback for rxvt-unicode only)
+" - Aliased codes:
+"   <S-F1>      (same as <F11>)
+"   <S-F2>      (same as <F12>)
+
 " Undo compiled-in mappings
 silent! unmap <C-x>
 silent! unmap <C-Del>

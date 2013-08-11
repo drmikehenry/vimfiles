@@ -16,6 +16,7 @@
     Endwise - End certain structures automatically      |notes_endwise|
     Eunuch - helpers for UNIX                           |notes_eunuch|
     Extline - for extending lines                       |notes_extline|
+    Fixkey - Fix key code for console Vim               |notes_fixkey|
     Fontsize - increment/decrement font size            |notes_fontsize|
     Fugitive - A wrapper for Git in Vim                 |notes_fugitive|
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
@@ -536,6 +537,17 @@ Version 2012-12-16 (19621140) from https://github.com/tpope/vim-eunuch
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+FIXKEY                                                  *notes_fixkey*
+  Fix key code for console Vim                          |fixkey.txt|
+
+Version 0.2.0 (9510736351a6) from https://github.com/drmikehenry/vim-fixkey
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+See |fixkey.txt| for details on setting up your terminal.
 
 ------------------------------------------------------------------------------
 FONTSIZE                                                *notes_fontsize*

@@ -1,0 +1,16 @@
+fixkey	fixkey.txt	/*fixkey*
+fixkey-credits	fixkey.txt	/*fixkey-credits*
+fixkey-installation	fixkey.txt	/*fixkey-installation*
+fixkey-intro	fixkey.txt	/*fixkey-intro*
+fixkey-references	fixkey.txt	/*fixkey-references*
+fixkey-term-gnome	fixkey.txt	/*fixkey-term-gnome*
+fixkey-term-konsole	fixkey.txt	/*fixkey-term-konsole*
+fixkey-term-linux	fixkey.txt	/*fixkey-term-linux*
+fixkey-term-putty	fixkey.txt	/*fixkey-term-putty*
+fixkey-term-rxvt	fixkey.txt	/*fixkey-term-rxvt*
+fixkey-term-screen	fixkey.txt	/*fixkey-term-screen*
+fixkey-term-setup	fixkey.txt	/*fixkey-term-setup*
+fixkey-term-testing	fixkey.txt	/*fixkey-term-testing*
+fixkey-term-tmux	fixkey.txt	/*fixkey-term-tmux*
+fixkey-term-xterm	fixkey.txt	/*fixkey-term-xterm*
+fixkey.txt	fixkey.txt	/*fixkey.txt*
