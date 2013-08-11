@@ -15,18 +15,19 @@ from sniputil import abbr, babbr, wabbr
 
 put(r"""
 global !p
-def better_visual(snip):
-    import textwrap, vim
+def betterVisual(snip, contIndentLevel=1):
+    import textwrap
 
-    n = vim.current.window.cursor[1] / int(vim.eval('&shiftwidth'), 10)
     text = textwrap.dedent(snip.v.text)
-
-    lines = []
     for i, line in enumerate(text.splitlines()):
-        lines.append(snip.mkline(line))
         if i == 0:
-            snip >> n
-    return '\n'.join(lines)
+            snip.rv = snip.mkline(line)
+            snip.shift(contIndentLevel)
+        elif line.strip():
+            snip += line
+        else:
+            # Avoid indentation for empty lines.
+            snip.rv += "\n"
 endglobal
 """)
 
@@ -34,21 +35,21 @@ endglobal
 bsnip("if", "if (...) {...}", r"""
 if ($1)
 {
-    `!p snip.rv = better_visual(snip)`$0
+    `!p betterVisual(snip)`$0
 }
 """)
 
 bsnip("else", "else {...}", r"""
 else
 {
-    `!p snip.rv = better_visual(snip)`$0
+    `!p betterVisual(snip)`$0
 }
 """, aliases=["el"])
 
 bsnip("elif", "else if (...) {...}", r"""
 else if ($1)
 {
-    `!p snip.rv = better_visual(snip)`$0
+    `!p betterVisual(snip)`$0
 }
 """, aliases = ["ei"])
 
@@ -57,14 +58,14 @@ else if ($1)
 bsnip("while", "while (...) {...}", r"""
 while ($1)
 {
-    `!p snip.rv = better_visual(snip)`$0
+    `!p betterVisual(snip)`$0
 }
 """, aliases=["wh"])
 
 bsnip("fore", "for (;;) {...}", r"""
 for (;;)
 {
-    `!p snip.rv = better_visual(snip)`$0
+    `!p betterVisual(snip)`$0
 }
 """, aliases=["forever"])
 
@@ -110,7 +111,7 @@ r"""${1/\s*[=;].*//}""" +
 r"""${3:${2/(^>.*)|.*/(?1:--:++)/}}""" +
 r""")
 {
-    `!p snip.rv = better_visual(snip)`$0
+    `!p betterVisual(snip)`$0
 }
 """))
 
@@ -120,7 +121,7 @@ r""")
 bsnip("forr", "for (...) {...}", r"""
 for (${1:})
 {
-    `!p snip.rv = better_visual(snip)`$0
+    `!p betterVisual(snip)`$0
 }
 """)
 
@@ -181,7 +182,7 @@ bsnip("func", "type func(...) {...}", r"""
 ${3:void}
 $1(${4:void})
 {
-    `!p snip.rv = better_visual(snip)`$0
+    `!p betterVisual(snip)`$0
 }
 """, aliases=["def"])
 
