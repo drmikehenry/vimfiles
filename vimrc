@@ -267,9 +267,6 @@ set timeout timeoutlen=3000
 " Also, Tim Pope's vim-sensible plugin uses 50 ms as a reasonable value.
 set ttimeout ttimeoutlen=50
 
-" Configure special terminal keys.
-runtime termsupport.vim
-
 " Disallow octal numbers for increment/decrement (CTRL-A/CTRL-X).
 set nrformats-=octal
 
