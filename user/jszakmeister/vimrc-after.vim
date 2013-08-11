@@ -613,9 +613,24 @@ function! TriggerSnippetTemplate()
     " Looks for a snippet named "template_<filetype>.<ext>", and expands it
     " if it exists.  The idea here is to provide a good default template for
     " various file types.
-    let l:snippetName = "template_" . &filetype . "." . expand("%:p:e")
+    let l:snippets = UltiSnips_SnippetsInCurrentScope()
+    let l:filename = expand("%:t")
 
-    call TriggerSpecificSnippetTemplate(l:snippetName)
+    let l:start = 0
+    let l:idx = stridx(l:filename, ".", l:start)
+
+    while l:idx > 0
+        let l:snippetName = "template_" . &filetype .
+                    \ "." . strpart(l:filename, l:idx+1)
+
+        if has_key(l:snippets, l:snippetName)
+            call TriggerSpecificSnippetTemplate(l:snippetName)
+            break
+        else
+            let l:start = l:idx
+            let l:idx = stridx(l:filename, ".", l:start+1)
+        endif
+    endwhile
 endfunction
 
 function! AddTemplateAutoCommands()
@@ -627,9 +642,7 @@ function! AddTemplateAutoCommands()
         " Load a template for new header files.
         autocmd BufNewFile *.h call TriggerSnippetTemplate()
         autocmd BufNewFile *.c call TriggerSnippetTemplate()
-        autocmd BufNewFile *.snippets.py
-                    \ call TriggerSpecificSnippetTemplate(
-                    \   "template_snippets.py")
+        autocmd BufNewFile *.py call TriggerSnippetTemplate()
     augroup END
 endfunction
 

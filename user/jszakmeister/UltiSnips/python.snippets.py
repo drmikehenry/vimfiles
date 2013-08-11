@@ -17,7 +17,7 @@ from sniputil import abbr, babbr, wabbr
 
 # Templates
 
-bsnip("template_snippets.py", "new snippet template", r"""
+bsnip("template_python.snippets.py", "new snippet template", r"""
 #!/usr/bin/env python
 # vim:set fileencoding=utf8:
 
