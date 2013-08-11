@@ -13,25 +13,42 @@ from sniputil import abbr, babbr, wabbr
 # Snippets are now cleared in "clearsnippets" directory.
 #put("clearsnippets\n")
 
+put(r"""
+global !p
+def better_visual(snip):
+    import textwrap, vim
+
+    n = vim.current.window.cursor[1] / int(vim.eval('&shiftwidth'), 10)
+    text = textwrap.dedent(snip.v.text)
+
+    lines = []
+    for i, line in enumerate(text.splitlines()):
+        lines.append(snip.mkline(line))
+        if i == 0:
+            snip >> n
+    return '\n'.join(lines)
+endglobal
+""")
+
 # 'if' snippets.
 bsnip("if", "if (...) {...}", r"""
 if ($1)
 {
-    $0
+    `!p snip.rv = better_visual(snip)`$0
 }
 """)
 
 bsnip("else", "else {...}", r"""
 else
 {
-    $0
+    `!p snip.rv = better_visual(snip)`$0
 }
 """, aliases=["el"])
 
 bsnip("elif", "else if (...) {...}", r"""
 else if ($1)
 {
-    $0
+    `!p snip.rv = better_visual(snip)`$0
 }
 """, aliases = ["ei"])
 
@@ -40,14 +57,14 @@ else if ($1)
 bsnip("while", "while (...) {...}", r"""
 while ($1)
 {
-    $0
+    `!p snip.rv = better_visual(snip)`$0
 }
 """, aliases=["wh"])
 
 bsnip("fore", "for (;;) {...}", r"""
 for (;;)
 {
-    $0
+    `!p snip.rv = better_visual(snip)`$0
 }
 """, aliases=["forever"])
 
@@ -93,7 +110,7 @@ r"""${1/\s*[=;].*//}""" +
 r"""${3:${2/(^>.*)|.*/(?1:--:++)/}}""" +
 r""")
 {
-    $0
+    `!p snip.rv = better_visual(snip)`$0
 }
 """))
 
@@ -103,7 +120,7 @@ r""")
 bsnip("forr", "for (...) {...}", r"""
 for (${1:})
 {
-    $0
+    `!p snip.rv = better_visual(snip)`$0
 }
 """)
 
@@ -164,7 +181,7 @@ bsnip("func", "type func(...) {...}", r"""
 ${3:void}
 $1(${4:void})
 {
-    $0
+    `!p snip.rv = better_visual(snip)`$0
 }
 """, aliases=["def"])
 
