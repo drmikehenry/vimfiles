@@ -100,6 +100,13 @@ vnoremap . :normal .<CR>
 " Yank to the system clipboard.
 vnoremap <Leader><Leader>y "+y
 
+function! GotoConflictMarker(direction)
+    call search('^<\{7}<\@!', a:direction ? 'W' : 'bW')
+endfunction
+
+nnoremap [n :call GotoConflictMarker(0)<CR>
+nnoremap ]n :call GotoConflictMarker(1)<CR>
+
 " =============================================================
 " Options
 " =============================================================
