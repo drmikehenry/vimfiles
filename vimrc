@@ -232,6 +232,31 @@ if has("gui_running")
     endif
 endif
 
+" MacVim-specific setup.  MacVim has a gvimrc setup that alters some bindings.
+" We want to keep our M-Left, M-Right, M-Up, and M-Down bindings, so let's
+" disable the MacVim setup, and only map the ones that don't collide with other
+" mappings we make.
+if has("gui_running") && has("gui_macvim")
+    if !exists("macvim_skip_cmd_opt_movement")
+        let macvim_skip_cmd_opt_movement = 1
+
+        noremap   <D-Left>       <Home>
+        noremap!  <D-Left>       <Home>
+
+        noremap   <D-Right>      <End>
+        noremap!  <D-Right>      <End>
+
+        noremap   <D-Up>         <C-Home>
+        inoremap  <D-Up>         <C-Home>
+
+        noremap   <D-Down>       <C-End>
+        inoremap  <D-Down>       <C-End>
+
+        imap      <M-BS>         <C-w>
+        imap      <D-BS>         <C-u>
+    endif
+endif
+
 " =============================================================
 " General setup
 " =============================================================
