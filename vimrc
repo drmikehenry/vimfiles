@@ -1767,21 +1767,32 @@ let g:tcommentMapLeader2 = ''
 " -------------------------------------------------------------
 " fswitch
 " -------------------------------------------------------------
+
+function! SetFswitchVars(dst, locs)
+    if !exists("b:fswitchdst")
+        let b:fswitchdst = a:dst
+    endif
+    if !exists("b:fswitchlocs")
+        let b:fswitchlocs = a:locs
+    endif
+endfunction
+
 augroup local_fswitch
     autocmd!
-    " There are lots more options - :help fswitch.
-    autocmd BufEnter *.h let b:fswitchdst = 'c,cpp'
-    autocmd BufEnter *.h let b:fswitchlocs =
+    " There are lots more options - :help fswitch.  We use SetFswitchVars()
+    " because we don't want to override values set by a .lvimrc file.
+    autocmd BufEnter *.h call SetFswitchVars(
+                \ 'c,cpp',
                 \ 'reg:/pubinc/src/'
                 \.',reg:/include/src/'
                 \.',reg:/include.*/src/'
-                \.',ifrel:|/include/|../src|'
-    autocmd BufEnter *.c,*.cpp let b:fswitchdst = 'h'
-    autocmd BufEnter *.c,*.cpp let b:fswitchlocs =
+                \.',ifrel:|/include/|../src|')
+    autocmd BufEnter *.c,*.cpp call SetFswitchVars(
+                \ 'h',
                 \ 'reg:/src/pubinc/'
                 \.',reg:/src/include/'
                 \.',reg:|src|include/**|'
-                \.',ifrel:|/src/|../include|'
+                \.',ifrel:|/src/|../include|')
 augroup END
 
 " Switch to the file and load it into the current window.
