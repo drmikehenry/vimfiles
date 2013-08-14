@@ -650,10 +650,7 @@ function! AddTemplateAutoCommands()
     " make sure that b:TemplateDir is set before we try to load a template.
 
     augroup jszakmeister_vimrc
-        " Load a template for new header files.
-        autocmd BufNewFile *.h call TriggerSnippetTemplate()
-        autocmd BufNewFile *.c call TriggerSnippetTemplate()
-        autocmd BufNewFile *.py call TriggerSnippetTemplate()
+        autocmd BufNewFile * call TriggerSnippetTemplate()
     augroup END
 endfunction
 
