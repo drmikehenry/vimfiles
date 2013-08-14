@@ -623,6 +623,10 @@ function! TriggerSnippetTemplate()
     let l:snippets = UltiSnips_SnippetsInCurrentScope()
     let l:filename = expand("%:t")
 
+    if len(l:filename) == 0
+        return
+    endif
+
     let l:start = 0
     let l:idx = stridx(l:filename, ".", l:start)
 
