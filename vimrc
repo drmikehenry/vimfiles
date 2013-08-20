@@ -1789,6 +1789,11 @@ let g:tcommentBlankLines = 0
 let g:tcommentMapLeader1 = ''
 let g:tcommentMapLeader2 = ''
 
+" Setup better linewise comments for Java.
+let g:tcomment_types = {
+            \ 'java': '// %s',
+            \ }
+
 " -------------------------------------------------------------
 " fswitch
 " -------------------------------------------------------------
@@ -3148,6 +3153,9 @@ command! -bar SetupAsm call SetupAsm()
 function! SetupJava()
     SetupSource
     setlocal omnifunc=javacomplete#Complete
+
+    " Setup better linewise comments for Java.
+    setlocal commentstring=//\ %s
 
     " [[, ]], and friends don't work well in Java.  Map them to
     " the "method" equivalents instead.
