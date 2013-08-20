@@ -396,14 +396,6 @@ function! CustomSetupHelp()
 endfunction
 command! -bar SetupHelp call CustomSetupHelp()
 
-function! CustomSetupJava()
-    call SetupJava()
-
-    nmap <buffer> [[ [m
-    nmap <buffer> ]] ]m
-endfunction
-command! -bar SetupJava call CustomSetupJava()
-
 function! CustomSetupPython()
     call SetupPython()
 

@@ -3148,6 +3148,17 @@ command! -bar SetupAsm call SetupAsm()
 function! SetupJava()
     SetupSource
     setlocal omnifunc=javacomplete#Complete
+
+    " [[, ]], and friends don't work well in Java.  Map them to
+    " the "method" equivalents instead.
+    nnoremap <buffer> [[ [m
+    nnoremap <buffer> [] [M
+    nnoremap <buffer> ]] ]m
+    nnoremap <buffer> ][ ]M
+    vnoremap <buffer> [[ [m
+    vnoremap <buffer> [] [M
+    vnoremap <buffer> ]] ]m
+    vnoremap <buffer> ][ ]M
 endfunction
 command! -bar SetupJava call SetupJava()
 
