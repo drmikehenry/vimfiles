@@ -1866,6 +1866,58 @@ nnoremap <Leader><Leader>u  :GundoToggle<CR>
 let g:gundo_close_on_revert = 1
 
 " -------------------------------------------------------------
+" indent-guides
+" -------------------------------------------------------------
+
+let g:indent_guides_enable_on_vim_startup = 0
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
+let g:IndentGuides = 1
+let g:IndentGuidesMap = {}
+
+function! AdjustIndentGuideColors()
+    if hlexists("IndentGuidesEven") && hlexists("IndentGuidesOdd")
+        let g:indent_guides_auto_colors = 0
+    else
+        let g:indent_guides_auto_colors = 1
+    endif
+endfunction
+
+function! IndentGuidesForBuffer()
+    if !g:IndentGuides
+        return
+    endif
+
+    let key = LookupKey("b:IndentGuidesType", "g:IndentGuidesMap")
+
+    if key == "<on>"
+        call indent_guides#enable()
+    else
+        call indent_guides#disable()
+    endif
+endfunction
+
+function! FixupIndentGuidesAutocommands()
+    " We clear out the indent guides autocmds because they don't implement the
+    " behavior that we desire.
+    augroup indent_guides
+      autocmd!
+    augroup END
+endfunction
+
+augroup local_indent_guides
+    autocmd!
+    autocmd BufEnter * call IndentGuidesForBuffer()
+
+    autocmd ColorScheme * call AdjustIndentGuideColors()
+    autocmd VimEnter * call FixupIndentGuidesAutocommands()
+augroup END
+
+if exists("g:colors_name")
+    call AdjustIndentGuideColors()
+endif
+
+" -------------------------------------------------------------
 " localvimrc
 " -------------------------------------------------------------
 
@@ -2884,6 +2936,7 @@ function! SetupPython()
     vnoremap <buffer> <C-O><CR> <C-\><C-N>A:<CR>
 endfunction
 command! -bar SetupPython call SetupPython()
+let g:IndentGuidesMap["python"] = "<on>"
 
 " -------------------------------------------------------------
 " Setup for Ruby.

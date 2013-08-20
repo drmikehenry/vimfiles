@@ -64,6 +64,7 @@
     VimBall - Vim "package manager"                     |notes_vimball|
     vim-clojure-static - Edit Clojure without runtime   |notes_vimclj-static|
     vim-fireplace - Access the Clojure nREPL from Vim   |notes_vim-fireplace|
+    vim-indent-guides - Adds indent guides              |notes_indent-guides|
     vim-redl - Provides a debug REPL to Clojure         |notes_vim-redl|
     Vis - The Visual Block Tool                         |notes_vis|
     VisIncr - Increment visually selected areas         |notes_visincr|
@@ -1829,6 +1830,33 @@ Provides an enhanced environment for editing Clojure code (including
 completion support), if you're connected via nREPL.
 
 Version 2013-04-19 (4f6b8e5) from git://github.com/tpope/vim-fireplace.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+VIM-INDENT-GUIDES                                        *notes_indent-guides*
+  Adds indent guides.                                    |indent-guides|
+
+Indent Guides is a plugin for visually displaying indent levels in Vim.  The
+guides can be toggled via <Leader>ig.  However, since we have some local
+customizations, it will not persist through changing buffers.
+
+Local Customizations:
+- Make the plugin work on a buffer basis, rather than a global one.
+- Set up a mechanism very similar to |g:SpellMap| and |b:SpellType| to control
+  the indent guides.  The variables are g:IndentGuidesMap and
+  b:IndentGuidesType.  See g:SpellMap documentation in vimrc for more detail
+  on how this mechanism works.
+- Indent guides is turned off default.  Use the following to turn it on: >
+    let g:IndentGuides = 1
+- Python is setup to use indent guides, if indent guides are enabled with the
+  above.
+- If your colorscheme has IndentGuidesOdd and IndentGuidesEven setup, then use
+  those colors instead of letting the plugin automatically chose the colors.
+
+Version 2013-06-23 (eec1b629) from
+git://github.com/nathanaelkane/vim-indent-guides.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
