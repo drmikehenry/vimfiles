@@ -277,6 +277,7 @@ notes_fugitive	notes.txt	/*notes_fugitive*
 notes_grep	notes.txt	/*notes_grep*
 notes_gundo	notes.txt	/*notes_gundo*
 notes_headerguard	notes.txt	/*notes_headerguard*
+notes_indent-guides	notes.txt	/*notes_indent-guides*
 notes_installation	notes.txt	/*notes_installation*
 notes_intro	notes.txt	/*notes_intro*
 notes_javacomplete	notes.txt	/*notes_javacomplete*

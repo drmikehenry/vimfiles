@@ -1866,6 +1866,58 @@ nnoremap <Leader><Leader>u  :GundoToggle<CR>
 let g:gundo_close_on_revert = 1
 
 " -------------------------------------------------------------
+" indent-guides
+" -------------------------------------------------------------
+
+let g:indent_guides_enable_on_vim_startup = 0
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
+let g:IndentGuides = 1
+let g:IndentGuidesMap = {}
+
+function! AdjustIndentGuideColors()
+    if hlexists("IndentGuidesEven") && hlexists("IndentGuidesOdd")
+        let g:indent_guides_auto_colors = 0
+    else
+        let g:indent_guides_auto_colors = 1
+    endif
+endfunction
+
+function! IndentGuidesForBuffer()
+    if !g:IndentGuides
+        return
+    endif
+
+    let key = LookupKey("b:IndentGuidesType", "g:IndentGuidesMap")
+
+    if key == "<on>"
+        call indent_guides#enable()
+    else
+        call indent_guides#disable()
+    endif
+endfunction
+
+function! FixupIndentGuidesAutocommands()
+    " We clear out the indent guides autocmds because they don't implement the
+    " behavior that we desire.
+    augroup indent_guides
+      autocmd!
+    augroup END
+endfunction
+
+augroup local_indent_guides
+    autocmd!
+    autocmd BufEnter * call IndentGuidesForBuffer()
+
+    autocmd ColorScheme * call AdjustIndentGuideColors()
+    autocmd VimEnter * call FixupIndentGuidesAutocommands()
+augroup END
+
+if exists("g:colors_name")
+    call AdjustIndentGuideColors()
+endif
+
+" -------------------------------------------------------------
 " localvimrc
 " -------------------------------------------------------------
 
@@ -2446,6 +2498,43 @@ let g:Spell = 1
 
 let g:SpellMap = {}
 
+" Implements the lookup scheme described above. varname is expected to be the
+" buffer-local variable (like "b:SpellType"), and mapname is the name of the
+" map used to track the mapping (e.g. "g:SpellMap").
+"
+" We use names instead of the actual variable so that we can check for the
+" existence of varname, and so we can provide a better error if a loop is
+" detected in mapname.
+function! LookupKey(varname, mapname)
+    let globalMap = eval(a:mapname)
+
+    " Track keys we've seen before.
+    let l:sawKey = {}
+
+    if has_key(l:globalMap, &filetype)
+        let key = &filetype
+    elseif exists(a:varname)
+        let key = eval(a:varname)
+    else
+        let key = "<*>"
+    endif
+
+    while has_key(l:globalMap, key)
+        if has_key(l:sawKey, key)
+            echoerr "Loop in " . mapname . " for key:" key
+            return
+        endif
+        let l:sawKey[key] = 1
+        let key = l:globalMap[key]
+    endwhile
+
+    if key == "<on>" || key == "<off>"
+        return key
+    endif
+
+    return ""
+endfunction
+
 " Adjust 'spell' setting for file (see g:SpellMap for details).
 " Generally called from autocmd on filetype change.
 function! SetSpell()
@@ -2454,25 +2543,7 @@ function! SetSpell()
         return
     endif
 
-    " Track keys we've seen before.
-    let l:sawKey = {}
-
-    if has_key(g:SpellMap, &filetype)
-        let key = &filetype
-    elseif exists("b:SpellType")
-        let key = b:SpellType
-    else
-        let key = "<*>"
-    endif
-
-    while has_key(g:SpellMap, key)
-        if has_key(l:sawKey, key)
-            echoerr "Loop in g:SpellMap for key:" key
-            return
-        endif
-        let l:sawKey[key] = 1
-        let key = g:SpellMap[key]
-    endwhile
+    let key = LookupKey("b:SpellType", "g:SpellMap")
 
     if key == "<on>"
         setl spell
@@ -2865,6 +2936,7 @@ function! SetupPython()
     vnoremap <buffer> <C-O><CR> <C-\><C-N>A:<CR>
 endfunction
 command! -bar SetupPython call SetupPython()
+let g:IndentGuidesMap["python"] = "<on>"
 
 " -------------------------------------------------------------
 " Setup for Ruby.

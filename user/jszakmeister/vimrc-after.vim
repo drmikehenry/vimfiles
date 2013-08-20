@@ -404,13 +404,6 @@ function! CustomSetupJava()
 endfunction
 command! -bar SetupJava call CustomSetupJava()
 
-function! CustomSetupPython()
-    call SetupPython()
-
-    let b:indent_guides_enabled = 1
-endfunction
-command! -bar SetupPython call CustomSetupPython()
-
 function! LocalSetupCompanyC()
     " This is indented to be called from an .lvimrc file after SetupC has been
     " called as part of opening the file.  This should be called from
@@ -481,51 +474,6 @@ let Grep_Xargs_Options = '-0'
 let g:Gitv_WipeAllOnClose = 1
 let g:Gitv_OpenHorizontal = 1
 let g:Gitv_OpenPreviewOnLaunch = 1
-
-" -------------------------------------------------------------
-" indent-guides
-" -------------------------------------------------------------
-
-let g:indent_guides_enable_on_vim_startup = 0
-let g:indent_guides_start_level = 2
-let g:indent_guides_guide_size = 1
-
-function! AdjustIndentGuideColors()
-    if hlexists("IndentGuidesEven") && hlexists("IndentGuidesOdd")
-        let g:indent_guides_auto_colors = 0
-    else
-        let g:indent_guides_auto_colors = 1
-    endif
-endfunction
-
-function! IndentGuidesForBuffer()
-    if exists("b:indent_guides_enabled") && b:indent_guides_enabled
-        call indent_guides#enable()
-    else
-        call indent_guides#disable()
-    endif
-endfunction
-
-function! FixupIndentGuidesAutocommands()
-    augroup indent_guides
-      autocmd!
-    augroup END
-endfunction
-
-augroup local_indent_guides
-    autocmd!
-    autocmd BufEnter * call IndentGuidesForBuffer()
-
-    " Trigger BufEnter and process modelines.
-    autocmd ColorScheme * call AdjustIndentGuideColors()
-    autocmd ColorScheme * doautocmd indent_guides BufEnter
-    autocmd VimEnter * call FixupIndentGuidesAutocommands()
-augroup END
-
-if exists("g:colors_name")
-    call AdjustIndentGuideColors()
-endif
-
 
 " -------------------------------------------------------------
 " localvimrc
