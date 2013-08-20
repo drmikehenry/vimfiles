@@ -2562,6 +2562,17 @@ into ASCII.  Mainly this converts several kinds of quotes into ASCII quotes
 and generally maps some of the Unicode symbols in the range U+2000 through
 U+206F into ASCII equivalents.
 
+------------------------------------------------------------------------------
+Conflict marker navigation
+
+Inspired by vim-unimpaired, keybindings have been setup for move between
+conflict markers:
+
+]n    Go to the beginning of the next conflict marker.
+]N    Go to the end of the next conflict marker.
+[n    Go to the beginning of the previous conflict marker.
+[N    Go to the end of the previous conflict marker.
+
 ==============================================================================
 6.  Tips                                                *notes_tips*
 

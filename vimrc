@@ -878,6 +878,20 @@ xnoremap $           g$
 nnoremap g$          $
 xnoremap g$          $
 
+" Navigate conflict markers.
+function! GotoConflictMarker(direction, beginning)
+    if a:beginning
+        call search('^<\{7}<\@!', a:direction ? 'W' : 'bW')
+    else
+        call search('^>\{7}>\@!', a:direction ? 'W' : 'bW')
+    endif
+endfunction
+
+nnoremap [n :call GotoConflictMarker(0, 1)<CR>
+nnoremap [N :call GotoConflictMarker(0, 0)<CR>
+nnoremap ]n :call GotoConflictMarker(1, 1)<CR>
+nnoremap ]N :call GotoConflictMarker(1, 0)<CR>
+
 " Command-line editing.
 " To match Bash, setup Emacs-style command-line editing keys.
 " This loses some Vim functionality.  The original functionality can
