@@ -582,76 +582,125 @@ let g:tagbar_type_rst = g:local_tagbar_type_rst
 " Autocommands
 " =============================================================
 
-function! IsCurrentBufferEmpty()
-    if line('$') == 1 && getline(1) == ''
-        return 1
-    endif
-
-    return 0
-endfunction
-
-if !exists("g:OnlyInsertTemplateOnEmptyBuffer")
-    let g:OnlyInsertTemplateOnEmptyBuffer = 1
-endif
-
-function! TriggerSpecificSnippetTemplate(snippetName)
-    " Only trigger if the buffer is empty, just in case something else is
-    " populating the buffer first.
-    if !IsCurrentBufferEmpty()
-        if g:OnlyInsertTemplateOnEmptyBuffer
-            return
-        else
-            " Delete all the content in the buffer.
-            1,$d
-        endif
-    endif
-
+function! FindSnippetTemplate()
+    " Searches for a template in this order:
+    "
+    " - template_<filetype>.<filename>
+    " - template_<filetype>.<ext>, where <ext> is successively trimmed
+    "   attempting to match the most specific extension.  For example,
+    "   foo.snippets.py would result in looking for template_python.snippets.py
+    "   followed by template_python.py.
+    " - template_<filetype>
+    "
+    " As soon as a match is made, the snippet name is returned.  If nothing
+    " matches, an empty string is returned.
+    "
+    " If the buffer has no name, we'll only look for template_<filetype>.  If
+    " there's no filetype set for the buffer, we'll return an empty string since
+    " it doesn't make sense to try and look up a template.
     let l:snippets = UltiSnips_SnippetsInCurrentScope()
+    let l:filename = expand("%:t")
 
-    if !has_key(l:snippets, a:snippetName)
-        return
+    " There's no use proceeding if there's no filetype set.
+    if &filetype == ""
+        return ""
     endif
 
-    startinsert
-    call feedkeys(a:snippetName . "\<TAB>")
+    if len(l:filename) != 0
+        let l:start = 0
+        let l:idx = 0
+
+        while l:idx >= 0
+            let l:snippetName = "template_" . &filetype .
+                        \ "." . strpart(l:filename, l:idx)
+
+            if has_key(l:snippets, l:snippetName)
+                return l:snippetName
+            else
+                let l:start = l:idx
+                let l:idx = stridx(l:filename, ".", l:start+1)
+                if l:idx >= 0
+                    let l:idx = l:idx + 1
+                endif
+            endif
+        endwhile
+    endif
+
+    let l:snippetName = "template_" . &filetype
+    if has_key(l:snippets, l:snippetName)
+        return l:snippetName
+    endif
+
+    return ""
 endfunction
 
 function! TriggerSnippetTemplate()
     " Looks for a snippet named "template_<filetype>.<ext>", and expands it
-    " if it exists.  The idea here is to provide a good default template for
-    " various file types.
-    let l:snippets = UltiSnips_SnippetsInCurrentScope()
+    " if it exists.  See FindSnippetTemplate() for details about the lookup.
+    " The idea here is to provide a good default template for various file
+    " types.
     let l:filename = expand("%:t")
 
     if len(l:filename) == 0
-        return
+        return 0
     endif
 
-    let l:start = 0
-    let l:idx = stridx(l:filename, ".", l:start)
+    let l:snippetName = FindSnippetTemplate()
+    if l:snippetName != ""
+        startinsert
+        call feedkeys(l:snippetName .
+                    \ eval('"\' . g:UltiSnipsExpandTrigger . '"'))
+        return 1
+    endif
 
-    while l:idx > 0
-        let l:snippetName = "template_" . &filetype .
-                    \ "." . strpart(l:filename, l:idx+1)
-
-        if has_key(l:snippets, l:snippetName)
-            call TriggerSpecificSnippetTemplate(l:snippetName)
-            break
-        else
-            let l:start = l:idx
-            let l:idx = stridx(l:filename, ".", l:start+1)
-        endif
-    endwhile
+    echo "No template found"
+    return 0
 endfunction
 
-function! AddTemplateAutoCommands()
-    " This is called from after/plugin/loadtemplate.vim.  We do this to ensure
-    " that the .lvimrc is sourced before trying to load templates.  This will
-    " make sure that b:TemplateDir is set before we try to load a template.
+function! ExpandSnippetOrSkel()
+    let result = UltiSnips_ExpandSnippet()
+    if !g:ulti_expand_res && getline('.') == "skel"
+        let curPos=getpos('.')
+        call setline('.', '')
 
-    augroup jszakmeister_vimrc
-        autocmd BufNewFile * call TriggerSnippetTemplate()
-    augroup END
+        if TriggerSnippetTemplate()
+            return ""
+        endif
+
+        call setline('.', 'skel')
+        call setpos('.', curPos)
+    endif
+
+    return l:result
+
+    return l:result
+endfunction
+
+function! ExpandSnippetOrJumpOrSkel()
+    let result = UltiSnips_ExpandSnippetOrJump()
+    if !g:ulti_expand_or_jump_res && getline('.') == "skel"
+        let curPos=getpos('.')
+        call setline('.', '')
+
+        if TriggerSnippetTemplate()
+            return ""
+        endif
+
+        call setline('.', 'skel')
+        call setpos('.', curPos)
+    endif
+
+    return l:result
+endfunction
+
+function! SetupUltiSnipsMapping()
+    " Override the expand trigger mapping for UltiSnips to provide the
+    " file skeleton functionality.
+    if g:UltiSnipsExpandTrigger == g:UltiSnipsJumpForwardTrigger
+        exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=ExpandSnippetOrJumpOrSkel()<cr>"
+    else
+        exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=ExpandSnippetOrSkel()<cr>"
+    endif
 endfunction
 
 augroup jszakmeister_vimrc
@@ -659,6 +708,7 @@ augroup jszakmeister_vimrc
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
     autocmd VimEnter * call UnmapUnwanted()
     autocmd VimEnter * call SetupBrowseX()
+    autocmd VimEnter * call SetupUltiSnipsMapping()
 
     " The toggle help feature seems to reset list.  I really want it off for
     " the help buffer though.
