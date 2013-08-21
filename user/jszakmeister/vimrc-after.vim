@@ -389,13 +389,12 @@ function! CustomSetupHelp()
 endfunction
 command! -bar SetupHelp call CustomSetupHelp()
 
-function! CustomSetupJava()
-    call SetupJava()
+function! CustomSetupPython()
+    call SetupPython()
 
-    nmap <buffer> [[ [m
-    nmap <buffer> ]] ]m
+    let b:indent_guides_enabled = 1
 endfunction
-command! -bar SetupJava call CustomSetupJava()
+command! -bar SetupPython call CustomSetupPython()
 
 function! LocalSetupCompanyC()
     " This is indented to be called from an .lvimrc file after SetupC has been
