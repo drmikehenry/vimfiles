@@ -389,13 +389,6 @@ function! CustomSetupHelp()
 endfunction
 command! -bar SetupHelp call CustomSetupHelp()
 
-function! CustomSetupPython()
-    call SetupPython()
-
-    let b:indent_guides_enabled = 1
-endfunction
-command! -bar SetupPython call CustomSetupPython()
-
 function! LocalSetupCompanyC()
     " This is indented to be called from an .lvimrc file after SetupC has been
     " called as part of opening the file.  This should be called from
@@ -466,6 +459,12 @@ let Grep_Xargs_Options = '-0'
 let g:Gitv_WipeAllOnClose = 1
 let g:Gitv_OpenHorizontal = 1
 let g:Gitv_OpenPreviewOnLaunch = 1
+
+" -------------------------------------------------------------
+" Indent Guides
+" -------------------------------------------------------------
+
+let g:IndentGuides = 1
 
 " -------------------------------------------------------------
 " localvimrc
