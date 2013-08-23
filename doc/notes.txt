@@ -1758,11 +1758,11 @@ scripts is used to define snippets.  For example, the file
 
 To reduce the ceremony in creating a new file, expanding a snippet has been
 hooked to provide a filetype and filename aware "snippet".  Typing skel<TAB>
-will cause us to look up a snippet nameteb "template_<filetype>.<ext>" and
-expand it.  For instance, a template for snippet.py files might be named
+will cause us to look up a snippet named "template_<filetype>.<ext>" and
+expand it.  For instance, a template for "*.snippets.py" files might be named
 "template_python.snippets.py".  For files with more than one '.' in the
 extension, we'll gradually chop off the front portion looking for a match.
-For instance, for a file name "foo.a.b.c" with filetype "bar", we'd look for
+For instance, for a file named "foo.a.b.c" with filetype "bar", we'd look for
 snippets in the following order:
 
 - template_bar.foo.a.b.c

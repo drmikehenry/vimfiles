@@ -2425,8 +2425,6 @@ function! ExpandSnippetOrSkel()
     endif
 
     return l:result
-
-    return l:result
 endfunction
 
 function! ExpandSnippetOrJumpOrSkel()
