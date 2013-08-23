@@ -1,11 +1,3 @@
-" Set the color scheme early on, so at least I have that when other things go
-" wrong.
-if !has("gui_running") && &t_Co == 8
-    colorscheme elflord
-else
-    colorscheme szakdark
-endif
-
 " =============================================================
 " Variables
 " =============================================================
