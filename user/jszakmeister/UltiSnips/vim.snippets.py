@@ -5,9 +5,21 @@ import os
 import sys
 import re
 
-sys.path.append(
-        os.path.join(os.path.dirname(__file__),
-                     '..', '..', '..', 'UltiSnips'))
+def addSnipUtilDir():
+    prevPath = None
+    path = os.path.abspath(os.path.dirname(__file__))
+
+    while path != prevPath:
+        snipUtilPath = os.path.join(path, 'UltiSnips/sniputil.py')
+        if os.path.exists(snipUtilPath):
+            sys.path.insert(0, os.path.dirname(snipUtilPath))
+            break
+
+        prevPath = path
+        path = os.path.dirname(path)
+
+addSnipUtilDir()
+
 
 from sniputil import put
 
