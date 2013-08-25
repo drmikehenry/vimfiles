@@ -474,7 +474,6 @@ let g:syntastic_mode_map['active_filetypes'] =
 
 augroup jszakmeister_vimrc
     autocmd!
-    autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
     autocmd VimEnter * call UnmapUnwanted()
 
     " The toggle help feature seems to reset list.  I really want it off for
