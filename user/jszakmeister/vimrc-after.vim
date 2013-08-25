@@ -247,14 +247,6 @@ endif
 " Setup routines
 " =============================================================
 
-function! SetupManPager()
-    setlocal nonu nolist
-    nnoremap <Space> <PageDown>
-    nnoremap b <PageUp>
-    nnoremap q :quit<CR>
-endfunction
-command! -bar SetupManPager call SetupManPager()
-
 function! SetupAnt()
     SetupMarkup
     set sts=4 sw=4
