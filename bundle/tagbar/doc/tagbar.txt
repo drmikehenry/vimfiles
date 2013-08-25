@@ -261,7 +261,8 @@ COMMANDS                                                     *tagbar-commands*
     Close the Tagbar window if it is open.
 
 :TagbarToggle                                                  *:TagbarToggle*
-    Open the Tagbar window if it is closed or close it if it is open.
+:Tagbar
+    Open the Tagbar window if it is closed, or close it if it is open.
 
 :TagbarOpenAutoClose                                    *:TagbarOpenAutoClose*
     Open the Tagbar window, jump to it and close it on tag selection. This is
@@ -298,6 +299,8 @@ COMMANDS                                                     *tagbar-commands*
     Start debug mode. This will write debug messages to file [logfile] while
     using Tagbar. If no argument is given "tagbardebug.log" in the current
     directory is used. Note: an existing file will be overwritten!
+    Note also that it is usually necessary to call this command before loading
+    a file that creates problems in order to get all of the needed data.
 
 :TagbarDebugEnd                                              *:TagbarDebugEnd*
     End debug mode, debug messages will no longer be written to the logfile.
@@ -308,27 +311,51 @@ KEY MAPPINGS                                                     *tagbar-keys*
 The following mappings are valid in the Tagbar window:
 
 <F1>          Display key mapping help.
+                Map option: tagbar_map_help
 <CR>/<Enter>  Jump to the tag under the cursor. Doesn't work for pseudo-tags
               or generic headers.
+                Map option: tagbar_map_jump
 p             Jump to the tag under the cursor, but stay in the Tagbar window.
+                Map option: tagbar_map_preview
 <LeftMouse>   When on a fold icon, open or close the fold depending on the
               current state.
 <2-LeftMouse> Same as <CR>. See |g:tagbar_singleclick| if you want to use a
               single- instead of a double-click.
+<C-N>         Go to the next top-level tag.
+                Map option: tagbar_map_nexttag
+<C-P>         Go to the previous top-level tag.
+                Map option: tagbar_map_prevtag
 <Space>       Display the prototype of the current tag (i.e. the line defining
               it) in the command line.
+                Map option: tagbar_map_showproto
 +/zo          Open the fold under the cursor.
+                Map option: tagbar_map_openfold
 -/zc          Close the fold under the cursor or the current one if there is
               no fold under the cursor.
+                Map option: tagbar_map_closefold
 o/za          Toggle the fold under the cursor or the current one if there is
               no fold under the cursor.
+                Map option: tagbar_map_togglefold
 */zR          Open all folds by setting foldlevel to 99.
+                Map option: tagbar_map_openallfolds
 =/zM          Close all folds by setting foldlevel to 0.
-<C-N>         Go to the next top-level tag.
-<C-P>         Go to the previous top-level tag.
+                Map option: tagbar_map_closeallfolds
 s             Toggle sort order between name and file order.
+                Map option: tagbar_map_togglesort
 x             Toggle zooming the window.
+                Map option: tagbar_map_zoomwin
 q             Close the Tagbar window.
+                Map option: tagbar_map_close
+
+These mappings can be redefined with the given map options. The argument can
+be either a string or a |List| of strings. In the latter case the
+functionality will be assigned to all of the keys in the list. For example, if
+you want to remap the sort toggling functionality to "r":
+>
+        let g:tagbar_map_togglesort = "r"
+<
+See |key-notation| for how to write special keys like <Space> or the keypad
+keys.
 
 ==============================================================================
 5. Configuration                                        *tagbar-configuration*
@@ -443,6 +470,23 @@ Example:
         let g:tagbar_show_visibility = 0
 <
 
+                                                   *g:tagbar_show_linenumbers*
+g:tagbar_show_linenumbers~
+Default: 0
+
+Whether line numbers should be shown in the Tagbar window.
+
+Possible values are:
+  0: Don't show any line numbers.
+  1: Show absolute line numbers.
+  2: Show relative line numbers.
+  -1: Use the global line number settings.
+
+Example:
+>
+        let g:tagbar_show_linenumbers = 2
+<
+
                                                              *g:tagbar_expand*
 g:tagbar_expand~
 Default: 0
@@ -492,7 +536,7 @@ Examples (don't worry if some of the characters aren't displayed correctly,
 just choose other characters in that case):
 >
         let g:tagbar_iconchars = ['▶', '▼']  (default on Linux and Mac OS X)
-        let g:tagbar_iconchars = ['▾', '▸']
+        let g:tagbar_iconchars = ['▸', '▾']
         let g:tagbar_iconchars = ['▷', '◢']
         let g:tagbar_iconchars = ['+', '-']  (default on Windows)
 <
@@ -501,11 +545,14 @@ just choose other characters in that case):
 g:tagbar_autoshowtag~
 Default: 0
 
-If this variable is set and the current tag is inside of a closed fold then
-the folds will be opened as much as needed for the tag to be visible so it can
-be highlighted. If it is not set then the folds won't be opened and the parent
-tag will be highlighted instead. You can use the |:TagbarShowTag| command to
-open the folds manually.
+If this variable is set to 1 and the current tag is inside of a closed fold
+then the folds will be opened as much as needed for the tag to be visible so
+it can be highlighted. If it is set to 0 then the folds will only be opened
+when opening the Tagbar window and the current tag is insided a closed fold,
+otherwise the folds won't be opened and the parent tag will be highlighted
+instead. If it is set to 2 then the folds will never be opened automatically.
+
+You can use the |:TagbarShowTag| command to open the folds manually.
 
 Example:
 >
@@ -533,6 +580,33 @@ your encoding is latin1) |+iconv| features to work.
 Example:
 >
         let g:tagbar_systemenc = 'cp936'
+<
+
+                                                        *g:tagbar_status_func*
+g:tagbar_status_func~
+Default: undefined
+
+This is the name of a function whose return value will be used to draw the
+statusline of the Tagbar window.
+
+The function has to take three arguments:
+  1. current: Whether Tagbar is the current window; 0 or 1.
+  2. sort: The sort order of the tags; 'Name' if they are sorted by name and
+     'Order' if they are sorted by their order of appearance in the file.
+  3. fname: The name of the file that the tags belong to.
+
+In order to avoid possible future additions to the arguments resulting in an
+error it is recommended to add an additional vararg to the signature (see
+|a:0|).
+
+Here is an example that, when put into your vimrc, will emulate Tagbar's
+default statusline:
+>
+        function! TagbarStatusFunc(current, sort, fname, ...) abort
+            let colour = a:current ? '%#StatusLine#' : '%#StatusLineNC#'
+            return colour . '[' . a:sort . '] ' . a:fname
+        endfunction
+        let g:tagbar_status_func = 'TagbarStatusFunc'
 <
 
 ------------------------------------------------------------------------------

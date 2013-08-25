@@ -42,49 +42,33 @@ if v:version == 700 && !has('patch167')
     finish
 endif
 
-if !exists('g:tagbar_left')
-    let g:tagbar_left = 0
-endif
+function! s:init_var(var, value) abort
+    if !exists('g:tagbar_' . a:var)
+        execute 'let g:tagbar_' . a:var . ' = ' . string(a:value)
+    endif
+endfunction
 
-if !exists('g:tagbar_width')
-    let g:tagbar_width = 40
-endif
+let s:options = [
+    \ ['autoclose', 0],
+    \ ['autofocus', 0],
+    \ ['autoshowtag', 0],
+    \ ['compact', 0],
+    \ ['expand', 0],
+    \ ['foldlevel', 99],
+    \ ['indent', 2],
+    \ ['left', 0],
+    \ ['show_visibility', 1],
+    \ ['show_linenumbers', 0],
+    \ ['singleclick', 0],
+    \ ['sort', 1],
+    \ ['systemenc', &encoding],
+    \ ['width', 40],
+\ ]
 
-if !exists('g:tagbar_autoclose')
-    let g:tagbar_autoclose = 0
-endif
-
-if !exists('g:tagbar_autofocus')
-    let g:tagbar_autofocus = 0
-endif
-
-if !exists('g:tagbar_sort')
-    let g:tagbar_sort = 1
-endif
-
-if !exists('g:tagbar_compact')
-    let g:tagbar_compact = 0
-endif
-
-if !exists('g:tagbar_indent')
-    let g:tagbar_indent = 2
-endif
-
-if !exists('g:tagbar_show_visibility')
-    let g:tagbar_show_visibility = 1
-endif
-
-if !exists('g:tagbar_expand')
-    let g:tagbar_expand = 0
-endif
-
-if !exists('g:tagbar_singleclick')
-    let g:tagbar_singleclick = 0
-endif
-
-if !exists('g:tagbar_foldlevel')
-    let g:tagbar_foldlevel = 99
-endif
+for [opt, val] in s:options
+    call s:init_var(opt, val)
+endfor
+unlet s:options
 
 if !exists('g:tagbar_iconchars')
     if has('multi_byte') && has('unix') && &encoding == 'utf-8' &&
@@ -95,13 +79,30 @@ if !exists('g:tagbar_iconchars')
     endif
 endif
 
-if !exists('g:tagbar_autoshowtag')
-    let g:tagbar_autoshowtag = 0
-endif
+let s:keymaps = [
+    \ ['jump',      '<CR>'],
+    \ ['preview',   'p'],
+    \ ['nexttag',   '<C-N>'],
+    \ ['prevtag',   '<C-P>'],
+    \ ['showproto', '<Space>'],
+    \
+    \ ['openfold',      ['+', '<kPlus>', 'zo']],
+    \ ['closefold',     ['-', '<kMinus>', 'zc']],
+    \ ['togglefold',    ['o', 'za']],
+    \ ['openallfolds',  ['*', '<kMultiply>', 'zR']],
+    \ ['closeallfolds', ['=', 'zM']],
+    \
+    \ ['togglesort', 's'],
+    \ ['zoomwin',    'x'],
+    \ ['close',      'q'],
+    \ ['help',       '<F1>'],
+\ ]
 
-if !exists('g:tagbar_systemenc')
-    let g:tagbar_systemenc = &encoding
-endif
+for [map, key] in s:keymaps
+    call s:init_var('map_' . map, key)
+    unlet key
+endfor
+unlet s:keymaps
 
 augroup TagbarSession
     autocmd!
@@ -109,6 +110,7 @@ augroup TagbarSession
 augroup END
 
 " Commands {{{1
+command! -nargs=0 Tagbar              call tagbar#ToggleWindow()
 command! -nargs=0 TagbarToggle        call tagbar#ToggleWindow()
 command! -nargs=? TagbarOpen          call tagbar#OpenWindow(<f-args>)
 command! -nargs=0 TagbarOpenAutoClose call tagbar#OpenWindow('fcj')
