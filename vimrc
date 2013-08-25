@@ -1150,7 +1150,7 @@ endif
 " -------------------------------------------------------------
 
 " Put from most recent yank instead of scratch register.
-vnoremap P "0P
+xnoremap P "0P
 
 " =============================================================
 " Search-related configuration
@@ -3370,10 +3370,10 @@ function! SetupJava()
     nnoremap <buffer> [] [M
     nnoremap <buffer> ]] ]m
     nnoremap <buffer> ][ ]M
-    vnoremap <buffer> [[ [m
-    vnoremap <buffer> [] [M
-    vnoremap <buffer> ]] ]m
-    vnoremap <buffer> ][ ]M
+    xnoremap <buffer> [[ [m
+    xnoremap <buffer> [] [M
+    xnoremap <buffer> ]] ]m
+    xnoremap <buffer> ][ ]M
 endfunction
 command! -bar SetupJava call SetupJava()
 
