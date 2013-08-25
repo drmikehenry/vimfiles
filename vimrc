@@ -2223,13 +2223,6 @@ augroup END
 " Tagbar
 " -------------------------------------------------------------
 
-" Wrapper to update Powerline's status line if Powerline is enabled.
-function! UpdatePowerlineStatus()
-    if g:EnablePowerline
-        call Pl#UpdateStatusline(1)
-    endif
-endfunction
-
 " Must have ctags of some kind or keep plugin from running.
 let usingTagbar = executable("ctags") || executable("ctags.exe")
 if !usingTagbar
@@ -2243,9 +2236,9 @@ let g:tagbar_width = 40
 let g:tagbar_autoclose = 1
 let g:tagbar_autofocus = 1
 
-nnoremap <silent> <S-F8>     :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
-nnoremap <silent> <C-Q><C-T> :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
-nnoremap <silent> <C-Q>t     :TagbarToggle<CR>:call UpdatePowerlineStatus()<CR>
+nnoremap <silent> <S-F8>     :TagbarToggle<CR>
+nnoremap <silent> <C-Q><C-T> :TagbarToggle<CR>
+nnoremap <silent> <C-Q>t     :TagbarToggle<CR>
 
 " Support for reStructuredText, if available.
 if executable("rst2ctags")
