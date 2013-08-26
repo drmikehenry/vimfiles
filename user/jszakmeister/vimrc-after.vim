@@ -487,51 +487,6 @@ let g:localvimrc_whitelist = resolve(expand('$HOME/projects/')) . '\(' .
 " let g:manpageview_options= "-P 'cat -'"
 
 " -------------------------------------------------------------
-" Netrw
-" -------------------------------------------------------------
-
-let g:netrw_nogx = 1
-
-" Setup xdg-open as the tool to open urls whenever we can, if nothing is set up.
-" This makes using 'gx' a little more sane environments outside of Gnome and
-" KDE.
-function! SetupBrowseX()
-    if !exists("g:netrw_browsex_viewer") && executable("xdg-open")
-        let g:netrw_browsex_viewer = "xdg-open"
-    endif
-endfunction
-
-function! SmartOpen()
-    if mode() ==# 'n'
-        let uri = expand("<cWORD>")
-        if match(uri, "://")
-            let uri = expand("<cfile>")
-        endif
-    else
-        let uri = s:get_selected_text()
-    endif
-
-    call netrw#NetrwBrowseX(uri, 0)
-endfunction
-command! -bar SmartOpen call SmartOpen()
-
-" Get selected text in visual mode.
-function! s:get_selected_text()
-    let save_z = getreg('z', 1)
-    let save_z_type = getregtype('z')
-
-    try
-        normal! gv"zy
-        return @z
-    finally
-        call setreg('z', save_z, save_z_type)
-    endtry
-endfunction
-
-nmap gx :SmartOpen<CR>
-vmap gx :SmartOpen<CR>
-
-" -------------------------------------------------------------
 " Powerline
 " -------------------------------------------------------------
 
@@ -586,7 +541,6 @@ augroup jszakmeister_vimrc
     autocmd!
     autocmd FileType man call setpos("'\"", [0, 0, 0, 0])|exe "normal! gg"
     autocmd VimEnter * call UnmapUnwanted()
-    autocmd VimEnter * call SetupBrowseX()
 
     " The toggle help feature seems to reset list.  I really want it off for
     " the help buffer though.

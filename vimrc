@@ -2004,7 +2004,52 @@ augroup END
 " -------------------------------------------------------------
 " netrw
 " -------------------------------------------------------------
+
+" Turn off netrw's gx.
+let g:netrw_nogx = 1
+
+" Setup xdg-open as the tool to open urls whenever we can, if nothing is set up.
+" This makes using 'gx' a little more sane environments outside of Gnome and
+" KDE.
+function! SetupBrowseX()
+    if !exists("g:netrw_browsex_viewer") && executable("xdg-open")
+        let g:netrw_browsex_viewer = "xdg-open"
+    endif
+endfunction
+
+function! s:SmartOpen(mode) range
+    if a:mode ==# 'n'
+        let uri = expand("<cWORD>")
+        if match(uri, "://")
+            let uri = expand("<cfile>")
+        endif
+    else
+        let uri = s:GetSelectedText()
+    endif
+
+    call netrw#NetrwBrowseX(l:uri, 0)
+endfunction
+
+" Get selected text in visual mode.  Taken from xolox's answer in
+" <http://stackoverflow.com/a/6271254/683080>.
+function! s:GetSelectedText()
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[0] = lines[0][col1 - 1:]
+  return join(lines, "\n")
+endfunction
+
+nnoremap gx :call <SID>SmartOpen('n')<CR>
+xnoremap gx <C-C>:call <SID>SmartOpen('v')<CR>
+
 nnoremap <silent> <Leader>fe :Explore<CR>
+
+augroup local_netrw
+    autocmd!
+    autocmd VimEnter * call SetupBrowseX()
+augroup END
 
 " -------------------------------------------------------------
 " OmniCppComplete
