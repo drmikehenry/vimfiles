@@ -484,7 +484,8 @@ augroup jszakmeister_vimrc
     autocmd BufRead,BufNewFile build.xml SetupAnt
 
     " Set makeprg for *.snippet.py files.
-    autocmd BufRead,BufNewFile *.snippets.py setlocal makeprg=make\ -C\ %:p:h
+    autocmd BufRead,BufNewFile *.snippets.py
+                \ setlocal makeprg=make\ -s\ -C\ %:p:h
 augroup END
 
 " =============================================================
