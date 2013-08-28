@@ -53,6 +53,12 @@ $0
 }}}
 """)
 
+bsnip("ghcode", "github code block", r"""
+\`\`\`${1:python}
+$0
+\`\`\`
+""")
+
 wsnip("lit", "literal (code) markup", r"""
 \`${1:literal}\`$0
 """, aliases=['f', 'cmd'])
