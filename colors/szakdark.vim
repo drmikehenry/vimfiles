@@ -16,7 +16,7 @@ let colors_name = "szakdark"
 
 " General colors
 hi Normal           guifg=#bbbbbb     guibg=#0d0d0d     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
-hi NonText          guifg=#070707     guibg=black       gui=NONE      ctermfg=black       ctermbg=NONE        cterm=NONE
+hi NonText          guifg=#303030     guibg=#1c1c1c     gui=NONE      ctermfg=236         ctermbg=234         cterm=NONE
 
 hi Cursor           guifg=black       guibg=white       gui=NONE      ctermfg=black       ctermbg=white       cterm=reverse
 hi LineNr           guifg=#4e4e4e     guibg=#262626     gui=NONE      ctermfg=239         ctermbg=235         cterm=NONE
