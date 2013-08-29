@@ -1,192 +1,222 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
-"""
-Copyright 2009-2011 Bernhard Leiner <bleiner@gmail.com>
+# Copyright (C) 2013 John Szakmeister <john@szakmeister.net>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
 
-This software may be used and distributed according to the terms of the
-MIT license, incorporated herein by reference.
-"""
-
-import os
 import sys
-from optparse import OptionParser
+import re
 
-from docutils import nodes
-from docutils.core import publish_doctree
 
-__version__ = "1.0"
+__version__ = '0.1.0'
+
+
+class ScriptError(Exception):
+    pass
+
 
 class Tag(object):
+    def __init__(self, tagName, tagFile, tagAddress):
+        self.tagName = tagName
+        self.tagFile = tagFile
+        self.tagAddress = tagAddress
+        self.fields = []
 
-    SRO = "|"  # scope resolution operator
+    def addField(self, type, value=None):
+        if type == 'kind':
+            type = None
+        self.fields.append((type, value or ""))
 
-    def __init__(self, tagid, tagfile, tagaddress, tagtype, linenr,
-                 level = 0, parent = None):
-        self.tagid = tagid
-        self.tagfile = tagfile
-        self.tagaddress = tagaddress
-        self.tagtype = tagtype
-        self.linenr = linenr
-        self.level = level
-        if level == 0:
-            self.scope = None
-        elif level == 1:
-            self.scope = parent.tagid if parent else None
-        elif level > 1:
-            self.scope = (Tag.SRO.join((parent.scope, parent.tagid)) 
-                          if (parent and parent.scope and parent.tagid)
-                          else None)
-        self.parent = parent
+    def _formatFields(self):
+        formattedFields = []
+        for name, value in self.fields:
+            if name:
+                s = '%s:%s' % (name, value or "")
+            else:
+                s = str(value)
+            formattedFields.append(s)
+        return '\t'.join(formattedFields)
 
     def __str__(self):
-        base_info = "{0}\t{1}\t{2}\t{3}".format \
-                    (self.tagid, self.tagfile, self.tagaddress, self.tagtype)
-        # add line info
-        line_info = "\tline:{0:d}".format(self.linenr)
-        # add full scope information
-        scope_info = ("\tsection:{0}".format(self.scope) if self.scope
-                       else "")
+        return '%s\t%s\t%s;"\t%s' % (
+                self.tagName, self.tagFile, self.tagAddress,
+                self._formatFields())
 
-        return base_info + line_info + scope_info + "\n"
+    def __cmp__(self, other):
+        return cmp(str(self), str(other))
 
+    @staticmethod
+    def section(section):
+        tagAddress = '/^%s$/' % section.line
+        t = Tag(section.name, section.filename, tagAddress)
+        t.addField('kind', 's')
+        t.addField('line', section.lineNumber)
 
-class CTagsWriter(object):
-    """rst2ctags specific docutils writer class.
-    """
+        parents = []
+        p = section.parent
+        while p is not None:
+            parents.append(p.name)
+            p = p.parent
+        parents.reverse()
 
-    URL = "http://bernh.net/rst2ctags"
-    VERSION = "rst2ctags v{0}".format(__version__)
+        if parents:
+            t.addField('section', '|'.join(parents))
 
-    metadata = \
-            ("!_TAG_FILE_FORMAT\t2\t/extended format/\n"
-             "!_TAG_FILE_SORTED\t{sort}\t/0=unsorted, 1=sorted, 2=foldcase/\n"
-             "!_TAG_PROGRAM_NAME\trst2ctags\t//\n"
-             "!_TAG_PROGRAM_AUTHOR\tBernhard Leiner\t/bleiner@gmail.com/\n"
-             "!_TAG_PROGRAM_URL\t{url}\t//\n"
-             "!_TAG_PROGRAM_VERSION\t{version}\t//\n")
-
-    def __init__(self):
-        self.tags = []
-
-    def nodewalker(self, node, level, parent):
-        """Translates the doctree into a list of tags and appends it to
-           :attr:`tags`.
-        """
-        tag = None
-        new_parent = False
-        if isinstance(node, nodes.section):
-            tagtype = "s"
-            tagfile = os.path.relpath(node.source)
-            tagid = \
-                str(node.astext().partition(node.child_text_separator)[0])
-            tagaddress = '/^{0}$/;"'.format(tagid)
-            taglinenr = node.line - 1
-            # increase level for next found section
-            level += 1
-            new_parent = True
-            tag = Tag(tagid, tagfile, tagaddress, tagtype, taglinenr, level, parent)
-        elif (isinstance(node, nodes.image) or
-              isinstance(node, nodes.figure)):
-            tagtype = "i"
-            tagfile = os.path.relpath(node.source) if node.source \
-                      else os.path.relpath(node.parent.source)
-            taglinenr = node.line - 1 if node.line else node.parent.line - 1
-            if isinstance(node, nodes.image):
-                tagid = node.attributes['uri'] 
-                tagaddress = '/^{0}$/;"'.format(node.rawsource.split('\n')[0])
-            if isinstance(node, nodes.figure):
-                tagid = node.children[0].attributes['uri'] 
-                tagaddress = '/^{0}$/;"'.format(node.children[0].rawsource.split('\n')[0])
-            tag = Tag(tagid, tagfile, tagaddress, tagtype, taglinenr, level)
-
-        if tag:
-            self.tags.append(tag)
-
-        if new_parent:
-            parent = tag
-
-        if len(node.children) and not isinstance(node, nodes.figure):
-            for child in node:
-                self.nodewalker(child, level, parent)
+        return t
 
 
-    def write(self, f, sort, metadata):
-        if sort == "yes":   # sort by tag name
-            self.tags.sort(key = lambda t: t.tagid)
-        else:               # sort by file and line number
-            self.tags.sort(key = lambda t: (t.tagfile, t.linenr))
+class Section(object):
+    def __init__(self, level, name, line, lineNumber, filename, parent=None):
+        self.level = level
+        self.name = name
+        self.line = line
+        self.lineNumber = lineNumber
+        self.filename = filename
+        self.parent = parent
 
-        if metadata:
-            sort = "1" if sort == "yes" else "0"
-            f.write(self.metadata.format(sort=sort, url = CTagsWriter.URL, 
-                                         version = CTagsWriter.VERSION))
-        for tag in self.tags:
-            f.write(str(tag))
+    def __repr__(self):
+        return '<Section %s %d %d>' % (self.name, self.level, self.lineNumber)
 
 
-def get_rst_files(source_args, recurse):
-    """Return an iterable containing all source files.
-    """
+headingRe = re.compile(r'^[-=^"#*.]+$')
+subjectRe = re.compile(r'^[^\s]+.*$')
 
-    rst_ext = ".rst"
-    source_files = []
+def findSections(filename, lines):
+    sections = []
+    headingOrder = {}
+    orderSeen = 1
+    previousSections = []
 
-    def is_rst_file(f):
-        return os.path.splitext(f)[1] == rst_ext
+    for i, line in enumerate(lines):
+        if i == 0:
+            continue
 
-    if not recurse:
-        # treat all source args as files
-        source_files = [f for f in source_args if is_rst_file(f)]
+        if headingRe.match(line) and subjectRe.match(lines[i-1]):
+            if i >= 2:
+                topLine = lines[i-2]
+            else:
+                topLine = ''
+
+            # If the heading line is to short, then docutils doesn't consider it
+            # a heading.
+            if len(line) < len(lines[i-1]):
+                continue
+
+            key = line[0]
+
+            if headingRe.match(topLine):
+                # If there is an overline, it must match the bottom line.
+                if topLine != line:
+                    # Not a heading.
+                    continue
+                # We have an overline, so double up.
+                key = key + key
+
+            if key not in headingOrder:
+                headingOrder[key] = orderSeen
+                orderSeen += 1
+
+            name = lines[i-1].strip()
+            level = headingOrder[key]
+            previousSections = previousSections[:level-1]
+            if previousSections:
+                parent = previousSections[-1]
+            else:
+                parent = None
+            lineNumber = i
+
+            s = Section(level, name, lines[i-1], lineNumber, filename, parent)
+            previousSections.append(s)
+            sections.append(s)
+
+            # Blank lines to help correctly detect:
+            #    foo
+            #    ===
+            #    bar
+            #    ===
+            #
+            # as two underline style headings.
+            lines[i] = lines[i-1] = ''
+            if topLine:
+                lines[i-2] = ''
+
+    return sections
+
+
+def sectionsToTags(sections):
+    tags = []
+
+    for section in sections:
+        tags.append(Tag.section(section))
+
+    return tags
+
+
+def genTagsFile(output, tags, sort):
+    if sort == "yes":
+        tags = sorted(tags)
+        sortedLine = '!_TAG_FILE_SORTED\t1\n'
+    elif sort == "foldcase":
+        tags = sorted(tags, key=lambda x: str(x).lower())
+        sortedLine = '!_TAG_FILE_SORTED\t2\n'
     else:
-        # source_args may be a mixture of files and directories
-        cwd = os.getcwd()
-        if cwd not in source_args:
-            source_args.append(cwd)
-        source_files = [f for f in source_args 
-                        if os.path.isfile(f) and is_rst_file(f)]
-        for source_dir in (d for d in source_args if os.path.isdir(d)):
-            for dirpath, _, filenames in os.walk(source_dir):
-                source_files.extend(os.path.join(dirpath, f)
-                                    for f in filenames if is_rst_file(f))
-    # return unique sources
-    return set(os.path.abspath(f) for f in source_files)
+        sortedLine = '!_TAG_FILE_SORTED\t0\n'
 
+    if output != sys.stdout:
+        output.write('!_TAG_FILE_FORMAT\t2\n')
+        output.write(sortedLine)
+
+    for t in tags:
+        output.write(str(t))
+        output.write('\n')
 
 
 def main():
-    parser = OptionParser(usage = "usage: %prog [options] file(s)", 
-                          version = "%prog {0}".format(__version__))
-    parser.add_option \
-            ("-f", "--file", metavar = "FILE", dest = "tagfile",
-             default = "tags",
-             help = 'Write tags into FILE (default: "tags"). Value of '
-                    '"-" writes tags to stdout.')
-    parser.add_option \
-            ("-R", "--recurse", dest = "recurse", action = "store_true",
-             default = False,
-             help = "Recurse into directories supplied on command line")
-    parser.add_option \
-            ("--sort", metavar = "[yes|no]", dest = "sort", default = "no",
-             help = 'Should tags be sorted by name? Default is "no", which '
-             'will sort by line number.')
-    options, args = parser.parse_args() 
+    from optparse import OptionParser
 
-    if len(args) == 0:
-        parser.error('No files specified. Try "--help"')
+    parser = OptionParser(usage = "usage: %prog [options] file(s)",
+                          version = __version__)
+    parser.add_option(
+            "-f", "--file", metavar = "FILE", dest = "tagfile",
+            default = "tags",
+            help = 'Write tags into FILE (default: "tags").  Use "-" to write '
+                   'tags to stdout.')
+    parser.add_option(
+            "", "--sort", metavar="[yes|foldcase|no]", dest = "sort",
+            choices = ["yes", "no", "foldcase"],
+            default = "yes",
+            help = 'Produce sorted output.  Acceptable values are "yes", '
+                   '"no", and "foldcase".  Default is "yes".')
 
-    writer = CTagsWriter()
-    for rstfile in get_rst_files(args, options.recurse):
-        with open(rstfile) as f:
-            rstdata = f.read()
-            doctree = publish_doctree(rstdata, source_path = rstfile)
-            writer.nodewalker(doctree, -1, None)
-    
-    if options.tagfile == "-":
-        writer.write(sys.stdout, options.sort, False)
+    options, args = parser.parse_args()
+
+    if options.tagfile == '-':
+        output = sys.stdout
     else:
-        with open(options.tagfile, "w") as f:
-            writer.write(f, options.sort, True)
+        output = open(options.tagfile, 'wb')
 
+    for filename in args:
+        f = open(filename, 'rb')
+        lines = f.read().splitlines()
+        f.close()
+        sections = findSections(filename, lines)
 
-if __name__ == "__main__":
-    main()
+        genTagsFile(output, sectionsToTags(sections), sort=options.sort)
+
+    output.flush()
+    output.close()
+
+if __name__ == '__main__':
+    try:
+        main()
+    except IOError as e:
+        import errno
+        if e.errno == errno.EPIPE:
+            # Exit saying we got SIGPIPE.
+            sys.exit(141)
+        raise
+    except ScriptError as e:
+        print >>sys.stderr, "ERROR: %s" % str(e)
+        sys.exit(1)
