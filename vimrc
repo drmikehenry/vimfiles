@@ -2120,6 +2120,18 @@ if g:EnablePowerline
     call Pl#Theme#RemoveSegment('syntastic:errors')
     call Pl#Theme#InsertSegment('syntastic:errors', 'before',
                 \               'tagbar:currenttag')
+
+    " Provide short forms of mode names, if a user adds back in the
+    " mode_indicator.
+    let g:Powerline_mode_n = 'N'
+    let g:Powerline_mode_i = 'I'
+    let g:Powerline_mode_R = 'R'
+    let g:Powerline_mode_v = 'V'
+    let g:Powerline_mode_V = 'V⋅LINE'
+    let g:Powerline_mode_cv = 'V⋅BLOCK'
+    let g:Powerline_mode_s = 'SELECT'
+    let g:Powerline_mode_S = 'S⋅LINE'
+    let g:Powerline_mode_cs = 'S⋅BLOCK'
 else
     " Powerline will not load if this variable is defined:
     let g:Powerline_loaded = 1
