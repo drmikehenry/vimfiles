@@ -2543,12 +2543,6 @@ augroup local_ultisnips
 augroup END
 
 " -------------------------------------------------------------
-" vim-markdown
-" -------------------------------------------------------------
-
-let g:markdown_fenced_languages = ['c', 'python', 'sh', 'vim']
-
-" -------------------------------------------------------------
 " vis
 " -------------------------------------------------------------
 
@@ -2833,6 +2827,55 @@ let g:SpellMap["<markup>"] = "<on>"
 " -------------------------------------------------------------
 " Setup for Markdown.
 " -------------------------------------------------------------
+
+function! DisableMarkdownSyntaxCodeList()
+    if exists ("g:markdown_fenced_languages") &&
+                \ len(g:markdown_fenced_languages) > 0
+        echoerr "Disabling g:markdown_fenced_languages; " .
+                    \ "use g:markdownEmbeddedLangs"
+    endif
+    let g:markdown_fenced_languages = []
+endfunction
+
+call DisableMarkdownSyntaxCodeList()
+
+function! SetupMarkdownSyntax()
+    call DisableMarkdownSyntaxCodeList()
+
+    " We default to g:rstEmbeddedLangs.
+    if !exists("g:markdownEmbeddedLangs")
+        let g:markdownEmbeddedLangs = g:rstEmbeddedLangs
+    endif
+
+    let includedLangs = {}
+
+    " The group naming convention is the same as vim-markdown's, but the logic
+    " is a little different here.  Namely, we don't deal with dotted names, and
+    " we have special handling for the c language.
+    for lang in g:markdownEmbeddedLangs
+        let synLang = lang
+        if lang == "c"
+            " Special-case C because Vim's syntax highlighting for cpp
+            " is based on the C highlighting, and it doesn't like to
+            " have both C and CPP active at the same time.  Map C highlighting
+            " to CPP to avoid this problem.
+            let synLang = "cpp"
+        endif
+
+        let synGroup = "markdownHighlight" . synLang
+        if !has_key(includedLangs, synLang)
+            call SyntaxInclude(synGroup, synLang)
+            let includedLangs[synLang] = 1
+        endif
+
+        exe 'syn region ' . synGroup .
+                    \ ' matchgroup=markdownCodeDelimiter start="^\s*```\s*' .
+                    \ lang . '\>.*$" end="^\s*```\ze\s*$" keepend ' .
+                    \ 'contains=@' . synGroup
+    endfor
+endfunction
+command! -bar SetupMarkdownSyntax call SetupMarkdownSyntax()
+
 function! SetupMarkdown()
     SetupMarkup
 
