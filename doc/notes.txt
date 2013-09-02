@@ -30,7 +30,6 @@
     LoremIpsum - Generate dummy text                    |notes_loremipsum|
     LustyExplorer - File/buffer switcher w/incr. search |notes_lustyexplorer|
     LustyJuggler - Quick access to recent buffers       |notes_lustyjuggler|
-    Markdown - Markdown syntax highlighting             |notes_markdown|
     Matchit - Extended matching with '%'                |notes_matchit|
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
@@ -64,6 +63,7 @@
     VimBall - Vim "package manager"                     |notes_vimball|
     vim-clojure-static - Edit Clojure without runtime   |notes_vimclj-static|
     vim-fireplace - Access the Clojure nREPL from Vim   |notes_vim-fireplace|
+    vim-markdown - Markdown syntax support              |notes_vim-markdown|
     vim-indent-guides - Adds indent guides              |notes_indent-guides|
     vim-redl - Provides a debug REPL to Clojure         |notes_vim-redl|
     Vis - The Visual Block Tool                         |notes_vis|
@@ -1117,16 +1117,6 @@ Installation:
     git add -f ~/.vim/bundle/manpageview/doc/tags
 
 ------------------------------------------------------------------------------
-
-MARKDOWN                                                *notes_markdown*
-  Markdown syntax highlighting
-
-Version 9 from http://www.vim.org/scripts/script.php?script_id=1242
-
-Installation:
-- Install into ~/.vim/syntax/mkd.vim
-
-------------------------------------------------------------------------------
 MATCHIT                                                 *notes_matchit*
   Extended matching with '%'                            |matchit|
 
@@ -1847,6 +1837,20 @@ Provides an enhanced environment for editing Clojure code (including
 completion support), if you're connected via nREPL.
 
 Version 2013-04-19 (4f6b8e5) from git://github.com/tpope/vim-fireplace.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+VIM-MARKDOWN                                             *notes_vim-markdown*
+  Markdown syntax support
+
+Version 2013-06-24 (fccf76f6) from https://github.com/tpope/vim-markdown.
+
+Local Customizations:
+- Set g:markdown_fenced_languages to ["c", "python", "sh", "vim"].
+- Made syntax/mkd.vim delegate in vim-markdown to avoid having to change the
+  filetype from "mkd" to "markdown" change on everyone.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

@@ -2543,6 +2543,12 @@ augroup local_ultisnips
 augroup END
 
 " -------------------------------------------------------------
+" vim-markdown
+" -------------------------------------------------------------
+
+let g:markdown_fenced_languages = ['c', 'python', 'sh', 'vim']
+
+" -------------------------------------------------------------
 " vis
 " -------------------------------------------------------------
 
@@ -2829,6 +2835,28 @@ let g:SpellMap["<markup>"] = "<on>"
 " -------------------------------------------------------------
 function! SetupMarkdown()
     SetupMarkup
+
+    " Setup formatoptions:
+    "   t - auto-wrap text using textwidth.
+    "   c - auto-wrap comments to textwidth.
+    "   q - allow formatting of comments with 'gq'.
+    "   l - long lines are not broken in insert mode.
+    setlocal formatoptions=tcql
+
+    " Turn on list support.  List pattern taken from vim-markdown's
+    " ftplugin/markdown.vim.
+    setlocal formatoptions+=n
+    setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^[-*+]\\s\\+
+
+    " Setup comments so that we get proper list support.  Also taken from
+    " vim-markdown's ftplugin/markdown.vim.
+    setlocal comments=fb:*,fb:-,fb:+,n:> commentstring=>\ %s
+
+    " Setup some extra highlighting for code blocks.  This matches the
+    " highlighting from Ben William's syntax/mkd.vim and is a decent fallback
+    " when we don't support the embedded language or the block is inline.
+    hi def link markdownCode                  String
+    hi def link markdownCodeBlock             String
 endfunction
 command! -bar SetupMarkdown call SetupMarkdown()
 
