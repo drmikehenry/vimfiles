@@ -288,7 +288,6 @@ notes_loremipsum	notes.txt	/*notes_loremipsum*
 notes_lustyexplorer	notes.txt	/*notes_lustyexplorer*
 notes_lustyjuggler	notes.txt	/*notes_lustyjuggler*
 notes_manpageview	notes.txt	/*notes_manpageview*
-notes_markdown	notes.txt	/*notes_markdown*
 notes_matchit	notes.txt	/*notes_matchit*
 notes_netrw	notes.txt	/*notes_netrw*
 notes_omnicppcomplete	notes.txt	/*notes_omnicppcomplete*
@@ -324,6 +323,7 @@ notes_togglecursor	notes.txt	/*notes_togglecursor*
 notes_ultisnips	notes.txt	/*notes_ultisnips*
 notes_vcscommand	notes.txt	/*notes_vcscommand*
 notes_vim-fireplace	notes.txt	/*notes_vim-fireplace*
+notes_vim-markdown	notes.txt	/*notes_vim-markdown*
 notes_vim-redl	notes.txt	/*notes_vim-redl*
 notes_vimball	notes.txt	/*notes_vimball*
 notes_vimclj-static	notes.txt	/*notes_vimclj-static*

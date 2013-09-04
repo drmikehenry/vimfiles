@@ -2827,8 +2827,79 @@ let g:SpellMap["<markup>"] = "<on>"
 " -------------------------------------------------------------
 " Setup for Markdown.
 " -------------------------------------------------------------
+
+function! DisableMarkdownSyntaxCodeList()
+    if exists ("g:markdown_fenced_languages") &&
+                \ len(g:markdown_fenced_languages) > 0
+        echoerr "Disabling g:markdown_fenced_languages; " .
+                    \ "use g:markdownEmbeddedLangs"
+    endif
+    let g:markdown_fenced_languages = []
+endfunction
+
+call DisableMarkdownSyntaxCodeList()
+
+function! SetupMarkdownSyntax()
+    call DisableMarkdownSyntaxCodeList()
+
+    " We default to g:rstEmbeddedLangs.
+    if !exists("g:markdownEmbeddedLangs")
+        let g:markdownEmbeddedLangs = g:rstEmbeddedLangs
+    endif
+
+    let includedLangs = {}
+
+    " The group naming convention is the same as vim-markdown's, but the logic
+    " is a little different here.  Namely, we don't deal with dotted names, and
+    " we have special handling for the c language.
+    for lang in g:markdownEmbeddedLangs
+        let synLang = lang
+        if lang == "c"
+            " Special-case C because Vim's syntax highlighting for cpp
+            " is based on the C highlighting, and it doesn't like to
+            " have both C and CPP active at the same time.  Map C highlighting
+            " to CPP to avoid this problem.
+            let synLang = "cpp"
+        endif
+
+        let synGroup = "markdownHighlight" . synLang
+        if !has_key(includedLangs, synLang)
+            call SyntaxInclude(synGroup, synLang)
+            let includedLangs[synLang] = 1
+        endif
+
+        exe 'syn region ' . synGroup .
+                    \ ' matchgroup=markdownCodeDelimiter start="^\s*```\s*' .
+                    \ lang . '\>.*$" end="^\s*```\ze\s*$" keepend ' .
+                    \ 'contains=@' . synGroup
+    endfor
+endfunction
+command! -bar SetupMarkdownSyntax call SetupMarkdownSyntax()
+
 function! SetupMarkdown()
     SetupMarkup
+
+    " Setup formatoptions:
+    "   t - auto-wrap text using textwidth.
+    "   c - auto-wrap comments to textwidth.
+    "   q - allow formatting of comments with 'gq'.
+    "   l - long lines are not broken in insert mode.
+    setlocal formatoptions=tcql
+
+    " Turn on list support.  List pattern taken from vim-markdown's
+    " ftplugin/markdown.vim.
+    setlocal formatoptions+=n
+    setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^[-*+]\\s\\+
+
+    " Setup comments so that we get proper list support.  Also taken from
+    " vim-markdown's ftplugin/markdown.vim.
+    setlocal comments=fb:*,fb:-,fb:+,n:> commentstring=>\ %s
+
+    " Setup some extra highlighting for code blocks.  This matches the
+    " highlighting from Ben William's syntax/mkd.vim and is a decent fallback
+    " when we don't support the embedded language or the block is inline.
+    hi def link markdownCode                  String
+    hi def link markdownCodeBlock             String
 endfunction
 command! -bar SetupMarkdown call SetupMarkdown()
 
@@ -2859,7 +2930,7 @@ call DisableRstSyntaxCodeList()
 
 " NOTE: Embedding java causes spell checking to be disabled, because
 " the syntax file for java monkeys with the spell checking settings.
-let g:rstEmbeddedLangs = ["c", "cpp", "html", "python"]
+let g:rstEmbeddedLangs = ["c", "cpp", "html", "python", "sh", "vim"]
 
 " -------------------------------------------------------------
 " Setup for reStructuredText.
