@@ -373,6 +373,20 @@ function! CustomSetupHelp()
 endfunction
 command! -bar SetupHelp call CustomSetupHelp()
 
+function! CustomSetupMarkdownSyntax()
+    call SetupMarkdownSyntax()
+
+    " Support my trac-style code blocks that I tend to use in my blog.
+    for l:type in g:markdownEmbeddedLangs
+        exe 'syn region markdownHighlight' . l:type . ' ' .
+                    \ 'matchgroup=markdownCodeDelimiter ' .
+                    \ 'start="^\s*{{{\n\s*::' . l:type .
+                    \ '\>.*$" end="^\s*}}}\ze\s*$" ' .
+                    \ 'keepend contains=@markdownHighlight' . l:type
+    endfor
+endfunction
+command! -bar SetupMarkdownSyntax call CustomSetupMarkdownSyntax()
+
 " =============================================================
 " Plugin settings
 " =============================================================
