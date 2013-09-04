@@ -1849,8 +1849,8 @@ Version 2013-06-24 (fccf76f6) from https://github.com/tpope/vim-markdown.
 
 Local Customizations:
 - Set g:markdown_fenced_languages to ["c", "python", "sh", "vim"].
-- Made syntax/mkd.vim delegate in vim-markdown to avoid having to change the
-  filetype from "mkd" to "markdown" change on everyone.
+- Made syntax/mkd.vim delegate in syntax/markdown.vim to give anyone who sets
+  the filetype to "mkd" support for markdown.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
