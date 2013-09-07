@@ -748,6 +748,20 @@ endfunction
 command! -nargs=1  -complete=file
             \ ReadJinjaTemplate :call ReadJinjaTemplate(<f-args>)
 
+" -------------------------------------------------------------
+" Edit snippets file
+" -------------------------------------------------------------
+
+function! EditSnippets()
+python << endpython
+filename = UltiSnips_Manager.file_to_edit(UltiSnips_Manager.primary_filetype)
+vim.command("let filename = '%s'" % filename.replace("'", "''"))
+endpython
+
+    exec 'e ' . filename . '.py'
+endfunction
+command! EditSnippets :call EditSnippets()
+
 " =============================================================
 " Machine Specific Settings
 " =============================================================
