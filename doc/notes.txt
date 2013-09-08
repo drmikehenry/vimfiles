@@ -3,7 +3,10 @@
 *notes*
 
 1.  Introduction                                        |notes_intro|
+    Changes                                             |notes_changes|
 2.  Installation                                        |notes_installation|
+    Setup vimfiles                                      |notes_setup_vimfiles|
+    Build Vim                                           |notes_build_vim|
 3.  Plugins                                             |notes_plugins|
     Align - Align things into columns                   |notes_align|
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
@@ -80,11 +83,128 @@
 ==============================================================================
 1.  Introduction                                        *notes_intro*
 
-These are notes for Vim usage and setup.
+The vimfiles project is a collection of Vim configuration files that gather
+settings, plugins, and documentation to provide a powerful editing environment
+with minimal additional tweaking.
 
+See |notes_setup_vimfiles| for instructions on setting up vimfiles.  It may be
+desirable to compile Vim on Unix platforms in order to turn on additional
+support features (particularly Ruby, for example).  See |notes_build_vim| for
+instructions on building Vim.
+
+------------------------------------------------------------------------------
+Changes                                                 *notes_changes*
+
+For a list of significant changes, see CHANGES.txt in the directory above
+(typically, ~/.vim/CHANGES.txt).  To open CHANGES.txt easily, execute the
+following ex-mode command: >
+
+  :e $VIMFILES/CHANGES.txt
+
+Alternatively, place cursor on $VIMFILES/CHANGES.txt and press gf.
 
 ==============================================================================
 2.  Installation                                        *notes_installation*
+
+------------------------------------------------------------------------------
+Setup vimfiles                                          *notes_setup_vimfiles*
+
+To setup for Unix (Linux, mac)
+==============================
+
+First, checkout vimfiles to ``~/.vim`` (such that this README.txt file ends up
+as ``~/.vim/README.txt``).  Using Subversion, this might be: >
+
+  svn co https://server/svn/.../vimfiles ~/.vim
+
+Next, choose one of these methods:
+
+- Automated method (preferred): >
+
+    ~/.vim/setup.py
+
+- Manual method (make sure you don't mind losing any existing settings!): >
+
+    cp ~/.vim/home.vimrc ~/.vimrc
+
+To setup for Windows
+====================
+
+Vim will look for your ``vimfiles`` in your ``USERPROFILE`` directory, which
+will typically be ``C:\Documents and Settings\USERNAME`` or
+``C:\Users\USERNAME``, but may be different when on a network.
+
+It's easiest to use this default location:
+
+- Start ``cmd.exe`` (Start | Run | cmd).
+
+- The current working directory will typically be the ``USERPROFILE``
+  directory, but you can confirm this location by executing: >
+
+    set USERPROFILE
+
+- Checkout vimfiles below this directory. Using Subversion, this might be: >
+
+    svn co https://server/svn/.../vimfiles vimfiles
+
+- Copy source-controlled ``home.vimrc`` file to become ``_vimrc``
+  (make sure you don't mind losing any existing settings!): >
+
+    copy vimfiles\home.vimrc _vimrc
+
+If the default location is not suitable, you may move the ``vimfiles``
+directory elsewhere and inform Vim of the new location.  Choose one of the
+following methods for informing Vim:
+
+- Method 1: Override HOME:
+
+  - In Windows, the ``HOME`` environment variable does not exist by default.
+    When Vim starts, if ``HOME`` is defined, it will use ``$HOME/vimfiles`` for
+    ``VIMFILES`` (which points to the per-user configuration files).  If
+    ``HOME`` is not defined, Vim will set it to the value ``%USERPROFILE%``.
+
+  - Therefore, to use a different location for ``VIMFILES``, set the value of
+    ``HOME`` to someplace like ``c:\home\username``, and Vim will then set
+    ``VIMFILES`` to ``c:\home\username\vimfiles``.
+
+  With this method, move the ``vimfiles`` directory and the ``_vimrc`` file to
+  the ``HOME`` directory.
+
+- Method 2: Chain to alternate location:
+
+  - With this method, copy the ``vimfiles\_vimrc`` file to the expected
+    location specified by ``USERPROFILE``, as for the default case.
+
+  - Modify ``%USERPROFILE%\_vimrc`` to extend your ``runtimepath`` to include
+    a new location.  For example, to checkout ``vimfiles`` directly into ``C:``,
+    add the following lines at the start of ``%USERPROFILE%\_vimrc``::
+
+    " Prepend, append vimfiles paths from hard drive
+    " to avoid slow %USERPROFILE% directory.
+    set runtimepath^=c:\vimfiles
+    set runtimepath+=c:\vimfiles\after
+
+  - Now move the checkout of ``vimfiles`` to become ``C:\vimfiles``.
+
+ctags support
+-------------
+
+For ctags support, ensure that Exuberant ctags.exe is in the PATH.  This will
+enable the TagList plugin.
+
+Ruby-based plugins
+------------------
+
+Install the Ruby programming language for Windows to enable the Ruby-based
+plugins (e.g., Lusty Explorer) to work.  Ensure the Ruby interpreter is in the
+PATH.  Also, ensure your build of Gvim for Windows includes the Ruby
+interpreter. (Note: the "Vim without Cream" build does *not* include Ruby).
+To see if Ruby is included, run the following from within Gvim: >
+
+  :echo has("ruby")
+
+------------------------------------------------------------------------------
+Build Vim                                               *notes_build_vim*
 
 Prerequisites for Ubuntu: >
     sudo apt-get install libgpmg1-dev libperl-dev ruby1.8-dev
@@ -108,7 +228,8 @@ Inspiration taken from:
   http://users.skynet.be/antoine.mechelynck/vim/compunix.htm
 
 The detailed steps for download and building Vim are captured in
-the script ~/.vim/buildtool.  See that script for more information.
+the script ~/.vim/buildtool.  Run the script with no arguments for usage
+help, or read the script for more detailed information.
 
 Update the hg directory (in the default download location) with the latest Vim
 source: >

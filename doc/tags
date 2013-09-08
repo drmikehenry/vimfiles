@@ -254,13 +254,16 @@ matchit-troubleshoot	matchit.txt	/*matchit-troubleshoot*
 matchit-v_%	matchit.txt	/*matchit-v_%*
 matchit.txt	matchit.txt	/*matchit.txt*
 matchit.vim	matchit.txt	/*matchit.vim*
+not	notes.txt	/*not*
 notes	notes.txt	/*notes*
 notes.txt	notes.txt	/*notes.txt*
 notes_align	notes.txt	/*notes_align*
 notes_bufexplorer	notes.txt	/*notes_bufexplorer*
 notes_bufkill	notes.txt	/*notes_bufkill*
 notes_bufmru	notes.txt	/*notes_bufmru*
+notes_build_vim	notes.txt	/*notes_build_vim*
 notes_c_additions	notes.txt	/*notes_c_additions*
+notes_changes	notes.txt	/*notes_changes*
 notes_closetag	notes.txt	/*notes_closetag*
 notes_colorsampler	notes.txt	/*notes_colorsampler*
 notes_ctrlp	notes.txt	/*notes_ctrlp*
@@ -304,6 +307,7 @@ notes_runview	notes.txt	/*notes_runview*
 notes_scriptease	notes.txt	/*notes_scriptease*
 notes_scrollcolor	notes.txt	/*notes_scrollcolor*
 notes_selfdot	notes.txt	/*notes_selfdot*
+notes_setup_vimfiles	notes.txt	/*notes_setup_vimfiles*
 notes_surround	notes.txt	/*notes_surround*
 notes_svn	notes.txt	/*notes_svn*
 notes_swapit	notes.txt	/*notes_swapit*
