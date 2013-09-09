@@ -119,3 +119,17 @@ bsnip("text", "text code block", r"""
 wsnip("lit", "literal (code) markup", r"""
 \`\`${1:literal}\`\`$0
 """)
+
+# Handy helpers (for me).
+
+wsnip("done", "[DONE]", r"""
+\`\`[DONE]\`\` $0
+""")
+
+wsnip("res", "[RESOLVED]", r"""
+\`\`[RESOLVED]\`\` $0
+""")
+
+wsnip("start", "started <date>", r"""
+\`\`[started ${1:`!v strftime("%Y-%m-%d")`}]\`\` $0
+""")
