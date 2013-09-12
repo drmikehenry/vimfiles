@@ -163,3 +163,20 @@ wsnip("rstar", "run*", r"""
 wsnip("use", "use", r"""
 (:use [${1:namespace} :only [$0]])
 """)
+
+wsnip("doseq", "doseq", r"""
+(doseq [${1:vars}]
+  $0)
+""")
+
+wsnip("dotimes", "dotimes ", r"""
+(dotimes [${1:vars}]
+  $0)
+""")
+
+bsnip("main", "-main", r"""
+(defn -main
+  "The application's main function"
+  [& args]
+  $0)
+""")

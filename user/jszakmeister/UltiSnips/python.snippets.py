@@ -60,3 +60,11 @@ from sniputil import abbr, babbr, wabbr
 
 $0
 """, flags="!")
+
+
+bsnip("screrr", "ScriptError", r"""
+class ScriptError(Exception):
+    pass
+
+$0
+""")

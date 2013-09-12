@@ -59,6 +59,13 @@ $0
 \`\`\`
 """)
 
+bsnip("cimg", "centered image", r"""
+<center>
+ <img src="${1:/path/to/img.png}" alt="${2:description}" />
+</center>
+$0
+""")
+
 wsnip("lit", "literal (code) markup", r"""
 \`${1:literal}\`$0
 """, aliases=['f', 'cmd'])
