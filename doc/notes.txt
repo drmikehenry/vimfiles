@@ -20,6 +20,7 @@
     Eunuch - helpers for UNIX                           |notes_eunuch|
     Extline - for extending lines                       |notes_extline|
     Fixkey - Fix key code for console Vim               |notes_fixkey|
+    Fontdetect - Detect installed fonts                 |notes_fontdetect|
     Fontsize - increment/decrement font size            |notes_fontsize|
     Fugitive - A wrapper for Git in Vim                 |notes_fugitive|
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
@@ -670,6 +671,15 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 See |fixkey.txt| for details on setting up your terminal.
+
+------------------------------------------------------------------------------
+FONTDETECT                                              *notes_fontdetect*
+  Detect installed fonts                                |fontdetect.txt|
+
+Version 0.1.0 (29aa0e6) from https://github.com/drmikehenry/vim-fontdetect
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 FONTSIZE                                                *notes_fontsize*

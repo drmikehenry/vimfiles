@@ -178,6 +178,41 @@ endif
 " GUI Setup
 " =============================================================
 
+let g:DefaultFontFamilies = [
+            \ "PragmataPro",
+            \ "DejaVu Sans Mono for Powerline",
+            \ "Droid Sans Mono for Powerline",
+            \ "DejaVu Sans Mono",
+            \ "Droid Sans Mono",
+            \ "Consolas",
+            \]
+
+function! SetupFont()
+    if !has("gui_running")
+        return
+    endif
+    if !exists("g:FontFamily")
+        let g:FontFamily = fontdetect#firstFontFamily(g:DefaultFontFamilies)
+    endif
+    if !exists("g:FontSize")
+        let g:FontSize = 14
+    endif
+    if g:FontFamily != "" && g:FontSize > 0
+        if has("gui_gtk2")
+            let font = g:FontFamily . " " . g:FontSize
+        else
+            let font = g:FontFamily . ":h" . g:FontSize
+        endif
+        let &guifont = font
+        if g:FontFamily =~# 'for Powerline$'
+            let g:Powerline_symbols = 'fancy'
+        else
+            let g:Powerline_symbols = 'unicode'
+        endif
+    endif
+endfunction
+command! -bar SetupFont call SetupFont()
+
 if has("gui_running")
     " 'T' flag controls the toolbar (we don't need it).
     set guioptions-=T
@@ -195,41 +230,10 @@ if has("gui_running")
     " left-side scrollbar anyway.
     set guioptions-=L
 
+    SetupFont
+
     " Number of lines of text overall.
-    set lines=50
-
-    " Setup nice fonts.
-    if has("gui_gtk2")
-
-        " The documentation for 'guifont' claims that fonts can be
-        " comma-separated, and that the first font to be found will
-        " be used.  This doesn't seem to be the case for me.  When
-        " the first font isn't available, no other fonts are tried,
-        " and Vim falls back to a default font.  So, this ugly
-        " hack lets me try PragmataPro at home but still have reasonable
-        " fonts elsewhere.
-        " TODO: Find a better solution fallback fonts.
-        if len(glob($HOME . "/.fonts/p/PragmataPro*.ttf"))
-            set guifont=PragmataPro\ 14
-        else
-            set guifont=DejaVu\ Sans\ Mono\ 12
-            "set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
-            "set guifont=Inconsolata\ Medium\ 13
-        endif
-
-    elseif has("x11")
-        set guifont=-*-lucidatypewriter-medium-r-normal-*-*-100-*-*-m-*-*
-
-    elseif has("win32")
-        try
-            set guifont=Bitstream_Vera_Sans_Mono:h12:cANSI
-        catch
-            set guifont=Lucida_Console:h12:cDEFAULT
-        endtry
-    else
-        " Non-X11 GUIs including Windows.
-        set guifont=Lucida_Console:h12:cDEFAULT
-    endif
+    set lines=45
 endif
 
 " MacVim-specific setup.  MacVim has a gvimrc setup that alters some bindings.

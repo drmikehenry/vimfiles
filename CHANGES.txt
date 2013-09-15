@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2013-09-15
+==========
+
+- Add fontdetect plugin, fixing broken font fallback logic.
+
 2013-09-08
 ==========
 

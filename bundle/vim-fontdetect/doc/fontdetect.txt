@@ -1,0 +1,99 @@
+*fontdetect.txt*  Plugin to detect installed fonts
+*fontdetect*      Version 0.1.0
+
+==============================================================================
+1.  Introduction                                    |fontdetect-intro|
+2.  Installation                                    |fontdetect-installation|
+3.  Usage                                           |fontdetect-usage|
+4.  References                                      |fontdetect-references|
+5.  Credits                                         |fontdetect-credits|
+
+==============================================================================
+1.  Introduction                                    *fontdetect-intro*
+
+There are some rough edges in Vim related to the detection of fonts.  Vim
+supplies the |getfontname()| function that seems ideal for detecting whether a
+font is available, but there are a couple of problems.  First, |getfontname()|
+cannot be called until the GUI has started (i.e., until the |GUIEnter| event
+occurs), which means that it can't be used from .vimrc (or .gvimrc).  This
+makes it hard to define other settings that depend on the font (e.g., the
+Powerline plugin's g:Powerline_symbols setting must be defined before
+|GUIEnter| occurs). 
+
+In addition, the GTK2 GUI seems unable to determine whether a given font is
+installed, so |getfontname()| always simply returns the input argument,
+and setting 'guifont' always succeeds even if the font is not present.
+
+|fontdetect| works around these issues, providing methods for detecting which
+fonts are installed on the system.
+
+At present, the following platforms are supported:
+
+- Linux (using GTK2 GUI)
+- Windows
+- Mac OS X
+
+===============================================================================
+2.  Installation                                    *fontdetect-installation*
+
+To install directly in your personal |vimfiles| directory (~/.vim under
+unix or %HOMEPATH%\vimfiles under windows), unpack the downloaded archive
+to yield these files: >
+
+  doc/fontdetect.txt
+  autoload/fontdetect.vim
+
+Then, re-generate your help tags with Vim's |:helptags| command, e.g.: >
+
+  :helptags ~/.vim/doc
+
+You may also install fontdetect using a tool like pathogen[1] by unpacking
+the downloaded archive into a bundle directory, e.g.: >
+
+  ~/.vim/bundle/vim-fontdetect
+
+[1]: https://github.com/tpope/vim-pathogen
+
+===============================================================================
+3.  Usage                                           *fontdetect-usage*
+
+|fontdetect| provides the following functions.  A font family should be
+specified as a string with spaces (not underscores), e.g. "DejaVu Sans Mono",
+"Consolas", etc.
+
+fontdetect#hasFontFamily({fontFamily})          |fontdetect#hasFontFamily|
+
+  Determines if the font family given by the string {fontFamily} exists.
+  For example (using GTK2 GUI): >
+
+    if fontdetect#hasFontFamily("DejaVu Sans Mono")
+        let &guifont = "DejaVu Sans Mono 14"
+    endif
+
+fontdetect#firstFontFamily([{fontFamilies}])    |fontdetect#firstFontFamily|
+
+  Returns the first installed font family from the list {fontFamilies}.
+  Returns the empty string if none of these font families are installed.
+  For example (using Windows GUI): >
+
+    let &guifont = fontdetect#firstFontFamily([
+        \ "DejaVu Sans Mono", 
+        \ "Consolas"]) . ":h14"
+
+===============================================================================
+4.  References                                      *fontdetect-references*
+
+- Method of listing installed fonts on OS X:
+  http://stackoverflow.com/questions/1113040/list-of-installed-fonts-os-x-c
+
+===============================================================================
+5.  Credits                                         *fontdetect-credits*
+
+Developed by Michael Henry (vim at drmikehenry.com).
+
+Distributed under Vim's |license|.
+
+Git repository:       https://github.com/drmikehenry/vim-fontdetect
+
+===============================================================================
+vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:

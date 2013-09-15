@@ -274,6 +274,7 @@ notes_eunuch	notes.txt	/*notes_eunuch*
 notes_extensions	notes.txt	/*notes_extensions*
 notes_extline	notes.txt	/*notes_extline*
 notes_fixkey	notes.txt	/*notes_fixkey*
+notes_fontdetect	notes.txt	/*notes_fontdetect*
 notes_fontsize	notes.txt	/*notes_fontsize*
 notes_fswitch	notes.txt	/*notes_fswitch*
 notes_fugitive	notes.txt	/*notes_fugitive*
