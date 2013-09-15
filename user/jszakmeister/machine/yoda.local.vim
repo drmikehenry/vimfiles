@@ -1,1 +1,1 @@
-let g:SZAK_FONT_SIZE = 15
+let g:FontSize = 15

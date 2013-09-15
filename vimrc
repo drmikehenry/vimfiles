@@ -187,7 +187,7 @@ let g:DefaultFontFamilies = [
             \ "Consolas",
             \]
 
-function! SetupFont()
+function! SetFont()
     if !has("gui_running")
         return
     endif
@@ -211,7 +211,7 @@ function! SetupFont()
         endif
     endif
 endfunction
-command! -bar SetupFont call SetupFont()
+command! -bar SetFont call SetFont()
 
 if has("gui_running")
     " 'T' flag controls the toolbar (we don't need it).
@@ -230,7 +230,7 @@ if has("gui_running")
     " left-side scrollbar anyway.
     set guioptions-=L
 
-    SetupFont
+    SetFont
 
     " Number of lines of text overall.
     set lines=45

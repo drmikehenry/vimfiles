@@ -3,12 +3,10 @@
 " =============================================================
 
 " Default font size.
-if !exists("g:SZAK_FONT_SIZE")
-    if has("gui_win32")
-        let g:SZAK_FONT_SIZE = 11
-    else
-        let g:SZAK_FONT_SIZE = 14
-    endif
+if has("gui_win32")
+    let g:FontSize = 11
+else
+    let g:FontSize = 14
 endif
 
 " =============================================================
@@ -157,60 +155,6 @@ endif
 " -------------------------------------------------------------
 " Font selection
 " -------------------------------------------------------------
-
-" Helper to aid in locating Powerline-enabled fonts in standard directory
-" locations.
-function! HasFont(filename)
-    if has("macunix")
-        let l:search_paths = ["~/Library/Fonts", "/Library/Fonts"]
-    elseif has("gui_win32")
-        let l:search_paths = [expand("$windir/Fonts")]
-    else
-        let l:search_paths = ["~/.fonts", "/usr/share/fonts"]
-    endif
-
-    for path in l:search_paths
-        let path = expand(path)
-        if filereadable(expand(path . "/**/" . a:filename))
-            return 1
-        endif
-    endfor
-
-    return 0
-endfunction
-
-" Searches for several Powerline-enabled fonts.  If it finds one, it'll choose
-" it and turn on fancy symbols for Powerline.  Otherwise, fallback to a normal
-" font, and use unicode symbols for Powerline.
-function! SetFont()
-    " Turn on fancy symbols on the status line
-    if has("gui_running")
-        let powerline_fonts=[
-                    \   ["DejaVu Sans Mono", "DejaVuSansMono-Powerline.ttf"],
-                    \   ["Droid Sans Mono", "DroidSansMonoSlashed-Powerline.ttf"],
-                    \   ]
-        let fontname=map(copy(powerline_fonts), 'v:val[0]')
-
-        for font in powerline_fonts
-            if HasFont(font[1])
-                let fontname=[font[0] . " for Powerline"]
-                let g:Powerline_symbols = 'fancy'
-                break
-            endif
-        endfor
-
-        if has("macunix") || has("gui_win32")
-            let fontstring=join(map(
-                        \ copy(fontname), 'v:val . ":h" . g:SZAK_FONT_SIZE'), ",")
-        else
-            let fontstring=join(map(
-                        \ copy(fontname), 'v:val . " " . g:SZAK_FONT_SIZE'), ",")
-        endif
-
-        let &guifont=fontstring
-    endif
-endfunction
-command! -bar SetFont call SetFont()
 
 " =============================================================
 " Fullscreen
