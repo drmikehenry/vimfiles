@@ -66,8 +66,6 @@ function! fontdetect#_listFontFamiliesUsingCocoa()
     if has("python")
         return pyeval("fontdetect_listFontFamiliesUsingCocoa()")
     else
-        " TODO: Consider using external Python script if OS X builds of
-        " Vim are likely not to have Python.
         return []
     endif
 endfunction
@@ -89,6 +87,10 @@ function! fontdetect#_fontDict()
         let families = fontdetect#_listFontFamiliesUsingWindowsRegistry()
     elseif has("macunix")
         let families = fontdetect#_listFontFamiliesUsingCocoa()
+        if len(families) == 0
+            " Try falling back on Fontconfig.
+            let families = fontdetect#_listFontFamiliesUsingFontconfig()
+        endif
     elseif executable("fc-list")
         let families = fontdetect#_listFontFamiliesUsingFontconfig()
     else
