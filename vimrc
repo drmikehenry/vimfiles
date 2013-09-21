@@ -2411,6 +2411,10 @@ endfunction
 
 " Helper to be called from your .lvimrc.
 function! AppendSnippetDirs(snippetDirs)
+    if !exists("b:UltiSnipsSnippetDirectories")
+        let b:UltiSnipsSnippetDirectories = copy(g:UltiSnipsSnippetDirectories)
+    endif
+
     if type(a:snippetDirs) == type([])
         let b:UltiSnipsSnippetDirectories += a:snippetDirs
     else
