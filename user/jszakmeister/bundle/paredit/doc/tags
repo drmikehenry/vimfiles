@@ -1,3 +1,6 @@
+g:paredit_disable_clojure	paredit.txt	/*g:paredit_disable_clojure*
+g:paredit_disable_lisp	paredit.txt	/*g:paredit_disable_lisp*
+g:paredit_disable_scheme	paredit.txt	/*g:paredit_disable_scheme*
 g:paredit_electric_return	paredit.txt	/*g:paredit_electric_return*
 g:paredit_leader	paredit.txt	/*g:paredit_leader*
 g:paredit_matchlines	paredit.txt	/*g:paredit_matchlines*
