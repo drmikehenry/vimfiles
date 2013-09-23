@@ -433,7 +433,8 @@ augroup jszakmeister_vimrc
     " Set up syntax highlighting for e-mail and mutt.
     autocmd BufRead,BufNewFile
                 \ .followup,.article,.letter,/tmp/pico*,nn.*,snd.*,/tmp/mutt*
-                \ :set ft=mail
+                \ set ft=mail
+    autocmd BufRead,BufNewFile *.mbox set ft=mail
 
     " Add a mapping to make it easy to kill a VCS buffer
     autocmd User VCSBufferCreated silent! nmap <unique> <buffer> q :bwipeout<CR>
