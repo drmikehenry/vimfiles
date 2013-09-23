@@ -416,7 +416,7 @@ endif
 
 let g:syntastic_mode_map['active_filetypes'] =
             \ g:syntastic_mode_map['active_filetypes'] +
-            \ ['html', 'less', 'sh', 'zsh']
+            \ ['html', 'less', 'sh', 'zsh', 'javascript']
 
 " =============================================================
 " Autocommands
