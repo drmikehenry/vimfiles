@@ -122,5 +122,5 @@ function! fontdetect#firstFontFamily(fontFamilies)
 endfunction
 
 " Restore saved 'cpoptions'.
-let cpoptions = s:save_cpoptions
+let &cpoptions = s:save_cpoptions
 " vim: sts=4 sw=4 tw=80 et ai:

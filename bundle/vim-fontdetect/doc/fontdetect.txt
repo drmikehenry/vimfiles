@@ -1,5 +1,5 @@
 *fontdetect.txt*  Plugin to detect installed fonts
-*fontdetect*      Version 0.2.0
+*fontdetect*      Version 0.2.1
 
 ==============================================================================
 1.  Introduction                                    |fontdetect-intro|
