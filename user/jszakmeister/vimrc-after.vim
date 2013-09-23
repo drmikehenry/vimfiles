@@ -106,7 +106,7 @@ set list
 set nowrap
 
 " Ignore some Clojure/Java-related files.
-set wildignore+=target/**,asset-cache
+set wildignore+=target,asset-cache,out
 
 " I regularly create tmp folders that I don't want searched.
 set wildignore+=tmp,.lein-*,*.egg-info,.*.swo
