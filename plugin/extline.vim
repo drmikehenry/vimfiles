@@ -1,6 +1,6 @@
 " Vim global plugin for extending lines (e.g., underlined titles).
-" Version:      0.1.2
-" Last Change:  February 16, 2013
+" Version:      0.1.3
+" Last Change:  September 24, 2013
 " Maintainer:   Michael Henry (vim at drmikehenry.com)
 " License:      This file is placed in the public domain.
 
@@ -242,7 +242,7 @@ inoremap <silent> <C-L>0      <C-G>u<C-O>:call <SID>MakeTitle("*", 1, 1)<CR>
 inoremap <silent> <C-L>*      <C-G>u<C-O>:call <SID>MakeTitle("*", 1, 1)<CR>
 
 " Restore saved 'cpoptions'.
-let cpoptions = s:save_cpoptions
+let &cpoptions = s:save_cpoptions
 
 finish
 
