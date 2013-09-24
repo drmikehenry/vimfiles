@@ -1,6 +1,6 @@
 *headerguard.txt*   Plugin for adding header guards to C/C++ header files
 
-*headerguard*       Version 0.1.0
+*headerguard*       Version 0.1.1
 
 ==============================================================================
 1.  Introduction                                    |headerguard-intro|

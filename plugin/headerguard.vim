@@ -1,6 +1,6 @@
 " Vim global plugin for adding C/C++ header guards.
-" Version:      0.1.0
-" Last Change:  September 14, 2007
+" Version:      0.1.1
+" Last Change:  September 24, 2013
 " Maintainer:   Michael Henry (vim at drmikehenry.com)
 " License:      This file is placed in the public domain.
 
@@ -95,5 +95,5 @@ endfunction
 command! -bar HeaderguardAdd call s:HeaderguardAdd()
 
 " Restore saved 'cpoptions'.
-let cpoptions = s:save_cpoptions
+let &cpoptions = s:save_cpoptions
 " vim: sts=4 sw=4 tw=80 et ai:
