@@ -1,6 +1,6 @@
 *fontsize.txt*   Plugin for modifying guifont size
 
-*fontsize*       Version 0.2.0          Last Change:  October 21, 2009
+*fontsize*       Version 0.2.1          Last Change:  September 24, 2013
 
 ==============================================================================
 Introduction                                        |fontsize-intro|
@@ -89,6 +89,10 @@ the font names.  For example, on Chinese Windows XP, the fonts are encoded in
 
 ===============================================================================
 ChangeLog                                           *fontsize-changelog*
+
+Version 0.2.1    Date    2013-09-24                 *fontsize-changelog-0.2.1*
+
+  - Properly restore 'cpoptions'.
 
 Version 0.2.0    Date    2009-10-21                 *fontsize-changelog-0.2.0*
 
