@@ -78,6 +78,33 @@ command! -range CopyForMarkdown <line1>,<line2>call CopyForMarkdown()
 
 vnoremap <Leader><Leader>cm :CopyForMarkdown<CR>
 
+function! CopyAsBoxQuote() range
+    let header = [',----[ ' . expand('%:t') . ' ]-']
+    if a:firstline != 1
+        let header += ['| [...]']
+    endif
+
+    echom len(header[0])-1
+    let trailer = ['`' . repeat('-', len(header[0])-1)]
+    if a:lastline != line('$')
+        let trailer = ['| [...]'] + trailer
+    endif
+
+    let digits = len(string(a:lastline))
+    let lines = getline(a:firstline, a:lastline)
+    let formatStr = '| %' . digits . 'd %s'
+
+    for i in range(a:lastline - a:firstline + 1)
+        let lines[i] = substitute(printf(formatStr, i + a:firstline, lines[i]),
+                    \             '\s\+$', '', '')
+    endfor
+
+    let @+ = join(header + lines + trailer, "\n") . "\n"
+endfunction
+command! -range CopyAsBoxQuote <line1>,<line2>call CopyAsBoxQuote()
+
+vnoremap <Leader><Leader>cb :CopyAsBoxQuote<CR>
+
 function! UnmapUnwanted()
     " Unmap one of AlignMap's mappings... I don't use it, and it delays the above
     " mapping.
