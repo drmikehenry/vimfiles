@@ -180,3 +180,13 @@ bsnip("main", "-main", r"""
   [& args]
   $0)
 """)
+
+wsnip("prs", "pr-str", r"""
+(pr-str $0)
+""")
+
+# ClojureScript snippets
+
+wsnip("jslog", "(.log js/console ...)", r"""
+(.log js/console $0)
+""")
