@@ -1,6 +1,4 @@
 " Autoload portion of plugin/fontsize.vim.
-" Maintainer:   Michael Henry (vim at drmikehenry.com)
-" License:      This file is placed in the public domain.
 
 " Font examples from http://vim.wikia.com/wiki/VimTip632
 
@@ -79,25 +77,29 @@ function! fontsize#setSize(font, size)
 endfunction
 
 function! fontsize#fontString(font)
-    let s = fontsize#decodeFont(a:font)
-    if len(s) == 0
-        let s = "Must :set guifont; :help 'guifont'"
-    elseif match(s, s:regex) == -1
-        let s = "Bad guifont=" . s
+    let fontName = fontsize#decodeFont(a:font)
+    if len(fontName) == 0
+        let fontName = "(Empty)"
+        let fontSize = 0
     else
-        let s = fontsize#getSize(s) . ": " . s
+        let fontSize = fontsize#getSize(fontName)
     endif
-    let maxFontLen = 55
-    if len(s) > maxFontLen
-        let s = s[:maxFontLen - 4] . "..."
+    let maxFontLen = 50
+    if len(fontName) > maxFontLen
+        let fontName = fontName[:maxFontLen - 4] . "..."
     endif
-    return s
+    if fontSize == 0
+        let fontString = "??: " . fontName
+    else
+        let fontString = fontSize . ": " . fontName
+    endif
+    return fontString
 endfunction
 
 function! fontsize#display()
     redraw
     sleep 100m
-    echo fontsize#fontString(&guifont) . " (+/= - 0 ! q CR SP)"
+    echo fontsize#fontString(getfontname()) . " (+/= - 0 ! q CR SP)"
 endfunction
 
 function! fontsize#begin()
@@ -105,7 +107,7 @@ function! fontsize#begin()
 endfunction
 
 function! fontsize#quit()
-    echo fontsize#fontString(&guifont) . " (Done)"
+    echo fontsize#fontString(getfontname()) . " (Done)"
 endfunction
 
 function! fontsize#ensureDefault()
@@ -113,34 +115,34 @@ function! fontsize#ensureDefault()
         let g:fontsize#defaultSize = 0
     endif
     if g:fontsize#defaultSize == 0
-        let g:fontsize#defaultSize = fontsize#getSize(&guifont)
+        let g:fontsize#defaultSize = fontsize#getSize(getfontname())
     endif
 endfunction
 
 function! fontsize#default()
     call fontsize#ensureDefault()
-    let &guifont = fontsize#setSize(&guifont, g:fontsize#defaultSize)
+    let &guifont = fontsize#setSize(getfontname(), g:fontsize#defaultSize)
     let &guifontwide = fontsize#setSize(&guifontwide, g:fontsize#defaultSize)
     call fontsize#display()
 endfunction
 
 function! fontsize#setDefault()
-    let g:fontsize#defaultSize = fontsize#getSize(&guifont)
+    let g:fontsize#defaultSize = fontsize#getSize(getfontname())
 endfunction
 
 function! fontsize#inc()
     call fontsize#ensureDefault()
-    let newSize = fontsize#getSize(&guifont) + 1
-    let &guifont = fontsize#setSize(&guifont, newSize)
+    let newSize = fontsize#getSize(getfontname()) + 1
+    let &guifont = fontsize#setSize(getfontname(), newSize)
     let &guifontwide = fontsize#setSize(&guifontwide, newSize)
     call fontsize#display()
 endfunction
 
 function! fontsize#dec()
     call fontsize#ensureDefault()
-    let newSize = fontsize#getSize(&guifont) - 1
+    let newSize = fontsize#getSize(getfontname()) - 1
     if newSize > 0
-        let &guifont = fontsize#setSize(&guifont, newSize)
+        let &guifont = fontsize#setSize(getfontname(), newSize)
         let &guifontwide = fontsize#setSize(&guifontwide, newSize)
     endif
     call fontsize#display()

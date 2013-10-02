@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2013-10-13
+==========
+
+- BREAKING CHANGE: Upgrade to fontsize 0.3.0, migrating to bundle-based
+  installation.  The default keystrokes have changed to <Leader><Leader>x
+  instead of <Leader>xx.  See :help fontsize-customization for configuring
+  non-default mappings.
+
 2013-09-15
 ==========
 
@@ -19,6 +27,5 @@ require adjustment of per-user settings.
 
 - Move all interesting documentation into doc/notes.txt, leaving README.txt
   as a pointer into the notes.
-
 
 .. vim:set ft=rst:

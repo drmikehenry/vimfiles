@@ -685,10 +685,10 @@ Installation:
 FONTSIZE                                                *notes_fontsize*
   Fontsize - increment/decrement font size              |fontsize.txt|
 
-  <Leader>++    Increment font size
-  <Leader>==    Increment font size
-  <Leader>--    Decrement font size
-  <Leader>00    Reset to default font size
+  <Leader><Leader>+    Increment font size
+  <Leader><Leader>=    Increment font size
+  <Leader><Leader>-    Decrement font size
+  <Leader><Leader>0    Reset to default font size
 
 The above mappings initiate a "font size" mode in which the following
 additional individual keys become active:
@@ -709,16 +709,10 @@ In addition, "font size" mode will automatically timeout after |timeoutlen|
 milliseconds have elapsed without a keypress, because "font size" mode is
 based on mappings.
 
-Version 0.1.0 from http://www.vim.org/scripts/script.php?script_id=2809
-(Original source in Subversion in ~/.vim/.)
+Version 0.3.1 (31abc1c) from https://github.com/drmikehenry/vim-fontdetect
 
 Installation:
-
-- Distributed as a |vimball|  >
-
-    vim fontsize-0.1.0.vba
-    :so %
-    :q
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 FSWITCH                                                 *notes_fswitch*

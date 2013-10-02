@@ -1,30 +1,35 @@
 *fontsize.txt*   Plugin for modifying guifont size
-
-*fontsize*       Version 0.2.1          Last Change:  September 24, 2013
-
-==============================================================================
-Introduction                                        |fontsize-intro|
-Customization                                       |fontsize-customization|
-ChangeLog                                           |fontsize-changelog|
-Installation                                        |fontsize-installation|
-Credits                                             |fontsize-credits|
-TODO                                                |fontsize-todo|
-Distribution                                        |fontsize-distribution|
+*fontsize*       Version 0.3.0
 
 ==============================================================================
-Introduction                                        *fontsize-intro*
+1.  Introduction                                    |fontsize-intro|
+2.  Usage                                           |fontsize-usage|
+3.  Installation                                    |fontsize-installation|
+4.  Customization                                   |fontsize-customization|
+5.  ChangeLog                                       |fontsize-changelog|
+6.  Credits                                         |fontsize-credits|
+
+==============================================================================
+1.  Introduction                                    *fontsize-intro*
 
 This plugin provides convenient mappings for changing the font size in Gvim.
+It defines a new "font size" mode wherein only a single keypress is needed to
+continue to increase or decrease the font size.
 
-  <Leader>==    Begin "font size" mode
-  <Leader>++    Increment font size
-  <Leader>--    Decrement font size
-  <Leader>00    Revert to default font size
+==============================================================================
+2.  Usage                                           *fontsize-usage*
 
-(Note that by default, <Leader> is the backslash character, so for example
-<Leader>++ is invoked by pressing \++ from normal mode.)
+Each of the following mappings is invoked from normal mode:
 
-The above mappings initiate a "font size" mode in which the following
+  <Leader><Leader>=    Begin "font size" mode
+  <Leader><Leader>+    Increment font size
+  <Leader><Leader>-    Decrement font size
+  <Leader><Leader>0    Revert to default font size
+
+Note that by default, <Leader> is the backslash character, so for example
+<Leader><Leader>+ is invoked by pressing \\+ from normal mode.
+
+The above mappings also initiate a "font size" mode in which the following
 additional individual keys become active:
 
   +          Increment font size (may also use = to avoid shift key)
@@ -35,18 +40,44 @@ additional individual keys become active:
   <SPACE>    Quit "font size" mode
   <CR>       Quit "font size" mode
 
-Other keys pressed will exit "font size" mode and perform their normal
-function.
+Other keys pressed will exit "font size" mode and then perform their normal
+function (e.g., pressing "j" will cancel "font size" mode and move down one
+line).
 
 In addition, "font size" mode will automatically timeout after |timeoutlen|
 milliseconds have elapsed without a keypress, because "font size" mode is
 based on mappings.
 
+While "font size" mode is active, the prompt "(fontsize)" will be shown if
+'showcmd' is set.
+
 Details on customization are found in the |fontsize-customization| section
 of the included documentation.
 
 ===============================================================================
-Customization                                       *fontsize-customization*
+3.  Installation                                    *fontsize-installation*
+
+To install directly in your personal |vimfiles| directory (~/.vim under
+unix or %HOMEPATH%\vimfiles under windows), unpack the downloaded archive
+to yield these files: >
+
+  autoload/fontsize.vim
+  plugin/fontsize.vim
+  doc/fontsize.txt
+
+Then, re-generate your help tags with Vim's |:helptags| command, e.g.: >
+
+  :helptags ~/.vim/doc
+
+You may also install fontdetect using a tool like pathogen[1] by unpacking
+the downloaded archive into a bundle directory, e.g.: >
+
+  ~/.vim/bundle/vim-fontdetect
+
+[1]: https://github.com/tpope/vim-pathogen
+
+===============================================================================
+4.  Customization                                   *fontsize-customization*
 
 The default value of |timeoutlen| is 1000 milliseconds (1 second), which might
 be too fast.  The author uses the following setting in his |vimrc|: >
@@ -56,7 +87,7 @@ be too fast.  The author uses the following setting in his |vimrc|: >
 
 You may change the mappings that initiate "font size" mode by creating
 your own mappings in your |vimrc|file.  For example, use these mappings
-to use single characters instead of doubled ones:
+to use <Leader> instead of <Leader><Leader> as a prefix:
 
   nmap <silent> <Leader>=  <Plug>FontsizeBegin
   nmap <silent> <Leader>+  <Plug>FontsizeInc
@@ -88,7 +119,19 @@ the font names.  For example, on Chinese Windows XP, the fonts are encoded in
 (Converting font name encodings requires the +iconv feature.)
 
 ===============================================================================
-ChangeLog                                           *fontsize-changelog*
+5.  ChangeLog                                       *fontsize-changelog*
+
+Version 0.3.0    Date    2013-10-13                 *fontsize-changelog-0.3.0*
+
+  - Switch default key bindings to <Leader><Leader>x instead of <Leader>xx.
+
+  - Convert to bundle-based installation instructions.
+
+  - Use getfontname() instead of reading 'guifont', allowing fontsize to work
+    when 'guifont' was not set or was set to a comma-separated list of fonts
+    where the first font was not valid.
+
+  - Use "(fontsize)" string for prettier-looking 'showcmd' output.
 
 Version 0.2.1    Date    2013-09-24                 *fontsize-changelog-0.2.1*
 
@@ -116,65 +159,18 @@ Version 0.1.0    Date    2009-10-11                 *fontsize-changelog-0.1.0*
   - Initial release.
 
 ===============================================================================
-Installation                                        *fontsize-installation*
+6.  Credits                                         *fontsize-credits*
 
-Must be installed using the Vimball plugin, found here:
-http://vim.sourceforge.net/scripts/script.php?script_id=1502
+Developed by Michael Henry (vim at drmikehenry.com).
 
-Open fontsize-x.y.z.vba with Vim: >
+Distributed under Vim's |license|.
 
-  vim fontsize-x.y.z.vba
+Git repository:       https://github.com/drmikehenry/vim-fontsize
 
-With the Vimball open in Vim, extract the files with the :source command: >
-
-  :source %
-
-===============================================================================
-Credits                                             *fontsize-credits*
-
-Author: Michael Henry <vim at drmikehenry.com>
-
-Thanks to all the tireless posters on the Vim mailing lists.  I have
-benefitted greatly from the detailed and helpful postings contributed daily
-by the helpful Vim community.
-
-Thanks also to Andy Wokula, author of the bufmru plugin
+Thanks to Andy Wokula, author of the bufmru plugin
 (http://www.vim.org/scripts/script.php?script_id=2346),
 for writing a clever plugin from which I learned to use
 chained keymaps to implement "modes".
-
-===============================================================================
-TODO                                                *fontsize-todo*
-
-- Handle empty 'guifont'.  Figure out a way to set 'guifont' to the same font
-  Vim uses as a per-platform default, so the size can be read and changed.
-
-- Better support for fractional font sizes.  Currently, they are permitted,
-  but only the integer portion is considered.  Therefore it's not possible to
-  decrement from 1.5 to 0.5, since the integer portion would become zero
-  (which is disallowed).
-
-- Better support for comma-separated fonts in guifont.  Currently, they are
-  permitted, but only the first font in the list is updated.  If that font
-  isn't present on the system and Vim is not using it, size changes don't
-  work.  Consider rotation through comma-separated fonts via < and >.
-
-===============================================================================
-Distribution                                        *fontsize-distribution*
-
-- Ensure version and date are correct at top of doc/fontsize.txt.
-- Verify date and changes in ChangeLog in doc/fontsize.txt.
-- Visually select the following lines:
-
-plugin/fontsize.vim
-autoload/fontsize.vim
-doc/fontsize.txt
-
-- Create Vimball based on version number (e.g., 0.1.0) as follows: >
-
-  :MkVimball! fontsize-0.1.0
-
-- Distribute fontsize-0.1.0.vba.
 
 ===============================================================================
 vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:
