@@ -44,3 +44,9 @@ bsnip("subsec", "subsection heading (---)", r"""
 
 $0
 """)
+
+bsnip("func", "function()", r"""
+function! ${1:name}($2)
+    $0
+endfunction
+""")

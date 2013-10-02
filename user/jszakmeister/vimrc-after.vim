@@ -9,6 +9,16 @@ else
     let g:FontSize = 14
 endif
 
+function! AdjustSzakDarkColors()
+    " This is here to help me test out adjustments to the color scheme.
+    hi IndentGuidesOdd  guibg=#141414 ctermbg=233
+    hi IndentGuidesEven guibg=#212121 ctermbg=235
+endfunction
+
+if g:colors_name == 'szakdark'
+    call AdjustSzakDarkColors()
+endif
+
 " =============================================================
 " Detect custom exectuables
 " =============================================================
@@ -472,6 +482,11 @@ augroup jszakmeister_vimrc
     " Set makeprg for *.snippet.py files.
     autocmd BufRead,BufNewFile *.snippets.py
                 \ setlocal makeprg=make\ -s\ -C\ %:p:h
+
+    " Adjustments for my color scheme.
+    autocmd ColorScheme * if g:colors_name == 'szakdark' |
+                \ call AdjustSzakDarkColors() |
+                \ endif
 augroup END
 
 " =============================================================
