@@ -1,12 +1,13 @@
 *fontdetect.txt*  Plugin to detect installed fonts
-*fontdetect*      Version 0.2.1
+*fontdetect*      Version 0.2.2
 
 ==============================================================================
 1.  Introduction                                    |fontdetect-intro|
 2.  Installation                                    |fontdetect-installation|
 3.  Usage                                           |fontdetect-usage|
-4.  References                                      |fontdetect-references|
-5.  Credits                                         |fontdetect-credits|
+4.  ChangeLog                                       |fontdetect-changelog|
+5.  References                                      |fontdetect-references|
+6.  Credits                                         |fontdetect-credits|
 
 ==============================================================================
 1.  Introduction                                    *fontdetect-intro*
@@ -50,7 +51,7 @@ Then, re-generate your help tags with Vim's |:helptags| command, e.g.: >
 You may also install fontdetect using a tool like pathogen[1] by unpacking
 the downloaded archive into a bundle directory, e.g.: >
 
-  ~/.vim/bundle/vim-fontdetect
+  ~/.vim/bundle/fontdetect
 
 [1]: https://github.com/tpope/vim-pathogen
 
@@ -81,13 +82,28 @@ fontdetect#firstFontFamily([{fontFamilies}])    |fontdetect#firstFontFamily|
         \ "Consolas"]) . ":h14"
 
 ===============================================================================
-4.  References                                      *fontdetect-references*
+4.  ChangeLog                                       |fontdetect-changelog|
+
+Version 0.2.2    Date    2013-10-03                 *fontdetect-changelog-0.2.2*
+
+  - Documentation reorganization.
+
+Version 0.2.1    Date    2013-09-23                 *fontdetect-changelog-0.2.1*
+
+  - Restore cpoptions correctly.
+
+Version 0.2.0    Date    2013-09-17                 *fontdetect-changelog-0.2.0*
+
+  - Initial release.
+
+===============================================================================
+5.  References                                      *fontdetect-references*
 
 - Method of listing installed fonts on OS X:
   http://stackoverflow.com/questions/1113040/list-of-installed-fonts-os-x-c
 
 ===============================================================================
-5.  Credits                                         *fontdetect-credits*
+6.  Credits                                         *fontdetect-credits*
 
 Developed by Michael Henry (vim at drmikehenry.com).
 

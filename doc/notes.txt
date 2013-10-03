@@ -702,7 +702,7 @@ See |fixkey.txt| for details on setting up your terminal.
 FONTDETECT                                              *notes_fontdetect*
   Detect installed fonts                                |fontdetect.txt|
 
-Version 0.2.1 (a111482) from https://github.com/drmikehenry/vim-fontdetect
+Version 0.2.2 (9770b2c) from https://github.com/drmikehenry/vim-fontdetect
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
