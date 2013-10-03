@@ -66,8 +66,8 @@ nnoremap <leader>w <C-w>v<C-w>l
 
 " I often want to close a buffer without closing the window.  Using
 " :BW also drops the associated metadata.
-nnoremap <leader><leader>d :BW<CR>
-nnoremap <leader><leader>D :BW!<CR>
+nnoremap <leader><leader>d :lclose<CR>:BW<CR>
+nnoremap <leader><leader>D :lclose<CR>:BW!<CR>
 
 " Shortcut for clearing CtrlP caches
 nnoremap <Leader><Leader>r :<C-U>CtrlPClearAllCaches<CR>
