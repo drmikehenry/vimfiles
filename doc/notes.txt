@@ -10,23 +10,26 @@
 3.  Plugins                                             |notes_plugins|
     Align - Align things into columns                   |notes_align|
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
-    bufmru - Most-recently-used buffer switcher         |notes_bufmru|
+    BufMRU - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
+    Clojure-static - Edit Clojure without runtime       |notes_clojure-static|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
+    ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
-    ColorSamplerPack - Color schemes and theme menu     |notes_colorsampler|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
     Endwise - End certain structures automatically      |notes_endwise|
     Eunuch - helpers for UNIX                           |notes_eunuch|
     Extline - for extending lines                       |notes_extline|
+    Fireplace - Access the Clojure nREPL from Vim       |notes_fireplace|
     Fixkey - Fix key code for console Vim               |notes_fixkey|
     Fontdetect - Detect installed fonts                 |notes_fontdetect|
     Fontsize - increment/decrement font size            |notes_fontsize|
-    Fugitive - A wrapper for Git in Vim                 |notes_fugitive|
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
+    Fugitive - A wrapper for Git in Vim                 |notes_fugitive|
     Grep - Wrapper for grep/xargs                       |notes_grep|
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
+    Indent-guides - Adds indent guides                  |notes_indent-guides|
     JavaComplete - Java Omnicompletion                  |notes_javacomplete|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
     Less - Syntax highlighting for LessCSS              |notes_less|
@@ -34,6 +37,8 @@
     LoremIpsum - Generate dummy text                    |notes_loremipsum|
     LustyExplorer - File/buffer switcher w/incr. search |notes_lustyexplorer|
     LustyJuggler - Quick access to recent buffers       |notes_lustyjuggler|
+    ManpageView                                         |notes_manpageview|
+    Markdown - Markdown syntax support                  |notes_markdown|
     Matchit - Extended matching with '%'                |notes_matchit|
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
@@ -43,19 +48,20 @@
     Project - Managing "projects" of files              |notes_project|
     Python - Python Syntax file with folding            |notes_python|
     PythonComplete - Python Omnicompletion              |notes_pythoncomplete|
+    Rainbow Parentheses - Highlight nested parens       |notes_rainbow-parens|
     Repeat - Repeat operations for supported plugins    |notes_repeat|
-    Rainbow Parenthesis - Highlight nested parens       |notes_rainbow-parens|
+    Redl - Provides a debug REPL to Clojure             |notes_redl|
     RunView - Run lines through filter into buffer      |notes_runview|
     Scriptease - Debugging tools for Vimscripts         |notes_scriptease|
     ScrollColor - Scroll through color schemes          |notes_scrollcolor|
     Selfdot - Changes "." to "self." in Python          |notes_selfdot|
-    SuperTab - Use <TAB> for all completion             |notes_supertab|
     Surround - Manipulating "surroundings"              |notes_surround|
-    Svn - View Subversion diffs while writing commit log|notes_svn|
+    Svn - View Subversion diffs while writing log       |notes_svn|
     SwapIt - Cycle through related words                |notes_swapit|
     Syntastic - Syntax checking hacks for Vim           |notes_syntastic|
     Tagbar - Source code browser                        |notes_tagbar|
     TagSignature - Balloon signatures for tags          |notes_tagsignature|
+    Tcomment - Comment lines in a program               |notes_tcomment|
     TextObj-Diff - Diff-based text objects              |notes_textobj-diff|
     TextObj-Function - Function-based text objects      |notes_textobj-func|
     TextObj-Indent - Indentation-based text objects     |notes_textobj-indent|
@@ -63,13 +69,8 @@
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
     ToggleCursor - Changes cursor shape in terminal     |notes_togglecursor|
     UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
-    vcscommand - Version Control System integration     |notes_vcscommand|
+    VCScommand - Version Control System integration     |notes_vcscommand|
     VimBall - Vim "package manager"                     |notes_vimball|
-    vim-clojure-static - Edit Clojure without runtime   |notes_vimclj-static|
-    vim-fireplace - Access the Clojure nREPL from Vim   |notes_vim-fireplace|
-    vim-markdown - Markdown syntax support              |notes_vim-markdown|
-    vim-indent-guides - Adds indent guides              |notes_indent-guides|
-    vim-redl - Provides a debug REPL to Clojure         |notes_vim-redl|
     Vis - The Visual Block Tool                         |notes_vis|
     VisIncr - Increment visually selected areas         |notes_visincr|
     VisSort - Sort visually selected areas              |notes_vissort|
@@ -456,10 +457,10 @@ BUFMRU                                                  *notes_bufmru*
 
 Usage:
   KEY(S)            ACTION
-  <Space>           switch to the most recently used buffer and enter Bufmru
+  <Space>           switch to the most recently used buffer and enter BufMRU
                     mode.
 
-  in BUFMRU MODE:
+  in BufMRU MODE:
   f  b              reach more MRU buffers (forward/backward)
   <Enter>           accept current choice
   q                 quit the mode, go back to start buffer (forcibly)
@@ -467,10 +468,10 @@ Usage:
   The mode times out after 'timeoutlen' ms.  A key not mapped in the mode
   (e.g. <Space>) quits the mode and executes as usual.
 
-Note: All unneeded keys are unmapped in Bufmru mode to avoid collisions with
+Note: All unneeded keys are unmapped in BufMRU mode to avoid collisions with
 console-mode Vim's Arrow keys (and other sequences that start with <Escape>).
 This maximizes buffer switching speed without needing to press the
-often-redundant <Enter> to exit Bufmru mode.
+often-redundant <Enter> to exit BufMRU mode.
 
 Version 3.3 from http://www.vim.org/scripts/script.php?script_id=2346
 
@@ -499,6 +500,18 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
+CLOJURE-STATIC                                          *notes_clojure-static*
+  Edit Clojure without runtime (REPL) environment       |clojure.txt|
+
+Syntax, indent, filetype, and other miscellaneous support for editing Clojure
+without having a runtime environment.
+
+Version 2013-04-26 (949adf7) from git://github.com/guns/vim-clojure-static.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 CLOSETAG                                                *notes_closetag*
   Close XML and HTML tags automatically
 
@@ -509,6 +522,20 @@ Installation:
 - Install as ~/.vim/scripts/closetag.vim
 - In ~/.vim/scripts.vim, source the script as part of per-filetype setup: >
     runtime scripts/closetag.vim
+
+------------------------------------------------------------------------------
+COLORSAMPLERPACK                                        *notes_colorsamplerpack*
+  Color schemes and theme menu
+
+Schemes recommended by Matt Gilbert:
+- nuvola
+- ps_color
+- darkblue2
+
+Version 8.03 from http://www.vim.org/scripts/script.php?script_id=625
+
+Installation:
+- Unzip in ~/.vim/
 
 ------------------------------------------------------------------------------
 CTRLP                                                   *notes_ctrlp*
@@ -568,20 +595,6 @@ Installation:
    endf
 
 ------------------------------------------------------------------------------
-COLORSAMPLERPACK                                        *notes_colorsampler*
-  Color schemes and theme menu
-
-Schemes recommended by Matt Gilbert:
-- nuvola
-- ps_color
-- darkblue2
-
-Version 8.03 from http://www.vim.org/scripts/script.php?script_id=625
-
-Installation:
-- Unzip in ~/.vim/
-
-------------------------------------------------------------------------------
 DUAL                                                    *notes_dual*
   Dual color scheme (gvim, vim)                         |notes_dual|
 
@@ -592,36 +605,6 @@ Installation:
 
 Use: >
     :colorscheme dual
-
-------------------------------------------------------------------------------
-EXTLINE                                                 *notes_extline*
-  Extend lines (e.g., for underlined titles)            |extline.txt|
-
-CTRL-L CTRL-L     Auto-line update
-CTRL-L CTRL-H     Horizontal line update
-CTRL-L CTRL-U     Change to underlined title
-CTRL-L CTRL-O     Change to overlined title
-CTRL-L CTRL-I     Change to underlined and overlined title
-
-Single-line headings:
-CTRL-L =          Force Section heading (level 1)
-CTRL-L 1
-CTRL-L -          Force Subsection heading (level 2)
-CTRL-L 2
-CTRL-L ^          Force Subsubsection heading (level 3)
-CTRL-L 3
-CTRL-L "          Force Paragraph heading (level 4)
-CTRL-L 4
-CTRL-L '          Force level 5 heading
-CTRL-L 5
-
-Double-line headings:
-CTRL-L #          Force Part heading (level 9)
-CTRL-L 9
-CTRL-L *          Force Chapter heading (level 0)
-CTRL-L 0
-
-(Custom plugin)
 
 ------------------------------------------------------------------------------
 ENDWISE                                                 *notes_endwise*
@@ -658,6 +641,48 @@ Vim sugar for the UNIX shell commands that need it the most. Commands include:
   :W          Write every open window. Handy for kicking off tools like guard.
 
 Version 2012-12-16 (19621140) from https://github.com/tpope/vim-eunuch
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+EXTLINE                                                 *notes_extline*
+  Extend lines (e.g., for underlined titles)            |extline.txt|
+
+CTRL-L CTRL-L     Auto-line update
+CTRL-L CTRL-H     Horizontal line update
+CTRL-L CTRL-U     Change to underlined title
+CTRL-L CTRL-O     Change to overlined title
+CTRL-L CTRL-I     Change to underlined and overlined title
+
+Single-line headings:
+CTRL-L =          Force Section heading (level 1)
+CTRL-L 1
+CTRL-L -          Force Subsection heading (level 2)
+CTRL-L 2
+CTRL-L ^          Force Subsubsection heading (level 3)
+CTRL-L 3
+CTRL-L "          Force Paragraph heading (level 4)
+CTRL-L 4
+CTRL-L '          Force level 5 heading
+CTRL-L 5
+
+Double-line headings:
+CTRL-L #          Force Part heading (level 9)
+CTRL-L 9
+CTRL-L *          Force Chapter heading (level 0)
+CTRL-L 0
+
+(Custom plugin)
+
+------------------------------------------------------------------------------
+FIREPLACE                                               *notes_fireplace*
+  Access the Clojure nREPL from Vim                     |fireplace.txt|
+
+Provides an enhanced environment for editing Clojure code (including
+completion support), if you're connected via nREPL.
+
+Version 2013-04-19 (4f6b8e5) from git://github.com/tpope/vim-fireplace.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -881,6 +906,32 @@ Version 0.2.0 (c402018) from https://github.com/drmikehenry/vim-headerguard
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
+------------------------------------------------------------------------------
+INDENT-GUIDES                                            *notes_indent-guides*
+  Adds indent guides.                                    |indent-guides|
+
+Indent Guides is a plugin for visually displaying indent levels in Vim.  The
+guides can be toggled via <Leader>ig.  However, since we have some local
+customizations, it will not persist through changing buffers.
+
+Local Customizations:
+- Make the plugin work on a buffer basis, rather than a global one.
+- Set up a mechanism very similar to |g:SpellMap| and |b:SpellType| to control
+  the indent guides.  The variables are g:IndentGuidesMap and
+  b:IndentGuidesType.  See g:SpellMap documentation in vimrc for more detail
+  on how this mechanism works.
+- Indent guides is turned off default.  Use the following to turn it on: >
+    let g:IndentGuides = 1
+- Python is setup to use indent guides, if indent guides are enabled with the
+  above.
+- If your colorscheme has IndentGuidesOdd and IndentGuidesEven setup, then use
+  those colors instead of letting the plugin automatically chose the colors.
+
+Version 2013-06-23 (eec1b629) from
+git://github.com/nathanaelkane/vim-indent-guides.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 JAVACOMPLETE                                           *notes_javacomplete*
@@ -1247,6 +1298,24 @@ Installation:
     git add -f ~/.vim/bundle/manpageview/doc/tags
 
 ------------------------------------------------------------------------------
+MARKDOWN                                                 *notes_markdown*
+  Markdown syntax support
+
+Version 2013-06-24 (fccf76f6) from https://github.com/tpope/vim-markdown.
+
+Local Customizations:
+- Disable built-in embedded language support and setup our own--mainly to
+  prevent multiple inclusion of the syntax definitions for c.
+- The list of languages defaults to be the same as g:rstEmbeddedLangs.  Set
+  g:markdownEmbeddedLangs to override the list of available languages for
+  embedding.
+- Made syntax/mkd.vim delegate in syntax/markdown.vim to give anyone who sets
+  the filetype to "mkd" support for markdown.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 MATCHIT                                                 *notes_matchit*
   Extended matching with '%'                            |matchit|
 
@@ -1475,6 +1544,36 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
+REDL                                                    *notes_redl*
+  Provides an enchanced REPL experience for Clojure
+
+This plugin integrates Vim with a running Clojure JVM. It provides a repl that
+supports breakpoints, documentation lookup, source code navigation, and
+omnicompletion.
+
+You'll need to install the Clojure component. To get this, you just need to
+add 2 lines to your ~/.lein/profiles.clj.
+>
+  ; ensure that redl is loaded on jvm startup
+  :injections [(require '[redl core complete])]
+  ; ensures that redl is available on the classpath
+  :dependencies [[redl "0.1.0"]]
+<
+A minimal profiles.clj (including REDL, Spyscope, and lein pprint) would look
+like: >
+
+  {:user {:dependencies [[spyscope "0.1.2"]
+                         [redl "0.1.0"]]
+          :injections [(require 'spyscope.core)
+                       (require '[redl complete core])]
+          :plugins [[lein-pprint "1.1.1"]]}}
+<
+Version 2013-04-16 (96e2558e) from git://github.com/dgrnbrg/vim-redl.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 RUNVIEW                                                 *notes_runview*
   Run lines through filter into buffer                  |RunView|
 
@@ -1582,7 +1681,7 @@ Installation:
 
 ------------------------------------------------------------------------------
 SVN                                                     *notes_svn*
-  View Subversion diffs while writing commit log
+  View Subversion diffs while writing log
 
 Install this plugin as ~/.vim/ftplugin/svn.vim and use Vim as the
 editor for Subversion's command-line interface.  When editing a
@@ -1667,18 +1766,6 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-TAGSIGNATURE                                            *notes_tagsignature*
-  Balloon signatures for tags
-
-Displays the signature of a tag when you hover the mouse over that tag.
-Requires a tags file.
-
-Version r714 from http://www.vim.org/scripts/script.php?script_id=2714
-
-Installation:
-- Copy to ~/.vim/plugin/tag_signature.vim
-
-------------------------------------------------------------------------------
 TAGBAR                                                  *notes_tagbar*
   Source code browser                                   |tagbar.txt|
 
@@ -1699,6 +1786,18 @@ http://ctags.sourceforge.net/
 Added support for reStructuredText using rst2ctags.  rst2ctags can be found
 at https://github.com/jszakmeister/rst2ctags, and a copy has been embedded
 in $VIMFILES/tool/rst2ctags.
+
+------------------------------------------------------------------------------
+TAGSIGNATURE                                            *notes_tagsignature*
+  Balloon signatures for tags
+
+Displays the signature of a tag when you hover the mouse over that tag.
+Requires a tags file.
+
+Version r714 from http://www.vim.org/scripts/script.php?script_id=2714
+
+Installation:
+- Copy to ~/.vim/plugin/tag_signature.vim
 
 ------------------------------------------------------------------------------
 TCOMMENT                                                *notes_tcomment*
@@ -1947,105 +2046,6 @@ Installation:
 - Untar in ~/.vim/
 
 ------------------------------------------------------------------------------
-VIM-CLOJURE-STATIC                                      *notes_vimclj-static*
-  Edit Clojure without runtime (REPL) environment       |clojure.txt|
-
-Syntax, indent, filetype, and other miscellaneous support for editing Clojure
-without having a runtime environment.
-
-Version 2013-04-26 (949adf7) from git://github.com/guns/vim-clojure-static.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-VIM-FIREPLACE                                           *notes_vim-fireplace*
-  Access the Clojure nREPL from Vim                     |fireplace.txt|
-
-Provides an enhanced environment for editing Clojure code (including
-completion support), if you're connected via nREPL.
-
-Version 2013-04-19 (4f6b8e5) from git://github.com/tpope/vim-fireplace.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-VIM-MARKDOWN                                             *notes_vim-markdown*
-  Markdown syntax support
-
-Version 2013-06-24 (fccf76f6) from https://github.com/tpope/vim-markdown.
-
-Local Customizations:
-- Disable built-in embedded language support and setup our own--mainly to
-  prevent multiple inclusion of the syntax definitions for c.
-- The list of languages defaults to be the same as g:rstEmbeddedLangs.  Set
-  g:markdownEmbeddedLangs to override the list of available languages for
-  embedding.
-- Made syntax/mkd.vim delegate in syntax/markdown.vim to give anyone who sets
-  the filetype to "mkd" support for markdown.
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-VIM-INDENT-GUIDES                                        *notes_indent-guides*
-  Adds indent guides.                                    |indent-guides|
-
-Indent Guides is a plugin for visually displaying indent levels in Vim.  The
-guides can be toggled via <Leader>ig.  However, since we have some local
-customizations, it will not persist through changing buffers.
-
-Local Customizations:
-- Make the plugin work on a buffer basis, rather than a global one.
-- Set up a mechanism very similar to |g:SpellMap| and |b:SpellType| to control
-  the indent guides.  The variables are g:IndentGuidesMap and
-  b:IndentGuidesType.  See g:SpellMap documentation in vimrc for more detail
-  on how this mechanism works.
-- Indent guides is turned off default.  Use the following to turn it on: >
-    let g:IndentGuides = 1
-- Python is setup to use indent guides, if indent guides are enabled with the
-  above.
-- If your colorscheme has IndentGuidesOdd and IndentGuidesEven setup, then use
-  those colors instead of letting the plugin automatically chose the colors.
-
-Version 2013-06-23 (eec1b629) from
-git://github.com/nathanaelkane/vim-indent-guides.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-VIM-REDL                                                      *notes_vim-redl*
-  Provides an enchanced REPL experience for Clojure
-
-This plugin integrates Vim with a running Clojure JVM. It provides a repl that
-supports breakpoints, documentation lookup, source code navigation, and
-omnicompletion.
-
-You'll need to install the Clojure component. To get this, you just need to
-add 2 lines to your ~/.lein/profiles.clj.
->
-  ; ensure that redl is loaded on jvm startup
-  :injections [(require '[redl core complete])]
-  ; ensures that redl is available on the classpath
-  :dependencies [[redl "0.1.0"]]
-<
-A minimal profiles.clj (including REDL, Spyscope, and lein pprint) would look
-like: >
-
-  {:user {:dependencies [[spyscope "0.1.2"]
-                         [redl "0.1.0"]]
-          :injections [(require 'spyscope.core)
-                       (require '[redl complete core])]
-          :plugins [[lein-pprint "1.1.1"]]}}
-<
-Version 2013-04-16 (96e2558e) from git://github.com/dgrnbrg/vim-redl.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
 VIS                                                     *notes_vis*
   The Visual Block Tool                                 |vis.txt|
 
@@ -2208,7 +2208,7 @@ http://mysite.verizon.net/astronaut/vim/index.html
 4.  Extensions                                          *notes_extensions*
 
 ------------------------------------------------------------------------------
-C ADDITIONS                                              *notes_c_additions*
+C ADDITIONS                                             *notes_c_additions*
   Extra syntax highlighting for C
 
 Taken from: http://www.vim.org/scripts/script.php?script_id=3064.
@@ -2360,7 +2360,7 @@ Lusty Juggler - rapidly switch among buffers
 
 BufMRU - most-recently-used buffer switcher
 
-  <space> Switch to MRU buffer and enter Bufmru mode.
+  <space> Switch to MRU buffer and enter BufMRU mode.
 
   See |notes_bufmru| for more details.
 
