@@ -3,7 +3,7 @@
 
 ==============================================================================
 1.  Introduction                                    |headerguard-intro|
-2.  Installation                                    |headerguard-installation|
+2.  Usage                                           |headerguard-usage|
 3.  Installation                                    |headerguard-installation|
 4.  Customization                                   |headerguard-customization|
 5.  ChangeLog                                       |headerguard-changelog|
