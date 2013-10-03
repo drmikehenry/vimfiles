@@ -399,10 +399,11 @@ General bundle installation instructions: *bundle_installation*
 - Remove existing bundle (if any): >
   git rm -rf bundle-name
 - Acquire latest version using one of these techniques: >
-  git clone https://github.com/tpope/bundle-name
-  tar -zxf .../bundle-name-x.y.z.tar.gz
+  git clone https://github.com/tpope/vim-bundle-name
+  mkdir bundle-name; cd bundle-name; tar -zxf .../bundle-name-x.y.z.tar.gz
 - Rename extracted directory (if desirable), e.g.: >
   mv Bundle-Name-x.y.z bundle-name
+  mv vim-bundle-name bundle-name
 - Enter new bundle directory: >
   cd bundle-name
 - Switch to tag (if appropriate): >
@@ -1346,7 +1347,7 @@ otherwise you may not see your settings take effect.
 
 Also, the GUI version can make use of a "fancy" patched font.
 |Powerline-symbols-fancy| provides some information, but the README in
-bundle/vim-powerline/fontpatches/README.rst provides more information.
+bundle/powerline/fontpatches/README.rst provides more information.
 If you use Droid Sans Mono as your font, a patched version of the font is
 available here:
   https://github.com/jszakmeister/etc/blob/master/fonts/DroidSansMonoSlashed-Powerline.ttf
@@ -1703,8 +1704,7 @@ in $VIMFILES/tool/rst2ctags.
 TCOMMENT                                                *notes_tcomment*
   Comment lines in a program                            |tcomment.txt|
 
-An extensible & universal comment vim-plugin that also handles embedded
-filetypes.
+An extensible & universal comment plugin that also handles embedded filetypes.
 
 As operator (the prefix can be customized via |g:tcommentMapLeaderOp1|
 and |g:tcommentMapLeaderOp2|):

@@ -128,7 +128,7 @@ endif
 " Pathogen plugin management
 " -------------------------------------------------------------
 
-runtime bundle/vim-pathogen/autoload/pathogen.vim
+runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
 
 " Bundles in the "pre-bundle" directories will come earlier in the path
