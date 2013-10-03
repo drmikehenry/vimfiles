@@ -691,7 +691,7 @@ Installation:
 FIXKEY                                                  *notes_fixkey*
   Fix key code for console Vim                          |fixkey.txt|
 
-Version 0.3.1 (aad8372) from https://github.com/drmikehenry/vim-fixkey
+Version 0.3.2 (756cdf8) from https://github.com/drmikehenry/vim-fixkey
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
