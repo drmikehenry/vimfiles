@@ -649,31 +649,10 @@ Installation:
 EXTLINE                                                 *notes_extline*
   Extend lines (e.g., for underlined titles)            |extline.txt|
 
-CTRL-L CTRL-L     Auto-line update
-CTRL-L CTRL-H     Horizontal line update
-CTRL-L CTRL-U     Change to underlined title
-CTRL-L CTRL-O     Change to overlined title
-CTRL-L CTRL-I     Change to underlined and overlined title
+Version 0.2.0 (704ec96) from https://github.com/drmikehenry/vim-extline
 
-Single-line headings:
-CTRL-L =          Force Section heading (level 1)
-CTRL-L 1
-CTRL-L -          Force Subsection heading (level 2)
-CTRL-L 2
-CTRL-L ^          Force Subsubsection heading (level 3)
-CTRL-L 3
-CTRL-L "          Force Paragraph heading (level 4)
-CTRL-L 4
-CTRL-L '          Force level 5 heading
-CTRL-L 5
-
-Double-line headings:
-CTRL-L #          Force Part heading (level 9)
-CTRL-L 9
-CTRL-L *          Force Chapter heading (level 0)
-CTRL-L 0
-
-(Custom plugin)
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 FIREPLACE                                               *notes_fireplace*

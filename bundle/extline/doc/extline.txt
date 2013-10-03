@@ -1,12 +1,13 @@
 *extline.txt*      Plugin for extending lines (e.g., underlined titles)
-
-*extline*          Version 0.1.2
+*extline*          Version 0.2.0
 
 ==============================================================================
 1.  Introduction                                    |extline-intro|
 2.  Installation                                    |extline-installation|
-3.  Customization                                   |extline-customization|
-4.  Credits                                         |extline-credits|
+3.  Usage                                           |extline-usage|
+4.  Customization                                   |extline-customization|
+5.  ChangeLog                                       |extline-changelog|
+6.  Credits                                         |extline-credits|
 
 ==============================================================================
 1.  Introduction                                    *extline-intro*
@@ -43,7 +44,31 @@ conventions as follows:
     Level-5 heading
     '''''''''''''''
 
-The following mappings apply in Visual and Insert modes:
+Extline provides methods for adding these lines, adjusting them to fit as the
+section names changes, and for converting one level to another.
+
+[1]: http://docutils.sourceforge.net/rst.html
+[2]: http://sphinx-doc.org/
+
+===============================================================================
+2.  Installation                                    *extline-installation*
+
+Unzip the downloaded file in your personal |vimfiles| directory (~/.vim under
+unix or %HOMEPATH%\vimfiles under windows).  The following files will
+be unpacked: >
+
+  doc/extline.txt
+  plugin/extline.vim
+
+Finally, re-generate your help tags with the |:helptags| command, e.g.: >
+
+  :helptags ~/.vim/doc
+
+==============================================================================
+3.  Usage                                           *extline-usage*
+
+The following mappings apply in Visual and Insert modes (but, notably, NOT in
+Normal mode):
 
 CTRL-L CTRL-L     Auto-line update
 CTRL-L CTRL-H     Horizontal line update
@@ -62,14 +87,20 @@ CTRL-L 4
 CTRL-L '          Force level 5 heading (level 5)
 CTRL-L 5
 
-To insert a literal CTRL-L in insert mode, use CTRL-V CTRL-L (or CTRL-Q CTRL-L
+To insert a literal CTRL-L in Insert mode, use CTRL-V CTRL-L (or CTRL-Q CTRL-L
 if CTRL-V has been remapped as happens on Windows by default).
 
+Because Normal-mode CTRL-L already serves a useful function (redrawing the
+screen), extline does not create Normal-mode mappings.  To invoke from Normal
+mode, it's convenient to first enter blockwise Visual mode via CTRL-V (or
+CTRL-Q on Windows), then press CTRL-L CTRL-L (for example) to invoke the
+desired mapping from Visual mode.
+
 Each of the "change to xxx title" commands will convert an existing title to
-the desired format.  
+the desired format.
 
 The "horizontal line update" command will update an existing horizontal line
-of punctuation charcters to reach column 78.
+of punctuation characters to reach column 78.
 
 The "auto-line update" command will update an existing title or horizontal.
 
@@ -77,27 +108,29 @@ If a title has no pre-existing underline or overline, by default a Section
 heading will be used with a row of equals signs as an underline.
 
 ===============================================================================
-2.  Installation                                    *extline-installation*
+4.  Customization                                   *extline-customization*
 
-Unzip the downloaded file in your personal |vimfiles| directory (~/.vim under 
-unix or %HOMEPATH%\vimfiles under windows).  The following files will
-be unpacked: >
-
-  doc/extline.txt
-  plugin/extline.vim
-
-Finally, re-generate your help tags with the |:helptags| command, e.g.: >
-
-  :helptags ~/.vim/doc
+At present, nothing is conveniently customizable.
 
 ===============================================================================
-3.  Customization                                   *extline-customization*
+5.  ChangeLog                                       |extline-changelog|
 
+Version 0.2.0    Date    2013-10-03                 *extline-changelog-0.2.0*
+
+  - Partition into plugin and autoload components.
+
+  - Reorganize documentation.
+
+  - First public release.
 
 ===============================================================================
-4.  Credits                                         *extline-credits*
+6.  Credits                                         *extline-credits*
 
-Author: Michael Henry <vim at drmikehenry.com>
+Developed by Michael Henry (vim at drmikehenry.com).
+
+Distributed under Vim's |license|.
+
+Git repository:       https://github.com/drmikehenry/vim-extline
 
 ===============================================================================
 vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:spell:
