@@ -63,7 +63,7 @@ Then, re-generate your help tags with Vim's |:helptags| command, e.g.: >
 You may also install headerguard using a tool like pathogen[1] by unpacking
 the downloaded archive into a bundle directory, e.g.: >
 
-  ~/.vim/bundle/vim-headerguard
+  ~/.vim/bundle/headerguard
 
 [1]: https://github.com/tpope/vim-pathogen
 
@@ -160,7 +160,6 @@ Version 0.1.1    Date    2013-09-24               *headerguard-changelog-0.1.1*
 Version 0.1.0    Date    2007-09-14               *headerguard-changelog-0.1.0*
 
   - Initial release.
-
 
 ===============================================================================
 6.  Credits                                         |headerguard-credits|

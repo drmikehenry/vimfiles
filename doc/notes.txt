@@ -875,7 +875,7 @@ To add or update a header guard in a .h file: >
 
     :HeaderguardAdd
 
-Version 0.2.0 (c5316b2) from https://github.com/drmikehenry/vim-headerguard
+Version 0.2.0 (c402018) from https://github.com/drmikehenry/vim-headerguard
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
