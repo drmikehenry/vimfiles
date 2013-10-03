@@ -1,10 +1,10 @@
 *headerguard.txt*   Plugin for adding header guards to C/C++ header files
-*headerguard*       Version 0.2.0
+*headerguard*       Version 0.2.1
 
 ==============================================================================
 1.  Introduction                                    |headerguard-intro|
-2.  Usage                                           |headerguard-usage|
-3.  Installation                                    |headerguard-installation|
+2.  Installation                                    |headerguard-installation|
+3.  Usage                                           |headerguard-usage|
 4.  Customization                                   |headerguard-customization|
 5.  ChangeLog                                       |headerguard-changelog|
 6.  Credits                                         |headerguard-credits|
@@ -27,27 +27,8 @@ Headerguard provides methods for inserting and updating header guards, and for
 tailoring the header guard style to fit local conventions.  It checks for a
 pre-existing header guard, and if found, modifies the existing guard in-place.
 
-==============================================================================
-2.  Usage                                           *headerguard-usage*
-
-The following command is provided:                  *HeaderguardAdd*  >
-
-  :HeaderguardAdd                                   
-
-This will add a new header guard to the current file.  It checks for a
-pre-existing header guard, and if found, modifies the existing guard in-place.  
-
-Detection of pre-existing header guards is somewhat primitive.  The first two
-pre-processor directives in the file must be the pre-existing header guard's
-#ifndef (or #if !defined()) and #define directives, and the final directive in
-the file must be the corresponding #endif.  Pre-existing header guards not
-following this form won't be recognized and thus cannot be converted in-place.
-To avoid mistakenly adding another header guard with the same guard name,
-|HeaderguardAdd| will refuse to add a new header guard if it can find a
-#define of the guard name macro anywhere in the file.
-
 ===============================================================================
-3.  Installation                                    *headerguard-installation*
+2.  Installation                                    *headerguard-installation*
 
 To install directly in your personal |vimfiles| directory (~/.vim under
 unix or %HOMEPATH%\vimfiles under windows), unpack the downloaded archive
@@ -66,6 +47,25 @@ the downloaded archive into a bundle directory, e.g.: >
   ~/.vim/bundle/headerguard
 
 [1]: https://github.com/tpope/vim-pathogen
+
+==============================================================================
+3.  Usage                                           *headerguard-usage*
+
+The following command is provided:                  *HeaderguardAdd*  >
+
+  :HeaderguardAdd                                   
+
+This will add a new header guard to the current file.  It checks for a
+pre-existing header guard, and if found, modifies the existing guard in-place.  
+
+Detection of pre-existing header guards is somewhat primitive.  The first two
+pre-processor directives in the file must be the pre-existing header guard's
+#ifndef (or #if !defined()) and #define directives, and the final directive in
+the file must be the corresponding #endif.  Pre-existing header guards not
+following this form won't be recognized and thus cannot be converted in-place.
+To avoid mistakenly adding another header guard with the same guard name,
+|HeaderguardAdd| will refuse to add a new header guard if it can find a
+#define of the guard name macro anywhere in the file.
 
 ===============================================================================
 4.  Customization                                   *headerguard-customization*
@@ -146,6 +146,10 @@ below buffer-local function will take precedence over g:HeaderguardName(): >
 
 ===============================================================================
 5.  ChangeLog                                       |headerguard-changelog|
+
+Version 0.2.1    Date    2013-10-03               *headerguard-changelog-0.2.1*
+
+  - Documentation reorganization.
 
 Version 0.2.0    Date    2013-10-03               *headerguard-changelog-0.2.0*
 
