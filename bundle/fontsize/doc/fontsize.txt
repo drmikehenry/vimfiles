@@ -1,10 +1,10 @@
 *fontsize.txt*   Plugin for modifying guifont size
-*fontsize*       Version 0.3.0
+*fontsize*       Version 0.3.1
 
 ==============================================================================
 1.  Introduction                                    |fontsize-intro|
-2.  Usage                                           |fontsize-usage|
-3.  Installation                                    |fontsize-installation|
+2.  Installation                                    |fontsize-installation|
+3.  Usage                                           |fontsize-usage|
 4.  Customization                                   |fontsize-customization|
 5.  ChangeLog                                       |fontsize-changelog|
 6.  Credits                                         |fontsize-credits|
@@ -16,8 +16,30 @@ This plugin provides convenient mappings for changing the font size in Gvim.
 It defines a new "font size" mode wherein only a single keypress is needed to
 continue to increase or decrease the font size.
 
+===============================================================================
+2.  Installation                                    *fontsize-installation*
+
+To install directly in your personal |vimfiles| directory (~/.vim under
+unix or %HOMEPATH%\vimfiles under windows), unpack the downloaded archive
+to yield these files: >
+
+  autoload/fontsize.vim
+  plugin/fontsize.vim
+  doc/fontsize.txt
+
+Then, re-generate your help tags with Vim's |:helptags| command, e.g.: >
+
+  :helptags ~/.vim/doc
+
+You may also install fontdetect using a tool like pathogen[1] by unpacking
+the downloaded archive into a bundle directory, e.g.: >
+
+  ~/.vim/bundle/fontdetect
+
+[1]: https://github.com/tpope/vim-pathogen
+
 ==============================================================================
-2.  Usage                                           *fontsize-usage*
+3.  Usage                                           *fontsize-usage*
 
 Each of the following mappings is invoked from normal mode:
 
@@ -53,28 +75,6 @@ While "font size" mode is active, the prompt "(fontsize)" will be shown if
 
 Details on customization are found in the |fontsize-customization| section
 of the included documentation.
-
-===============================================================================
-3.  Installation                                    *fontsize-installation*
-
-To install directly in your personal |vimfiles| directory (~/.vim under
-unix or %HOMEPATH%\vimfiles under windows), unpack the downloaded archive
-to yield these files: >
-
-  autoload/fontsize.vim
-  plugin/fontsize.vim
-  doc/fontsize.txt
-
-Then, re-generate your help tags with Vim's |:helptags| command, e.g.: >
-
-  :helptags ~/.vim/doc
-
-You may also install fontdetect using a tool like pathogen[1] by unpacking
-the downloaded archive into a bundle directory, e.g.: >
-
-  ~/.vim/bundle/vim-fontdetect
-
-[1]: https://github.com/tpope/vim-pathogen
 
 ===============================================================================
 4.  Customization                                   *fontsize-customization*
@@ -121,7 +121,11 @@ the font names.  For example, on Chinese Windows XP, the fonts are encoded in
 ===============================================================================
 5.  ChangeLog                                       *fontsize-changelog*
 
-Version 0.3.0    Date    2013-10-13                 *fontsize-changelog-0.3.0*
+Version 0.3.1    Date    2013-10-03                 *fontsize-changelog-0.3.1*
+
+  - Documentation reorganization.
+
+Version 0.3.0    Date    2013-10-03                 *fontsize-changelog-0.3.0*
 
   - Switch default key bindings to <Leader><Leader>x instead of <Leader>xx.
 
