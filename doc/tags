@@ -32,7 +32,6 @@ ClearSwapList	swapit.txt	/*ClearSwapList*
 FSReturnCompanionFilenameString()	fswitch.txt	/*FSReturnCompanionFilenameString()*
 FSReturnReadableCompanionFilename()	fswitch.txt	/*FSReturnReadableCompanionFilename()*
 FSwitch()	fswitch.txt	/*FSwitch()*
-HeaderguardAdd	headerguard.txt	/*HeaderguardAdd*
 IDMY	visincr.txt	/*IDMY*
 IMDY	visincr.txt	/*IMDY*
 IYMD	visincr.txt	/*IYMD*
@@ -208,11 +207,6 @@ g:vimball_path_escape	pi_vimball.txt	/*g:vimball_path_escape*
 g:visincr_datedivset	visincr.txt	/*g:visincr_datedivset*
 grep-plugin	grep.txt	/*grep-plugin*
 grep.txt	grep.txt	/*grep.txt*
-headerguard	headerguard.txt	/*headerguard*
-headerguard-customization	headerguard.txt	/*headerguard-customization*
-headerguard-installation	headerguard.txt	/*headerguard-installation*
-headerguard-intro	headerguard.txt	/*headerguard-intro*
-headerguard.txt	headerguard.txt	/*headerguard.txt*
 loremipsum#Generate()	loremipsum.txt	/*loremipsum#Generate()*
 loremipsum#GenerateInline()	loremipsum.txt	/*loremipsum#GenerateInline()*
 loremipsum#Insert()	loremipsum.txt	/*loremipsum#Insert()*

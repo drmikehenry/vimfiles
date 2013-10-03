@@ -7,8 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
-2013-10-13
+2013-10-03
 ==========
+
+- Upgrade to headerguard 0.2.0; migrate it to bundle-based installation.
+  Version 0.2.0 provide buffer-local override capabilities for inserting
+  header guards.
 
 - BREAKING CHANGE: Upgrade to fontsize 0.3.0, migrating to bundle-based
   installation.  The default keystrokes have changed to <Leader><Leader>x

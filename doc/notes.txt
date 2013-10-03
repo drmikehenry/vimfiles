@@ -875,7 +875,11 @@ To add or update a header guard in a .h file: >
 
     :HeaderguardAdd
 
-Version 0.1.0 from http://www.vim.org/scripts/script.php?script_id=2021
+Version 0.2.0 (0d2d5cf) from https://github.com/drmikehenry/vim-headerguard
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
 
 ------------------------------------------------------------------------------
 JAVACOMPLETE                                           *notes_javacomplete*
