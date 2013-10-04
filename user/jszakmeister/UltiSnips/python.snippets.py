@@ -67,4 +67,12 @@ class ScriptError(Exception):
     pass
 
 $0
+""", aliases=['se'])
+
+wsnip("xrange", "xrange", r"""
+xrange($1)$0
+""", aliases = ['xr'])
+
+bsnip("rre", "raise RuntimeError()", r"""
+raise RuntimeError($1)$0
 """)
