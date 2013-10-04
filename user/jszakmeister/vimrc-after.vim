@@ -455,6 +455,32 @@ let g:syntastic_mode_map['active_filetypes'] =
             \ g:syntastic_mode_map['active_filetypes'] +
             \ ['html', 'less', 'sh', 'zsh', 'javascript']
 
+
+" -------------------------------------------------------------
+" Tagbar
+" -------------------------------------------------------------
+
+" Add support for Clojure.  It requires that your ctags have support for
+" Clojure.
+let g:tagbar_type_clojure = {
+    \ 'ctagstype': 'clojure',
+    \ 'ctagsbin' : 'ctags',
+    \ 'ctagsargs' : '-f - --sort=yes',
+    \ 'kinds' : [
+        \ 'n:namespaces',
+        \ 'f:functions',
+        \ 'p:private functions',
+        \ 'i:inline',
+        \ 'a:multimethod definitions',
+        \ 'b:multimethod instances',
+        \ 'c:definitions (once)',
+        \ 's:structures',
+        \ 'v:interns',
+        \ 'm:macros',
+        \ 'd:definitions'
+    \ ],
+\ }
+
 " =============================================================
 " Autocommands
 " =============================================================
