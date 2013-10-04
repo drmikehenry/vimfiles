@@ -2828,6 +2828,9 @@ function! SetupMarkup()
     runtime scripts/closetag.vim
     runtime scripts/xml.vim
     let b:SpellType = "<markup>"
+
+    " Re-synchronize syntax highlighting from start of file.
+    syntax sync fromstart
 endfunction
 command! -bar SetupMarkup call SetupMarkup()
 let g:SpellMap["<markup>"] = "<on>"
