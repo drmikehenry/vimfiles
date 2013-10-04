@@ -378,6 +378,9 @@ command! -bar SetupMarkdownSyntax call CustomSetupMarkdownSyntax()
 
 nnoremap <SNR>CtrlP.....<C-s>     :<C-U>CtrlPRTS<CR>
 
+" Reuse the current window when opening new files.
+let g:ctrlp_open_new_file = 'r'
+
 " -------------------------------------------------------------
 " Grep
 " -------------------------------------------------------------
