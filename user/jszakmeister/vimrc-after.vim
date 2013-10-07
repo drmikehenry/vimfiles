@@ -189,6 +189,12 @@ if !empty($SSH_TTY)
     hi Normal guibg=#0d280d
 endif
 
+" Alias '+' to '*'.  This makes it easier to cut and paste between Vim and
+" other applications.
+if has('unnamedplus')
+    set clipboard+=unnamedplus
+endif
+
 " -------------------------------------------------------------
 " Font selection
 " -------------------------------------------------------------
