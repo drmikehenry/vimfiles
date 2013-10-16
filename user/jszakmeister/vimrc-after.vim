@@ -132,8 +132,28 @@ vnoremap . :normal .<CR>
 " Yank to the system clipboard.
 vnoremap <Leader><Leader>y "+y
 
+function! SmartHome()
+    let c = col('.')
+    let l = getline('.')
+
+    if match(l, '^\s*$') == -1
+        if c == matchend(l, '^\s*')+1
+            return '0'
+        else
+            return '^'
+        endif
+    else
+        " The line is just whitespace, so we behave slightly different.
+        if c == matchend(l, '^\s*')
+            return '0'
+        else
+            return '$'
+        endif
+    endif
+endfunction
+
 " Smart Home and End keys.  From http://vim.wikia.com/wiki/Smart_home.
-noremap <expr> <Home> (col('.') == matchend(getline('.'), '^\s*')+1 ? '0' : '^')
+noremap <expr> <Home> SmartHome()
 noremap <expr> <End> (col('.') == match(getline('.'), '\s*$') ? '$' : 'g_')
 vnoremap <expr> <End> (col('.') == match(getline('.'), '\s*$') ? '$h' : 'g_')
 imap <Home> <C-o><Home>
