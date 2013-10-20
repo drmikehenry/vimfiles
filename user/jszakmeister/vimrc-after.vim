@@ -154,10 +154,7 @@ endfunction
 
 " Smart Home and End keys.  From http://vim.wikia.com/wiki/Smart_home.
 noremap <expr> <Home> SmartHome()
-noremap <expr> <End> (col('.') == match(getline('.'), '\s*$') ? '$' : 'g_')
-vnoremap <expr> <End> (col('.') == match(getline('.'), '\s*$') ? '$h' : 'g_')
 imap <Home> <C-o><Home>
-imap <End> <C-o><End>
 
 " =============================================================
 " Options
