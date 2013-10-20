@@ -26,6 +26,8 @@ from sniputil import put
 from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
 
+put("extends markdown\n")
+
 bsnip("ab", "Acked-by: ...", r"""
 Acked-by: John Szakmeister <john@szakmeister.net>
 """)
