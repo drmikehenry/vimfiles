@@ -135,26 +135,35 @@ vnoremap <Leader><Leader>y "+y
 function! SmartHome()
     let c = col('.')
     let l = getline('.')
+    if mode() == "i"
+        let prefix = "\<C-o>"
+        " I want the cursor to be 1 position after the match in insert mode.
+        let offset = 1
+    else
+        let prefix = ""
+        let offset = 0
+    endif
 
     if match(l, '^\s*$') == -1
         if c == matchend(l, '^\s*')+1
-            return '0'
+            return prefix . '0'
         else
-            return '^'
+            return prefix . '^'
         endif
     else
         " The line is just whitespace, so we behave slightly different.
-        if c == matchend(l, '^\s*')
-            return '0'
+        if c == matchend(l, '^\s*') + offset
+            return prefix . '0'
         else
-            return '$'
+            return prefix . '$'
         endif
     endif
 endfunction
 
-" Smart Home and End keys.  From http://vim.wikia.com/wiki/Smart_home.
+" Smart Home.  Idea taken from http://vim.wikia.com/wiki/Smart_home, but
+" tweaked by me.
 noremap <expr> <Home> SmartHome()
-imap <Home> <C-o><Home>
+inoremap <expr> <Home> SmartHome()
 
 " =============================================================
 " Options
