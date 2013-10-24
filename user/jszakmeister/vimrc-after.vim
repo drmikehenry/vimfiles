@@ -24,6 +24,10 @@ if g:colors_name == 'szakdark'
     call AdjustSzakDarkColors()
 endif
 
+" Turn on some Java-syntax related options.  Namely, let's color all
+" built-in classes and object methods.
+let java_highlight_all = 1
+
 " =============================================================
 " Detect custom exectuables
 " =============================================================
