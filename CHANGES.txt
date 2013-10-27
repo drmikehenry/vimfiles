@@ -19,6 +19,8 @@ require adjustment of per-user settings.
   Makefiles.  Now 'autoindent' is enabled and the colon key won't force a
   re-indentation.
 
+- Update fugitive plugin to version 2013-10-24 (34e2d253).
+
 2013-10-03
 ==========
 

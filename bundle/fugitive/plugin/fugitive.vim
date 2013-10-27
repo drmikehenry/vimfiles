@@ -64,6 +64,15 @@ function! s:shellslash(path)
   endif
 endfunction
 
+let s:git_versions = {}
+
+function! fugitive#git_version(...) abort
+  if !has_key(s:git_versions, g:fugitive_git_executable)
+    let s:git_versions[g:fugitive_git_executable] = matchstr(system(g:fugitive_git_executable.' --version'), "\\S\\+\n")
+  endif
+  return s:git_versions[g:fugitive_git_executable]
+endfunction
+
 function! s:recall()
   let rev = s:sub(s:buffer().rev(), '^/', '')
   if rev ==# ':'
@@ -243,7 +252,7 @@ function! s:repo_bare() dict abort
     return 0
   else
     return self.configured_tree() ==# ''
-  endtry
+  endif
 endfunction
 
 function! s:repo_translate(spec) dict abort
@@ -663,7 +672,7 @@ function! s:Status() abort
   try
     Gpedit :
     wincmd P
-    set foldmethod=syntax foldlevel=1
+    setlocal foldmethod=syntax foldlevel=1
     nnoremap <buffer> <silent> q    :<C-U>bdelete<CR>
   catch /^fugitive:/
     return 'echoerr v:errmsg'
@@ -717,11 +726,11 @@ function! s:stage_info(lnum) abort
   endwhile
   if !lnum
     return ['', '']
-  elseif getline(lnum+1) =~# '^# .*"git \%(reset\|rm --cached\) ' || getline(lnum) ==# '# Changes to be committed:'
+  elseif getline(lnum+1) =~# '^# .*\<git \%(reset\|rm --cached\) ' || getline(lnum) ==# '# Changes to be committed:'
     return [matchstr(filename, colon.' *\zs.*'), 'staged']
-  elseif getline(lnum+2) =~# '^# .*"git checkout ' || getline(lnum) ==# '# Changes not staged for commit:'
+  elseif getline(lnum+2) =~# '^# .*\<git checkout ' || getline(lnum) ==# '# Changes not staged for commit:'
     return [matchstr(filename, colon.' *\zs.*'), 'unstaged']
-  elseif getline(lnum+1) =~# '^# .*"git add/rm ' || getline(lnum) ==# '# Unmerged paths:'
+  elseif getline(lnum+1) =~# '^# .*\<git add/rm ' || getline(lnum) ==# '# Unmerged paths:'
     return [matchstr(filename, colon.' *\zs.*'), 'unmerged']
   else
     return [filename, 'untracked']
@@ -1504,7 +1513,7 @@ function! s:Move(force,destination)
   if a:destination =~# '^/'
     let destination = a:destination[1:-1]
   else
-    let destination = fnamemodify(s:sub(a:destination,'[%#]%(:\w)*','\=expand(submatch(0))'),':p')
+    let destination = s:shellslash(fnamemodify(s:sub(a:destination,'[%#]%(:\w)*','\=expand(submatch(0))'),':p'))
     if destination[0:strlen(s:repo().tree())] ==# s:repo().tree('')
       let destination = destination[strlen(s:repo().tree('')):-1]
     endif
@@ -1530,7 +1539,7 @@ function! s:Move(force,destination)
       return 'keepalt saveas! '.s:fnameescape(destination)
     endif
   else
-    return 'file '.s:fnameescape(s:repo().translate(':0:'.destination)
+    return 'file '.s:fnameescape(s:repo().translate(':0:'.destination))
   endif
 endfunction
 
@@ -2059,9 +2068,17 @@ function! s:BufReadIndex()
     else
       let cd = exists('*haslocaldir') && haslocaldir() ? 'lcd ' : 'cd '
       let dir = getcwd()
+      if fugitive#git_version() =~# '^0\|1\.[1-7]\.'
+        let cmd = s:repo().git_command('status')
+      else
+        let cmd = s:repo().git_command(
+              \ '-c', 'status.displayCommentPrefix=true',
+              \ '-c', 'color.status=false',
+              \ 'status')
+      endif
       try
         execute cd.'`=s:repo().tree()`'
-        call s:ReplaceCmd(s:repo().git_command('status'),index)
+        call s:ReplaceCmd(cmd, index)
       finally
         execute cd.'`=dir`'
       endtry
@@ -2152,7 +2169,7 @@ function! s:BufWriteIndexFile()
     endif
     let info = old_mode.' '.sha1.' '.stage."\t".path
     call writefile([info],tmp)
-    if has('win32')
+    if &shell =~# 'cmd'
       let error = system('type '.s:gsub(tmp,'/','\\').'|'.s:repo().git_command('update-index','--index-info'))
     else
       let error = system(s:repo().git_command('update-index','--index-info').' < '.tmp)
