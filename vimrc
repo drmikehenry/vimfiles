@@ -934,7 +934,15 @@ let &cedit = "<C-G>"
 function! ResetGuiFont()
     let &guifont=&guifont
 endfunction
-nnoremap <silent> <C-L> :nohlsearch<BAR>call ResetGuiFont()<CR><C-L>
+
+function! RefreshScreen()
+    call ResetGuiFont()
+    if &diff
+        diffupdate
+    endif
+endfunction
+command! RefreshScreen :call RefreshScreen()
+nnoremap <silent> <C-L> :RefreshScreen<CR>:nohlsearch<CR><C-L>
 
 " Work-around slow pasting to command-line; avoid a command-line
 " re-draw on every character entered by turning off Arabic shaping
