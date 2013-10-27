@@ -423,6 +423,16 @@ endfunction
 command! -bar SetupMarkdownSyntax call CustomSetupMarkdownSyntax()
 
 " =============================================================
+" Setup routines for lvimrc files
+" =============================================================
+
+function! GitLvimrc()
+    call SetupKernelSource()
+    call Highlight('nocommas', 'nolonglines')
+    call AppendSnippetDirs("snippets/git")
+endfunction
+
+" =============================================================
 " Plugin settings
 " =============================================================
 
