@@ -491,6 +491,9 @@ let s:project_whitelist = [
 let g:localvimrc_whitelist = resolve(expand('$HOME/projects/')) . '\(' .
             \ join(s:project_whitelist, '\|') . '\)/.*'
 
+" Turn off the sandbox, otherwise I can't turn off some highlighting features.
+let g:localvimrc_sandbox = 0
+
 " -------------------------------------------------------------
 " manpageview
 " -------------------------------------------------------------
