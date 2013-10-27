@@ -13,6 +13,9 @@ require adjustment of per-user settings.
 - Perform ``:diffupdate`` on <C-L> as part of screen refreshing.
 
 - Define ``SetupMakeIndent`` to override some indent-related settings for
+
+- Define first-cut experimental snippets for Makefiles.
+
   Makefiles.  Now 'autoindent' is enabled and the colon key won't force a
   re-indentation.
 
