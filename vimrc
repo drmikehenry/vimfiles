@@ -3373,6 +3373,12 @@ function! SetupMake()
 endfunction
 command! -bar SetupMake call SetupMake()
 
+function! SetupMakeIndent()
+    setlocal autoindent
+    setlocal indentkeys-=<:>
+endfunction
+command! -bar SetupMakeIndent call SetupMakeIndent()
+
 " -------------------------------------------------------------
 " Setup for help files.
 " -------------------------------------------------------------
