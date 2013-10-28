@@ -114,10 +114,20 @@ bsnip("text", "text code block", r"""
     $0
 """, flags="!")
 
+wsnip("math", "math block", r"""
+.. math::
+
+    $0
+""")
+
 # Markup
 
 wsnip("lit", "literal (code) markup", r"""
 \`\`${1:literal}\`\`$0
+""")
+
+wsnip("m", "inline math", r"""
+:math:\`$1\`$0
 """)
 
 # Handy helpers (for me).
