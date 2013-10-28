@@ -1604,6 +1604,10 @@ command! -bar L5 call s:L(5)
 " Toggle quickfix window.
 function! QuickFixWinToggle()
     let numOpenWindows = winnr("$")
+    if IsQuickFixWin()
+        " Move to previous window before closing QuickFix window.
+        wincmd p
+    endif
     cclose
     if numOpenWindows == winnr("$")
         " Window was already closed, so open it.
