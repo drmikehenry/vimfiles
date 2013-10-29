@@ -190,6 +190,9 @@ set list
 " I dislike wrapping being on by default.
 set nowrap
 
+" When I do turn it on though, I want to see a better line break character.
+let &showbreak = '↳   '
+
 " Ignore some Clojure/Java-related files.
 set wildignore+=target,asset-cache,out
 
