@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2013-10-29
+==========
+
+- Restore customized settings for the fswitch plugin which were accidentally
+  lost when adding the ability to override them with .lvimrc files.
+  The fswitch plugin provides the \of ("Other File") functionality (see :help
+  notes for details).
+
 2013-10-27
 ==========
 
