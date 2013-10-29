@@ -431,7 +431,7 @@ command! -bar SetupMarkdownSyntax call CustomSetupMarkdownSyntax()
 
 function! GitLvimrc()
     call SetupKernelSource()
-    call Highlight('nocommas', 'nolonglines')
+    call Highlight('nocommas', 'nolonglines', 'notabs')
     call AppendSnippetDirs("snippets/git")
 endfunction
 
