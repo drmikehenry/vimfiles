@@ -273,6 +273,7 @@ notes_lustyjuggler	notes.txt	/*notes_lustyjuggler*
 notes_manpageview	notes.txt	/*notes_manpageview*
 notes_markdown	notes.txt	/*notes_markdown*
 notes_matchit	notes.txt	/*notes_matchit*
+notes_misc	notes.txt	/*notes_misc*
 notes_netrw	notes.txt	/*notes_netrw*
 notes_omnicppcomplete	notes.txt	/*notes_omnicppcomplete*
 notes_paredit	notes.txt	/*notes_paredit*
@@ -289,6 +290,7 @@ notes_runview	notes.txt	/*notes_runview*
 notes_scriptease	notes.txt	/*notes_scriptease*
 notes_scrollcolor	notes.txt	/*notes_scrollcolor*
 notes_selfdot	notes.txt	/*notes_selfdot*
+notes_session	notes.txt	/*notes_session*
 notes_setup_vimfiles	notes.txt	/*notes_setup_vimfiles*
 notes_surround	notes.txt	/*notes_surround*
 notes_svn	notes.txt	/*notes_svn*

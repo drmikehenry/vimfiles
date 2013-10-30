@@ -2263,6 +2263,73 @@ augroup END
 " Setup Bash as default view to run.
 let g:runview_filtcmd="bash"
 
+
+" -------------------------------------------------------------
+" Session
+" -------------------------------------------------------------
+
+let g:session_directory = $VIM_CACHE_DIR . '/sessions'
+let g:session_autoload = 'yes'
+let g:session_autosave = 'no'
+let g:session_verbose_messages = 0
+let g:session_command_aliases = 1
+
+" Lifted from session.
+function! s:unescape(s)
+    " Undo escaping of special characters (preceded by a backslash).
+    let s = substitute(a:s, '\\\(.\)', '\1', 'g')
+    " Expand any environment variables in the user input.
+    let s = substitute(s, '\(\$[A-Za-z0-9_]\+\)', '\=expand(submatch(1))', 'g')
+    return s
+endfunction
+
+function! SaveSessionNoDefault(name, bang, command) abort
+    " Normally, don't let session save to the default session, unless:
+    "   * The session is already active, or
+    "   * The user ran the command with '!', or
+    "   * The default session already exists.
+    if a:bang != '!'
+        let name = s:unescape(a:name)
+        if empty(name)
+            let name = xolox#session#find_current_session()
+        endif
+        if empty(name)
+            let defaultSessionFound = 0
+            for session in xolox#session#get_names()
+                if session ==? g:session_default_name
+                    let defaultSessionFound = 1
+                    break
+                endif
+            endfor
+            if defaultSessionFound != 1
+                call xolox#misc#msg#warn("Please provide a session name.")
+                return
+            endif
+        endif
+    endif
+
+    call xolox#session#save_cmd(a:name, a:bang, a:command)
+endfunction
+
+function! OverrideSaveSession()
+    command! -bar -bang -nargs=?
+                \ -complete=customlist,xolox#session#complete_names
+                \ SaveSession
+                \ call SaveSessionNoDefault(<q-args>, <q-bang>, 'SaveSession')
+    if g:session_command_aliases
+        command! -bar -bang -nargs=?
+                    \ -complete=customlist,xolox#session#complete_names
+                    \ SessionSave
+                    \ call SaveSessionNoDefault(
+                    \   <q-args>, <q-bang>, 'SessionSave')
+    endif
+endfunction
+
+augroup local_session
+    autocmd!
+    autocmd VimEnter * call OverrideSaveSession()
+augroup END
+
 " -------------------------------------------------------------
 " Syntastic
 " -------------------------------------------------------------

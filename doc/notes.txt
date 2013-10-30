@@ -40,6 +40,7 @@
     ManpageView                                         |notes_manpageview|
     Markdown - Markdown syntax support                  |notes_markdown|
     Matchit - Extended matching with '%'                |notes_matchit|
+    Misc - Contains many useful Vimscript functions     |notes_misc|
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
     Paredit - Structured editing of Lisp S-expressions  |notes_paredit|
@@ -55,6 +56,7 @@
     Scriptease - Debugging tools for Vimscripts         |notes_scriptease|
     ScrollColor - Scroll through color schemes          |notes_scrollcolor|
     Selfdot - Changes "." to "self." in Python          |notes_selfdot|
+    Session - Provides better session management        |notes_session|
     Surround - Manipulating "surroundings"              |notes_surround|
     Svn - View Subversion diffs while writing log       |notes_svn|
     SwapIt - Cycle through related words                |notes_swapit|
@@ -1311,6 +1313,17 @@ Installation:
 - :helptags ~/.vim/doc
 
 ------------------------------------------------------------------------------
+MISC                                                    *notes_misc*
+  Contains many useful Vimscript functions              |misc.txt|
+
+Version 1.8.5 from https://github.com/xolox/vim-misc
+
+This plugin is also used by the session plugin.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 NETRW                                                   *notes_netrw*
   File reading and writing across networks              |netrw|
 
@@ -1638,6 +1651,30 @@ Version 1.0.2 from http://www.vim.org/scripts/script.php?script_id=2911
 
 Installation:
 - Copy to ~/.vim/plugin
+
+------------------------------------------------------------------------------
+SESSION                                                 *notes_session*
+  Provides better session management                    |session.txt|
+
+Version 2.4.9 from https://github.com/xolox/vim-session
+
+Note: this plugin requires the misc plugin.
+
+Local Customizations:
+- Autoloading (|g:session_autoload|) is enabled.
+- Autosaving (|g:session_autosave|) is turned off.
+- Aliases (|g:session_command_aliases|) have been turned on.  These versions
+  start with Session, so they're easier to remember.  For example,
+  |:SaveSession| has an alias named |:SessionSave|.
+- The |:SaveSession| command has been overridden to prevent accidentally
+  saving a default session with a plain |:SaveSession| command.  If you want
+  to save a default session, use the bang version of the command,
+  |:SaveSession!|, or ":SaveSession default".
+- The session storage (|g:session_directory|) has been configured to be
+  $VIM_CACHE_DIR/sessions.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 SURROUND                                                *notes_surround*
