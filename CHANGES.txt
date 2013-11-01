@@ -7,6 +7,16 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2013-10-30
+==========
+
+- Added the vim-session and vim-misc plugins.  The vim-session plugin provides
+  some nice session management features.  Use ``:SaveSession`` to save a
+  session, ``:OpenSession`` to load a saved session, and ``:CloseSession`` to
+  close the current session.  See ``:help notes_session`` for more information
+  about how vim-session is configured, or ``:help session.txt`` to see
+  vim-session's documentation
+
 2013-10-29
 ==========
 
