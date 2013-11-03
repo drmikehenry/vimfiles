@@ -2679,15 +2679,52 @@ set spelllang=en_us
 " highlight NonText gui=BOLD guifg=#4000FF guibg=#EFEFF7
 "highlight HG_Background gui=BOLD guibg=#EFEFF7
 
+" Return true if groupName exists.
+"   Calling hlexists() ought to suffice, but it can return true even though
+"   groupName has been cleared.  At startup, hlexists() correctly returns false
+"   for a groupName that has never been defined, but any time after groupName
+"   has been defined, hlexists() will be permanently stuck returning true,
+"   even after ``:highlight clear`` has clobbered the group's definition.
+"   The problem is that after ``:highlight clear``, the group still looks
+"   defined, but it now has the inactive value "xxx cleared".
+function! HighlightGroupExists(groupName)
+    let haveGroup = 0
+    if hlexists(a:groupName)
+        let regA = getreg("a")
+        let regTypeA = getregtype("a")
+        redir @a
+        execute "silent highlight " . a:groupName
+        redir END
+        let groupDef = @a
+        call setreg("a", regA, regTypeA)
+        if groupDef !~# "xxx cleared$"
+            let haveGroup = 1
+        endif
+    endif
+    return haveGroup
+endfunction
+
 function! HighlightDefineGroups()
-    if !hlexists("HG_Subtle")
-        hi HG_Subtle ctermfg=yellow  ctermbg=lightgray guibg=#efeff7
+    if !HighlightGroupExists("HG_Subtle")
+        if &background == "dark"
+            hi HG_Subtle  ctermfg=brown  ctermbg=darkgray  guibg=red       guifg=white
+        else
+            hi HG_Subtle  ctermfg=yellow ctermbg=lightgray guibg=#efeff7
+        endif
     endif
-    if !hlexists("HG_Warning")
-        hi HG_Warning ctermfg=yellow ctermbg=lightgray guibg=#ffffdd
+    if !HighlightGroupExists("HG_Warning")
+        if &background == "dark"
+            hi HG_Warning ctermfg=lightred  ctermbg=darkgray  guibg=#505000   guifg=lightgray
+        else
+            hi HG_Warning ctermfg=yellow ctermbg=lightgray guibg=#ffffdd
+        endif
     endif
-    if !hlexists("HG_Error")
-        hi HG_Error   ctermfg=red    ctermbg=lightgray guibg=#ffe0e0
+    if !HighlightGroupExists("HG_Error")
+        if &background == "dark"
+            hi HG_Error   ctermfg=white  ctermbg=darkred  guibg=red       guifg=white
+        else
+            hi HG_Error   ctermfg=red    ctermbg=lightgray guibg=#ffe0e0
+        endif
     endif
 endfunction
 
