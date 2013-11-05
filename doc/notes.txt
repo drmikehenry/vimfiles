@@ -29,7 +29,7 @@
     Grep - Wrapper for grep/xargs                       |notes_grep|
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
-    Hilinks - Display syntax hilighting stack           |notes_hilinks|
+    HiLinkTrace - Display syntax hilighting stack       |notes_hilinktrace|
     Indent-guides - Adds indent guides                  |notes_indent-guides|
     JavaComplete - Java Omnicompletion                  |notes_javacomplete|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
@@ -931,7 +931,7 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-HILINKS                                                 *notes_hilinks*
+HILINKTRACE                                             *notes_hilinktrace*
   Display syntax hilighting stack                       |hilinks|
 
 To toggle automatic display of syntax hilighting stack: >
@@ -941,6 +941,10 @@ To toggle automatic display of syntax hilighting stack: >
 Note: The non-bang :HLT (as well as the \hlt mapping) don't seem to work
 properly, probably because of an interaction with other plugins.  The
 :echo output seems to be lost in the one-shot :HLT mode.
+
+Local Customizations:
+
+- Disable mappings for <S-F10> and <Leader>hlt.
 
 Version 4l (lowercase "L") from
 http://www.drchip.org/astronaut/vim/index.html#HILINKS

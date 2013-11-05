@@ -1901,6 +1901,14 @@ nnoremap <Leader><Leader>u  :GundoToggle<CR>
 let g:gundo_close_on_revert = 1
 
 " -------------------------------------------------------------
+" HiLinkTrace
+" -------------------------------------------------------------
+
+" Disable default mappings by having a pre-existing (but useless)
+" mapping to <Plug>HiLinkTrace.
+:nnoremap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
+
+" -------------------------------------------------------------
 " indent-guides
 " -------------------------------------------------------------
 
