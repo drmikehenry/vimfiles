@@ -1,0 +1,67 @@
+*hilinks.txt*	Highlighting Links				Apr 03, 2013
+
+Author:  Charles E. Campbell  <NdrOchip@ScampbellPfamily.AbizM>
+	  (remove NOSPAM from Campbell's email first)
+Copyright: (c) 2008-2013 by Charles E. Campbell		*hilinks-copyright*
+           The VIM LICENSE applies to hilinks.vim, and hilinks.txt
+           (see |copyright|) except use "hilinks" instead of "Vim"
+	   NO WARRANTY, EXPRESS OR IMPLIED.  USE AT-YOUR-OWN-RISK.
+
+==============================================================================
+1. Contents					*hilinks* *hilinks-contents*
+     1. Contents : ............................. |hilinks|
+     2. Manual   : ............................. |hilinks-manual|
+     3. History  : ............................. |hilinks-history|
+
+==============================================================================
+2. Manual					*hilinks-manual*
+
+MAPS						*hlt*
+	\hlt  : reveals a linked list of highlighting from the top-level down
+	        to the bottom level for the cursor position.  For vim 7.1
+	        with patch 215, will also reveal the syntax stack at the cursor
+	        position.
+
+COMMANDS					*:HLT* *:HLT!* *:HLTm*
+	:HLT  : same as \hlt, but in a command format.
+	:HLT! : same as \hlt, but will execute on every CursorMoved event,
+	        so one can see the highlighting trace and syntax stack as
+		one moves the cursor.  The next :HLT! will toggle this mode
+		off.
+		May enable mouse-based balloons, too (see |hilinks-beval|).
+	:HLTm : same as :HLT! (provided so AsNeeded can trigger off it)
+	:HLTX : like :HLT, but also converts the colors into an xterm-256-color
+	        index
+	:HLTX!: like :HLT!, but also converts the colors into an xterm-256-color
+	        index
+	
+	NOTE: Vim 7.1 with patch#215 required for the syntax stack.
+
+BEVAL						*hilinks-beval*
+	By default and with |:HLT!|, if your vim supports |'beval'|, hilinks will enable
+	beval and install a ballon expression (|'bexpr'|).  You can
+	prevent that by putting >
+		let g:hilinks_nobeval= 1
+<	into your .vimrc .
+
+	This feature means that a hovering mouse will show a highlighting
+	trace when |:HLT!| is used to enable syntax and highlighting tracing
+	as you move the cursor.
+	
+
+==============================================================================
+3. History					*hilinks-history*
+
+   v4   Jan 10, 2008	* :HLT and :HLT! implemented
+        Feb 29, 2008	* shows foreground and background definitions
+	May 20, 2008	* (bugfix) wasn't working when patch#215 was missing
+	Feb 23, 2009	* (bugfix) the map was missing the new argument
+			* :HLTm implemented (so AsNeeded can use :HLTm)
+	Feb 28, 2013	* |'beval'| usage implemented
+	Apr 03, 2013	* included :HLTX and :HLTX! commands
+
+==============================================================================
+Modelines: {{{1
+vim:tw=78:ts=8:ft=help:fdm=marker:
+
+

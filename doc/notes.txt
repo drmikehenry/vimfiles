@@ -29,6 +29,7 @@
     Grep - Wrapper for grep/xargs                       |notes_grep|
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
+    Hilinks - Display syntax hilighting stack           |notes_hilinks|
     Indent-guides - Adds indent guides                  |notes_indent-guides|
     JavaComplete - Java Omnicompletion                  |notes_javacomplete|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
@@ -394,32 +395,74 @@ For help with plugins:
 
 - Adding local help files |add-local-help|
 
-General bundle installation instructions: *bundle_installation*
+General bundle installation instructions:               *bundle_installation*
+
 - Move to bundle directory: >
-  cd ~/.vim/bundle
+
+    cd ~/.vim/bundle
+
 - Move existing bundle (if any) to a backup directory (optional): >
-  mv bundle-name bundle-name~
+
+    mv bundle-name bundle-name~
+
 - Remove existing bundle (if any): >
-  git rm -rf bundle-name
+
+    git rm -rf bundle-name
+
 - Acquire latest version using one of these techniques: >
-  git clone https://github.com/tpope/vim-bundle-name
-  mkdir bundle-name; cd bundle-name; tar -zxf .../bundle-name-x.y.z.tar.gz
+
+  - Using a version-control system:
+
+      git clone https://github.com/tpope/vim-bundle-name bundle-name
+
+  - Using an archive file:
+
+      mkdir bundle-name
+      cd bundle-name
+      tar -zxf .../bundle-name-x.y.z.tar.gz
+      cd ..
+
+    or, if archive contains the bundle-name top-level directory:
+
+      tar -zxf .../bundle-name-x.y.z.tar.gz
+
+  - Using a Vimball:
+
+      mkdir bundle-name
+      vim .../bundle-name.vba.gz
+      :UseVimball ~/.vim/bundle/bundle-name
+      :q
+
 - Rename extracted directory (if desirable), e.g.: >
-  mv Bundle-Name-x.y.z bundle-name
-  mv vim-bundle-name bundle-name
+
+    mv Bundle-Name-x.y.z bundle-name
+    mv vim-bundle-name bundle-name
+
 - Enter new bundle directory: >
-  cd bundle-name
+    
+    cd bundle-name
+
 - Switch to tag (if appropriate): >
-  git checkout v2.1.0
+
+    git checkout v2.1.0
+
 - Test bundle until satisfied.
+
 - Remove unwanted hidden directories: >
-  rm -rf {.git,.bzr,.hg,.svn,.gitignore}
+
+    rm -rf {.git,.bzr,.hg,.svn,.gitignore,.VimballRecord}
+
 - Add clean bundle tree to Git: >
-  git add .
+
+    git add .
+
 - Process help tags (if any) in Vim: >
-  vim '+Helptags|q'
+
+    vim '+Helptags|q'
+
 - Force-add any documentation tag files: >
-  git add -f doc/tag*
+
+    git add -f doc/tag*
 
 Installed plugins:
 
@@ -883,6 +926,24 @@ To add or update a header guard in a .h file: >
     :HeaderguardAdd
 
 Version 0.2.1 (2c254b7) from https://github.com/drmikehenry/vim-headerguard
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+HILINKS                                                 *notes_hilinks*
+  Display syntax hilighting stack                       |hilinks|
+
+To toggle automatic display of syntax hilighting stack: >
+
+    :HLT!
+
+Note: The non-bang :HLT (as well as the \hlt mapping) don't seem to work
+properly, probably because of an interaction with other plugins.  The
+:echo output seems to be lost in the one-shot :HLT mode.
+
+Version 4l (lowercase "L") from
+http://www.drchip.org/astronaut/vim/index.html#HILINKS
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
