@@ -38,6 +38,24 @@ function! RtpPrepend(path)
     endif
 endfunction
 
+" -------------------------------------------------------------
+" Pathogen plugin management (part one)
+" -------------------------------------------------------------
+
+" A couple of bundles must be initialized early for use in "-before.vim"
+" scripts.
+
+runtime bundle/pathogen/autoload/pathogen.vim
+
+" We'd like to set fonts in "-before.vim".
+call pathogen#surround("bundle/fontdetect")
+
+" We'd like to set colorschemes in "-before.vim".
+call pathogen#surround("bundle/colorsamplepack")
+
+" Now restore $VIMFILES area to surround the other bundles, giving it higher
+" priority than the added bundles.
+call pathogen#surround("")
 
 " -------------------------------------------------------------
 " Customizing environment variables
@@ -125,10 +143,10 @@ if filereadable($VIMRC_BEFORE)
 endif
 
 " -------------------------------------------------------------
-" Pathogen plugin management
+" Pathogen plugin management (part two)
 " -------------------------------------------------------------
 
-runtime bundle/pathogen/autoload/pathogen.vim
+" Infect all remaining bundles.
 call pathogen#infect()
 
 " Bundles in the "pre-bundle" directories will come earlier in the path

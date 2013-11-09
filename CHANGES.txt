@@ -20,6 +20,9 @@ require adjustment of per-user settings.
 - Blacklist Consolas from using g:Powerline_symbols == "unicode", as that font
   doesn't properly support the needed Unicode symbols.
 
+- Enable fontdetect and colorsamplerpack bundles early for use in "-before.vim"
+  scripts.
+
 2013-11-05
 ==========
 
