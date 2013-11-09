@@ -23,6 +23,8 @@ require adjustment of per-user settings.
 - Enable fontdetect and colorsamplerpack bundles early for use in "-before.vim"
   scripts.
 
+- Allow g:DefaultFontFamilies to be set from "-before.vim" scripts.
+
 2013-11-05
 ==========
 
