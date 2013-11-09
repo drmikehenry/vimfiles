@@ -28,7 +28,6 @@
 :UseVimball	pi_vimball.txt	/*:UseVimball*
 :VimballList	pi_vimball.txt	/*:VimballList*
 Align-copyright	Align.txt	/*Align-copyright*
-ClearSwapList	swapit.txt	/*ClearSwapList*
 FSReturnCompanionFilenameString()	fswitch.txt	/*FSReturnCompanionFilenameString()*
 FSReturnReadableCompanionFilename()	fswitch.txt	/*FSReturnReadableCompanionFilename()*
 FSwitch()	fswitch.txt	/*FSwitch()*
@@ -50,8 +49,6 @@ OmniCpp_ShowAccess	omnicppcomplete.txt	/*OmniCpp_ShowAccess*
 OmniCpp_ShowPrototypeInAbbr	omnicppcomplete.txt	/*OmniCpp_ShowPrototypeInAbbr*
 OmniCpp_ShowScopeInAbbr	omnicppcomplete.txt	/*OmniCpp_ShowScopeInAbbr*
 RunView.txt	RunView.txt	/*RunView.txt*
-SwapIdea	swapit.txt	/*SwapIdea*
-SwapList	swapit.txt	/*SwapList*
 Vimball-copyright	pi_vimball.txt	/*Vimball-copyright*
 [%	matchit.txt	/*[%*
 ]%	matchit.txt	/*]%*
@@ -382,19 +379,6 @@ runview-option	RunView.txt	/*runview-option*
 runview-options	RunView.txt	/*runview-options*
 runview-swapwin	RunView.txt	/*runview-swapwin*
 runview-usage	RunView.txt	/*runview-usage*
-swapit-annoyances	swapit.txt	/*swapit-annoyances*
-swapit-bugs	swapit.txt	/*swapit-bugs*
-swapit-builtin	swapit.txt	/*swapit-builtin*
-swapit-cleanup	swapit.txt	/*swapit-cleanup*
-swapit-define	swapit.txt	/*swapit-define*
-swapit-filetype	swapit.txt	/*swapit-filetype*
-swapit-html	swapit.txt	/*swapit-html*
-swapit-installation	swapit.txt	/*swapit-installation*
-swapit-intro	swapit.txt	/*swapit-intro*
-swapit-multiword	swapit.txt	/*swapit-multiword*
-swapit-omnicomplete	swapit.txt	/*swapit-omnicomplete*
-swapit-requirements	swapit.txt	/*swapit-requirements*
-swapit-setup	swapit.txt	/*swapit-setup*
 v_:B	vis.txt	/*v_:B*
 v_[%	matchit.txt	/*v_[%*
 v_]%	matchit.txt	/*v_]%*

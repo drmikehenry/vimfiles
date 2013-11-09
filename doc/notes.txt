@@ -1787,31 +1787,11 @@ Works in Normal and Visual mode.
 
 E.g., with cursor on "true" pressing CTRL-A changes the word to "false".
 
-Version 0.3 from http://www.vim.org/scripts/script.php?script_id=2294
+Version 0.3.2 from http://www.vim.org/scripts/script.php?script_id=2294
 
 Installation:
-- Untar to ~/.vim
-For version 0.3, need the following patch: >
+- Follow bundle installation instructions (|bundle_installation|).
 
-  --- plugin/swapit.vim   (revision 549)
-  +++ plugin/swapit.vim   (revision 550)
-  @@ -327,14 +327,14 @@
-       else
-
-           if a:is_visual == 'yes'
-  -            if next_word =~ "\W"
-  +            if next_word =~ '\W'
-                   let in_visual = 1
-                   exec 'norm! gv"sp`[v`]'
-               else
-                   exec 'norm! gv"spb'
-               endif
-           else
-  -            if next_word =~ "\W"
-  +            if next_word =~ '\W'
-                   let in_visual = 1
-                   exec 'norm! maviw"sp`[v`]'
-               else
 ------------------------------------------------------------------------------
 SYNTASTIC                                                *notes_syntastic*
  Syntax checking hacks for vim                           |syntastic|

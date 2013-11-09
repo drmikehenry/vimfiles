@@ -1,3 +1,4 @@
+
 swapit.txt Extensible Keyword Swapper
 
 Author: Michael Brown <mjbrownie @ NOSPAMMY gmail.com>
@@ -184,6 +185,22 @@ Author: Michael Brown <mjbrownie @ NOSPAMMY gmail.com>
     currently only for CSS as of writing. I'd appreciate any ideas and
     additions in this area.
 
-    Please fork.
+    For additions please fork.
 
     http://github.com/mjbrownie/swapit/tree/master
+
+    Example of setting up a callback swapit function is as follows
+
+    Firstly define the callback function in the
+
+    after/ftplugin/<filetype>_swapit.vim file
+
+    Eg in after/ftplugin/css_swapit.vim
+
+    let b:swap_completefunc = 'cssswapit#CssSwapComplete'
+
+    then define a function in the autoload folder
+
+    autoload/cssswapit.vim. The function must take one argument specifying the
+    direction 'forward' or 'backward' and return 1 on a successful swap or 0
+    if no matches are made. Look at the cssswapit for an example.

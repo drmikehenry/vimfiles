@@ -25,6 +25,8 @@ require adjustment of per-user settings.
 
 - Allow g:DefaultFontFamilies to be set from "-before.vim" scripts.
 
+- Update swapit plugin to version 0.3.2.
+
 2013-11-05
 ==========
 
