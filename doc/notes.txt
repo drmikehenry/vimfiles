@@ -2398,12 +2398,26 @@ VIMRC_BEFORE, VIMRC_AFTER
 ------------------------------------------------------------------------------
 Colorschemes
 
-By default, vimfiles chooses a default colorscheme.  To override this,
-setup your preferred colorscheme either in a "-before.vim" file or in your
-~/.vimrc file (before "runtime vimrc").  For example, in your ~/.vimrc file: >
+By default, vimfiles chooses a default colorscheme.  To override this, setup
+your preferred colorscheme in a "-before.vim" file.  For example, for user
+drmikehenry, setup ~/.vim/user/drmikehenry/vimrc-before.vim with: >
 
   colorscheme nuvola
-  runtime vimrc
+
+------------------------------------------------------------------------------
+Fonts
+
+By default, vimfiles chooses a font.  To override this, setup your preferred
+font using a "-before.vim" file.  For example, for user drmikehenry,
+setup ~/.vim/user/drmikehenry/vimrc-before.vim with: >
+
+  let detectedFamily = fontdetect#firstFontFamily([
+      \ "Droid Sans Mono",
+      \ "Consolas"])
+  if detectedFamily != ""
+      let g:FontFamily = detectedFamily
+      let g:FontSize = 10
+  endif
 
 ------------------------------------------------------------------------------
 Spell checking

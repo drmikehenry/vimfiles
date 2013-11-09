@@ -25,6 +25,10 @@ set fileencodings=ucs-bom,utf-8,default,latin1
 " May also set 'bomb' to force use of a BOM (Byte Order Mark).
 " set fileencoding=
 
+" Set environment variable to directory containing this vimrc.  Expect absolute
+" directory $HOME/.vim on Unix or %USERPROFILE%\vimfiles on Windows.
+let $VIMFILES = expand("<sfile>:p:h")
+
 " -------------------------------------------------------------
 " runtimepath manipulation
 " -------------------------------------------------------------
@@ -47,15 +51,20 @@ endfunction
 
 runtime bundle/pathogen/autoload/pathogen.vim
 
-" We'd like to set fonts in "-before.vim".
-call pathogen#surround("bundle/fontdetect")
+" The calls to expand() below launder the slashes to backslashes
+" on Windows as well as expand environment variables.  This is
+" helpful to ensure that pathogen does not re-infect these plugins
+" (since pathogen doesn't normalize the slashes during comparisons).
+
+" We'd like to detect fonts in "-before.vim".
+call pathogen#surround(expand("$VIMFILES/bundle/fontdetect"))
 
 " We'd like to set colorschemes in "-before.vim".
-call pathogen#surround("bundle/colorsamplepack")
+call pathogen#surround(expand("$VIMFILES/bundle/colorsamplerpack"))
 
 " Now restore $VIMFILES area to surround the other bundles, giving it higher
 " priority than the added bundles.
-call pathogen#surround("")
+call pathogen#surround($VIMFILES)
 
 " -------------------------------------------------------------
 " Customizing environment variables
@@ -67,10 +76,6 @@ call pathogen#surround("")
 "
 " Environment variables are used instead of Vim variables to allow
 " configuration at the operating-system level outside of Vim.
-
-" Set environment variable to directory containing this vimrc.  Expect absolute
-" directory $HOME/.vim on Unix or %USERPROFILE%\vimfiles on Windows.
-let $VIMFILES = expand("<sfile>:p:h")
 
 " If local customizations directory exists, it takes precedence.
 call RtpPrepend($VIMFILES . "/local")
