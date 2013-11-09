@@ -29,6 +29,8 @@ require adjustment of per-user settings.
 
 - Update BufExplorer plugin to version 7.4.2.
 
+- Update ManPageView plugin to version 25l.
+
 2013-11-05
 ==========
 

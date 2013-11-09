@@ -1319,25 +1319,10 @@ Installation:
 MANPAGEVIEW                                             *notes_manpageview*
   File reading and writing across networks              |manpageview|
 
-Version 25g from http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
+Version 25l from http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
 
 Installation:
-- Distributed as a |vimball|  >
-
-    mkdir ~/.vim/bundle/manpageview
-    vim manpageview.vba.gz
-    :UseVimball ~/.vim/bundle/manpageview
-    :q
-
-- Remove .VimballRecord: >
-    rm ~/.vim/bundle/manpageview/.VimballRecord
-
-- Update help tags: >
-    vim '+:Helptags|q'
-
-- Add bundle and helptags: >
-    git add ~/.vim/bundle/manpageview
-    git add -f ~/.vim/bundle/manpageview/doc/tags
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 MARKDOWN                                                 *notes_markdown*

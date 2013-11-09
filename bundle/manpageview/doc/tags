@@ -42,8 +42,12 @@ manpageview-pageup	manpageview.txt	/*manpageview-pageup*
 manpageview-perl	manpageview.txt	/*manpageview-perl*
 manpageview-php	manpageview.txt	/*manpageview-php*
 manpageview-python	manpageview.txt	/*manpageview-python*
+manpageview-search	manpageview.txt	/*manpageview-search*
 manpageview-shell	manpageview.txt	/*manpageview-shell*
 manpageview-suggest	manpageview.txt	/*manpageview-suggest*
+manpageview-updates	manpageview.txt	/*manpageview-updates*
 manpageview-usage	manpageview.txt	/*manpageview-usage*
 manpageview.txt	manpageview.txt	/*manpageview.txt*
 manpageview_extend	manpageview.txt	/*manpageview_extend*
+mpv-history	manpageview.txt	/*mpv-history*
+mpv-search	manpageview.txt	/*mpv-search*

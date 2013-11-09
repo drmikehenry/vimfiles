@@ -1,4 +1,4 @@
-*manpageview.txt*	Man Page Viewer			Mar 02, 2013
+*manpageview.txt*	Man Page Viewer			Apr 05, 2013
 
 Author:  Charles E. Campbell  <NdrchipO@ScampbellPfamily.AbizM>
 	 (remove NOSPAM from Campbell's email first)
@@ -22,8 +22,10 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 	     Extending ManPageView..................: |manpageview-extend|
 	     Manpageview Suggestion.................: |manpageview-suggest|
 	     From the Shell.........................: |manpageview-shell|
+	     Manpageview History....................: |manpageview-history|
+	     Manpageview Search.....................: |manpageview-search|
 	3. ManPageView Options......................: |manpageview-options|
-	4. ManPageView History......................: |manpageview-history|
+	4. ManPageView Update History...............: |manpageview-updates|
 
 ==============================================================================
 2. ManPageView Usage				*manpageview-usage* {{{1
@@ -216,19 +218,34 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 	manpageview instead.
 
 
+				*manpageview-history* *mpv-history*
 	MANPAGEVIEW HISTORY     		*:Manprv* *:Mannxt*
 
 	Manpageview keeps track of successful (ie. not empty) pages; you may
 	use >
 		:[count]Mannxt
 		:[count]Manprv
+
 <	to go forwards and backwards in the history.  In addition, while in
-	help page buffers, one has two maps: >
+	a manpageview help buffer, one also has two maps available: >
+
 		<s-up>
 		<s-down>
+
 <	which you may likewise use to go forwards and backwards in the
 	history, respectively.  One may precede these two maps with a count,
 	too.
+
+
+	MANPAGEVIEW SEARCH		*manpageview-search*  *mpv-search*
+
+	Sometimes the man page one gets isn't in the right book.  Use
+	the following two maps to search for manpages with the same topic: >
+
+		<s-left>	in smaller book numbers
+		<s-right>	in larger book numbers
+
+<	These maps are only available when in a manpageview generated buffer.
 
 
 ==============================================================================
@@ -362,11 +379,23 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 
 
 ==============================================================================
-4. ManPageView History				*manpageview-history* {{{1
+4. ManPageView History				*manpageview-updates* {{{1
 
 	Thanks go to the various people who have contributed changes,
 	pointed out problems, and made suggestions!
 
+	v25:	Apr 03, 2013	* (Gary Johnson) suggested changing some of
+				  the default book numbers to zero for more
+				  general searching.
+		Apr 04, 2013	* eliminated some "noise" while searching
+				  for other books containing the topic
+				  (see |mpv-search|)
+				* search now uses an internal |List|, and so
+				  it also searches manpage books such as 3p,
+				  5x, etc.
+		Apr 05, 2013	* found why manpageview's |mpv-search| was
+				  noisy (had to do with |g:manpageview_iconv|).
+				  Fixed.
 	v24:	Jan 03, 2011	* some extra protection against trying to use
 				  a program that is not executable
 		Mar 30, 2012	* TMan command included

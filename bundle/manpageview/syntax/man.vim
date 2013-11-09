@@ -1,8 +1,8 @@
 " Vim syntax file
 "  Language:	Manpageview
 "  Maintainer:	Charles E. Campbell, Jr.
-"  Last Change:	Aug 12, 2008
-"  Version:    	6	ASTRO-ONLY
+"  Last Change:	Apr 05, 2013
+"  Version:    	7	ASTRO-ONLY
 "
 "  History:
 "    2: * Now has conceal support
@@ -27,7 +27,7 @@ syn case ignore
 syn match  manReference		"\f\+([1-9]\l\=)"
 syn match  manSectionTitle	'^\u\{2,}\(\s\+\u\{2,}\)*'
 syn match  manSubSectionTitle	'^\s+\zs\u\{2,}\(\s\+\u\{2,}\)*'
-syn match  manTitle		"^\f\+([0-9]\+\l\=).*"
+syn match  manTitle		"^\f\+([0-9]\+\a\=).*"
 syn match  manSectionHeading	"^\(\u[a-z]* \)\+$"
 syn match  manOptionDesc	"^\s*\zs[+-]\{1,2}\w\S*"
 

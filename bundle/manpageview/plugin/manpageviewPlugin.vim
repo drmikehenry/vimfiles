@@ -15,7 +15,6 @@ set cpo&vim
 if !hasmapto('<Plug>ManPageView') && &kp =~ '^man\>'
  nmap <unique> K <Plug>ManPageView
 endif
-"nno <silent> <script> <Plug>ManPageView	:call manpageview#ManPageView(1,v:count,expand("<cword>"))<CR>
 nno <silent> <script> <Plug>ManPageView		:call manpageview#KMap(expand("<cword>"))<cr>
 
 com! -nargs=* -count=0	Man		call manpageview#ManPageView(0,<count>,<f-args>)

@@ -1,10 +1,9 @@
 " manpagevim : extra commands for manual-handling
 " Author:	Charles E. Campbell
-" Date:		Mar 02, 2013
-" Version:	25g	ASTRO-ONLY
+" Date:		Apr 08, 2013
+" Version:	25l	 ASTRO-ONLY
 "
 " Please read :help manpageview for usage, options, etc
-" COMBAK: get K on a latex command to work
 "
 " GetLatestVimScripts: 489 1 :AutoInstall: manpageview.vim
 "redraw!|call DechoSep()|call inputsave()|call input("Press <cr> to continue")|call inputrestore()
@@ -15,7 +14,7 @@
 if &cp || exists("g:loaded_manpageview")
  finish
 endif
-let g:loaded_manpageview = "v25g"
+let g:loaded_manpageview = "v25l"
 if v:version < 702
  echohl WarningMsg
  echo "***warning*** this version of manpageview needs vim 7.2 or later"
@@ -48,6 +47,11 @@ endif
 " ---------------------------------------------------------------------
 " Default Variable Values: {{{1
 "DechoWF "Set up default variable values:"
+if has("unix") || has("win32unix")
+ let s:nostderr= " 2>/dev/null"
+else
+ let s:nostderr= ""
+endif
 if !exists("g:manpageview_iconv")
  if executable("iconv")
   let s:iconv= "iconv -c"
@@ -58,7 +62,7 @@ else
  let s:iconv= g:manpageview_iconv
 endif
 if s:iconv != ""
- let s:iconv= "| ".s:iconv
+ let s:iconv= s:nostderr."| ".s:iconv
 endif
 if !exists("g:manpageview_pgm") && executable("man")
  let g:manpageview_pgm= "man"
@@ -150,15 +154,15 @@ endif
 "    :call manpageview#ManPageView(booknumber,"topic")
 "    :call manpageview#ManPageView("topic(booknumber)")
 "
-"    bknum   : the book number of the manpage (default=1)
+"    bknum   : the book number of the manpage (default=0)
 "
 "    Returns  0 : usually, except when
 "            -1 : manpage does not exist
 fun! manpageview#ManPageView(...) range
 "  call Dfunc("manpageview#ManPageView(...) a:0=".a:0. " version=".g:loaded_manpageview)
-"  DechoWF "(ManPageView) a:1<".((a:0 >= 1)? a:1 : '\n/a').">"
-"  DechoWF "(ManPageView) a:2<".((a:0 >= 2)? a:2 : '\n/a').">"
-"  DechoWF "(ManPageView) a:3<".((a:0 >= 3)? a:3 : '\n/a').">"
+"  DechoWF "(ManPageView) a:1<".((a:0 >= 1)? a:1 : 'n/a').">"
+"  DechoWF "(ManPageView) a:2<".((a:0 >= 2)? a:2 : 'n/a').">"
+"  DechoWF "(ManPageView) a:3<".((a:0 >= 3)? a:3 : 'n/a').">"
   set lz
   let manpageview_fname = expand("%")
   call s:MPVSaveSettings()
@@ -223,9 +227,7 @@ fun! manpageview#ManPageView(...) range
 
   " default book number
   if !exists("bknum")
-   let bknum= 1
-  elseif bknum == 0 && (&ft == "c" || &ft == "cpp")
-   let bknum= 3
+   let bknum= 0
   endif
 "  DechoWF "(ManPageView) after parsing: topic<".topic."> bknum#".bknum
 
@@ -394,6 +396,7 @@ fun! manpageview#ManPageView(...) range
   " ---------------------------------------------------------------------
   " Set up the window for the manpage display (only hsplit split etc) {{{3
 "  DechoWF "(ManPageView) set up window for manpage display (g:manpageview_winopen<".g:manpageview_winopen."> ft<".&ft."> manpageview_syntax<".manpageview_syntax.">)"
+"  DechoWF "(ManPageView) winnr($)=".winnr("$")." ft=".&ft
   if     g:manpageview_winopen == "only"
    " OMan
    sil! noautocmd windo w
@@ -405,17 +408,17 @@ fun! manpageview#ManPageView(...) range
     sil! only!
 "	let mesg= "(ManPageView) [only]".s:WinReport() | DechoWF mesg
    endif
-   enew!
+   sil! enew!
 
   elseif g:manpageview_winopen == "hsplit"
    " HMan
    if &ft != manpageview_syntax
     wincmd s
-    enew!
+	sil! enew!
     wincmd _
     3wincmd -
    else
-    enew!
+	sil! enew!
    endif
 "   let mesg= "(ManPageView) [hsplit]".s:WinReport() | DechoWF mesg
 
@@ -424,18 +427,18 @@ fun! manpageview#ManPageView(...) range
    if &ft != manpageview_syntax
     wincmd s
    endif
-   enew!
+   sil! enew!
 "   let mesg= "(ManPageView) [hsplit=]".s:WinReport() | DechoWF mesg
 
   elseif g:manpageview_winopen == "vsplit"
    " VMan
    if &ft != manpageview_syntax
     wincmd v
-    enew!
+	sil! enew!
     wincmd |
     20wincmd <
    else
-    enew!
+	sil! enew!
    endif
 "   let mesg= "(ManPageView) [vsplit]".s:WinReport() | DechoWF mesg
 
@@ -457,27 +460,32 @@ fun! manpageview#ManPageView(...) range
   elseif g:manpageview_winopen == "reuse"
    " RMan
    " determine if a Manpageview window already exists
-   let g:manpageview_manwin= -1
-   exe "noautocmd windo if &ft == '".fnameescape(manpageview_syntax)."'|let g:manpageview_manwin= winnr()|endif"
+   if exists("s:booksearching")
+	let g:manpageview_manwin= s:booksearching
+   else
+    let g:manpageview_manwin= -1
+    exe "noautocmd windo if &ft == '".fnameescape(manpageview_syntax)."'|let g:manpageview_manwin= winnr()|endif"
+   endif
    if g:manpageview_manwin != -1
     " found a pre-existing Manpageview window, re-using it
-"    DechoWF "found pre-existing manpageview window, re-using it"
+"	DechoWF "(ManPageView) found pre-existing manpageview window (win#".g:manpageview_manwin."), re-using it"
     exe g:manpageview_manwin."wincmd w"
-    enew!
+	sil! enew!
+"	DechoWF "(ManPageView) re-using win#".g:manpageview_manwin." (note that win($)=".winnr("$").")"
    elseif &l:mod == 1
     " file has been modified, would be lost if we re-used window.  Use hsplit instead.
 "    DechoWF "file<".expand("%")."> has been modified, would be lost if re-used.  Using hsplit instead"
     wincmd s
-    enew!
+	sil! enew!
     wincmd _
     3wincmd -
    elseif &ft != manpageview_syntax
     " re-using current window (but hiding it first)
 "    DechoWF "re-using current window#".winnr()." (hiding it first)"
     setlocal bh=hide
-    enew!
+	sil! enew!
    else
-    enew!
+	sil! enew!
    endif
 "   let mesg= "(ManPageView) [reuse]".s:WinReport() | DechoWF mesg
 
@@ -557,7 +565,8 @@ fun! manpageview#ManPageView(...) range
 
   let cmdmod= ""
   if v:version >= 603
-   let cmdmod= "sil keepj "
+   let cmdmod= "sil! keepj "
+"   call Decho("(ManPageView) setting cmdmod<".cmdmod.">")
   endif
 
   " ---------------------------------------------------------------------
@@ -628,19 +637,20 @@ fun! manpageview#ManPageView(...) range
 "	 DechoWF "(ManPageView) ‣mpb    <".(exists("mpb")?     mpb     : 'n/a').">"
 "	 DechoWF "(ManPageView) ‣topic  <".(exists("topic")?   topic   : 'n/a').">"
 "	 DechoWF "(ManPageView) ‣s:iconv<".(exists("s:iconv")? s:iconv : 'n/a').">"
+"	 call Decho('(ManPageView) ‣s:nostderr="'.s:nostderr.'"')
 	 if exists("g:mpvcmd")
-"	  DechoWF "(ManPageView) ‣mpvcmd: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd
-	  exe cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd
+"	  DechoWF "(ManPageView) ‣mpvcmd: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd.s:nostderr
+      exe cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd.s:nostderr
 	  unlet g:mpvcmd
 	 elseif nospace
-"	  DechoWF "(ManPageView) ‣nospace=".nospace.":  exe sil! ".cmdmod."r!".pgm.iopt.mpb.topic.(exists("s:iconv")? s:iconv : "")
-	  exe cmdmod."r!".pgm.iopt.mpb.shellescape(topic,1).(exists("s:iconv")? s:iconv : "")
+"	  DechoWF "(ManPageView) ‣nospace=".nospace.":  exe sil! ".cmdmod."r!".pgm.iopt.mpb.topic.(exists("s:iconv")? s:iconv : "").s:nostderr
+	  exe cmdmod."r!".pgm.iopt.mpb.shellescape(topic,1).(exists("s:iconv")? s:iconv : "").s:nostderr
      elseif has("win32")
-"	  DechoWF "(ManPageView) ‣win32: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." \"".topic."\" ".(exists("s:iconv")? s:iconv : "")
-       exe cmdmod."r!".pgm." ".iopt." ".mpb." ".shellescape(topic,1).(exists("s:iconv")? " ".s:iconv : "")
+"	  DechoWF "(ManPageView) ‣win32: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." \"".topic."\" ".(exists("s:iconv")? s:iconv : "").s:nostderr
+	  exe cmdmod."r!".pgm." ".iopt." ".mpb." ".shellescape(topic,1).(exists("s:iconv")? " ".s:iconv : "").s:nostderr
 	 else
-"	  DechoWF "(ManPageView) ‣normal: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." '".topic."' ".(exists("s:iconv")? s:iconv : "")
-	  exe cmdmod."r!".pgm." ".iopt." ".mpb." ".shellescape(topic,1).(exists("s:iconv")? " ".s:iconv : "")
+"	  call Decho("(ManPageView) ‣normal: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." '".topic."' ".(exists("s:iconv")? s:iconv : "").s:nostderr)
+	  exe cmdmod."r!".pgm." ".iopt." ".mpb." ".shellescape(topic,1).(exists("s:iconv")? " ".s:iconv : "").s:nostderr
 	endif
      exe cmdmod.'sil!  %s/.\b//ge'
     endif
@@ -713,7 +723,7 @@ fun! manpageview#ManPageView(...) range
 "	 DechoWF "(ManPageView) no help found: s:manpageview_curtopic<".s:manpageview_curtopic.">"
 	 call manpageview#ManPageView(v:count,s:manpageview_curtopic)
 	endif
-   elseif winnr("$") > 1
+   elseif winnr("$") > 1 && !exists("s:booksearching")
 "    DechoWF "(ManPageView) no help found, quitting help window"
     sil! q!
    endif
@@ -727,12 +737,19 @@ fun! manpageview#ManPageView(...) range
     echohl None
     sleep 2
    endif
-"   DechoWF "(ManPageView) winnr($)=".winnr("$")
+"   DechoWF "(ManPageView) winnr($)=".winnr("$")." ft=".&ft
 
    if exists("s:mpv_before_k_posn")
 "	DechoWF "(ManPageView) restoring winposn"
 	sil! call RestoreWinPosn(s:mpv_before_k_posn)
 	unlet s:mpv_before_k_posn
+   endif
+
+   " attempt to recover from a no-manpage-found condition
+   if exists("s:onerr_bknum")
+	call manpageview#ManPageView(s:onerr_bknum,s:onerr_topic)
+	call RestoreWinPosn(s:onerr_winpos)
+	unlet s:onerr_bknum s:onerr_topic s:onerr_winpos
    endif
 
 "   DechoWF "(ManPageView) restoring settings"
@@ -742,25 +759,25 @@ fun! manpageview#ManPageView(...) range
 
   elseif bknum == ""
 "   DechoWF '(ManPageView) exe file '.fnameescape('Manpageview['.topic.']')
-   exe 'file '.fnameescape('Manpageview['.topic.']')
+   exe 'sil! file '.fnameescape('Manpageview['.topic.']')
    let s:manpageview_curtopic= topic
 
   else
 "   DechoWF '(ManPageView) exe file '.fnameescape('Manpageview['.topic.'('.fnameescape(bknum).')]')
-   exe 'file '.fnameescape('Manpageview['.topic.'('.fnameescape(bknum).')]')
+   exe 'sil! file '.fnameescape('Manpageview['.topic.'('.fnameescape(bknum).')]')
    let s:manpageview_curtopic= topic."(".bknum.")"
   endif
 
   " ---------------------------------------------------------------------
   " Enter booknumber and topic into history
   if !exists("s:history") || s:ihist == len(s:history)-1
-"   DechoWF "Saving history: bknum#".bknum." topic<".topic.">"
+"   DechoWF "(ManPageView) Saving history: bknum#".bknum." topic<".topic.">"
    call manpageview#History(0,bknum,topic)
   endif
 
   " ---------------------------------------------------------------------
   " Install search book maps
-  nno <silent> <buffer> <s-left>		:call manpageview#BookSearch(-v:count1)<cr>
+  nno <silent> <buffer> <s-left>	:call manpageview#BookSearch(-v:count1)<cr>
   nno <silent> <buffer> <s-right>	:call manpageview#BookSearch( v:count1)<cr>
 
   " ---------------------------------------------------------------------
@@ -807,7 +824,7 @@ fun! manpageview#KMap(usecWORD)
 	if getline(".") =~ '\<'.expand("<cword>").'\s\+(\d\+)'
 	 let book= substitute(getline("."),'\<'.expand("<cword>").'\s\+(\(\d\+\)).*$','\1','') + 0
 	else
-     let book= "3"
+     let book= "0"
 	endif
    elseif book > 0
     let book= string(book)
@@ -894,6 +911,11 @@ fun! s:MPVSaveSettings()
   endif
   let s:curmanwidth = $MANWIDTH
 "  call Dret("s:MPVSaveSettings")
+ endif
+ if &ft == "man" && exists("s:history") && exists("s:ihist")
+  let s:onerr_bknum  = s:history[s:ihist][0]
+  let s:onerr_topic  = s:history[s:ihist][1]
+  let s:onerr_winpos = SaveWinPosn()
  endif
 
 endfun
@@ -1387,32 +1409,59 @@ fun! manpageview#History(mode,...)
 endfun
 
 " ---------------------------------------------------------------------
-" manpageview#BookSearch: {{{2
+" manpageview#BookSearch: search for another manpagepage on the given topic {{{2
+"   direction= +1 : search larger  book numbers
+"            = -1 : search smaller book numbers
 fun! manpageview#BookSearch(direction)
 "  call Dfunc("manpageview#BookSearch(direction=".a:direction.")")
-  let bknum            = s:history[s:ihist][0]
+  let bknum    = s:history[s:ihist][0]
+  let curbknum = bknum
   if bknum == ""
-   let bknum= 1
+   if getline(2) =~ '(\d\+[px]\=)'
+	let bknum= substitute(getline(2),'^.\{-}(\(\d\+[px]\=\)).*$','\1','')
+   elseif getline(1) =~ '(\d\+[px]\=)'
+	let bknum= substitute(getline(1),'^.\{-}(\(\d\+[px]\=\)).*$','\1','')
+   else
+	let bknum= "1"
+   endif
+"   call Decho("booksearch: setting bknum=".bknum." (was empty string)")
+  elseif type(bknum) != 1
+   let bknum= string(bknum)
   endif
-  if type(bknum) != 1
-   let bknum= bknum + 0
+  let s:mpv_booksearch      = 1
+  let retval                = -1
+  let topic                 = s:history[s:ihist][1]
+  let curtopic              = topic
+  let keep_mpv_winopen      = g:manpageview_winopen
+  let keeplz                = &lz
+  set lz
+  let g:manpageview_winopen = "reuse"
+  let bknumlist             = ["0p","1","1p","1x","2","2x","3","3p","3x","4","4x","5","5x","5p","6","6x","6p","7","7x","8","8x","9","9x"]
+  let ibk                   = index(bknumlist,bknum)
+"  call Decho("booksearch: current bknum#".bknum." (type ".type(bknum).")   topic<".topic."> ibk=".ibk. "(reuse)")
+  if ibk != -1
+   let s:booksearching= winnr()
+   while retval < 0
+    let ibk  += a:direction
+	if ibk < 0 || len(bknumlist) <= ibk
+	 break
+	endif
+    let bknum = bknumlist[ibk]
+"    call Decho("‣booksearch: trying bknum#".bknum."   topic<".topic.">")
+    let retval = manpageview#ManPageView(bknum,topic)
+   endwhile
+   unlet s:booksearching
   endif
-  let s:mpv_booksearch = 1
-  let retval           = -1
-  let topic            = s:history[s:ihist][1]
-"  call Decho("booksearch: bknum#".bknum." topic<".topic.">")
-  while(retval < 0 && 1 <= bknum && bknum <= 8)
-"   call Decho("‣booksearch: bknum#".bknum." topic<".topic.">")
-   let bknum += a:direction
-   let retval = manpageview#ManPageView(bknum,topic)
-  endwhile
   unlet s:mpv_booksearch
+  let &lz= keeplz
   if retval < 0
+   call manpageview#ManPageView(curbknum,curtopic)
    echohl WarningMsg
-   echomsg "***warning*** unable to find man page on <".topic."> with ".((a:direction > 0)? "larger" : "smaller")." book numbers"
+   echomsg "***warning*** unable to find man page on <".topic."> with a ".((a:direction > 0)? "larger" : "smaller")." book number"
    echohl None
    sleep 2
   endif
+  let g:manpageview_winopen = keep_mpv_winopen
 "  call Dret("manpageview#BookSearch")
 endfun
 
