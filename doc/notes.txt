@@ -489,7 +489,7 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Version 7.3.5 from http://www.vim.org/scripts/script.php?script_id=42
+Version 7.4.2 from http://www.vim.org/scripts/script.php?script_id=42
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

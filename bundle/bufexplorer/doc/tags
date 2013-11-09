@@ -1,5 +1,6 @@
 bufexplorer	bufexplorer.txt	/*bufexplorer*
 bufexplorer-changelog	bufexplorer.txt	/*bufexplorer-changelog*
+bufexplorer-copyright	bufexplorer.txt	/*bufexplorer-copyright*
 bufexplorer-credits	bufexplorer.txt	/*bufexplorer-credits*
 bufexplorer-customization	bufexplorer.txt	/*bufexplorer-customization*
 bufexplorer-installation	bufexplorer.txt	/*bufexplorer-installation*
@@ -11,6 +12,7 @@ buffer-explorer	bufexplorer.txt	/*buffer-explorer*
 g:bufExplorerChgWin	bufexplorer.txt	/*g:bufExplorerChgWin*
 g:bufExplorerDefaultHelp	bufexplorer.txt	/*g:bufExplorerDefaultHelp*
 g:bufExplorerDetailedHelp	bufexplorer.txt	/*g:bufExplorerDetailedHelp*
+g:bufExplorerDisableDefaultKeyMapping	bufexplorer.txt	/*g:bufExplorerDisableDefaultKeyMapping*
 g:bufExplorerFindActive	bufexplorer.txt	/*g:bufExplorerFindActive*
 g:bufExplorerFuncRef	bufexplorer.txt	/*g:bufExplorerFuncRef*
 g:bufExplorerReverseSort	bufexplorer.txt	/*g:bufExplorerReverseSort*

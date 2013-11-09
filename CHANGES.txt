@@ -27,6 +27,8 @@ require adjustment of per-user settings.
 
 - Update swapit plugin to version 0.3.2.
 
+- Update BufExplorer plugin to version 7.4.2.
+
 2013-11-05
 ==========
 
