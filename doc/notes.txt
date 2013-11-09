@@ -1321,6 +1321,33 @@ MANPAGEVIEW                                             *notes_manpageview*
 
 Version 25l from http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
 
+Version 25l requires patching of "sleep 2" to become "sleep 250m" to avoid
+freezing Vim for two tiresome seconds while ManPageView displays an error
+message:
+
+diff --git a/bundle/manpageview/autoload/manpageview.vim b/bundle/manpageview/autoload/manpageview.vim
+index 87680dc..a276407 100644
+--- a/bundle/manpageview/autoload/manpageview.vim
++++ b/bundle/manpageview/autoload/manpageview.vim
+@@ -223 +223 @@ fun! manpageview#ManPageView(...) range
+-   sleep 2
++   sleep 250m
+@@ -496 +496 @@ fun! manpageview#ManPageView(...) range
+-   sleep 2
++   sleep 250m
+@@ -738 +738 @@ fun! manpageview#ManPageView(...) range
+-    sleep 2
++    sleep 250m
+@@ -1097 +1097 @@ fun! s:MPVInfo(type)
+-   sleep 2
++   sleep 250m
+@@ -1145 +1145 @@ fun! s:NextInfoLink()
+-               sleep 2
++               sleep 250m
+@@ -1462 +1462 @@ fun! manpageview#BookSearch(direction)
+-   sleep 2
++   sleep 250m
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 

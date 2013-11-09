@@ -29,7 +29,12 @@ require adjustment of per-user settings.
 
 - Update BufExplorer plugin to version 7.4.2.
 
-- Update ManPageView plugin to version 25l.
+- Update ManPageView plugin to version 25l.  Patch "sleep 2" calls to be
+  "sleep 250m" to drop the irritating 2-second delay when K is pressed
+  accidentally and no manpage exists under cursor.  Changed
+  g:manpageview_winopen back to the default "hsplit"; the value "reuse" is
+  painful when pressing "K" for a non-existent manpage, since ManPageView
+  will forcibly close the original window after displaying the error.
 
 2013-11-05
 ==========

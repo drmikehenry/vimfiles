@@ -2037,7 +2037,10 @@ nnoremap <silent> <M-s> :LustyJuggler<CR>
 " manpageview
 " -------------------------------------------------------------
 
-let g:manpageview_winopen = "reuse"
+" Default is "hsplit" for opening a horizontal split.
+" The "reuse" option is irritating when accidentally pressing "K" in the
+" window, since it forcibly closes that window after displaying the error.
+"let g:manpageview_winopen = "reuse"
 
 function! CheckManpageview()
     let isMan = maparg("\<Space>", "n") ==? "<C-F>"
