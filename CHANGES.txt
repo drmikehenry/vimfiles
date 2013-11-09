@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Update Python syntax highlighting support to version 3.3.5.
 
+- Update ColorSamplerPack to version 2012-10-28.
+
 2013-11-05
 ==========
 

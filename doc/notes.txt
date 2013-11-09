@@ -572,15 +572,11 @@ Installation:
 COLORSAMPLERPACK                                        *notes_colorsamplerpack*
   Color schemes and theme menu
 
-Schemes recommended by Matt Gilbert:
-- nuvola
-- ps_color
-- darkblue2
-
-Version 8.03 from http://www.vim.org/scripts/script.php?script_id=625
+Version 2012.10.28 from http://www.vim.org/scripts/script.php?script_id=625
 
 Installation:
-- Unzip in ~/.vim/
+- Follow bundle installation instructions (|bundle_installation|).
+- Unpack in bundle/colorsamplerpack.
 
 ------------------------------------------------------------------------------
 CTRLP                                                   *notes_ctrlp*
