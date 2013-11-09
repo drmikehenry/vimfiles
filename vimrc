@@ -187,6 +187,12 @@ let g:DefaultFontFamilies = [
             \ "Consolas",
             \]
 
+" These fonts don't have full support for Unicode symbols, so they can't be
+" used with Powerline_symbols == "unicode".
+let g:BadSymbolFontFamilies = [
+            \ "Consolas",
+            \]
+
 function! SetFont()
     if !has("gui_running")
         return
@@ -206,6 +212,8 @@ function! SetFont()
         let &guifont = font
         if g:FontFamily =~# 'for Powerline$'
             let g:Powerline_symbols = 'fancy'
+        elseif index(g:BadSymbolFontFamilies, g:FontFamily) >= 0
+            let g:Powerline_symbols = 'compatible'
         else
             let g:Powerline_symbols = 'unicode'
         endif
