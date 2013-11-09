@@ -1528,10 +1528,14 @@ Installation:
 PYTHON                                                  *notes_python*
   Python Syntax file with folding
 
-Version 2.6.6 from http://www.vim.org/scripts/script.php?script_id=790
+Version 3.3.5 (69f8e12a) from https://github.com/hdima/python-syntax
+
+(Also found here: http://www.vim.org/scripts/script.php?script_id=790)
+
+Maintained by Dmitry Vasiliev.
 
 Installation:
-- Install into ~/.vim/syntax/python.vim
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 PYTHONCOMPLETE                                          *notes_pythoncomplete*
