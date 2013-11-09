@@ -439,7 +439,7 @@ General bundle installation instructions:               *bundle_installation*
     mv vim-bundle-name bundle-name
 
 - Enter new bundle directory: >
-    
+
     cd bundle-name
 
 - Switch to tag (if appropriate): >
@@ -2377,10 +2377,10 @@ VIMRC_BEFORE, VIMRC_AFTER
 
   By default, these files are named "vimrc-before.vim" and "vimrc-after.vim",
   and are located in the $VIMUSERFILES directory, at these locations:
-  
+
     $VIMUSERFILES/vimrc-before.vim
     $VIMUSERFILES/vimrc-after.vim
-  
+
   For example, the "-before.vim" script for the Unix user "someuser" would be
   at one of the following two locations (depending whether ~/.vimuser exists):
 
@@ -2408,12 +2408,27 @@ drmikehenry, setup ~/.vim/user/drmikehenry/vimrc-before.vim with: >
 Fonts
 
 By default, vimfiles chooses a font.  To override this, setup your preferred
-font using a "-before.vim" file.  For example, for user drmikehenry,
-setup ~/.vim/user/drmikehenry/vimrc-before.vim with: >
+font using a "-before.vim" file.
+
+The simplest option is to setup g:DefaultFontFamilies with your first-choice
+fonts in preferred order, and vimfiles will try them first before its built-in
+list of fonts.  For example, for user drmikehenry, setup
+~/.vim/user/drmikehenry/vimrc-before.vim with: >
+
+  let g:DefaultFontFamilies = [
+      \ "Droid Sans Mono",
+      \ "Consolas",
+      \]
+  let g:FontSize = 10
+
+Alternatively, you may use the fontdetect plugin to decide whether to set
+g:FontFamily and g:FontSize (allowing vimfiles to choose the default font and
+size if your preferred fonts aren't available).  For example:
 
   let detectedFamily = fontdetect#firstFontFamily([
       \ "Droid Sans Mono",
-      \ "Consolas"])
+      \ "Consolas",
+      \])
   if detectedFamily != ""
       let g:FontFamily = detectedFamily
       let g:FontSize = 10

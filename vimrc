@@ -201,7 +201,10 @@ endif
 " GUI Setup
 " =============================================================
 
-let g:DefaultFontFamilies = [
+if !exists("g:DefaultFontFamilies")
+    let g:DefaultFontFamilies = []
+endif
+let g:DefaultFontFamilies += [
             \ "PragmataPro",
             \ "DejaVu Sans Mono for Powerline",
             \ "Droid Sans Mono for Powerline",
