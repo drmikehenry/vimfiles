@@ -512,8 +512,6 @@ if g:EnablePowerline
     call Pl#Theme#InsertSegment('mode_indicator', 'after', 'paste_indicator')
     call Pl#Theme#InsertSegment('filetype', 'before', 'scrollpercent')
 
-    call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
-
     if !has("gui_running")
         if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
             let g:Powerline_symbols_override = {

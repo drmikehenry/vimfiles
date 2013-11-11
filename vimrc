@@ -2198,7 +2198,7 @@ endif
 "   :2013-11-11.1
 " This vimfiles-wide setting will be appended to whatever value may have been
 " set via a |VIMRC_BEFORE| file.
-let g:PowerlineRequiredCacheTag .= ":2013-11-11"
+let g:PowerlineRequiredCacheTag .= ":2013-11-11.1"
 
 " This file records the current Powerline "tag".
 let g:PowerlineCacheTagFile = expand('$VIM_CACHE_DIR/PowerlineCacheTag')
@@ -2259,6 +2259,11 @@ if g:EnablePowerline
     call Pl#Theme#RemoveSegment('syntastic:errors')
     call Pl#Theme#InsertSegment('syntastic:errors', 'before',
                 \               'tagbar:currenttag')
+
+    " Add some non-default segments.
+
+    " Indicate trailing whitespace in file.
+    call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo')
 
     " Provide short forms of mode names, if a user adds back in the
     " mode_indicator.

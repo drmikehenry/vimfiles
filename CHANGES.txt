@@ -36,6 +36,8 @@ require adjustment of per-user settings.
 
 - Cleaned up references to |VIMRC_BEFORE| and |VIMRC_AFTER|.
 
+- Add Powerline segment to detect trailing whitespace.
+
 2013-11-09
 ==========
 
