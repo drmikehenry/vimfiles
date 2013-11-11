@@ -15,8 +15,24 @@ require adjustment of per-user settings.
   looks very bad when using Powerlines_symbols == "unicode" with a font family
   that doesn't support the symbols.
   The variable g:GoodUnicodeSymbolFontFamilyPatterns may now be set from a
-  "-before.vim" script to extend the list of font families that have
+  ``vimrc-before.vim`` script to extend the list of font families that have
   known-good support for Unicode Powerline symbols.  See vimrc for more details.
+
+- Add a way to detect changes in Powerline settings and automatically delete
+  stale cached ``Powerline*.cache`` files as Vim starts.
+
+  As a result, these cache files now live below the ``$VIM_CACHE_DIR``
+  directory (typically ``~/.cache/vim`` on Unix).  For tidiness, you may
+  want to delete any old Powerline cache files in your vimfiles directory.
+  For example, on Unix::
+
+    find ~/.vim -name 'Powerline*.cache' -delete
+
+  In addition, if you make adjustments to Powerline settings in your
+  per-user ``vimrc-before.vim``, set ``g:PowerlineRequiredCacheTag`` to a
+  unique value every time you make a change to the format.  For example::
+
+    let g:PowerlineRequiredCacheTag = "2013-11-11"
 
 2013-11-09
 ==========

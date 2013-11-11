@@ -2177,7 +2177,70 @@ endfunc
 " Powerline
 " -------------------------------------------------------------
 
+" Detect if Powerline-related configuration is out-of-date such that
+" we need to clear the cache.
+
+" Determine "required" version of Powerline cached information.
+" This may be set in "vimrc-before.vim" files for a per-user tag field; if
+" not, the value defaults to "none".
+" If you change any Powerline-related settings, update this variable
+" to ensure the stale cached data will be deleted.  For example::
+"   let g:PowerlineRequiredCacheTag = "2013-11-11"
+if !exists("g:PowerlineRequiredCacheTag")
+    let g:PowerlineRequiredCacheTag = "none"
+endif
+
+" Append Powerline cache tag for global vimrc settings.
+" Generally, this will be a colon, the date, and optionally a dot and a one-up
+" sequence number appended in case of multiple changes in a single day.
+" E.g.:
+"   :2013-11-11
+"   :2013-11-11.1
+" This vimfiles-wide setting will be appended to whatever value may have been
+" set via a "vimrc-before.vim" file.
+let g:PowerlineRequiredCacheTag .= ":2013-11-11"
+
+" This file records the current Powerline "tag".
+let g:PowerlineCacheTagFile = expand('$VIM_CACHE_DIR/PowerlineCacheTag')
+
+" Location of desired Powerline cache directory.
+let g:PowerlineDesiredCacheDir = expand('$VIM_CACHE_DIR/PowerlineCache')
+
+" Write a tag to track the "version" of the Powerline cache.
+function! PowerlineCacheTagWrite(tag)
+    call writefile([a:tag], g:PowerlineCacheTagFile)
+endfunction
+
+" Read back the stored Powerline tag value.
+" Return "" if not found or couldn't read.
+function! PowerlineCacheTagRead()
+    if filereadable(g:PowerlineCacheTagFile)
+        let lines = readfile(g:PowerlineCacheTagFile, "", 1)
+        if len(lines) == 1
+            return lines[0]
+        endif
+    endif
+    return ""
+endfunction
+
 if g:EnablePowerline
+    " Nail down directory for Powerline's cache so we know where it lives.
+    if !isdirectory(g:PowerlineDesiredCacheDir)
+        call mkdir(g:PowerlineDesiredCacheDir, "p")
+    endif
+    if isdirectory(g:PowerlineDesiredCacheDir)
+        " We've got a cache directory, so tell Powerline about it.
+        let g:Powerline_cache_dir = g:PowerlineDesiredCacheDir
+        if PowerlineCacheTagRead() != g:PowerlineRequiredCacheTag
+            " Wipe out all Powerline cache files.
+            for p in glob(g:Powerline_cache_dir . "/Powerline_*.cache", 1, 1)
+                silent! call delete(p)
+            endfor
+            call PowerlineCacheTagWrite(g:PowerlineRequiredCacheTag)
+        endif
+    else
+        echomsg "Why is " . g:PowerlineDesiredCacheDir . " not available?"
+    endif
     " Remove segments that are redundant (like "mode_indicator") or
     " which are essentially static indicators that don't warrant taking
     " up room.
