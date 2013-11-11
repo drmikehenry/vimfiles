@@ -46,7 +46,7 @@ endfunction
 " Pathogen plugin management (part one)
 " -------------------------------------------------------------
 
-" A couple of bundles must be initialized early for use in "-before.vim"
+" A couple of bundles must be initialized early for use in |VIMRC_BEFORE|
 " scripts.
 
 runtime bundle/pathogen/autoload/pathogen.vim
@@ -56,10 +56,10 @@ runtime bundle/pathogen/autoload/pathogen.vim
 " helpful to ensure that pathogen does not re-infect these plugins
 " (since pathogen doesn't normalize the slashes during comparisons).
 
-" We'd like to detect fonts in "-before.vim".
+" We'd like to detect fonts in |VIMRC_BEFORE|.
 call pathogen#surround(expand("$VIMFILES/bundle/fontdetect"))
 
-" We'd like to set colorschemes in "-before.vim".
+" We'd like to set colorschemes in |VIMRC_BEFORE|.
 call pathogen#surround(expand("$VIMFILES/bundle/colorsamplerpack"))
 
 " Now restore $VIMFILES area to surround the other bundles, giving it higher
@@ -121,7 +121,7 @@ if $VIMUSERFILES == ""
     endif
 endif
 
-" VIMRC_BEFORE points directly to the "-before.vim" script to execute.
+" VIMRC_BEFORE points directly to the script to execute.
 if $VIMRC_BEFORE == ""
     let $VIMRC_BEFORE = expand("$VIMUSERFILES/vimrc-before.vim")
     " For backward compatibility:
@@ -130,7 +130,7 @@ if $VIMRC_BEFORE == ""
     endif
 endif
 
-" VIMRC_AFTER points directly to the "-after.vim" script to execute.
+" VIMRC_AFTER points directly to the script to execute.
 if $VIMRC_AFTER == ""
     let $VIMRC_AFTER = expand("$VIMUSERFILES/vimrc-after.vim")
     " For backward compatibility:
@@ -142,7 +142,7 @@ endif
 " Prepend per-user directory to runtimepath (provides the highest priority).
 call RtpPrepend($VIMUSERFILES)
 
-" If it exists, source the specified "-before.vim" hook.
+" If it exists, source the specified |VIMRC_BEFORE| hook.
 if filereadable($VIMRC_BEFORE)
     source $VIMRC_BEFORE
 endif
@@ -165,7 +165,7 @@ call pathogen#infect('pre-bundle/{}')
 " Setup a color scheme early for better visibility of errors and to nail down
 " 'background' (which changes when a new colorscheme is selected).
 
-" If a user sets up a colorscheme in his "-before.vim" script (or early in his
+" If a user sets up a colorscheme in his |VIMRC_BEFORE| script (or early in his
 " ~/.vimrc file), the varible g:colors_name will be set and no default
 " colorscheme selection will take place.  To use no colorscheme at all, set
 " g:colors_name to the empty string.
@@ -2181,7 +2181,7 @@ endfunc
 " we need to clear the cache.
 
 " Determine "required" version of Powerline cached information.
-" This may be set in "vimrc-before.vim" files for a per-user tag field; if
+" This may be set in |VIMRC_BEFORE| files for a per-user tag field; if
 " not, the value defaults to "none".
 " If you change any Powerline-related settings, update this variable
 " to ensure the stale cached data will be deleted.  For example::
@@ -2197,7 +2197,7 @@ endif
 "   :2013-11-11
 "   :2013-11-11.1
 " This vimfiles-wide setting will be appended to whatever value may have been
-" set via a "vimrc-before.vim" file.
+" set via a |VIMRC_BEFORE| file.
 let g:PowerlineRequiredCacheTag .= ":2013-11-11"
 
 " This file records the current Powerline "tag".
@@ -2556,7 +2556,7 @@ let g:local_tagbar_type_rst = {
 \ }
 
 " Enable support for .rst files in tagbar by default.  Disable if desired in
-" your per-user "-after.vim" file via:
+" your |VIMRC_AFTER| file via:
 "   unlet g:tagbar_type_rst.
 let g:tagbar_type_rst = g:local_tagbar_type_rst
 
@@ -4042,7 +4042,7 @@ endif
 set laststatus=2
 
 
-" If it exists, source the specified "-after.vim" hook.
+" If it exists, source the specified |VIMRC_AFTER| hook.
 if filereadable($VIMRC_AFTER)
     source $VIMRC_AFTER
 endif

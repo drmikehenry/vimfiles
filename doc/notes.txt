@@ -1505,7 +1505,7 @@ font and use it: >
 <
 
 If you don't want to use Powerline, you can add the following to your
-user/$VIMUSER-before.vim: >
+|VIMRC_BEFORE| file: >
 
     let g:EnablePowerline = 0
 <
@@ -2360,12 +2360,12 @@ directory in the below list:
   ~/.vimuser
   ~/.vim/user/someuser
 
-VIMRC_BEFORE, VIMRC_AFTER
-  These point to "-before.vim" and "-after.vim" scripts.  If these files
-  exist, they will be sourced before or after the main "vimrc" file.  The
-  "-before.vim" hook is useful for changing things like <Leader> so that it
+VIMRC_BEFORE, VIMRC_AFTER                     *VIMRC_BEFORE*   *VIMRC_AFTER*
+  These point to "before" and "after" scripts.  If these files
+  exist, they will be sourced before or after the main "vimrc" file.
+  |VIMRC_BEFORE| is useful for changing things like <Leader> so that it
   will be used by mappings in the main "vimrc".  Most other settings are best
-  overridden in the "-after.vim" script.
+  overridden in |VIMRC_AFTER|.
 
   By default, these files are named "vimrc-before.vim" and "vimrc-after.vim",
   and are located in the $VIMUSERFILES directory, at these locations:
@@ -2373,7 +2373,7 @@ VIMRC_BEFORE, VIMRC_AFTER
     $VIMUSERFILES/vimrc-before.vim
     $VIMUSERFILES/vimrc-after.vim
 
-  For example, the "-before.vim" script for the Unix user "someuser" would be
+  For example, the |VIMRC_BEFORE| script for the Unix user "someuser" would be
   at one of the following two locations (depending whether ~/.vimuser exists):
 
     ~/.vimuser/vimrc-before.vim
@@ -2381,7 +2381,7 @@ VIMRC_BEFORE, VIMRC_AFTER
 
   Note: It's preferrable to keep all of the per-user files within
   $VIMUSERFILES; however, for backward compatibility, the following locations
-  are also checked for "-before.vim" and "-after.vim" scripts, but only when
+  are also checked for "before" and "after" scripts, but only when
   VIMUSERFILES is allowed to default to $VIMFILES/user/$VIMUSER:
 
     $VIMFILES/user/$VIMUSER-before.vim
@@ -2391,7 +2391,7 @@ VIMRC_BEFORE, VIMRC_AFTER
 Colorschemes
 
 By default, vimfiles chooses a default colorscheme.  To override this, setup
-your preferred colorscheme in a "-before.vim" file.  For example, for user
+your preferred colorscheme in |VIMRC_BEFORE|.  For example, for user
 drmikehenry, setup ~/.vim/user/drmikehenry/vimrc-before.vim with: >
 
   colorscheme nuvola
@@ -2400,7 +2400,7 @@ drmikehenry, setup ~/.vim/user/drmikehenry/vimrc-before.vim with: >
 Fonts
 
 By default, vimfiles chooses a font.  To override this, setup your preferred
-font using a "-before.vim" file.
+font using a |VIMRC_BEFORE| file.
 
 The simplest option is to setup g:DefaultFontFamilies with your first-choice
 fonts in preferred order, and vimfiles will try them first before its built-in
@@ -2431,7 +2431,7 @@ Spell checking
 
 In order to allow per-user overriding of spell-check settings, there are two
 variables for configuring spell-checking.  Adjust these variables in per-user
-configuration files (e.g., ~/.vim/user/someuser-after.vim).
+configuration files (|VIMRC_BEFORE|, |VIMRC_AFTER|).
 
 To disable automatic configuration of the 'spell' setting entirely: >
 
