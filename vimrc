@@ -205,19 +205,40 @@ if !exists("g:DefaultFontFamilies")
     let g:DefaultFontFamilies = []
 endif
 let g:DefaultFontFamilies += [
+            \ "PragmataPro for Powerline",
             \ "PragmataPro",
             \ "DejaVu Sans Mono for Powerline",
             \ "Droid Sans Mono for Powerline",
+            \ "Consolas for Powerline",
             \ "DejaVu Sans Mono",
             \ "Droid Sans Mono",
             \ "Consolas",
             \]
 
-" These fonts don't have full support for Unicode symbols, so they can't be
-" used with Powerline_symbols == "unicode".
-let g:BadSymbolFontFamilies = [
-            \ "Consolas",
+" Font Families matching the regex patterns below have known-good Unicode
+" symbols for use with Powerline.
+if !exists("g:GoodUnicodeSymbolFontFamilyPatterns")
+    let g:GoodUnicodeSymbolFontFamilyPatterns = []
+endif
+let g:GoodUnicodeSymbolFontFamilyPatterns += [
+            \ '^PragmataPro\>',
+            \ '^DejaVu Sans Mono\>',
+            \ '^Droid Sans Mono\>',
             \]
+
+" Return type of Powerline symbols to use for given font family.
+" Value will be one of "fancy", "unicode", or "compatible".
+function! PowerlineSymbolsForFontFamily(family)
+    if a:family =~# ' Powerline$'
+        return "fancy"
+    endif
+    for pattern in g:GoodUnicodeSymbolFontFamilyPatterns
+        if a:family =~# pattern
+            return "unicode"
+        endif
+    endfor
+    return "compatible"
+endfunction
 
 function! SetFont()
     if !has("gui_running")
@@ -236,13 +257,7 @@ function! SetFont()
             let font = g:FontFamily . ":h" . g:FontSize
         endif
         let &guifont = font
-        if g:FontFamily =~# 'for Powerline$'
-            let g:Powerline_symbols = 'fancy'
-        elseif index(g:BadSymbolFontFamilies, g:FontFamily) >= 0
-            let g:Powerline_symbols = 'compatible'
-        else
-            let g:Powerline_symbols = 'unicode'
-        endif
+        let g:Powerline_symbols = PowerlineSymbolsForFontFamily(g:FontFamily)
     endif
 endfunction
 command! -bar SetFont call SetFont()

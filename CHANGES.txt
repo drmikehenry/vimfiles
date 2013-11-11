@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2013-11-11
+==========
+
+- Convert from Blacklisting of font families that don't support Unicode Symbols
+  properly to having a whitelist of known-good font families, since Powerline
+  looks very bad when using Powerlines_symbols == "unicode" with a font family
+  that doesn't support the symbols.
+  The variable g:GoodUnicodeSymbolFontFamilyPatterns may now be set from a
+  "-before.vim" script to extend the list of font families that have
+  known-good support for Unicode Powerline symbols.  See vimrc for more details.
+
 2013-11-09
 ==========
 
