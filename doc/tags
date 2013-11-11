@@ -49,6 +49,8 @@ OmniCpp_ShowAccess	omnicppcomplete.txt	/*OmniCpp_ShowAccess*
 OmniCpp_ShowPrototypeInAbbr	omnicppcomplete.txt	/*OmniCpp_ShowPrototypeInAbbr*
 OmniCpp_ShowScopeInAbbr	omnicppcomplete.txt	/*OmniCpp_ShowScopeInAbbr*
 RunView.txt	RunView.txt	/*RunView.txt*
+VIMRC_AFTER	notes.txt	/*VIMRC_AFTER*
+VIMRC_BEFORE	notes.txt	/*VIMRC_BEFORE*
 Vimball-copyright	pi_vimball.txt	/*Vimball-copyright*
 [%	matchit.txt	/*[%*
 ]%	matchit.txt	/*]%*
