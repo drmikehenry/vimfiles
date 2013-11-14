@@ -10,4 +10,5 @@ if has("gui_running")
     "let g:solarized_contrast = "normal"
     "let g:solarized_contrast = "high"
     colorscheme solarized
+    let g:Powerline_colorscheme = "solarized256"
 endif
