@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2013-11-13
+==========
+
+- Update vim-eunuch to version 2013-03-02.
+
+- Convert from use of glob(expr, nosuf, list) to older glob(expr, nosuf) for
+  compatibility with older Vim.  Apparently the third argument to glob() was
+  added in Vim 7.3.465.
+
 2013-11-11
 ==========
 

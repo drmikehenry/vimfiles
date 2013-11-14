@@ -2198,7 +2198,7 @@ endif
 "   :2013-11-11.1
 " This vimfiles-wide setting will be appended to whatever value may have been
 " set via a |VIMRC_BEFORE| file.
-let g:PowerlineRequiredCacheTag .= ":2013-11-11.1"
+let g:PowerlineRequiredCacheTag .= ":2013-11-14"
 
 " This file records the current Powerline "tag".
 let g:PowerlineCacheTagFile = expand('$VIM_CACHE_DIR/PowerlineCacheTag')
@@ -2233,7 +2233,8 @@ if g:EnablePowerline
         let g:Powerline_cache_dir = g:PowerlineDesiredCacheDir
         if PowerlineCacheTagRead() != g:PowerlineRequiredCacheTag
             " Wipe out all Powerline cache files.
-            for p in glob(g:Powerline_cache_dir . "/Powerline_*.cache", 1, 1)
+            for p in split(glob(g:Powerline_cache_dir .
+                        \ "/Powerline_*.cache", 1), '\n')
                 silent! call delete(p)
             endfor
             call PowerlineCacheTagWrite(g:PowerlineRequiredCacheTag)
