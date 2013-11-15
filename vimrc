@@ -1065,6 +1065,9 @@ set wildignore+=*.ko,*.mod.c,*.order,modules.builtin
 " Ignore some java-related files.
 set wildignore+=*.class,classes/**,*.jar
 
+" Ignore debug symbols on Mac OS X.
+set wildignore+=*.dSYM
+
 " Want sessionoptions to contain:
 "   blank - save unnamed buffers.
 "   buffers - save buffers.
