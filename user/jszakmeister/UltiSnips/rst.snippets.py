@@ -114,10 +114,14 @@ bsnip("text", "text code block", r"""
     $0
 """, flags="!")
 
-wsnip("math", "math block", r"""
+bsnip("math", "math block", r"""
 .. math::
 
     $0
+""")
+
+bsnip("foot", "footnote description", r"""
+.. [${1:label}] $0
 """)
 
 # Markup
@@ -128,6 +132,10 @@ wsnip("lit", "literal (code) markup", r"""
 
 wsnip("m", "inline math", r"""
 :math:\`$1\`$0
+""")
+
+wsnip("sup", "superscript", r"""
+:sup:\`$1\`$0
 """)
 
 # Handy helpers (for me).

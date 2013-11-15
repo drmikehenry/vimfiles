@@ -185,6 +185,10 @@ wsnip("prs", "pr-str", r"""
 (pr-str $0)
 """)
 
+wsnip("pl", "println", r"""
+(println $1)$0
+""")
+
 # ClojureScript snippets
 
 wsnip("jslog", "(.log js/console ...)", r"""
