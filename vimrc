@@ -3610,6 +3610,9 @@ command! -bar SetupKernelSource call SetupKernelSource()
 function! SetupMake()
     " Vim's defaults are mostly good.
     setlocal ts=8 tw=80
+
+    " Setup identical settings for both "##" and "#" comments.
+    setlocal comments=sO:##\ -,mO:##\ \ ,b:##,sO:#\ -,mO:#\ \ ,b:#
 endfunction
 command! -bar SetupMake call SetupMake()
 
