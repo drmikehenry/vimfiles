@@ -234,3 +234,6 @@ hi SyntasticWarningLine guibg=#2f2f00   ctermbg=58
 " Indent guides
 hi IndentGuidesOdd  guibg=#141414 ctermbg=233
 hi IndentGuidesEven guibg=#212121 ctermbg=235
+
+" Git
+hi gitcommitSummary guifg=#96CBFE gui=BOLD ctermfg=lightblue cterm=BOLD
