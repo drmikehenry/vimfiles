@@ -37,7 +37,7 @@ hi WildMenu         guifg=#e8e0c3     guibg=#222240     gui=NONE      ctermfg=18
 hi PmenuSbar        guifg=black       guibg=white       gui=NONE      ctermfg=black       ctermbg=white       cterm=NONE
 "hi Ignore           guifg=gray        guibg=black       gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
 
-hi Error            guifg=NONE        guibg=NONE        gui=undercurl ctermfg=white       ctermbg=red         cterm=NONE     guisp=#FF6C60 " undercurl color
+hi Error            guifg=red         guibg=#553333     gui=BOLD      ctermfg=white       ctermbg=red         cterm=NONE
 hi ErrorMsg         guifg=white       guibg=#FF6C60     gui=BOLD      ctermfg=white       ctermbg=red         cterm=NONE
 hi WarningMsg       guifg=white       guibg=#FF6C60     gui=BOLD      ctermfg=white       ctermbg=red         cterm=NONE
 hi LongLineWarning  guifg=NONE        guibg=#371F1C     gui=underline ctermfg=NONE        ctermbg=NONE	      cterm=underline
@@ -175,7 +175,7 @@ hi link javaScriptNumber      Number
 
 
 " Special for Python
-"hi  link pythonEscape         Keyword
+hi pythonDot guibg=NONE
 
 
 " Special for CSharp
@@ -232,5 +232,8 @@ hi SyntasticErrorLine   guibg=#3f0000   ctermbg=52
 hi SyntasticWarningLine guibg=#2f2f00   ctermbg=58
 
 " Indent guides
-hi IndentGuidesOdd  guibg=#252525 ctermbg=233
-hi IndentGuidesEven guibg=#3a3a3a ctermbg=235
+hi IndentGuidesOdd  guibg=#141414 ctermbg=233
+hi IndentGuidesEven guibg=#212121 ctermbg=235
+
+" Git
+hi gitcommitSummary guifg=#96CBFE gui=BOLD ctermfg=lightblue cterm=BOLD
