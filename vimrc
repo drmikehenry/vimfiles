@@ -1705,14 +1705,23 @@ function! TabDo(command)
 endfunction
 command! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 
+" Force current window to be the only window (like <C-W>o).
+" Avoids "Already only one window" error if only one window is showing.
+function! OneWindow()
+    if winnr("$") > 1
+        wincmd o
+    endif
+endfunction
+command! -bar OneWindow call OneWindow()
+
 " -------------------------------------------------------------
 " Diff-related
 " -------------------------------------------------------------
 
 " Taken from :help :DiffOrig.  Shows unsaved differences between
 " this buffer and original file.
-command! -bar DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
-            \ | diffthis | wincmd p | diffthis
+command! -bar DiffOrig OneWindow | vert new | set bt=nofile |
+            \ r ++edit # | 0d_ | diffthis | wincmd p | diffthis
 
 " =============================================================
 " Plugins

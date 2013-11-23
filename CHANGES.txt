@@ -20,6 +20,7 @@ require adjustment of per-user settings.
   - Tone down the indent guides so they're less distracting.
   - Make the git commit summary line standout a little more.
 
+- :DiffOrig now closes other windows before starting diff.
 
 2013-11-21
 ==========
