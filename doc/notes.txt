@@ -2514,10 +2514,33 @@ active, browses through diff hunks; otherwise, when a Location List window is
 open, browses through the Location List; otherwise, opens and browses through
 the QuickFix list.
 
-Use :DiffOrig to compare unsaved changes against original on-disk.
-Use :diffoff to remove diff mode.
-Use :diffthis to put current window into diff mode (do on two windows
-separately to do a diff between them).
+New diff commands:
+
+  :DiffOrig
+    Compare unsaved changes in current window against original on-disk.
+
+  :Diff
+    Initiate diff between current window and "next" window (found by <C-W>w).
+
+  :Diff {filename}
+    Initiate diff between current window and {filename}.
+
+  :DiffClose
+    Restore all diff windows and close them all except current window.
+    Note: this is invoked as part of :OneWindow to ensure that the remaining
+    window won't be left in diff mode when <C-W>o is invoked.
+
+Built-in commands for more manual control:
+
+  :diffthis
+    Put current window into diff mode.  Use this on two windows separately to
+    do a diff between them.
+
+  :diffoff
+    Remove diff mode for current window.
+
+  :diffoff!
+    Remove diff mode for all windows.
 
 ------------------------------------------------------------------------------
 Dragging text in four directions

@@ -1773,6 +1773,20 @@ function! DiffClose()
 endfunction
 command! -bar DiffClose call DiffClose()
 
+" Diff current window and "next" window or a newly split file.
+function! Diff(filename)
+    if a:filename != ""
+        execute "vsplit " . a:filename
+    endif
+    if winnr("$") >= 2
+        diffthis
+        wincmd w
+        diffthis
+        wincmd p
+    endif
+endfunction
+command! -bar -nargs=? Diff  call Diff(<q-args>)
+
 " =============================================================
 " Plugins
 " =============================================================

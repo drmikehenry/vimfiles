@@ -240,6 +240,7 @@ notes_bufmru	notes.txt	/*notes_bufmru*
 notes_build_vim	notes.txt	/*notes_build_vim*
 notes_c_additions	notes.txt	/*notes_c_additions*
 notes_changes	notes.txt	/*notes_changes*
+notes_characterize	notes.txt	/*notes_characterize*
 notes_clojure-static	notes.txt	/*notes_clojure-static*
 notes_closetag	notes.txt	/*notes_closetag*
 notes_colorsamplerpack	notes.txt	/*notes_colorsamplerpack*

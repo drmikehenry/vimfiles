@@ -28,6 +28,9 @@ require adjustment of per-user settings.
 - Add :DiffClose to close all diff windows except current window.
   Perform this as first step of :OneWindow.
 
+- Add :Diff command to initiate a diff between current window and
+  the "next" window or a file given as an argument.
+
 2013-11-21
 ==========
 
