@@ -11,19 +11,6 @@ endif
 
 function! AdjustSzakDarkColors()
     " This is here to help me test out adjustments to the color scheme.
-
-    hi Error guifg=red guibg=#553333 gui=BOLD
-                \ ctermfg=white ctermbg=red cterm=NONE
-
-    " Indent guides
-    hi IndentGuidesOdd  guibg=#141414 ctermbg=233
-    hi IndentGuidesEven guibg=#212121 ctermbg=235
-
-    " Git
-    hi gitcommitSummary guifg=#96CBFE gui=BOLD ctermfg=lightblue cterm=BOLD
-
-    " Python
-    hi pythonDot guibg=NONE
 endfunction
 
 if g:colors_name == 'szakdark'
