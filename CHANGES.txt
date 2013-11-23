@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2013-11-23
+==========
+
+- Add "Characterize" plugin.  Now typing ``ga`` shows more information about
+  the character under the cursor.
+
 2013-11-21
 ==========
 
