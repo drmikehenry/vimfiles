@@ -1708,6 +1708,7 @@ command! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 " Force current window to be the only window (like <C-W>o).
 " Avoids "Already only one window" error if only one window is showing.
 function! OneWindow()
+    DiffClose
     if winnr("$") > 1
         wincmd o
     endif
@@ -1726,6 +1727,51 @@ nnoremap <silent> <C-W>o     :OneWindow<CR>
 " this buffer and original file.
 command! -bar DiffOrig OneWindow | vert new | set bt=nofile |
             \ r ++edit # | 0d_ | diffthis | wincmd p | diffthis
+
+
+" Return list of window numbers for all diff windows (in descending order).
+function! GetDiffWinNums()
+    let diffWinNums = []
+    let curWinNum = winnr()
+    for winNum in range(winnr("$"), 1, -1)
+        execute "noautocmd " . winNum . "wincmd w"
+        if &diff
+            let diffWinNums += [winNum]
+        endif
+    endfor
+    execute "noautocmd " . curWinNum . "wincmd w"
+    return diffWinNums
+endfunction
+
+" Restore all diff windows and close them all except current window.
+" Since folding is enabled for certain kinds of diffs, folds are
+" expanded as part of restoring settings.
+" Also deletes diff buffers that are known-transient.
+function! DiffClose()
+    for diffWinNum in GetDiffWinNums()
+        let curWinNum = winnr()
+        execute diffWinNum . "wincmd w"
+        let name = bufname("%")
+        if &modified || (curWinNum == diffWinNum)
+            " Leave this window in-place, but turn off diff.
+            diffoff
+            normal zR
+        else
+            if &buftype == "nofile" || name =~# "^fugitive:"
+                bwipeout
+            else
+                wincmd c
+            endif
+            if curWinNum > diffWinNum
+                " Our window number decreased when we deleted the
+                " smaller-numbered window.
+                let curWinNum -= 1
+            endif
+        endif
+        execute curWinNum . "wincmd w"
+    endfor
+endfunction
+command! -bar DiffClose call DiffClose()
 
 " =============================================================
 " Plugins

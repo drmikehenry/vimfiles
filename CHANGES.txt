@@ -25,6 +25,9 @@ require adjustment of per-user settings.
 
 - :DiffOrig now closes other windows before starting diff.
 
+- Add :DiffClose to close all diff windows except current window.
+  Perform this as first step of :OneWindow.
+
 2013-11-21
 ==========
 
