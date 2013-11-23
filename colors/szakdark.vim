@@ -175,7 +175,7 @@ hi link javaScriptNumber      Number
 
 
 " Special for Python
-"hi  link pythonEscape         Keyword
+hi pythonDot guibg=NONE
 
 
 " Special for CSharp
