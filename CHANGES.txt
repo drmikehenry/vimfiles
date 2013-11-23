@@ -13,6 +13,14 @@ require adjustment of per-user settings.
 - Add "Characterize" plugin.  Now typing ``ga`` shows more information about
   the character under the cursor.
 
+- Update the "szakdark" colorscheme:
+
+  - Provide better Error highlighting.
+  - Ensure that the background is cleared for pythonDot.
+  - Tone down the indent guides so they're less distracting.
+  - Make the git commit summary line standout a little more.
+
+
 2013-11-21
 ==========
 
