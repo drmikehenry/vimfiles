@@ -1714,6 +1714,10 @@ function! OneWindow()
 endfunction
 command! -bar OneWindow call OneWindow()
 
+" Avoid "Already only one window" errors.
+nnoremap <silent> <C-W><C-O> :OneWindow<CR>
+nnoremap <silent> <C-W>o     :OneWindow<CR>
+
 " -------------------------------------------------------------
 " Diff-related
 " -------------------------------------------------------------
@@ -2795,7 +2799,7 @@ xmap <silent> <C-T> <Plug>VisualSwap
 let VCSCommandMapPrefix = '<Leader>s'
 
 " When doing diff, force two-window layout with old on left.
-nmap <silent> <Leader>sv <C-W>o<Plug>VCSVimDiff<C-W>H<C-W>w
+nmap <silent> <Leader>sv :OneWindow<CR><Plug>VCSVimDiff<C-W>H<C-W>w
 
 " -------------------------------------------------------------
 " winmanager

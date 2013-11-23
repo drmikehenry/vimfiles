@@ -20,6 +20,9 @@ require adjustment of per-user settings.
   - Tone down the indent guides so they're less distracting.
   - Make the git commit summary line standout a little more.
 
+- Add :OneWindow command to avoid "Already only one window"
+  error messages.  Map <C-W><C-O> and <C-W>o to use it.
+
 - :DiffOrig now closes other windows before starting diff.
 
 2013-11-21
