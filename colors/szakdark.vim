@@ -232,5 +232,5 @@ hi SyntasticErrorLine   guibg=#3f0000   ctermbg=52
 hi SyntasticWarningLine guibg=#2f2f00   ctermbg=58
 
 " Indent guides
-hi IndentGuidesOdd  guibg=#252525 ctermbg=233
-hi IndentGuidesEven guibg=#3a3a3a ctermbg=235
+hi IndentGuidesOdd  guibg=#141414 ctermbg=233
+hi IndentGuidesEven guibg=#212121 ctermbg=235
