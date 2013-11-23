@@ -12,6 +12,7 @@
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
     BufMRU - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
+    Characterize - A better 'ga'                        |notes_characterize|
     Clojure-static - Edit Clojure without runtime       |notes_clojure-static|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
@@ -540,6 +541,18 @@ See also:
 :bw       - wipe a buffer, closing window (vim built-in)      |:buwipe|
 
 Version 1.11 from http://vim.sourceforge.net/scripts/script.php?script_id=1147
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+CHARACTERIZE                                             *notes_characterize*
+  A better 'ga'                                          |characterize|
+
+Replaces the builtin 'ga' with one that shows more information, including
+Unicode character name, Vim digraph, Emoji code, and HTML entity.
+
+Version 2013-03-13 (d5ba608) from git://github.com/tpope/vim-characterize.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
