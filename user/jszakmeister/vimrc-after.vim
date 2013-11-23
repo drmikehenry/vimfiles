@@ -402,12 +402,19 @@ function! CustomSetupMarkdownSyntax()
     call SetupMarkdownSyntax()
 
     " Support my trac-style code blocks that I tend to use in my blog.
-    for l:type in g:markdownEmbeddedLangs
-        exe 'syn region markdownHighlight' . l:type . ' ' .
+    for lang in g:markdownEmbeddedLangs
+        let synLang = lang
+        if lang == "c"
+            let synLang = "cpp"
+        endif
+
+        let synGroup = "markdownTracEmbeddedHighlight" . synLang
+
+        exe 'syn region ' . synGroup . ' ' .
                     \ 'matchgroup=markdownCodeDelimiter ' .
-                    \ 'start="^\s*{{{\n\s*::' . l:type .
+                    \ 'start="^\s*{{{\n\s*::' . lang .
                     \ '\>.*$" end="^\s*}}}\ze\s*$" ' .
-                    \ 'keepend contains=@markdownHighlight' . l:type
+                    \ 'keepend contains=@markdownHighlight' . synLang
     endfor
 endfunction
 command! -bar SetupMarkdownSyntax call CustomSetupMarkdownSyntax()
