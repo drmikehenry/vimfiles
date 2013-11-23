@@ -1687,7 +1687,7 @@ function! WinDo(command)
     execute 'windo ' . a:command
     execute curWinNum . 'wincmd w'
 endfunction
-com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
+command! -nargs=+ -complete=command Windo call WinDo(<q-args>)
 
 " Like bufdo but restore the current buffer.
 function! BufDo(command)
@@ -1695,7 +1695,7 @@ function! BufDo(command)
     execute 'bufdo if &bt==""|set ei-=Syntax|' . a:command . '|endif'
     execute 'buffer ' . currBuff
 endfunction
-com! -nargs=+ -complete=command Bufdo call BufDo(<q-args>)
+command! -nargs=+ -complete=command Bufdo call BufDo(<q-args>)
 
 " Like tabdo but restore the current tab.
 function! TabDo(command)
@@ -1703,7 +1703,7 @@ function! TabDo(command)
     execute 'tabdo ' . a:command
     execute 'tabn ' . currTab
 endfunction
-com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
+command! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 
 " -------------------------------------------------------------
 " Diff-related
