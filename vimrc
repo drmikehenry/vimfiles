@@ -502,6 +502,16 @@ endfunction
 nnoremap <F12> :wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
 inoremap <F12> <ESC>:wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
 
+" Return last selected text (as defined by `< and `>).
+function! SelectedText()
+    let regA = getreg("a")
+    let regTypeA = getregtype("a")
+    silent execute 'normal! `<v`>"ay'
+    let text = @a
+    call setreg("a", regA, regTypeA)
+    return text
+endfunction
+
 " -------------------------------------------------------------
 " QuickFix/Location List support
 " -------------------------------------------------------------
@@ -3765,6 +3775,16 @@ command! -bar HelpToggle call HelpToggle()
 nnoremap <F1>       :<C-U>HelpToggle<CR>
 nnoremap <C-Q>h     :<C-U>HelpToggle<CR>
 nnoremap <C-Q><C-H> :<C-U>HelpToggle<CR>
+
+" Get help on visual selection.
+function! VisualHelp()
+    execute ":help " . SelectedText()
+endfunction
+command! -bar VisualHelp call VisualHelp()
+
+xnoremap <F1>       :<C-U>call VisualHelp()<CR>
+xnoremap <C-Q>h     :<C-U>call VisualHelp()<CR>
+xnoremap <C-Q><C-H> :<C-U>call VisualHelp()<CR>
 
 
 " -------------------------------------------------------------

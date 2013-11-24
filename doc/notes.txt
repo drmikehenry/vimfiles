@@ -2843,13 +2843,15 @@ Options include: >
     trailingspace
 
 ------------------------------------------------------------------------------
-Help file toggling
+Help-related mappings
 
-The following mappings toggle the help window on and off:
+The following normal-mode mappings toggle the help window on and off:
 
   <F1>
   <C-Q><C-H>
   <C-Q>h
+
+In visual mode, these same keys perform :help on the selected text.
 
 NOTE See |notes_tips_xon_xoff| if <C-Q> doesn't work in console vim.
 
