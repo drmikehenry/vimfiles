@@ -124,6 +124,19 @@ bsnip("foot", "footnote description", r"""
 .. [${1:label}] $0
 """)
 
+bsnip("img", "image", r"""
+.. image:: ${1:path.*}
+
+$0
+""")
+
+bsnip("cimg", "centered image", r"""
+.. image:: ${1:path.*}
+    :align: center
+
+$0
+""")
+
 # Markup
 
 wsnip("lit", "literal (code) markup", r"""
