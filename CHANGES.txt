@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2013-12-01
+==========
+
+- Default to Python version 2 syntax highlighting with the newly upgraded
+  Python syntax file.  This is done by setting g:python_2_syntax to 1.  It may
+  be overridden using b:python_2_syntax on a per-buffer basis, or globally by
+  setting g:python_2_syntax from "vimrc_before.vim" or "vimrc_after.vim".
+
+  Also, :Python2Syntax and :Python3Syntax allow switching dynamically between
+  the two syntax highlighting schemes.
+
 2013-11-24
 ==========
 

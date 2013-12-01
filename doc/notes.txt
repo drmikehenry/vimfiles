@@ -1555,6 +1555,19 @@ Version 3.3.5 (69f8e12a) from https://github.com/hdima/python-syntax
 
 Maintained by Dmitry Vasiliev.
 
+Use these commands to change between Python version 2 and 3 syntaxes:
+
+  :Python2Syntax
+  :Python3Syntax
+
+Note: These are defined only in Python buffers.
+
+Local customizations:
+- Use Python version 2 syntax highlighting by default by setting
+  g:python_version_2 to 1 if not already set.  May be overridden on a
+  per-buffer basis using b:python_version_2, or globally by setting
+  g:python_version_2 in "vimrc-before.vim" or "vimrc-after.vim".
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 

@@ -3577,6 +3577,11 @@ endfunction
 command! -bar SetupPython call SetupPython()
 let g:IndentGuidesMap["python"] = "<on>"
 
+" Default to Python version 2 syntax, if not already decided.
+if !exists("g:python_version_2")
+    let g:python_version_2 = 1
+endif
+
 " -------------------------------------------------------------
 " Setup for Ruby.
 " -------------------------------------------------------------
