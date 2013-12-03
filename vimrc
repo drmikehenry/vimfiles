@@ -2645,6 +2645,7 @@ let g:local_tagbar_type_rst = {
     \ 'kind2scope' : {
         \ 's' : 'section',
     \ },
+    \ 'sort': 0,
 \ }
 
 " Enable support for .rst files in tagbar by default.  Disable if desired in
