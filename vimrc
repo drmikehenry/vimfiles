@@ -2653,6 +2653,35 @@ let g:local_tagbar_type_rst = {
 "   unlet g:tagbar_type_rst.
 let g:tagbar_type_rst = g:local_tagbar_type_rst
 
+" Support for markdown, if available.
+if executable("markdown2ctags")
+    let g:markdown2ctags = 'markdown2ctags'
+else
+    let g:markdown2ctags = $VIMFILES . '/tool/markdown2ctags/markdown2ctags.py'
+endif
+
+" Local tagbar settings.  Assign g:tagbar_type_markdown to this value to enable
+" support for markdown files in tagbar.
+let g:local_tagbar_type_markdown = {
+    \ 'ctagstype': 'markdown',
+    \ 'ctagsbin' : g:markdown2ctags,
+    \ 'ctagsargs' : '-f - --sort=yes',
+    \ 'kinds' : [
+        \ 's:sections',
+        \ 'i:images'
+    \ ],
+    \ 'sro' : '|',
+    \ 'kind2scope' : {
+        \ 's' : 'section',
+    \ },
+    \ 'sort': 0,
+\ }
+
+" Enable support for markdown files in tagbar by default.  Disable if desired in
+" your |VIMRC_AFTER| file via:
+"   unlet g:tagbar_type_markdown.
+let g:tagbar_type_markdown = g:local_tagbar_type_markdown
+
 " -------------------------------------------------------------
 " textobj-diff
 " -------------------------------------------------------------
