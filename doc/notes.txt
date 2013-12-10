@@ -798,16 +798,11 @@ Compatibility command for Alternate.vim:
 
   :A        Same as :FSHere
 
-Version 0.9.2 from http://www.vim.org/scripts/script.php?script_id=2590
+Version 0.9.5 (e716da1) from https://github.com/derekwyatt/vim-fswitch
 
 Installation:
 
-- Distributed as a |vimball|  >
-
-    vim FSwitch-0.9.2.vba.gz
-    :RmVimball FSwitch          (if upgrading)
-    :so %
-    :q
+- Follow bundle installation instructions (bundle_installation).
 
 ------------------------------------------------------------------------------
 FUGITIVE                                                *notes_fugitive*
