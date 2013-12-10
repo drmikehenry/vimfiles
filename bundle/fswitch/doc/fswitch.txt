@@ -1,4 +1,4 @@
-2fswitch.txt*	For Vim version 7.2 and above	Last change: 2009 Mar 23
+*fswitch.txt*	For Vim version 7.2 and above	Last change: 2009 Mar 23
 
 			       ---------------
  			        File Switcher
@@ -103,7 +103,7 @@ get that move on to |fswitch-configure|.
 	'fswitchlocs' variable.
 
 							*'fswitchlocs'*
-'fswitchlocs'	string	(default depends on filen in current buffer)
+'fswitchlocs'	string	(default depends on file in current buffer)
 		local to buffer
 
 	The 'fswitchlocs' variable contains a set of directives that indicate
@@ -208,6 +208,30 @@ get that move on to |fswitch-configure|.
 	The default locations are currently set to "./" or ".\" depending on
 	what slash your configuration evaluates to.
 
+							*'fswitchfnames'*
+'fswitchfnames'	string	(default depends on file in current buffer)
+		local to buffer
+
+	The 'fswitchfnames' variable contains a comma-separated list
+	of possible substitution patterns over the base filename (without path
+	and extension) that should be formulated when trying to find the
+	alternate file.  The format of the substitution pattern is the same
+	as |fswitch-reg|.
+
+	This may be useful when the companion file may can be formulated by
+	adding a suffix to the base filename. For instance, when the companion
+	of MyClass.java is MyClassTest.java.
+	
+	For example:
+>
+		" Create the destination filename by appending 'Test'
+		" to the filename
+		:let b:fswitchfnames = '/$/Test/'
+
+		" Create the destination filename by removing 'Test'
+		" from the end of the filename.
+		:let b:fswitchfnames = '/Test$//'
+<
 							*'fswitchnonewfiles'*
 'fsnonewfiles'
 		string	(default off)
@@ -364,13 +388,37 @@ In order to see what created the need for this function, see
 							*fswitch-defaults*
 11. The Default Settings~
 
-By default FSwitch handles {c} and {cpp} files, favouring {cpp}.
+By default FSwitch handles {c}, {cc}, {cpp}, {cxx} and {C}.  Note that the
+difference between {c} and {C} is only case sensitivity.  This may mean that
+weird stuff happens if your OS is case insensitive.
+
+Also NOTE that when you use {cxx/hxx} or {C/H}, god kills a puppy.
+Consider that next time you want to do such a silly thing.
 
 For *.h files:
 >
-    let b:fswitchdst  = 'cpp,c'
+    let b:fswitchdst  = 'c,cpp'
     let b:fswitchlocs = 'reg:/include/src/,reg:/include.*/src/,../src'
 <
+
+For *.hpp files:
+>
+    let b:fswitchdst  = 'cpp'
+    let b:fswitchlocs = 'reg:/include/src/,reg:/include.*/src/,../src'
+<
+
+For *.hxx files:
+>
+    let b:fswitchdst  = 'cxx'
+    let b:fswitchlocs = 'reg:/include/src/,reg:/include.*/src/,../src'
+<
+
+For *.H files:
+>
+    let b:fswitchdst  = 'C'
+    let b:fswitchlocs = 'reg:/include/src/,reg:/include.*/src/,../src'
+<
+
 For *.c
 >
     let b:fswitchdst  = 'h'
@@ -379,7 +427,19 @@ For *.c
 
 For *.cpp
 >
-    let b:fswitchdst  = 'h'
+    let b:fswitchdst  = 'hpp,h'
+    let b:fswitchlocs = 'reg:/src/include/,reg:|src|include/**|,../include'
+<
+
+For *.cxx
+>
+    let b:fswitchdst  = 'hxx'
+    let b:fswitchlocs = 'reg:/src/include/,reg:|src|include/**|,../include'
+<
+
+For *.C
+>
+    let b:fswitchdst  = 'H'
     let b:fswitchlocs = 'reg:/src/include/,reg:|src|include/**|,../include'
 <
 
@@ -509,6 +569,23 @@ path.
 ==============================================================================
 							*fswitch-changes*
 A. Change History~
+
+0.9.5
+	- Modified the autocommands to handle the myriad different
+	  formulations of C++ files per Hong Xu's request. See:
+	  https://github.com/derekwyatt/vim-fswitch/pull/3
+
+0.9.4
+	- Added fixes from Alexey Radkov to handle the 'sb' and 'spr' option
+	  settings as well as the 'switchbuf' option.  See:
+	  https://github.com/derekwyatt/vim-fswitch/pull/2
+	- Made small fix to Alexey's fix to keep the 'sb' and 'spr' shadow
+	  variable local to the buffer and unlet them at the end.
+	- I made a quick regression check on this update but did not test
+	  Alexey's features directly - I trust that he did that :)
+
+0.9.3
+	- Made sure that there's a check for 7.0 (Thanks Timon Kelter)
 
 0.9.2
 	- Fix for the splitting commands (Thanks Michael Henry)
