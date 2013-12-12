@@ -4031,7 +4031,8 @@ augroup local_vimrc
     autocmd FileType svn SetupSvn | let b:startAtTop = 1
 
     " Start at top-of-file for Git-related files.
-    autocmd FileType gitcommit,gitrelated SetupGit | let b:startAtTop = 1
+    autocmd FileType gitcommit,gitrelated,gitrebase SetupGit |
+                \ let b:startAtTop = 1
 
     " When editing a file, jump to the last known cursor position.
     autocmd BufReadPost * call AutoRestoreLastCursorPosition()
