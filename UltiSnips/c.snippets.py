@@ -4,7 +4,7 @@
 import sys
 import re
 
-from sniputil import put
+from sniputil import put, defineBetterVisual
 
 from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
@@ -13,23 +13,7 @@ from sniputil import abbr, babbr, wabbr
 # Snippets are now cleared in "clearsnippets" directory.
 #put("clearsnippets\n")
 
-put(r"""
-global !p
-def betterVisual(snip, contIndentLevel=1):
-    import textwrap
-
-    text = textwrap.dedent(snip.v.text)
-    for i, line in enumerate(text.splitlines()):
-        if i == 0:
-            snip.rv = snip.mkline(line)
-            snip.shift(contIndentLevel)
-        elif line.strip():
-            snip += line
-        else:
-            # Avoid indentation for empty lines.
-            snip.rv += "\n"
-endglobal
-""")
+defineBetterVisual()
 
 # 'if' snippets.
 bsnip("if", "if (...) {...}", r"""

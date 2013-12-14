@@ -21,10 +21,12 @@ def addSnipUtilDir():
 addSnipUtilDir()
 
 
-from sniputil import put
+from sniputil import put, defineBetterVisual
 
 from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
+
+defineBetterVisual()
 
 bsnip("chap", "Chapter/Title", r"""
 # $0
@@ -67,7 +69,7 @@ $0
 """)
 
 wsnip("lit", "literal (code) markup", r"""
-\`${1:literal}\`$0
+\`${1:`!p betterVisual(snip)`}\`$0
 """, aliases=['f', 'cmd'])
 
 wsnip("link", "link markup", r"""

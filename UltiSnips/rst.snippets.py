@@ -6,10 +6,12 @@ import re
 
 from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
-from sniputil import put
+from sniputil import put, defineBetterVisual
 
 # Snippets are now cleared in "clearsnippets" directory.
 #put("clearsnippets\n")
+
+defineBetterVisual()
 
 # Title snippets.
 
@@ -71,7 +73,7 @@ bsnip("note", "Note Admonition", r"""
 # Markup.
 
 wsnip("f", "File markup", r"""
-:file:\`${1:path}\`$0
+:file:\`${1:`!p betterVisual(snip)`}\`$0
 """)
 
 wsnip("r", "Ref markup", r"""
@@ -79,5 +81,5 @@ wsnip("r", "Ref markup", r"""
 """)
 
 wsnip("cmd", "Command markup", r"""
-:command:\`${1:command}\`$0
+:command:\`${1:`!p betterVisual(snip)`}\`$0
 """)
