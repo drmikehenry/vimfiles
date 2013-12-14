@@ -638,6 +638,9 @@ augroup jszakmeister_vimrc
 
     " Add my rebase mappings when doing a `git rebase`.
     autocmd FileType gitrebase call SetupRebaseMappings()
+
+    " Treat patch files as mail when preparing to send to a list.
+    autocmd BufNewFile,BufRead [0-9][0-9][0-9][0-9]-*.patch set ft=mail
 augroup END
 
 " =============================================================
