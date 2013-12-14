@@ -21,11 +21,12 @@ def addSnipUtilDir():
 addSnipUtilDir()
 
 
-from sniputil import put
+from sniputil import put, defineBetterVisual
 
 from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
 
+defineBetterVisual()
 
 # Status template
 bsnip("status", "status template", r"""
@@ -140,7 +141,7 @@ $0
 # Markup
 
 wsnip("lit", "literal (code) markup", r"""
-\`\`${1:literal}\`\`$0
+\`\`${1:`!p betterVisual(snip)`}\`\`$0
 """)
 
 wsnip("m", "inline math", r"""
