@@ -158,6 +158,28 @@ call pathogen#infect()
 " than those in "bundle" directories.
 call pathogen#infect('pre-bundle/{}')
 
+" -------------------------------------------------------------
+" Python path management
+" -------------------------------------------------------------
+
+" Setup Python's sys.path to include any "pylib" directories found
+" as immediate children of paths in Vim's 'runtimepath'.  This allows
+" for more easily sharing Python modules.
+
+if has('python')
+function AugmentPythonPath()
+python << endpython
+import vim
+import os
+for p in vim.eval("pathogen#split(&runtimepath)"):
+    libPath = os.path.join(p, "pylib")
+    if os.path.isdir(libPath) and libPath not in sys.path:
+        sys.path.append(libPath)
+endpython
+endfunction
+call AugmentPythonPath()
+endif
+
 " =============================================================
 " Color schemes
 " =============================================================

@@ -2413,6 +2413,20 @@ VIMRC_BEFORE, VIMRC_AFTER                     *VIMRC_BEFORE*   *VIMRC_AFTER*
     $VIMFILES/user/$VIMUSER-after.vim
 
 ------------------------------------------------------------------------------
+Python Path
+
+Python's sys.path is used to locate Python modules when import commands are
+issued.  Especially for use with UltiSnips, it can be useful for Vim's
+embedded Python interpreter to have an augmented sys.path so that helper
+modules may be used from multiple places conveniently.
+
+For this reason, the function AugmentPythonPath() is called from vimrc to
+scan all paths in Vim's 'runtimepath' for child directories named "pylib" and
+adds them to Python's sys.path (unless they are already present).  If a module
+lives in such a "pylib" path, it may be imported from any Python code executed
+within Vim.
+
+------------------------------------------------------------------------------
 Colorschemes
 
 By default, vimfiles chooses a default colorscheme.  To override this, setup
