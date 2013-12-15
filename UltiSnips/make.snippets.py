@@ -3,6 +3,7 @@
 
 import sys
 import re
+import setpypath
 
 from sniputil import put
 

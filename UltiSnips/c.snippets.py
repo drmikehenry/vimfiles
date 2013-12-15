@@ -3,6 +3,7 @@
 
 import sys
 import re
+import setpypath
 
 from sniputil import put
 
@@ -15,19 +16,7 @@ from sniputil import abbr, babbr, wabbr
 
 put(r"""
 global !p
-def betterVisual(snip, contIndentLevel=1):
-    import textwrap
-
-    text = textwrap.dedent(snip.v.text)
-    for i, line in enumerate(text.splitlines()):
-        if i == 0:
-            snip.rv = snip.mkline(line)
-            snip.shift(contIndentLevel)
-        elif line.strip():
-            snip += line
-        else:
-            # Avoid indentation for empty lines.
-            snip.rv += "\n"
+from sniputil import betterVisual
 endglobal
 """)
 

@@ -3,6 +3,7 @@
 
 import sys
 import re
+import setpypath
 
 from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr

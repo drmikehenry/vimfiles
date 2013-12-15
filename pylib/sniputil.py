@@ -4,6 +4,9 @@
 import sys
 import re
 
+##############################################################################
+# Helpers for defining snippets.
+
 def put(s):
     sys.stdout.write(s)
 
@@ -48,3 +51,19 @@ def wabbr(trigger, value, flags="", aliases=[]):
     """Word boundary."""
     abbr(trigger, value, flags="w" + flags.replace("w", ""), aliases=aliases)
 
+##############################################################################
+# Helpers for use in snippets themselves.
+
+def betterVisual(snip, contIndentLevel=1):
+    import textwrap
+
+    text = textwrap.dedent(snip.v.text)
+    for i, line in enumerate(text.splitlines()):
+        if i == 0:
+            snip.rv = snip.mkline(line)
+            snip.shift(contIndentLevel)
+        elif line.strip():
+            snip += line
+        else:
+            # Avoid indentation for empty lines.
+            snip.rv += "\n"
