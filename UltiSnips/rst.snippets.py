@@ -12,6 +12,12 @@ from sniputil import put
 # Snippets are now cleared in "clearsnippets" directory.
 #put("clearsnippets\n")
 
+put(r"""
+global !p
+from sniputil import betterVisual
+endglobal
+""")
+
 # Title snippets.
 
 def tsnip(trigger, desc, char, withOverline=False, flags="b", aliases=[],
@@ -72,7 +78,7 @@ bsnip("note", "Note Admonition", r"""
 # Markup.
 
 wsnip("f", "File markup", r"""
-:file:\`${1:path}\`$0
+:file:\`${1:`!p betterVisual(snip)`}\`$0
 """)
 
 wsnip("r", "Ref markup", r"""
@@ -80,5 +86,5 @@ wsnip("r", "Ref markup", r"""
 """)
 
 wsnip("cmd", "Command markup", r"""
-:command:\`${1:command}\`$0
+:command:\`${1:`!p betterVisual(snip)`}\`$0
 """)

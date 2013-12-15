@@ -125,7 +125,7 @@ $0
 # Markup
 
 wsnip("lit", "literal (code) markup", r"""
-\`\`${1:literal}\`\`$0
+\`\`${1:`!p betterVisual(snip)`}\`\`$0
 """)
 
 wsnip("m", "inline math", r"""
