@@ -7,6 +7,16 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2013-12-13
+==========
+
+- Augment Python Path with all "pylib" directories in Vim runtimepath.  Migrate
+  "sniputil" to ~/.vim/pypath.  See "Python Path" section in notes.txt for more
+  details.
+
+- Incorporate more uses of John Szakmeister's "betterVisual()" support for
+  UltiSnips snippets.
+
 2013-12-12
 ==========
 
