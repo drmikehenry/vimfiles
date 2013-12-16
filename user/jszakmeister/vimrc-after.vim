@@ -47,7 +47,8 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Visually select the text that was last edited/pasted.
-nnoremap gV `[v`]
+" From http://vim.wikia.com/wiki/Selecting_your_pasted_text
+nnoremap <expr> gV '`[' . strpart(getregtype(), 0, 1) . '`]'
 
 " Some reminders of the tag-related shortcuts, since I tend to check my
 " configuration first.
