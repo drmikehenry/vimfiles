@@ -397,6 +397,12 @@ function! CustomSetupClojure()
     inoremap <buffer> <C-Right> <C-\><C-O>:call PareditForwardSlurp()<CR>
     inoremap <buffer> <C-M-Left> <C-\><C-O>:call PareditBackwardSlurp()<CR>
     inoremap <buffer> <C-M-Right> <C-\><C-O>:call PareditBackwardBarf()<CR>
+
+    " Map fireplace's Eval.  Likely to change, but let's try this for now.
+    nnoremap <buffer> <Leader><Leader>e :Eval<CR>
+    nnoremap <buffer> <Leader>e :Eval<CR>
+    vnoremap <buffer> <Leader><Leader>e :Eval<CR>
+    vnoremap <buffer> <Leader>e :Eval<CR>
 endfunction
 command! -bar SetupClojure call CustomSetupClojure()
 
