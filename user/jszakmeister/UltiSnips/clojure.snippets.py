@@ -69,6 +69,10 @@ bsnip("deft", "deftype", r"""
   $0)
 """)
 
+bsnip("def", "def", r"""
+(def $0)
+""")
+
 wsnip("f", "fresh", r"""
 (fresh [${1:vars}]
   $0)
