@@ -25,3 +25,14 @@ wabbr("@param",     "@param ${1:inParam}  ${0:@todo Description of $1.}",
 wabbr("@return",    "@return ", aliases=["@re", "@ret", "@retval", "@rv"])
 wabbr("todo",  "/** @todo ${1:Description of what's TO DO.} */")
 wabbr("bug",   "/** @bug ${1:Description of BUG.} */")
+
+put(r"""
+snippet printf "printf('...', ...);" w!
+System.out.printf("${1:%s}\n"${1/([^%]|%%)*(%.)?.*/(?2:, :\);)/}$2${1/([^%]|%%)*(%.)?.*/(?2:\);)/}
+endsnippet
+
+snippet pf "printf('...', ...);" w!
+System.out.printf("${1:%s}\n"${1/([^%]|%%)*(%.)?.*/(?2:, :\);)/}$2${1/([^%]|%%)*(%.)?.*/(?2:\);)/}
+endsnippet
+
+""")

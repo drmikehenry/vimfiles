@@ -70,3 +70,12 @@ endsnippet
 snippet bug "/** @bug Description of BUG. */" w
 /** @bug ${1:Description of BUG.} */
 endsnippet
+
+snippet printf "printf('...', ...);" w!
+System.out.printf("${1:%s}\n"${1/([^%]|%%)*(%.)?.*/(?2:, :\);)/}$2${1/([^%]|%%)*(%.)?.*/(?2:\);)/}
+endsnippet
+
+snippet pf "printf('...', ...);" w!
+System.out.printf("${1:%s}\n"${1/([^%]|%%)*(%.)?.*/(?2:, :\);)/}$2${1/([^%]|%%)*(%.)?.*/(?2:\);)/}
+endsnippet
+
