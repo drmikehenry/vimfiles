@@ -142,6 +142,10 @@ wsnip("sup", "superscript", r"""
 :sup:\`$1\`$0
 """)
 
+wsnip("link", "link markup", r"""
+\`${1:text} <${2:`!p betterVisual(snip)`}>\`_$0
+""")
+
 # Handy helpers (for me).
 
 wsnip("done", "[DONE]", r"""
