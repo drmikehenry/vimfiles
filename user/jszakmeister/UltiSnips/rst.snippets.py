@@ -12,6 +12,12 @@ from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
 
 
+put(r"""
+global !p
+from sniputil import betterVisual
+endglobal
+""")
+
 # Status template
 bsnip("status", "status template", r"""
 `!v strftime("%d %b")` - `!v strftime("%d %b", localtime()+604800)`
