@@ -290,6 +290,23 @@ endif
 " Setup routines
 " =============================================================
 
+" Override SetupSource's enabling of longline handling.  It messes
+" up syntax-coloring, and it's often not under my control when contributing
+" to other project.  Also, it is acceptable in some projects, like Git, to
+" exceed 80 characters if it keeps the code more coherent.
+function! CustomSetupSource()
+    call SetupSource()
+    Highlight nolonglines
+endfunction
+command! -bar SetupSource call CustomSetupSource()
+
+" Same as the above, but for C.
+function! CustomSetupC()
+    call SetupC()
+    Highlight nolonglines
+endfunction
+command! -bar SetupC call CustomSetupC()
+
 function! SetupAnt()
     SetupMarkup
     set sts=4 sw=4
