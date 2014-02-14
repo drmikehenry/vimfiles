@@ -1,5 +1,5 @@
 *fontsize.txt*   Plugin for modifying guifont size
-*fontsize*       Version 0.3.1
+*fontsize*       Version 0.3.2
 
 ==============================================================================
 1.  Introduction                                    |fontsize-intro|
@@ -31,10 +31,10 @@ Then, re-generate your help tags with Vim's |:helptags| command, e.g.: >
 
   :helptags ~/.vim/doc
 
-You may also install fontdetect using a tool like pathogen[1] by unpacking
+You may also install fontsize using a tool like pathogen[1] by unpacking
 the downloaded archive into a bundle directory, e.g.: >
 
-  ~/.vim/bundle/fontdetect
+  ~/.vim/bundle/fontsize
 
 [1]: https://github.com/tpope/vim-pathogen
 

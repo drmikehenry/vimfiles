@@ -1,5 +1,10 @@
 " Autoload portion of plugin/fontsize.vim.
 
+if exists("autoloaded_fontsize")
+    finish
+endif
+let autoloaded_fontsize = 1
+
 " Font examples from http://vim.wikia.com/wiki/VimTip632
 
 " Regex values for each platform split guifont into three

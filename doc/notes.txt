@@ -768,7 +768,7 @@ In addition, "font size" mode will automatically timeout after |timeoutlen|
 milliseconds have elapsed without a keypress, because "font size" mode is
 based on mappings.
 
-Version 0.3.1 (cb05538) from https://github.com/drmikehenry/vim-fontsize
+Version 0.3.2 (e9a3daf) from https://github.com/drmikehenry/vim-fontsize
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
