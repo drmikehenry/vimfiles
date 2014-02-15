@@ -715,7 +715,7 @@ FIREPLACE                                               *notes_fireplace*
 Provides an enhanced environment for editing Clojure code (including
 completion support), if you're connected via nREPL.
 
-Version 2013-04-19 (4f6b8e5) from git://github.com/tpope/vim-fireplace.git
+Version 2014-02-08 (54476927) from git://github.com/tpope/vim-fireplace.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
