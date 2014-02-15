@@ -818,7 +818,7 @@ more useful ones are:
             See |fugitive-:Gstatus| for more information
   :Git      Run an arbitrary git command from within Vim
 
-Version 2013-10-24 (34e2d253) from git://github.com/tpope/vim-fugitive.git
+Version 2013-01-21 (8f0b8edf) from git://github.com/tpope/vim-fugitive.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
