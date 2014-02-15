@@ -1647,18 +1647,17 @@ add 2 lines to your ~/.lein/profiles.clj.
   ; ensure that redl is loaded on jvm startup
   :injections [(require '[redl core complete])]
   ; ensures that redl is available on the classpath
-  :dependencies [[redl "0.1.0"]]
+  :dependencies [[redl "0.2.2"]]
 <
 A minimal profiles.clj (including REDL, Spyscope, and lein pprint) would look
 like: >
 
-  {:user {:dependencies [[spyscope "0.1.2"]
-                         [redl "0.1.0"]]
+  {:user {:dependencies [[spyscope "0.1.3"]
+                         [redl "0.2.2"]]
           :injections [(require 'spyscope.core)
-                       (require '[redl complete core])]
-          :plugins [[lein-pprint "1.1.1"]]}}
+                       (require '[redl complete core])]}}
 <
-Version 2013-04-16 (96e2558e) from git://github.com/dgrnbrg/vim-redl.git
+Version 2014-01-20 (a5f13665) from git://github.com/dgrnbrg/vim-redl.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

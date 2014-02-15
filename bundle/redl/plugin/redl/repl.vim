@@ -11,7 +11,7 @@ function! redl#repl#eval(form)
   endif
   let escaped_form = escape(a:form,'\"')
   let full_form = '(redl.core/repl-eval '.b:repl_id .
-        \ ' (read-string "(do '.escaped_form.')"))'
+        \ ' "'.escaped_form.'")'
   return fireplace#evalparse(full_form)
 endfunction
 
@@ -41,8 +41,16 @@ function! redl#repl#beginning_of_line()
 endfunction
 
 " Appends the given lines to the end of the buffer
+" Incorporates kotarak's fix for showText in vimclojure
 function! redl#repl#show_text(lines)
-  call append(line('$'), split(a:lines, "\n"))
+  if type(a:lines) == type("")
+    " XXX: Opening the box of the pandora.
+    " 2012-01-09: Adding Carriage Returns here.
+    let text = split(a:lines, '\r\?\n')
+  else
+    let text = a:lines
+  endif
+  call append(line("$"), text)
 endfunction
 
 " When invoked, writes out the prompt in a new line,
@@ -67,7 +75,7 @@ function! redl#repl#create(namespace)
   setlocal noswapfile
   set filetype=clojure
   let ns = "'".a:namespace
-  let b:repl_id = fireplace#evalparse('(redl.core/make-repl '.ns.')')
+  let b:repl_id = fireplace#evalparse('(do (in-ns '.ns.') (redl.core/make-repl '.ns.'))')
   let b:repl_namespace = a:namespace
   let b:repl_depth = 0
   let b:repl_history_depth = 0
@@ -76,7 +84,7 @@ function! redl#repl#create(namespace)
   if !hasmapto("<Plug>clj_repl_enter.", "i")
     imap <buffer> <silent> <CR> <Plug>clj_repl_enter.
   endif
-  if !hasmapto("<Pulg>clj_repl_eval.", "i")
+  if !hasmapto("<Plug>clj_repl_eval.", "i")
     imap <buffer> <silent> <C-e> <Plug>clj_repl_eval.
   endif
   if !hasmapto("<Plug>clj_repl_hat.", "n")
