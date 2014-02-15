@@ -3,7 +3,7 @@
 Author:         Jan Larres <jan@majutsushi.net>
 Licence:        Vim licence, see |license|
 Homepage:       http://majutsushi.github.com/tagbar/
-Version:        2.5
+Version:        2.6.1
 
 ==============================================================================
 Contents                                            *tagbar* *tagbar-contents*
@@ -21,6 +21,7 @@ Contents                                            *tagbar* *tagbar-contents*
               Highlight colours ............. |tagbar-highlight|
               Automatically opening Tagbar .. |tagbar-autoopen|
               Show current tag in statusline  |tagbar-statusline|
+              Ignoring specific files ....... |tagbar-ignore|
          6. Extending Tagbar ................ |tagbar-extend|
          7. Troubleshooting & Known issues .. |tagbar-issues|
          8. History ......................... |tagbar-history|
@@ -317,6 +318,8 @@ The following mappings are valid in the Tagbar window:
                 Map option: tagbar_map_jump
 p             Jump to the tag under the cursor, but stay in the Tagbar window.
                 Map option: tagbar_map_preview
+P             Open the tag in a |preview-window|.
+                Map option: tagbar_map_previewwin
 <LeftMouse>   When on a fold icon, open or close the fold depending on the
               current state.
 <2-LeftMouse> Same as <CR>. See |g:tagbar_singleclick| if you want to use a
@@ -328,6 +331,9 @@ p             Jump to the tag under the cursor, but stay in the Tagbar window.
 <Space>       Display the prototype of the current tag (i.e. the line defining
               it) in the command line.
                 Map option: tagbar_map_showproto
+v             Hide tags that are declared non-public. Tags without any
+              visibility information will still be shown.
+                Map option: tagbar_map_hidenonpublic
 +/zo          Open the fold under the cursor.
                 Map option: tagbar_map_openfold
 -/zc          Close the fold under the cursor or the current one if there is
@@ -393,6 +399,22 @@ Width of the Tagbar window in characters.
 Example:
 >
         let g:tagbar_width = 30
+<
+
+                                                          *g:tagbar_zoomwidth*
+g:tagbar_zoomwidth~
+Default: 1
+
+Width of the Tagbar window when zoomed.
+
+Possible values are:
+  1: Use the maximum width available.
+  0: Use the width of the longest currently visible tag.
+  >1: Use this width in characters.
+
+Example:
+>
+        let g:tagbar_zoomwidth = 0
 <
 
                                                           *g:tagbar_autoclose*
@@ -487,6 +509,19 @@ Example:
         let g:tagbar_show_linenumbers = 2
 <
 
+                                                     *g:tagbar_hide_nonpublic*
+g:tagbar_hide_nonpublic~
+Default: 0
+
+Hide tags that are declared non-public. Tags without any visibility
+information will still be shown. This can also be toggled with a key, see
+|tagbar-keys|.
+
+Example:
+>
+        let g:tagbar_hide_nonpublic = 1
+<
+
                                                              *g:tagbar_expand*
 g:tagbar_expand~
 Default: 0
@@ -559,6 +594,36 @@ You can use the |:TagbarShowTag| command to open the folds manually.
 Example:
 >
         let g:tagbar_autoshowtag = 1
+<
+
+                                                     *g:tagbar_previewwin_pos*
+g:tagbar_previewwin_pos~
+Default: topleft
+
+The position of the preview window. Valid values are the window splitting
+commands that are described starting from |:vertical|. Set it to an empty
+string to use the options 'splitbelow' and 'splitright'.
+
+Example:
+>
+        let g:tagbar_previewwin_pos = "aboveleft"
+<
+If you want to disable line numbers in the preview window put something like
+this into your vimrc:
+>
+        autocmd BufWinEnter * if &previewwindow | setlocal nonumber | endif
+<
+
+                                                        *g:tagbar_autopreview*
+g:tagbar_autopreview~
+Default: 0
+
+If this variable is set to 1 then moving the cursor in the Tagbar window will
+automatically show the current tag in the preview window.
+
+Example:
+>
+        let g:tagbar_autopreview = 1
 <
 
                                               *g:tagbar_updateonsave_maxlines*
@@ -738,6 +803,18 @@ tagbar#currenttag({format}, {default} [, {flags}])
 Note that if there is an error when processing the current file no error
 message will be shown in order to not disrupt the statusline. If the function
 doesn't seem to work right open the Tagbar window to see any error messages.
+
+------------------------------------------------------------------------------
+IGNORING SPECIFIC FILES                                        *tagbar-ignore*
+
+You can ignore specific files by setting the |buffer-variable|
+"b:tagbar_ignore" to 1. This is best done with an |autocommand|:
+>
+    autocmd BufNewFile,BufReadPost foo.cpp let b:tagbar_ignore = 1
+<
+Note that autocommands are order-sensitive, so make sure that this autocommand
+gets defined before the ones that Tagbar defines so the variable will get
+found at the right time.
 
 ==============================================================================
 6. Extending Tagbar                                            *tagbar-extend*
@@ -1186,6 +1263,27 @@ file.
 ==============================================================================
 8. History                                                    *tagbar-history*
 
+2.6.1 (2014-01-23)
+    - Automatically close the preview window when jumping to a tag
+    - Don't forget the previous window in certain situations, which was
+      causing problems with for example fugitive
+    - Fixed toggling kind-specific folds
+    - Fixed ctags error that can happen with Cygwin
+
+2.6 (2013-12-06)
+    - Added possibility to show tags in the preview window, either manually or
+      automatically.
+    - Allow customizing the statusline, see :help g:tagbar_status_func.
+    - Type configuration can now be project-specific.
+    - The keybindings in the Tagbar window are now configurable.
+    - Improvements to Ctags execution on Windows, thanks to Darcy Parker.
+    - Added function tagbar#currentfile() that returns the path to the file
+      currently being displayed in Tagbar, thanks to Zhao Cai.
+    - Added a :Tagbar command as an alias for :TagbarToggle.
+    - Added an way to ignore specific files in case they create problems.
+    - Optionally show line numbers in the Tagbar window.
+    - The usual bunch of small improvements and bugfixes.
+
 2.5 (2013-03-25)
     - New command :TagbarTogglePause to freeze Tagbar in its current state so
       you can switch to other files while keeping the old information
@@ -1338,11 +1436,18 @@ software.
 The folding technique was inspired by NERDTree by Martin Grenfell.
 
 Thanks to the following people for code contributions, feature suggestions etc:
+Peter Butkovic
+Zhao Cai
 Jan Christoph Ebersbach
 Vadim Fint
 Leandro Freitas
+Ingo Karkat
+Audrius Kažukauskas
+Michael McClimon
 Seth Milliken
 Kien N
+Darcy Parker
+fritzophrenic
 pielgrzym
 Taybin Rutkin
 Kian Ryan

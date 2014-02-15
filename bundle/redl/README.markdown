@@ -6,6 +6,9 @@ omnicompletion.
 
 ## Installation
 
+Vim Redl depends on [fireplace.vim](https://github.com/tpope/vim-fireplace).
+Please install fireplace first.
+
 First, you'll need to install this as a Vim plugin. Do that with
 
     cd ~/.vim/bundle
@@ -19,16 +22,15 @@ Then, you'll need to install the Clojure component. To get this, you just need t
 to your `~/.lein/profiles.clj`.
 
 - `:injections [(require '[redl core complete])]` ensure that redl is loaded on jvm startup
-- `:dependencies [[redl "0.1.0"]]` ensures that redl is available on the classpath
+- `:dependencies [[redl "0.2.2"]]` ensures that redl is available on the classpath
 
 A minimal profiles.clj (including REDL, Spyscope, and `lein pprint`) would look like:
 
 ```clojure
-{:user {:dependencies [[spyscope "0.1.2"]
-                       [redl "0.1.0"]]
+{:user {:dependencies [[spyscope "0.1.3"]
+                       [redl "0.2.2"]]
         :injections [(require 'spyscope.core)
-                     (require '[redl complete core])]
-        :plugins [[lein-pprint "1.1.1"]]}}
+                     (require '[redl complete core])]}}
 ```
 
 ### A REPL

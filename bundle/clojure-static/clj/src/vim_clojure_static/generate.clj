@@ -2,19 +2,31 @@
 ;;          Joel Holdbrooks <cjholdbrooks@gmail.com>
 
 (ns vim-clojure-static.generate
-  (:require [clojure.string :as string]
-            [clojure.set :as set]))
+  (:require [clojure.set :as set]
+            [clojure.string :as string]
+            [frak :as f])
+  (:import (clojure.lang MultiFn)
+           (java.lang Character$UnicodeBlock Character$UnicodeScript)
+           (java.lang.reflect Field)
+           (java.util.regex Pattern$CharPropertyNames UnicodeProp)))
 
 ;;
 ;; Helpers
 ;;
 
+(defn vim-frak-pattern
+  "Create a non-capturing regular expression pattern compatible with Vim."
+  [strs]
+  (-> (str (f/pattern strs))
+      (string/replace #"\(\?:" "\\%\\(")))
+
 (defn property-pattern
   "Vimscript very magic pattern for a character property class."
   ([s] (property-pattern s true))
-  ([s braces?] (if braces?
-                 (format "\\v\\\\[pP]\\{%s\\}" s)
-                 (format "\\v\\\\[pP]%s" s))))
+  ([s braces?]
+   (if braces?
+     (format "\\v\\\\[pP]\\{%s\\}" s)
+     (format "\\v\\\\[pP]%s" s))))
 
 (defn syntax-match-properties
   "Vimscript literal `syntax match` for a character property class."
@@ -22,21 +34,45 @@
   ([group fmt props braces?]
    (format "syntax match %s \"%s\" contained display\n"
            (name group)
-           (property-pattern (format fmt (string/join \| (sort props))) braces?))))
+           (property-pattern (format fmt (vim-frak-pattern props)) braces?))))
 
 (defn get-private-field
   "Violate encapsulation and get the value of a private field."
-  [cls fieldname]
-  (let [field (first (filter #(= fieldname (.getName %)) (.getDeclaredFields cls)))]
+  [^Class cls fieldname]
+  (let [^Field field (first (filter #(= fieldname (.getName ^Field %))
+                                    (.getDeclaredFields cls)))]
     (.setAccessible field true)
     (.get field field)))
+
+(defn fn-var? [v]
+  (let [f @v]
+    (or (contains? (meta v) :arglists)
+        (fn? f)
+        (instance? MultiFn f))))
+
+(defn inner-class-name [^Class cls]
+  (string/replace (.getName cls) #".*\$(.+)" "$1"))
+
+(defn map-keyword-names [coll]
+  (reduce
+    (fn [v x]
+      ;; Include fully qualified versions of core vars for matching vars in
+      ;; macroexpanded forms
+      (cond (symbol? x) (if-let [m (meta (resolve x))]
+                          (conj v
+                                (str (:name m))
+                                (str (:ns m) \/ (:name m)))
+                          (conj v (str x)))
+            (nil? x) (conj v "nil")
+            :else (conj v (str x))))
+    [] coll))
 
 ;;
 ;; Definitions
 ;;
 
 (def generation-comment
-  "\" Generated from https://github.com/guns/vim-clojure-static/blob/vim-release-004/clj/src/vim_clojure_static/generate.clj\n")
+  "\" Generated from https://github.com/guns/vim-clojure-static/blob/%%RELEASE_TAG%%/clj/src/vim_clojure_static/generate.clj\n")
 
 (def clojure-version-comment
   (format "\" Clojure version %s\n" (clojure-version)))
@@ -46,46 +82,46 @@
 
 (def special-forms
   "http://clojure.org/special_forms"
-  '[def if do let quote var fn loop recur throw try catch finally
-    monitor-enter monitor-exit . new set!])
+  '#{def if do let quote var fn loop recur throw try catch finally
+     monitor-enter monitor-exit . new set!})
 
 (def keyword-groups
   "Special forms, constants, and every public var in clojure.core listed by
    syntax group suffix."
-  (let [builtins [["Constant" '[nil]]
-                  ["Boolean" '[true false]]
+  (let [builtins [["Constant" '#{nil}]
+                  ["Boolean" '#{true false}]
                   ["Special" special-forms]
-                  ;; The duplicates from Special are intentional here
-                  ["Exception" '[throw try catch finally]]
-                  ["Cond" '[case cond cond-> cond->> condp if-let if-not when
-                            when-first when-let when-not]]
+                  ;; These are duplicates from special-forms
+                  ["Exception" '#{throw try catch finally}]
+                  ["Cond" '#{case cond cond-> cond->> condp if-let if-not when
+                             when-first when-let when-not}]
                   ;; Imperative looping constructs (not sequence functions)
-                  ["Repeat" '[doall dorun doseq dotimes while]]]
-        declared (atom (set (filter symbol? (mapcat peek builtins))))
-        coresyms (keys (ns-publics `clojure.core))
-        select! (fn [pred]
-                  (let [xs (set/difference (set (filter pred coresyms)) @declared)]
-                    (swap! declared into xs)
-                    (vec xs)))]
-    (conj builtins
-          ;; Clojure devs are fastidious about accurate metadata
-          ["Define" (select! #(re-seq #"\Adef(?!ault)" (str %)))]
-          ["Macro" (select! #(:macro (meta (resolve %))))]
-          ["Func" (select! #(:arglists (meta (resolve %))))]
-          ["Variable" (select! identity)])))
+                  ["Repeat" '#{doall dorun doseq dotimes while}]]
+        coresyms (set/difference (set (keys (ns-publics 'clojure.core)))
+                                 (set (mapcat peek builtins)))
+        group-preds [["Define" #(re-seq #"\Adef(?!ault)" (str %))]
+                     ["Macro" #(:macro (meta (ns-resolve 'clojure.core %)))]
+                     ["Func" #(fn-var? (ns-resolve 'clojure.core %))]
+                     ["Variable" identity]]]
+    (first
+      (reduce
+        (fn [[v syms] [group pred]]
+          (let [group-syms (set (filterv pred syms))]
+            [(conj v [group group-syms])
+             (set/difference syms group-syms)]))
+        [builtins coresyms] group-preds))))
 
 (def character-properties
   "Character property names derived via reflection."
-  (let [props (map (fn [[p typ]] [p (string/replace (.getName (type typ)) #".*\$(.+)" "$1")])
-                   (get-private-field java.util.regex.Pattern$CharPropertyNames "map"))
-        props (map (fn [[typ ps]] [typ (map first ps)])
-                   (group-by peek props))
-        props (into {} props)
-        binary (concat (map #(. % name) (get-private-field java.util.regex.UnicodeProp "$VALUES"))
-                       (keys (get-private-field java.util.regex.UnicodeProp "aliases")))
-        script (concat (map #(. % name) (java.lang.Character$UnicodeScript/values))
-                       (keys (get-private-field java.lang.Character$UnicodeScript "aliases")))
-        block (keys (get-private-field java.lang.Character$UnicodeBlock "map"))]
+  (let [props (->> (get-private-field Pattern$CharPropertyNames "map")
+                   (mapv (fn [[prop field]] [(inner-class-name (class field)) prop]))
+                   (group-by first)
+                   (reduce (fn [m [k v]] (assoc m k (mapv peek v))) {}))
+        binary (concat (map #(.name ^UnicodeProp %) (get-private-field UnicodeProp "$VALUES"))
+                       (keys (get-private-field UnicodeProp "aliases")))
+        script (concat (map #(.name ^Character$UnicodeScript %) (Character$UnicodeScript/values))
+                       (keys (get-private-field Character$UnicodeScript "aliases")))
+        block (keys (get-private-field Character$UnicodeBlock "map"))]
     ;;
     ;; * The keys "1"…"5" reflect the order of CharPropertyFactory
     ;;   declarations in Pattern.java!
@@ -109,39 +145,30 @@
 
 (def vim-syntax-keywords
   "Vimscript literal `syntax keyword` definitions."
-  (let [names (fn [coll]
-                (reduce (fn [v x]
-                          ;; Include fully qualified versions of core vars
-                          (cond (symbol? x) (if-let [m (meta (resolve x))]
-                                              (conj v (str (:name m)) (str (:ns m) \/ (:name m)))
-                                              (conj v (str x)))
-                                (nil? x) (conj v "nil")
-                                :else (conj v (str x))))
-                        [] coll))
-        definitions (map (fn [[group keywords]]
-                           (format "syntax keyword clojure%s %s\n"
-                                   group
-                                   (string/join \space (sort (names keywords)))))
-                         keyword-groups)]
-    (string/join definitions)))
+  (->> keyword-groups
+       (map (fn [[group keywords]]
+              (format "syntax keyword clojure%s %s\n"
+                      group
+                      (string/join \space (sort (map-keyword-names keywords))))))
+       string/join))
 
 (def vim-completion-words
   "Vimscript literal list of words for omnifunc completion."
-  (format "let s:words = [%s]\n"
-          (->> `clojure.core
-               ns-publics
-               keys
-               (concat special-forms)
-               (map #(str \" % \"))
-               sort
-               (string/join \,))))
+  (->> 'clojure.core
+       ns-publics
+       keys
+       (concat special-forms)
+       (map #(str \" % \"))
+       sort
+       (string/join \,)
+       (format "let s:words = [%s]\n")))
 
 (def vim-posix-char-classes
   "Vimscript literal `syntax match` for POSIX character classes."
   ;; `IsPosix` works, but is undefined.
   (syntax-match-properties
     :clojureRegexpPosixCharClass
-    "%%(%s)"
+    "%s"
     (:posix character-properties)))
 
 (def vim-java-char-classes
@@ -149,7 +176,7 @@
   ;; `IsjavaMethod` works, but is undefined.
   (syntax-match-properties
     :clojureRegexpJavaCharClass
-    "java%%(%s)"
+    "java%s"
     (map #(string/replace % #"\Ajava" "") (:java character-properties))))
 
 (def vim-unicode-binary-char-classes
@@ -158,26 +185,32 @@
   ;; insensitively like the other Unicode properties.
   (syntax-match-properties
     :clojureRegexpUnicodeCharClass
-    "\\cIs%%(%s)"
+    "\\cIs%s"
     (map string/lower-case (:binary character-properties))))
 
 (def vim-unicode-category-char-classes
   "Vimscript literal `syntax match` for Unicode General Category classes."
-  (let [cats (map seq (:category character-properties))
-        cats (map (fn [[c subcats]]
-                    (format "%s[%s]" c (apply str (sort (mapcat rest subcats)))))
-                  (group-by first cats))]
+  (let [cats (sort (:category character-properties))
+        chrs (->> (map seq cats)
+                  (group-by first)
+                  (keys)
+                  (map str)
+                  (sort))]
     ;; gc= and general_category= can be case insensitive, but this is behavior
     ;; is undefined.
     (str
       (syntax-match-properties
         :clojureRegexpUnicodeCharClass
-        "%%(%s)"
-        (sort (filter #(= (count %) 1) (:category character-properties)))
+        "%s"
+        chrs
         false)
       (syntax-match-properties
         :clojureRegexpUnicodeCharClass
-        "%%(Is|gc\\=|general_category\\=)?%%(%s)"
+        "%s"
+        cats)
+      (syntax-match-properties
+        :clojureRegexpUnicodeCharClass
+        "%%(Is|gc\\=|general_category\\=)?%s"
         cats))))
 
 (def vim-unicode-script-char-classes
@@ -189,7 +222,7 @@
   ;; InScriptName works, but is undefined.
   (syntax-match-properties
     :clojureRegexpUnicodeCharClass
-    "\\c%%(Is|sc\\=|script\\=)%%(%s)"
+    "\\c%%(Is|sc\\=|script\\=)%s"
     (map string/lower-case (:script character-properties))))
 
 (def vim-unicode-block-char-classes
@@ -198,18 +231,30 @@
   ;; of Is.
   (syntax-match-properties
     :clojureRegexpUnicodeCharClass
-    "\\c%%(In|blk\\=|block\\=)%%(%s)"
+    "\\c%%(In|blk\\=|block\\=)%s"
     (map string/lower-case (:block character-properties))))
 
+(def comprehensive-clojure-character-property-regexps
+  "A string representing a Clojure literal vector of regular expressions
+   containing all possible property character classes. For testing Vimscript
+   syntax matching optimizations."
+  (let [fmt (fn [prefix prop-key]
+              (let [props (map (partial format "\\p{%s%s}" prefix)
+                               (sort (get character-properties prop-key)))]
+                (format "#\"%s\"" (string/join props))))]
+    (string/join \newline [(fmt "" :posix)
+                           (fmt "" :java)
+                           (fmt "Is" :binary)
+                           (fmt "general_category=" :category)
+                           (fmt "script=" :script)
+                           (fmt "block=" :block)])))
+
 (comment
+  ;; Generate the vim literal definitions for pasting into the runtime files.
   (spit "tmp/clojure-defs.vim"
         (str generation-comment
              clojure-version-comment
              vim-syntax-keywords
-             \newline
-             generation-comment
-             clojure-version-comment
-             vim-completion-words
              \newline
              generation-comment
              java-version-comment
@@ -218,4 +263,12 @@
              vim-unicode-binary-char-classes
              vim-unicode-category-char-classes
              vim-unicode-script-char-classes
-             vim-unicode-block-char-classes)))
+             vim-unicode-block-char-classes
+             \newline
+             generation-comment
+             clojure-version-comment
+             vim-completion-words))
+  ;; Generate an example file with all possible character property literals.
+  (spit "tmp/all-char-props.clj"
+        comprehensive-clojure-character-property-regexps)
+  )

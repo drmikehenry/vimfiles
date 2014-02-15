@@ -564,7 +564,7 @@ CLOJURE-STATIC                                          *notes_clojure-static*
 Syntax, indent, filetype, and other miscellaneous support for editing Clojure
 without having a runtime environment.
 
-Version 2013-04-26 (949adf7) from git://github.com/guns/vim-clojure-static.git
+Version 2014-02-13 (3910ac4) from git://github.com/guns/vim-clojure-static.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -715,7 +715,7 @@ FIREPLACE                                               *notes_fireplace*
 Provides an enhanced environment for editing Clojure code (including
 completion support), if you're connected via nREPL.
 
-Version 2013-04-19 (4f6b8e5) from git://github.com/tpope/vim-fireplace.git
+Version 2014-02-08 (54476927) from git://github.com/tpope/vim-fireplace.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -818,7 +818,7 @@ more useful ones are:
             See |fugitive-:Gstatus| for more information
   :Git      Run an arbitrary git command from within Vim
 
-Version 2013-10-24 (34e2d253) from git://github.com/tpope/vim-fugitive.git
+Version 2013-01-21 (8f0b8edf) from git://github.com/tpope/vim-fugitive.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1647,18 +1647,17 @@ add 2 lines to your ~/.lein/profiles.clj.
   ; ensure that redl is loaded on jvm startup
   :injections [(require '[redl core complete])]
   ; ensures that redl is available on the classpath
-  :dependencies [[redl "0.1.0"]]
+  :dependencies [[redl "0.2.2"]]
 <
 A minimal profiles.clj (including REDL, Spyscope, and lein pprint) would look
 like: >
 
-  {:user {:dependencies [[spyscope "0.1.2"]
-                         [redl "0.1.0"]]
+  {:user {:dependencies [[spyscope "0.1.3"]
+                         [redl "0.2.2"]]
           :injections [(require 'spyscope.core)
-                       (require '[redl complete core])]
-          :plugins [[lein-pprint "1.1.1"]]}}
+                       (require '[redl complete core])]}}
 <
-Version 2013-04-16 (96e2558e) from git://github.com/dgrnbrg/vim-redl.git
+Version 2014-01-20 (a5f13665) from git://github.com/dgrnbrg/vim-redl.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1868,7 +1867,7 @@ Local customizations:
   CTRL-Q CTRL-T - toggle the tagbar (:TagbarToggle)
   CTRL-Q T      - toggle the tagbar (:TagbarToggle)
 
-Version 2013-09-18 (5566cb34) from https://github.com/majutsushi/tagbar
+Version 2014-02-14 (614b5b24) from https://github.com/majutsushi/tagbar
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

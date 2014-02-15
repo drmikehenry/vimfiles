@@ -11,14 +11,17 @@
 :TagbarTogglePause	tagbar.txt	/*:TagbarTogglePause*
 g:tagbar_autoclose	tagbar.txt	/*g:tagbar_autoclose*
 g:tagbar_autofocus	tagbar.txt	/*g:tagbar_autofocus*
+g:tagbar_autopreview	tagbar.txt	/*g:tagbar_autopreview*
 g:tagbar_autoshowtag	tagbar.txt	/*g:tagbar_autoshowtag*
 g:tagbar_compact	tagbar.txt	/*g:tagbar_compact*
 g:tagbar_ctags_bin	tagbar.txt	/*g:tagbar_ctags_bin*
 g:tagbar_expand	tagbar.txt	/*g:tagbar_expand*
 g:tagbar_foldlevel	tagbar.txt	/*g:tagbar_foldlevel*
+g:tagbar_hide_nonpublic	tagbar.txt	/*g:tagbar_hide_nonpublic*
 g:tagbar_iconchars	tagbar.txt	/*g:tagbar_iconchars*
 g:tagbar_indent	tagbar.txt	/*g:tagbar_indent*
 g:tagbar_left	tagbar.txt	/*g:tagbar_left*
+g:tagbar_previewwin_pos	tagbar.txt	/*g:tagbar_previewwin_pos*
 g:tagbar_show_linenumbers	tagbar.txt	/*g:tagbar_show_linenumbers*
 g:tagbar_show_visibility	tagbar.txt	/*g:tagbar_show_visibility*
 g:tagbar_singleclick	tagbar.txt	/*g:tagbar_singleclick*
@@ -27,6 +30,7 @@ g:tagbar_status_func	tagbar.txt	/*g:tagbar_status_func*
 g:tagbar_systemenc	tagbar.txt	/*g:tagbar_systemenc*
 g:tagbar_updateonsave_maxlines	tagbar.txt	/*g:tagbar_updateonsave_maxlines*
 g:tagbar_width	tagbar.txt	/*g:tagbar_width*
+g:tagbar_zoomwidth	tagbar.txt	/*g:tagbar_zoomwidth*
 tagbar	tagbar.txt	/*tagbar*
 tagbar-autoopen	tagbar.txt	/*tagbar-autoopen*
 tagbar-commands	tagbar.txt	/*tagbar-commands*
@@ -37,6 +41,7 @@ tagbar-extend	tagbar.txt	/*tagbar-extend*
 tagbar-features	tagbar.txt	/*tagbar-features*
 tagbar-highlight	tagbar.txt	/*tagbar-highlight*
 tagbar-history	tagbar.txt	/*tagbar-history*
+tagbar-ignore	tagbar.txt	/*tagbar-ignore*
 tagbar-installation	tagbar.txt	/*tagbar-installation*
 tagbar-intro	tagbar.txt	/*tagbar-intro*
 tagbar-issues	tagbar.txt	/*tagbar-issues*
