@@ -26,15 +26,30 @@ buffer and classpath.vim is installed, java (or $JAVA_CMD) is invoked
 directly, which can be quite slow depending on your setup.
 
 The only adapter shipped with fireplace.vim is for nREPL.  You need either
-|if_pyth| or the ruby command in your PATH.  (This curious combination is an
-accident of history.)
+|if_pyth| or the python command in your PATH.
+
+                        *fireplace-piggieback* *fireplace-clojurescript*
+ClojureScript is can be evaled with Piggieback if the appropriate nREPL
+middleware is loaded.  https://github.com/cemerick/piggieback. Be aware that
+your ClojureScript files must be available on the classpath for this to work
+properly.
+
+                                                *fireplace-:Piggieback*
+:Piggieback [{env}]     Create a new nREPL session and invoke
+                        cemerick.piggieback/cljs-repl with the given or
+                        default (Rhino) environment.  This will also happen
+                        automatically on first eval in a ClojureScript buffer
+                        if not invoked explicitly.
+
+:Piggieback!            Terminate the most recently created piggieback
+                        session.
 
 LEININGEN                                       *fireplace-leiningen*
 
 In addition to automatic repl connection, Clojure buffers in a Leiningen
-project will automatically have their 'makeprg' set to lein.  This has the
-nominal value of letting you call, for example, |:make| deps rather than
-:!lein deps.
+project will automatically have their 'makeprg' set to lein and 'efm' set to
+"%+G,fireplace".  This combination enables `:make test` to run `lein test` and
+parse the stacktraces in the results.
 
 DOCUMENTATION                                   *fireplace-documentation*
 
@@ -129,7 +144,7 @@ stack trace is loaded into the |location-list|.  Use |:lopen| to view it.
                                                 *fireplace-cp*
 cp{motion}              Eval/print the code indicated by {motion}.
 
-cpp                     Eval/print the inner-most expr at the cursor.
+cpp                     Eval/print the outermost form at the cursor.
 
                                                 *fireplace-cpr*
 cpr                     Eval a require :reload form.
@@ -137,7 +152,19 @@ cpr                     Eval a require :reload form.
                                                 *fireplace-c!*
 c!{motion}              Eval/replace the code indicated by {motion}.
 
-c!!                     Eval/replace the inner-most expr at the cusror.
+c!!                     Eval/replace the innermost form at the cursor.
+
+                                                *fireplace-cm*
+cm{motion}              Fully macroexpand the code indicated by {motion}.
+
+                                                *fireplace-cmm*
+cmm                     Fully macroexpand the innermost form at the cursor.
+
+                                                *fireplace-c1m*
+c1m{motion}             Macroexpand the code indicated by {motion} once.
+
+                                                *fireplace-c1mm*
+c1mm                    Macroexpand the innermost form at the cursor once.
 
                                                 *fireplace-cqp*
 cqp                     Bring up a prompt for code to eval/print.

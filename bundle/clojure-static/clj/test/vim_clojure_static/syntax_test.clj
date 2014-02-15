@@ -1,34 +1,23 @@
 ;; Authors: Sung Pae <self@sungpae.com>
 ;;          Joel Holdbrooks <cjholdbrooks@gmail.com>
 
-(ns syntax-test
-  (:require [vim-clojure-static.test :as test :refer [defsyntaxtest]]))
+(ns vim-clojure-static.syntax-test
+  (:require [vim-clojure-static.test :refer [defpredicates defsyntaxtest]]))
 
-(defmacro defbooleantest
-  "Create two complementary test function vars `sym` and `!sym` which test if
-   all members of a passed collection are equal to `kw`"
-  [sym kw]
-  (let [!sym (symbol (str \! sym))]
-    `(do (def ~sym ~(format "All elements in coll equal to %s ?" kw)
-           (partial every? (partial = ~kw)))
-         (def ~!sym ~(format "All elements in coll not equal to %s ?" kw)
-           (complement ~sym))
-         [#'~sym #'~!sym])))
-
-(defbooleantest number :clojureNumber)
-(defbooleantest kw :clojureKeyword)
-(defbooleantest regexp :clojureRegexp)
-(defbooleantest regexp-escape :clojureRegexpEscape)
-(defbooleantest regexp-char-class :clojureRegexpCharClass)
-(defbooleantest regexp-predefined-char-class :clojureRegexpPredefinedCharClass)
-(defbooleantest regexp-posix-char-class :clojureRegexpPosixCharClass)
-(defbooleantest regexp-java-char-class :clojureRegexpJavaCharClass)
-(defbooleantest regexp-unicode-char-class :clojureRegexpUnicodeCharClass)
-(defbooleantest regexp-boundary :clojureRegexpBoundary)
-(defbooleantest regexp-quantifier :clojureRegexpQuantifier)
-(defbooleantest regexp-back-ref :clojureRegexpBackRef)
-(defbooleantest regexp-or :clojureRegexpOr)
-(defbooleantest regexp-group :clojureRegexpGroup)
+(defpredicates number :clojureNumber)
+(defpredicates kw :clojureKeyword)
+(defpredicates regexp :clojureRegexp)
+(defpredicates regexp-escape :clojureRegexpEscape)
+(defpredicates regexp-char-class :clojureRegexpCharClass)
+(defpredicates regexp-predefined-char-class :clojureRegexpPredefinedCharClass)
+(defpredicates regexp-posix-char-class :clojureRegexpPosixCharClass)
+(defpredicates regexp-java-char-class :clojureRegexpJavaCharClass)
+(defpredicates regexp-unicode-char-class :clojureRegexpUnicodeCharClass)
+(defpredicates regexp-boundary :clojureRegexpBoundary)
+(defpredicates regexp-quantifier :clojureRegexpQuantifier)
+(defpredicates regexp-back-ref :clojureRegexpBackRef)
+(defpredicates regexp-or :clojureRegexpOr)
+(defpredicates regexp-group :clojureRegexpGroup)
 (defn regexp-mod [xs] (= (second xs) :clojureRegexpMod))
 (def !regexp-mod (complement regexp-mod))
 
@@ -92,6 +81,28 @@
 
 (comment (test #'number-literals-test))
 
+;; TODO: Finish me! (this was in an old git stash)
+;; (defsyntaxtest keywords-test
+;;   (with-format "%s"
+;;     ":1" kw
+;;     ":A" kw
+;;     ":a" kw
+;;     ":αβγ" kw
+;;     "::a" kw
+;;     ":a/b" kw
+;;     ":a:b" kw
+;;     ":a:b/:c:b" kw
+;;     ":a/b/c/d" kw
+;;     "::a/b" !kw
+;;     "::" !kw
+;;     ":a:" !kw
+;;     ":a/" !kw
+;;     ":/" !kw
+;;     ":" !kw
+;;     ))
+;;
+;; (comment (test #'keywords-test))
+
 (defsyntaxtest java-regexp-literals-test
   ["#\"%s\""
    [;; http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
@@ -143,6 +154,8 @@
     "\\cA" regexp-escape
     "\\c1" !regexp-escape
     "\\c" !regexp-escape
+    ;; Special character escapes
+    "\\(\\)\\[\\]\\{\\}\\^\\$\\*\\?\\+\\." regexp-escape
 
     ;;;; Character classes
 
@@ -219,8 +232,6 @@
     "\\p{IsLatin}" regexp-unicode-char-class
     ;; \p{InGreek}        A character in the Greek block (block)
     "\\p{InGreek}" regexp-unicode-char-class
-    ;; \p{Lu}             An uppercase letter (category)
-    "\\p{Lu}" regexp-unicode-char-class
     ;; \p{IsAlphabetic}   An alphabetic character (binary property)
     "\\p{IsAlphabetic}" regexp-unicode-char-class
     ;; \p{Sc}             A currency symbol
@@ -228,6 +239,13 @@
     ;; \P{InGreek}        Any character except one in the Greek block (negation)
     "\\P{InGreek}" regexp-unicode-char-class
     ;; [\p{L}&&[^\p{Lu}]] Any letter except an uppercase letter (subtraction)
+
+    ;; Abbreviated categories
+    "\\pL" regexp-unicode-char-class
+    "\\p{L}" regexp-unicode-char-class
+    "\\p{Lu}" regexp-unicode-char-class
+    "\\p{gc=L}" regexp-unicode-char-class
+    "\\p{IsLu}" regexp-unicode-char-class
 
     ;;;; Invalid classes
 
@@ -361,6 +379,11 @@
     "(?>X)" regexp-mod
 
     "(?X)" !regexp-mod
-    ]])
+    ]]
+  ["#%s"
+   [;; Backslashes with character classes
+    "\"[\\\\]\"" (partial = [:clojureRegexp :clojureRegexpCharClass :clojureRegexpCharClass :clojureRegexpCharClass :clojureRegexpCharClass :clojureRegexp])
+    "\"\\[]\"" (partial = [:clojureRegexp :clojureRegexpEscape :clojureRegexpEscape :clojureRegexp :clojureRegexp])
+    "\"\\\\[]\"" (partial = [:clojureRegexp :clojureRegexpEscape :clojureRegexpEscape :clojureRegexpCharClass :clojureRegexpCharClass :clojureRegexp])]])
 
 (comment (test #'java-regexp-literals-test))
