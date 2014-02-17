@@ -3215,6 +3215,31 @@ function! SetupCommon()
     " (e.g., via gqap) such that bulleted and numbered lines are handled
     " correctly.
     let &l:formatlistpat = '^\s*\d\+\.\s\+\|^\s*[-*+]\s\+'
+
+    " Also treat lines consisting of optional leading whitespace and
+    " a single repeated punctuation character as list items so that
+    " header text will not be joined with its underline. E.g., the below
+    " text will be unchanged by reformatting::
+    "
+    "   Some header text
+    "   ================
+    "
+    " Unfortunately, overlines are not treated properly.  This text:
+    "
+    "   =================
+    "   Over/under header
+    "   =================
+    "
+    " will be reformatted badly to this::
+    "
+    "   ================= Over/under header
+    "   =================
+    "
+    " But since underlined headers are the most common, this is better
+    " than nothing, and it's much easier to use Vim's built-in formatting
+    " logic than to write something custom.
+
+    let &l:formatlistpat .= '\|^\s*\([-=^"#*' . "'" . ']\)\ze\1\+$'
 endfunction
 command! -bar SetupCommon call SetupCommon()
 

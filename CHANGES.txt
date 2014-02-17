@@ -32,6 +32,29 @@ require adjustment of per-user settings.
     - with a bulleted item
     - and another one
 
+- Extend 'formatlistpat' to view a header's underline as it would a list item.
+  This hack prevents Vim from reformatting underlined headers.  So, for
+  example, pressing Alt-Q when on the below text leaves it unchanged::
+
+    An underlined header
+    ====================
+
+  Unfortunately, it doesn't work for over/under headers.  This text::
+
+    =================
+    Over/under header
+    =================
+
+  will be reformatted badly to this::
+
+    ================= Over/under header
+    =================
+
+  But since underlined headers are the most common, this is better
+  than nothing, and it's much easier to use Vim's built-in formatting
+  logic than to write something custom.
+
+
 2013-12-13
 ==========
 
