@@ -7,6 +7,31 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-02-17
+==========
+
+- Consolidate 'formatoptions' settings for filetypes into shared setup
+  functions.  SetupCommon(), SetupText(), and SetupSource() now collaborate to
+  provide textfile-like and sourcecode-like format settings that should be
+  usable unchanged across most types of files.
+
+  In addition, the flag 'n' is now included in all filetypes, so that the
+  reformatting operator "gq" (also mapped to Alt-Q) now properly preserves
+  bulleted and numbered items.  For example, this text::
+
+    Some text
+    - with a
+      bulleted
+      item
+    - and another
+      one
+
+  Will reformat (using Alt-Q) to the following text::
+
+    Some text
+    - with a bulleted item
+    - and another one
+
 2013-12-13
 ==========
 
@@ -189,6 +214,7 @@ require adjustment of per-user settings.
 - Perform ``:diffupdate`` on <C-L> as part of screen refreshing.
 
 - Define ``SetupMakeIndent`` to override some indent-related settings for
+  makefiles.
 
 - Define first-cut experimental snippets for Makefiles.
 

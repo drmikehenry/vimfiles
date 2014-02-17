@@ -524,6 +524,10 @@ endfunction
 nnoremap <F12> :wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
 inoremap <F12> <ESC>:wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
 
+" -------------------------------------------------------------
+" Support routines
+" -------------------------------------------------------------
+
 " Return last selected text (as defined by `< and `>).
 function! SelectedText()
     let regA = getreg("a")
@@ -532,6 +536,31 @@ function! SelectedText()
     let text = @a
     call setreg("a", regA, regTypeA)
     return text
+endfunction
+
+" Return true if line is blank (i.e., contains only whitespace).
+function! IsBlank(line)
+    return a:line =~# '^\s*$'
+endfunction
+
+" Indent function that leaves things unchanged.
+" Existing (i.e., non-blank) lines keep their current indentation.
+" New (blank) lines keep the indentation level of the previous non-blank line.
+" Use via:
+"   set indentexpr=StatusQuoIndent()
+function! StatusQuoIndent()
+    " Leave non-blank lines alone at their current indentation.
+    let thisLine = getline(v:lnum)
+    if !IsBlank(thisLine)
+        return indent(thisLine)
+    endif
+
+    let lnum = prevnonblank(v:lnum - 1)
+    if lnum == 0
+        return -1
+    endif
+
+    return indent(getline(lnum))
 endfunction
 
 " -------------------------------------------------------------
@@ -3170,22 +3199,33 @@ function! SetSpell()
 endfunction
 
 " -------------------------------------------------------------
-" Setup for mail.
+" Settings common to all filetypes.
 " -------------------------------------------------------------
-function! SetupMail()
-    " Use the 'w' flag in formatoptions to setup format=flowed editing.
-    " The 'w' flag causes problems for wrapping when manual editing strips
-    " out a trailing space.  Better to avoid the flag...
-    " set formatoptions+=w
-    setlocal tw=64 sw=2 sts=2 et ai
+function! SetupCommon()
+    " Setup formatoptions:
+    "   c - auto-wrap comments to textwidth.
+    "   r - automatically insert comment leader when pressing <Enter>.
+    "   o - automatically insert comment leader after 'o' or 'O'.
+    "   q - allow formatting of comments with 'gq'.
+    "   l - long lines are not broken in insert mode.
+    "   n - recognize numbered lists.
+    setlocal formatoptions+=croqln
+
+    " Define pattern for list items.  This helps with reformatting paragraphs
+    " (e.g., via gqap) such that bulleted and numbered lines are handled
+    " correctly.
+    let &l:formatlistpat = '^\s*\d\+\.\s\+\|^\s*[-*+]\s\+'
 endfunction
-command! -bar SetupMail call SetupMail()
-let g:SpellMap["mail"] = "<on>"
+command! -bar SetupCommon call SetupCommon()
 
 " -------------------------------------------------------------
-" Setup for plain text.
+" Setup for plain text (and derivatives).
 " -------------------------------------------------------------
 function! SetupText()
+    SetupCommon
+    " Auto-wrap text using textwidth:
+    setlocal formatoptions+=t
+
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
     let b:SpellType = "<text>"
 endfunction
@@ -3196,6 +3236,9 @@ let g:SpellMap["<text>"] = "<on>"
 " Setup for general source code.
 " -------------------------------------------------------------
 function! SetupSource()
+    SetupCommon
+    " Disable auto-wrap for text, allowing long code lines.
+    set formatoptions-=t
     setlocal tw=80 ts=8 sts=4 sw=4 et ai
     Highlight longlines tabs trailingspace
     let b:SpellType = "<source>"
@@ -3207,6 +3250,7 @@ let g:SpellMap["<source>"] = "<on>"
 " Setup for markup languages like HTML, XML, ....
 " -------------------------------------------------------------
 function! SetupMarkup()
+    SetupText
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
     runtime scripts/closetag.vim
     runtime scripts/xml.vim
@@ -3217,6 +3261,20 @@ function! SetupMarkup()
 endfunction
 command! -bar SetupMarkup call SetupMarkup()
 let g:SpellMap["<markup>"] = "<on>"
+
+" -------------------------------------------------------------
+" Setup for mail.
+" -------------------------------------------------------------
+function! SetupMail()
+    SetupText
+    " Use the 'w' flag in formatoptions to setup format=flowed editing.
+    " The 'w' flag causes problems for wrapping when manual editing strips
+    " out a trailing space.  Better to avoid the flag...
+    " set formatoptions+=w
+    setlocal tw=64 sw=2 sts=2 et ai
+endfunction
+command! -bar SetupMail call SetupMail()
+let g:SpellMap["mail"] = "<on>"
 
 " -------------------------------------------------------------
 " Setup for Markdown.
@@ -3273,18 +3331,6 @@ command! -bar SetupMarkdownSyntax call SetupMarkdownSyntax()
 function! SetupMarkdown()
     SetupMarkup
 
-    " Setup formatoptions:
-    "   t - auto-wrap text using textwidth.
-    "   c - auto-wrap comments to textwidth.
-    "   q - allow formatting of comments with 'gq'.
-    "   l - long lines are not broken in insert mode.
-    setlocal formatoptions=tcql
-
-    " Turn on list support.  List pattern taken from vim-markdown's
-    " ftplugin/markdown.vim.
-    setlocal formatoptions+=n
-    setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^[-*+]\\s\\+
-
     " Setup comments so that we get proper list support.  Also taken from
     " vim-markdown's ftplugin/markdown.vim.
     setlocal comments=fb:*,fb:-,fb:+,n:> commentstring=>\ %s
@@ -3301,6 +3347,7 @@ command! -bar SetupMarkdown call SetupMarkdown()
 " Setup LessCSS.
 " -------------------------------------------------------------
 function! SetupLess()
+    SetupText
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
 endfunction
 command! -bar SetupLess call SetupLess()
@@ -3386,7 +3433,23 @@ endfunction
 command! -bar SetupRstSyntax call SetupRstSyntax()
 
 function! SetupRst()
+    SetupText
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
+
+    " The indent function shipped with Vim tries to guess the desired
+    " indentation, but it guesses incorrectly often enough to make it
+    " irritating.  This is mainly because after a line like this:
+    "
+    "   - Some bullet text
+    "
+    " It's not possible to guess accurately enough whether the user
+    " plans to continue the bullet or start something new.  Manually
+    " changing the indentation when desired seems to create a less
+    " jarring experience.  Therefore, use the "Status Quo" indentation
+    " function to keep the prevailing indentation level unless the user
+    " changes it explicitly.
+    set indentexpr=StatusQuoIndent()
+
 endfunction
 command! -bar SetupRst call SetupRst()
 let g:SpellMap["rst"] = "<on>"
@@ -3395,6 +3458,7 @@ let g:SpellMap["rst"] = "<on>"
 " Setup for Wikipedia.
 " -------------------------------------------------------------
 function! SetupWikipedia()
+    SetupText
     setlocal tw=0 ts=8 sts=2 sw=2 et ai
     " Setup angle brackets as matched pairs for '%'.
     setlocal matchpairs+=<:>
@@ -3483,15 +3547,6 @@ function! SetupC()
 
     " How many lines away to search for unclosed comments.
     setlocal cinoptions+=*100
-
-    " Setup formatoptions:
-    "   c - auto-wrap comments to textwidth.
-    "   r - automatically insert comment leader when pressing <Enter>.
-    "   o - automatically insert comment leader after 'o' or 'O'.
-    "   q - allow formatting of comments with 'gq'.
-    "   l - long lines are not broken in insert mode.
-    "   n - recognize numbered lists.
-    setlocal formatoptions=croqln
 
     " Map CTRL-O_CR to append ';' to the end of line, then do CR.
     inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
@@ -3659,15 +3714,6 @@ function! SetupVhdl()
 
     setlocal comments=b:--
 
-    " Setup formatoptions:
-    "   c - auto-wrap comments to textwidth.
-    "   r - automatically insert comment leader when pressing <Enter>.
-    "   o - automatically insert comment leader after 'o' or 'O'.
-    "   q - allow formatting of comments with 'gq'.
-    "   l - long lines are not broken in insert mode.
-    "   n - recognize numbered lists.
-    setlocal formatoptions=croqln
-
     " Map CTRL-O_CR to append ';' to the end of line, then do CR.
     inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
     vnoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
@@ -3682,6 +3728,7 @@ command! -bar SetupVhdl call SetupVhdl()
 " Setup for Vim C-code Source (the source code for Vim itself).
 " -------------------------------------------------------------
 function! SetupVimC()
+    SetupCommon
     setlocal ts=8 sts=4 sw=4 tw=80
 
     " Don't expand tabs to spaces.
@@ -3695,16 +3742,6 @@ function! SetupVimC()
 
     " Use default indentation options.
     setlocal cinoptions&
-
-    " Setup formatoptions:
-    "   c - auto-wrap comments to textwidth.
-    "   r - automatically insert comment leader when pressing <Enter>.
-    "   o - automatically insert comment leader after 'o' or 'O'.
-    "   q - allow formatting of comments with 'gq'.
-    "   l - long lines are not broken in insert mode.
-    "   n - recognize numbered lists.
-    "   t - autowrap using textwidth,
-    setlocal formatoptions=croqlnt
 endfunction
 command! -bar SetupVimC call SetupVimC()
 
@@ -3712,6 +3749,7 @@ command! -bar SetupVimC call SetupVimC()
 " Setup for Linux Kernel Sources.
 " -------------------------------------------------------------
 function! SetupKernelSource()
+    SetupCommon
     setlocal ts=8 sts=8 sw=8 tw=80
 
     " Don't expand tabs to spaces.
@@ -3731,16 +3769,6 @@ function! SetupKernelSource()
 
     " Line up function args.
     setlocal cinoptions+=(0
-
-    " Setup formatoptions:
-    "   c - auto-wrap comments to textwidth.
-    "   r - automatically insert comment leader when pressing <Enter>.
-    "   o - automatically insert comment leader after 'o' or 'O'.
-    "   q - allow formatting of comments with 'gq'.
-    "   l - long lines are not broken in insert mode.
-    "   n - recognize numbered lists.
-    "   t - autowrap using textwidth,
-    setlocal formatoptions=croqlnt
 endfunction
 command! -bar SetupKernelSource call SetupKernelSource()
 
@@ -3748,6 +3776,7 @@ command! -bar SetupKernelSource call SetupKernelSource()
 " Setup for Makefiles.
 " -------------------------------------------------------------
 function! SetupMake()
+    SetupCommon
     " Vim's defaults are mostly good.
     setlocal ts=8 tw=80
 
@@ -3766,6 +3795,7 @@ command! -bar SetupMakeIndent call SetupMakeIndent()
 " Setup for help files.
 " -------------------------------------------------------------
 function! SetupHelp()
+    SetupText
     " This helps make it easier to jump to tags while editing help files,
     " since a number of tags contain a hyphen.
     " The "@" adds in all "alphabetic" characters, including
@@ -3848,6 +3878,7 @@ xnoremap <C-Q><C-H> :<C-U>call VisualHelp()<CR>
 " Setup for C projects following the GNU Coding Standards
 " -------------------------------------------------------------
 function! SetupGnuSource()
+    SetupSource
     " Don't expand tabs to spaces.
     setlocal noexpandtab
 
@@ -3909,20 +3940,11 @@ function! SetupGnuSource()
     setlocal cinoptions+=m1
 
     setlocal sw=2 sts=2 tw=79
-
-    " Setup formatoptions:
-    "   c - auto-wrap comments to textwidth.
-    "   r - automatically insert comment leader when pressing <Enter>.
-    "   o - automatically insert comment leader after 'o' or 'O'.
-    "   q - allow formatting of comments with 'gq'.
-    "   l - long lines are not broken in insert mode.
-    "   n - recognize numbered lists.
-    "   t - autowrap using textwidth,
-    setlocal formatoptions=croqlnt
 endfunction
 command! -bar SetupGnuSource call SetupGnuSource()
 
 function! SetupDiff()
+    SetupText
     call CreateTextobjDiffLocalMappings()
 endfunction
 command! -bar SetupDiff call SetupDiff()
