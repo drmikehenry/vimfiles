@@ -167,7 +167,7 @@ call pathogen#infect('pre-bundle/{}')
 " for more easily sharing Python modules.
 
 if has('python')
-function AugmentPythonPath()
+function! AugmentPythonPath()
 python << endpython
 import vim
 import os
