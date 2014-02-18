@@ -3477,7 +3477,7 @@ function! SetupRstIndent()
     " jarring experience.  Therefore, use the "Status Quo" indentation
     " function to keep the prevailing indentation level unless the user
     " changes it explicitly.
-    set indentexpr=StatusQuoIndent()
+    setlocal indentexpr=StatusQuoIndent()
 endfunction
 command! -bar SetupRstIndent call SetupRstIndent()
 
