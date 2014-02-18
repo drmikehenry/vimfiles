@@ -3204,12 +3204,11 @@ endfunction
 function! SetupCommon()
     " Setup formatoptions:
     "   c - auto-wrap comments to textwidth.
-    "   r - automatically insert comment leader when pressing <Enter>.
-    "   o - automatically insert comment leader after 'o' or 'O'.
     "   q - allow formatting of comments with 'gq'.
     "   l - long lines are not broken in insert mode.
     "   n - recognize numbered lists.
-    setlocal formatoptions+=croqln
+    "   j - remove comment leader when joining.
+    setlocal formatoptions+=cqlnj
 
     " Define pattern for list items.  This helps with reformatting paragraphs
     " (e.g., via gqap) such that bulleted and numbered lines are handled
@@ -3251,6 +3250,16 @@ function! SetupText()
     " Auto-wrap text using textwidth:
     setlocal formatoptions+=t
 
+    " Do not automatically insert comment leaders:
+    "   r - automatically insert comment leader when pressing <Enter>.
+    "   o - automatically insert comment leader after 'o' or 'O'.
+    " Note: This is to avoid the unwanted side-effect that pressing <Enter>
+    " on a bulleted list item indents the next line, e.g.:
+    "
+    "   - Pressing <Enter> on this bullet yields the below
+    "     indented second line.
+    setlocal formatoptions-=ro
+
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
     let b:SpellType = "<text>"
 endfunction
@@ -3264,6 +3273,12 @@ function! SetupSource()
     SetupCommon
     " Disable auto-wrap for text, allowing long code lines.
     set formatoptions-=t
+
+    " Automatically insert comment leaders:
+    "   r - automatically insert comment leader when pressing <Enter>.
+    "   o - automatically insert comment leader after 'o' or 'O'.
+    setlocal formatoptions+=ro
+
     setlocal tw=80 ts=8 sts=4 sw=4 et ai
     Highlight longlines tabs trailingspace
     let b:SpellType = "<source>"
