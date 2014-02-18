@@ -3460,7 +3460,11 @@ command! -bar SetupRstSyntax call SetupRstSyntax()
 function! SetupRst()
     SetupText
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
+endfunction
+command! -bar SetupRst call SetupRst()
+let g:SpellMap["rst"] = "<on>"
 
+function! SetupRstIndent()
     " The indent function shipped with Vim tries to guess the desired
     " indentation, but it guesses incorrectly often enough to make it
     " irritating.  This is mainly because after a line like this:
@@ -3474,10 +3478,8 @@ function! SetupRst()
     " function to keep the prevailing indentation level unless the user
     " changes it explicitly.
     set indentexpr=StatusQuoIndent()
-
 endfunction
-command! -bar SetupRst call SetupRst()
-let g:SpellMap["rst"] = "<on>"
+command! -bar SetupRstIndent call SetupRstIndent()
 
 " -------------------------------------------------------------
 " Setup for Wikipedia.
