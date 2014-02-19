@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-02-18
+==========
+
+- Fail gracefully when setting the 'j' flag in 'formatoptions' on Vim older
+  than 7.3.541 (when this flag was first introduced).
+
 2014-02-17
 ==========
 

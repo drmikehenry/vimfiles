@@ -3207,8 +3207,12 @@ function! SetupCommon()
     "   q - allow formatting of comments with 'gq'.
     "   l - long lines are not broken in insert mode.
     "   n - recognize numbered lists.
+    setlocal formatoptions+=cqln
+
+    " This flag was added in Vim 7.3.541:
     "   j - remove comment leader when joining.
-    setlocal formatoptions+=cqlnj
+    " Ignore failures setting this flag.
+    silent! setlocal formatoptions+=j
 
     " Define pattern for list items.  This helps with reformatting paragraphs
     " (e.g., via gqap) such that bulleted and numbered lines are handled
