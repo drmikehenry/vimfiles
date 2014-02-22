@@ -10,11 +10,25 @@ import sys
 import re
 
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 
 class ScriptError(Exception):
     pass
+
+
+def ctagNameEscape(str):
+    str = re.sub('[\t\r\n]+', ' ', str)
+    str = re.sub(r'^\s*\\\((.)\)', r'(\1)', str)
+    return str
+
+
+def ctagSearchEscape(str):
+    str = str.replace('\t', r'\t')
+    str = str.replace('\r', r'\r')
+    str = str.replace('\n', r'\n')
+    str = str.replace('\\', r'\\')
+    return str
 
 
 class Tag(object):
@@ -49,15 +63,16 @@ class Tag(object):
 
     @staticmethod
     def section(section):
-        tagAddress = '/^%s$/' % section.line
-        t = Tag(section.name, section.filename, tagAddress)
+        tagName = ctagNameEscape(section.name)
+        tagAddress = '/^%s$/' % ctagSearchEscape(section.line)
+        t = Tag(tagName, section.filename, tagAddress)
         t.addField('kind', 's')
         t.addField('line', section.lineNumber)
 
         parents = []
         p = section.parent
         while p is not None:
-            parents.append(p.name)
+            parents.append(ctagNameEscape(p.name))
             p = p.parent
         parents.reverse()
 
