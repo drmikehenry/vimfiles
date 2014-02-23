@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-02-23
+==========
+
+- Update rst2ctags to v0.1.2 and markdown2ctags to v0.1.1.  This fixes some
+  issues with having backslash characters in headings (thanks for John
+  Szakmeister for these updates).
+
 2014-02-18
 ==========
 
