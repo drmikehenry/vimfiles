@@ -1866,6 +1866,10 @@ if !exists("g:EnablePowerline")
     let g:EnablePowerline = 1
 endif
 
+if !exists("g:EnableUltiSnips")
+    let g:EnableUltiSnips = 1
+endif
+
 " -------------------------------------------------------------
 " BufExplorer
 " -------------------------------------------------------------
@@ -2918,12 +2922,17 @@ function! SetupUltiSnipsMapping()
     endif
 endfunction
 
-augroup local_ultisnips
-    autocmd!
+if g:EnableUltiSnips
+    augroup local_ultisnips
+        autocmd!
 
-    " Store last active help buffer number when leaving the help window.
-    autocmd VimEnter * call SetupUltiSnipsMapping()
-augroup END
+        " Store last active help buffer number when leaving the help window.
+        autocmd VimEnter * call SetupUltiSnipsMapping()
+    augroup END
+else
+    " UltiSnips will not load if this variable is defined:
+    let g:did_UltiSnips_vim = 1
+endif
 
 " -------------------------------------------------------------
 " vis
