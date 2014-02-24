@@ -14,6 +14,9 @@ require adjustment of per-user settings.
   issues with having backslash characters in headings (thanks for John
   Szakmeister for these updates).
 
+- Add g:EnableUltiSnips to allow UltiSnips to be disabled.  This helps with
+  NeoVim, a Vim fork that doesn't support Python bindings yet.
+
 2014-02-18
 ==========
 
