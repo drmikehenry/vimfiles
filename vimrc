@@ -3721,6 +3721,22 @@ endfunction
 command! -bar SetupLlvm call SetupLlvm()
 
 " -------------------------------------------------------------
+" Setup for Lua.
+" -------------------------------------------------------------
+function! SetupLua()
+    SetupSource
+endfunction
+command! -bar SetupLua call SetupLua()
+
+" -------------------------------------------------------------
+" Setup for Moonscript.
+" -------------------------------------------------------------
+function! SetupMoonscript()
+    SetupSource
+endfunction
+command! -bar SetupMoonscript call SetupMoonscript()
+
+" -------------------------------------------------------------
 " Setup for Python.
 " -------------------------------------------------------------
 function! SetupPython()

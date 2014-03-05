@@ -43,6 +43,7 @@
     Markdown - Markdown syntax support                  |notes_markdown|
     Matchit - Extended matching with '%'                |notes_matchit|
     Misc - Contains many useful Vimscript functions     |notes_misc|
+    Moonscript - support for a dialect of Lua           |notes_moonscript|
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
     Paredit - Structured editing of Lisp S-expressions  |notes_paredit|
@@ -1400,6 +1401,16 @@ MISC                                                    *notes_misc*
 Version 1.8.5 from https://github.com/xolox/vim-misc
 
 This plugin is also used by the session plugin.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+MOONSCRIPT - support for a dialect of Lua               *notes_moonscript*
+  Support for a dialect of Lua
+
+Version 77cf9ef0 (December 4, 2013) from
+https://github.com/leafo/moonscript-vim
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
