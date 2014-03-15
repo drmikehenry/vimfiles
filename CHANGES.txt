@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-03-15
+==========
+
+- Change ttimeoutlen to 5 ms to avoid Console vim errors when pressing <Esc>
+  followed too closely by a letter (which look too much like the terminal's
+  encoding for Alt+letter).
+
 2014-03-04
 ==========
 

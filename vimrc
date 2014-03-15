@@ -362,10 +362,14 @@ set timeout timeoutlen=3000
 " so if in insert mode you press <Esc>OH in console Vim (on Linux) within
 " 'ttimeoutlen' milliseconds, you'll get <Home> instead of opening a new
 " line above and inserting "H".
-" Note: 120 words per minute ==> 10 character per second ==> 100 ms between,
-" and 50 ms ==> 240 words per minute.
-" Also, Tim Pope's vim-sensible plugin uses 50 ms as a reasonable value.
-set ttimeout ttimeoutlen=50
+" Note: The previous value of 50 ms proved to be much too long once
+" support for Alt+letter mappings were added by the fixkey plugin.
+" Problems cropped up when pressing <Esc> to leave insert mode followed
+" too quickly by j or k as cursor movements.  With a long ttimeoutlen,
+" these were being interpreted as Alt-j and Alt-k.  Experimentally,
+" it seems that ttimeoutlen=5 is short enough to avoid this error
+" without causing other problems.
+set ttimeout ttimeoutlen=5
 
 " Disallow octal numbers for increment/decrement (CTRL-A/CTRL-X).
 set nrformats-=octal
