@@ -2936,6 +2936,10 @@ if g:EnableUltiSnips
 else
     " UltiSnips will not load if this variable is defined:
     let g:did_UltiSnips_vim = 1
+
+    function! UltiSnips_FileTypeChanged()
+        " Do nothing.
+    endfunction
 endif
 
 " -------------------------------------------------------------
