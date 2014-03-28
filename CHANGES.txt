@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Add John Szakmeister's work-around to define UltiSnips_FileTypeChanged
   when UltiSnips is disabled.
 
+- Upgraded togglecursor to 0.2.0.
+
 2014-03-15
 ==========
 
