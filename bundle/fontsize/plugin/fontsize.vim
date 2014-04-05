@@ -61,12 +61,12 @@ nmap <silent> <SID>(fontsize)<CR>     <SID>quit
 nmap <silent> <SID>(fontsize)         <SID>quit
 
 " Action mappings.
-nnoremap <silent> <SID>begin       :call fontsize#begin()<CR>
-nnoremap <silent> <SID>inc         :call fontsize#inc()<CR>
-nnoremap <silent> <SID>dec         :call fontsize#dec()<CR>
-nnoremap <silent> <SID>default     :call fontsize#default()<CR>
-nnoremap <silent> <SID>setDefault  :call fontsize#setDefault()<CR>
-nnoremap <silent> <SID>quit        :call fontsize#quit()<CR>
+nnoremap <silent> <SID>begin       :<C-u>call fontsize#begin()<CR>
+nnoremap <silent> <SID>inc         :<C-u>call fontsize#inc()<CR>
+nnoremap <silent> <SID>dec         :<C-u>call fontsize#dec()<CR>
+nnoremap <silent> <SID>default     :<C-u>call fontsize#default()<CR>
+nnoremap <silent> <SID>setDefault  :<C-u>call fontsize#setDefault()<CR>
+nnoremap <silent> <SID>quit        :<C-u>call fontsize#quit()<CR>
 
 " Restore saved 'cpoptions'.
 let &cpoptions = s:save_cpoptions

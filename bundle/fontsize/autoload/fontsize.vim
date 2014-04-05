@@ -137,7 +137,7 @@ endfunction
 
 function! fontsize#inc()
     call fontsize#ensureDefault()
-    let newSize = fontsize#getSize(getfontname()) + 1
+    let newSize = fontsize#getSize(getfontname()) + v:count1
     let &guifont = fontsize#setSize(getfontname(), newSize)
     let &guifontwide = fontsize#setSize(&guifontwide, newSize)
     call fontsize#display()
@@ -145,7 +145,7 @@ endfunction
 
 function! fontsize#dec()
     call fontsize#ensureDefault()
-    let newSize = fontsize#getSize(getfontname()) - 1
+    let newSize = fontsize#getSize(getfontname()) - v:count1
     if newSize > 0
         let &guifont = fontsize#setSize(getfontname(), newSize)
         let &guifontwide = fontsize#setSize(&guifontwide, newSize)

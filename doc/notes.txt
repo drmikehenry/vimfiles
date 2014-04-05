@@ -745,16 +745,23 @@ Installation:
 FONTSIZE                                                *notes_fontsize*
   Fontsize - increment/decrement font size              |fontsize.txt|
 
-  <Leader><Leader>+    Increment font size
-  <Leader><Leader>=    Increment font size
-  <Leader><Leader>-    Decrement font size
-  <Leader><Leader>0    Reset to default font size
+  <Leader><Leader>=    Begin "font size" mode
+  <Leader><Leader>+    Increment font size (by [count])
+  <Leader><Leader>-    Decrement font size (by [count])
+  <Leader><Leader>0    Revert to default font size
 
-The above mappings initiate a "font size" mode in which the following
+Note that by default, <Leader> is the backslash character, so for example
+<Leader><Leader>+ is invoked by pressing \\+ from normal mode.
+
+Prefix the above mappings with a numeric [count] to change the font size by
+larger increments.  For example, increase the font size by 5 points via:
+
+  5<Leader><Leader>+
+
+The above mappings also initiate a "font size" mode in which the following
 additional individual keys become active:
 
-  +          Increment font size
-  =          Increment font size
+  +          Increment font size (may also use = to avoid shift key)
   -          Decrement font size
   0          Revert to default font size
   !          Save current size as new default
@@ -762,14 +769,18 @@ additional individual keys become active:
   <SPACE>    Quit "font size" mode
   <CR>       Quit "font size" mode
 
-Other keys pressed will exit "font size" mode and perform their normal
-function.
+Other keys pressed will exit "font size" mode and then perform their normal
+function (e.g., pressing "j" will cancel "font size" mode and move down one
+line).
 
 In addition, "font size" mode will automatically timeout after |timeoutlen|
 milliseconds have elapsed without a keypress, because "font size" mode is
 based on mappings.
 
-Version 0.3.2 (e9a3daf) from https://github.com/drmikehenry/vim-fontsize
+While "font size" mode is active, the prompt "(fontsize)" will be shown if
+'showcmd' is set.
+
+Version 0.3.3 (a5fb55a) from https://github.com/drmikehenry/vim-fontsize
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
