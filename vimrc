@@ -3733,6 +3733,7 @@ command! -bar SetupLlvm call SetupLlvm()
 " -------------------------------------------------------------
 function! SetupLua()
     SetupSource
+    setlocal commentstring=--\ %s
 endfunction
 command! -bar SetupLua call SetupLua()
 
@@ -3741,6 +3742,7 @@ command! -bar SetupLua call SetupLua()
 " -------------------------------------------------------------
 function! SetupMoonscript()
     SetupSource
+    setlocal commentstring=--\ %s
 endfunction
 command! -bar SetupMoonscript call SetupMoonscript()
 
