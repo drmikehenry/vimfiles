@@ -262,6 +262,7 @@ notes_scrollcolor	notes.txt	/*notes_scrollcolor*
 notes_selfdot	notes.txt	/*notes_selfdot*
 notes_session	notes.txt	/*notes_session*
 notes_setup_vimfiles	notes.txt	/*notes_setup_vimfiles*
+notes_snippets	notes.txt	/*notes_snippets*
 notes_surround	notes.txt	/*notes_surround*
 notes_svn	notes.txt	/*notes_svn*
 notes_swapit	notes.txt	/*notes_swapit*
