@@ -2099,11 +2099,16 @@ earlier in the 'runtimepath' take precedence.  For example:
 - ~/.vim/UltiSnips         - Snippets common to all configurations
 - ~/.vim/local/UltiSnips   - Optional snippets local to an installation
 
-For select languages, the default snippets provided by UltiSnips are
-overridden by local snippets.  This is accomplished by putting the directory
-~/.vim/pre-bundle/clearsnippets into the 'runtimepath' before the new locally
-defined snippets.  In this directory are snippets files using the
-"clearsnippets" directive to wipe out the default snippets.
+The default snippets that came with UltiSnips have been split into a separate
+plugin and are no longer included with UltiSnips.  We've included a plugin
+dedicated to providing default snippets for your convenience.  Take a look at
+|notes_snippets| for more information about where the snippets reside and how to
+make them available, should you want to use them.
+
+The default snippets provided by vimfiles are set to have a priority level of
+-5.  This should allow all vimfiles snippets to override many plugin provided
+ones, but still allow use of the default priorty by users to override vimfiles
+provided snippets.
 
 To avoid rampant duplication when defining snippets, a custom set of Python
 scripts is used to define snippets.  For example, the file
