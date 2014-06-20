@@ -2821,7 +2821,7 @@ function! FindSnippetTemplate()
     " If the buffer has no name, we'll only look for template_<filetype>.  If
     " there's no filetype set for the buffer, we'll return an empty string since
     " it doesn't make sense to try and look up a template.
-    let l:snippets = UltiSnips_SnippetsInCurrentScope()
+    let l:snippets = UltiSnips#SnippetsInCurrentScope()
     let l:filename = expand("%:t")
 
     " There's no use proceeding if there's no filetype set.
@@ -2881,7 +2881,7 @@ function! TriggerSnippetTemplate()
 endfunction
 
 function! ExpandSnippetOrSkel()
-    let result = UltiSnips_ExpandSnippet()
+    let result = UltiSnips#ExpandSnippet()
     if !g:ulti_expand_res && getline('.') == "skel"
         let curPos=getpos('.')
         call setline('.', '')
@@ -2898,7 +2898,7 @@ function! ExpandSnippetOrSkel()
 endfunction
 
 function! ExpandSnippetOrJumpOrSkel()
-    let result = UltiSnips_ExpandSnippetOrJump()
+    let result = UltiSnips#ExpandSnippetOrJump()
     if !g:ulti_expand_or_jump_res && getline('.') == "skel"
         let curPos=getpos('.')
         call setline('.', '')
@@ -2935,9 +2935,11 @@ if g:EnableUltiSnips
     augroup END
 else
     " UltiSnips will not load if this variable is defined:
-    let g:did_UltiSnips_vim = 1
+    let g:did_UltiSnips_after = 1
+    let g:did_UltiSnips_autoload = 1
+    let g:did_UltiSnips_plugin = 1
 
-    function! UltiSnips_FileTypeChanged()
+    function! UltiSnips#FileTypeChanged()
         " Do nothing.
     endfunction
 endif
