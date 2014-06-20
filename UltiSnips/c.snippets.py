@@ -15,6 +15,8 @@ from sniputil import abbr, babbr, wabbr
 #put("clearsnippets\n")
 
 put(r"""
+priority -5
+
 global !p
 from sniputil import betterVisual
 endglobal

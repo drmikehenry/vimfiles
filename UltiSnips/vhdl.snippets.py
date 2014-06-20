@@ -10,9 +10,9 @@ from sniputil import put
 from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
 
-
-# Snippets are now cleared in "clearsnippets" directory.
-#put("clearsnippets\n")
+put(r"""
+priority -5
+""")
 
 # 'if' snippets.
 bsnip("if", "if ... then ... end if;", r"""
