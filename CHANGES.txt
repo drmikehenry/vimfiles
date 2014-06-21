@@ -7,6 +7,18 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-06-21
+==========
+
+- Upgrade to UltiSnips 3.0 (thanks to John Szakmeister).  The "sample" snippets
+  that used to ship with UltiSnips were removed in UltiSnips 3.0 and repackaged
+  with the "vim-snippets" project.  In addition, the "clearsnippets"
+  functionality in UltiSnips 3.0 is no longer very useful, since snippet
+  priority based on runtimepath ordering is no longer a feature.  Therefore,
+  these sample snippets have been imported for reference into
+  vimfiles/optional-bundle/snippets, with instructions at :help notes_snippets
+  for activating them.
+
 2014-05-17
 ==========
 

@@ -1802,7 +1802,7 @@ SNIPPETS                                                 *notes_snippets*
 
 Contains snippets for many languages (and for use by several different plugins).
 These snippets are not available for use by default due to the clearsnippets
-functionality not working as expected in UltiSnips 3.0 and the liklihood that
+functionality not working as expected in UltiSnips 3.0 and the likelihood that
 clearsnippets will go away completely.  To make these snippets available, add
 the following to your user vimrc configuration: >
 
