@@ -9,9 +9,6 @@ from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
 from sniputil import put
 
-# Snippets are now cleared in "clearsnippets" directory.
-#put("clearsnippets\n")
-
 put(r"""
 priority -5
 
