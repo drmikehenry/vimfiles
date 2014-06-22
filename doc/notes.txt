@@ -2010,7 +2010,7 @@ Use "f" for text objects based on functions.
 
 To add more language support, see |textobj-function-customizing|.
 
-Version 0.1.3 (97b2c11c) from git://github.com/kana/vim-textobj-function.git
+Version 0.4.0 (adb50f38) from git://github.com/kana/vim-textobj-function.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

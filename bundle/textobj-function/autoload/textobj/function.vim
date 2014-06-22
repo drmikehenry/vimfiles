@@ -1,6 +1,6 @@
 " textobj-function - Text objects for functions
 " Version: 0.4.0
-" Copyright (C) 2007-2014 Kana Natsuno <http://whileimautomaton.net/>
+" Copyright (C) 2014 Kana Natsuno <http://whileimautomaton.net/>
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -22,24 +22,59 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 
-if exists('g:loaded_textobj_function')
-  finish
-endif
+function! s:select(object_type)
+  return exists('b:textobj_function_select')
+  \      ? b:textobj_function_select(a:object_type)
+  \      : 0
+endfunction
 
+function! textobj#function#select_a()
+  return s:select('a')
+endfunction
 
+function! textobj#function#select_i()
+  return s:select('i')
+endfunction
 
+function! textobj#function#select_A()
+  let oln = line('.')
 
-call textobj#user#plugin('function', {
-\   'a': {'select': 'af', 'select-function': 'textobj#function#select_a'},
-\   'i': {'select': 'if', 'select-function': 'textobj#function#select_i'},
-\   'A': {'select': 'aF', 'select-function': 'textobj#function#select_A'},
-\   'I': {'select': 'iF', 'select-function': 'textobj#function#select_I'},
-\ })
+  let r = s:select('a')
+  if r is 0
+    return r
+  endif
 
+  let [_, bp, ep] = r
+  let bln = bp[1]
+  let eln = ep[1]
 
+  call cursor(bln, 1)
+  let lln = search('\v(.\n\zs\n+.*%#)|(%^\n\n+.*%#)', 'bcW')
+  let lp = getpos('.')
 
+  call cursor(eln, 1)
+  let tln = search('\v%#.*\n\n*\zs\n', 'cW')
+  let tp = getpos('.')
 
-let g:loaded_textobj_function = 1
+  if lln != 0 && tln != 0
+    if oln < bln
+      return ['V', lp, ep]
+    else
+      return ['V', bp, tp]
+    endif
+  endif
+  if lln != 0
+    return ['V', lp, ep]
+  endif
+  if tln != 0
+    return ['V', bp, tp]
+  endif
+  return r
+endfunction
 
-" __END__
+function! textobj#function#select_I()
+  return s:select('a')
+endfunction
+
+" __END__  "{{{1
 " vim: foldmethod=marker

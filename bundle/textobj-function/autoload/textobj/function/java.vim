@@ -1,6 +1,7 @@
 " textobj-function - Text objects for functions
 " Version: 0.4.0
-" Copyright (C) 2007-2014 Kana Natsuno <http://whileimautomaton.net/>
+" Copyright (C) 2014 Kana Natsuno <http://whileimautomaton.net/>
+"               2013-2014 Jan Larres <jan@majutsushi.net>
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -22,24 +23,52 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 
-if exists('g:loaded_textobj_function')
-  finish
-endif
+function! textobj#function#java#select(object_type)
+  return s:select_{a:object_type}()
+endfunction
 
+function! s:select_a()
+  if getline('.') =~# '}'
+    normal! k
+  endif
+  normal! ]M$
+  let e = getpos('.')
 
+  normal! [m
+  call search(')', 'bW')
+  normal! %0
+  let b = getpos('.')
 
+  if 1 < e[1] - b[1]  " is there some code?
+    return ['V', b, e]
+  else
+    return 0
+  endif
+endfunction
 
-call textobj#user#plugin('function', {
-\   'a': {'select': 'af', 'select-function': 'textobj#function#select_a'},
-\   'i': {'select': 'if', 'select-function': 'textobj#function#select_i'},
-\   'A': {'select': 'aF', 'select-function': 'textobj#function#select_A'},
-\   'I': {'select': 'iF', 'select-function': 'textobj#function#select_I'},
-\ })
+function! s:select_i()
+  let range = s:select_a()
+  if range is 0
+    return 0
+  endif
 
+  let [_, ab, ae] = range
 
+  call setpos('.', ab)
+  call search('{', 'W')
+  normal! j0
+  let ib = getpos('.')
 
+  call setpos('.', ae)
+  normal! k$
+  let ie = getpos('.')
 
-let g:loaded_textobj_function = 1
+  if 0 <= ie[1] - ib[1]  " is there some code?
+    return ['V', ib, ie]
+  else
+    return 0
+  endif
+endfunction
 
-" __END__
+" __END__  "{{{1
 " vim: foldmethod=marker
