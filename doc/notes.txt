@@ -2057,7 +2057,7 @@ TEXTOBJ-USER                                            *notes_textobj-user*
 Library to support construction of user-defined text objects; by itself,
 library is not terribly useful.  Enables things like |textobj-indent|.
 
-Version 0.3.12 (1b738334) from git://github.com/kana/vim-textobj-user.git
+Version 0.6.2 (96aeac30) from git://github.com/kana/vim-textobj-user.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
