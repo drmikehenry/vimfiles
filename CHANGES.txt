@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-06-23
+==========
+
+- Upgrade textobj-user to version 0.6.3 and textobj-function to version 0.4.0.
+  This fixes problems with newer versions of Vim.  John Szakmeister worked with
+  the maintainer of these plugins to get the needed corrections in-place.
+
 2014-06-21
 ==========
 
