@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-06-26
+==========
+
+- Upgrade fixkey to version 0.3.4.  This includes a changed default for
+  'ttimeoutlen' (which won't impact much, as 5 ms is already set
+  in vimrc), and documentation of an inherent problem using Vim macros
+  to play back ambiguous keycodes.
+
 2014-06-23
 ==========
 
