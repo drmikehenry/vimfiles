@@ -237,3 +237,7 @@ hi IndentGuidesEven guibg=#212121 ctermbg=235
 
 " Git
 hi gitcommitSummary guifg=#96CBFE gui=BOLD ctermfg=lightblue cterm=BOLD
+
+" Java
+hi javaCommentTitle guifg=#7C7C7C gui=BOLD
+hi link javaDocTags javaCommentTitle
