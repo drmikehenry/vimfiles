@@ -3676,6 +3676,12 @@ function! SetupGit()
 endfunction
 command! -bar SetupGit call SetupGit()
 
+function! SetupGitConfig()
+    SetupText
+    setlocal noexpandtab sts=8 sw=8 commentstring=#\ %s
+endfunction
+command! -bar SetupGitConfig call SetupGitConfig()
+
 " -------------------------------------------------------------
 " Setup for Haskell.
 " -------------------------------------------------------------
@@ -4170,9 +4176,6 @@ augroup local_vimrc
 
     " Close diff window after a Git commit.
     autocmd BufUnload * call AutoCloseGitDiff()
-
-    " Use tabs for gitconfig files.
-    autocmd FileType gitconfig setlocal noexpandtab commentstring=#\ %s
 
     " By default, when Vim switches buffers in a window, the new buffer's
     " cursor position is scrolled to the center (as if 'zz' had been
