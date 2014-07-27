@@ -42,6 +42,34 @@ function! RtpPrepend(path)
     endif
 endfunction
 
+" Inserts a directory right after $VIMUSERFILES in the runtimepath.  If an after
+" directory exists, it inserts the /after folder to just before the one in
+" VIMUSERFILES, or tacks it at the end of the runtimepath if $VIMUSEFILES/after
+" is not in the runtimepath.
+"
+" The goal here is to allow inheriting another user's configuration.  This will
+" get the runtimepath fixed up correctly, but you still need to source the
+" before and after scripts within your before and after scripts, respectively.
+function! InheritDirectory(path)
+    if isdirectory(a:path)
+        let l = split(&runtimepath, ",")
+        let i = index(l, $VIMUSERFILES) + 1
+        call insert(l, a:path, i)
+
+        if isdirectory(a:path . '/after')
+            let i = index(l, $VIMUSERFILES . "/after")
+
+            if i < 0
+                call add(l, a:path . '/after')
+            else
+                call insert(l, a:path . "/after", i)
+            endif
+        endif
+
+        let &runtimepath = join(l, ",")
+    endif
+endfunction
+
 " -------------------------------------------------------------
 " Pathogen plugin management (part one)
 " -------------------------------------------------------------
