@@ -12,6 +12,10 @@ require adjustment of per-user settings.
 
 - Add "unittest" plugin.
 
+- Add routines for path manipulation in vimrc.
+
+- Add unit tests for vimrc in test/test_vimrc.vim.
+
 2014-07-26
 ==========
 

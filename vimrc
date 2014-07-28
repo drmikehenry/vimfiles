@@ -30,14 +30,83 @@ set fileencodings=ucs-bom,utf-8,default,latin1
 let $VIMFILES = expand("<sfile>:p:h")
 
 " -------------------------------------------------------------
+" List manipulation
+" -------------------------------------------------------------
+
+function! Flatten(nestedLists)
+    let flattened = []
+    let i = 0
+    while i < len(a:nestedLists)
+        if type(a:nestedLists[i]) == type([])
+            let flattened += Flatten(a:nestedLists[i])
+        else
+            let flattened += [a:nestedLists[i]]
+        endif
+        let i += 1
+    endwhile
+    return flattened
+endfunction
+
+" -------------------------------------------------------------
 " runtimepath manipulation
 " -------------------------------------------------------------
 
+" Escape commas and backslashes in path.
+function! PathEscape(path)
+    return substitute(a:path, '[\\,]', '\\&', "g")
+endfunction
+
+" Un-escape commas and backslashes in path.
+function! PathUnescape(path)
+    " Very magic.
+    let rex = '\v'
+
+    " Find escaping backslash, capture following backslash or a comma.
+    let rex .= '\\([\\,])'
+
+    return substitute(a:path, rex, '\1', "g")
+endfunction
+
+" Join paths into comma-separated path string.
+"   Backslashes and commas will be escaped in final string.
+"   Arguments are individual strings or lists of strings.
+function! PathJoin(...)
+    let paths = Flatten(a:000)
+    let paths = map(paths, 'PathEscape(v:val)')
+    let path = join(paths, ",")
+    return path
+endfunction
+
+" Split comma-separated path string into a list.
+"   Honors escaped backslashes and commas.
+function! PathSplit(path)
+    " Split regex: Very magic.
+    let rex = '\v'
+
+    " Begin match after a non-backslash.
+    let rex .= '\\@<!'
+
+    " Match an zero or more pairs of backslashes; each pair
+    " represents a single escaped backslash.
+    let rex .= '%(\\\\)*'
+
+    " Now set start-of-match and require a comma (which is necessarily not
+    " escaped).
+    let rex .= '\zs,'
+
+    let paths = split(a:path, rex)
+
+    " Unescape individual paths.
+    let paths = map(paths, 'PathUnescape(v:val)')
+    return paths
+endfunction
+
 function! RtpPrepend(path)
     if isdirectory(a:path)
-        let &runtimepath = a:path . "," . &runtimepath
-        if isdirectory(a:path . '/after')
-            let &runtimepath = &runtimepath . "," . a:path . "/after"
+        let &runtimepath = PathEscape(a:path) . "," . &runtimepath
+        let after = a:path . "/after"
+        if isdirectory(after)
+            let &runtimepath = &runtimepath . "," . PathEscape(after)
         endif
     endif
 endfunction
@@ -171,7 +240,7 @@ function! AugmentPythonPath()
 python << endpython
 import vim
 import os
-for p in vim.eval("pathogen#split(&runtimepath)"):
+for p in vim.eval("PathSplit(&runtimepath)"):
     libPath = os.path.join(p, "pylib")
     if os.path.isdir(libPath) and libPath not in sys.path:
         sys.path.append(libPath)
