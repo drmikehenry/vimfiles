@@ -117,7 +117,6 @@ endfunction
 " - If refPath/after does not exist, path/after is added to end of &runtimepath.
 function! RtpAppend(path, refPath)
     if isdirectory(a:path)
-        echomsg("Appending " . a:path . " to " . a:refPath)
         let rtpParts = PathSplit(&runtimepath)
         let i = index(rtpParts, a:refPath)
         if i >= 0
