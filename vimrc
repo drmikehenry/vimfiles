@@ -111,6 +111,45 @@ function! RtpPrepend(path)
     endif
 endfunction
 
+" Append path later in &runtimepath than refPath (similarly for path/after).
+" - Non-existing paths are not added to &runtimepath.
+" - If refPath does not exist, path is inserted at start of &runtimepath.
+" - If refPath/after does not exist, path/after is added to end of &runtimepath.
+function! RtpAppend(path, refPath)
+    if isdirectory(a:path)
+        echomsg("Appending " . a:path . " to " . a:refPath)
+        let rtpParts = PathSplit(&runtimepath)
+        let i = index(rtpParts, a:refPath)
+        if i >= 0
+            call insert(rtpParts, a:path, i + 1)
+        else
+            call insert(rtpParts, a:path, 0)
+        endif
+        let after = a:path . "/after"
+        if isdirectory(after)
+            let i = index(rtpParts, a:refPath . "/after")
+            if i >= 0
+                call insert(rtpParts, after, i)
+            else
+                call add(rtpParts, after)
+            endif
+        endif
+        let &runtimepath = PathJoin(rtpParts)
+    endif
+endfunction
+
+" Inserts directory "path" right after $VIMUSERFILES in &runtimepath. If
+" "path/after" exists, it will be inserted just before $VIMUSERFILES/after (or
+" appended to the end of &runtimepath if $VIMUSEFILES/after is not in
+" &runtimepath).
+"
+" The goal is to allow inheriting another user's configuration. This will get
+" &runtimepath fixed up correctly, but you still need to source the before and
+" after scripts within your before and after scripts, respectively.
+function! RtpInherit(path)
+    call RtpAppend(a:path, $VIMUSERFILES)
+endfunction
+
 " -------------------------------------------------------------
 " Pathogen plugin management (part one)
 " -------------------------------------------------------------

@@ -16,6 +16,8 @@ require adjustment of per-user settings.
 
 - Add unit tests for vimrc in test/test_vimrc.vim.
 
+- Add RtpInherit() to allow inheriting from another user's configuration.
+
 2014-07-26
 ==========
 
