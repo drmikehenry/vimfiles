@@ -280,6 +280,7 @@ notes_tips_xon_xoff	notes.txt	/*notes_tips_xon_xoff*
 notes_tmux_syntax	notes.txt	/*notes_tmux_syntax*
 notes_togglecursor	notes.txt	/*notes_togglecursor*
 notes_ultisnips	notes.txt	/*notes_ultisnips*
+notes_unittest	notes.txt	/*notes_unittest*
 notes_vcscommand	notes.txt	/*notes_vcscommand*
 notes_vimball	notes.txt	/*notes_vimball*
 notes_vis	notes.txt	/*notes_vis*

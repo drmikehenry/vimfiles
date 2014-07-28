@@ -1,0 +1,181 @@
+#!/bin/bash
+#=============================================================================
+# Unit Testing Framework for Vim script
+#
+# File    : bin/vunit
+# Author  : h1mesuke <himesuke+vim@gmail.com>
+# Updated : 2012-01-20
+# Version : 0.6.0
+# License : MIT license {{{
+#
+#   Permission is hereby granted, free of charge, to any person obtaining
+#   a copy of this software and associated documentation files (the
+#   "Software"), to deal in the Software without restriction, including
+#   without limitation the rights to use, copy, modify, merge, publish,
+#   distribute, sublicense, and/or sell copies of the Software, and to
+#   permit persons to whom the Software is furnished to do so, subject to
+#   the following conditions:
+#
+#   The above copyright notice and this permission notice shall be included
+#   in all copies or substantial portions of the Software.
+#
+#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+#   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+#   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+#   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+#   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+#   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# }}}
+#=============================================================================
+
+set -o errexit
+set -o nounset
+
+NAME=vunit
+USAGE="$NAME [options] TESTCASE.vim"
+VERSION=0.1.2
+
+print_help() {
+  cat 1>&2 << EOF
+
+  $NAME - Run a test case of unittest.vim
+
+  Usage:
+    $USAGE
+
+  Options:
+    -V VIM_COMMAND    Executes tests with VIM_COMMAND.
+
+    -b                Output results to a Vim's buffer.
+
+    -c COLOR_SET      Change the color set for colorizing results.
+
+                        Available color sets:
+                          n[one]    Disable colorzing.
+                          d[ark]    Use dark  colors.   [Default]
+                          l[ight]   Use light colors.
+
+    -h                Print this help.
+    -v                Print the version of this program.
+EOF
+}
+
+print_usage() {
+  echo "Usage: $USAGE" 1>&2
+}
+
+print_version() {
+  echo "$NAME $VERSION" 1>&2
+}
+
+VIM=vim
+OUTPUT=FILE   # FILE | BUFFER
+COLOR=DARK    # NONE | DARK | LIGHT
+OPT=
+
+# Parse command-line options.
+if [ "$OPTIND" = 1 ]; then
+  while getopts V:c:bhv OPT; do
+    case $OPT in
+      V) VIM=$OPTARG   ;;
+      b) OUTPUT=BUFFER ;;
+      c)
+        case "$OPTARG" in
+          [nN]*) COLOR=NONE  ;;
+          [dD]*) COLOR=DARK  ;;
+          [lL]*) COLOR=LIGHT ;;
+        esac
+        ;;
+      h)  print_help;    exit 0 ;;
+      v)  print_version; exit 0 ;;
+      \?) print_help;    exit 1 ;;
+    esac
+  done
+  shift $(($OPTIND - 1))
+else
+  echo "$NAME: getopts is not available." 1>&2
+  exit 1
+fi
+
+if [ $# -ne 1 ]; then
+  print_usage
+  exit 1
+fi
+
+check_path() {
+  local path=$1
+  case "$path" in *' '*)
+    echo "vunit: PathError: vunit can't handle a path with spaces." 1>&2
+    exit 1
+  esac
+}
+
+tcdir=`dirname "$1"`
+tcfile=`basename "$1"`
+check_path "$tcfile"
+
+cwd=`pwd`
+trap 'cd "$cwd"; exit 0' EXIT
+trap 'cd "$cwd"; exit 1' HUP INT QUIT TERM
+cd "$tcdir"
+
+if [ $OUTPUT = FILE ]; then
+  outfile=`mktemp -t vunit_results.XXXXXXXXXX`
+  check_path "$outfile"
+  trap - EXIT HUP INT QUIT TERM
+  trap 'rm -f "$outfile"; cd "$tcdir" exit 0' EXIT
+  trap 'rm -f "$outfile"; cd "$tcdir" exit 1' HUP INT QUIT TERM
+
+  $VIM -c "UnitTest $tcfile >$outfile" -c "qall!"
+
+  if [ $COLOR = NONE ]; then
+    cat "$outfile"
+  else
+    <"$outfile" awk -v color_set=$COLOR '
+
+      BEGIN {
+        if (color_set == "DARK") {
+          color_pending = "\x1b[33m"
+          color_red     = "\x1b[31m"
+          color_green   = "\x1b[32m"
+        } else {
+          color_pending = "\x1b[33;01m"
+          color_red     = "\x1b[31;01m"
+          color_green   = "\x1b[32;01m"
+        }
+        end_color="\x1b[0m"
+      }
+
+      # Status lines
+      /^[[:alpha:]_][[:alnum:]_]* => \*$/ {
+        $1 = color_pending $1 end_color
+        $3 = color_pending $3 end_color
+      }
+      /^[[:alpha:]_][[:alnum:]_]* => \.*[FE][.FE]*$/ {
+        $1 = color_red $1 end_color
+        gsub(/[FE]/, color_red "&" end_color, $3)
+      }
+
+      # NYI
+      /^[[:space:]]+# Not Yet Implemented$/ {
+        $0 = color_pending $0 end_color
+      }
+      # Failure/Error reason
+      /^[[:space:]]+(Failed|Error): / {
+        $0 = color_red $0 end_color
+      }
+
+      # Results
+      /^[01-9]+ tests, [01-9]+ assertions, [01-9]+ failures, [01-9]+ errors( \([01-9]+ pending\))?$/ {
+        sub(/\([1-9][01-9]* pending\)/,       color_pending "&" end_color)
+        sub(/0 failures, 0 errors/,           color_green   "&" end_color)
+        sub(/[1-9][01-9]* (failures|errors)/, color_red     "&" end_color)
+      }
+
+      { print }
+    '
+  fi
+else
+  $VIM -c "UnitTest $tcfile" -c 'wincmd o' -c 'normal! z-'
+fi

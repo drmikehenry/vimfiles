@@ -1,0 +1,969 @@
+*unittest.txt*		Unit Testing Framework for Vim script
+
+Author  : h1mesuke <himesuke+vim@gmail.com>
+Updated : 2012-01-28
+Version : 0.6.0
+License : MIT license {{{
+
+	Permission is hereby granted, free of charge, to any person obtaining
+	a copy of this software and associated documentation files (the
+	"Software"), to deal in the Software without restriction, including
+	without limitation the rights to use, copy, modify, merge, publish,
+	distribute, sublicense, and/or sell copies of the Software, and to
+	permit persons to whom the Software is furnished to do so, subject to
+	the following conditions:
+	The above copyright notice and this permission notice shall be
+	included in all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+	IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+	CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+	TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+}}}
+
+CONTENTS					*unittest-contents*
+
+	Introduction			|unittest-introduction|
+	Install				|unittest-install|
+	How to Write Tests		|unittest-how-to-write|
+	  Setup and Teardown		|unittest-setup|
+	  Access Script-locals		  |unittest-access-script-locals|
+	  Use of Test Data		  |unittest-test-data|
+	  Pending Tests			  |unittest-pending-tests|
+	How to Run Tests		|unittest-how-to-run|
+	Interface			|unittest-interface|
+	  Commands			  |unittest-commands|
+	  Global Functions		  |unittest-functions|
+	  TestCase Methods		  |unittest-testcase-methods|
+	    Assertions			    |unittest-assertions|
+	    Context Accessors		    |unittest-context-accessors|
+	    Data Accessors		    |unittest-data-accessors|
+	    Utilities			    |unittest-testcase-utilities|
+	  Variables			  |unittest-variables|
+	Issues				|unittest-issues|
+	ChanheLog			|unittest-changelog|
+
+==============================================================================
+INTRODUCTION					*unittest-introduction*
+
+	*unittest.vim* is a unit testing framework for Vim script. It helps
+	you to test commands and functions defined in your Vim scripts. You
+	can write tests of not only global commands and functions but also
+	script-locals in the manner of xUnit frameworks.
+
+	Requirements: ~
+	* Vim 7.2 or later
+
+	NOTE: If you need to write tests that access any script-local
+	variables, unittest.vim requires Vim 7.3 or later.
+
+	See |unittest-access-script-locals|.
+
+==============================================================================
+INSTALL						*unittest-install*
+
+	Install the distributed files into your Vim script directory which is
+	usually $HOME/.vim, or $HOME/vimfiles on Windows.
+
+==============================================================================
+HOW TO WRITE TESTS				*unittest-how-to-write*
+
+	1. Make a new test case file.
+>
+		$ vim test_something.vim
+<
+		* Basename of a test case file MUST start with "test_" or "tc_".
+
+	2. Create a new TestCase object at your "test_something.vim".
+>
+		let s:tc = unittest#testcase#new("Something")
+<
+		* unittest#testcase#new() returns a new TestCase object.
+		* unittest#testcase#new()'s first argument will be used as
+		  a caption in the report of the test results.
+
+	3. Define test functions as the TestCase's methods.
+>
+		function! s:tc.test_one()
+		  call self.assert(1)
+		endfunction
+
+		function! s:tc.one_should_be_true()
+		  call self.assert(1)
+		endfunction
+<
+		* Names of test functions MUST start with "test_" or contain
+		  "should".
+
+	4. Use assertions in the test functions to describe your expectations.
+
+		See |unittest-assertions|.
+
+	5. Run the tests.
+>
+		:UnitTest
+<
+		See |unittest-how-to-run|, |:UnitTest|.
+
+------------------------------------------------------------------------------
+SETUP AND TEARDOWN			*unittest-setup*  *unittest-teardown*
+					*unittest-SETUP*  *unittest-TEARDOWN*
+
+	You can write setup/teardown hooks for each test just as you do it
+	with other xUnit frameworks.
+
+	First, look at the example below.
+>
+	function! s:tc.SETUP()
+	endfunction
+
+	function! s:tc.setup()
+	endfunction
+
+	function! s:tc.setup_foo()
+	endfunction
+
+	function! s:tc.test_foo()
+	endfunction
+
+	function! s:tc.teardown_foo()
+	endfunction
+
+	function! s:tc.setup_foo_bar()
+	endfunction
+
+	function! s:tc.test_foo_bar()
+	endfunction
+
+	function! s:tc.teardown_foo_bar()
+	endfunction
+
+	function! s:tc.teardown()
+	endfunction
+
+	function! s:tc.TEARDOWN()
+	endfunction
+<
+	These functions are executed in the following order:
+>
+	SETUP
+
+	setup
+	setup_foo
+	test_foo
+	teardown_foo
+	teardown
+
+	setup
+	setup_foo
+	setup_foo_bar
+	test_foo_bar
+	teardown_foo_bar
+	teardown_foo
+	teardown
+
+	TEARDOWN
+<
+	At first, SETUP() is executed. Note that SETUP() and TEARDOWN(), whose
+	names consist of uppercase letters, are executed once for the test
+	case. SETUP() for preparation and TEARDOWN() for cleaning up.
+
+	The tests are executed in alphabetical order. "setup_[foo]" matches
+	"test_[foo]" and "test_[foo_bar]", so "setup_foo" are executed for
+	both tests. The setup functions whose suffixes match a test's suffix
+	are executed in order of suffix length from the shortest to the
+	longest before the test. On the other hand, the teardown functions are
+	executed in reverse order after the test. setup() and teardown() are
+	executed for every tests if they exist. They are considered to have
+	the shortest suffix.
+
+	At last, TEARDOWN() is executed.
+
+------------------------------------------------------------------------------
+ACCESS SCRIPT-LOCALS			*unittest-access-script-locals*
+
+	You can write tests that access the script-locals of a script to be
+	tested by exporting its scope to your TestCase.
+
+						 *unittest-export-context*
+	1. Define a public function that exports a context Dictionary at the
+	   script to be tested.
+>
+		function! s:get_SID()
+		  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+		endfunction
+		let s:SID = s:get_SID()
+		delfunction s:get_SID
+
+		function! path#to#script#__context__()
+		  return { 'sid': s:SID, 'scope': s: }
+		endfunction
+<						 *unittest-context*
+		* Context Dictionary is a Dictionary that has some hints to
+		  access the script-locals.
+
+		* It may have the following attributes.
+
+						*unittest-context-sid*
+			sid	The SID prefix or number of the script to be
+				tested. Required if the test case has tests
+				that call any script-local functions of the
+				script.
+						*unittest-context-scope*
+			scope	A Dictionary of the script-local variables of
+				the script to be tested. Required if the test
+				case has tests that access any script-local
+				variables of the script.
+
+			WARNING:
+			Exporting s: in Vim 7.2 causes deadly signal SEGV.
+			You had better use Vim 7.3 or later when you run tests
+			that access any script-local variables.
+
+	2. Give the context Dictionary to your TestCase at its instantiation.
+>
+		let s:tc = unittest#testcase#new("Tests of Something",
+			\ path#to#script#__context__())
+<
+	3. Use TestCase's call(), get() or set() methods to access
+	   script-locals.
+>
+		function! s:tc.test_context_call()
+		  call self.assert(self.call('s:func', []))
+		endfunction
+
+		function! s:tc.test_context_get()
+		  call self.assert_equal(10, self.get('s:foo'))
+		endfunction
+
+		function! s:tc.test_context_set()
+		  call self.set('s:foo', 20)
+		  call self.assert_equal(20, self.get('s:foo'))
+		endfunction
+<
+		See |unittest-context-accessors|.
+
+	Sample test case:
+
+		* test/test_context.vim
+
+------------------------------------------------------------------------------
+USE OF TEST DATA				*unittest-test-data*
+
+	You can write tests of commands and functions that are applied to and
+	process the current buffer's content by attaching a test data file to
+	your TestCase.
+
+	1. Give the pathname of a test data file to your TestCase at its
+	   instantiation.
+>
+		let s:here = expand('<sfile>:p:h')
+		let s:tc = unittest#testcase#new("Tests of Something",
+			\ { 'data': s:here . '/test_data.dat' })
+<
+		* Test data file's pathname MUST be set as the value of
+		  a Context Dictionary's "data" attribute.
+
+		* You can use any file as a test data.
+
+	2. Use TestCase's data accessors to access and/or process the test data.
+>
+		function! s:tc.test_data_get()
+		  call self.assert_equal(s:LOREM_IPSUM, self.data.get('lorem_ipsum'))
+		endfunction
+
+		function! s:tc.test_data_execute()
+		  call self.data.execute('sort', 'lorem_ipsum')
+		  call self.assert_equal(s:LOREM_IPSUM_SORTED, self.data.get('lorem_ipsum'))
+		endfunction
+<
+		* While running tests, the current buffer is set to the buffer
+		  of the test data file.
+
+		* Test data, the content of the current buffer, is modifiable
+		  but reverted automatically after each test. It's OK that
+		  tests change the test data. You can write assertions that
+		  compare the changed results to what you expect.
+
+		* It is guaranteed that a test data file is not overwritten by
+		  running tests.
+
+		See |unittest-data-accessors|.
+
+	Sample test case:
+
+		* test/test_data.vim
+		* test/test_data.dat
+
+------------------------------------------------------------------------------
+PENDING TESTS					*unittest-pending-tests*
+
+	Tests with no assertions are considered to be in "Pending" state.
+	The pending tests are neither "Red" nor "Green" but listed at the
+	report of the test results.
+
+	Example: >
+	function! s:tc.test_foo()
+	endfunction
+<
+==============================================================================
+HOW TO RUN TESTS 				*unittest-how-to-run*
+
+RUN TESTS FROM VIM~
+
+	Run a test case and output the results to the report buffer.
+>
+		:UnitTest test_foo.vim
+<
+		* If nothing specified at the command line, run a test case
+		  loaded in the current buffer.
+
+	Run a test case and output the results to a file.
+>
+		:UnitTest test_foo.vim >output.txt
+<
+	Run a test case and output the results to a file in 'a' mode.
+>
+		:UnitTest test_foo.vim >>output.txt
+<
+RUN TESTS FROM SHELL WITH BIN/VUNIT~
+
+	Run a test case with bin/vunit.
+>
+		$ bin/vunit test_foo.vim
+<
+==============================================================================
+INTERFACE					*unittest-interface*
+
+------------------------------------------------------------------------------
+COMMANDS					*unittest-commands*
+
+						*:UnitTest*
+	:UnitTest [{testcase}...] [{filter}] [{outfile}]
+
+		Run the tests defined in {testcase}.
+		When {testcase} isn't given, the current buffer is assumed.
+
+		When {filter} is given, only the tests that match the
+		filtering pattern are executed. g/{pattern} means "only
+		matches" and v/{pattern} means "except matches".
+
+		Example: >
+		:UnitTest test_foo.vim g/some_feature
+<
+		When {outfile} is given, the results of the tests are
+		outputted to a file {outfile}. The filename MUST be prefixed
+		by ">" or ">>". The latter means "append" not "overwrite". The
+		results outputted to the file are not colorized.
+
+		Example: >
+		:UnitTest test_foo.vim >output.txt
+<
+		See |unittest-how-to-run|.
+
+------------------------------------------------------------------------------
+GLOBAL FUNCTIONS				*unittest-functions*
+
+						*unittest#testcase#new()*
+	unittest#testcase#new( [{caption} [, {context}]])	
+
+		Creates a new TestCase object.
+		When {caption} is given, it will be used as a cation in the
+		report of the test results.
+
+		{context} must be a Dictionary that gives hints to access the
+		script-locals and/or the test data. See
+		|unittest-access-script-locals| and |unittest-test-data|.
+
+		Example: >
+		let s:tc = unittest#testcase#new("Something")
+<
+------------------------------------------------------------------------------
+TESTCASE METHODS				*unittest-testcase-methods*
+
+	The following functions are TestCase's instance methods. You can use
+	them via special "self" variable in test functions.
+
+ASSERTIONS					*unittest-assertions*
+
+	NOTE: All assertions accept optional argument {hint}. When {hint} is
+	given, it would be appended to the failure message to give additional
+	information if the assertion failed.
+
+
+	assert( {expr} [, {hint}])		*unittest-assert()*
+
+		Expects {expr} to be evaluated to True.
+
+	assert_not( {expr} [, {hint}])		*unittest-assert_not()*
+
+		Expects {expr} to be evaluated to False.
+
+	assert_equal( {expected}, {actual} [, {hint}])
+
+		Expects: {actual} == {expected}
+
+		See also: |expr-==|
+						*unittest-assert_not_equal()*
+	assert_not_equal( {expected}, {actual} [, {hint}])
+
+		Expects: {actual} != {expected}
+
+		See also: |expr-!=|
+						*unittest-assert_equal_c()*
+						*unittest-assert_equal_q()*
+	assert_equal_c( {expected}, {actual} [, {hint}])
+	assert_equal_q( {expected}, {actual} [, {hint}])
+
+		Expects: {actual} ==? {expected}
+
+		See also: |expr-==?|, |\c|
+						*unittest-assert_not_equal_c()*
+						*unittest-assert_not_equal_q()*
+	assert_not_equal_c( {expected}, {actual} [, {hint}])	
+	assert_not_equal_q( {expected}, {actual} [, {hint}])	
+
+		Expects: {actual} !=? {expected}
+
+		See also: |expr-!=?|, |\c|
+						*unittest-assert_equal_C()*
+						*unittest-assert_equal_s()*
+	assert_equal_C( {expected}, {actual} [, {hint}])
+	assert_equal_s( {expected}, {actual} [, {hint}])
+
+		Expects: {actual} ==# {expected}
+
+		See also: |expr-==#|, |\C|
+						*unittest-assert_not_equal_C()*
+						*unittest-assert_not_equal_s()*
+	assert_not_equal_C( {expected}, {actual} [, {hint}])	
+	assert_not_equal_s( {expected}, {actual} [, {hint}])	
+
+		Expects: {actual} !=# {expected}
+
+		See also: |expr-!=#|, |\C|
+
+	assert_exists( {expr} [, {hint}])	*unittest-assert_exists()*
+
+		Expects: exists({expr})
+
+		When {expr} is a command name;
+		Expects: exists({expr}) == 2
+
+		See also: |exists()|
+
+	assert_not_exists( {expr} [, {hint}])	*unittest-assert_not_exists()*
+
+		Expects: !exists({expr})
+
+		When {expr} is a command name;
+		Expects: exists({expr}) != 2
+						*unittest-assert_has_key()*
+	assert_has_key( {key}, {dict} [, {hint}])
+
+		Expects: has_key({dict}, {key})
+
+		Note that the order of parameters is reverse to |has_key()|.
+		The first argument of assertions is always what you expect.
+
+		See also: |has_key()|
+						*unittest-assert_not_has_key()*
+	assert_not_has_key( {key}, {dict} [, {hint}])
+
+		Expects: !has_key({dict}, {key})
+
+						*unittest-assert_is()*
+	assert_is( {expected}, {actual} [, {hint}])
+
+		Expects: {actual} is {expected}
+
+		See also: |expr-is|
+						*unittest-assert_isnot()*
+						*unittest-assert_is_not()*
+	assert_isnot( {expected}, {actual} [, {hint}])
+	assert_is_not( {expected}, {actual} [, {hint}])
+
+		Expects: {actual} isnot {expected}
+
+		See also: |expr-is|
+
+	assert_is_Number( {value} [, {hint}])	*unittest-assert_is_Number()*
+
+		Expects: type({value}) == type(0)
+
+		See also: |type()|
+
+	assert_is_String( {value} [, {hint}])	*unittest-assert_is_String()*
+
+		Expects: type({value}) == type("")
+
+	assert_is_Funcref( {value} [, {hint}])	*unittest-assert_is_Funcref()*
+
+		Expects: type({value}) == type(function("tr"))
+
+	assert_is_List( {value} [, {hint}])	*unittest-assert_is_List()*
+
+		Expects: type({value}) == type([])
+
+	assert_is_Dict( {value} [, {hint}])	*unittest-assert_is_Dict()*
+
+		Expects: type({value}) == type({})
+
+	assert_is_Float( {value} [, {hint}])	*unittest-assert_is_Float()*
+
+		Expects: type({value}) == type(0.0)
+
+						*unittest-assert_match()*
+	assert_match( {pattern}, {str} [, {hint}])
+
+		Expects: {str} =~ {pattern}
+
+		Note that the order of parameters is reverse to |match()|.
+		The first argument of assertions is always what you expect.
+
+		See also: |expr-=~|
+						*unittest-assert_not_match()*
+	assert_not_match( {pattern}, {str} [, {hint}])
+
+		Expects: {str} !~ {pattern}
+
+		See also: |expr-!~|
+						*unittest-assert_match_c()*
+						*unittest-assert_match_q()*
+	assert_match_c( {pattern}, {str} [, {hint}])
+	assert_match_q( {pattern}, {str} [, {hint}])
+
+		Expects: {str} =~? {pattern}
+
+		See also: |expr-=~?|, |\c|
+						*unittest-assert_not_match_c()*
+						*unittest-assert_not_match_q()*
+	assert_not_match_c( {pattern}, {str} [, {hint}])
+	assert_not_match_q( {pattern}, {str} [, {hint}])
+
+		Expects: {str} !~? {pattern}
+
+		See also: |expr-!~?|, |\c|
+						*unittest-assert_match_C()*
+						*unittest-assert_match_s()*
+	assert_match_C( {pattern}, {str} [, {hint}])
+	assert_match_s( {pattern}, {str} [, {hint}])
+
+		Expects: {str} =~# {pattern}
+
+		See also: |expr-=~#|, |\C|
+						*unittest-assert_not_match_C()*
+						*unittest-assert_not_match_s()*
+	assert_not_match_C( {pattern}, {str} [, {hint}])
+	assert_not_match_s( {pattern}, {str} [, {hint}])
+
+		Expects: {str} !~# {pattern}
+
+		See also: |expr-!~#|, |\C|
+						*unittest-assert_throw()*
+	assert_throw( {exception}, {ex-command} [, {hint}])
+
+		Expects {ex-command} to throw {exception}.
+
+		See also: |:throw|, |:catch|
+						*unittest-assert_throw_something()*
+						*unittest-assert_something_thrown()*
+	assert_throw_something( {ex-command} [, {hint}])
+	assert_something_thrown( {ex-command} [, {hint}])
+
+		Expects {ex-command} to throw something.
+
+						*unittest-assert_not_throw()*
+						*unittest-assert_nothing_thrown()*
+	assert_not_throw( {ex-command} [, {hint}])
+	assert_nothing_thrown( {ex-command} [, {hint}])
+
+		Expects {ex-command} to throw nothing.
+
+CONTEXT ACCESSORS				*unittest-context-accessors*
+
+	exists( {expr})				*unittest-context-exists()*
+
+		Returns True if {expr} is defined, False otherwise. The {expr}
+		argument is a String described in |exists()|. Unlike built-in
+		|exists()|, this version interprets "s:" as "the tested
+		script's local".
+
+		Example: >
+		call self.assert(self.exists('*s:some_func'))
+<
+		Example: >
+		call self.assert(self.exists('s:some_var'))
+<
+	call( {func}, {args} [, {dict}])	*unittest-context-call()*
+
+		Calls function {func} in the manner of built-in |call()|. This
+		version can also call the script-local functions of the tested
+		script when {func} is prefixed by "s:".
+
+		Example: >
+		call self.assert(self.call('s:some_func', ["args"]))
+<
+	get( {name} [, {default}])		*unittest-context-get()*
+
+		Returns the value of variable/option {name}.
+		{name} MUST start with one of the prefixes listed in
+		|unittest-context-value-kind-prefix|.
+		When the variable hasn't been defined, returns {default}.
+		Returns zero when {default} is omitted.
+
+		Example: >
+		call self.assert_equal(10, self.get('s:some_var'))
+<
+	set( {name}, {value})			*unittest-context-set()*
+
+		Sets the value of variable/option {name} to {value}.
+		{name} MUST start with one of the following prefixes.
+
+					*unittest-context-value-kind-prefix*
+			{name}'s prefix		Kind
+			-------------------------------------------------
+			"s:"			script-local variable of
+						the tested script
+
+			"b:"			buffer-local variable of
+						the test data buffer
+
+			"g:", "w:", "t:"	other variables
+
+			"&"			global option
+			"&g:"			local  option's global value
+			"&l:"			local  option's local  value
+
+						*unittest-context-auto-revert*
+		set() saves the current value of {name} before changing it.
+		The saved values are restored after each test automatically so
+		that you don't need to do it yourself at teardown functions.
+
+		Example: >
+		call self.set('s:some_var', 10)
+<
+		Example: >
+		call self.set('&ignorecase', 0)
+		call self.set('&l:autoindent', 1)
+<
+	save( {name})				*unittest-context-save()*
+
+		Saves the value of variable/option {name}.
+		{name} MUST start with one of the prefixes listed in
+		|unittest-context-value-kind-prefix|.
+
+		The saved values are restored after each test automatically so
+		that you don't need to do it yourself at teardown functions.
+
+		Example: >
+		call self.save('&ignorecase')
+		set noignorecase
+<
+		Example: >
+		call self.save('&l:autoindent')
+		setlocal noautoindent
+<
+DATA ACCESSORS					*unittest-data-accessors*
+
+	Data accessors are applied to the content of the test data buffer.
+	You need to attach a test data file to your TestCase to use these
+	methods to access and/or process the test data in your tests. See
+	|unittest-test-data|.
+						*unittest-data-marker*
+	MARKER ~
+
+		All data accessors requires the {marker} argument. {marker}
+		must be an unique String to specify the range of the text in
+		the test data buffer. By default, if you specify "lorem_ipsum"
+		as {marker}, data accessors search the buffer for
+		'^# lorem_ipsum$' as the beginning and for
+		'^# end_lorem_ipsum$' as the ending. The searching for markers
+		is case-sensitive.
+
+		The formats of the beginning and the ending markers are
+		defined at data.marker_formats attribute. The default value of
+		the attribute is:		*unittest-data-marker_formats*
+>
+		['# %s', '# end_%s']
+<
+		"%s" in format Strings are replaced by {marker}. You can
+		change the marker formats in this way:
+>
+		function! s:tc.SETUP()
+		  let self.data.marker_formats = ['// BEGIN %s', '// END %s']
+		endfunction
+<
+	data.goto( {marker} [, {char}])		*unittest-data-goto()*
+
+		Move the cursor to the NEXT line of the line with {marker}.
+		When {char} is given, the cursor is moved to the NEXT column
+		of the first occurrence of {char} in the line. Otherwise, the
+		cursor stays at the first column.
+
+		Example: >
+		call self.data.goto('lorem_ipsum')
+<
+		Result: (<> represents the cursor) >
+		# lorem_ipsum
+		<L>orem ipsum dolor sit[amet, consectetur adipisicing elit, sed do eiusmod
+<
+		Example: >
+		call self.data.goto('lorem_ipsum', '[')
+<
+		Result: (<> represents the cursor) >
+		# lorem_ipsum
+		Lorem ipsum dolor sit[<a>met, consectetur adipisicing elit, sed do eiusmod
+<
+	data.goto_end( {marker} [, {char}])	*unittest-data-goto_end()*
+
+		Move the cursor to the PREVIOUS line of the line with
+		{marker}'s corresponding end marker.
+		When {char} is given, the cursor is moved to the PREVIOUS
+		column of the last occurrence of {char} (or its corresponding
+		closing) in the line. Otherwise, the cursor stays at the first
+		column.
+
+			{char}	Closing
+			----------------
+			  (	   )
+			  [	   ]
+			  {	   }
+			  <	   > 
+
+		Example: >
+		call self.data.goto_end('lorem_ipsum')
+<
+		Result: (<> represents the cursor) >
+		<p>roident, sunt in culpa qui officia deserunt mollit anim]id est laborum.
+		# end_lorem_ipsum
+<
+		Example: >
+		call self.data.goto_end('lorem_ipsum', '[')
+<
+		Result: (<> represents the cursor) >
+		proident, sunt in culpa qui officia deserunt mollit ani<m>]id est laborum.
+		# end_lorem_ipsum
+<
+	data.range( {marker} [, {char}])	*unittest-data-range()*
+
+		Returns a pair of the positions that are the beginning and the
+		ending of the range surrounded by {marker} and its
+		corresponding end marker. The beginning position is where
+		data.goto() moves the cursor to and the ending position is
+		where data.goto_end() does. Each of them is a List that
+		|getpos()| returns.
+
+		Example: >
+		call self.data.range('lorem_ipsum')
+		"=> [[0, 4, 1, 0], [0, 9, 1, 0]]
+<
+		Example: >
+		call self.data.range('lorem_ipsum', '[')
+		"=> [[0, 4, 23, 0], [0, 9, 56, 0]]
+<
+		See also: |unittest-data-line_range()|
+
+						*unittest-data-select()*
+	data.select( {marker} [, {char} [, {mode}]])
+
+		Selects the range surrounded by {marker} and its corresponding
+		end marker with Visual mode. The range is determined by
+		data.range().
+
+			{char}	{mode}			Visual mode
+			----------------------------------------------
+			none	none			linewise
+			given	none			blockwise
+			given	"block" or "\<C-v>"	blockwise
+			given	"char"  or "v"		characterwise
+
+		Example: >
+		call self.data.select('lorem_ipsum')
+<
+		Result: (|| represents the linewise selection) >
+		# lorem_ipsum
+		|Lorem ipsum dolor sit[amet, consectetur adipisicing elit, sed do eiusmod|
+		|                                  <snip>                                |
+		|proident, sunt in culpa qui officia deserunt mollit anim]id est laborum.|
+		# end_lorem_ipsum
+<
+		Example: >
+		call self.data.select('lorem_ipsum', '[')
+<
+		Result: (|| represents the blockwise selection) >
+		# lorem_ipsum
+		Lorem ipsum dolor sit[|amet, consectetur adipisicing elit|, sed do eiusmod
+		                      |             <snip>               |
+		proident, sunt in culp|a qui officia deserunt mollit anim|]id est laborum.
+		# end_lorem_ipsum
+<
+		Example: >
+		call self.data.select('lorem_ipsum', '[', 'char')
+<
+		Result: (|| represents the characterwise selection) >
+		# lorem_ipsum
+		Lorem ipsum dolor sit[|amet, consectetur adipisicing elit, sed do eiusmod|
+		|                                  <snip>                                |
+		|proident, sunt in culpa qui officia deserunt mollit anim|]id est laborum.
+		# end_lorem_ipsum
+<
+						*unittest-data-get()*
+	data.get( {marker} [, {char} [, {mode}]])
+
+		Returns a List of lines in the range surrounded by {marker}
+		and its corresponding end marker. The range is determined by
+		data.range().
+
+		Example: >
+		call self.data.get('lorem_ipsum')
+		"=> [
+		\ 'Lorem ipsum dolor sit[amet, consectetur adipisicing elit, sed do eiusmod',
+		\                                  <snip>
+		\ 'proident, sunt in culpa qui officia deserunt mollit anim]id est laborum.',
+		\ ]
+<
+		Example: >
+		call self.data.get('lorem_ipsum', '[')
+		"=> [
+		\ 'amet, consectetur adipisicing elit',
+		\               <snip>
+		\ 'a qui officia deserunt mollit anim',
+		\ ]
+<
+		Example: >
+		call self.data.get('lorem_ipsum', '[', 'char')
+		"=> [
+		\ 'amet, consectetur adipisicing elit, sed do eiusmod',
+		\               <snip>
+		\ 'proident, sunt in culpa qui officia deserunt mollit anim',
+		\ ]
+<
+		See also: |unittest-data-uncomment()|
+
+	data.uncomment( {line})			*unittest-data-uncomment()*
+
+		Not defined by default. If defined, applied to each line
+		returned by data.get(). This is usable to remove any comment
+		marks from test data embedded in a source program as
+		a comment.
+
+		Example: >
+		function! s:tc.SETUP()
+		  function! self.data.uncomment(line)
+		    return substitute(a:line, '^# ', '', '')
+		  endfunction
+		endfunction
+<
+						*unittest-data-execute()*
+	data.execute( {command}, {marker} [, {char} [, {mode}]])
+
+		Executes {command} for the range surrounded by {marker} and
+		its corresponding end marker. The range is determined by
+		data.range().
+						*unittest-data-visual_execute()*
+		Example: >
+		call self.data.execute('sort', 'lorem_ipsum')
+<
+	data.visual_execute( {command}, {marker} [, {char} [, {mode}]])
+
+		Same as data.execute() but it selects the range in Visual mode
+		first and then executes {command} with ":'<,'>" prefixed. It
+		simulates a command execution from Visual mode.
+
+		Example: >
+		call self.data.visual_execute('sort', 'lorem_ipsum')
+<
+	data.line_range( {marker})		*unittest-data-line_range()*
+
+		Wrapper of data.range()
+
+		Returns a pair of line numbers of the first line and the last
+		line of the range surrounded by {marker} and its corresponding
+		end marker.
+
+		Example: >
+		call self.data.line_range('lorem_ipsum')
+		"=> [4, 9]
+<
+		See |unittest-data-range()|.
+
+	data.block_range( {marker}, {char})	*unittest-data-block_range()*
+
+		Wrapper of data.range()
+
+		Returns a pair of [lnum, col] of the positions that are the
+		beginning and the ending of the range surrounded by {marker}
+		and its corresponding end marker.
+
+		Example: >
+		call self.data.block_range('lorem_ipsum', '[')
+		"=> [[4, 23], [9, 56]]
+<
+		See |unittest-data-range()|.
+
+	data.char_range( {marker}, {char})	*unittest-data-char_range()*
+
+		Alias of data.block_range()
+
+UTILITIES					*unittest-testcase-utilities*
+
+	puts( {str})				*unittest-testcase-puts()*
+
+		Appends a line {str} to the report of the current running
+		tests.
+
+------------------------------------------------------------------------------
+VARIABLES					*unittest-variables*
+
+	g:unittest_color_red			|g:unittest_color_red|
+
+		Name of the color used for "Red" state.
+
+		Default: "DarkRed"
+
+	g:unittest_color_green			|g:unittest_color_green|
+
+		Name of the color used for "Green" state.
+
+		Default: "Green"
+
+	g:unittest_color_pending		|g:unittest_color_pending|
+
+		Name of the color used for "Pending" state.
+
+		Default: "DarkYellow"
+
+==============================================================================
+ISSUES						*unittest-issues*
+
+	* Issues - h1mesuke/vim-unittest - GitHub
+	  https://github.com/h1mesuke/vim-unittest/issues
+
+==============================================================================
+CHANHELOG					*unittest-changelog*
+
+0.6.0	2012-01-28
+
+	* Added assert_throw_something()
+	* Added assert_has_key()
+	* Removed unittest#runner() and its family.
+
+0.5.1	2012-01-20
+
+	* Allowed multiple test filters.
+	* Changed callback names: Setup/Teardown -> SETUP/TEARDOWN
+
+0.5.0	2012-01-08
+
+	* Assertions as TestCase's methods.
+	* Added script-locals accessors.
+	* Added test data accessors.
+	* Added "Pending" feature.
+	* Added bin/vunit bash script.
+	* Added doc/unittest.txt
+
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:fdm=marker:
