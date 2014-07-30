@@ -1504,18 +1504,18 @@ function! FoldRegex(foldExprFunc, regex)
 endfunction
 
 " Search (and "show") regex; fold everything else.
-command! -nargs=? Foldsearch    call FoldRegex('FoldShowExpr', <q-args>)
+command! -nargs=? FoldSearch    call FoldRegex('FoldShowExpr', <q-args>)
 
 " Fold matching lines ("hide" the matches).
 command! -nargs=? Fold          call FoldRegex('FoldHideExpr', <q-args>)
 
 " Fold away comment lines (including blank lines).
 " TODO: Extend for more than just shell comments.
-command! -nargs=? Foldcomments  Fold ^\s*#\|^\s*$
+command! -nargs=? FoldComments  Fold ^\s*#\|^\s*$
 
 " Convert certain unicode characters to ASCII equivalents in range
 " from firstLine to lastLine, included.
-function! Toascii(firstLine, lastLine)
+function! ToAscii(firstLine, lastLine)
     let prefix = "silent " . a:firstLine . "," . a:lastLine . "s"
 
     " Spaces of non-zero width.
@@ -1581,7 +1581,7 @@ function! Toascii(firstLine, lastLine)
 endfunction
 
 " Convert certain unicode characters to ASCII equivalents.
-command! -range=% Toascii  call Toascii(<line1>, <line2>)
+command! -range=% ToAscii  call ToAscii(<line1>, <line2>)
 
 
 " -------------------------------------------------------------

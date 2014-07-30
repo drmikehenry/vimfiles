@@ -2951,21 +2951,21 @@ To fold away lines that match a regex, use the custom command :Fold: >
     :Fold regex         ; lines matching regex are hidden
     :Fold               ; use last search pattern (@/) for regex
 
-Use the custom command :Foldsearch to search for lines matching a regex and
+Use the custom command :FoldSearch to search for lines matching a regex and
 fold away everything else: >
-    :Foldsearch regex   ; show lines matching regex, and fold away all else
-    :Foldsearch         ; use last search pattern (@/) for regex
+    :FoldSearch regex   ; show lines matching regex, and fold away all else
+    :FoldSearch         ; use last search pattern (@/) for regex
 
-With :Foldsearch, increasing the 'foldlevel' to 1 will show one line of
+With :FoldSearch, increasing the 'foldlevel' to 1 will show one line of
 context around all matches.
 
 To fold away comments and blank lines, use this custom command: >
-    :Foldcomments
+    :FoldComments
 
 ------------------------------------------------------------------------------
 Converting Unicode symbols to ASCII
 
-Use :Toascii to convert a range of lines (defaulting to the entire buffer)
+Use :ToAscii to convert a range of lines (defaulting to the entire buffer)
 into ASCII.  Mainly this converts several kinds of quotes into ASCII quotes
 and generally maps some of the Unicode symbols in the range U+2000 through
 U+206F into ASCII equivalents.
