@@ -17,6 +17,20 @@ require adjustment of per-user settings.
   allow the languages to change 'iskeyword'.  Previously, the ``sh`` language
   was adding a period to 'iskeyword'.
 
+- Improved interface for :Highlight command:
+
+  - New g:HighlightEnabled variable to control the default disposition of
+    highlighting.  In vimrc, this is set to 1, but it may be overridden in a
+    vimrc-after file.
+
+  - New :HighlightOn and :HighlightOff commands that toggle highlighting for a
+    single buffer.
+
+  It's recommended to avoid invoking ":Highlight no*" to disable highlighting,
+  as that makes it difficult to restore highlighting of the items configured
+  for the filetype; instead, use a combination of g:HighlightEnabled and
+  :HighlightOn/:HighlightOff.
+
 2014-07-27
 ==========
 

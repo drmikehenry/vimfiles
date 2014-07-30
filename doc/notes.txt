@@ -2916,17 +2916,42 @@ Highlight command
 The custom command :Highlight provides highlighting of non-conforming coding
 styles to make it easier to locate problems during editing.
 
-Highlights tabs, long lines, etc.: >
-    :Highlight *          ; enable all
-    :Highlight no*        ; disable all
-    :Highlight <Tab>      ; command-line completion to show all options
+Highlighting is done on a per-buffer basis via Vim's syntax highlighting
+mechanism.  Individual syntax items for a single buffer are enabled or disabled
+via the :Highlight command:
 
-Options include: >
+    :Highlight tabs         ; enable highlighting of tab characters
+    :Highlight notabs       ; disable highlighting of tab characters
+    :Highlight longlines    ; enable highlighting of long lines
+    :Highlight nolonglines  ; disable highlighting of long lines
+    :Highlight *            ; enable all supported highlight items
+    :Highlight no*          ; disable all supported highlight items
+    :Highlight <Tab>        ; command-line completion to show all options
+
+:Highlight options include: >
     commas
     keywordspace
     longlines
     tabs
     trailingspace
+
+In addition, highlighting may be enabled or disabled on a per-buffer basis via
+the following commands:
+
+    :HighlightOn        ; enable highlighting of previously enabled items
+    :HighlightOff       ; disable highlighting of all items
+
+The highlight items that were individually configured via the :Highlight
+command are remembered, such that :HighlightOn restores the configuration.
+
+The default disposition of highlighting is controlled by the global variable
+g:HighlightEnabled.  This is set to 1 in the vimrc, but it may be overridden in
+a vimrc-after file to cause highlighting to be disabled by default.  In this
+way, it's convenient to allow individually configured highlighting items to be
+set by the main vimrc, but have them be inactive by default (by setting
+g:HighlightEnabled to 0), such that :HighlightOn will turn on the recommended
+set of highlight items.  For this reason, it's not recommended to have
+":Highlight no*" in your configuration.
 
 ------------------------------------------------------------------------------
 Help-related mappings

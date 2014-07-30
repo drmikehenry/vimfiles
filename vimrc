@@ -3153,7 +3153,10 @@ endfunction
 :autocmd ColorScheme * call HighlightDefineGroups()
 call HighlightDefineGroups()
 
-let g:HighlightNames = split("commas keywordspace longlines tabs trailingspace")
+" Default value for buffers without b:HighlightEnabled.
+let g:HighlightEnabled = 1
+
+let g:HighlightItems = split("commas keywordspace longlines tabs trailingspace")
 let g:HighlightRegex_longlines1 = '\%>61v.*\%<82v\(.*\%>80v.\)\@='
 let g:HighlightRegex_longlines2 = '\%>80v.\+'
 let g:HighlightRegex_tabs = '\t'
@@ -3164,7 +3167,7 @@ let g:HighlightRegex_trailingspace = '\s\+\%#\@<!$'
 
 " Invoke as: HighlightNamedRegex('longlines1', 'HG_Warning', 1)
 " The linkedGroup comes from the highlight groups (:help highlight-groups),
-" or from HighlightDefinGroups() above.
+" or from HighlightDefineGroups() above.
 " Highlight groups to consider:
 "   Error       very intrusive group with reverse-video red.
 "   ErrorMsg    less intrusive, red foreground (invisible for whitespace).
@@ -3200,39 +3203,67 @@ function! Highlight_trailingspace(enable)
 endfunction
 
 function! HighlightArgs(ArgLead, CmdLine, CursorPos)
-    let noNames = []
-    for name in g:HighlightNames
-        let noNames = add(noNames, 'no' . name)
+    let noItems = []
+    for Item in g:HighlightItems
+        let noItems = add(noItems, 'no' . Item)
     endfor
-    return join(g:HighlightNames + noNames + ['*', 'no*'], "\n")
+    return join(g:HighlightItems + noItems + ['*', 'no*'], "\n")
+endfunction
+
+function! HighlightBufferEnabled()
+    if exists("b:HighlightEnabled")
+        let bufferEnabled = b:HighlightEnabled
+    else
+        let bufferEnabled = g:HighlightEnabled
+    endif
+    return bufferEnabled
+endfunction
+
+function! HighlightItem(itemName, enable)
+    let fullItemName = 'Highlight_' . a:itemName
+    if !exists('*' . fullItemName)
+        echoerr "Invalid highlight option " . a:itemName
+        return
+    endif
+    let b:{fullItemName} = a:enable
+    call {fullItemName}(a:enable && HighlightBufferEnabled())
 endfunction
 
 function! Highlight(...)
     let i = 0
     while i < a:0
-        let name = a:000[i]
+        let itemName = a:000[i]
         let enable = 1
         if strpart(a:000[i], 0, 2) == 'no'
             let enable = 0
-            let name = strpart(name, 2)
+            let itemName = strpart(itemName, 2)
         endif
-        if name == '*'
-            for f in g:HighlightNames
-                call Highlight_{f}(enable)
+        if itemName == '*'
+            for itemName in g:HighlightItems
+                call HighlightItem(itemName, enable)
             endfor
         else
-            let funcName = 'Highlight_' . name
-            if exists('*' . funcName)
-                call {funcName}(enable)
-            else
-                echoerr "Invalid highlight option " . name
-            endif
+            call HighlightItem(itemName, enable)
         endif
         let i = i + 1
     endwhile
 endfunction
 command! -nargs=* -complete=custom,HighlightArgs
             \ Highlight call Highlight(<f-args>)
+
+function! HighlightItemEnabled(itemName)
+    let varName = "b:Highlight_" . a:itemName
+    return exists(varName) && {varName}
+endfunction
+
+function! HighlightEnable(enable)
+    let b:HighlightEnabled = a:enable
+    for itemName in g:HighlightItems
+        call HighlightItem(itemName, HighlightItemEnabled(itemName))
+    endfor
+endfunction
+command!  HighlightOn  call HighlightEnable(1)
+command!  HighlightOff call HighlightEnable(0)
 
 " -------------------------------------------------------------
 " Spell-checking.
