@@ -3576,6 +3576,7 @@ function! SetupRstSyntax()
         execute 'syntax cluster rstDirectives add=' . region
     endfunction
 
+    let old_iskeyword = &iskeyword
     call DisableRstSyntaxCodeList()
     " Handle unspecified languages first.
     call l:EmbedCodeBlock("", "")
@@ -3596,6 +3597,7 @@ function! SetupRstSyntax()
         endif
         call l:EmbedCodeBlock(lang, synGroup)
     endfor
+"    let &iskeyword = old_iskeyword
 
     " Re-synchronize syntax highlighting from start of file.
     syntax sync fromstart

@@ -13,6 +13,10 @@ require adjustment of per-user settings.
 - BREAKING CHANGE: Rename Foldsearch, Foldcomments, and Toascii to FoldSearch,
   FoldComments, and ToAscii for uniformity with other commands.
 
+- When embedding languages into ``.rst`` files for syntax highlighting, don't
+  allow the languages to change 'iskeyword'.  Previously, the ``sh`` language
+  was adding a period to 'iskeyword'.
+
 2014-07-27
 ==========
 
