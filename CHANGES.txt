@@ -31,6 +31,17 @@ require adjustment of per-user settings.
   for the filetype; instead, use a combination of g:HighlightEnabled and
   :HighlightOn/:HighlightOff.
 
+- When pressing <CR> in insert mode, trailing whitespace will be removed from
+  the previous line.  So, with your cursor on the "X" below:
+
+    Place cursor on X and press Enter
+
+  Pressing Enter will remove the trailing space from "Place cursor on ".  This
+  helps avoid leaving trailing whitespace in a file.
+
+  See :help notes for ideas to intentionally preserve whitespace when pressing
+  <Enter>.
+
 2014-07-27
 ==========
 

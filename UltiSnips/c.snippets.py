@@ -50,20 +50,57 @@ while ($1)
 }
 """, aliases=["wh"])
 
-bsnip("fore", "for (;;) {...}", r"""
+put(r"""
+global !p
+def snip_c_forLoopVariable(s):
+    # Junk semi-colon and onward.
+    s = s.split(";")[0]
+
+    # Junk everything through final comma (if any).
+    s = s.split(",")[-1]
+
+    # Clobber initializer (if any).
+    s = s.split("=")[0]
+
+    # Keep final whitespace-delimited word.
+    s = s.strip()
+    if s:
+        s = s.split()[-1]
+    return s
+
+def snip_c_forLoopInitializer(s):
+    if ";" in s:
+        return ""
+    elif "=" in s:
+        return ";"
+    else:
+        return " = 0;"
+
+def snip_c_forLoopComparator(s):
+    if ";" in s:
+        return ""
+    for op in ["<", ">", "!", "="]:
+        if s.startswith(op):
+            return " "
+    return " < "
+
+endglobal
+""")
+
+bsnip("forever", "for (;;) {...}", r"""
 for (;;)
 {
     `!p betterVisual(snip)`$0
 }
-""", aliases=["forever"])
+""", aliases=["forev"])
 
 """
 Features of the "for" snippet:
-- In first tab stop, can press "=" to change 
+- In first tab stop, can press "=" to change
   initializer or ";" to remove initializer;
 - In second tab stop, can press different comparison
   (e.g, < <= > >= != ==) to override the default "<". When
-  choosing "<", the third field defaults to var--; 
+  choosing ">", the third field defaults to var--;
 
 More ideas:
 
@@ -90,12 +127,12 @@ pressing ";" terminates
 
 bsnip("for", "for (i = 0; i < N; i++) {...}", (
 r"""for (${1:i}""" +
-r"""${1/(.*;.*)|(.*=.*)|(.+)|.*/(?1::(?2:;:(?3: = 0;:;)))/} """ +
-r"""${1/\s*[=;].*//}""" +
-r"""${2/(.*;.*)|(^[<>!=].*)|.*/(?1::(?2: : < ))/}""" +
+r"""`!p snip.rv = snip_c_forLoopInitializer(t[1])` """ +
+r"""`!p snip.rv = snip_c_forLoopVariable(t[1])`""" +
+r"""`!p snip.rv = snip_c_forLoopComparator(t[2])`""" +
 r"""${2:N}""" +
 r"""${2/(.*;.*)|.*/(?1::;)/} """ +
-r"""${1/\s*[=;].*//}""" +
+r"""`!p snip.rv = snip_c_forLoopVariable(t[1])`""" +
 r"""${3:${2/(^>.*)|.*/(?1:--:++)/}}""" +
 r""")
 {
@@ -195,7 +232,7 @@ bsnip("Inc", "#include <Header.h>", r"""
 """)
 
 # Doxygen.
-babbr("@param",     "@param[in] ${1:inParam}  ${0:@todo Description of $1.}", 
+babbr("@param",     "@param[in] ${1:inParam}  ${0:@todo Description of $1.}",
         aliases=["@p", "@pi"])
 babbr("@po",   "@param[out] ${1:outParam}  ${0:@todo Description of $1.}")
 babbr("@pio",  "@param[in,out] ${1:inOutParam}  ${0:@todo Description of $1.}")

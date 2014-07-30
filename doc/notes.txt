@@ -2722,6 +2722,28 @@ Additional CTRL-O mappings
 <C-O><C-L>  - Exit visual modes at end of selected text
 
 ------------------------------------------------------------------------------
+Pressing <Enter> removes trailing whitespace
+
+To help avoid cluttering the file with trailing whitespace, pressing <Enter> in
+insert mode will strip trailing whitespace from the previous line.  This is
+helpful when trying to split a line such as the one below.  Consider this line:
+
+  Place cursor on X and press <Enter>
+
+With your cursor on the "X" above, pressing <Enter> would normally leave a
+trailing space character after the word "on"; this space will instead be
+removed.
+
+To intentionally preserve trailing whitespace when typing at the end of a line,
+simply avoid pressing <Enter>.  When pressing <Enter> in the middle of a line,
+more steps are involved.  For example, before pressing <Enter>, add a period,
+then press <Enter>, then go back and remove the period from the line.
+Alternatively, press <Enter>, then go back and restore the trailing whitespace
+on the previous line.  Though this is awkward, it's expected to be very rarely
+desirable in the course of normal editing that pressing <Enter> in the middle
+of a line should preserve whitespace.
+
+------------------------------------------------------------------------------
 Movement by screen lines
 
 The standard movement keys have been remapped to move by screen lines instead

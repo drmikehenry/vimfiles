@@ -929,6 +929,11 @@ xnoremap <silent> <M-l>        <C-C>:call VMoveRight()<CR>
 xnoremap <silent> <Backspace>  <C-C>:call VMoveLeft()<CR>
 xnoremap <silent> <Space>      <C-C>:call VMoveRight()<CR>
 
+" Strip whitespace from the right.
+function! Rstrip(s)
+    return substitute(a:s, '\s\+$', '', "")
+endfunction
+
 " Remove "rubbish" whitespace (from Andy Wokula posting).
 
 nnoremap <silent> drw :<C-U>call DeleteRubbishWhitespace()<CR>
@@ -1060,6 +1065,17 @@ vnoremap <silent> <C-O><CR>  <ESC>A.<CR>
 snoremap <silent> <C-O><C-H> <C-G>o<C-\><C-N>i
 xnoremap <silent> <C-O><C-H>      o<C-\><C-N>i
 vnoremap <silent> <C-O><C-L>       <C-\><C-N>a
+
+" Strip trailing whitespace from line above.  Useful just after pressing <CR>.
+function! RstripLineAbove()
+    if line(".") > 1
+        let prevLine = line(".") - 1
+        call setline(prevLine, Rstrip(getline(prevLine)))
+    endif
+endfunction
+
+" After executing the <CR>, strip trailing whitespace from the line above.
+inoremap <CR>  <CR><C-O>:call RstripLineAbove()<CR>
 
 " Move vertically by screen lines instead of physical lines.
 " Exchange meanings for physical and screen motion keys.
