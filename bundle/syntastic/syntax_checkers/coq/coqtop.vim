@@ -13,24 +13,28 @@
 if exists("g:loaded_syntastic_coq_coqtop_checker")
     finish
 endif
-let g:loaded_syntastic_coq_coqtop_checker=1
+let g:loaded_syntastic_coq_coqtop_checker = 1
 
-function! SyntaxCheckers_coq_coqtop_IsAvailable()
-    return executable('coqtop')
-endfunction
+let s:save_cpo = &cpo
+set cpo&vim
 
-function! SyntaxCheckers_coq_coqtop_GetLocList()
-    let makeprg = syntastic#makeprg#build({
-                \ 'exe': 'coqtop',
-                \ 'args': '-noglob -batch -load-vernac-source',
-                \ 'subchecker': 'coqtop' })
+function! SyntaxCheckers_coq_coqtop_GetLocList() dict
+    let makeprg = self.makeprgBuild({ 'args_after': '-noglob -batch -load-vernac-source' })
+
     let errorformat =
         \ '%AFile \"%f\"\, line %l\, characters %c\-%.%#\:,'.
         \ '%C%m'
 
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
+    return SyntasticMake({
+        \ 'makeprg': makeprg,
+        \ 'errorformat': errorformat })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'coq',
     \ 'name': 'coqtop'})
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: set et sts=4 sw=4:

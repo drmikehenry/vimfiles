@@ -8,20 +8,18 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
 "============================================================================
+
 if exists("g:loaded_syntastic_ruby_macruby_checker")
     finish
 endif
-let g:loaded_syntastic_ruby_macruby_checker=1
+let g:loaded_syntastic_ruby_macruby_checker = 1
 
-function! SyntaxCheckers_ruby_macruby_IsAvailable()
-    return executable('macruby')
-endfunction
+let s:save_cpo = &cpo
+set cpo&vim
 
-function! SyntaxCheckers_ruby_macruby_GetLocList()
-    let makeprg = syntastic#makeprg#build({
-                \ 'exe': 'RUBYOPT= macruby',
-                \ 'args': '-W1 -c',
-                \ 'subchecker': 'macruby' })
+function! SyntaxCheckers_ruby_macruby_GetLocList() dict
+    let makeprg = self.makeprgBuild({ 'args_after': '-W1 -c' })
+
     let errorformat =
         \ '%-GSyntax OK,'.
         \ '%E%f:%l: syntax error\, %m,'.
@@ -30,9 +28,20 @@ function! SyntaxCheckers_ruby_macruby_GetLocList()
         \ '%Z%p^,'.
         \ '%W%f:%l: %m,'.
         \ '%-C%.%#'
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
+
+    let env = { 'RUBYOPT': '' }
+
+    return SyntasticMake({
+        \ 'makeprg': makeprg,
+        \ 'errorformat': errorformat,
+        \ 'env': env })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'ruby',
     \ 'name': 'macruby'})
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: set et sts=4 sw=4:

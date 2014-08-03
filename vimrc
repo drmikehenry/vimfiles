@@ -2721,8 +2721,8 @@ if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
 endif
 
 let g:syntastic_enable_balloons = 1
-let g:syntastic_quiet_warnings = 1
 let g:syntastic_enable_highlighting = 0
+let g:syntastic_quiet_messages = {'level': 'warnings'}
 
 function! ReplacePowerlineSyntastic()
     function! Powerline#Functions#syntastic#GetErrors(line_symbol) " {{{

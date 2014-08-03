@@ -18,23 +18,25 @@
 "
 "   let g:syntastic_cuda_arch = "sm_20"
 
-
 if exists("g:loaded_syntastic_cuda_nvcc_checker")
     finish
 endif
-let g:loaded_syntastic_cuda_nvcc_checker=1
+let g:loaded_syntastic_cuda_nvcc_checker = 1
 
-function! SyntaxCheckers_cuda_nvcc_IsAvailable()
-    return executable('nvcc')
-endfunction
+let s:save_cpo = &cpo
+set cpo&vim
 
-function! SyntaxCheckers_cuda_nvcc_GetLocList()
+function! SyntaxCheckers_cuda_nvcc_GetLocList() dict
     if exists('g:syntastic_cuda_arch')
-        let arch_flag = '-arch='.g:syntastic_cuda_arch
+        let arch_flag = '-arch=' . g:syntastic_cuda_arch
     else
         let arch_flag = ''
     endif
-    let makeprg = 'nvcc '.arch_flag.' --cuda -O0 -I . -Xcompiler -fsyntax-only '.shellescape(expand('%')).' -o /dev/null'
+    let makeprg =
+        \ self.getExecEscaped() . ' ' . arch_flag .
+        \ ' --cuda -O0 -I . -Xcompiler -fsyntax-only ' .
+        \ syntastic#util#shexpand('%') . ' ' . syntastic#c#NullOutput()
+
     let errorformat =
         \ '%*[^"]"%f"%*\D%l: %m,'.
         \ '"%f"%*\D%l: %m,'.
@@ -51,9 +53,13 @@ function! SyntaxCheckers_cuda_nvcc_GetLocList()
         \ '%DMaking %*\a in %f,'.
         \ '%f|%l| %m'
 
-    if expand('%') =~? '\%(.h\|.hpp\|.cuh\)$'
+    if expand('%') =~? '\m\%(.h\|.hpp\|.cuh\)$'
         if exists('g:syntastic_cuda_check_header')
-            let makeprg = 'echo > .syntastic_dummy.cu ; nvcc '.arch_flag.' --cuda -O0 -I . .syntastic_dummy.cu -Xcompiler -fsyntax-only -include '.shellescape(expand('%')).' -o /dev/null'
+            let makeprg =
+                \ 'echo > .syntastic_dummy.cu ; ' .
+                \ self.getExecEscaped() . ' ' . arch_flag .
+                \ ' --cuda -O0 -I . .syntastic_dummy.cu -Xcompiler -fsyntax-only -include ' .
+                \ syntastic#util#shexpand('%') . ' ' . syntastic#c#NullOutput()
         else
             return []
         endif
@@ -65,3 +71,8 @@ endfunction
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'cuda',
     \ 'name': 'nvcc'})
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: set et sts=4 sw=4:

@@ -13,28 +13,20 @@
 if exists("g:loaded_syntastic_slim_slimrb_checker")
     finish
 endif
-let g:loaded_syntastic_slim_slimrb_checker=1
+let g:loaded_syntastic_slim_slimrb_checker = 1
 
-function! SyntaxCheckers_slim_slimrb_IsAvailable()
-    return executable("slimrb")
-endfunction
+let s:save_cpo = &cpo
+set cpo&vim
 
-function! s:SlimrbVersion()
-    if !exists('s:slimrb_version')
-        let output = system("slimrb --version 2>/dev/null")
-        let output = substitute(output, '\n$', '', '')
-        let output = substitute(output, '^slim ', '', 'i')
-        let s:slimrb_version = split(output, '\.')
-    end
-    return s:slimrb_version
-endfunction
+function! SyntaxCheckers_slim_slimrb_GetLocList() dict
+    if !exists('s:slimrb_new')
+        let s:slimrb_new = syntastic#util#versionIsAtLeast(syntastic#util#getVersion(
+            \ self.getExecEscaped() . ' --version 2>'. syntastic#util#DevNull()), [1, 3, 1])
+    endif
 
-function! SyntaxCheckers_slim_slimrb_GetLocList()
-    let makeprg = syntastic#makeprg#build({
-                \ 'exe': 'slimrb',
-                \ 'args': '-c',
-                \ 'subchecker': 'slimrb' })
-    if syntastic#util#versionIsAtLeast(s:SlimrbVersion(), [1,3,1])
+    let makeprg = self.makeprgBuild({ 'args_after': '-c' })
+
+    if s:slimrb_new
         let errorformat =
             \ '%C\ %#%f\, Line %l\, Column %c,'.
             \ '%-G\ %.%#,'.
@@ -47,9 +39,17 @@ function! SyntaxCheckers_slim_slimrb_GetLocList()
             \ '%ESlim::Parser::SyntaxError: %m,'.
             \ '%+C%.%#'
     endif
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
+
+    return SyntasticMake({
+        \ 'makeprg': makeprg,
+        \ 'errorformat': errorformat })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'slim',
     \ 'name': 'slimrb'})
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: set et sts=4 sw=4:

@@ -1,5 +1,5 @@
 "============================================================================
-"File:        eruby.vim
+"File:        ruby.vim
 "Description: Syntax checking plugin for syntastic.vim
 "Maintainer:  Martin Grenfell <martin.grenfell at gmail dot com>
 "License:     This program is free software. It comes without any warranty,
@@ -13,26 +13,36 @@
 if exists("g:loaded_syntastic_eruby_ruby_checker")
     finish
 endif
-let g:loaded_syntastic_eruby_ruby_checker=1
+let g:loaded_syntastic_eruby_ruby_checker = 1
 
-if !exists("g:syntastic_ruby_exec")
-    let g:syntastic_ruby_exec = "ruby"
-endif
+let s:save_cpo = &cpo
+set cpo&vim
 
-function! SyntaxCheckers_eruby_ruby_IsAvailable()
-    return executable(expand(g:syntastic_ruby_exec))
+function! SyntaxCheckers_eruby_ruby_IsAvailable() dict
+    if !exists('g:syntastic_eruby_ruby_exec') && exists('g:syntastic_ruby_exec')
+        let g:syntastic_eruby_ruby_exec = g:syntastic_ruby_exec
+    endif
+    return executable(self.getExec())
 endfunction
 
-function! SyntaxCheckers_eruby_ruby_GetLocList()
-    let ruby_exec=expand(g:syntastic_ruby_exec)
-    if !has('win32')
-        let ruby_exec='RUBYOPT= ' . ruby_exec
+function! SyntaxCheckers_eruby_ruby_GetLocList() dict
+    let fname = "'" . escape(expand('%'), "\\'") . "'"
+
+    " TODO: encodings became useful in ruby 1.9 :)
+    if syntastic#util#versionIsAtLeast(syntastic#util#getVersion(self.getExecEscaped(). ' --version'), [1, 9])
+        let enc = &fileencoding != '' ? &fileencoding : &encoding
+        let encoding_spec = ', :encoding => "' . (enc ==? 'utf-8' ? 'UTF-8' : 'BINARY') . '"'
+    else
+        let encoding_spec = ''
     endif
 
-    "gsub fixes issue #7 rails has it's own eruby syntax
-    let makeprg=ruby_exec . ' -rerb -e "puts ERB.new(File.read(''' .
-        \ (expand("%")) .
-        \ ''').gsub(''<\%='',''<\%''), nil, ''-'').src" \| ' . ruby_exec . ' -c'
+    "gsub fixes issue #7, rails has it's own eruby syntax
+    let makeprg =
+        \ self.getExecEscaped() . ' -rerb -e ' .
+        \ syntastic#util#shescape('puts ERB.new(File.read(' .
+        \     fname . encoding_spec .
+        \     ').gsub(''<%='',''<%''), nil, ''-'').src') .
+        \ ' | ' . self.getExecEscaped() . ' -c'
 
     let errorformat =
         \ '%-GSyntax OK,'.
@@ -41,9 +51,20 @@ function! SyntaxCheckers_eruby_ruby_GetLocList()
         \ '%Z%p^,'.
         \ '%-C%.%#'
 
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat})
+    let env = syntastic#util#isRunningWindows() ? {} : { 'RUBYOPT': '' }
+
+    return SyntasticMake({
+        \ 'makeprg': makeprg,
+        \ 'errorformat': errorformat,
+        \ 'env': env,
+        \ 'defaults': { 'bufnr': bufnr(""), 'vcol': 1 } })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'eruby',
     \ 'name': 'ruby'})
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: set et sts=4 sw=4:

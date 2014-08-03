@@ -1894,7 +1894,7 @@ Local customizations:
   warnings.
 - Use nicer error and warning symbols where Vim can support it.
 
-Version 2013-05-27 (cc1b898c) from git://github.com/scrooloose/syntastic.git
+Version 2014-07-31 (c2e7bf29) from git://github.com/scrooloose/syntastic.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
