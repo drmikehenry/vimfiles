@@ -4372,7 +4372,7 @@ endfunction
 if has('statusline') && version >= 700
     " Default status line:
     " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-    set statusline =
+    set statusline=
     set statusline+=%#User1#                       " Highlighting
     set statusline+=%-3n\                          " Buffer number
 
