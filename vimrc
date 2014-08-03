@@ -2207,7 +2207,7 @@ let g:gundo_close_on_revert = 1
 
 " Disable default mappings by having a pre-existing (but useless)
 " mapping to <Plug>HiLinkTrace.
-:nnoremap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
+nnoremap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
 
 " -------------------------------------------------------------
 " indent-guides
@@ -3150,7 +3150,7 @@ function! HighlightDefineGroups()
     endif
 endfunction
 
-:autocmd ColorScheme * call HighlightDefineGroups()
+autocmd ColorScheme * call HighlightDefineGroups()
 call HighlightDefineGroups()
 
 let g:HighlightNames = split("commas keywordspace longlines tabs trailingspace")
