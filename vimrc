@@ -929,6 +929,11 @@ xnoremap <silent> <M-l>        <C-C>:call VMoveRight()<CR>
 xnoremap <silent> <Backspace>  <C-C>:call VMoveLeft()<CR>
 xnoremap <silent> <Space>      <C-C>:call VMoveRight()<CR>
 
+" Strip whitespace from the left.
+function! Lstrip(s)
+    return substitute(a:s, '^\s\+', '', "")
+endfunction
+
 " Strip whitespace from the right.
 function! Rstrip(s)
     return substitute(a:s, '\s\+$', '', "")
@@ -1066,16 +1071,29 @@ snoremap <silent> <C-O><C-H> <C-G>o<C-\><C-N>i
 xnoremap <silent> <C-O><C-H>      o<C-\><C-N>i
 vnoremap <silent> <C-O><C-L>       <C-\><C-N>a
 
-" Strip trailing whitespace from line above.  Useful just after pressing <CR>.
-function! RstripLineAbove()
-    if line(".") > 1
-        let prevLine = line(".") - 1
-        call setline(prevLine, Rstrip(getline(prevLine)))
+" Strip whitespace left of cursor (only if non-blank at or after cursor).
+function! StripWhiteLeftOfCursor()
+    let c = col(".")
+    if c > 1
+        let s = getline(line("."))
+        let unstrippedLeftS = s[0 : c-2]
+        let leftS = Rstrip(unstrippedLeftS)
+        let rightS = s[c - 1 : ]
+        if leftS != unstrippedLeftS && !IsBlank(rightS)
+            " Setting left-side first brings cursor over as needed.
+            call setline(line("."), leftS)
+            call setline(line("."), leftS . rightS)
+        endif
     endif
+    " Return empty string so it may be called from insert mode via <C-R>=.
+    return ""
 endfunction
 
-" After executing the <CR>, strip trailing whitespace from the line above.
-inoremap <CR>  <CR><C-O>:call RstripLineAbove()<CR>
+" Use <C-R>=FunctionCall()<CR> idiom to avoid leaving insert mode.  Using
+" <C-O>:call FunctionCall()<CR> clobbers the virtual indentation that gets
+" added as part of automatic indentation.
+inoremap <CR>  <C-R>=StripWhiteLeftOfCursor()<CR><CR>
+
 
 " Move vertically by screen lines instead of physical lines.
 " Exchange meanings for physical and screen motion keys.
