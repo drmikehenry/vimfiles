@@ -10,10 +10,11 @@
 "
 " Tested with checkstyle 5.5
 "============================================================================
+
 if exists("g:loaded_syntastic_java_checkstyle_checker")
     finish
 endif
-let g:loaded_syntastic_java_checkstyle_checker=1
+let g:loaded_syntastic_java_checkstyle_checker = 1
 
 if !exists("g:syntastic_java_checkstyle_classpath")
     let g:syntastic_java_checkstyle_classpath = 'checkstyle-5.5-all.jar'
@@ -23,32 +24,39 @@ if !exists("g:syntastic_java_checkstyle_conf_file")
     let g:syntastic_java_checkstyle_conf_file = 'sun_checks.xml'
 endif
 
-function! SyntaxCheckers_java_checkstyle_IsAvailable()
-    return executable('java')
-endfunction
+let s:save_cpo = &cpo
+set cpo&vim
 
-function! SyntaxCheckers_java_checkstyle_GetLocList()
+function! SyntaxCheckers_java_checkstyle_GetLocList() dict
 
-    let fname = fnameescape( expand('%:p:h') . '/' . expand('%:t') )
+    let fname = syntastic#util#shescape( expand('%:p:h') . '/' . expand('%:t') )
 
     if has('win32unix')
-        let fname = substitute(system('cygpath -m ' . fname), '\%x00', '', 'g')
+        let fname = substitute(system('cygpath -m ' . fname), '\m\%x00', '', 'g')
     endif
 
-    let makeprg = syntastic#makeprg#build({
-        \ 'exe': 'java',
-        \ 'args': '-cp ' . g:syntastic_java_checkstyle_classpath .
-        \         ' com.puppycrawl.tools.checkstyle.Main -c ' . g:syntastic_java_checkstyle_conf_file,
-        \ 'fname': fname,
-        \ 'subchecker': 'checkstyle' })
+    let makeprg = self.makeprgBuild({
+        \ 'args_after': '-cp ' . g:syntastic_java_checkstyle_classpath .
+        \       ' com.puppycrawl.tools.checkstyle.Main -c ' .
+        \       syntastic#util#shexpand(g:syntastic_java_checkstyle_conf_file) .
+        \       ' -f xml',
+        \ 'fname': fname })
 
-    " check style format
-    let errorformat = '%f:%l:%c:\ %m,%f:%l:\ %m'
+    let errorformat = '%f:%t:%l:%c:%m'
 
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat, 'postprocess': ['cygwinRemoveCR'] })
-
+    return SyntasticMake({
+        \ 'makeprg': makeprg,
+        \ 'errorformat': errorformat,
+        \ 'preprocess': 'checkstyle',
+        \ 'subtype': 'Style' })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'java',
-    \ 'name': 'checkstyle'})
+    \ 'name': 'checkstyle',
+    \ 'exec': 'java'})
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: set et sts=4 sw=4:
