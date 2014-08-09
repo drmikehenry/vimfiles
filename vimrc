@@ -2241,7 +2241,7 @@ let g:gundo_close_on_revert = 1
 
 " Disable default mappings by having a pre-existing (but useless)
 " mapping to <Plug>HiLinkTrace.
-:nnoremap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
+nmap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
 
 " -------------------------------------------------------------
 " indent-guides
@@ -3184,7 +3184,7 @@ function! HighlightDefineGroups()
     endif
 endfunction
 
-:autocmd ColorScheme * call HighlightDefineGroups()
+autocmd ColorScheme * call HighlightDefineGroups()
 call HighlightDefineGroups()
 
 " Default value for buffers without b:HighlightEnabled.
@@ -4439,7 +4439,7 @@ endfunction
 if has('statusline') && version >= 700
     " Default status line:
     " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-    set statusline =
+    set statusline=
     set statusline+=%#User1#                       " Highlighting
     set statusline+=%-3n\                          " Buffer number
 
