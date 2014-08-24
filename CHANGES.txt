@@ -7,6 +7,20 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-08-24
+==========
+
+- Fix a problem with :Highlight seeming to be turned off by default on older
+  Vim versions.  The newly refactored :Highlight command was tested on a recent
+  Vim; that version of Vim allowed syntax groups defined in a FileType autocmd
+  to survive, such that things worked as expected.  Older versions of Vim do
+  not seem to preserve syntax groups defined in the FileType autocmd, so the
+  checks turned on by the :Highlight command appeared to be off by default.  As
+  a work-around, the :HighlightOn command may be issued manually to re-apply
+  the groups after a file has been loaded.
+
+  The change in Vim occurred somewhere between versions 7.4.179 and 7.4.410.
+
 2014-08-08
 ==========
 

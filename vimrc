@@ -3290,11 +3290,17 @@ function! HighlightItemEnabled(itemName)
     return exists(varName) && {varName}
 endfunction
 
-function! HighlightEnable(enable)
-    let b:HighlightEnabled = a:enable
+" (Re)-apply highlight groups.
+" Note related local_HighlightApply autocmd group below.
+function! HighlightApply()
     for itemName in g:HighlightItems
         call HighlightItem(itemName, HighlightItemEnabled(itemName))
     endfor
+endfunction
+
+function! HighlightEnable(enable)
+    let b:HighlightEnabled = a:enable
+    call HighlightApply()
 endfunction
 command!  HighlightOn  call HighlightEnable(1)
 command!  HighlightOff call HighlightEnable(0)
@@ -4408,6 +4414,20 @@ augroup local_spell
     " First, remove all autocmds in this group.
     autocmd!
     autocmd FileType * call SetSpell()
+augroup END
+
+" Re-apply highlight groups on syntax change.
+" This should come after "syntax on" so it will be invoked after Vim-supplied
+" autocmds.
+augroup local_HighlightApply
+    " First, remove all autocmds in this group.
+    autocmd!
+
+    " Re-apply highlight groups defined via :Highlight command.
+    " Older Vim versions can clear the associated Highlight syntax groups,
+    " so this autocmd (which comes after "syntax on") will run afterward
+    " to apply those groups again.
+    autocmd Syntax * call HighlightApply()
 augroup END
 
 " =============================================================
