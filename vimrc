@@ -304,15 +304,27 @@ endif
 " default to assuming a dark background.  Vim does try to use the environment
 " variable COLORFGBG to guess the background color, but that variable is not
 " always set properly (especially after ``sudo`` or ``ssh``).
+" *However*, if COLORFGBG *is* set for console Vim, we assume we can trust it,
+" in which case we won't override the detected value of 'background'.
 
 " Provide a default colorscheme.
 if !exists("g:colors_name")
-    if !has("gui_running") && &t_Co <= 8
-        " With only a few colors, it's better to use a simple colorscheme.
-        colorscheme elflord
+    " Use a dark background for GUIs and for console Vims that lack the
+    " COLORFGBG environment variable (since without COLORFGBG, Vim can't
+    " really do any detection; instead, it falls back to compiled-in defaults).
+    if has("gui_running") || $COLORFGBG == ""
+        set background=dark
+    endif
+    if &background == "dark"
+        if !has("gui_running") && &t_Co <= 8
+            " With only a few colors, it's better to use a simple colorscheme.
+            colorscheme elflord
+        else
+            " Dark scheme maintained by John Szakmeister.
+            colorscheme szakdark
+        endif
     else
-        " Dark scheme maintained by John Szakmeister.
-        colorscheme szakdark
+        colorscheme nuvola
     endif
 endif
 

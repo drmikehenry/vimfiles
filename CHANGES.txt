@@ -7,6 +7,26 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-08-27
+==========
+
+- When Vim can be trusted, vimfiles will now honor its light-background
+  detection choice.  Vim can't really detect the background color properly in
+  many cases (especially when running in a console).  For example, it loses
+  detection accuracy after ssh'ing to another machine and after executing ``su
+  -`` or ``sudo -i``.  For this reason, vimfiles used to unconditionally force
+  a dark-background colorscheme (unless the user preselects a preferred
+  colorscheme using the VIMUSER mechanism).  But in the special case that the
+  COLORFGBG environment variable is set accurately, console Vim can correctly
+  detect the background color.  Not all terminal emulators set this variable,
+  but rxvt and KDE's konsole do (but sadly, xterm does not).  This variable is
+  lost when executing ``su -`` or ``sudo -i``, and when ssh'ing to another
+  machine (unless the ssh client and server settings are changed to propagate
+  the variable to the server).  In the cases where this variable *has* been
+  set, vimfiles will now honor it, so rxvt and konsole terminals that use a
+  light background will work out-of-the-box, at least until the user loses the
+  COLORFGBG definition for some reason (such as the above scenarios).
+
 2014-08-24
 ==========
 
