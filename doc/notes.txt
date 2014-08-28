@@ -101,6 +101,11 @@ desirable to compile Vim on Unix platforms in order to turn on additional
 support features (particularly Ruby, for example).  See |notes_build_vim| for
 instructions on building Vim.
 
+Locally added extensions (which typically live in ~/.vim/local) may have notes
+as well; you can look at them via: >
+
+  :help localnotes
+
 ------------------------------------------------------------------------------
 Changes                                                 *notes_changes*
 
