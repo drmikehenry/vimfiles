@@ -2758,6 +2758,45 @@ augroup local_session
 augroup END
 
 " -------------------------------------------------------------
+" Startify
+" -------------------------------------------------------------
+let g:startify_files_number        = 8
+let g:startify_enable_special      = 0
+
+let g:startify_list_order = [
+            \ 'files',
+            \ ['Recent files in current directory:'],
+            \ 'dir',
+            \ ['Sessions:'],
+            \ 'sessions',
+            \ ['Bookmarks:'],
+            \ 'bookmarks',
+            \ ]
+
+" List of regexes to skip.
+"let g:startify_skiplist = [
+"            \ ]
+
+" List of bookmarks
+"let g:startify_bookmarks = [
+"            \ ]
+
+let g:startify_custom_header = [
+  \ "Recent files:      (Scroll for more; CTRL-e to see all footer text)",
+  \ ]
+
+let g:startify_custom_footer = [
+  \ "[e] - open an empty buffer, closing startify",
+  \ "[q] - close startify window (quit Vim if only window)",
+  \ "[i] - enter insert mode in an empty buffer, closing startify",
+  \ "[:] - start an ex-mode command, e.g. ':e somefile.txt'",
+  \ "[b], [s], [v], [t] - mark to open in Buffer, Split, Vert. split, or Tab",
+  \ "<CR> - open marked entries (or current entry if nothing is marked)",
+  \ "':help notes', ':help localnotes' - get help on vimfiles configuration",
+  \ "':intro' - view Vim's standard startup screen",
+  \ ]
+
+" -------------------------------------------------------------
 " Syntastic
 " -------------------------------------------------------------
 

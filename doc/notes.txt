@@ -61,6 +61,7 @@
     Selfdot - Changes "." to "self." in Python          |notes_selfdot|
     Session - Provides better session management        |notes_session|
     Snippets - Default snippets for UltiSnips           |notes_snippets|
+    Startify - Menu of recently used files at startup   |notes_startify|
     Surround - Manipulating "surroundings"              |notes_surround|
     Svn - View Subversion diffs while writing log       |notes_svn|
     SwapIt - Cycle through related words                |notes_swapit|
@@ -1804,7 +1805,7 @@ Installation:
 
 ------------------------------------------------------------------------------
 SNIPPETS                                                 *notes_snippets*
-  Default snippets for UltiSnips                         |notes_snippets|
+  Default snippets for UltiSnips
 
 Contains snippets for many languages (and for use by several different plugins).
 These snippets are not available for use by default due to the clearsnippets
@@ -1815,6 +1816,15 @@ the following to your user vimrc configuration: >
    call pathogen#surround(expand('$VIMFILES/optional-bundle/snippets'))
 <
 Version 2014-06-19 (fa45583c) from git://github.com/honza/vim-snippets.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+STARTIFY                                                 *notes_startify*
+  Menu of recently used files at startup                 |startify.txt|
+
+Version 2014-08-21 (bf85306c) from git://github.com/mhinz/vim-startify
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
