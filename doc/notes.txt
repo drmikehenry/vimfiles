@@ -1824,7 +1824,7 @@ Installation:
 STARTIFY                                                 *notes_startify*
   Menu of recently used files at startup                 |startify.txt|
 
-Version 2014-08-21 (bf85306c) from git://github.com/mhinz/vim-startify
+Version 2014-09-01 (2fe12144) from git://github.com/mhinz/vim-startify
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
