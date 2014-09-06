@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-09-06
+==========
+
+- Disable Startify for Vim versions prior to 7.3.633.  Startify hangs on
+  Windows with Vim 7.3.46 on some machines, but works with 7.3.633.  Since I
+  can't replicate it with Vim 7.3.46 on another machine, its easier to just
+  disable Startify as a work-around.
+
 2014-08-31
 ==========
 

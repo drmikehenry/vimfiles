@@ -2760,6 +2760,12 @@ augroup END
 " -------------------------------------------------------------
 " Startify
 " -------------------------------------------------------------
+if v:version < 703 || (v:version == 703 && !has("patch633"))
+    " There's some problem with gvim 7.3.46 on Windows on some machines
+    " that causes Startify to hang; it doesn't seem to be there for 7.3.633,
+    " so for now Startify will be disabled unless 7.3.633 or better is running.
+    let g:startify_disable_at_vimenter = 1
+endif
 let g:startify_files_number        = 8
 let g:startify_enable_special      = 0
 
