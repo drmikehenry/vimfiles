@@ -150,31 +150,7 @@ function! RtpInherit(path)
 endfunction
 
 " -------------------------------------------------------------
-" Pathogen plugin management (part one)
-" -------------------------------------------------------------
-
-" A couple of bundles must be initialized early for use in |VIMRC_BEFORE|
-" scripts.
-
-runtime bundle/pathogen/autoload/pathogen.vim
-
-" The calls to expand() below launder the slashes to backslashes
-" on Windows as well as expand environment variables.  This is
-" helpful to ensure that pathogen does not re-infect these plugins
-" (since pathogen doesn't normalize the slashes during comparisons).
-
-" We'd like to detect fonts in |VIMRC_BEFORE|.
-call pathogen#surround(expand("$VIMFILES/bundle/fontdetect"))
-
-" We'd like to set colorschemes in |VIMRC_BEFORE|.
-call pathogen#surround(expand("$VIMFILES/bundle/colorsamplerpack"))
-
-" Now restore $VIMFILES area to surround the other bundles, giving it higher
-" priority than the added bundles.
-call pathogen#surround($VIMFILES)
-
-" -------------------------------------------------------------
-" Customizing environment variables
+" Per-user customization pre-setup
 " -------------------------------------------------------------
 
 " NOTE: Several environment variables follow that may be customized.
@@ -183,23 +159,6 @@ call pathogen#surround($VIMFILES)
 "
 " Environment variables are used instead of Vim variables to allow
 " configuration at the operating-system level outside of Vim.
-
-" If local customizations directory exists, it takes precedence.
-call RtpPrepend($VIMFILES . "/local")
-
-" Setup an environment variable for cache-related bits.  This follows
-" XDG_CACHE_HOME by default, but can be overridden by the user.
-if $VIM_CACHE_DIR == ""
-    if $XDG_CACHE_HOME != ""
-        let $VIM_CACHE_DIR = expand("$XDG_CACHE_HOME/vim")
-    else
-        if has("win32")
-            let $VIM_CACHE_DIR = expand("$USERPROFILE/.cache/vim")
-        else
-            let $VIM_CACHE_DIR = expand("$HOME/.cache/vim")
-        endif
-    endif
-endif
 
 " VIMUSER defaults to the logged-in user, but may be overridden to allow
 " multiple user to share the same overrides (e.g., to let "root" share settings
@@ -246,24 +205,57 @@ if $VIMRC_AFTER == ""
     endif
 endif
 
+" Activate pathogen in case a user would need to activate a bundle in
+" |VIMRC_VARS| as part of setting up some variable.
+
+runtime bundle/pathogen/autoload/pathogen.vim
+
+" Source the user's |VIMRC_VARS| file (if it exists).
+" Note that $VIMUSERFILES won't yet be in the 'runtimepath'.
+let $VIMRC_VARS = $VIMUSERFILES . "/vimrc-vars.vim"
+if filereadable($VIMRC_VARS)
+    source $VIMRC_VARS
+endif
+
+" If local customizations directory exists, it takes precedence over $VIMFILES.
+call RtpPrepend($VIMFILES . "/local")
+
 " Prepend per-user directory to runtimepath (provides the highest priority).
 call RtpPrepend($VIMUSERFILES)
 
-" If it exists, source the specified |VIMRC_BEFORE| hook.
-if filereadable($VIMRC_BEFORE)
-    source $VIMRC_BEFORE
+" Setup an environment variable for cache-related bits.  This follows
+" XDG_CACHE_HOME by default, but can be overridden by the user.
+if $VIM_CACHE_DIR == ""
+    if $XDG_CACHE_HOME != ""
+        let $VIM_CACHE_DIR = expand("$XDG_CACHE_HOME/vim")
+    else
+        if has("win32")
+            let $VIM_CACHE_DIR = expand("$USERPROFILE/.cache/vim")
+        else
+            let $VIM_CACHE_DIR = expand("$HOME/.cache/vim")
+        endif
+    endif
 endif
 
 " -------------------------------------------------------------
-" Pathogen plugin management (part two)
+" Pathogen bundle management
 " -------------------------------------------------------------
 
-" Infect all remaining bundles.
+" Infect all bundles.
 call pathogen#infect()
 
 " Bundles in the "pre-bundle" directories will come earlier in the path
 " than those in "bundle" directories.
 call pathogen#infect('pre-bundle/{}')
+
+" -------------------------------------------------------------
+" Per-user "vimrc-before" configuration
+" -------------------------------------------------------------
+
+" If it exists, source the specified |VIMRC_BEFORE| hook.
+if filereadable($VIMRC_BEFORE)
+    source $VIMRC_BEFORE
+endif
 
 " -------------------------------------------------------------
 " Python path management

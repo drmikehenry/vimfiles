@@ -7,6 +7,22 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-09-07
+==========
+
+- Provide support for extremely early per-user configuration of variables via
+  the new |VIMRC_VARS| script file.  Most users won't need this; it comes in
+  handy for disabling bundles before the main vimrc activates them all.
+
+- BREAKING CHANGE: To better support the use of bundles in vimrc-before.vim
+  scripts, all bundles are activated now before sourcing this script.  In the
+  off chance that you were setting g:pathogen_disabled in your vimrc-before.vim
+  script, you'll need to move this definition to a vimrc-vars.vim file.
+
+  With this change, all supported colorschemes are available for use directly
+  in the vimrc-before.vim script; tricks with pathogen#surround() are no longer
+  required.
+
 2014-09-06
 ==========
 

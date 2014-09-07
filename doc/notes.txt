@@ -2460,6 +2460,26 @@ directory in the below list:
   ~/.vimuser
   ~/.vim/user/someuser
 
+VIMRC_VARS                                    *VIMRC_VARS*
+  This points to a "vars" script for per-user variable initialization that must
+  occur extremely early.  The script is located at $VIMUSERFILES/vimrc-vars.vim.
+
+  Most users won't require a |VIMRC_VARS| script.  Its purpose is to solve a
+  chicken-and-egg problem with a |VIMRC_BEFORE| script:
+
+  - The user wants to do ":colorscheme SomeColorScheme" in his |VIMRC_BEFORE|;
+  - Support for SomeColorScheme lives in an arbitrary bundle;
+  - Activating all bundles in advance of |VIMRC_BEFORE| makes it hard for the
+    user to disable a particular bundle.
+
+  Only the most primitive settings should live in |VIMRC_VARS|; everything else
+  belongs in |VIMRC_BEFORE| or |VIMRC_AFTER|.  The most likely reason for
+  needing this script is to disable a bundle on a per-user basis.  For example,
+  to disable the "fixkey" bundle, place the following line in
+  $VIMUSERFILES/vimrc-vars.vim: >
+
+    let g:pathogen_disabled = ["fixkey"]
+
 VIMRC_BEFORE, VIMRC_AFTER                     *VIMRC_BEFORE*   *VIMRC_AFTER*
   These point to "before" and "after" scripts.  If these files
   exist, they will be sourced before or after the main "vimrc" file.
