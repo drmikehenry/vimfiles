@@ -23,6 +23,15 @@ require adjustment of per-user settings.
   in the vimrc-before.vim script; tricks with pathogen#surround() are no longer
   required.
 
+- Add some new colorschemes:
+  - badwolf (dark)
+  - base16-* (collection of colorschemes)
+  - gruvbox (dark)
+  - hemisu (dark)
+  - hybrid (dark)
+  - monokai (dark)
+  - wombat256i (dark)
+
 2014-09-06
 ==========
 
