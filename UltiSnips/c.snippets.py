@@ -231,6 +231,15 @@ bsnip("Inc", "#include <Header.h>", r"""
 #include <${1:.h}>
 """)
 
+# Standard data types.
+
+# int8_t, uint8_t, and friends.
+for width in [8, 16, 32, 64]:
+    t = "%d" % width
+    t_t = t + "_t "
+    wabbr("i" + t,  "int" + t_t)
+    wabbr("ui" + t,  "uint" + t_t, aliases=[t])
+
 # Doxygen.
 babbr("@param",     "@param[in] ${1:inParam}  ${0:@todo Description of $1.}",
         aliases=["@p", "@pi"])
