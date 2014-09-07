@@ -30,6 +30,7 @@
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
     Fugitive - A wrapper for Git in Vim                 |notes_fugitive|
     Grep - Wrapper for grep/xargs                       |notes_grep|
+    Gruvbox - a dark colorscheme                        |notes_gruvbox|
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
     HiLinkTrace - Display syntax hilighting stack       |notes_hilinktrace|
@@ -947,6 +948,15 @@ Installation:
   was added to fix this problem.
 
 Version 1.9 from http://www.vim.org/scripts/script.php?script_id=311
+
+------------------------------------------------------------------------------
+Gruvbox                                                 *notes_gruvbox*
+  A dark colorscheme
+
+Version 2014-08-22 (d1a55f7) from git://github.com/cmorhetz/gruvbox
+              
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 GUNDO                                                   *notes_gundo*

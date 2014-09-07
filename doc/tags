@@ -229,6 +229,7 @@ notes_fontsize	notes.txt	/*notes_fontsize*
 notes_fswitch	notes.txt	/*notes_fswitch*
 notes_fugitive	notes.txt	/*notes_fugitive*
 notes_grep	notes.txt	/*notes_grep*
+notes_gruvbox	notes.txt	/*notes_gruvbox*
 notes_gundo	notes.txt	/*notes_gundo*
 notes_headerguard	notes.txt	/*notes_headerguard*
 notes_hilinktrace	notes.txt	/*notes_hilinktrace*
