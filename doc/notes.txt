@@ -9,6 +9,7 @@
     Build Vim                                           |notes_build_vim|
 3.  Plugins                                             |notes_plugins|
     Align - Align things into columns                   |notes_align|
+    Badwolf colorscheme                                 |notes_badwolf|
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
     BufMRU - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
@@ -494,6 +495,15 @@ Installation:
     :n
     :so %
     :q
+
+------------------------------------------------------------------------------
+BADWOLF                                                 *notes_badwolf*
+  A dark colorscheme
+
+Version 2013-07-19 (e6fdf18) from git://github.com/sjl/badwolf.git
+                    
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 BUFEXPLORER                                             *notes_bufexplorer*
