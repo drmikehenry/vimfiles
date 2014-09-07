@@ -295,6 +295,7 @@ notes_vis	notes.txt	/*notes_vis*
 notes_visincr	notes.txt	/*notes_visincr*
 notes_vissort	notes.txt	/*notes_vissort*
 notes_visswap	notes.txt	/*notes_visswap*
+notes_wombat256i	notes.txt	/*notes_wombat256i*
 o_[%	matchit.txt	/*o_[%*
 o_]%	matchit.txt	/*o_]%*
 o_g%	matchit.txt	/*o_g%*

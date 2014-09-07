@@ -89,6 +89,7 @@
     VisIncr - Increment visually selected areas         |notes_visincr|
     VisSort - Sort visually selected areas              |notes_vissort|
     VisSwap - Swap visually selected areas              |notes_visswap|
+    Wombat256i - A dark colorscheme                     |notes_wombat256i|
 4.  Extensions                                          |notes_extensions|
     C Additions - Extra syntax highlighting for C       |notes_c_additions|
     Tmux syntax - Syntax definitions for tmux.conf      |notes_tmux_syntax|
@@ -2436,6 +2437,15 @@ Installation:
 
 Version 4e from section "Visual Mode Based Swap" at
 http://mysite.verizon.net/astronaut/vim/index.html
+
+------------------------------------------------------------------------------
+WOMBAT256I                                              *notes_wombat256i*
+  A dark colorscheme
+
+Version 2013-08-04 (f99475e) from git://github.com/dsolstad/vim-wombat256i.git
+              
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ==============================================================================
 4.  Extensions                                          *notes_extensions*
