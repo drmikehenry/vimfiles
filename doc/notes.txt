@@ -48,6 +48,7 @@
     Markdown - Markdown syntax support                  |notes_markdown|
     Matchit - Extended matching with '%'                |notes_matchit|
     Misc - Contains many useful Vimscript functions     |notes_misc|
+    Monokai - A dark colorscheme                        |notes_monokai|
     Moonscript - support for a dialect of Lua           |notes_moonscript|
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
@@ -1471,6 +1472,15 @@ Version 1.8.5 from https://github.com/xolox/vim-misc
 
 This plugin is also used by the session plugin.
 
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+MONOKAI                                                 *notes_monokai*
+  A dark colorscheme
+
+Version 2014-06-10 (168adea) from git://github.com/w0ng/vim-hybrid.git
+              
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
