@@ -232,6 +232,7 @@ notes_grep	notes.txt	/*notes_grep*
 notes_gruvbox	notes.txt	/*notes_gruvbox*
 notes_gundo	notes.txt	/*notes_gundo*
 notes_headerguard	notes.txt	/*notes_headerguard*
+notes_hemisu	notes.txt	/*notes_hemisu*
 notes_hilinktrace	notes.txt	/*notes_hilinktrace*
 notes_indent-guides	notes.txt	/*notes_indent-guides*
 notes_installation	notes.txt	/*notes_installation*

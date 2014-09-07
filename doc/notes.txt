@@ -33,6 +33,7 @@
     Gruvbox - a dark colorscheme                        |notes_gruvbox|
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
+    Hemisu - A dark colorscheme                         |notes_hemisu|
     HiLinkTrace - Display syntax hilighting stack       |notes_hilinktrace|
     Indent-guides - Adds indent guides                  |notes_indent-guides|
     JavaComplete - Java Omnicompletion                  |notes_javacomplete|
@@ -950,7 +951,7 @@ Installation:
 Version 1.9 from http://www.vim.org/scripts/script.php?script_id=311
 
 ------------------------------------------------------------------------------
-Gruvbox                                                 *notes_gruvbox*
+GRUVBOX                                                 *notes_gruvbox*
   A dark colorscheme
 
 Version 2014-08-22 (d1a55f7) from git://github.com/cmorhetz/gruvbox
@@ -981,6 +982,15 @@ To add or update a header guard in a .h file: >
 
 Version 0.2.1 (2c254b7) from https://github.com/drmikehenry/vim-headerguard
 
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+HEMISU                                                  *notes_hemisu*
+  A dark colorscheme
+
+Version 2013-09-05 (37ea6aa) from git://github.com/noahfrederick/vim-hemisu.git
+              
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
