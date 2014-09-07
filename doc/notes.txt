@@ -10,6 +10,7 @@
 3.  Plugins                                             |notes_plugins|
     Align - Align things into columns                   |notes_align|
     Badwolf colorscheme                                 |notes_badwolf|
+    Base16 colorscheme collection                       |notes_base16|
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
     BufMRU - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
@@ -501,6 +502,15 @@ BADWOLF                                                 *notes_badwolf*
   A dark colorscheme
 
 Version 2013-07-19 (e6fdf18) from git://github.com/sjl/badwolf.git
+                    
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+BASE16                                                  *notes_base16*
+  A colorscheme collection
+
+Version 2014-07-22 (1ce4b84) from git://github.com/chriskempson/base16-vim.git
                     
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

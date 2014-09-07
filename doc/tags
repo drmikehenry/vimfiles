@@ -204,6 +204,7 @@ notes	notes.txt	/*notes*
 notes.txt	notes.txt	/*notes.txt*
 notes_align	notes.txt	/*notes_align*
 notes_badwolf	notes.txt	/*notes_badwolf*
+notes_base16	notes.txt	/*notes_base16*
 notes_bufexplorer	notes.txt	/*notes_bufexplorer*
 notes_bufkill	notes.txt	/*notes_bufkill*
 notes_bufmru	notes.txt	/*notes_bufmru*
