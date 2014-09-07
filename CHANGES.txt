@@ -32,6 +32,8 @@ require adjustment of per-user settings.
   - monokai (dark)
   - wombat256i (dark)
 
+- Update grep plugin to version 1.11.
+
 2014-09-06
 ==========
 

@@ -507,7 +507,7 @@ BADWOLF                                                 *notes_badwolf*
   A dark colorscheme
 
 Version 2013-07-19 (e6fdf18) from git://github.com/sjl/badwolf.git
-                    
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
@@ -516,7 +516,7 @@ BASE16                                                  *notes_base16*
   A colorscheme collection
 
 Version 2014-07-22 (1ce4b84) from git://github.com/chriskempson/base16-vim.git
-                    
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
@@ -940,25 +940,18 @@ Local customizations
   by pressing <F3>.
 
 Installation:
-- Install grep.vim in ~/.vim/plugin
-- Install grep.txt in ~/.vim/doc
-- :helptags ~/.vim/doc
+- Follow bundle installation instructions (|bundle_installation|).
 - Note: grep.txt is not directly downloadable; it was created from a
-  copy-and-paste of the plugin web page
+  copy-and-paste of the plugin web page.
 
-- For Version 1.8: the xargs command is using --null.  OS X's version
-  of xargs doesn't support this long alias for -0, so replace --null
-  with -0 in grep.vim.  In Version 1.9, the new variable Grep_Xargs_Options
-  was added to fix this problem.
-
-Version 1.9 from http://www.vim.org/scripts/script.php?script_id=311
+Version 1.11 from http://www.vim.org/scripts/script.php?script_id=311
 
 ------------------------------------------------------------------------------
 GRUVBOX                                                 *notes_gruvbox*
   A dark colorscheme
 
 Version 2014-08-22 (d1a55f7) from git://github.com/cmorhetz/gruvbox
-              
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
@@ -993,7 +986,7 @@ HEMISU                                                  *notes_hemisu*
   A dark colorscheme
 
 Version 2013-09-05 (37ea6aa) from git://github.com/noahfrederick/vim-hemisu.git
-              
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
@@ -1024,7 +1017,7 @@ HYBRID                                                  *notes_hybrid*
   A dark colorscheme
 
 Version 2014-05-10 (81b7e55) from git://github.com/w0ng/vim-hybrid.git
-              
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
@@ -1481,7 +1474,7 @@ MONOKAI                                                 *notes_monokai*
   A dark colorscheme
 
 Version 2014-06-10 (168adea) from git://github.com/w0ng/vim-hybrid.git
-              
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
@@ -2443,7 +2436,7 @@ WOMBAT256I                                              *notes_wombat256i*
   A dark colorscheme
 
 Version 2013-08-04 (f99475e) from git://github.com/dsolstad/vim-wombat256i.git
-              
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 

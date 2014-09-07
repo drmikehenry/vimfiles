@@ -167,8 +167,6 @@ g:vimball_home	pi_vimball.txt	/*g:vimball_home*
 g:vimball_mkdir	pi_vimball.txt	/*g:vimball_mkdir*
 g:vimball_path_escape	pi_vimball.txt	/*g:vimball_path_escape*
 g:visincr_datedivset	visincr.txt	/*g:visincr_datedivset*
-grep-plugin	grep.txt	/*grep-plugin*
-grep.txt	grep.txt	/*grep.txt*
 loremipsum#Generate()	loremipsum.txt	/*loremipsum#Generate()*
 loremipsum#GenerateInline()	loremipsum.txt	/*loremipsum#GenerateInline()*
 loremipsum#Insert()	loremipsum.txt	/*loremipsum#Insert()*
