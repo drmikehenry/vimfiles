@@ -682,6 +682,24 @@ endfunction
 " QuickFix/Location List support
 " -------------------------------------------------------------
 
+" Shorten filenames in all buffers.
+" E.g., /home/mike/somefile => ~/somefile
+function! ShortenFilenames()
+    " Using "cd ." (or "lcd .") will cause Vim to invoke internal
+    " function shorten_fnames().
+    if haslocaldir()
+        lcd .
+    else
+        cd .
+    endif
+endfunction
+
+" Shorten filenames when QuickFix window changes.
+augroup local_QuickFix
+    autocmd!
+    autocmd QuickfixCmdPost * call ShortenFilenames()
+augroup END
+
 " Open QuickFix window using standard position and height.
 command! -bar Copen  execute "botright copen " . g:QuickFixWinHeight
 
