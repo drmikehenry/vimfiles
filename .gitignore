@@ -4,3 +4,5 @@ spell
 *.pyc
 *.cache
 .undo
+tags
+.netrwhist
