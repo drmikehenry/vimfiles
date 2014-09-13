@@ -3717,6 +3717,7 @@ function! SetupRstSyntax()
     " Handle unspecified languages first.
     call s:EmbedCodeBlock("", "")
     let includedLangs = {}
+    for lang in g:rstEmbeddedLangs
         let synLang = lang
         if lang == "c"
             " Special-case C because Vim's syntax highlighting for cpp
