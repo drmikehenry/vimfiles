@@ -2593,6 +2593,40 @@ drmikehenry, setup ~/.vim/user/drmikehenry/vimrc-before.vim with: >
 
   colorscheme nuvola
 
+If you don't choose a colorscheme, one will be chosen for you.  Since Gvim can
+use any colorscheme, vimfiles arbitrarily chooses a dark-background
+colorscheme.  When running in a console, Vim tries to detect whether your
+background is light or dark, but it can't really detect the background color
+properly in many cases; in such cases, Vim uses a heuristic to guess the
+background color, generally based on the terminal type.  For example, Vim can't
+generally detect the background color after ssh'ing to another machine or after
+executing ``su -`` or ``sudo -i``.  For this reason, vimfiles will
+unconditionally force a dark-background colorscheme for Gvim and whenever the
+background color detection algorithm in not trustworthy.
+
+But in the special case that the COLORFGBG environment variable is set, console
+Vim can correctly detect the background color.  Not all terminal emulators set
+this variable, but rxvt and KDE's konsole do (but sadly, xterm does not).  This
+variable is lost when executing ``su -`` or ``sudo -i``, and when ssh'ing to
+another machine (unless the ssh client and server settings are changed to
+propagate the variable to the server).  In the cases where this variable has
+been set, vimfiles will now honor it, so rxvt and konsole terminals that use a
+light background will receive a light-background colorscheme by default (unless
+overridden by the user).
+
+You may want to adjust your ssh client and server settings to propagate the
+COLORFGBG variable to the server, improving Vim's detection accuracy.  To
+accomplish this with openssh, add this line to /etc/ssh/sshd_config on the
+server: >
+
+    AcceptEnv COLORFGBG
+
+Then adjust the client settings by adding these lines to either ~/.ssh/config
+(for a single user) or /etc/ssh/ssh_config (for all users): >
+
+  Host *
+      SendEnv COLORFGBG
+
 ------------------------------------------------------------------------------
 Fonts
 

@@ -257,6 +257,13 @@ if filereadable($VIMRC_BEFORE)
     source $VIMRC_BEFORE
 endif
 
+" In general there is no good way to reliably detect console background color.
+" However, if COLORFGBG is set and we're running in a console, we assume we can
+" trust the value of 'background'.
+function! BackgroundIsTrustworthy()
+    return !has("gui_running") && $COLORFGBG != ""
+endfunction
+
 " -------------------------------------------------------------
 " Python path management
 " -------------------------------------------------------------
@@ -291,20 +298,11 @@ endif
 " colorscheme selection will take place.  To use no colorscheme at all, set
 " g:colors_name to the empty string.
 
-" If the user hadn't chosen a colorscheme, we setup a default.  Because in
-" general there is no good way to reliably detect console background color, we
-" default to assuming a dark background.  Vim does try to use the environment
-" variable COLORFGBG to guess the background color, but that variable is not
-" always set properly (especially after ``sudo`` or ``ssh``).
-" *However*, if COLORFGBG *is* set for console Vim, we assume we can trust it,
-" in which case we won't override the detected value of 'background'.
+" If the user hasn't chosen a colorscheme, we setup a default.  If we can't
+" trust the background color detection, we force a dark background.
 
-" Provide a default colorscheme.
 if !exists("g:colors_name")
-    " Use a dark background for GUIs and for console Vims that lack the
-    " COLORFGBG environment variable (since without COLORFGBG, Vim can't
-    " really do any detection; instead, it falls back to compiled-in defaults).
-    if has("gui_running") || $COLORFGBG == ""
+    if !BackgroundIsTrustworthy()
         set background=dark
     endif
     if &background == "dark"
@@ -3719,7 +3717,6 @@ function! SetupRstSyntax()
     " Handle unspecified languages first.
     call s:EmbedCodeBlock("", "")
     let includedLangs = {}
-    for lang in g:rstEmbeddedLangs
         let synLang = lang
         if lang == "c"
             " Special-case C because Vim's syntax highlighting for cpp

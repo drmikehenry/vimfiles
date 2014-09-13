@@ -16,6 +16,10 @@ require adjustment of per-user settings.
   shortening algorithm (such as converting to a relative path when the result
   is contained within the current working directory).
 
+- Add documentation for colorscheme detection and for configuring ssh to
+  propagate the COLORFGBG environment variable to aid background color
+  detection accuracy.
+
 2014-09-07
 ==========
 
