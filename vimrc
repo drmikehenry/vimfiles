@@ -3733,7 +3733,7 @@ function! SetupRstSyntax()
         endif
         call s:EmbedCodeBlock(lang, synGroup)
     endfor
-"    let &iskeyword = old_iskeyword
+    let &iskeyword = old_iskeyword
 
     " Re-synchronize syntax highlighting from start of file.
     syntax sync fromstart
