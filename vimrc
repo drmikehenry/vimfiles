@@ -3892,6 +3892,9 @@ command! -bar SetupClojure call SetupClojure()
 function! SetupCmake()
     SetupSource
     setlocal commentstring=#\ %s
+
+    " Re-synchronize syntax highlighting from start of file.
+    syntax sync fromstart
 endfunction
 command! -bar SetupCmake call SetupCmake()
 
