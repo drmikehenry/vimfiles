@@ -1288,8 +1288,8 @@ set wildignore+=*.pyc,*.egg-info
 " Ignore some Linux-kernel artifacts.
 set wildignore+=*.ko,*.mod.c,*.order,modules.builtin
 
-" Ignore some java-related files.
-set wildignore+=*.class,classes/**,*.jar
+" Ignore some Java and Clojure-related files.
+set wildignore+=*.class,classes/**,*.jar,.lein-*
 
 " Ignore debug symbols on Mac OS X.
 set wildignore+=*.dSYM
@@ -3892,6 +3892,9 @@ command! -bar SetupClojure call SetupClojure()
 function! SetupCmake()
     SetupSource
     setlocal commentstring=#\ %s
+
+    " Re-synchronize syntax highlighting from start of file.
+    syntax sync fromstart
 endfunction
 command! -bar SetupCmake call SetupCmake()
 
