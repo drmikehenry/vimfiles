@@ -11,6 +11,9 @@ endif
 
 let colors_name = "szakdark"
 
+if !exists("g:szakdark_subtle_search")
+    let g:szakdark_subtle_search=0
+endif
 
 "hi Example         guifg=NONE        guibg=NONE        gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
 
@@ -72,7 +75,12 @@ if version >= 700 " Vim 7.x specific colors
   hi MatchParen     guifg=#f6f3e8     guibg=#857b6f     gui=BOLD      ctermfg=white       ctermbg=darkgray    cterm=NONE
   hi Pmenu          guifg=#f6f3e8     guibg=#444444     gui=NONE      ctermfg=230         ctermbg=238         cterm=NONE
   hi PmenuSel       guifg=#000000     guibg=#cae682     gui=NONE      ctermfg=black       ctermbg=192         cterm=NONE
-  hi Search         guifg=NONE        guibg=#2F2F00     gui=underline ctermfg=NONE        ctermbg=NONE	      cterm=underline
+
+  if g:szakdark_subtle_search != 0
+    hi Search       guifg=NONE        guibg=#404000     gui=NONE      ctermfg=NONE        ctermbg=58          cterm=NONE
+  else
+    hi Search       guifg=#c8c800     guibg=NONE        gui=reverse   ctermfg=3           ctermbg=NONE        cterm=reverse
+  endif
 endif
 
 " Syntax highlighting
