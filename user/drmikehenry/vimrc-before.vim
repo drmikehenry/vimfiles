@@ -1,15 +1,4 @@
-" Don't waste time setting up GUI menu.
 let did_install_default_menus = 1
-
-function! Drmikehenry_adjust_szakdark()
-  hi clear Search
-  hi Search term=reverse cterm=reverse ctermfg=yellow gui=reverse guifg=yellow
-endfunction
-
-augroup drmikehenry_colors
-    autocmd!
-    autocmd ColorScheme szakdark call Drmikehenry_adjust_szakdark()
-augroup END
 
 function! Drmikehenry_solarized()
     "let g:solarized_contrast = "low"
