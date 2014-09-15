@@ -3136,7 +3136,7 @@ if g:EnableUltiSnips
     augroup local_ultisnips
         autocmd!
 
-        " Store last active help buffer number when leaving the help window.
+        " Wait until all initialization is complete, then override mappings.
         autocmd VimEnter * call SetupUltiSnipsMapping()
     augroup END
 else
