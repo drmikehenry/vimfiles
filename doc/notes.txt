@@ -2219,7 +2219,7 @@ To disable UltiSnips entirely, set the below variable before vimrc runs: >
 This is useful for forks of Vim that don't support Python bindings (e.g.,
 NeoVim).
 
-Version 2014-05-31 (e59a60cb) from git://github.com/SirVer/ultisnips.git
+Version 2014-09-13 (8e57a659) from git://github.com/SirVer/ultisnips.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

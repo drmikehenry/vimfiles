@@ -379,15 +379,23 @@ class SnippetManager(object):
     def _jump(self, backwards=False):
         """Helper method that does the actual jump."""
         jumped = False
+        # If next tab has length 1 and the distance between itself and
+        # self._ctab is 1 then there is 1 less CursorMove events.  We
+        # cannot ignore next movement in such case.
+        ntab_short_and_near = False
         if self._cs:
-            self._ctab = self._cs.select_next_tab(backwards)
-            if self._ctab:
+            ntab = self._cs.select_next_tab(backwards)
+            if ntab:
                 if self._cs.snippet.has_option("s"):
                     lineno = _vim.buf.cursor.line
                     _vim.buf[lineno] = _vim.buf[lineno].rstrip()
-                _vim.select(self._ctab.start, self._ctab.end)
+                _vim.select(ntab.start, ntab.end)
                 jumped = True
-                if self._ctab.number == 0:
+                if (self._ctab is not None
+                        and ntab.start - self._ctab.end == Position(0, 1)
+                        and ntab.end - ntab.start == Position(0, 1)):
+                    ntab_short_and_near = True
+                if ntab.number == 0:
                     self._current_snippet_is_done()
             else:
                 # This really shouldn't happen, because a snippet should
@@ -395,10 +403,12 @@ class SnippetManager(object):
                 # Cleanup by removing current snippet and recursing.
                 self._current_snippet_is_done()
                 jumped = self._jump(backwards)
+            self._ctab = ntab
         if jumped:
             self._vstate.remember_position()
             self._vstate.remember_unnamed_register(self._ctab.current_text)
-            self._ignore_movements = True
+            if not ntab_short_and_near:
+                self._ignore_movements = True
         return jumped
 
     def _leaving_insert_mode(self):
@@ -445,9 +455,27 @@ class SnippetManager(object):
         partial is True, then get also return partial matches. """
         filetypes = self._buffer_filetypes[_vim.buf.number][::-1]
         matching_snippets = defaultdict(list)
+        clear_priority = None
+        cleared = {}
+        for _, source in self._snippet_sources:
+            source.ensure(filetypes)
+
+        # Collect cleared information from sources.
+        for _, source in self._snippet_sources:
+            sclear_priority = source.get_clear_priority(filetypes)
+            if sclear_priority is not None and (clear_priority is None
+                    or sclear_priority > clear_priority):
+                clear_priority = sclear_priority
+            for key, value in source.get_cleared(filetypes).items():
+                if key not in cleared or value > cleared[key]:
+                    cleared[key] = value
+
         for _, source in self._snippet_sources:
             for snippet in source.get_snippets(filetypes, before, partial):
-                matching_snippets[snippet.trigger].append(snippet)
+                if ((clear_priority is None or snippet.priority > clear_priority)
+                        and (snippet.trigger not in cleared or
+                        snippet.priority > cleared[snippet.trigger])):
+                    matching_snippets[snippet.trigger].append(snippet)
         if not matching_snippets:
             return []
 
@@ -506,7 +534,6 @@ class SnippetManager(object):
 
         si.update_textobjects()
 
-        self._ignore_movements = True
         self._vstate.remember_buffer(self._csnippets[0])
 
         self._jump()

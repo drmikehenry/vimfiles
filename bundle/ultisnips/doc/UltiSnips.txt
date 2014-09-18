@@ -180,6 +180,8 @@ g:UltiSnipsEditSplit        Defines how the edit window is opened. Possible
                             |normal|         Default. Opens in the current window.
                             |horizontal|     Splits the window horizontally.
                             |vertical|       Splits the window vertically.
+                            |context|        Splits the window vertically or
+                                           horizontally depending on context.
 
                                                         *g:UltiSnipsSnippetsDir*
 g:UltiSnipsSnippetsDir
@@ -236,7 +238,7 @@ vimrc file. >
    let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 UltiSnips will only map the jump triggers while a snippet is active to
-interfer as little as possible with other mappings.
+interfere as little as possible with other mappings.
 
 The default value for g:UltiSnipsJumpBackwardTrigger interferes with the
 built-in complete function: |i_CTRL-X_CTRL-K|. A workaround is to add the
@@ -1237,12 +1239,23 @@ directive.
 clearsnippets
 ------------------- SNAP -------------------
 
-Without arguments, 'clearsnippets' removes all snippets defined up to that
-point for the current file type. 
+'clearsnippets' removes all snippets with a priority lower than the current
+one. For example, the following cleares all snippets that have priority <= 1,
+even though the example snippet is defined after the 'clearsnippets'.
 
-To clear one or more specific snippet, provide the names of the snippets as
-arguments to the 'clearsnippets' command. The following example will clear
-the snippets 'trigger1' and 'trigger2'.
+------------------- SNIP -------------------
+priority 1
+clearsnippets
+
+priority -1
+snippet example "Cleared example"
+	This will never be expanded.
+endsnippet
+------------------- SNAP -------------------
+
+To clear one or more specific snippet, provide the triggers of the snippets as
+arguments to the 'clearsnippets' command. The following example will clear the
+snippets 'trigger1' and 'trigger2'.
 
 ------------------- SNIP -------------------
 clearsnippets trigger1 trigger2
@@ -1392,6 +1405,8 @@ individuals have contributed to UltiSnips (in chronological order):
    Christian - Oberon00
    Andrew Ruder - aeruder
    Mathias Fußenegger - mfussenegger
+   Kevin Ballard - kballard
+   Ahbong Chang - cwahbong
 
 
 Thank you for your support.
