@@ -12,6 +12,10 @@ require adjustment of per-user settings.
 
 - Upgrade UltiSnips to version 2014-09-13.
 
+- Improve <M-z> (undo) mapping to stay in the same mode from which is
+  was invoked.  Add <M-u><M-u> mapping as an alias, as it's expected
+  to be easier to type and remember in some cases.
+
 2014-09-13
 ==========
 

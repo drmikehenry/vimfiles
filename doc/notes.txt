@@ -2931,6 +2931,11 @@ In addition, old-style mappings exist:
 <C-S-Insert>  Paste from primary X selection
 <C-Insert>    Copy to clipboard
 
+For ease of use and mnemonic value, the "undo" functionality is also
+available as <M-u><M-u>.
+
+All of these mappings are available in Normal, Visual, and Insert modes.
+
 ------------------------------------------------------------------------------
 Putting most-recently-yanked text
 

@@ -1413,6 +1413,13 @@ cnoremap <C-S-Insert>       <C-R>*
 nnoremap <M-z>  u
 vnoremap <M-z>  <ESC>ugv
 inoremap <M-z>  <C-o>u
+
+" Use <m-u><m-u> as an alias for "undo", as it's intended as an
+" easier-to-remember, easier-to-type alternative.
+nnoremap <M-u><M-u>  u
+vnoremap <M-u><M-u>  <ESC>ugv
+inoremap <M-u><M-u>  <C-o>u
+
 nmap <M-x>      <S-Del>
 vmap <M-x>      <S-Del>
 imap <M-x>      <S-Del>
