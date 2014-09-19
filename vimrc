@@ -1409,9 +1409,10 @@ vnoremap <C-S-Insert>       "*gP
 inoremap <C-S-Insert>       <C-\><C-O>"*gP
 cnoremap <C-S-Insert>       <C-R>*
 
-nnoremap <M-z>  :undo<CR>
-vnoremap <M-z>  <ESC>:undo<CR>
-inoremap <M-z>  <ESC>:undo<CR>
+" Perform "undo" operation via Alt-Z, remaining in original mode if possible.
+nnoremap <M-z>  u
+vnoremap <M-z>  <ESC>ugv
+inoremap <M-z>  <C-o>u
 nmap <M-x>      <S-Del>
 vmap <M-x>      <S-Del>
 imap <M-x>      <S-Del>
