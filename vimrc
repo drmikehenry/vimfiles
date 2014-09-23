@@ -3219,13 +3219,9 @@ set spelllang=en_us
 function! HighlightGroupExists(groupName)
     let haveGroup = 0
     if hlexists(a:groupName)
-        let regA = getreg("a")
-        let regTypeA = getregtype("a")
-        redir @a
+        redir => groupDef
         execute "silent highlight " . a:groupName
         redir END
-        let groupDef = @a
-        call setreg("a", regA, regTypeA)
         if groupDef !~# "xxx cleared$"
             let haveGroup = 1
         endif
