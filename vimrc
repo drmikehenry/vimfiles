@@ -2808,6 +2808,7 @@ let g:startify_custom_header = [
   \ ]
 
 let g:startify_custom_footer = [
+  \ "",
   \ "[e] - open an empty buffer, closing startify",
   \ "[q] - close startify window (quit Vim if only window)",
   \ "[i] - enter insert mode in an empty buffer, closing startify",
