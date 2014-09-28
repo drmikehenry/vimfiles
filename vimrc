@@ -3095,38 +3095,34 @@ function! TriggerSnippetTemplate()
     return 0
 endfunction
 
-function! ExpandSnippetOrSkel()
-    let result = UltiSnips#ExpandSnippet()
-    if !g:ulti_expand_res && getline('.') == "skel"
-        let curPos=getpos('.')
-        call setline('.', '')
-
+" Attempt the "skel" pseudo-snippet if a:skelPermitted.
+" a:ultiResult comes from UltiSnips#ExpandSnippet() or
+" UltiSnips#ExpandSnippetOrJump(); it will be returned unless "skel" succeeds.
+function! TrySkel(skelPermitted, ultiResult)
+    let result = a:ultiResult
+    if a:skelPermitted && getline(".") == "skel"
+        let curPos = getpos(".")
+        call setline(".", "")
         if TriggerSnippetTemplate()
-            return ""
+            " Skeleton found.
+            let result = ""
+        else
+            " Didn't work; put back the line.
+            call setline(".", "skel")
+            call setpos(".", curPos)
         endif
-
-        call setline('.', 'skel')
-        call setpos('.', curPos)
     endif
+    return result
+endfunction
 
-    return l:result
+function! ExpandSnippetOrSkel()
+    let ultiResult = UltiSnips#ExpandSnippet()
+    return TrySkel(g:ulti_expand_res == 0, ultiResult)
 endfunction
 
 function! ExpandSnippetOrJumpOrSkel()
-    let result = UltiSnips#ExpandSnippetOrJump()
-    if !g:ulti_expand_or_jump_res && getline('.') == "skel"
-        let curPos=getpos('.')
-        call setline('.', '')
-
-        if TriggerSnippetTemplate()
-            return ""
-        endif
-
-        call setline('.', 'skel')
-        call setpos('.', curPos)
-    endif
-
-    return l:result
+    let ultiResult = UltiSnips#ExpandSnippetOrJump()
+    return TrySkel(g:ulti_expand_or_jump_res == 0, ultiResult)
 endfunction
 
 function! SetupUltiSnipsMapping()
