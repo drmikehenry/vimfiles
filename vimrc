@@ -3137,6 +3137,9 @@ function! SetupUltiSnipsMapping()
         let cmd .= "<C-r>=ExpandSnippetOrSkel()<CR>"
     endif
     exec cmd
+    inoremap <silent> <M-u><Tab> <C-r>=UltiSnips#JumpForwards()<CR>
+    snoremap <silent> <M-u><Tab> <Esc>:call UltiSnips#JumpForwards()<CR>
+    inoremap <silent> <M-u><M-l> <C-r>=UltiSnips#ListSnippets()<CR>
 endfunction
 
 if g:EnableUltiSnips

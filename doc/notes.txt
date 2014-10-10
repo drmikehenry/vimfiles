@@ -2175,12 +2175,20 @@ Provides TextMate-like snippets for inserting text with placeholders.
 
 Configured as follows:
 
-- <Tab>   - Expand trigger
-- <Tab>   - Jump forward trigger
-- <s-Tab> - Jump backward trigger
+- <Tab>       - Expand trigger or jump forward to the next tabstop
+- <M-u><Tab>  - Jump forward to the next tabstop
+- <S-Tab>     - Jump backward to the previous tabstop
+- <C-Tab>     - List snippets whose triggers start with prefix at cursor
+- <M-u><M-l>  - List snippets whose triggers start with prefix at cursor
 
-To see snippets whose triggers begin with a given prefix, type the prefix
-followed by <C-Tab>.
+<Tab> will first try to expand a snippet if it can; otherwise, if a snippet is
+active, it will jump to the next tabstop; otherwise, it behaves like a normal
+<Tab> operation.
+
+If you'd like to jump forward when the cursor is at a valid trigger, use
+<M-u><Tab> to force jumping instead of expansion.  If you expand the trigger by
+mistake, first undo the expansion (via <M-u><M-u> or <M-z>), then use
+<M-u><Tab> to force the jump operation).
 
 Snippets live in any "UltiSnips" subdirectory on the 'runtimepath'.  Snippets
 earlier in the 'runtimepath' take precedence.  For example:

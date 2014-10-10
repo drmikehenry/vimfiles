@@ -7,6 +7,21 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-10-10
+==========
+
+- Map <M-u><M-l> to list snippets matching trigger at cursor.  This is useful
+  for Console Vim, where the default <C-Tab> mapping doesn't work.
+
+- Map <M-u><Tab> to the UltiSnips "jump forward" action.  <Tab> is overloaded
+  to expand a snippet if possible, and to jump forward if no trigger is found.
+  When this is not desired, <M-u><Tab> can be used to force the jump action
+  instead of expanding the trigger (perhaps after undoing the erroneous snippet
+  expansion via <M-u><M-u> or <M-z>).
+
+- Break undo when triggering a snippet, so that if you under after expanding
+  a snippet, only the snippet expansion is undone.
+
 2014-09-18
 ==========
 
