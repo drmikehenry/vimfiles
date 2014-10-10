@@ -66,6 +66,7 @@
     ScrollColor - Scroll through color schemes          |notes_scrollcolor|
     Selfdot - Changes "." to "self." in Python          |notes_selfdot|
     Session - Provides better session management        |notes_session|
+    Signature - Signs and helpers for bookmarks         |notes_signature|
     Snippets - Default snippets for UltiSnips           |notes_snippets|
     Startify - Menu of recently used files at startup   |notes_startify|
     Surround - Manipulating "surroundings"              |notes_surround|
@@ -1853,6 +1854,22 @@ Local Customizations:
   |:SaveSession!|, or ":SaveSession default".
 - The session storage (|g:session_directory|) has been configured to be
   $VIM_CACHE_DIR/sessions.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+SIGNATURE                                                *notes_signature*
+  Signs and helpers for bookmarks                        |signature|
+
+Signature is a plugin to place, toggle and display marks.
+
+Apart from the above, you can also:
+- Navigate forward/backward by position/alphabetical order
+- Display multiple marks (up to 2, limited by the signs feature)
+- Placing custom signs !@#$%^&*() as visual markers
+
+Version 2014-09-24 (3bc19dca) from git://github.com/kshenoy/vim-signature.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
