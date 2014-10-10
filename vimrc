@@ -3128,13 +3128,15 @@ endfunction
 function! SetupUltiSnipsMapping()
     " Override the expand trigger mapping for UltiSnips to provide the
     " file skeleton functionality.
+
+    " Break undo sequence via <C-G>u before expanding the trigger.
+    let cmd = "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-G>u"
     if g:UltiSnipsExpandTrigger == g:UltiSnipsJumpForwardTrigger
-        exec "inoremap <silent> " . g:UltiSnipsExpandTrigger .
-                    \ " <C-R>=ExpandSnippetOrJumpOrSkel()<cr>"
+        let cmd .= "<C-r>=ExpandSnippetOrJumpOrSkel()<CR>"
     else
-        exec "inoremap <silent> " . g:UltiSnipsExpandTrigger .
-                    \ " <C-R>=ExpandSnippetOrSkel()<cr>"
+        let cmd .= "<C-r>=ExpandSnippetOrSkel()<CR>"
     endif
+    exec cmd
 endfunction
 
 if g:EnableUltiSnips
