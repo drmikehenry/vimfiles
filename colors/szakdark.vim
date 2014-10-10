@@ -201,19 +201,21 @@ hi htmlH5           guifg=#e0e0e0     guibg=#181830     gui=NONE      ctermfg=NO
 hi htmlH6           guifg=#e0e0e0     guibg=#101020     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
 
 " Diff support
-highlight DiffAdd       term=reverse    cterm=bold  ctermbg=darkgreen   ctermfg=white   guibg=#003800 guifg=white
-highlight DiffChange    term=reverse    cterm=bold  ctermbg=cyan        ctermfg=black
-highlight DiffText      term=reverse    cterm=bold  ctermbg=gray        ctermfg=black
-highlight DiffDelete    term=reverse                ctermbg=red         ctermfg=black   guibg=#480000 guifg=white
-highlight diffFile                                  ctermbg=black       ctermfg=yellow  guifg=yellow3
+hi Special          guifg=#E18964     guibg=NONE        gui=NONE      ctermfg=white       ctermbg=NONE        cterm=NONE
+
+highlight DiffAdd       guifg=NONE    guibg=#0e410e     gui=NONE      ctermfg=white       ctermbg=darkgreen               term=reverse
+highlight DiffDelete    guifg=NONE    guibg=#5d1515     gui=NONE      ctermfg=white       ctermbg=red                     term=reverse
+highlight DiffChange                  guibg=#002626     gui=NONE      ctermfg=black       ctermbg=cyan                    term=reverse
+highlight DiffText                    guibg=#303030     gui=NONE      ctermfg=black       ctermbg=gray                    term=reverse
+highlight diffFile      guifg=#c8c800                   gui=NONE      ctermfg=3           ctermbg=black
 highlight link diffAdded DiffAdd
 highlight link diffRemoved DiffDelete
 
 if &t_Co > 255
-    highlight DiffAdd       ctermbg=22      ctermfg=white
-    highlight DiffChange    ctermbg=37      ctermfg=black
-    highlight DiffText      ctermbg=235     ctermfg=black
-    highlight DiffDelete    ctermbg=52      ctermfg=gray
+    highlight DiffAdd       ctermbg=22      ctermfg=NONE
+    highlight DiffDelete    ctermbg=88      ctermfg=NONE
+    highlight DiffChange    ctermbg=23      ctermfg=NONE
+    highlight DiffText      ctermbg=235     ctermfg=NONE
 endif
 
 " ColorColumn
