@@ -2152,6 +2152,16 @@ Installation:
 UNITTEST                                                *notes_unittest*
     Support for unit tests in vimscript                 |unittest.txt|
 
+To run the vimfiles unit test from the command line: >
+
+  cd ~/.vim/test
+  ../bundle/unittest/bin/vunit test_vimrc.vim
+
+To run from within Vim: >
+
+  vim ~/.vim/test/test_vimrc.vim
+  :UnitTest
+
 Version 2012-04-02 (92778771) from git://github.com/h1mesuke/vim-unittest
 
 Installation:
