@@ -480,7 +480,7 @@ set timeout timeoutlen=3000
 " without causing other problems.
 set ttimeout ttimeoutlen=5
 
-" Disallow octal numbers for increment/decrement (CTRL-A/CTRL-X).
+" Disallow octal numbers for increment/decrement (CTRL-a/CTRL-x).
 set nrformats-=octal
 
 " -------------------------------------------------------------
@@ -808,9 +808,9 @@ function! GotoNext()
 endfunction
 
 " Setup previous/next browsing using F4/Shift-F4.
-inoremap <silent> <F4> <C-O>:call GotoNext()<CR>
+inoremap <silent> <F4> <C-o>:call GotoNext()<CR>
 nnoremap <silent> <F4>      :call GotoNext()<CR>
-inoremap <silent> <S-F4> <C-O>:call GotoPrev()<CR>
+inoremap <silent> <S-F4> <C-o>:call GotoPrev()<CR>
 nnoremap <silent> <S-F4>      :call GotoPrev()<CR>
 
 function! s:Qf2Args()
@@ -874,17 +874,17 @@ nnoremap <silent> <M-Down> :call NMoveDown()<CR>
 nnoremap <silent> <M-k>    :call NMoveUp()<CR>
 nnoremap <silent> <M-j>    :call NMoveDown()<CR>
 
-inoremap <silent> <M-Up>   <C-\><C-O>:call NMoveUp()<CR>
-inoremap <silent> <M-Down> <C-\><C-O>:call NMoveDown()<CR>
-inoremap <silent> <M-k>    <C-\><C-O>:call NMoveUp()<CR>
-inoremap <silent> <M-j>    <C-\><C-O>:call NMoveDown()<CR>
+inoremap <silent> <M-Up>   <C-\><C-o>:call NMoveUp()<CR>
+inoremap <silent> <M-Down> <C-\><C-o>:call NMoveDown()<CR>
+inoremap <silent> <M-k>    <C-\><C-o>:call NMoveUp()<CR>
+inoremap <silent> <M-j>    <C-\><C-o>:call NMoveDown()<CR>
 
-xnoremap <silent> <M-Up>   <C-C>:call VMoveUp()<CR>
-xnoremap <silent> <M-Down> <C-C>:call VMoveDown()<CR>
-xnoremap <silent> <M-k>    <C-C>:call VMoveUp()<CR>
-xnoremap <silent> <M-j>    <C-C>:call VMoveDown()<CR>
-xnoremap <silent> -        <C-C>:call VMoveUp()<CR>
-xnoremap <silent> +        <C-C>:call VMoveDown()<CR>
+xnoremap <silent> <M-Up>   <C-c>:call VMoveUp()<CR>
+xnoremap <silent> <M-Down> <C-c>:call VMoveDown()<CR>
+xnoremap <silent> <M-k>    <C-c>:call VMoveUp()<CR>
+xnoremap <silent> <M-j>    <C-c>:call VMoveDown()<CR>
+xnoremap <silent> -        <C-c>:call VMoveUp()<CR>
+xnoremap <silent> +        <C-c>:call VMoveDown()<CR>
 
 " Invoke as:
 "   WithShiftWidth(1, "normal gv<gv")
@@ -899,7 +899,7 @@ endfunction
 " Derived from John Little's Vbs() function, posted in vim_use
 " 9/8/2010 with Subject "Re: formating".
 function! VMoveLeft()
-    if visualmode() == "\<c-v>"
+    if visualmode() == "\<C-v>"
         let s = getpos("'<")
         let e = getpos("'>")
         let fl = min([s[1], e[1]])
@@ -909,11 +909,11 @@ function! VMoveLeft()
         let save_virtualedit = &virtualedit
         let &virtualedit = "all"
         call setpos(".", [0, fl, lc - (lc == 1 ? 0 : 1), 0])
-        execute "normal \<c-v>"
+        execute "normal \<C-v>"
         call setpos(".", [0, ll, lc - (lc == 1 ? 0 : 1), 0])
         normal x
         call setpos(".", [0, fl, fc - (fc == lc && fc != 1 ? 1 : 0), 0])
-        execute "normal \<c-v>"
+        execute "normal \<C-v>"
         call setpos(".", [0, ll, lc - (fc == lc && lc == 1 ? 0 : 1), 0])
         let &virtualedit = save_virtualedit
     else
@@ -923,7 +923,7 @@ function! VMoveLeft()
 endfunction
 
 function! VMoveRight()
-    if visualmode() == "\<c-v>"
+    if visualmode() == "\<C-v>"
         execute "normal gvI\<Space>\<esc>"
         normal gvl
     else
@@ -937,17 +937,17 @@ nnoremap <silent> <M-Right>    :call WithShiftWidth(1, ":>")<CR>
 nnoremap <silent> <M-h>        :call WithShiftWidth(1, ":<")<CR>
 nnoremap <silent> <M-l>        :call WithShiftWidth(1, ":>")<CR>
 
-inoremap <silent> <M-Left>     <C-\><C-O>:call WithShiftWidth(1, ":<")<CR>
-inoremap <silent> <M-Right>    <C-\><C-O>:call WithShiftWidth(1, ":>")<CR>
-inoremap <silent> <M-h>        <C-\><C-O>:call WithShiftWidth(1, ":<")<CR>
-inoremap <silent> <M-l>        <C-\><C-O>:call WithShiftWidth(1, ":>")<CR>
+inoremap <silent> <M-Left>     <C-\><C-o>:call WithShiftWidth(1, ":<")<CR>
+inoremap <silent> <M-Right>    <C-\><C-o>:call WithShiftWidth(1, ":>")<CR>
+inoremap <silent> <M-h>        <C-\><C-o>:call WithShiftWidth(1, ":<")<CR>
+inoremap <silent> <M-l>        <C-\><C-o>:call WithShiftWidth(1, ":>")<CR>
 
-xnoremap <silent> <M-Left>     <C-C>:call VMoveLeft()<CR>
-xnoremap <silent> <M-Right>    <C-C>:call VMoveRight()<CR>
-xnoremap <silent> <M-h>        <C-C>:call VMoveLeft()<CR>
-xnoremap <silent> <M-l>        <C-C>:call VMoveRight()<CR>
-xnoremap <silent> <Backspace>  <C-C>:call VMoveLeft()<CR>
-xnoremap <silent> <Space>      <C-C>:call VMoveRight()<CR>
+xnoremap <silent> <M-Left>     <C-c>:call VMoveLeft()<CR>
+xnoremap <silent> <M-Right>    <C-c>:call VMoveRight()<CR>
+xnoremap <silent> <M-h>        <C-c>:call VMoveLeft()<CR>
+xnoremap <silent> <M-l>        <C-c>:call VMoveRight()<CR>
+xnoremap <silent> <Backspace>  <C-c>:call VMoveLeft()<CR>
+xnoremap <silent> <Space>      <C-c>:call VMoveRight()<CR>
 
 " Strip whitespace from the left.
 function! Lstrip(s)
@@ -961,7 +961,7 @@ endfunction
 
 " Remove "rubbish" whitespace (from Andy Wokula posting).
 
-nnoremap <silent> drw :<C-U>call DeleteRubbishWhitespace()<CR>
+nnoremap <silent> drw :<C-u>call DeleteRubbishWhitespace()<CR>
 
 function! DeleteRubbishWhitespace()
     " Reduce many spaces or blank lines to one.
@@ -1014,8 +1014,8 @@ function! RewrapParagraphExprVisual()
 endfunction
 
 function! RewrapParagraphExprInsert()
-    " Include undo point via CTRL-G u.
-    return "\<C-G>u\<Esc>" . RewrapParagraphExpr() . "A"
+    " Include undo point via CTRL-g u.
+    return "\<C-g>u\<Esc>" . RewrapParagraphExpr() . "A"
 endfunction
 
 nnoremap <expr> <M-q>      RewrapParagraphExpr()
@@ -1063,33 +1063,33 @@ function! MoveToClosest()
 endfunction
 
 " Go "out" to the next closest containing thingy.
-inoremap <silent> <C-O><C-O>  <ESC>:call MoveToClosest()<CR>a
-vnoremap <silent> <C-O><C-O>  <ESC>:call MoveToClosest()<CR>a
+inoremap <silent> <C-o><C-o>  <ESC>:call MoveToClosest()<CR>a
+vnoremap <silent> <C-o><C-o>  <ESC>:call MoveToClosest()<CR>a
 
-" Map CTRL-O o in visual modes to be the same as in insert mode
+" Map CTRL-o o in visual modes to be the same as in insert mode
 " (which opens a new line below this one even when currently mid-line).
-vnoremap <silent> <C-O>o  <ESC>o
+vnoremap <silent> <C-o>o  <ESC>o
 
 " Append ;<CR> to current line.
-inoremap <silent> <C-O>;  <ESC>A;<CR>
-vnoremap <silent> <C-O>;  <ESC>A;<CR>
+inoremap <silent> <C-o>;  <ESC>A;<CR>
+vnoremap <silent> <C-o>;  <ESC>A;<CR>
 
 " Append :<CR> to current line.
-inoremap <silent> <C-O>:  <ESC>A:<CR>
-vnoremap <silent> <C-O>:  <ESC>A:<CR>
+inoremap <silent> <C-o>:  <ESC>A:<CR>
+vnoremap <silent> <C-o>:  <ESC>A:<CR>
 
 " Append .<CR> to current line.
-inoremap <silent> <C-O>.  <ESC>A.<CR>
-vnoremap <silent> <C-O>.  <ESC>A.<CR>
+inoremap <silent> <C-o>.  <ESC>A.<CR>
+vnoremap <silent> <C-o>.  <ESC>A.<CR>
 
 " Append .<CR> to current line unless overridden by filetype-specific mapping.
-inoremap <silent> <C-O><CR>  <ESC>A.<CR>
-vnoremap <silent> <C-O><CR>  <ESC>A.<CR>
+inoremap <silent> <C-o><CR>  <ESC>A.<CR>
+vnoremap <silent> <C-o><CR>  <ESC>A.<CR>
 
 " To leave Visual or Select mode at start or end of selected text.
-snoremap <silent> <C-O><C-H> <C-G>o<C-\><C-N>i
-xnoremap <silent> <C-O><C-H>      o<C-\><C-N>i
-vnoremap <silent> <C-O><C-L>       <C-\><C-N>a
+snoremap <silent> <C-o><C-h> <C-g>o<C-\><C-n>i
+xnoremap <silent> <C-o><C-h>      o<C-\><C-n>i
+vnoremap <silent> <C-o><C-l>       <C-\><C-n>a
 
 " Strip whitespace left of cursor (only if non-blank at or after cursor).
 function! StripWhiteLeftOfCursor()
@@ -1105,14 +1105,14 @@ function! StripWhiteLeftOfCursor()
             call setline(line("."), leftS . rightS)
         endif
     endif
-    " Return empty string so it may be called from insert mode via <C-R>=.
+    " Return empty string so it may be called from insert mode via <C-r>=.
     return ""
 endfunction
 
-" Use <C-R>=FunctionCall()<CR> idiom to avoid leaving insert mode.  Using
-" <C-O>:call FunctionCall()<CR> clobbers the virtual indentation that gets
+" Use <C-r>=FunctionCall()<CR> idiom to avoid leaving insert mode.  Using
+" <C-o>:call FunctionCall()<CR> clobbers the virtual indentation that gets
 " added as part of automatic indentation.
-inoremap <CR>  <C-R>=StripWhiteLeftOfCursor()<CR><CR>
+inoremap <CR>  <C-r>=StripWhiteLeftOfCursor()<CR><CR>
 
 
 " Move vertically by screen lines instead of physical lines.
@@ -1128,7 +1128,7 @@ nnoremap j           gj
 xnoremap j           gj
 nnoremap <Down>      gj
 xnoremap <Down>      gj
-inoremap <silent> <Down> <C-R>=pumvisible() ? "\<lt>Down>" : "\<lt>C-o>gj"<CR>
+inoremap <silent> <Down> <C-r>=pumvisible() ? "\<lt>Down>" : "\<lt>C-o>gj"<CR>
 nnoremap gj          j
 xnoremap gj          j
 
@@ -1137,7 +1137,7 @@ nnoremap k           gk
 xnoremap k           gk
 nnoremap <Up>        gk
 xnoremap <Up>        gk
-inoremap <silent> <Up>   <C-R>=pumvisible() ? "\<lt>Up>" : "\<lt>C-o>gk"<CR>
+inoremap <silent> <Up>   <C-r>=pumvisible() ? "\<lt>Up>" : "\<lt>C-o>gk"<CR>
 nnoremap gk          k
 xnoremap gk          k
 
@@ -1174,36 +1174,36 @@ nnoremap ]N :call GotoConflictMarker(1, 0)<CR>
 " Command-line editing.
 " To match Bash, setup Emacs-style command-line editing keys.
 " This loses some Vim functionality.  The original functionality can
-" be had by pressing CTRL-O followed by the original key.  E.g., to insert
-" all matching filenames (originally <C-A>), do <C-O><C-A>.
-cnoremap <C-A>      <Home>
-cnoremap <C-B>      <Left>
-cnoremap <C-D>      <Del>
-cnoremap <C-F>      <Right>
-cnoremap <C-N>      <Down>
-cnoremap <C-P>      <Up>
+" be had by pressing CTRL-o followed by the original key.  E.g., to insert
+" all matching filenames (originally <C-a>), do <C-o><C-a>.
+cnoremap <C-a>      <Home>
+cnoremap <C-b>      <Left>
+cnoremap <C-d>      <Del>
+cnoremap <C-f>      <Right>
+cnoremap <C-n>      <Down>
+cnoremap <C-p>      <Up>
 cnoremap <M-b>      <S-Left>
 cnoremap <M-f>      <S-Right>
 
-cnoremap <C-O><C-A> <C-A>
-cnoremap <C-O><C-B> <C-B>
-cnoremap <C-O><C-D> <C-D>
-cnoremap <C-O><C-F> <C-G>
-cnoremap <C-O><C-N> <C-N>
-cnoremap <C-O><C-P> <C-P>
+cnoremap <C-o><C-a> <C-a>
+cnoremap <C-o><C-b> <C-b>
+cnoremap <C-o><C-d> <C-d>
+cnoremap <C-o><C-f> <C-g>
+cnoremap <C-o><C-n> <C-n>
+cnoremap <C-o><C-p> <C-p>
 
-" Use CTRL-G to bring up the command-line window.
-let &cedit = "<C-G>"
+" Use CTRL-g to bring up the command-line window.
+let &cedit = "<C-g>"
 
 " Original meanings:
-" <C-A>   Insert all matching filenames.
-" <C-B>   <Home>.
-" <C-D>   List matching names
-" <C-F>   Edit command-line history.
-" <C-G>   Nothing.
-" <C-N>   Next match after wildchar, or recall next command-line history.
-" <C-O>   Nothing.
-" <C-P>   Prev. match after wildchar, or recall prev. command-line history.
+" <C-a>   Insert all matching filenames.
+" <C-b>   <Home>.
+" <C-d>   List matching names
+" <C-f>   Edit command-line history.
+" <C-g>   Nothing.
+" <C-n>   Next match after wildchar, or recall next command-line history.
+" <C-o>   Nothing.
+" <C-p>   Prev. match after wildchar, or recall prev. command-line history.
 
 " Work around bug on Fedora (resetting guifont seems to fix it).
 function! ResetGuiFont()
@@ -1217,7 +1217,7 @@ function! RefreshScreen()
     endif
 endfunction
 command! RefreshScreen :call RefreshScreen()
-nnoremap <silent> <C-L> :RefreshScreen<CR>:nohlsearch<CR><C-L>
+nnoremap <silent> <C-l> :RefreshScreen<CR>:nohlsearch<CR><C-l>
 
 " Work-around slow pasting to command-line; avoid a command-line
 " re-draw on every character entered by turning off Arabic shaping
@@ -1373,7 +1373,7 @@ set complete=.,w,b,u,t
 " down arrow to ensure a menu item is always selected.
 " inoremap <expr> <C-n> pumvisible() ? "\<lt>c-n>" : "\<lt>c-n>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>"
 
-" inoremap <expr> <m-;> pumvisible() ? "\<lt>c-n>" : "\<lt>c-x>\<lt>c-o>\<lt>c-n>\<lt>c-p>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>"
+" inoremap <expr> <M-;> pumvisible() ? "\<lt>c-n>" : "\<lt>c-x>\<lt>c-o>\<lt>c-n>\<lt>c-p>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>"
 
 " -------------------------------------------------------------
 " Begin "inspired by mswin.vim"
@@ -1385,12 +1385,12 @@ set complete=.,w,b,u,t
 " SHIFT-Del is Cut
 nnoremap <S-Del>            "+dd
 vnoremap <S-Del>            "+d
-inoremap <S-Del>            <C-O>"+dd
+inoremap <S-Del>            <C-o>"+dd
 
 " CTRL-Insert is Copy
 nnoremap <C-Insert>         "+yy
 vnoremap <C-Insert>         "+y
-inoremap <C-Insert>         <C-O>"+yy
+inoremap <C-Insert>         <C-o>"+yy
 
 " SHIFT-Insert is Paste
 " Pasting blockwise and linewise selections is not possible in Insert and
@@ -1401,20 +1401,20 @@ inoremap <C-Insert>         <C-O>"+yy
 nnoremap <S-Insert>         "+gP
 exe 'vnoremap <script> <S-Insert>' paste#paste_cmd['v']
 exe 'inoremap <script> <S-Insert>' paste#paste_cmd['i']
-cnoremap <S-Insert>         <C-R>+
+cnoremap <S-Insert>         <C-r>+
 
 " CTRL-SHIFT-Insert is Paste from primary selection ("* register)
 nnoremap <C-S-Insert>       "*gP
 vnoremap <C-S-Insert>       "*gP
-inoremap <C-S-Insert>       <C-\><C-O>"*gP
-cnoremap <C-S-Insert>       <C-R>*
+inoremap <C-S-Insert>       <C-\><C-o>"*gP
+cnoremap <C-S-Insert>       <C-r>*
 
 " Perform "undo" operation via Alt-Z, remaining in original mode if possible.
 nnoremap <M-z>  u
 vnoremap <M-z>  <ESC>ugv
 inoremap <M-z>  <C-o>u
 
-" Use <m-u><m-u> as an alias for "undo", as it's intended as an
+" Use <M-u><M-u> as an alias for "undo", as it's intended as an
 " easier-to-remember, easier-to-type alternative.
 nnoremap <M-u><M-u>  u
 vnoremap <M-u><M-u>  <ESC>ugv
@@ -1488,7 +1488,7 @@ function! VisualSearch(direction)
     else
         let l:rhs = "y/"
     endif
-    let l:rhs = l:rhs . "\<C-R>=MakeSearchString(@\")\<CR>\<CR>gV"
+    let l:rhs = l:rhs . "\<C-r>=MakeSearchString(@\")\<CR>\<CR>gV"
     return l:rhs
 endfunction
 
@@ -1517,13 +1517,13 @@ xnoremap <silent> *  <ESC>:let temp_a=@a<CR>gv"ay:MatchScratch<CR>
 " Setup :Regrep command to search for visual selection.
 function! VisualRegrep()
     return "y:MatchScratch\<CR>" .
-                \ ":Regrep \<C-R>=MakeEgrepString(@\")\<CR>"
+                \ ":Regrep \<C-r>=MakeEgrepString(@\")\<CR>"
 endfunction
 
 " Setup :Regrep command to search for complete word under cursor.
 function! NormalRegrep()
     return "yiw:MatchScratchWord\<CR>" .
-                \ ":Regrep \\<\<C-R>=MakeEgrepString(@\")\<CR>\\>"
+                \ ":Regrep \\<\<C-r>=MakeEgrepString(@\")\<CR>\\>"
 endfunction
 
 " :Regrep of visual selection or current word under cursor.
@@ -1803,14 +1803,14 @@ if has("cscope")
     " t - text:     find all instances of the text.
     set cscopequickfix=c-,d-,e-,i-,s-,t-
 
-    nnoremap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
-    nnoremap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
-    nnoremap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
-    nnoremap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-    nnoremap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-    nnoremap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>:Copen<CR>
-    nnoremap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
-    nnoremap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <C-\>c :cs find c <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <C-\>d :cs find d <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <C-\>e :cs find e <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <C-\>f :cs find f <C-r>=expand("<cfile>")<CR><CR>
+    nnoremap <C-\>g :cs find g <C-r>=expand("<cword>")<CR><CR>
+    nnoremap <C-\>i :cs find i ^<C-r>=expand("<cfile>")<CR>$<CR>:Copen<CR>
+    nnoremap <C-\>s :cs find s <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <C-\>t :cs find t <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
 endif
 
 " -------------------------------------------------------------
@@ -1868,7 +1868,7 @@ function! s:L(...)
     call WinDo("if IsLocListWin() | " . llCmd . " | endif")
 
     " Make other windows equally large.
-    execute "normal \<C-W>="
+    execute "normal \<C-w>="
 endfunction
 command! -nargs=? L call s:L(<f-args>)
 
@@ -1900,7 +1900,7 @@ function! QuickFixWinToggle()
         Copen
     endif
 endfunction
-nnoremap <silent> <C-Q><C-Q> :call QuickFixWinToggle()<CR>
+nnoremap <silent> <C-q><C-q> :call QuickFixWinToggle()<CR>
 command! -bar QuickFixWinToggle :call QuickFixWinToggle()
 
 " Toggle location list window.
@@ -1912,7 +1912,7 @@ function! LocListWinToggle()
         silent! Lopen
     endif
 endfunction
-nnoremap <silent> <C-Q><C-L> :call LocListWinToggle()<CR>
+nnoremap <silent> <C-q><C-l> :call LocListWinToggle()<CR>
 command! -bar LocListWinToggle :call LocListWinToggle()
 
 " Like windo but restore the current window.
@@ -1939,7 +1939,7 @@ function! TabDo(command)
 endfunction
 command! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 
-" Force current window to be the only window (like <C-W>o).
+" Force current window to be the only window (like <C-w>o).
 " Avoids "Already only one window" error if only one window is showing.
 function! OneWindow()
     DiffClose
@@ -1950,8 +1950,8 @@ endfunction
 command! -bar OneWindow call OneWindow()
 
 " Avoid "Already only one window" errors.
-nnoremap <silent> <C-W><C-O> :OneWindow<CR>
-nnoremap <silent> <C-W>o     :OneWindow<CR>
+nnoremap <silent> <C-w><C-o> :OneWindow<CR>
+nnoremap <silent> <C-w>o     :OneWindow<CR>
 
 " -------------------------------------------------------------
 " Diff-related
@@ -2057,7 +2057,7 @@ augroup local_bufExplorer
     autocmd BufLeave \[BufExplorer\] nmap ds <Plug>Dsurround
     autocmd BufEnter \[BufExplorer\] nunmap drw
     autocmd BufLeave \[BufExplorer\] nnoremap drw
-                \ :<C-U>call DeleteRubbishWhitespace()<CR>
+                \ :<C-u>call DeleteRubbishWhitespace()<CR>
 augroup END
 
 " -------------------------------------------------------------
@@ -2121,51 +2121,51 @@ command! -n=? -com=dir C CtrlP <args>
 command! -n=? -com=dir CD CtrlPDir <args>
 
 " Define prefix mapping for CtrlP plugin so that buffer-local mappings
-" for CTRL-P (such as in Tagbar) will override all CtrlP plugin mappings.
-nmap <C-P> <SNR>CtrlP.....
+" for CTRL-p (such as in Tagbar) will override all CtrlP plugin mappings.
+nmap <C-p> <SNR>CtrlP.....
 
 " An incomplete mapping should do nothing.
 nnoremap <SNR>CtrlP.....      <Nop>
 
-nnoremap <SNR>CtrlP.....<C-B> :<C-U>CtrlPBookmarkDir<CR>
-nnoremap <SNR>CtrlP.....c     :<C-U>CtrlPChange<CR>
-nnoremap <SNR>CtrlP.....C     :<C-U>CtrlPChangeAll<CR>
-nnoremap <SNR>CtrlP.....<C-D> :<C-U>CtrlPDir<CR>
-nnoremap <SNR>CtrlP.....<C-F> :<C-U>CtrlPCurFile<CR>
-nnoremap <SNR>CtrlP.....<C-L> :<C-U>CtrlPLine<CR>
-nnoremap <SNR>CtrlP.....<C-M> :<C-U>CtrlPMRU<CR>
-nnoremap <SNR>CtrlP.....m     :<C-U>CtrlPMixed<CR>
+nnoremap <SNR>CtrlP.....<C-b> :<C-u>CtrlPBookmarkDir<CR>
+nnoremap <SNR>CtrlP.....c     :<C-u>CtrlPChange<CR>
+nnoremap <SNR>CtrlP.....C     :<C-u>CtrlPChangeAll<CR>
+nnoremap <SNR>CtrlP.....<C-d> :<C-u>CtrlPDir<CR>
+nnoremap <SNR>CtrlP.....<C-f> :<C-u>CtrlPCurFile<CR>
+nnoremap <SNR>CtrlP.....<C-l> :<C-u>CtrlPLine<CR>
+nnoremap <SNR>CtrlP.....<C-m> :<C-u>CtrlPMRU<CR>
+nnoremap <SNR>CtrlP.....m     :<C-u>CtrlPMixed<CR>
 
 " Mnemonic: "open files"
-nnoremap <SNR>CtrlP.....<C-O> :<C-U>CtrlPBuffer<CR>
-nnoremap <SNR>CtrlP.....<C-P> :<C-U>CtrlP<CR>
-nnoremap <SNR>CtrlP.....<C-Q> :<C-U>CtrlPQuickfix<CR>
-nnoremap <SNR>CtrlP.....<C-R> :<C-U>CtrlPRoot<CR>
-nnoremap <SNR>CtrlP.....<C-T> :<C-U>CtrlPTag<CR>
-nnoremap <SNR>CtrlP.....t     :<C-U>CtrlPBufTag<CR>
-nnoremap <SNR>CtrlP.....T     :<C-U>CtrlPBufTagAll<CR>
-nnoremap <SNR>CtrlP.....<C-U> :<C-U>CtrlPUndo<CR>
+nnoremap <SNR>CtrlP.....<C-o> :<C-u>CtrlPBuffer<CR>
+nnoremap <SNR>CtrlP.....<C-p> :<C-u>CtrlP<CR>
+nnoremap <SNR>CtrlP.....<C-q> :<C-u>CtrlPQuickfix<CR>
+nnoremap <SNR>CtrlP.....<C-r> :<C-u>CtrlPRoot<CR>
+nnoremap <SNR>CtrlP.....<C-t> :<C-u>CtrlPTag<CR>
+nnoremap <SNR>CtrlP.....t     :<C-u>CtrlPBufTag<CR>
+nnoremap <SNR>CtrlP.....T     :<C-u>CtrlPBufTagAll<CR>
+nnoremap <SNR>CtrlP.....<C-u> :<C-u>CtrlPUndo<CR>
 
 " Transitional mappings to migrate from historical Command-T functionality.
 " At first, redirect to CtrlP equivalent functionality.  Later, just
 " provide an error message.  Eventually, remove this mappings.
-nnoremap <leader><leader>t :<C-U>echoe "Use CTRL-P CTRL-P instead"<Bar>
+nnoremap <leader><leader>t :<C-u>echoe "Use CTRL-p CTRL-p instead"<Bar>
             \ sleep 1<Bar>
             \ CtrlP<CR>
 
-nnoremap <leader><leader>b :<C-U>echoe "Use CTRL-P CTRL-O instead"<Bar>
+nnoremap <leader><leader>b :<C-u>echoe "Use CTRL-p CTRL-o instead"<Bar>
             \ sleep 1<Bar>
             \ CtrlPBuffer<CR>
 
 " Reverse move and history binding pairs:
-" - For consistency with other plugins that use <C-N>/<C-P> for moving around.
-" - Because <C-J> is bound to the tmux prefix key, so it's best to map
+" - For consistency with other plugins that use <C-n>/<C-p> for moving around.
+" - Because <C-j> is bound to the tmux prefix key, so it's best to map
 "   that key to a less-used function.
 let g:ctrlp_prompt_mappings = {
-    \ 'PrtSelectMove("j")':   ['<C-N>', '<down>'],
-    \ 'PrtSelectMove("k")':   ['<C-P>', '<up>'],
-    \ 'PrtHistory(-1)':       ['<C-J>'],
-    \ 'PrtHistory(1)':        ['<C-K>'],
+    \ 'PrtSelectMove("j")':   ['<C-n>', '<down>'],
+    \ 'PrtSelectMove("k")':   ['<C-p>', '<up>'],
+    \ 'PrtHistory(-1)':       ['<C-j>'],
+    \ 'PrtHistory(1)':        ['<C-k>'],
     \ }
 
 " Maximum height of filename window.
@@ -2178,7 +2178,7 @@ let g:ctrlp_max_height = 50
 " Don't comment blank lines.
 let g:tcommentBlankLines = 0
 
-" Turn off the <c-_> and <Leader>_ mappings.
+" Turn off the <C-_> and <Leader>_ mappings.
 let g:tcommentMapLeader1 = ''
 let g:tcommentMapLeader2 = ''
 
@@ -2372,11 +2372,11 @@ nnoremap <silent> <M-s> :LustyJuggler<CR>
 "let g:manpageview_winopen = "reuse"
 
 function! CheckManpageview()
-    let isMan = maparg("\<Space>", "n") ==? "<C-F>"
+    let isMan = maparg("\<Space>", "n") ==? "<C-f>"
     let isInfo = maparg("H", "n") =~? "manpageview"
     if isMan
-        nnoremap <silent> <buffer> b           <C-B>
-        nnoremap <silent> <buffer> f           <C-F>
+        nnoremap <silent> <buffer> b           <C-b>
+        nnoremap <silent> <buffer> f           <C-f>
         nnoremap <silent> <buffer> <           gg
         nnoremap <silent> <buffer> >           G
     endif
@@ -2465,7 +2465,7 @@ endpython
     endfunction
 
     nnoremap gx :call <SID>SmartOpen('n')<CR>
-    xnoremap gx <C-C>:call <SID>SmartOpen('v')<CR>
+    xnoremap gx <C-c>:call <SID>SmartOpen('v')<CR>
 endif
 
 nnoremap <silent> <Leader>fe :Explore<CR>
@@ -2613,7 +2613,7 @@ endif
 "   F - float Project Window.
 "   g - create <F12> mapping for toggling Project Window.
 "   i - display filename and working directory in command line.
-"   m - modify CTRL-W_o to keep Project Window visible too.
+"   m - modify CTRL-w_o to keep Project Window visible too.
 "   s - use syntax highlighting in Project Window.
 "   S - sorting for refresh and create.
 "   t - toggle size of window instead of increase-only.
@@ -2622,8 +2622,8 @@ endif
 let g:proj_flags = 'csStTv'
 let g:proj_window_width = 40
 nmap <silent> <F8>        <Plug>ToggleProject
-nmap <silent> <C-Q><C-P>  <Plug>ToggleProject
-nmap <silent> <C-Q>p      <Plug>ToggleProject
+nmap <silent> <C-q><C-p>  <Plug>ToggleProject
+nmap <silent> <C-q>p      <Plug>ToggleProject
 
 " -------------------------------------------------------------
 " Rainbow Parentheses
@@ -2895,8 +2895,8 @@ let g:tagbar_autoclose = 1
 let g:tagbar_autofocus = 1
 
 nnoremap <silent> <S-F8>     :TagbarToggle<CR>
-nnoremap <silent> <C-Q><C-T> :TagbarToggle<CR>
-nnoremap <silent> <C-Q>t     :TagbarToggle<CR>
+nnoremap <silent> <C-q><C-t> :TagbarToggle<CR>
+nnoremap <silent> <C-q>t     :TagbarToggle<CR>
 
 " Support for reStructuredText, if available.
 if executable("rst2ctags")
@@ -2993,9 +2993,9 @@ endfunction
 " directory "pre-bundle/clearsnippets" will be earlier in the
 " runtimepath.
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsExpandTrigger="<Tab>"
+let g:UltiSnipsJumpForwardTrigger="<Tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 
 " Use a:ultiSnipsSnippetDirectories as buffer-local value for UltiSnips's
 " global g:ultiSnipsSnippetDirectories.  Typically invoked from a .lvimrc
@@ -3129,8 +3129,8 @@ function! SetupUltiSnipsMapping()
     " Override the expand trigger mapping for UltiSnips to provide the
     " file skeleton functionality.
 
-    " Break undo sequence via <C-G>u before expanding the trigger.
-    let cmd = "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-G>u"
+    " Break undo sequence via <C-g>u before expanding the trigger.
+    let cmd = "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-g>u"
     if g:UltiSnipsExpandTrigger == g:UltiSnipsJumpForwardTrigger
         let cmd .= "<C-r>=ExpandSnippetOrJumpOrSkel()<CR>"
     else
@@ -3171,10 +3171,10 @@ let g:vis_WantSlashSlash = 1
 " visswap
 " -------------------------------------------------------------
 
-" Change default CTRL-X to CTRL-T (for "trade") to avoid conflict
+" Change default CTRL-x to CTRL-t (for "trade") to avoid conflict
 " with swapit plugin.
 " @todo Consider other mappings...
-xmap <silent> <C-T> <Plug>VisualSwap
+xmap <silent> <C-t> <Plug>VisualSwap
 
 " -------------------------------------------------------------
 " vcscommand
@@ -3185,15 +3185,15 @@ xmap <silent> <C-T> <Plug>VisualSwap
 let VCSCommandMapPrefix = '<Leader>s'
 
 " When doing diff, force two-window layout with old on left.
-nmap <silent> <Leader>sv :OneWindow<CR><Plug>VCSVimDiff<C-W>H<C-W>w
+nmap <silent> <Leader>sv :OneWindow<CR><Plug>VCSVimDiff<C-w>H<C-w>w
 
 " -------------------------------------------------------------
 " winmanager
 " -------------------------------------------------------------
 
-" :nnoremap <C-W><C-T>   :WMToggle<CR>
-" :nnoremap <C-W><C-F>   :FirstExplorerWindow<CR>
-" :nnoremap <C-W><C-B>   :BottomExplorerWindow<CR>
+" :nnoremap <C-w><C-t>   :WMToggle<CR>
+" :nnoremap <C-w><C-f>   :FirstExplorerWindow<CR>
+" :nnoremap <C-w><C-b>   :BottomExplorerWindow<CR>
 
 " =============================================================
 " Language and filetype setup
@@ -3864,9 +3864,9 @@ function! SetupC()
     " How many lines away to search for unclosed comments.
     setlocal cinoptions+=*100
 
-    " Map CTRL-O_CR to append ';' to the end of line, then do CR.
-    inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
-    vnoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
+    " Map CTRL-o_CR to append ';' to the end of line, then do CR.
+    inoremap <buffer> <C-o><CR> <C-\><C-n>A;<CR>
+    vnoremap <buffer> <C-o><CR> <C-\><C-n>A;<CR>
 endfunction
 command! -bar SetupC call SetupC()
 
@@ -3956,9 +3956,9 @@ function! SetupJavaScript()
         setlocal sts=2 sw=2
     endif
 
-    " Map CTRL-O_CR to append ';' to the end of line, then do CR.
-    inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
-    vnoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
+    " Map CTRL-o_CR to append ';' to the end of line, then do CR.
+    inoremap <buffer> <C-o><CR> <C-\><C-n>A;<CR>
+    vnoremap <buffer> <C-o><CR> <C-\><C-n>A;<CR>
 endfunction
 command! -bar SetupJavaScript call SetupJavaScript()
 
@@ -4020,9 +4020,9 @@ function! SetupPython()
     " Follow PEP-recommended alignment of parentheses
     setlocal cinoptions+=(0
 
-    " Map CTRL-O_CR to append ':' to the end of line, then do CR.
-    inoremap <buffer> <C-O><CR> <C-\><C-N>A:<CR>
-    vnoremap <buffer> <C-O><CR> <C-\><C-N>A:<CR>
+    " Map CTRL-o_CR to append ':' to the end of line, then do CR.
+    inoremap <buffer> <C-o><CR> <C-\><C-n>A:<CR>
+    vnoremap <buffer> <C-o><CR> <C-\><C-n>A:<CR>
 endfunction
 command! -bar SetupPython call SetupPython()
 let g:IndentGuidesMap["python"] = "<on>"
@@ -4057,9 +4057,9 @@ function! SetupVhdl()
 
     setlocal comments=b:--
 
-    " Map CTRL-O_CR to append ';' to the end of line, then do CR.
-    inoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
-    vnoremap <buffer> <C-O><CR> <C-\><C-N>A;<CR>
+    " Map CTRL-o_CR to append ';' to the end of line, then do CR.
+    inoremap <buffer> <C-o><CR> <C-\><C-n>A;<CR>
+    vnoremap <buffer> <C-o><CR> <C-\><C-n>A;<CR>
 
     " Convert a port into a port map.
     xnoremap <buffer> <leader>pm :s/^\(\s*\)\(\w\+\)\(\s*\)\(=>\<bar>:\).*
@@ -4202,9 +4202,9 @@ function! HelpToggle()
 endfunction
 command! -bar HelpToggle call HelpToggle()
 
-nnoremap <F1>       :<C-U>HelpToggle<CR>
-nnoremap <C-Q>h     :<C-U>HelpToggle<CR>
-nnoremap <C-Q><C-H> :<C-U>HelpToggle<CR>
+nnoremap <F1>       :<C-u>HelpToggle<CR>
+nnoremap <C-q>h     :<C-u>HelpToggle<CR>
+nnoremap <C-q><C-h> :<C-u>HelpToggle<CR>
 
 " Get help on visual selection.
 function! VisualHelp()
@@ -4212,9 +4212,9 @@ function! VisualHelp()
 endfunction
 command! -bar VisualHelp call VisualHelp()
 
-xnoremap <F1>       :<C-U>call VisualHelp()<CR>
-xnoremap <C-Q>h     :<C-U>call VisualHelp()<CR>
-xnoremap <C-Q><C-H> :<C-U>call VisualHelp()<CR>
+xnoremap <F1>       :<C-u>call VisualHelp()<CR>
+xnoremap <C-q>h     :<C-u>call VisualHelp()<CR>
+xnoremap <C-q><C-h> :<C-u>call VisualHelp()<CR>
 
 
 " -------------------------------------------------------------

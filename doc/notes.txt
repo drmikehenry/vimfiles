@@ -638,29 +638,29 @@ Local customizations:
 
 - Normal-mode mappings:
 
-    CTRL-P CTRL-B        CtrlPBookmarkDir
-    CTRL-P c             CtrlPChange
-    CTRL-P C             CtrlPChangeAll
-    CTRL-P CTRL-D        CtrlPDir
-    CTRL-P CTRL-F        CtrlP %:h
-    CTRL-P CTRL-L        CtrlPLine
-    CTRL-P CTRL-M        CtrlPMRU
-    CTRL-P m             CtrlPMixed
-    CTRL-P CTRL-O        CtrlPBuffer    ; Mnemonic: buffers are "Open" files.
-    CTRL-P CTRL-P        CtrlP          ; From current working directory.
-    CTRL-P CTRL-Q        CtrlPQuickfix
-    CTRL-P CTRL-R        CtrlPRoot      ; From nearest enclosing project root.
-    CTRL-P CTRL-T        CtrlPTag
-    CTRL-P t             CtrlPBufTag
-    CTRL-P T             CtrlPBufTagAll
-    CTRL-P CTRL-U        CtrlPUndo
+    CTRL-p CTRL-b        CtrlPBookmarkDir
+    CTRL-p c             CtrlPChange
+    CTRL-p C             CtrlPChangeAll
+    CTRL-p CTRL-d        CtrlPDir
+    CTRL-p CTRL-f        CtrlP %:h
+    CTRL-p CTRL-l        CtrlPLine
+    CTRL-p CTRL-m        CtrlPMRU
+    CTRL-p m             CtrlPMixed
+    CTRL-p CTRL-o        CtrlPBuffer    ; Mnemonic: buffers are "Open" files.
+    CTRL-p CTRL-p        CtrlP          ; From current working directory.
+    CTRL-p CTRL-q        CtrlPQuickfix
+    CTRL-p CTRL-r        CtrlPRoot      ; From nearest enclosing project root.
+    CTRL-p CTRL-t        CtrlPTag
+    CTRL-p t             CtrlPBufTag
+    CTRL-p T             CtrlPBufTagAll
+    CTRL-p CTRL-u        CtrlPUndo
 
-- When CtrlP is active, the pair CTRL-N/CTRL-P moves the cursor vertically to
-  make a select, and CTRL-J/CTRL-K move through the command prompt history.
+- When CtrlP is active, the pair CTRL-n/CTRL-p moves the cursor vertically to
+  make a select, and CTRL-j/CTRL-k move through the command prompt history.
 
-  This is for consistency with other plugins that use CTRL-N/CTRL-P for moving
+  This is for consistency with other plugins that use CTRL-n/CTRL-p for moving
   around, and to avoid binding a commonly used function to the tmux prefix key
-  (CTRL-J).
+  (CTRL-j).
 
 
 Version 2013-07-29 (b5d3fe66a) from https://github.com/kien/ctrlp.vim
@@ -704,7 +704,7 @@ Vimscript, this amounts to appropriately adding endfunction, endif, etc.
 There's also Bourne shell, VB (don't ask), C/C++ preprocessor, and Lua
 support.
 
-This plugin does remap <CR> in insert mode.  It also adds a <C-X><CR> mapping
+This plugin does remap <CR> in insert mode.  It also adds a <C-x><CR> mapping
 to force inserting an end.  However, it the forced version isn't always
 correct.
 
@@ -1518,16 +1518,16 @@ Installation:
 OMNICPPCOMPLETE                                         *notes_omnicppcomplete*
   C/C++ Omnicompletion                                  |omnicppcomplete|
 
-CTRL-X CTRL-O - Completion of normal identifiers.
+CTRL-x CTRL-o - Completion of normal identifiers.
 "." or "->" - Completion of struct fields.
 
 Within popup completion menu:
-CTRL-Y - Yes: accept currently selected match.
-CTRL-E - End completion, reverting to what was typed.
-CTRL-N - Insert next completion.
-CTRL-P - Insert previous completion.
-<Down> - Select next match (like CTRL-N), but don't insert it.
-<Up>   - Select previous match (like CTRL-P), but don't insert it.
+CTRL-y - Yes: accept currently selected match.
+CTRL-e - End completion, reverting to what was typed.
+CTRL-n - Insert next completion.
+CTRL-p - Insert previous completion.
+<Down> - Select next match (like CTRL-n), but don't insert it.
+<Up>   - Select previous match (like CTRL-p), but don't insert it.
 
 Requires Exuberant ctags database with these options: >
     ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
@@ -1615,8 +1615,8 @@ To invoke the project window: >
 
 Local customizations:
   <F8>            - toggles the project window on and off.
-  CTRL-Q CTRL-P   - toggles the project window on and off.
-  CTRL-Q P        - toggles the project window on and off.
+  CTRL-q CTRL-p   - toggles the project window on and off.
+  CTRL-q P        - toggles the project window on and off.
 
 Version 1.4.1 from http://www.vim.org/scripts/script.php?script_id=69
 
@@ -1922,12 +1922,12 @@ Installation:
 SWAPIT                                                  *notes_swapit*
   Cycle through related words                           |swapit|
 
-Press CTRL-A to cycle forward through the list of related words
-Press CTRL-X to cycle forward through the list of related words
+Press CTRL-a to cycle forward through the list of related words
+Press CTRL-x to cycle forward through the list of related words
 
 Works in Normal and Visual mode.
 
-E.g., with cursor on "true" pressing CTRL-A changes the word to "false".
+E.g., with cursor on "true" pressing CTRL-a changes the word to "false".
 
 Version 0.3.2 from http://www.vim.org/scripts/script.php?script_id=2294
 
@@ -1974,8 +1974,8 @@ TAGBAR                                                  *notes_tagbar*
 
 Local customizations:
   <S-F8>        - toggle the tagbar (:TagbarToggle)
-  CTRL-Q CTRL-T - toggle the tagbar (:TagbarToggle)
-  CTRL-Q T      - toggle the tagbar (:TagbarToggle)
+  CTRL-q CTRL-t - toggle the tagbar (:TagbarToggle)
+  CTRL-q T      - toggle the tagbar (:TagbarToggle)
 
 Version 2014-02-14 (614b5b24) from https://github.com/majutsushi/tagbar
 
@@ -2296,7 +2296,7 @@ VIS                                                     *notes_vis*
 
 Performs an arbitrary Ex command on a visual highlighted block.
 
-Mark visual block (CTRL-V) or visual character (v),
+Mark visual block (CTRL-v) or visual character (v),
   press ':B ' and enter an Ex command [cmd].
 
   ex. Use ctrl-v to visually mark the block then use
@@ -2756,7 +2756,7 @@ New diff commands:
     Compare unsaved changes in current window against original on-disk.
 
   :Diff
-    Initiate diff between current window and "next" window (found by <C-W>w).
+    Initiate diff between current window and "next" window (found by <C-w>w).
 
   :Diff {filename}
     Initiate diff between current window and {filename}.
@@ -2764,7 +2764,7 @@ New diff commands:
   :DiffClose
     Restore all diff windows and close them all except current window.
     Note: this is invoked as part of :OneWindow to ensure that the remaining
-    window won't be left in diff mode when <C-W>o is invoked.
+    window won't be left in diff mode when <C-w>o is invoked.
 
 Built-in commands for more manual control:
 
@@ -2794,22 +2794,22 @@ selections, this implies that only the selected block is shifted.
 
 Dragging up:
   <M-Up>        (select mode, insert mode, normal mode)
-  <M-K>         (select mode, insert mode, normal mode)
+  <M-k>         (select mode, insert mode, normal mode)
   -             (select mode)
 
 Dragging down:
   <M-Down>      (select mode, insert mode, normal mode)
-  <M-J>         (select mode, insert mode, normal mode)
+  <M-j>         (select mode, insert mode, normal mode)
   +             (select mode)
 
 Dragging left:
   <M-Left>      (select mode, insert mode, normal mode)
-  <M-H>         (select mode, insert mode, normal mode)
+  <M-h>         (select mode, insert mode, normal mode)
   <Backspace>   (select mode)
 
 Dragging right:
   <M-Left>      (select mode, insert mode, normal mode)
-  <M-H>         (select mode, insert mode, normal mode)
+  <M-h>         (select mode, insert mode, normal mode)
   <Space>       (select mode)
 
 ------------------------------------------------------------------------------
@@ -2847,9 +2847,9 @@ For normal and visual modes, <Leader>q does the same as <M-q>.
 ------------------------------------------------------------------------------
 Moving "out" hierarchically
 
-Press <C-O><C-O> in insert or visual modes to exit "out" to the containing
+Press <C-o><C-o> in insert or visual modes to exit "out" to the containing
 context.  For example, if your cursor is between parentheses, pressing
-<C-O><C-O> will move out just beyond the parentheses.  This is helpful for
+<C-o><C-o> will move out just beyond the parentheses.  This is helpful for
 getting outside text that was automatically inserted (e.g., from a snippet).
 
 The following may be "exited": >
@@ -2860,16 +2860,16 @@ The following may be "exited": >
   break;
 
 ------------------------------------------------------------------------------
-Additional CTRL-O mappings
+Additional CTRL-o mappings
 
-<C-O>o      - Open a line below this one
-<C-O>;      - Append ";" to the current line
-<C-O>:      - Append ":" to the current line
-<C-O>.      - Append "." to the current line
-<C-O><CR>   - Append "." and <CR> to the current line unless overridden by a
+<C-o>o      - Open a line below this one
+<C-o>;      - Append ";" to the current line
+<C-o>:      - Append ":" to the current line
+<C-o>.      - Append "." to the current line
+<C-o><CR>   - Append "." and <CR> to the current line unless overridden by a
               filetype-specific mapping
-<C-O><C-H>  - Exit visual modes at start of selected text
-<C-O><C-L>  - Exit visual modes at end of selected text
+<C-o><C-h>  - Exit visual modes at start of selected text
+<C-o><C-l>  - Exit visual modes at end of selected text
 
 ------------------------------------------------------------------------------
 Pressing <Enter> removes trailing whitespace
@@ -2907,29 +2907,29 @@ Emacs-style command-line editing
 The standard Emacs-style command-line editing keys as used in Bash have been
 mapped for command-line mode.  These include:
 
-<C-A>   Start of line
-<C-B>   Move left one character
-<C-D>   Delete character under cursor
-<C-F>   Move right one character
-<C-N>   Next command history line
-<C-P>   Previous command history line
+<C-a>   Start of line
+<C-b>   Move left one character
+<C-d>   Delete character under cursor
+<C-f>   Move right one character
+<C-n>   Next command history line
+<C-p>   Previous command history line
 <M-b>   Move left one word
 <M-f>   Move right one word
 
-<C-G>   Edit command-line history (used to be <C-F>)
+<C-g>   Edit command-line history (used to be <C-f>)
 
-The original meanings for these keys may be activated by first pressing <C-O>
+The original meanings for these keys may be activated by first pressing <C-o>
 (mnemonic: "Original").
 
 Original meanings:
-<C-A>   Insert all matching filenames
-<C-B>   <Home>
-<C-D>   List matching names
-<C-F>   Edit command-line history
-<C-G>   Nothing
-<C-N>   Next match after wildchar, or recall next command-line history
-<C-O>   Nothing
-<C-P>   Prev. match after wildchar, or recall prev. command-line history
+<C-a>   Insert all matching filenames
+<C-b>   <Home>
+<C-d>   List matching names
+<C-f>   Edit command-line history
+<C-g>   Nothing
+<C-n>   Next match after wildchar, or recall next command-line history
+<C-o>   Nothing
+<C-p>   Prev. match after wildchar, or recall prev. command-line history
 
 ------------------------------------------------------------------------------
 Windows-style clipboard support
@@ -3061,10 +3061,10 @@ the number of character columns may be truncated to keep Gvim on a single
 monitor.  To work around this, move Gvim to straddle the boundary between
 monitors before executing the above commands.
 
-<C-Q><C-L>  Toggle the Location window on or off
-<C-Q><C-Q>  Toggle the QuickFix window on or off
+<C-q><C-l>  Toggle the Location window on or off
+<C-q><C-q>  Toggle the QuickFix window on or off
 
-NOTE See |notes_tips_xon_xoff| if <C-Q> doesn't work in console vim.
+NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
 
 The default heights of Location Windows and the QuickFix Window may be
 controlled by the following global variables: >
@@ -3136,12 +3136,12 @@ Help-related mappings
 The following normal-mode mappings toggle the help window on and off:
 
   <F1>
-  <C-Q><C-H>
-  <C-Q>h
+  <C-q><C-h>
+  <C-q>h
 
 In visual mode, these same keys perform :help on the selected text.
 
-NOTE See |notes_tips_xon_xoff| if <C-Q> doesn't work in console vim.
+NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
 
 If the help window is already open, it will be closed; otherwise, the most
 recent help file will be re-opened.
@@ -3225,14 +3225,14 @@ Command-line window
 
 Special window for editing current and historical command and searches.
 
-From command-line mode or while editing a search pattern, press CTRL-G to open
-the window (Note: Vim default is to use CTRL-F, but this has been remapped).
+From command-line mode or while editing a search pattern, press CTRL-g to open
+the window (Note: Vim default is to use CTRL-f, but this has been remapped).
 
 From normal mode, press "q:" or "q/" to open the command-history or
 search-history window, respectively.
 
 You can edit, cut, paste, yank, etc., from these history windows.  Press
-CTRL-C to exit.
+CTRL-c to exit.
 
 Press <CR> on a line in the window to execute it.
 
@@ -3292,13 +3292,13 @@ So the above example becomes: >
     :Redir
 
 ------------------------------------------------------------------------------
-Using <C-Q> and <C-S> in console Vim                    *notes_tips_xon_xoff*
+Using <C-q> and <C-s> in console Vim                    *notes_tips_xon_xoff*
 
-When using console Vim, <C-Q> and <C-S> are often trapped by the console
+When using console Vim, <C-q> and <C-s> are often trapped by the console
 (they're the standard ASCII XON and XOFF characters).  To allow them to be
 seen by console Vim on Linux, try the following in your ~/.bashrc: >
 
-  # Disable XON/XOFF so CTRL-Q and CTRL-S are available to Vim and friends
+  # Disable XON/XOFF so CTRL-q and CTRL-s are available to Vim and friends
   # when stdout is connected to a terminal.
   test -t 0 && stty -ixon -ixoff
 
