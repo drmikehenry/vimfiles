@@ -524,7 +524,10 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Version 7.4.2 from http://www.vim.org/scripts/script.php?script_id=42
+Version 7.4.4 (fc022c5) from https://github.com/jlanzarotta/bufexplorer
+
+Note: The releases at http://www.vim.org/scripts/script.php?script_id=42 don't
+appear to be kept as up-to-date as on Github.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

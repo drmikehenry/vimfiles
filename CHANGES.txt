@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-10-13
+==========
+
+- Update BufExplorer to version 7.4.4 (no significant changes; updated to
+  prepare for future patches).
+
 2014-10-10
 ==========
 
