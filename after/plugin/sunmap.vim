@@ -51,6 +51,9 @@ function! SunmapAll()
     Sunmap //
     Sunmap ??
     Sunmap [%
+    Sunmap \be
+    Sunmap \bs
+    Sunmap \bv
     Sunmap \a(
     Sunmap \a,
     Sunmap \a<
@@ -105,6 +108,8 @@ function! SunmapAll()
     Sunmap \tsp
     Sunmap \tsq
     Sunmap \tt
+    Sunmap \tW@
+    Sunmap \TW@
     Sunmap \T|
     Sunmap \t|
     Sunmap \T~

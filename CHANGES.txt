@@ -14,6 +14,9 @@ require adjustment of per-user settings.
   "noremap" command used previously created undesirable select-mode mappings
   for "\be" and friends.
 
+- Unmap some stray undesirable select-mode mappings that appeared after a
+  plugin upgrade.
+
 2014-10-13
 ==========
 
