@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-10-14
+==========
+
+- Patch BufExplorer to define mappings only for normal mode.  The overly broad
+  "noremap" command used previously created undesirable select-mode mappings
+  for "\be" and friends.
+
 2014-10-13
 ==========
 
