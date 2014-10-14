@@ -17,6 +17,10 @@ require adjustment of per-user settings.
 - Unmap some stray undesirable select-mode mappings that appeared after a
   plugin upgrade.
 
+- Turn off UltiSnips's feature of unmapping select-mode mappings.  It ought to
+  :sunmap only mappings that start with a printable character, but it unmaps
+  too much (e.g., it removes select-mode <M-z>).
+
 2014-10-13
 ==========
 

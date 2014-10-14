@@ -2997,6 +2997,12 @@ let g:UltiSnipsExpandTrigger="<Tab>"
 let g:UltiSnipsJumpForwardTrigger="<Tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 
+" Do not use UltiSnips's algorithm for removing select-mode mappings.  It
+" should be restricted to just those mappings that start with printable
+" characters, but it removes too much (so, for example, the desirable
+" select-mode mapping for <M-z> gets unmapped).
+let g:UltiSnipsRemoveSelectModeMappings = 0
+
 " Use a:ultiSnipsSnippetDirectories as buffer-local value for UltiSnips's
 " global g:ultiSnipsSnippetDirectories.  Typically invoked from a .lvimrc
 " file as:
