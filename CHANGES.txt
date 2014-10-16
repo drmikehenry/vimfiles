@@ -39,7 +39,7 @@ require adjustment of per-user settings.
   instead of expanding the trigger (perhaps after undoing the erroneous snippet
   expansion via <M-u><M-u> or <M-z>).
 
-- Break undo when triggering a snippet, so that if you under after expanding
+- Break undo when triggering a snippet, so that if you undo after expanding
   a snippet, only the snippet expansion is undone.
 
 2014-09-18
