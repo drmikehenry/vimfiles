@@ -524,6 +524,10 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
+Version 7.4.4 (f58ef4a) from https://github.com/drmikehenry/bufexplorer
+(small patch of fc022c5 that changes "noremap" to "nnoremap" to avoid
+creating printable select-mode mappings).
+
 Version 7.4.4 (fc022c5) from https://github.com/jlanzarotta/bufexplorer
 
 Note: The releases at http://www.vim.org/scripts/script.php?script_id=42 don't
