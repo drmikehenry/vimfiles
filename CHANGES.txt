@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-10-15
+==========
+
+- Break undo for insert-mode CTRL-u and CTRL-w; otherwise, an undo will just
+  remove all text from the current insert operation instead of bringing back
+  the deleted text.
+
 2014-10-14
 ==========
 

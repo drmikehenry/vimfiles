@@ -1447,6 +1447,12 @@ endif
 " End "inspired by mswin.vim"
 " -------------------------------------------------------------
 
+" Break undo for some insert-mode deletion operations otherwise, an undo will
+" just remove all text from the current insert operation instead of bringing
+" back the deleted text.
+inoremap <C-w>  <C-g>u<C-w>
+inoremap <C-u>  <C-g>u<C-u>
+
 " Put from most recent yank instead of scratch register.
 xnoremap P "0P
 
