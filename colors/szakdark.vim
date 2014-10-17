@@ -255,3 +255,7 @@ hi link svnDelimiter Comment
 " Java
 hi javaCommentTitle guifg=#7C7C7C gui=BOLD
 hi link javaDocTags javaCommentTitle
+
+" reStructuredText
+hi rstEmphasis       guifg=#E18964 guibg=NONE gui=italic ctermfg=210 ctermbg=NONE cterm=NONE
+hi rstStrongEmphasis guifg=#E18964 guibg=NONE gui=BOLD   ctermfg=210 ctermbg=NONE cterm=BOLD
