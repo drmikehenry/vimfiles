@@ -184,6 +184,7 @@ hi link javaScriptNumber      Number
 
 " Special for Python
 hi pythonDot guibg=NONE
+hi pythonBytesEscape ctermfg=71 guifg=#439300
 
 
 " Special for CSharp
