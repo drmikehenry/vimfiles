@@ -254,3 +254,10 @@ hi link svnDelimiter Comment
 " Java
 hi javaCommentTitle guifg=#7C7C7C gui=BOLD
 hi link javaDocTags javaCommentTitle
+
+" Signature
+highlight SignatureMarkText   guifg=#4fff4f guibg=#262626 ctermfg=83  ctermbg=235
+highlight SignatureMarkerText guifg=#b4b4ee guibg=#262626 ctermfg=147 ctermbg=235
+
+let g:SignatureMarkerTextHL='"SignatureMarkerText"'
+let g:SignatureMarkTextHL='"SignatureMarkText"'
