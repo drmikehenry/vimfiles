@@ -205,6 +205,14 @@ if $VIMRC_AFTER == ""
     endif
 endif
 
+" Define an empty g:pathogen_disabled so users can assume it always exists.
+" NOTE: This variable must be adjusted very early in your vimrc-vars.vim.
+" To disable a plugin:
+"   call add(g:pathogen_disabled, "pluginname")
+" To remove a plugin from the list:
+"   call filter(g:pathogen_disabled, 'v:val != "pluginname"')
+let g:pathogen_disabled = []
+
 " Activate pathogen in case a user would need to activate a bundle in
 " |VIMRC_VARS| as part of setting up some variable.
 
