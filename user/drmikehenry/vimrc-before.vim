@@ -4,6 +4,19 @@ if exists('+colorcolumn')
     set colorcolumn=+1
 endif
 
+function! Drmikehenry_adjustSzakDark()
+    if exists('+colorcolumn')
+        if &t_Co > 255 || has("gui_running")
+            highlight ColorColumn ctermbg=236 guibg=#252525
+        endif
+    endif
+endfunction
+
+augroup Drmikehenry_vimrc
+    au!
+    autocmd ColorScheme szakdark call Drmikehenry_adjustSzakDark()
+augroup END
+
 function! Drmikehenry_solarized()
     "let g:solarized_contrast = "low"
     "let g:solarized_contrast = "normal"
