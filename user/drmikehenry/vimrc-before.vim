@@ -1,5 +1,9 @@
 let did_install_default_menus = 1
 
+if exists('+colorcolumn')
+    set colorcolumn=+1
+endif
+
 function! Drmikehenry_solarized()
     "let g:solarized_contrast = "low"
     "let g:solarized_contrast = "normal"
