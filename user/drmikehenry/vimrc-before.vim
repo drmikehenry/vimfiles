@@ -7,7 +7,10 @@ endif
 function! Drmikehenry_adjustSzakDark()
     if exists('+colorcolumn')
         if &t_Co > 255 || has("gui_running")
-            highlight ColorColumn ctermbg=236 guibg=#252525
+"            highlight ColorColumn ctermbg=233 guibg=#121212
+            highlight ColorColumn ctermbg=234 guibg=#1c1c1c
+"            highlight ColorColumn ctermbg=235 guibg=#262626
+"            highlight ColorColumn ctermbg=236 guibg=#303030
         endif
     endif
 endfunction
