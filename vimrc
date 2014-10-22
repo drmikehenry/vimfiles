@@ -2848,6 +2848,7 @@ endif
 let g:syntastic_enable_balloons = 1
 let g:syntastic_enable_highlighting = 0
 let g:syntastic_quiet_messages = {'level': 'warnings'}
+let g:syntastic_always_populate_loc_list = 1
 
 function! ReplacePowerlineSyntastic()
     function! Powerline#Functions#syntastic#GetErrors(line_symbol) " {{{
