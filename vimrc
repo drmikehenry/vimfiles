@@ -2877,6 +2877,7 @@ let g:syntastic_enable_highlighting = 0
 let g:syntastic_quiet_messages = {'level': 'warnings'}
 let g:syntastic_always_populate_loc_list = 1
 
+let g:syntastic_rst_rst2pseudoxml_quiet_messages = { 'level': [] }
 let g:syntastic_rst_rstsphinx_quiet_messages = { 'level': [] }
 let g:syntastic_rst_rstsphinx_args_before = '-j ' . NumCpus()
 
