@@ -687,6 +687,33 @@ function! StatusQuoIndent()
     return indent(getline(lnum))
 endfunction
 
+function! NumCpus()
+    " Mostly taken from:
+    "   http://vim.wikia.com/wiki/Auto-detect_number_of_cores_for_parallel_build
+    "
+    " Tweaked to work for Mac OS X and BSD
+
+    if !empty($NUMBER_OF_PROCESSORS)
+        " this works on Windows and provides a convenient override mechanism
+        " otherwise
+        let n = $NUMBER_OF_PROCESSORS + 0
+    elseif filereadable('/proc/cpuinfo')
+        " this works on most Linux systems
+        let n = system('grep -c ^processor /proc/cpuinfo') + 0
+    elseif executable('/usr/sbin/psrinfo')
+        " this works on Solaris
+        let n = system('/usr/sbin/psrinfo -p') + 0
+    elseif executable('/usr/sbin/sysctl')
+        " this works on FreeBSD and Mac OS X
+        let n = system('/usr/sbin/sysctl -n hw.ncpu') + 0
+    else
+        " default to single process if we can't figure it out automatically
+        let n = 1
+    endif
+
+    return n
+endfunction
+
 " -------------------------------------------------------------
 " QuickFix/Location List support
 " -------------------------------------------------------------
@@ -2850,6 +2877,9 @@ let g:syntastic_enable_highlighting = 0
 let g:syntastic_quiet_messages = {'level': 'warnings'}
 let g:syntastic_always_populate_loc_list = 1
 
+let g:syntastic_rst_rstsphinx_quiet_messages = { 'level': [] }
+let g:syntastic_rst_rstsphinx_args_before = '-j ' . NumCpus()
+
 function! ReplacePowerlineSyntastic()
     function! Powerline#Functions#syntastic#GetErrors(line_symbol) " {{{
         if ! exists('g:syntastic_stl_format')
@@ -3773,6 +3803,10 @@ command! -bar SetupRstSyntax call SetupRstSyntax()
 function! SetupRst()
     SetupText
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
+
+    if has("python") && findfile('conf.py', '.;') != ''
+        let b:syntastic_checkers = ['rstsphinx']
+    endif
 endfunction
 command! -bar SetupRst call SetupRst()
 let g:SpellMap["rst"] = "<on>"
