@@ -2910,7 +2910,7 @@ endfunction
 
 let g:syntastic_mode_map = {
             \ 'mode': 'passive',
-            \ 'active_filetypes': ['python', 'ruby'],
+            \ 'active_filetypes': ['python', 'ruby', 'rst'],
             \ 'passive_filetypes': []
             \ }
 
