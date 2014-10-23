@@ -3064,14 +3064,18 @@ Usage:
 :L4         Layout windows in a four-column format.
 :L5         Layout windows in a five-column format.
 
+The desired window width is controlled by the sum of two variables:
+- g:WindowWidth (defaults to 80)
+- g:ExtraWindowWidth (allows extra room for :sign columns; defaults to 2)
+
 Performs the following:
 - Sets number of character columns for the requested number of window
-  columns, e.g.:
-  - :L1  ==> 80 characters
-  - :L2  ==> 161 characters (2 * 80 + 1)
-  - :L3  ==> 242 characters (3 * 80 + 2)
-  - :L4  ==> 323 characters (4 * 80 + 3)
-  - :L5  ==> 404 characters (5 * 80 + 4)
+  columns.  E.g., for 82 characters per window:
+  - :L1  ==> 82 characters
+  - :L2  ==> 165 characters (2 * 82 + 1)
+  - :L3  ==> 248 characters (3 * 82 + 2)
+  - :L4  ==> 331 characters (4 * 82 + 3)
+  - :L5  ==> 414 characters (5 * 82 + 4)
   - :L n ==> n * 80 + (n - 1)
 
   This leaves room for n windows with (n - 1) dividing lines between them.

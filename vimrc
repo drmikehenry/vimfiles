@@ -1867,6 +1867,12 @@ let g:QuickFixWinHeight = 10
 " Desired height of a Location List window.
 let g:LocListWinHeight = 5
 
+" Desired width in columns of each window (as laid out by :L, :L2, etc.).
+let g:WindowWidth = 80
+
+" Extra columns per window (e.g., to allow room for the two :sign columns).
+let g:ExtraWindowWidth = 2
+
 " Re-layout windows in standard fashion.
 " If zero arguments are passed, leaves number of columns unchanged.
 " If one argument is passed, it's considered the number of window columns.
@@ -1881,7 +1887,8 @@ function! s:L(...)
         let winColumns = 0
     endif
     if winColumns > 0
-        let scrColumns = 81 * winColumns - 1
+        let winWidth = g:WindowWidth + g:ExtraWindowWidth
+        let scrColumns = (winWidth + 1) * winColumns - 1
         let &columns = scrColumns
         redraw
         if &columns != scrColumns
