@@ -2789,7 +2789,7 @@ function! SaveSessionNoDefault(name, bang, command) abort
         endif
         if empty(name)
             let defaultSessionFound = 0
-            for session in xolox#session#get_names()
+            for session in xolox#session#get_names(0)
                 if session ==? g:session_default_name
                     let defaultSessionFound = 1
                     break

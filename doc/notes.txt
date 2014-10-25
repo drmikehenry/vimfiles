@@ -1466,7 +1466,7 @@ Installation:
 MISC                                                    *notes_misc*
   Contains many useful Vimscript functions              |misc.txt|
 
-Version 1.8.5 from https://github.com/xolox/vim-misc
+Version 1.16.1 from https://github.com/xolox/vim-misc
 
 This plugin is also used by the session plugin.
 
@@ -1841,7 +1841,7 @@ Installation:
 SESSION                                                 *notes_session*
   Provides better session management                    |session.txt|
 
-Version 2.4.9 from https://github.com/xolox/vim-session
+Version 2.7 from https://github.com/xolox/vim-session
 
 Note: this plugin requires the misc plugin.
 

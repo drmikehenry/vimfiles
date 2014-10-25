@@ -1,6 +1,6 @@
 " Vim script
 " Author: Peter Odding
-" Last Change: July 4, 2013
+" Last Change: July 6, 2014
 " URL: http://peterodding.com/code/vim/session/
 
 " Support for automatic update using the GLVS plug-in.
@@ -109,6 +109,16 @@ if !exists('g:session_menu')
   let g:session_menu = 1
 endif
 
+" Toggle the persistence of color schemes and the 'background' option.
+if !exists('g:session_persist_colors')
+  let g:session_persist_colors = 1
+endif
+
+" Enable user defined session name completion suggestions for :SaveSession.
+if !exists('g:session_name_suggestion_function')
+  let g:session_name_suggestion_function = 'xolox#session#suggestions#vcs_feature_branch'
+endif
+
 " Make sure the sessions directory exists and is writable. {{{1
 
 let s:directory = fnamemodify(g:session_directory, ':p')
@@ -145,10 +155,11 @@ endif
 augroup PluginSession
   autocmd!
   au VimEnter * nested call xolox#session#auto_load()
-  au CursorHold,CursorHoldI * call xolox#session#auto_save_periodic()
   au VimLeavePre * call xolox#session#auto_save()
   au VimLeavePre * call xolox#session#auto_unlock()
 augroup END
+
+call xolox#misc#cursorhold#register({'function': 'xolox#session#auto_save_periodic', 'interval': 60})
 
 " Plug-in commands (user defined commands). {{{1
 
@@ -157,7 +168,7 @@ augroup END
 " one or more tab pages).
 command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSession call xolox#session#open_cmd(<q-args>, <q-bang>, 'OpenSession')
 command! -bar -nargs=? -complete=customlist,xolox#session#complete_names ViewSession call xolox#session#view_cmd(<q-args>)
-command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names SaveSession call xolox#session#save_cmd(<q-args>, <q-bang>, 'SaveSession')
+command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names_with_suggestions SaveSession call xolox#session#save_cmd(<q-args>, <q-bang>, 'SaveSession')
 command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names DeleteSession call xolox#session#delete_cmd(<q-args>, <q-bang>)
 command! -bar -bang CloseSession call xolox#session#close_cmd(<q-bang>, 0, 1, 'CloseSession')
 
@@ -165,7 +176,7 @@ command! -bar -bang CloseSession call xolox#session#close_cmd(<q-bang>, 0, 1, 'C
 " sessions (used to persist/restore the window layout of a single tab page).
 command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenTabSession call xolox#session#open_tab_cmd(<q-args>, <q-bang>, 'OpenTabSession')
 command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names SaveTabSession call xolox#session#save_tab_cmd(<q-args>, <q-bang>, 'SaveTabSession')
-command! -bar -bang -count=94919 -nargs=? -complete=customlist,xolox#session#complete_names AppendTabSession call xolox#session#append_tab_cmd(<q-args>, <q-bang>, <count>, 'AppendTabSession')
+command! -bar -bang -range=-1 -nargs=? -complete=customlist,xolox#session#complete_names AppendTabSession call xolox#session#append_tab_cmd(<q-args>, <q-bang>, <count>, 'AppendTabSession')
 command! -bar -bang CloseTabSession call xolox#session#close_tab_cmd(<q-bang>, 'CloseTabSession')
 
 " Define a command to restart Vim editing sessions.
@@ -183,7 +194,7 @@ if g:session_command_aliases
   command! -bar -bang SessionClose call xolox#session#close_cmd(<q-bang>, 0, 1, 'SessionClose')
   command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names SessionTabOpen call xolox#session#open_tab_cmd(<q-args>, <q-bang>, 'SessionTabOpen')
   command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names SessionTabSave call xolox#session#save_tab_cmd(<q-args>, <q-bang>, 'SessionTabSave')
-  command! -bar -bang -count=94919 -nargs=? -complete=customlist,xolox#session#complete_names SessionTabAppend call xolox#session#append_tab_cmd(<q-args>, <q-bang>, <count>, 'SessionTabAppend')
+  command! -bar -bang -range=-1 -nargs=? -complete=customlist,xolox#session#complete_names SessionTabAppend call xolox#session#append_tab_cmd(<q-args>, <q-bang>, <count>, 'SessionTabAppend')
   command! -bar -bang SessionTabClose call xolox#session#close_tab_cmd(<q-bang>, 'SessionTabClose')
 endif
 

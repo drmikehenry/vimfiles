@@ -37,8 +37,168 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 80 functions below was extracted from
-15 Vim scripts on July 20, 2013 at 10:41.
+The documentation of the 95 functions below was extracted from
+19 Vim scripts on September 17, 2014 at 22:39.
+
+### Asynchronous Vim script evaluation
+
+The `xolox#misc#async#call()` function builds on top of `xolox#misc#os#exec()`
+to support asynchronous evaluation of Vim scripts. The first (and for now
+only) use case is my [vim-easytags][] plug-in which has a bunch of
+conflicting requirements:
+
+1. I want the [vim-easytags][] plug-in to be as portable as possible.
+   Ideally everything is implemented in Vim script because that's the only
+   thing I can rely on to be available for all potential users of the
+   plug-in!
+
+2. Because of point one I've been forced to implement tags file reading,
+   parsing, (fold case) sorting and writing in Vim script. This is fine for
+   small tags files but once they grow to a couple of megabytes it becomes
+   annoying because Vim is unresponsive during tags file updates (key
+   presses are fortunately buffered due to Vim's input model but that
+   doesn't make it a nice user experience :-).
+
+3. I could (and did in the past) come up with all sorts of hacks to speed
+   things up without switching away from Vim script, but none of them are
+   going to solve the fundamental problem that Vim's unresponsive hiccups
+   become longer as tags files grow larger.
+
+By now it should be clear where this is heading: _Why not handle tags file
+updates in a Vim process that runs in the background without blocking the
+Vim process that the user is interacting with?_ It turns out that there are
+quite a few details to take care of, but with those out of the way, it might
+just work! I'm actually hoping to make asynchronous updates the default mode
+in [vim-easytags][]. This means I need this functionality to be as
+portable and robust as possible.
+
+**Status:** This code has seen little testing so I wouldn't trust it too
+much just yet. On the other hand, as I said, my intention is to make this
+functionality as portable and robust as possible. You be the judge :-).
+
+[vim-easytags]: http://peterodding.com/code/vim/easytags/
+
+#### The `xolox#misc#async#call()` function
+
+Call a Vim script function asynchronously by starting a hidden Vim process
+in the background. Once the function returns the hidden Vim process
+terminates itself. This function takes a single argument which is a
+dictionary with the following key/value pairs:
+
+ - **function** (required): The name of the Vim function to call inside
+   the child process (a string). I suggest using an [autoload][] function
+   for this, see below.
+
+ - **arguments** (optional): A list of arguments to pass to the function.
+   This list is serialized to a string using [string()][] and deserialized
+   using [eval()][].
+
+ - **callback** (optional): The name of a Vim function to call in the
+   parent process when the child process has completed (a string).
+
+ - **clientserver** (optional): If this is true (1) the child process will
+   notify the parent process when it has finished (the default is true).
+   This works using Vim's client/server support which is not always
+   available. As a fall back Vim's [CursorHold][] automatic command is
+   also supported (although the effect is not quite as instantaneous :-).
+
+This functionality is experimental and non trivial to use, so consider
+yourself warned :-).
+
+**Limitations**
+
+I'm making this functionality available in [vim-misc][] because I think it
+can be useful to other plug-ins, however if you are going to use it you
+should be aware of the following limitations:
+
+ - Because of the use of multiple processes this functionality is only
+   suitable for 'heavy' tasks.
+
+ - The function arguments are serialized to a string which is passed to
+   the hidden Vim process as a command line argument, so the amount of
+   data you can pass will be limited by your operating environment.
+
+ - The hidden Vim process is explicitly isolated from the user in several
+   ways (see below for more details). This is to make sure that the hidden
+   Vim processes are fast and don't clobber the user's editing sessions in
+   any way.
+
+**Changes to how Vim normally works**
+
+You have to be aware that the hidden Vim process is initialized in a
+specific way that is very different from your regular Vim editing
+sessions:
+
+ - Your [vimrc][] file is ignored using the `-u NONE` command line option.
+
+ - Your [gvimrc][] file (if you even knew it existed ;-) is ignored using
+   the `-U NONE` command line option.
+
+ - Plug-in loading is skipped using the `--noplugin` command line option.
+
+ - Swap files (see [swap-file][]) are disabled using the `-n` command line
+   option. This makes sure asynchronous Vim processes don't disturb the
+   user's editing session.
+
+ - Your [viminfo][] file is ignored using the `-i NONE` command line
+   option. Just like with swap files this makes sure asynchronous Vim
+   processes don't disturb the user's editing session.
+
+ - No-compatible mode is enabled using the `-N` command line option
+   (usually the existence of your vimrc script would have achieved the
+   same effect but since we disable loading of your vimrc we need to spell
+   things out for Vim).
+
+**Use an auto-load function**
+
+The function you want to call is identified by its name which has to be
+defined, but I just explained above that all regular initialization is
+disabled for asynchronous Vim processes, so what gives? The answer is to
+use an [autoload][] function. This should work fine because the
+asynchronous Vim process 'inherits' the value of the ['runtimepath'][]
+option from your editing session.
+
+['runtimepath']: http://vimdoc.sourceforge.net/htmldoc/options.html#'runtimepath'
+[autoload]: http://vimdoc.sourceforge.net/htmldoc/eval.html#autoload
+[CursorHold]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#CursorHold
+[eval()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#eval()
+[gvimrc]: http://vimdoc.sourceforge.net/htmldoc/gui.html#gvimrc
+[string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
+[swap-file]: http://vimdoc.sourceforge.net/htmldoc/recover.html#swap-file
+[vim-misc]: http://peterodding.com/code/vim/misc/
+[viminfo]: http://vimdoc.sourceforge.net/htmldoc/starting.html#viminfo
+[vimrc]: http://vimdoc.sourceforge.net/htmldoc/starting.html#vimrc
+
+#### The `xolox#misc#async#inside_child()` function
+
+Entry point inside the hidden Vim process that runs in the background.
+Invoked indirectly by `xolox#misc#async#call()` because it runs a command
+similar to the following:
+
+    vim --cmd 'call xolox#misc#async#inside_child(...)'
+
+This function is responsible for calling the user defined function,
+capturing exceptions and reporting the results back to the parent Vim
+process using Vim's client/server support or a temporary file.
+
+#### The `xolox#misc#async#callback_to_parent()` function
+
+When Vim was compiled with client/server support this function (in the
+parent process) will be called by `xolox#misc#async#inside_child()` (in
+the child process) after the user defined function has returned. This
+enables more or less instant callbacks after running an asynchronous
+function.
+
+#### The `xolox#misc#async#periodic_callback()` function
+
+When client/server support is not being used the vim-misc plug-in
+improvises: It uses Vim's [CursorHold][] event to periodically check if an
+asynchronous process has written its results to one of the expected
+temporary files. If a response is found the temporary file is read and
+deleted and then `xolox#misc#async#callback_to_parent()` is called to
+process the response.
+
+[CursorHold]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#CursorHold
 
 ### Handling of special buffers
 
@@ -95,6 +255,52 @@ Vim commands based on the contents of the current buffer. Here's an
 example of how you would use it:
 
     :command -nargs=* -complete=customlist,xolox#misc#complete#keywords MyCmd call s:MyCmd(<f-args>)
+
+### Rate limiting for Vim's CursorHold event
+
+Several of my Vim plug-ins (e.g. [vim-easytags][], [vim-notes][] and
+[vim-session][]) use Vim's [CursorHold][] and [CursorHoldI][] events to
+perform periodic tasks when the user doesn't press any keys for a couple of
+seconds. These events by default fire after four seconds, this is
+configurable using Vim's ['updatetime'][] option. The problem that this
+script solves is that there are Vim plug-ins which set the ['updatetime'][]
+option to unreasonably low values, thereby breaking my Vim plug-ins and
+probably a lot of other Vim plug-ins out there. When users complain about
+this I can tell them that another Vim plug-in is to blame, but users don't
+care for the difference, their Vim is broken! So I implemented a workaround.
+This script enables registration of [CursorHold][] event handlers with a
+configurable interval (expressed in seconds). The event handlers will be
+called no more than once every interval.
+
+['updatetime']: http://vimdoc.sourceforge.net/htmldoc/options.html#'updatetime'
+[CursorHold]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#CursorHold
+[CursorHoldI]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#CursorHoldI
+[vim-easytags]: http://peterodding.com/code/vim/easytags/
+[vim-notes]: http://peterodding.com/code/vim/notes/
+[vim-session]: http://peterodding.com/code/vim/session/
+
+#### The `xolox#misc#cursorhold#register()` function
+
+Register a [CursorHold][] event handler with a custom interval. This
+function takes a single argument which is a dictionary with the following
+fields:
+
+ - **function** (required): The name of the event handler function (a
+   string).
+
+ - **arguments** (optional): A list of arguments to pass to the event
+   handler function (defaults to an empty list).
+
+ - **interval** (optional): The number of seconds between calls to the
+   event handler (defaults to 4).
+
+#### The `xolox#misc#cursorhold#autocmd()` function
+
+The 'top level event handler' that's called by Vim whenever the
+[CursorHold][] or [CursorHoldI][] event fires. It iterates through the
+event handlers registered using `xolox#misc#cursorhold#register()` and
+calls each event handler at the appropriate interval, keeping track of
+the time when each event handler was last run.
 
 ### String escaping functions
 
@@ -410,6 +616,13 @@ Join a directory pathname and filename into a single pathname.
 
 Find the common prefix of path components in a list of pathnames.
 
+#### The `xolox#misc#path#starts_with()` function
+
+Check whether the first pathname starts with the second pathname (expected
+to be a directory). This does not perform a regular string comparison;
+first it normalizes both pathnames, then it splits them into their
+pathname segments and then it compares the segments.
+
 #### The `xolox#misc#path#encode()` function
 
 Encode a pathname so it can be used as a filename. This uses URL encoding
@@ -428,6 +641,94 @@ relative, false (0) otherwise.
 
 Create a temporary directory and return the pathname of the directory.
 
+### Manipulation of UNIX file permissions
+
+Vim's [writefile()][] function cannot set file permissions for newly created
+files and although Vim script has a function to get file permissions (see
+[getfperm()][]) there is no equivalent for changing a file's permissions.
+
+This omission breaks the otherwise very useful idiom of updating a file by
+writing its new contents to a temporary file and then renaming the temporary
+file into place (which is as close as you're going to get to atomically
+updating a file's contents on UNIX) because the file's permissions will not
+be preserved!
+
+**Here's a practical example:** My [vim-easytags][] plug-in writes tags file
+updates to a temporary file and renames the temporary file into place. When
+I use `sudo -s` on Ubuntu Linux it preserves my environment variables so my
+`~/.vimrc` and the [vim-easytags][] plug-in are still loaded. Now when a
+tags file is written the file becomes owned by root (my effective user id in
+the `sudo` session). Once I leave the `sudo` session I can no longer update
+my tags file because it's now owned by root … ಠ_ಠ
+
+[getfperm()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#getfperm()
+[vim-easytags]: http://peterodding.com/code/vim/easytags/
+[writefile()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#writefile()
+
+#### The `xolox#misc#perm#update()` function
+
+Atomically update a file's contents while preserving the owner, group and
+mode. The first argument is the pathname of the file to update (a string).
+The second argument is the list of lines to be written to the file. Writes
+the new contents to a temporary file and renames the temporary file into
+place, thereby preventing readers from reading a partially written file.
+Returns 1 if the file is successfully updated, 0 otherwise.
+
+Note that if `xolox#misc#perm#get()` and `xolox#misc#perm#set()` cannot be
+used to preserve the file owner/group/mode the file is still updated using
+a rename (for compatibility with non-UNIX systems and incompatible
+`/usr/bin/stat` implementations) so in that case you can still lose the
+file's owner/group/mode.
+
+#### The `xolox#misc#perm#get()` function
+
+Get the owner, group and permissions of the pathname given as the first
+argument. Returns an opaque value which you can later pass to
+`xolox#misc#perm#set()`.
+
+#### The `xolox#misc#perm#set()` function
+
+Set the permissions (the second argument) of the pathname given as the
+first argument. Expects a permissions value created by
+`xolox#misc#perm#get()`.
+
+### Persist/recall Vim values from/to files
+
+Vim's [string()][] function can be used to serialize Vim script values like
+numbers, strings, lists, dictionaries and composites of them to a string
+which can later be evaluated using the [eval()][] function to turn it back
+into the original value. This Vim script provides functions to use these
+functions to persist and recall Vim values from/to files. This is very
+useful for communication between (possibly concurrent) Vim processes.
+
+#### The `xolox#misc#persist#load()` function
+
+Read a Vim value like a number, string, list or dictionary from a file
+using [readfile()][] and [eval()][]. The first argument is the filename of
+the file to read (a string). The optional second argument specifies the
+default value which is returned when the file can't be loaded. This
+function returns the loaded value or the default value (which itself
+defaults to the integer 0).
+
+[eval()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#eval()
+[readfile()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#readfile()
+
+#### The `xolox#misc#persist#save()` function
+
+Write a Vim value like a number, string, list or dictionary to a file
+using [string()][] and [writefile()][]. The first argument is the filename
+of the file to write (a string) and the second argument is the value to
+write (any value).
+
+This function writes the serialized value to an intermediate file which is
+then renamed into place atomically. This avoids issues with concurrent
+processes where for example a producer has written a partial file which is
+read by a consumer before the file is complete. In this case the consumer
+would read a corrupt value. The rename trick avoids this problem.
+
+[string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
+[writefile()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#writefile()
+
 ### String handling
 
 #### The `xolox#misc#str#slug()` function
@@ -439,6 +740,10 @@ characters.
 #### The `xolox#misc#str#ucfirst()` function
 
 Uppercase the first character in a string (the first argument).
+
+#### The `xolox#misc#str#unescape()` function
+
+Remove back slash escapes from a string (the first argument).
 
 #### The `xolox#misc#str#compact()` function
 
@@ -610,6 +915,33 @@ Test comparison of version strings with `xolox#misc#version#at_least()`.
 
 ### Timing of long during operations
 
+#### The `xolox#misc#timer#resumable()` function
+
+Create a resumable timer object. This returns an object (a dictionary with
+functions) with the following "methods":
+
+ - `start()` instructs the timer object to start counting elapsed time
+   (when a timer object is created it is not automatically started).
+
+ - `stop()` instructs the timer object to stop counting elapsed time.
+   This adds the time elapsed since `start()` was last called to the
+   total elapsed time. This method will raise an error if called out of
+   sequence.
+
+ - `format()` takes the total elapsed time and reports it as a string
+   containing a formatted floating point number.
+
+Timer objects are meant to accurately time short running operations so
+they're dependent on Vim's [reltime()][] and [reltimestr()][] functions.
+In order to make it possible to use timer objects in my Vim plug-ins
+unconditionally there's a fall back to [localtime()][] when [reltime()][]
+is not available. In this mode the timer objects are not very useful but
+at least they shouldn't raise errors.
+
+[localtime()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#localtime()
+[reltime()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#reltime()
+[reltimestr()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#reltimestr()
+
 #### The `xolox#misc#timer#start()` function
 
 Start a timer. This returns a list which can later be passed to
@@ -636,6 +968,15 @@ handling as Vim's [printf()] [printf] function with one difference: At the
 point where you want the elapsed time to be embedded, you write `%s` and
 you pass the list returned by `xolox#misc#timer#start()` as an argument.
 
+#### The `xolox#misc#timer#convert()` function
+
+Convert the value returned by `xolox#misc#timer#start()` to a string
+representation of the elapsed time since `xolox#misc#timer#start()` was
+called. Other values are returned unmodified (this allows using it with
+Vim's [map()][] function).
+
+[map()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#map()
+
 ### Version string handling
 
 #### The `xolox#misc#version#parse()` function
@@ -651,17 +992,19 @@ first version string. Returns 1 (true) when it is, 0 (false) otherwise.
 
 ## Contact
 
-If you have questions, bug reports, suggestions, etc. the author can be
-contacted at <peter@peterodding.com>. The latest version is available at
-<http://peterodding.com/code/vim/misc> and <http://github.com/xolox/vim-misc>.
-If you like the script please vote for it on [Vim Online] [].
+If you have questions, bug reports, suggestions, etc. please open an issue or
+pull request on [GitHub] []. Download links and documentation can be found on
+the plug-in's [homepage] []. If you like the script please vote for it on
+[Vim Online] [].
 
 ## License
 
 This software is licensed under the [MIT license] [].  
-© 2013 Peter Odding &lt;<peter@peterodding.com>&gt;.
+© 2014 Peter Odding &lt;<peter@peterodding.com>&gt;.
 
 
+[GitHub]: http://github.com/xolox/vim-misc
+[homepage]: http://peterodding.com/code/vim/misc
 [MIT license]: http://en.wikipedia.org/wiki/MIT_License
 [Pathogen]: http://www.vim.org/scripts/script.php?script_id=2332
 [plugins]: http://peterodding.com/code/vim/

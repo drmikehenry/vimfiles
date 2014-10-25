@@ -8,6 +8,7 @@
 :SaveSession	session.txt	/*:SaveSession*
 :SaveTabSession	session.txt	/*:SaveTabSession*
 :ViewSession	session.txt	/*:ViewSession*
+example-function-for-session-name-suggestions	session.txt	/*example-function-for-session-name-suggestions*
 g:loaded_session	session.txt	/*g:loaded_session*
 g:session_autoload	session.txt	/*g:session_autoload*
 g:session_autosave	session.txt	/*g:session_autosave*
@@ -18,7 +19,10 @@ g:session_default_overwrite	session.txt	/*g:session_default_overwrite*
 g:session_default_to_last	session.txt	/*g:session_default_to_last*
 g:session_directory	session.txt	/*g:session_directory*
 g:session_extension	session.txt	/*g:session_extension*
+g:session_lock_directory	session.txt	/*g:session_lock_directory*
 g:session_menu	session.txt	/*g:session_menu*
+g:session_name_suggestion_function	session.txt	/*g:session_name_suggestion_function*
+g:session_persist_colors	session.txt	/*g:session_persist_colors*
 g:session_persist_globals	session.txt	/*g:session_persist_globals*
 g:session_restart_environment	session.txt	/*g:session_restart_environment*
 g:session_verbose_messages	session.txt	/*g:session_verbose_messages*
@@ -43,6 +47,7 @@ xolox#session#auto_save_periodic()	session.txt	/*xolox#session#auto_save_periodi
 xolox#session#auto_unlock()	session.txt	/*xolox#session#auto_unlock()*
 xolox#session#change_tab_options()	session.txt	/*xolox#session#change_tab_options()*
 xolox#session#complete_names()	session.txt	/*xolox#session#complete_names()*
+xolox#session#complete_names_with_suggestions()	session.txt	/*xolox#session#complete_names_with_suggestions()*
 xolox#session#find_current_session()	session.txt	/*xolox#session#find_current_session()*
 xolox#session#get_label()	session.txt	/*xolox#session#get_label()*
 xolox#session#get_names()	session.txt	/*xolox#session#get_names()*
@@ -61,3 +66,4 @@ xolox#session#save_qflist()	session.txt	/*xolox#session#save_qflist()*
 xolox#session#save_session()	session.txt	/*xolox#session#save_session()*
 xolox#session#save_special_windows()	session.txt	/*xolox#session#save_special_windows()*
 xolox#session#save_state()	session.txt	/*xolox#session#save_state()*
+xolox#session#suggestions#vcs_feature_branch()	session.txt	/*xolox#session#suggestions#vcs_feature_branch()*

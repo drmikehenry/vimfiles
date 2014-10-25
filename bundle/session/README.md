@@ -47,11 +47,11 @@ Your session script will be saved in the directory pointed to by the `g:session_
 This command is basically [:source][source] in disguise, but it supports tab completion of session names and it executes `:CloseSession` before opening the session. When you don't provide a session name and only a single session exists then that session is opened, otherwise the plug-in will ask you to select one from a list:
 
     Please select the session to restore:
-    
+
      1. vim-profile
      2. session-plugin
      3. etc.
-    
+
     Type number and <Enter> or click with mouse (empty cancels):
 
 If the session you're trying to open is already active in another Vim instance you'll get a warning and nothing happens. You can use a bang (!) as in `:OpenSession! ...` to ignore the warning and open the session anyway.
@@ -127,6 +127,13 @@ Note that the vim-session plug-in automatically and unconditionally executes the
 
 This option controls the location of your session scripts. Its default value is `~/.vim/sessions` (on UNIX) or `~\vimfiles\sessions` (on Windows). If you don't mind the default you don't have to do anything; the directory will be created for you. Note that a leading `~` is expanded to your current home directory (`$HOME` on UNIX, `%USERPROFILE%` on Windows).
 
+### The `g:session_lock_directory` option
+
+The vim-session plug-in uses lock files to prevent double loading of sessions. By default the lock files are stored in the same directory as the sessions. If you'd rather store lock files in a dedicated lock file directory you can use this option:
+
+    " Store lock files in a tmpfs that doesn't persist between reboots.
+    let g:session_lock_directory = '/var/lock'
+
 ### The `g:session_default_name` option
 
 The name of the default session without directory or filename extension (you'll never guess what the default is).
@@ -160,6 +167,12 @@ The session load/save prompts are quite verbose by default because they explain 
 ### The `g:session_default_to_last` option
 
 By default this option is set to false (0). When you set this option to true (1) and you start Vim, the session plug-in will open your last used session instead of the default session. Note that the session plug-in will still show you the dialog asking whether you want to restore the last used session. To get rid of the dialog you have to set `g:session_autoload` to `'yes'`.
+
+### The `g:session_persist_colors` option
+
+By default the plug-in will save the color scheme and the ['background' option] [bg] with the session to be reused the next time that session is loaded, this can be disabled by adding the following line to your [vimrc script] [vimrc]:
+
+    :let g:session_persist_colors = 0
 
 ### The `g:session_persist_globals` option
 
@@ -221,6 +234,10 @@ By default the plug-in installs a top level menu. If you don't like this you can
 
     :let g:session_menu = 0
 
+### The `g:session_name_suggestion_function` option
+
+The default completion of the `:SaveSession` command is based on the names of the existing sessions. You can add your own suggestions using this option by setting the option to the name of a Vim script function. By default this option is set to an example function that suggests the name of the current git or Mercurial feature branch (when you're working in a version control repository).
+
 ### The `g:loaded_session` option
 
 This variable isn't really an option but if you want to avoid loading the vim-session plug-in you can set this variable to any value in your [vimrc script] [vimrc]:
@@ -245,8 +262,8 @@ Recently this plug-in switched from reimplementing [:mksession][mksession] to ac
 
 <!-- Start of generated documentation -->
 
-The documentation of the 34 functions below was extracted from
-1 Vim scripts on October 15, 2013 at 19:26.
+The documentation of the 37 functions below was extracted from
+2 Vim scripts on September 14, 2014 at 13:07.
 
 ### Public API for the vim-session plug-in
 
@@ -399,10 +416,20 @@ configured with `g:session_directory` for files that end with the suffix
 configured with `g:session_extension`, takes the base name of each file
 and decodes any URL encoded characters. Returns a list of strings.
 
+If the first argument is true (1) then the user defined function
+configured with `g:session_name_suggestion_function` is called to find
+suggested session names, which are prefixed to the list of available
+sessions, otherwise the argument should be false (0).
+
 #### The `xolox#session#complete_names()` function
 
 Completion function for user defined Vim commands. Used by commands like
-`:OpenSession` and `:DeleteSession` to support user friendly completion.
+`:OpenSession` and `:DeleteSession`  (but not `:SaveSession`) to support
+user friendly completion.
+
+#### The `xolox#session#complete_names_with_suggestions()` function
+
+Completion function for the Vim command `:SaveSession`.
 
 #### The `xolox#session#is_tab_scoped()` function
 
@@ -443,6 +470,16 @@ scoped session. Saves a copy of the original value to be restored later.
 
 Restore the original value of Vim's [sessionoptions] [] option.
 
+### Example function for session name suggestions
+
+#### The `xolox#session#suggestions#vcs_feature_branch()` function
+
+This function implements an example of a function that can be used with
+the `g:session_name_suggestion_function` option. It finds the name of the
+current git or Mercurial feature branch (if any) and suggests this name as
+the name for the session that is being saved with :SaveSession. Returns a
+list with one string on success and an empty list on failure.
+
 <!-- End of generated documentation -->
 
 ## Contact
@@ -452,7 +489,9 @@ If you have questions, bug reports, suggestions, etc. the author can be contacte
 ## License
 
 This software is licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License).  
-© 2013 Peter Odding &lt;<peter@peterodding.com>&gt;.
+© 2014 Peter Odding &lt;<peter@peterodding.com>&gt; and Ingo Karkat.
+
+Thanks go out to everyone who has helped to improve the vim-session plug-in (whether through pull requests, bug reports or personal e-mails).
 
 ## Sample session script
 
@@ -461,7 +500,7 @@ Here's an example session script generated by the vim-session plug-in while I wa
     " ~/.vim/sessions/example.vim: Vim session script.
     " Created by session.vim on 30 August 2010 at 05:26:28.
     " Open this file in Vim and run :source % to restore your session.
-    
+
     set guioptions=aegit
     set guifont=Monaco\ 13
     if exists('g:syntax_on') != 1 | syntax on | endif
@@ -552,6 +591,7 @@ Here's an example session script generated by the vim-session plug-in while I wa
     unlet SessionLoad
 
 
+[bg]: http://vimdoc.sourceforge.net/htmldoc/options.html#'background'
 [delcommand]: http://vimdoc.sourceforge.net/htmldoc/map.html#:delcommand
 [download-misc]: http://peterodding.com/code/vim/downloads/misc.zip
 [download-session]: http://peterodding.com/code/vim/downloads/session.zip
