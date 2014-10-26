@@ -213,8 +213,8 @@ endif
 "   call filter(g:pathogen_disabled, 'v:val != "pluginname"')
 let g:pathogen_disabled = []
 
-" Disable experimental "signature" plugin for users in general.
-call add(g:pathogen_disabled, "signature")
+" Disable an experimental plugin for users in general.
+" call add(g:pathogen_disabled, "plugin_name")
 
 " Activate pathogen in case a user would need to activate a bundle in
 " |VIMRC_VARS| as part of setting up some variable.
