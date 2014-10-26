@@ -7,6 +7,31 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-10-26
+==========
+
+- Add signature plugin to display Vim :marks.  Now, after setting a mark (such
+  as with ``ma``), a Vim "sign" will be shown in the gutter to show the mark's
+  location.
+
+- Enable the use of the "colorcolumn" feature.  When 'textwidth' is non-zero,
+  a vertical colored line will be displayed one column beyond 'textwidth' to
+  help visually track the margin.
+
+- Set szakdark's ColorColumn color to be a muted dark gray.
+
+2014-10-25
+==========
+
+- Update bufexplorer plugin to 7.4.5 (the nnoremap patch has been merged).
+
+2014-10-23
+==========
+
+- Adjust :L, :L2, etc., to use 82-column window widths by default, to
+  accommodate the use of Vim's :signs (which take two extra columns).
+  See :help notes for details on configuring the window width.
+
 2014-10-15
 ==========
 

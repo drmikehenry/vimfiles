@@ -3155,6 +3155,16 @@ set of highlight items.  For this reason, it's not recommended to have
 ":Highlight no*" in your configuration.
 
 ------------------------------------------------------------------------------
+colorcolumn (highlighting first column in right margin)
+
+Where supported, Vim's 'colorcolumn' feature will be enabled and set to create
+an indicator of the right margin.  A vertical line indicates the first column
+outside 'textwidth' (when 'textwidth' is non-zero).  To disable this feature,
+place the following in |VIMRC_AFTER|: >
+
+  :set colorcolumn=
+
+------------------------------------------------------------------------------
 Help-related mappings
 
 The following normal-mode mappings toggle the help window on and off:
