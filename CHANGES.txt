@@ -75,7 +75,7 @@ require adjustment of per-user settings.
 ==========
 
 - Provide support for extremely early per-user configuration of variables via
-  the new |VIMRC_VARS| script file.  Most users won't need this; it comes in
+  the new ``VIMRC_VARS`` script file.  Most users won't need this; it comes in
   handy for disabling bundles before the main vimrc activates them all.
 
 - BREAKING CHANGE: To better support the use of bundles in vimrc-before.vim
@@ -430,10 +430,10 @@ require adjustment of per-user settings.
 - Convert from Blacklisting of font families that don't support Unicode Symbols
   properly to having a whitelist of known-good font families, since Powerline
   looks very bad when using Powerlines_symbols == "unicode" with a font family
-  that doesn't support the symbols.
-  The variable g:GoodUnicodeSymbolFontFamilyPatterns may now be set from a
-  |VIMRC_BEFORE| script to extend the list of font families that have
-  known-good support for Unicode Powerline symbols.  See vimrc for more details.
+  that doesn't support the symbols.  The variable
+  g:GoodUnicodeSymbolFontFamilyPatterns may now be set from a ``VIMRC_BEFORE``
+  script to extend the list of font families that have known-good support for
+  Unicode Powerline symbols.  See vimrc for more details.
 
 - Add a way to detect changes in Powerline settings and automatically delete
   stale cached ``Powerline*.cache`` files as Vim starts.
@@ -445,13 +445,13 @@ require adjustment of per-user settings.
 
     find ~/.vim -name 'Powerline*.cache' -delete
 
-  In addition, if you make adjustments to Powerline settings in your
-  per-user |VIMRC_BEFORE|, set ``g:PowerlineRequiredCacheTag`` to a
-  unique value every time you make a change to the format.  For example::
+  In addition, if you make adjustments to Powerline settings in your per-user
+  ``VIMRC_BEFORE``, set ``g:PowerlineRequiredCacheTag`` to a unique value every
+  time you make a change to the format.  For example::
 
     let g:PowerlineRequiredCacheTag = "2013-11-11"
 
-- Cleaned up references to |VIMRC_BEFORE| and |VIMRC_AFTER|.
+- Cleaned up references to ``VIMRC_BEFORE`` and ``VIMRC_AFTER``.
 
 - Add Powerline segment to detect trailing whitespace.
 
@@ -468,10 +468,10 @@ require adjustment of per-user settings.
 - Blacklist Consolas from using g:Powerline_symbols == "unicode", as that font
   doesn't properly support the needed Unicode symbols.
 
-- Enable fontdetect and colorsamplerpack bundles early for use in |VIMRC_BEFORE|
-  scripts.
+- Enable fontdetect and colorsamplerpack bundles early for use in
+  ``VIMRC_BEFORE`` scripts.
 
-- Allow g:DefaultFontFamilies to be set from |VIMRC_BEFORE| scripts.
+- Allow g:DefaultFontFamilies to be set from ``VIMRC_BEFORE`` scripts.
 
 - Update swapit plugin to version 0.3.2.
 
