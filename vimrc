@@ -339,6 +339,11 @@ if !exists("g:Powerline_colorscheme")
     endif
 endif
 
+" Highlight the column just after &textwidth (unless &textwidth is zero).
+if exists('+colorcolumn')
+    set colorcolumn=+1
+endif
+
 " =============================================================
 " GUI Setup
 " =============================================================
