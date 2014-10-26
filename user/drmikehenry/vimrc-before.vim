@@ -1,9 +1,5 @@
 let did_install_default_menus = 1
 
-if exists('+colorcolumn')
-    set colorcolumn=+1
-endif
-
 function! Drmikehenry_adjustSzakDark()
 "    if exists('+colorcolumn')
 "        if &t_Co > 255 || has("gui_running")
