@@ -92,7 +92,7 @@ function configure()
 {
     echo "Configuring in $VIMDIR..."
     (
-        cd $VIMDIR; 
+        cd $VIMDIR;
         ./configure \
             --quiet \
             --with-features=huge    \
@@ -107,7 +107,7 @@ function configure()
 
 function patchlevel()
 {
-    grep -A 3 '^static int included_patches' src/version.c | 
+    grep -A 3 '^static int included_patches' src/version.c |
         tail -n 1 | perl -pe 's/^\s*(\d+).*/$1/'
 }
 

@@ -85,7 +85,7 @@ function update()
 
 function patchlevel()
 {
-    grep -A 3 '^static int included_patches' "$VIMDIR"/src/version.c | 
+    grep -A 3 '^static int included_patches' "$VIMDIR"/src/version.c |
         tail -n 1 | perl -pe 's/^\s*(\d+).*/$1/'
 }
 
@@ -147,7 +147,7 @@ function configure()
 {
     echo "Configuring in $VIMDIR..."
     (
-        cd $VIMDIR; 
+        cd $VIMDIR;
         ./configure \
             --quiet \
             --with-features=huge    \
@@ -185,7 +185,7 @@ function build()
 }
 
 # Trap any exiting, setup to exit on any failures.
-trap "trap - EXIT; echo Aborting" EXIT 
+trap "trap - EXIT; echo Aborting" EXIT
 set -e
 
 setup "$1"
