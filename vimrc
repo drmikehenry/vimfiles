@@ -2899,6 +2899,14 @@ augroup local_session
 augroup END
 
 " -------------------------------------------------------------
+" Signature
+" -------------------------------------------------------------
+
+" Disable toggling of marks and markers.
+let g:SignatureForceMarkPlacement = 1
+let g:SignatureForceMarkerPlacement = 1
+
+" -------------------------------------------------------------
 " Startify
 " -------------------------------------------------------------
 if v:version < 703 || (v:version == 703 && !has("patch633"))

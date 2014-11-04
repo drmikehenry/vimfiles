@@ -3,6 +3,8 @@
 'g:SignatureDeleteConfirmation'	signature.txt	/*'g:SignatureDeleteConfirmation'*
 'g:SignatureEnabledAtStartup'	signature.txt	/*'g:SignatureEnabledAtStartup'*
 'g:SignatureErrorIfNoAvailableMarks'	signature.txt	/*'g:SignatureErrorIfNoAvailableMarks'*
+'g:SignatureForceMarkPlacement'	signature.txt	/*'g:SignatureForceMarkPlacement'*
+'g:SignatureForceMarkerPlacement'	signature.txt	/*'g:SignatureForceMarkerPlacement'*
 'g:SignatureForceRemoveGlobal'	signature.txt	/*'g:SignatureForceRemoveGlobal'*
 'g:SignatureIncludeMarkers'	signature.txt	/*'g:SignatureIncludeMarkers'*
 'g:SignatureIncludeMarks'	signature.txt	/*'g:SignatureIncludeMarks'*

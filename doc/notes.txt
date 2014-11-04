@@ -1872,7 +1872,7 @@ Apart from the above, you can also:
 - Display multiple marks (up to 2, limited by the signs feature)
 - Placing custom signs !@#$%^&*() as visual markers
 
-Version 2014-09-24 (3bc19dca) from git://github.com/kshenoy/vim-signature.git
+Version 2014-11-03 (29fc0955) from git://github.com/kshenoy/vim-signature.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
