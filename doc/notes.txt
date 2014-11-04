@@ -3060,37 +3060,42 @@ Usage:
 :L4         Layout windows in a four-column format.
 :L5         Layout windows in a five-column format.
 
-The desired window width is controlled by the sum of two variables:
-- g:WindowWidth (defaults to 80)
-- g:ExtraWindowWidth (allows extra room for :sign columns; defaults to 2)
+The bare :L command will not change the overall number of columns; the rest will
+set the overall number of columns to the value needed to provide <n> vertically
+split windows side-by-side, as determined by the function GetWindowWidth() (see
+the definition in the vimrc file).
 
-Performs the following:
-- Sets number of character columns for the requested number of window
-  columns.  E.g., for 82 characters per window:
-  - :L1  ==> 82 characters
-  - :L2  ==> 165 characters (2 * 82 + 1)
-  - :L3  ==> 248 characters (3 * 82 + 2)
-  - :L4  ==> 331 characters (4 * 82 + 3)
-  - :L5  ==> 414 characters (5 * 82 + 4)
-  - :L n ==> n * 80 + (n - 1)
-
-  This leaves room for n windows with (n - 1) dividing lines between them.
-
-- Moves current window to the top (L1 only).
-- Moves quickfix window to the bottom and set to standard size (if already open).
-- Makes all windows equally sized (via Ctrl-w_=).
+Within the overall number of columns, :L and friends adjust the windows as
+follows:
+- Move current window to the top (L1 only).
+- Move quickfix window to the bottom and set to standard size (if already open).
+- Make all windows equally sized (via Ctrl-w_=).
 
 *NOTE* If your Gvim window isn't positioned to span the edges of your monitor,
 the number of character columns may be truncated to keep Gvim on a single
 monitor.  To work around this, move Gvim to straddle the boundary between
 monitors before executing the above commands.
 
-<C-q><C-l>  Toggle the Location window on or off
-<C-q><C-q>  Toggle the QuickFix window on or off
+With w = GetWindowWidth(), the overall number of columns is calculated as:
+- :L1  ==> w
+- :L2  ==> (2 * w + 1)
+- :L3  ==> (3 * w + 2)
+- :L4  ==> (4 * w + 3)
+- :L5  ==> (5 * w + 4)
+- :L n ==> (n * w + (n - 1))
 
-NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
+This leaves room for n windows with (n - 1) dividing lines between them.
 
-The default heights of Location Windows and the QuickFix Window may be
+GetWindowWidth() calculates the desired window width as follows:
+- Start with a based value of g:WindowWidth (defaults to 80);
+- Unconditionally add in g:ExtraWindowWidth (allows extra room for :sign
+  columns; defaults to 2);
+- If any window is in diff mode, add two more columns for the diff indicators;
+- If any window has line numbering turned on (via 'number' or 'relativenumber'),
+  add enough space for the largest value across all windows, but no smaller
+  than 'numberwidth'.
+
+The standard heights of Location Windows and the QuickFix Window may be
 controlled by the following global variables: >
 
   " Desired height of a Location List window.
@@ -3098,6 +3103,14 @@ controlled by the following global variables: >
 
   " Desired height of QuickFix window.
   let g:QuickFixWinHeight = 10
+
+------------------------------------------------------------------------------
+QuickFix and Location Window
+
+<C-q><C-l>  Toggle the Location window on or off
+<C-q><C-q>  Toggle the QuickFix window on or off
+
+NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
 
 ------------------------------------------------------------------------------
 Alternatives to :bufdo, :windo, :tabdo

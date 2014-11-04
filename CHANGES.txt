@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-11-04
+==========
+
+- Make :L, :L2, etc., account for the presence of extra columns in the gutter
+  (for line numbers and for diff-mode indicators).
+
 2014-10-26
 ==========
 

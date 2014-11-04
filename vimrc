@@ -1878,13 +1878,82 @@ let g:WindowWidth = 80
 " Extra columns per window (e.g., to allow room for the two :sign columns).
 let g:ExtraWindowWidth = 2
 
+" Return number of windows that have 'relativenumber' or 'number' (or both) set.
+function NumWindowsWithLineNumbers()
+    " Note that a local variable won't work with the :Windo command.
+    let s:numWindows = 0
+    if exists("+number")
+        Windo let s:numWindows += &number
+    endif
+    if exists("+relativenumber")
+        Windo let s:numWindows += &relativenumber
+    endif
+    return s:numWindows
+endfunction
+
+" Return number of windows using 'diff' mode.
+function NumWindowsWithDiffMode()
+    " Note that a local variable won't work with the :Windo command.
+    let s:numWindows = 0
+    if exists("+diff")
+        Windo let s:numWindows += &diff
+    endif
+    return s:numWindows
+endfunction
+
+" Return minimum required value of 'numberwidth' to support all windows.
+function MinNumberWidth()
+    " Note that a local variable won't work with the :Windo command.
+    let s:minNumberWidth = 0
+
+    " For 'number', the minimum width is based on biggest line number;
+    " for 'relativenumber', it's based on window height.
+    " With relativeNumber,
+    Windo let s:minNumberWidth = max([
+                \ s:minNumberWidth,
+                \ max([
+                \     (exists("+relativenumber") && &relativenumber) *
+                \       strlen(string(winheight(0))),
+                \     (exists("+number") && &number) * strlen(string(line("$")))
+                \     ])
+                \ ])
+
+    if s:minNumberWidth > 0
+        " Account for the blank column separating the number from the buffer.
+        let s:minNumberWidth += 1
+
+        " Don't drop below 'numberwidth' (or a default if it doesn't exist).
+        if exists("+numberwidth")
+            let s:minNumberWidth = max([s:minNumberWidth, &numberwidth])
+        else
+            " Vim's default number width is 4.
+            let s:minNumberWidth = max([s:minNumberWidth, 4])
+        endif
+    endif
+    return s:minNumberWidth
+endfunction
+
+" Return desired width of a single standard window.
+" May be redefined in vimrc-after.vim to customize the logic.
+function! GetWindowWidth()
+    let width = g:WindowWidth + g:ExtraWindowWidth
+    if NumWindowsWithLineNumbers() > 0
+        let width += MinNumberWidth()
+    endif
+    if NumWindowsWithDiffMode() > 0
+        let width += 2
+    endif
+    return width
+endfunction
+
 " Re-layout windows in standard fashion.
 " If zero arguments are passed, leaves number of columns unchanged.
 " If one argument is passed, it's considered the number of window columns.
 " Passing two or more arguments is illegal.
-function! s:L(...)
+" May be redefined in vimrc-after.vim to customize the logic.
+function! LayoutWindows(...)
     if a:0 > 1
-        echoerr "Invalid number of columns in s:L"
+        echoerr "Invalid number of columns in LayoutWindows"
         return
     elseif a:0 > 0
         let winColumns = a:1
@@ -1892,7 +1961,7 @@ function! s:L(...)
         let winColumns = 0
     endif
     if winColumns > 0
-        let winWidth = g:WindowWidth + g:ExtraWindowWidth
+        let winWidth = GetWindowWidth()
         let scrColumns = (winWidth + 1) * winColumns - 1
         let &columns = scrColumns
         redraw
@@ -1926,22 +1995,22 @@ function! s:L(...)
     " Make other windows equally large.
     execute "normal \<C-w>="
 endfunction
-command! -nargs=? L call s:L(<f-args>)
+command! -nargs=? L call LayoutWindows(<f-args>)
 
 " Make 1-column-wide layout.
-command! -bar L1 call s:L(1)
+command! -bar L1 call LayoutWindows(1)
 
 " Make 2-column-wide layout.
-command! -bar L2 call s:L(2)
+command! -bar L2 call LayoutWindows(2)
 
 " Make 3-column-wide layout.
-command! -bar L3 call s:L(3)
+command! -bar L3 call LayoutWindows(3)
 
 " Make 4-column-wide layout.
-command! -bar L4 call s:L(4)
+command! -bar L4 call LayoutWindows(4)
 
 " Make 5-column-wide layout.
-command! -bar L5 call s:L(5)
+command! -bar L5 call LayoutWindows(5)
 
 " Toggle quickfix window.
 function! QuickFixWinToggle()
