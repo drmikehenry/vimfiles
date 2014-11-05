@@ -1874,6 +1874,12 @@ Apart from the above, you can also:
 
 Version 2014-11-03 (29fc0955) from git://github.com/kshenoy/vim-signature.git
 
+Local Customizations:
+- Mark placement is "forced", which means the toggling feature is disabled.
+  To remove mark "x", use: >
+
+    dmx
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 

@@ -10,6 +10,19 @@ require adjustment of per-user settings.
 2014-11-04
 ==========
 
+- Update signature plugin to 2014-11-03.  This makes marks work like they are
+  supposed to work in Vim, which is that setting a mark on a line via ``mx``
+  does not toggle the mark.  To delete mark ``x``, use ``dmx``.  This is
+  controlled via these two variables in vimrc (they may be overridden in your
+  vimrc-after if you'd like signature's toggling-mark behavior back)::
+
+    " Disable toggling of marks and markers.
+    let g:SignatureForceMarkPlacement = 1
+    let g:SignatureForceMarkerPlacement = 1
+
+2014-11-04
+==========
+
 - Make :L, :L2, etc., account for the presence of extra columns in the gutter
   (for line numbers and for diff-mode indicators).
 
