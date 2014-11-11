@@ -14,19 +14,30 @@ put(r"""
 priority -5
 """)
 
-wsnip("call", "$(call )","""
-$(call $0)
-""", aliases=["c"])
+wsnip("c", "$(call ","""
+$(call $0
+""", aliases=["call"])
 
-wsnip("v", "$()","""
-$($0)
+wsnip("s", "$(call S.","""
+$(call S.$0
 """, aliases=[])
 
-bsnip("def", "define funcName...endef $(call S.def,funcName)","""
-define $1
-  $0
+wsnip("v", "$(","""
+$($0
+""", aliases=[])
+
+wsnip("fi", "$(filter ","""
+$(filter $0
+""", aliases=[])
+
+wsnip("fo", "$(filter-out ","""
+$(filter-out $0
+""", aliases=[])
+
+
+bsnip("def", "define ...endef","""
+define $0
 endef
-$(call S.def,$1)
 """, aliases=[])
 
 put(r"""
@@ -51,31 +62,67 @@ endef
 $(call S.endFunc)
 """, aliases=[])
 
-wsnip("if", "$(if $1,$0)","""
-$(if $1,$0)
+wsnip("if", "$(if ","""
+$(if $0
 """, aliases=[])
 
-bsnip("ife", "ifeq '$1' $'2' ... endif","""
+wsnip("ie", "ifeq '$1' $'2' ... endif","""
 ifeq '$1' '$2'
   $0
 endif
 """, aliases=["ifeq"])
 
-bsnip("ifn", "ifneq '$1' $'2' ... endif","""
+wsnip("eie", "else ifeq '$1' $'2'","""
+else ifeq '$1' '$2'
+  $0
+""", aliases=[])
+
+wsnip("ine", "ifneq '$1' $'2' ... endif","""
 ifneq '$1' '$2'
   $0
 endif
-""", aliases=["ifne", "ifneq"])
+""", aliases=["ifneq"])
 
-bsnip("ei", "else ifeq '$1' $'2' ... endif","""
-else ifeq '$1' '$2'
-  $0
-""", aliases=["eie", "eieq"])
-
-bsnip("ein", "else ifenq '$1' $'2' ... endif","""
+wsnip("eine", "else ifenq '$1' $'2'","""
 else ifneq '$1' '$2'
   $0
-""", aliases=["eine", "eineq"])
+""", aliases=[])
+
+wsnip("i", "_if ... endif","""
+_if $0
+endif
+""", aliases=[])
+
+wsnip("ei", "else _if","""
+else _if $0
+""", aliases=[])
+
+wsnip("in", "_ifNot ... endif","""
+_ifNot $0
+endif
+""", aliases=[])
+
+wsnip("ein", "else _ifNot","""
+else _ifNot $0
+""", aliases=[])
+
+wsnip("ib", "_ifBool ... endif","""
+_ifBool $0
+endif
+""", aliases=[])
+
+wsnip("eib", "else _ifBool","""
+else _ifBool $0
+""", aliases=[])
+
+wsnip("inb", "_ifNotBool ... endif","""
+_ifNotBool $0
+endif
+""", aliases=[])
+
+wsnip("einb", "else _ifNotBool","""
+else _ifNotBool $0
+""", aliases=[])
 
 wabbr("t","$(true)")
 wabbr("f","$(false)")

@@ -17,6 +17,8 @@ require adjustment of per-user settings.
   windows.  Now selected buffers will open in the current window, even if the
   buffer is already open in another window.
 
+- Adjust snippets for Makefiles.
+
 2014-11-04
 ==========
 
