@@ -19,6 +19,8 @@ require adjustment of per-user settings.
 
 - Adjust snippets for Makefiles.
 
+- Update endwise plugin to version 2014-10-01.
+
 2014-11-04
 ==========
 

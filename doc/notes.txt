@@ -716,7 +716,7 @@ This plugin does remap <CR> in insert mode.  It also adds a <C-x><CR> mapping
 to force inserting an end.  However, it the forced version isn't always
 correct.
 
-Version 2013-01-01 (fd869a75) from https://github.com/tpope/vim-endwise
+Version 2014-10-01 (96eb117) from https://github.com/tpope/vim-endwise
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
