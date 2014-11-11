@@ -1879,7 +1879,7 @@ let g:WindowWidth = 80
 let g:ExtraWindowWidth = 2
 
 " Return number of windows that have 'relativenumber' or 'number' (or both) set.
-function NumWindowsWithLineNumbers()
+function! NumWindowsWithLineNumbers()
     " Note that a local variable won't work with the :Windo command.
     let s:numWindows = 0
     if exists("+number")
@@ -1892,7 +1892,7 @@ function NumWindowsWithLineNumbers()
 endfunction
 
 " Return number of windows using 'diff' mode.
-function NumWindowsWithDiffMode()
+function! NumWindowsWithDiffMode()
     " Note that a local variable won't work with the :Windo command.
     let s:numWindows = 0
     if exists("+diff")
@@ -1902,7 +1902,7 @@ function NumWindowsWithDiffMode()
 endfunction
 
 " Return minimum required value of 'numberwidth' to support all windows.
-function MinNumberWidth()
+function! MinNumberWidth()
     " Note that a local variable won't work with the :Windo command.
     let s:minNumberWidth = 0
 
