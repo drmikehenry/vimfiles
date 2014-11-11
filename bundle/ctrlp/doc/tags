@@ -45,7 +45,6 @@
 'g:ctrlp_switch_buffer'	ctrlp.txt	/*'g:ctrlp_switch_buffer'*
 'g:ctrlp_tabpage_position'	ctrlp.txt	/*'g:ctrlp_tabpage_position'*
 'g:ctrlp_use_caching'	ctrlp.txt	/*'g:ctrlp_use_caching'*
-'g:ctrlp_use_migemo'	ctrlp.txt	/*'g:ctrlp_use_migemo'*
 'g:ctrlp_user_command'	ctrlp.txt	/*'g:ctrlp_user_command'*
 'g:ctrlp_working_path_mode'	ctrlp.txt	/*'g:ctrlp_working_path_mode'*
 'g:loaded_ctrlp'	ctrlp.txt	/*'g:loaded_ctrlp'*
@@ -79,6 +78,7 @@ ctrlp-commands	ctrlp.txt	/*ctrlp-commands*
 ctrlp-contents	ctrlp.txt	/*ctrlp-contents*
 ctrlp-credits	ctrlp.txt	/*ctrlp-credits*
 ctrlp-customization	ctrlp.txt	/*ctrlp-customization*
+ctrlp-default-value	ctrlp.txt	/*ctrlp-default-value*
 ctrlp-extensions	ctrlp.txt	/*ctrlp-extensions*
 ctrlp-input-formats	ctrlp.txt	/*ctrlp-input-formats*
 ctrlp-intro	ctrlp.txt	/*ctrlp-intro*

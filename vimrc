@@ -2239,6 +2239,13 @@ let g:ctrlp_root_markers = []
 " buffer already at the front.
 let g:ctrlp_open_multiple_files = '1vr'
 
+" Don't try to jump to another window or tab; instead, open the desired
+" buffer in the current window.  By default, this variable is undefined, which
+" is equivalent to a value of "Et":
+" "E" - On <CR>, jump to open window on any tab.
+" "t" - On <C-t>, jump to open window on current tab.
+let g:ctrlp_switch_buffer=""
+
 " :C [path]  ==> :CtrlP [path]
 command! -n=? -com=dir C CtrlP <args>
 
