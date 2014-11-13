@@ -29,7 +29,7 @@ function! SyntaxCheckers_rst_rstsphinx_GetLocList() dict
         let output_path =
                     \ s:temp_dir . '/vim-rstsphinx-' . s:compute_hash(conf_py)
         let makeprg = self.makeprgBuild({
-            \ 'args': '-b text -N -q',
+            \ 'args': '-b html -N -q',
             \ 'fname': syntastic#util#shescape(fnamemodify(conf_py, ":h")),
             \ 'tail': syntastic#util#shescape(output_path) })
 
