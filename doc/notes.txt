@@ -2267,10 +2267,26 @@ To disable UltiSnips entirely, set the below variable before vimrc runs: >
 This is useful for forks of Vim that don't support Python bindings (e.g.,
 NeoVim).
 
-Version 2014-09-13 (8e57a659) from git://github.com/SirVer/ultisnips.git
+Version 2014-11-03 (cb8536d7) from git://github.com/SirVer/ultisnips.git
 
 Installation:
-- Follow bundle installation instructions (|bundle_installation|).
+- Follow bundle installation instructions (|bundle_installation|).  After
+  installation, apply the following patch to fix an issue with expanding
+  snippets when the clipboard cannot be converted to a Unicode string: >
+
+  diff --git a/bundle/ultisnips/pythonx/UltiSnips/compatibility.py b/bundle/ultisnips/pythonx/UltiSnips/compatibility.py
+  index c8c975e..b34a94d 100644
+  --- a/bundle/ultisnips/pythonx/UltiSnips/compatibility.py
+  +++ b/bundle/ultisnips/pythonx/UltiSnips/compatibility.py
+  @@ -72,6 +72,8 @@ else:
+          """Encode 'string' using &encoding."""
+          try:
+              return string.encode(vim.eval("&encoding"))
+  +        except UnicodeDecodeError:
+  +            return string
+          except UnicodeEncodeError:
+              return string
+<
 - See ~/.vim/vimrc for detailed configuration steps
 
 ------------------------------------------------------------------------------
