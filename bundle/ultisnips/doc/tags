@@ -45,6 +45,10 @@ UltiSnips-visual-placeholder	UltiSnips.txt	/*UltiSnips-visual-placeholder*
 UltiSnips-warning-smappings	UltiSnips.txt	/*UltiSnips-warning-smappings*
 UltiSnips.txt	UltiSnips.txt	/*UltiSnips.txt*
 g:UltiSnipsEditSplit	UltiSnips.txt	/*g:UltiSnipsEditSplit*
+g:UltiSnipsExpandTrigger	UltiSnips.txt	/*g:UltiSnipsExpandTrigger*
+g:UltiSnipsJumpBackwardTrigger	UltiSnips.txt	/*g:UltiSnipsJumpBackwardTrigger*
+g:UltiSnipsJumpForwardTrigger	UltiSnips.txt	/*g:UltiSnipsJumpForwardTrigger*
+g:UltiSnipsListSnippets	UltiSnips.txt	/*g:UltiSnipsListSnippets*
 g:UltiSnipsSnippetsDir	UltiSnips.txt	/*g:UltiSnipsSnippetsDir*
 snippet	UltiSnips.txt	/*snippet*
 snippets	UltiSnips.txt	/*snippets*
