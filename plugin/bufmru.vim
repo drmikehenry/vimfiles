@@ -134,18 +134,18 @@ augroup bufmru
     au BufRead * let s:did_bufread = 1
 augroup End "}}}
 " Mappings: {{{1
-exec "nmap" g:bufmru_switchkey "<SID>idxz<SID>buf<SID>m_"
-nmap <SID>m_f	    <SID>next<SID>buf<SID>m_
-nmap <SID>m_b	    <SID>prev<SID>buf<SID>m_
-sil! unmap	    <SID>m_<Tab>
-sil! unmap	    <SID>m_<S-Tab>
-nmap <SID>m_!	    <SID>bang<SID>m_
-nmap <SID>m_<Enter> <SID>raccept
-nmap <SID>m_e	    <SID>raccept
-nmap <SID>m_<Esc>   <SID>reset
-nmap <SID>m_q	    <SID>reset
-nmap <SID>m_	    <SID>raccept
-nmap <SID>m_y	    <SID>yank<SID>m_
+exec "nmap" g:bufmru_switchkey "<SID>idxz<SID>buf<Plug>bufmru...."
+nmap <Plug>bufmru....f	    <SID>next<SID>buf<Plug>bufmru....
+nmap <Plug>bufmru....b	    <SID>prev<SID>buf<Plug>bufmru....
+sil! unmap	    <Plug>bufmru....<Tab>
+sil! unmap	    <Plug>bufmru....<S-Tab>
+nmap <Plug>bufmru....!	    <SID>bang<Plug>bufmru....
+nmap <Plug>bufmru....<Enter> <SID>raccept
+nmap <Plug>bufmru....e	    <SID>raccept
+nmap <Plug>bufmru....<Esc>   <SID>reset
+nmap <Plug>bufmru....q	    <SID>reset
+nmap <Plug>bufmru....	    <SID>raccept
+nmap <Plug>bufmru....y	    <SID>yank<Plug>bufmru....
 
 nnoremap <silent> <SID>idxz	:<C-U>call<sid>idxz()<cr>
 nnoremap <silent> <SID>next	:call<sid>next()<cr>
