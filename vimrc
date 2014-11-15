@@ -2461,7 +2461,14 @@ endif
 
 " Enable persistence of our decisions.
 set viminfo+=!
-let g:localvimrc_persistent = 2
+
+" 0 - Don't store and restore any decisions.
+" 1 - Store and restore decisions only for uppercase answers (Y/N/A).
+" 2 - Store and restore all decisions.
+let g:localvimrc_persistent = 1
+
+" Since localvimrc files require confirmation, don't require :sandbox.
+let g:localvimrc_sandbox = 0
 
 " -------------------------------------------------------------
 " lookupfile

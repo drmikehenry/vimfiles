@@ -14,6 +14,15 @@ require adjustment of per-user settings.
   previously saved position when the user scrolls the inactive window with the
   mouse wheel and then clicks in the window.
 
+- Make localvimrc decisions persistent only for uppercase answers (Y/N/A).  This
+  way, you can provide a one-time approval for the given .lvimrc.
+
+- Don't run .lvimrc files in a sandbox.  The user must approve the use of any
+  given .lvimrc file, and he must re-approve it whenever the contents of the
+  .lvimrc file changes; therefore, it's safe to run them outside of the :sandbox
+  command.  In particular, this permits using things like :HighlightOff inside a
+  .lvimrc.
+
 2014-11-13
 ==========
 
