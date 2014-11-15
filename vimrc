@@ -4546,18 +4546,24 @@ function! AutoCloseGitDiff()
     endif
 endfunction
 
-" Save current view settings.
+" Save current view settings on a per-window, per-buffer basis.
 function! AutoSaveWinView()
-    let b:winview = winsaveview()
+    if !exists("w:SavedBufView")
+        let w:SavedBufView = {}
+    endif
+    let w:SavedBufView[bufnr("%")] = winsaveview()
 endfunction
 
 " Restore current view settings.
 function! AutoRestoreWinView()
-    if exists('b:winview')
-        if (!&diff)
-            call winrestview(b:winview)
+    let buf = bufnr("%")
+    if exists("w:SavedBufView") && has_key(w:SavedBufView, buf)
+        let v = winsaveview()
+        let atStartOfFile = v.lnum == 1 && v.col == 0
+        if atStartOfFile && !&diff
+            call winrestview(w:SavedBufView[buf])
         endif
-        unlet b:winview
+        unlet w:SavedBufView[buf]
     endif
 endfunction
 

@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-11-15
+==========
+
+- Prevent the highly irritating problem wherein the cursor jumps back to the
+  previously saved position when the user scrolls the inactive window with the
+  mouse wheel and then clicks in the window.
+
 2014-11-13
 ==========
 
