@@ -1457,6 +1457,7 @@ Installation:
                silent  = VIM::evaluate_bool("s:maparg_dict_holder['silent']")  ? ' <silent>' : ''
                expr    = VIM::evaluate_bool("s:maparg_dict_holder['expr']")    ? ' <expr>'   : ''
                buffer  = VIM::evaluate_bool("s:maparg_dict_holder['buffer']")  ? ' <buffer>' : ''
+  +            script  = needs_script?(mode, key) ? ' <script>' : ''
   -            restore_cmd = "#{mode}#{nore}map#{silent}#{expr}#{buffer} #{key} #{orig_rhs}"
   +            restore_cmd = "#{mode}#{nore}map#{silent}#{expr}#{buffer}#{script} #{key} #{orig_rhs}"
              else
