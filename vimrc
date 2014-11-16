@@ -2407,6 +2407,14 @@ let g:gundo_close_on_revert = 1
 nmap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
 
 " -------------------------------------------------------------
+" incsearch
+" -------------------------------------------------------------
+
+nmap /      <Plug>(incsearch-forward)
+nmap ?      <Plug>(incsearch-backward)
+nmap g/     <Plug>(incsearch-stay)
+
+" -------------------------------------------------------------
 " indent-guides
 " -------------------------------------------------------------
 

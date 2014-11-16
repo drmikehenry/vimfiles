@@ -1070,6 +1070,19 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
+INCSEARCH                                                *notes_incsearch*
+  Incrementally highlight all pattern matches            |incsearch.txt|
+
+Version 2014-11-13 (293c810) from git://github.com/haya14busa/incsearch.vim.git
+
+Local Customizations:
+- The recommended mappings for "/", "?", and "g/" were made; see
+  |incsearch| for more details.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 INDENT-GUIDES                                            *notes_indent-guides*
   Adds indent guides.                                    |indent-guides|
 

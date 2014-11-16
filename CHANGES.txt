@@ -14,6 +14,9 @@ require adjustment of per-user settings.
   operator.  Pressing "s" followed by two consecutive characters in your file to
   move to that location.  See ``:help notes_sneak`` for more details.
 
+- Add "incsearch" plugin.  Now "/" and "?" highlight all matches incrementally
+  while typing.  See ``:help notes_incsearch`` for more details.
+
 - Update "surround" plugin to version 2014-07-26.
 
 2014-11-15
