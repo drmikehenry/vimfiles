@@ -586,6 +586,10 @@ set winaltkeys=no
 " Key settings
 " -------------------------------------------------------------
 
+" Define some convenient mapping commands.
+command! -nargs=* -bar Noxmap  nmap <args>|omap <args>|xmap <args>
+command! -nargs=* -bar Nxmap  nmap <args>|xmap <args>
+
 " Avoid the following key settings for maximum portability across terminal
 " types.  "No codes" means the terminal generates nothing for the given keys.
 " "Aliased code" means the key generates the same code as another key, making
