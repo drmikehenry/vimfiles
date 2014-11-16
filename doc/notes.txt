@@ -1443,7 +1443,7 @@ Installation:
   @@ -724,6 +724,12 @@ class LustyJuggler
          VIM::command "sb #{buf}"
        end
-   
+
   +    def needs_script?(mode, key)
   +        VIM::command "redir => s:needs_script | #{mode}map #{key} | redir END"
   +        mapping = VIM::evaluate("s:needs_script").split
