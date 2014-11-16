@@ -499,6 +499,9 @@ set ttimeout ttimeoutlen=5
 " Disallow octal numbers for increment/decrement (CTRL-a/CTRL-x).
 set nrformats-=octal
 
+" Perform vertically split diffs by default.
+set diffopt+=vertical
+
 " -------------------------------------------------------------
 " File settings
 " -------------------------------------------------------------
