@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-11-16
+==========
+
+- Add "sneak" plugin, bringing new "s{char}{char}" motion and "z{char}{char}"
+  operator.  Pressing "s" followed by two consecutive characters in your file to
+  move to that location.  See ``:help notes_sneak`` for more details.
+
 2014-11-15
 ==========
 

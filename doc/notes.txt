@@ -67,6 +67,7 @@
     Selfdot - Changes "." to "self." in Python          |notes_selfdot|
     Session - Provides better session management        |notes_session|
     Signature - Signs and helpers for bookmarks         |notes_signature|
+    Sneak - Motion based on two-character searching     |notes_sneak|
     Snippets - Default snippets for UltiSnips           |notes_snippets|
     Startify - Menu of recently used files at startup   |notes_startify|
     Surround - Manipulating "surroundings"              |notes_surround|
@@ -1952,6 +1953,34 @@ Local Customizations:
 
     dmx
 
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+SNEAK                                                    *notes_sneak*
+  Motion based on two-character searching                |sneak|
+
+Local Customizations:
+- The set of label characters has been reduced to make it less likely to
+  hit one using a subsequent Vim edit command.
+
+" Reduce label characters to set least likely to be pressed after landing
+" at desired location (see issue #88 above; suggested set with "g" removed).
+let g:sneak#target_labels = "sfjktunbqz/SFKGHLTUNBRMQZ?"
+
+" Enable "streak" mode.
+let g:sneak#streak = 1
+
+" 0 : Always case-sensitive.
+" 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
+let g:sneak#use_ic_scs = 1
+
+" Avoid default {operator}z mapping, and force streak-mode for operators.
+let g:sneak#textobject_z = 0
+omap z          <Plug>(SneakStreak)
+omap Z          <Plug>(SneakStreakBackward)
+
+Version 2014-10-28 (cd8cbb9) from git://github.com/justinmk/vim-sneak.git
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 

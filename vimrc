@@ -2924,6 +2924,29 @@ let g:SignatureForceMarkPlacement = 1
 let g:SignatureForceMarkerPlacement = 1
 
 " -------------------------------------------------------------
+" Sneak
+" -------------------------------------------------------------
+
+" Future ideas on sneak are found here:
+" https://github.com/justinmk/vim-sneak/issues/88
+
+" Reduce label characters to set least likely to be pressed after landing
+" at desired location (see issue #88 above; suggested set with "g" removed).
+let g:sneak#target_labels = "sfjktunbqz/SFKGHLTUNBRMQZ?"
+
+" Enable "streak" mode.
+let g:sneak#streak = 1
+
+" 0 : Always case-sensitive.
+" 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
+let g:sneak#use_ic_scs = 1
+
+" Avoid default {operator}z mapping, and force streak-mode for operators.
+let g:sneak#textobject_z = 0
+omap z          <Plug>(SneakStreak)
+omap Z          <Plug>(SneakStreakBackward)
+
+" -------------------------------------------------------------
 " Startify
 " -------------------------------------------------------------
 if v:version < 703 || (v:version == 703 && !has("patch633"))
