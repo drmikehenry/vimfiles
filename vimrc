@@ -2307,22 +2307,6 @@ let g:ctrlp_prompt_mappings = {
 let g:ctrlp_max_height = 50
 
 " -------------------------------------------------------------
-" tcomment
-" -------------------------------------------------------------
-
-" Don't comment blank lines.
-let g:tcommentBlankLines = 0
-
-" Turn off the <C-_> and <Leader>_ mappings.
-let g:tcommentMapLeader1 = ''
-let g:tcommentMapLeader2 = ''
-
-" Setup better linewise comments for Java.
-let g:tcomment_types = {
-            \ 'java': '// %s',
-            \ }
-
-" -------------------------------------------------------------
 " fswitch
 " -------------------------------------------------------------
 
@@ -3141,6 +3125,22 @@ let g:local_tagbar_type_markdown = {
 " your |VIMRC_AFTER| file via:
 "   unlet g:tagbar_type_markdown.
 let g:tagbar_type_markdown = g:local_tagbar_type_markdown
+
+" -------------------------------------------------------------
+" tcomment
+" -------------------------------------------------------------
+
+" Don't comment blank lines.
+let g:tcommentBlankLines = 0
+
+" Turn off the <C-_> and <Leader>_ mappings.
+let g:tcommentMapLeader1 = ''
+let g:tcommentMapLeader2 = ''
+
+" Setup better linewise comments for Java.
+let g:tcomment_types = {
+            \ 'java': '// %s',
+            \ }
 
 " -------------------------------------------------------------
 " textobj-diff
