@@ -10,6 +10,11 @@ require adjustment of per-user settings.
 2014-11-16
 ==========
 
+- Update "lusty-juggler" plugin to version 2014-11-15 (0e73d8d) which includes
+  John Szakmeister's fix.
+
+- Update "lusty-explorer" plugin to version 2014-11-15 (0e73d8d).
+
 - Add "sneak" plugin, bringing new "s{char}{char}" motion and "z{char}{char}"
   operator.  Pressing "s" followed by two consecutive characters in your file to
   move to that location.  See ``:help notes_sneak`` for more details.

@@ -1363,8 +1363,9 @@ Development versions found at: http://github.com/sjbach/lusty
 Released versions appear here:
 Version 4.3 from http://www.vim.org/scripts/script.php?script_id=1890
 
+Version 2014-11-15 (0e73d8d) from https://github.com/sjbach/lusty.git
 Installation:
-- Install in ~/.vim/plugin
+- Install in ~/.vim/plugin and ~/.vim/autoload
 
 ------------------------------------------------------------------------------
 LUSTYJUGGLER                                            *notes_lustyjuggler*
@@ -1446,38 +1447,10 @@ Development versions found at: http://github.com/sjbach/lusty
 Released versions appear here:
 Version 1.5.1 from http://www.vim.org/scripts/script.php?script_id=2050
 
+Version 2014-11-15 (0e73d8d) from https://github.com/sjbach/lusty.git
 Installation:
-- Install in ~/.vim/plugin
-- Apply the following patch to fix a bad interaction with vim-endwise: >
+- Install in ~/.vim/plugin and ~/.vim/autoload
 
-  diff --git a/plugin/lusty-juggler.vim b/plugin/lusty-juggler.vim
-  index c84a13f..d51d470 100644
-  --- a/plugin/lusty-juggler.vim
-  +++ b/plugin/lusty-juggler.vim
-  @@ -724,6 +724,12 @@ class LustyJuggler
-         VIM::command "sb #{buf}"
-       end
-
-  +    def needs_script?(mode, key)
-  +        VIM::command "redir => s:needs_script | #{mode}map #{key} | redir END"
-  +        mapping = VIM::evaluate("s:needs_script").split
-  +        return ((mapping.length > 2) and (mapping[2] == '&'))
-  +    end
-  +
-       def map_key(key, action)
-         ['n','s','x','o','i','c','l'].each do |mode|
-           VIM::command "let s:maparg_holder = maparg('#{key}', '#{mode}')"
-  @@ -735,7 +741,7 @@ class LustyJuggler
-               silent  = VIM::evaluate_bool("s:maparg_dict_holder['silent']")  ? ' <silent>' : ''
-               expr    = VIM::evaluate_bool("s:maparg_dict_holder['expr']")    ? ' <expr>'   : ''
-               buffer  = VIM::evaluate_bool("s:maparg_dict_holder['buffer']")  ? ' <buffer>' : ''
-  +            script  = needs_script?(mode, key) ? ' <script>' : ''
-  -            restore_cmd = "#{mode}#{nore}map#{silent}#{expr}#{buffer} #{key} #{orig_rhs}"
-  +            restore_cmd = "#{mode}#{nore}map#{silent}#{expr}#{buffer}#{script} #{key} #{orig_rhs}"
-             else
-               nore = LustyJ::starts_with?(orig_rhs, '<Plug>') ? '' : 'nore'
-               restore_cmd = "#{mode}#{nore}map <silent> #{key} #{orig_rhs}"
-<
 ------------------------------------------------------------------------------
 MANPAGEVIEW                                             *notes_manpageview*
   File reading and writing across networks              |manpageview|
