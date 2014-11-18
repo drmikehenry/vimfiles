@@ -14,16 +14,20 @@ put(r"""
 priority -5
 """)
 
-wsnip("c", "$(call ","""
+wsnip("ca", "$(call ","""
 $(call $0
 """, aliases=["call"])
 
-wsnip("s", "$(call S.","""
+wsnip("cs", "$(call S.","""
 $(call S.$0
 """, aliases=[])
 
 wsnip("v", "$(","""
 $($0
+""", aliases=[])
+
+wsnip("vs", "$(S.","""
+$(S.$0
 """, aliases=[])
 
 wsnip("fi", "$(filter ","""
