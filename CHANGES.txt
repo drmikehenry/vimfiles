@@ -24,6 +24,9 @@ require adjustment of per-user settings.
 - Setup 'shellpipe' to keep Vim from hiding failures (thanks to John
   Szakmeister).
 
+- Synchronize python syntax highlighting from start-of-file to avoid
+  highlighting errors (thanks to John Szakmeister).
+
 2014-11-16
 ==========
 
