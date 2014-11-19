@@ -2365,12 +2365,22 @@ let g:easy_align_delimiters = {
 " fswitch
 " -------------------------------------------------------------
 
-function! SetFswitchVars(dst, locs)
+function! SetFswitchVars(dst, locs, ...)
+    if a:0 == 1
+        let fnames = a:1
+    elseif a:0 > 1
+        echoerr "Invalid argument count"
+        return
+    endif
+
     if !exists("b:fswitchdst")
         let b:fswitchdst = a:dst
     endif
     if !exists("b:fswitchlocs")
         let b:fswitchlocs = a:locs
+    endif
+    if exists("fnames") && !exists("b:fswitchfnames")
+        let b:fswitchfnames = fnames
     endif
 endfunction
 
@@ -2390,6 +2400,13 @@ augroup local_fswitch
             \.',reg:/src/include/'
             \.',reg:|src|include/**|'
             \.',ifrel:|/src/|../include|')
+    autocmd BufEnter *.snippets call SetFswitchVars(
+            \ 'snippets.py',
+            \ '.')
+    autocmd BufEnter *.snippets.py call SetFswitchVars(
+            \ 'snippets',
+            \ '.',
+            \ '/.snippets$//')
 augroup END
 
 " Switch to the file and load it into the current window.

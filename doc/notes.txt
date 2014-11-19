@@ -34,7 +34,7 @@
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
     Hemisu - A dark colorscheme                         |notes_hemisu|
-    HiLinkTrace - Display syntax hilighting stack       |notes_hilinktrace|
+    HiLinkTrace - Display syntax highlighting stack     |notes_hilinktrace|
     Hybrid - A dark colorscheme                         |notes_hybrid|
     Indent-guides - Adds indent guides                  |notes_indent-guides|
     JavaComplete - Java Omnicompletion                  |notes_javacomplete|
@@ -1029,9 +1029,9 @@ Installation:
 
 ------------------------------------------------------------------------------
 HILINKTRACE                                             *notes_hilinktrace*
-  Display syntax hilighting stack                       |hilinks|
+  Display syntax highlighting stack                     |hilinks|
 
-To toggle automatic display of syntax hilighting stack: >
+To toggle automatic display of syntax highlighting stack: >
 
     :HLT!
 
