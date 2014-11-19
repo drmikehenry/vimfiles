@@ -2306,6 +2306,9 @@ let g:ctrlp_prompt_mappings = {
 " Maximum height of filename window.
 let g:ctrlp_max_height = 50
 
+" Reuse the current window when opening new files.
+let g:ctrlp_open_new_file = 'r'
+
 " -------------------------------------------------------------
 " fswitch
 " -------------------------------------------------------------
