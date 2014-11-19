@@ -64,6 +64,18 @@ endfunction
 let g:Platform = DetectPlatform()
 let g:InVmware = DetectVmware(g:Platform)
 
+function! AdjustBaseFontSize(size)
+    if g:Platform != "darwin"
+        return a:size
+    endif
+
+    " Mac's idea of a point on screen is not the same as everyone else's.
+    " It appears that most operating systems either expect the screen to be 96
+    " DPI, or will query the monitor.  Mac, on the other hand, assumes that the
+    " monitor is 72 DPI.
+    return ((a:size * 96) + 35) / 72
+endfunction
+
 " -------------------------------------------------------------
 " List manipulation
 " -------------------------------------------------------------
@@ -430,7 +442,7 @@ function! SetFont()
         let g:FontFamily = fontdetect#firstFontFamily(g:DefaultFontFamilies)
     endif
     if !exists("g:FontSize")
-        let g:FontSize = 14
+        let g:FontSize = AdjustBaseFontSize(14)
     endif
     if g:FontFamily != "" && g:FontSize > 0
         if has("gui_gtk2")
