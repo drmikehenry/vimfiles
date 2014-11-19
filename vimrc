@@ -2167,6 +2167,11 @@ command! -bar -nargs=? Diff  call Diff(<q-args>)
 " For example, to disable the Powerline plugin, use the following:
 "   let g:EnablePowerline = 0
 
+" Don't use Powerline on 8-color terminals... it just doesn't look good.
+if !has("gui_running") && &t_Co == 8
+    let g:EnablePowerline = 0
+endif
+
 if !exists("g:EnablePowerline")
     let g:EnablePowerline = 1
 endif
