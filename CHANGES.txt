@@ -39,6 +39,9 @@ require adjustment of per-user settings.
 
 - Treat .syntastic_c_config files as vim files (thanks to John Szakmeister).
 
+- Add AddTags() function for use in ``.lvimrc`` files (thanks to John
+  Szakmeister).
+
 2014-11-16
 ==========
 
