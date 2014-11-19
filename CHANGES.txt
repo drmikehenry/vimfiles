@@ -37,6 +37,8 @@ require adjustment of per-user settings.
 - Disable Powerline support for terminals with eight or fewer colors (thanks to
   John Szakmeister).
 
+- Treat .syntastic_c_config files as vim files (thanks to John Szakmeister).
+
 2014-11-16
 ==========
 
