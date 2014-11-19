@@ -3334,6 +3334,82 @@ function! SetupUltiSnipsMapping()
     inoremap <silent> <M-u><M-l> <C-r>=UltiSnips#ListSnippets()<CR>
 endfunction
 
+if has("python")
+    function! EditSnippets()
+        if exists("b:UltiSnipsSnippetDirectories")
+            let l:snippetDirs = b:UltiSnipsSnippetDirectories
+        elseif exists("g:UltiSnipsSnippetDirectories")
+            let l:snippetDirs = g:UltiSnipsSnippetDirectories
+        else
+            let l:snippetDirs = ["UltiSnips"]
+        endif
+
+python << endpython
+import os.path
+
+primary_filetype = vim.eval("&ft")
+filename = primary_filetype + '.snippets'
+pyfilename = filename + '.py'
+
+rtp = [os.path.realpath(os.path.expanduser(p))
+        for p in vim.eval("&rtp").split(",")]
+
+# Process them in reverse, because the UltiSnips uses the last one first.
+snippetDirs = vim.eval("l:snippetDirs")
+
+def searchForFile(filename):
+    editPath = None
+    for snippetDir in snippetDirs:
+        if editPath is not None:
+            break
+
+        for p in rtp:
+            if '/bundle/' in p or '/pre-bundle/' in p:
+                continue
+
+            fullPath = os.path.join(p, snippetDir, filename)
+            if os.path.exists(fullPath):
+                editPath = fullPath
+                break
+    return editPath
+
+path = searchForFile(pyfilename)
+if path is None:
+    # Hunt down a good location to put the snippets file.
+    for p in rtp:
+        if path is not None:
+            break
+
+        if '/bundle/' in p or '/pre-bundle/' in p:
+            continue
+
+        for snippetDir in snippetDirs:
+            fullPath = os.path.join(p, snippetDir)
+            if os.path.exists(fullPath):
+                path = fullPath
+                break
+
+        if path:
+            path = os.path.join(path, pyfilename)
+
+if path is None:
+    # Something is very wrong here.  We should at least have an
+    # UltiSnips at the root of the VIMFILES area.
+    vim.command("let filename = ''")
+else:
+    vim.command("let filename = '%s'" % path.replace("'", "''"))
+endpython
+
+        if l:filename == ""
+            echoerr "Could not find a suitable location to "
+                        \ . "create snippets file."
+        else
+            exec 'e ' . l:filename
+        endif
+    endfunction
+    command! EditSnippets :call EditSnippets()
+endif
+
 if g:EnableUltiSnips
     augroup local_ultisnips
         autocmd!

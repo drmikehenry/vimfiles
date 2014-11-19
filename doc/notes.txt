@@ -2324,7 +2324,9 @@ To avoid rampant duplication when defining snippets, a custom set of Python
 scripts is used to define snippets.  For example, the file
 ~/.vim/UltiSnips/c.snippets.py generates the snippets found in
 ~/.vim/UltiSnips/c.snippets.  All snippets make be "built" via the Makefile in
-~/.vim/UltiSnips by executing "make".
+~/.vim/UltiSnips by executing "make".  To make it easier to open a
+.snippets.py for the filetype you happen to be editing, you can use the
+EditSnippets command.
 
 To reduce the ceremony in creating a new file, expanding a snippet has been
 hooked to provide a filetype and filename aware "snippet".  Typing skel<TAB>
