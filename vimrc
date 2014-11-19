@@ -996,8 +996,6 @@ xnoremap <silent> <M-Left>     <C-c>:call VMoveLeft()<CR>
 xnoremap <silent> <M-Right>    <C-c>:call VMoveRight()<CR>
 xnoremap <silent> <M-h>        <C-c>:call VMoveLeft()<CR>
 xnoremap <silent> <M-l>        <C-c>:call VMoveRight()<CR>
-xnoremap <silent> <Backspace>  <C-c>:call VMoveLeft()<CR>
-xnoremap <silent> <Space>      <C-c>:call VMoveRight()<CR>
 
 " Strip whitespace from the left.
 function! Lstrip(s)
