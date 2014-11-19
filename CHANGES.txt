@@ -12,13 +12,17 @@ require adjustment of per-user settings.
 
 - Add ``EditSnippets`` command (thanks to John Szakmeister).
 
-- During a Git rebase operation, the following mappings are now available:
+- During a Git rebase operation, the following mappings are now available
+  (thanks to John Szakmeister):
 
   - <Leader><Leader>e Change rebase action to "edit"
   - <Leader><Leader>f Change rebase action to "fixup"
   - <Leader><Leader>p Change rebase action to "pick"
   - <Leader><Leader>r Change rebase action to "reword"
   - <Leader><Leader>s Change rebase action to "squash"
+
+- Setup 'shellpipe' to keep Vim from hiding failures (thanks to John
+  Szakmeister).
 
 2014-11-16
 ==========
