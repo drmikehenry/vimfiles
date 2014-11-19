@@ -198,6 +198,16 @@ endsnippet
 
 """)
 
+bsnip("Func", "type func(...);", r"""
+/*******************************************************************************
+    [docexport ${1:funcName}]
+*//**
+    @brief ${2:Description.}
+*******************************************************************************/
+${3:void}
+$1(${4:void});
+""")
+
 bsnip("func", "type func(...) {...}", r"""
 /*******************************************************************************
     [docimport ${1:funcName}]
@@ -211,12 +221,33 @@ $1(${4:void})
 }
 """, aliases=["def"])
 
-# @todo Create static function definitions with "sfunc", "static".
+bsnip("sfunc", "static type func(...) {...}", r"""
+/*******************************************************************************
+    ${1:funcName}
+*//**
+    @brief ${2:Description.}
+*******************************************************************************/
+static ${3:void}
+$1(${4:void})
+{
+    `!p betterVisual(snip)`$0
+}
+""", aliases=["static"])
+
 # Type-related snippets.
 bsnip("struct", "typedef struct name {...} name;", r"""
 /** @brief ${2:@todo Description of $1.}
 */
 typedef struct ${1:name}
+{
+    $0
+} $1;
+""")
+
+bsnip("enum", "typedef enum name {...} name;", r"""
+/** @brief ${2:@todo Description of $1.}
+*/
+typedef enum ${1:name}
 {
     $0
 } $1;
