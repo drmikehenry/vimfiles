@@ -34,6 +34,9 @@ require adjustment of per-user settings.
   operation), type a filename that doesn't exist, then press CTRL-y to create
   that file.
 
+- Disable Powerline support for terminals with eight or fewer colors (thanks to
+  John Szakmeister).
+
 2014-11-16
 ==========
 
