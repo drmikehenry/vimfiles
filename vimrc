@@ -3859,6 +3859,35 @@ function! SetupMail()
     " out a trailing space.  Better to avoid the flag...
     " set formatoptions+=w
     setlocal tw=64 sw=2 sts=2 et ai
+
+    " Highlight diffs.  Most of this was taken from notmuch's vim integration,
+    " but with spelling turned off in the highlighted lines.
+    syn match diffRemoved "^-.*" contains=@NoSpell
+    syn match diffAdded "^+.*" contains=@NoSpell
+
+    syn match diffSeparator "^---$"
+    syn match diffSubname " @@..*"ms=s+3 contained
+    syn match diffLine "^@.*" contains=diffSubname,@NoSpell
+
+    syn match diffFile "^diff .*" contains=@NoSpell
+    syn match diffNewFile "^+++ .*" contains=@NoSpell
+    syn match diffOldFile "^--- .*" contains=@NoSpell
+
+    hi def link diffOldFile diffFile
+    hi def link diffNewFile diffFile
+
+    hi def link diffFile Type
+    hi def link diffRemoved Special
+    hi def link diffAdded Identifier
+    hi def link diffLine Statement
+    hi def link diffSubname PreProc
+
+    syntax match gitDiffStatLine /^ .\{-}\zs[+-]\+$/ contains=gitDiffStatAdd,gitDiffStatDelete
+    syntax match gitDiffStatAdd /+/ contained
+    syntax match gitDiffStatDelete /-/ contained
+
+    hi def link gitDiffStatAdd diffAdded
+    hi def link gitDiffStatDelete diffRemoved
 endfunction
 command! -bar SetupMail call SetupMail()
 let g:SpellMap["mail"] = "<on>"
