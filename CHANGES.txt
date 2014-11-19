@@ -29,6 +29,11 @@ require adjustment of per-user settings.
 
 - Highlight diffs in emails (thanks to John Szakmeister).
 
+- Reuse the current window when opening a new file with CtrlP (thanks to John
+  Szakmeister).  Try this via CTRL-p CTRL-p (or any other file-based CtrlP
+  operation), type a filename that doesn't exist, then press CTRL-y to create
+  that file.
+
 2014-11-16
 ==========
 
