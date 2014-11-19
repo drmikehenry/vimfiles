@@ -27,6 +27,8 @@ require adjustment of per-user settings.
 - Synchronize python and shell syntax highlighting from start-of-file to avoid
   highlighting errors (thanks to John Szakmeister).
 
+- Highlight diffs in emails (thanks to John Szakmeister).
+
 2014-11-16
 ==========
 
