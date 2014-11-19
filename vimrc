@@ -4237,6 +4237,18 @@ endfunction
 command! -bar SetupRuby call SetupRuby()
 
 " -------------------------------------------------------------
+" Setup for shell languages like sh and zsh.
+" -------------------------------------------------------------
+
+function! SetupShell()
+    SetupSource
+
+    " Re-synchronize syntax highlighting from start of file.
+    syntax sync fromstart
+endfunction
+command! -bar SetupShell call SetupShell()
+
+" -------------------------------------------------------------
 " Setup for Subversion commit files.
 " -------------------------------------------------------------
 function! SetupSvn()
