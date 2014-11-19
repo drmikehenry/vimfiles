@@ -4219,6 +4219,9 @@ function! SetupPython()
     " Map CTRL-o_CR to append ':' to the end of line, then do CR.
     inoremap <buffer> <C-o><CR> <C-\><C-n>A:<CR>
     vnoremap <buffer> <C-o><CR> <C-\><C-n>A:<CR>
+
+    " Re-synchronize syntax highlighting from start of file.
+    syntax sync fromstart
 endfunction
 command! -bar SetupPython call SetupPython()
 let g:IndentGuidesMap["python"] = "<on>"
