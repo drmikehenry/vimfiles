@@ -40,4 +40,7 @@ augroup filetypedetect
 
     " Setup tmux conf files.
     au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
+
+    " Treat .syntastic_c_config as vim.
+    autocmd BufRead,BufNewFile .syntastic_c_config setfiletype vim
 augroup END
