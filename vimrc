@@ -4715,6 +4715,9 @@ augroup local_vimrc
     autocmd BufLeave * call AutoSaveWinView()
     autocmd BufEnter * call AutoRestoreWinView()
 
+    " Set makeprg for *.snippet.py files.
+    autocmd BufRead,BufNewFile *.snippets.py
+                \ setlocal makeprg=make\ -s\ -C\ %:p:h
 augroup END
 
 " Support for gpg-encrypted files.
