@@ -29,6 +29,41 @@ set fileencodings=ucs-bom,utf-8,default,latin1
 " directory $HOME/.vim on Unix or %USERPROFILE%\vimfiles on Windows.
 let $VIMFILES = expand("<sfile>:p:h")
 
+function! DetectPlatform()
+    if has("gui_win32")
+        return "win32"
+    endif
+
+    " Assume we're on a Unix box.
+    let name = substitute(system("uname"), '^\_s*\(.\{-}\)\_s*$', '\1', '')
+
+    return tolower(name)
+endfunction
+
+function! DetectVmware(platform)
+    if a:platform == "linux"
+        if filereadable("/sys/class/dmi/id/sys_vendor")
+            for line in readfile("/sys/class/dmi/id/sys_vendor", '', 10)
+                if line =~ '\cvmware'
+                    return 1
+                endif
+            endfor
+        endif
+    elseif a:platform == "freebsd"
+        if executable("kldstat")
+            let output = system("kldstat")
+            if output =~ "vmxnet"
+                return 1
+            endif
+        endif
+    endif
+
+    return 0
+endfunction
+
+let g:Platform = DetectPlatform()
+let g:InVmware = DetectVmware(g:Platform)
+
 " -------------------------------------------------------------
 " List manipulation
 " -------------------------------------------------------------
