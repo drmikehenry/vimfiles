@@ -3351,6 +3351,17 @@ the list of languages that will include syntax highlighting in the
 as reStructuredText by default.  You can set "g:markdownEmbeddedLangs" to a
 different list, if you desire.
 
+------------------------------------------------------------------------------
+Source control integration
+
+During a Git rebase operation, the following additional mappings are available:
+
+<Leader><Leader>e Change rebase action to "edit"
+<Leader><Leader>f Change rebase action to "fixup"
+<Leader><Leader>p Change rebase action to "pick"
+<Leader><Leader>r Change rebase action to "reword"
+<Leader><Leader>s Change rebase action to "squash"
+
 ==============================================================================
 6.  Tips                                                *notes_tips*
 

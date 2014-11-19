@@ -12,6 +12,14 @@ require adjustment of per-user settings.
 
 - Add ``EditSnippets`` command (thanks to John Szakmeister).
 
+- During a Git rebase operation, the following mappings are now available:
+
+  - <Leader><Leader>e Change rebase action to "edit"
+  - <Leader><Leader>f Change rebase action to "fixup"
+  - <Leader><Leader>p Change rebase action to "pick"
+  - <Leader><Leader>r Change rebase action to "reword"
+  - <Leader><Leader>s Change rebase action to "squash"
+
 2014-11-16
 ==========
 
