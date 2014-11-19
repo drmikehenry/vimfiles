@@ -735,6 +735,19 @@ function! NumCpus()
     return n
 endfunction
 
+" Helper for adding tag files from your $HOME/.tags folder.  Useful within
+" .lvimrc files.
+function! AddTags(...)
+    let index = 1
+    while index <= a:0
+        let tagPath = expand("$HOME/.tags/") . a:{index} . ".tags"
+        if filereadable(tagPath) == 1
+            execute 'setlocal tags+=' . escape(tagPath, ' \')
+        endif
+        let index = index + 1
+    endwhile
+endfunction
+
 " -------------------------------------------------------------
 " QuickFix/Location List support
 " -------------------------------------------------------------
