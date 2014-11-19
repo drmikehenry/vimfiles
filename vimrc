@@ -502,6 +502,15 @@ set nrformats-=octal
 " Perform vertically split diffs by default.
 set diffopt+=vertical
 
+" Unfortunately, do to some redirection that Vim uses underneath the hood, it
+" can hide an error status of a command.  This helps to preserve the error
+" status so v:shell_error and the command can be tested for the success.
+if $SHELL =~# "zsh"
+    let &shellpipe='2>&1 | tee "%s" ; exit ${pipestatus[1]}'
+elseif $SHELL =~# "bash"
+    let &shellpipe='2>&1 | tee "%s" ; exit ${PIPESTATUS[0]}'
+endif
+
 " -------------------------------------------------------------
 " File settings
 " -------------------------------------------------------------
