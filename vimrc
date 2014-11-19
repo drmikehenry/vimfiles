@@ -4682,6 +4682,24 @@ function! AutoRestoreWinView()
     endif
 endfunction
 
+function! ChangeRebaseAction(action)
+    let ptn = '^\(pick\|reword\|edit\|squash\|fixup\|exec\|p\|r\|e\|s\|f\|x\)\s'
+    let line = getline(".")
+    let result = matchstr(line, ptn)
+    if result != ""
+        execute "normal! ^cw" . a:action
+        execute "normal! ^"
+    endif
+endfunction
+
+function! SetupRebaseMappings()
+    nnoremap <buffer> <Leader><Leader>e :call ChangeRebaseAction('edit')<CR>
+    nnoremap <buffer> <Leader><Leader>f :call ChangeRebaseAction('fixup')<CR>
+    nnoremap <buffer> <Leader><Leader>p :call ChangeRebaseAction('pick')<CR>
+    nnoremap <buffer> <Leader><Leader>r :call ChangeRebaseAction('reword')<CR>
+    nnoremap <buffer> <Leader><Leader>s :call ChangeRebaseAction('squash')<CR>
+endfunction
+
 " Put these in an autocmd group, so that we can delete them easily.
 augroup local_vimrc
     " First, remove all autocmds in this group.
@@ -4700,12 +4718,14 @@ augroup local_vimrc
     " When editing a file, jump to the last known cursor position.
     autocmd BufReadPost * call AutoRestoreLastCursorPosition()
 
-
     " Open a diff window for Git commits.
     autocmd FileType gitcommit call AutoOpenGitDiff()
 
     " Close diff window after a Git commit.
     autocmd BufUnload * call AutoCloseGitDiff()
+
+    " Add interactive rebase mappings when doing a `git rebase`.
+    autocmd FileType gitrebase call SetupRebaseMappings()
 
     " By default, when Vim switches buffers in a window, the new buffer's
     " cursor position is scrolled to the center (as if 'zz' had been
