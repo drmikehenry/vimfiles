@@ -3530,23 +3530,23 @@ endfunction
 function! HighlightDefineGroups()
     if !HighlightGroupExists("HG_Subtle")
         if &background == "dark"
-            hi HG_Subtle  ctermfg=brown  ctermbg=darkgray  guibg=red       guifg=white
+            highlight HG_Subtle  ctermfg=brown  ctermbg=darkgray  guibg=red       guifg=white
         else
-            hi HG_Subtle  ctermfg=yellow ctermbg=lightgray guibg=#efeff7
+            highlight HG_Subtle  ctermfg=yellow ctermbg=lightgray guibg=#efeff7
         endif
     endif
     if !HighlightGroupExists("HG_Warning")
         if &background == "dark"
-            hi HG_Warning ctermfg=lightred  ctermbg=darkgray  guibg=#505000   guifg=lightgray
+            highlight HG_Warning ctermfg=lightred  ctermbg=darkgray  guibg=#505000   guifg=lightgray
         else
-            hi HG_Warning ctermfg=yellow ctermbg=lightgray guibg=#ffffdd
+            highlight HG_Warning ctermfg=yellow ctermbg=lightgray guibg=#ffffdd
         endif
     endif
     if !HighlightGroupExists("HG_Error")
         if &background == "dark"
-            hi HG_Error   ctermfg=white  ctermbg=darkred  guibg=red       guifg=white
+            highlight HG_Error   ctermfg=white  ctermbg=darkred  guibg=red       guifg=white
         else
-            hi HG_Error   ctermfg=red    ctermbg=lightgray guibg=#ffe0e0
+            highlight HG_Error   ctermfg=red    ctermbg=lightgray guibg=#ffe0e0
         endif
     endif
 endfunction
@@ -3888,19 +3888,19 @@ function! SetupMail()
     " regex, so that no characters are left unmatched.  That way, any unmatched
     " characters will cause the "end=" match in diffRegion to bail out, showing
     " the user where the well-formed diff hunk ends.
-    syn match diffFile "^diff .*\n" contains=@NoSpell contained
-    syn match diffIndex "^Index: .*\n" contains=@NoSpell contained
-    syn match diffIndex "^index .*\n" contains=@NoSpell contained
-    syn match diffNormal "^ .*\n" contains=@NoSpell contained
-    syn match diffNormal "^=\+\n" contains=@NoSpell contained
-    syn match diffRemoved "^-.*\n" contains=@NoSpell contained
-    syn match diffAdded "^+.*\n" contains=@NoSpell contained
+    syntax match diffFile "^diff .*\n" contains=@NoSpell contained
+    syntax match diffIndex "^Index: .*\n" contains=@NoSpell contained
+    syntax match diffIndex "^index .*\n" contains=@NoSpell contained
+    syntax match diffNormal "^ .*\n" contains=@NoSpell contained
+    syntax match diffNormal "^=\+\n" contains=@NoSpell contained
+    syntax match diffRemoved "^-.*\n" contains=@NoSpell contained
+    syntax match diffAdded "^+.*\n" contains=@NoSpell contained
 
-    syn match diffNewFile "^+++ .*\n" contains=@NoSpell contained
-    syn match diffOldFile "^--- .*\n" contains=@NoSpell contained
+    syntax match diffNewFile "^+++ .*\n" contains=@NoSpell contained
+    syntax match diffOldFile "^--- .*\n" contains=@NoSpell contained
 
-    syn match diffSubname " @@..*\n"ms=s+3 contains=@NoSpell contained
-    syn match diffLine "^@.*\n" contains=diffSubname,@NoSpell
+    syntax match diffSubname " @@..*\n"ms=s+3 contains=@NoSpell contained
+    syntax match diffLine "^@.*\n" contains=diffSubname,@NoSpell
 
     " Declare a region of "diff" hunks.  The "matchgroup=" directive applies
     " only for select "end=" conditions, allowing the other contained matches to
@@ -3911,7 +3911,7 @@ function! SetupMail()
     " completely empty line, since diff hunks should have at least a leading
     " space for normal diff lines.
 
-    syn region diffRegion
+    syntax region diffRegion
                 \ contains=@NoSpell,
                 \diffFile,diffIndex,diffNormal,diffRemoved,diffAdded,
                 \diffNewFile,diffOldFile,diffLine
@@ -3926,24 +3926,24 @@ function! SetupMail()
                 \ matchgroup=diffEndmarker
                 \ end="^-- \n"
 
-    hi def link diffHeader diffFile
-    hi def link diffIndex diffFile
-    hi def link diffOldFile diffFile
-    hi def link diffNewFile diffFile
-    hi def link diffRemoved Special
-    hi def link diffAdded Identifier
-    hi def link diffLine Statement
-    hi def link diffSubname PreProc
-    hi def link diffSeparator diffComment
-    hi def link diffEndMarker diffComment
+    highlight default link diffHeader diffFile
+    highlight default link diffIndex diffFile
+    highlight default link diffOldFile diffFile
+    highlight default link diffNewFile diffFile
+    highlight default link diffRemoved Special
+    highlight default link diffAdded Identifier
+    highlight default link diffLine Statement
+    highlight default link diffSubname PreProc
+    highlight default link diffSeparator diffComment
+    highlight default link diffEndMarker diffComment
 
     syntax match gitDiffStatLine /^ .\{-}\zs[+-]\+$/
                 \ contains=gitDiffStatAdd,gitDiffStatDelete
     syntax match gitDiffStatAdd /+/ contained
     syntax match gitDiffStatDelete /-/ contained
 
-    hi def link gitDiffStatAdd diffAdded
-    hi def link gitDiffStatDelete diffRemoved
+    highlight default link gitDiffStatAdd diffAdded
+    highlight default link gitDiffStatDelete diffRemoved
 endfunction
 command! -bar SetupMail call SetupMail()
 let g:SpellMap["mail"] = "<on>"
@@ -3992,7 +3992,7 @@ function! SetupMarkdownSyntax()
             let includedLangs[synLang] = 1
         endif
 
-        exe 'syn region ' . synGroup .
+        exe 'syntax region ' . synGroup .
                     \ ' matchgroup=markdownCodeDelimiter start="^\s*```\s*' .
                     \ lang . '\>.*$" end="^\s*```\ze\s*$" keepend ' .
                     \ 'contains=@' . synGroup
@@ -4010,8 +4010,8 @@ function! SetupMarkdown()
     " Setup some extra highlighting for code blocks.  This matches the
     " highlighting from Ben William's syntax/mkd.vim and is a decent fallback
     " when we don't support the embedded language or the block is inline.
-    hi def link markdownCode                  String
-    hi def link markdownCodeBlock             String
+    highlight default link markdownCode                  String
+    highlight default link markdownCodeBlock             String
 endfunction
 command! -bar SetupMarkdown call SetupMarkdown()
 
@@ -4061,7 +4061,7 @@ function! SetupRstSyntax()
             let region = "rstDirective" . a:lang
             let regex = a:lang
         endif
-        silent! syn clear region
+        silent! syntax clear region
         let cmd  = 'syntax region ' . region
         let cmd .= ' matchgroup=rstDirective fold'
         let cmd .= ' start="^\z(\s*\)\.\.\s\+'
