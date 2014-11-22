@@ -13,6 +13,9 @@ require adjustment of per-user settings.
 - Tighten up diff highlighting in emails to avoid mistakenly highlighting
   bulleted lists that start with hyphens.
 
+- Synchronize email syntax highlighting from start to keep highlighting in-sync
+  for lengthy patches.
+
 2014-11-19
 ==========
 

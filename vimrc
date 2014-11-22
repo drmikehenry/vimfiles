@@ -3944,6 +3944,9 @@ function! SetupMail()
 
     highlight default link gitDiffStatAdd diffAdded
     highlight default link gitDiffStatDelete diffRemoved
+
+    " Re-synchronize syntax highlighting from start of file.
+    syntax sync fromstart
 endfunction
 command! -bar SetupMail call SetupMail()
 let g:SpellMap["mail"] = "<on>"
