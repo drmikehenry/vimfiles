@@ -16,6 +16,10 @@ require adjustment of per-user settings.
 - Synchronize email syntax highlighting from start to keep highlighting in-sync
   for lengthy patches.
 
+- Update rst2ctags to version 0.1.3.  This updates heading detection to include
+  all of the recommended characters that can be used to underline headings
+  (thanks to John Szakmeister).
+
 2014-11-19
 ==========
 
