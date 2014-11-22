@@ -3884,6 +3884,19 @@ function! SetupMail()
     " Highlight diffs.  Most of this was taken from notmuch's vim integration,
     " but with spelling turned off in the highlighted lines.
 
+    " diffSeparator separates headers such as "Signed-off-by" from the
+    " diff itself, as in this example::
+    "
+    "   Signed-off-by: John Szakmeister <john@example.com>
+    "   ---
+    "   Some comments about the diff that follows below.
+    "
+    " It's not part of diffRegion below.  Since it's unlikely that emails
+    " will contain the line "---" without preceding such a diff, and it's
+    " little enough harm in the event of a spurious match, we'll highlight
+    " lines of "---" anywhere throughout an email.
+    syntax match diffSeparator "^---$"
+
     " These "contained" matches should all include the final newline in their
     " regex, so that no characters are left unmatched.  That way, any unmatched
     " characters will cause the "end=" match in diffRegion to bail out, showing
@@ -3921,8 +3934,6 @@ function! SetupMail()
                 \)"
                 \ end="^$"
                 \ end="."
-                \ matchgroup=diffSeparator
-                \ end="^---\n"
                 \ matchgroup=diffEndmarker
                 \ end="^-- \n"
 
