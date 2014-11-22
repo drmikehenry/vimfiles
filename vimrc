@@ -3883,26 +3883,48 @@ function! SetupMail()
 
     " Highlight diffs.  Most of this was taken from notmuch's vim integration,
     " but with spelling turned off in the highlighted lines.
-    syn match diffSeparator "^---$"
 
-    syn match diffFile "^diff .*" contains=@NoSpell contained
-    syn match diffIndex "^index .*" contains=@NoSpell contained
-    syn match diffNormal "^ .*" contains=@NoSpell contained
-    syn match diffNormal "^==*" contains=@NoSpell contained
-    syn match diffRemoved "^-.*" contains=@NoSpell contained
-    syn match diffAdded "^+.*" contains=@NoSpell contained
+    " These "contained" matches should all include the final newline in their
+    " regex, so that no characters are left unmatched.  That way, any unmatched
+    " characters will cause the "end=" match in diffRegion to bail out, showing
+    " the user where the well-formed diff hunk ends.
+    syn match diffFile "^diff .*\n" contains=@NoSpell contained
+    syn match diffIndex "^Index: .*\n" contains=@NoSpell contained
+    syn match diffIndex "^index .*\n" contains=@NoSpell contained
+    syn match diffNormal "^ .*\n" contains=@NoSpell contained
+    syn match diffNormal "^=\+\n" contains=@NoSpell contained
+    syn match diffRemoved "^-.*\n" contains=@NoSpell contained
+    syn match diffAdded "^+.*\n" contains=@NoSpell contained
 
-    syn match diffNewFile "^+++ .*" contains=@NoSpell contained
-    syn match diffOldFile "^--- .*" contains=@NoSpell contained
-    syn match diffEndMarker "^-- $" contains=@NoSpell contained
+    syn match diffNewFile "^+++ .*\n" contains=@NoSpell contained
+    syn match diffOldFile "^--- .*\n" contains=@NoSpell contained
 
-    syn match diffSubname " @@..*"ms=s+3 contained
-    syn match diffLine "^@.*" contains=diffSubname,@NoSpell
+    syn match diffSubname " @@..*\n"ms=s+3 contains=@NoSpell contained
+    syn match diffLine "^@.*\n" contains=diffSubname,@NoSpell
 
-    syn region diffHeader matchgroup=diffHeader
-                \ start="^\(\(diff .*\nindex .*\n\|Index: .*\(\n==*\n\)\?\)\?\(^--- .*\n+++ .*$\)\)\@="
-                \ end="\n\n\|-- $" keepend
-                \ contains=diffFile,diffIndex,diffNormal,diffRemoved,diffAdded,diffNewFile,diffOldFile,diffEndMarker,diffLine
+    " Declare a region of "diff" hunks.  The "matchgroup=" directive applies
+    " only for select "end=" conditions, allowing the other contained matches to
+    " handle individual highlighting (e.g., "diffIndex" will be used to
+    " highlight the "Index: " lines).  The use of "." as an "end=" regex means
+    " that diffRegion will terminate on the first character not claimed by one
+    " of the contained matches.  Another "end=" regex causes termination on a
+    " completely empty line, since diff hunks should have at least a leading
+    " space for normal diff lines.
+
+    syn region diffRegion
+                \ contains=@NoSpell,
+                \diffFile,diffIndex,diffNormal,diffRemoved,diffAdded,
+                \diffNewFile,diffOldFile,diffLine
+                \ start="\v^(
+                \(diff .*\nindex .*\n|Index: .*\n(\=+\n)?)?
+                \(^--- .*\n\+\+\+ )
+                \)"
+                \ end="^$"
+                \ end="."
+                \ matchgroup=diffSeparator
+                \ end="^---\n"
+                \ matchgroup=diffEndmarker
+                \ end="^-- \n"
 
     hi def link diffHeader diffFile
     hi def link diffIndex diffFile
@@ -3915,7 +3937,8 @@ function! SetupMail()
     hi def link diffSeparator diffComment
     hi def link diffEndMarker diffComment
 
-    syntax match gitDiffStatLine /^ .\{-}\zs[+-]\+$/ contains=gitDiffStatAdd,gitDiffStatDelete
+    syntax match gitDiffStatLine /^ .\{-}\zs[+-]\+$/
+                \ contains=gitDiffStatAdd,gitDiffStatDelete
     syntax match gitDiffStatAdd /+/ contained
     syntax match gitDiffStatDelete /-/ contained
 
