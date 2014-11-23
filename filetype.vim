@@ -43,4 +43,12 @@ augroup filetypedetect
 
     " Treat .syntastic_c_config as vim.
     autocmd BufRead,BufNewFile .syntastic_c_config setfiletype vim
+
+    " Salt server support.  Treat .sls files as yaml, unless #!py is at the top.
+    autocmd BufRead,BufNewFile *.sls
+                \ if getline(1) =~ "^#!py" |
+                \   setfiletype python |
+                \ else |
+                \   setfiletype yaml |
+                \ endif
 augroup END
