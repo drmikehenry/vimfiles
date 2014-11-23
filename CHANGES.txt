@@ -12,7 +12,11 @@ require adjustment of per-user settings.
 
 - Detect salt server files (thanks to John Szakmeister).
 
-- BREAKING CHANGE: Remove aging Align plugin.
+- Add Easy-Align plugin.  Visually select a group of lines, then press \a
+  to begin alignment.  Press a delimiter key (such as <Space>, =, comma, etc.)
+  to align on that delimiter.  See :help notes_easyalign for more details.
+
+- BREAKING CHANGE: Remove Align plugin (replaced by Easy-Align).
 
 2014-11-22
 ==========

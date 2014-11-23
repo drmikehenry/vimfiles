@@ -2335,6 +2335,22 @@ let g:ctrlp_max_height = 50
 let g:ctrlp_open_new_file = 'r'
 
 " -------------------------------------------------------------
+" Easy-Align
+" -------------------------------------------------------------
+
+xmap \a <Plug>(EasyAlign)
+nmap \a <Plug>(EasyAlign)
+
+" Setup custom alignment characters.
+"   \ - Align on backslash (such as for C/C++ line continuations).
+let g:easy_align_delimiters = {
+            \ '\':
+            \   {
+            \       'pattern':         '\\',
+            \   },
+            \ }
+
+" -------------------------------------------------------------
 " fswitch
 " -------------------------------------------------------------
 

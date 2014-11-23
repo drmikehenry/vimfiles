@@ -19,6 +19,7 @@
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
+    Easy-Align - Align text on delimiters               |notes_easyalign|
     Endwise - End certain structures automatically      |notes_endwise|
     Eunuch - helpers for UNIX                           |notes_eunuch|
     Extline - for extending lines                       |notes_extline|
@@ -721,6 +722,22 @@ Installation:
 
 Use: >
     :colorscheme dual
+
+------------------------------------------------------------------------------
+EASY-ALIGN                                              *notes_easyalign*
+  Align text on delimiters                              |easyalign|
+
+Local Customizations:
+- Map \a to launch Easy-Align in normal and visual modes.
+- Add custom alignment delimiters:
+
+  Delimiter   Purpose
+      \       Align on backslash (such as for C/C++ line continuations).
+
+Version 2014-11-22 (44216b0) from https://github.com/junegunn/vim-easy-align
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 ENDWISE                                                 *notes_endwise*
