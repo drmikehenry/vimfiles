@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Detect salt server files (thanks to John Szakmeister).
 
+- BREAKING CHANGE: Remove aging Align plugin.
+
 2014-11-22
 ==========
 

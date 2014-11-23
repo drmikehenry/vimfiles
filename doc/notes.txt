@@ -8,7 +8,6 @@
     Setup vimfiles                                      |notes_setup_vimfiles|
     Build Vim                                           |notes_build_vim|
 3.  Plugins                                             |notes_plugins|
-    Align - Align things into columns                   |notes_align|
     Badwolf colorscheme                                 |notes_badwolf|
     Base16 colorscheme collection                       |notes_base16|
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
@@ -484,25 +483,6 @@ General bundle installation instructions:               *bundle_installation*
     git add -f doc/tag*
 
 Installed plugins:
-
-------------------------------------------------------------------------------
-ALIGN                                                   *notes_align*
-    Align things into columns                           |align|
-
-Align vimball comprises AlignPlugin and AlignMapsPlugin with a combined
-version number.
-
-Version 36e_46h from section "Alignment" at
-http://mysite.verizon.net/astronaut/vim/index.html
-
-Installation:
-- Distributed as a |vimball|  >
-
-    vim .VimballRecord Align-36e_46h.vba.gz
-    :RmVimball Align-xxx_yyy
-    :n
-    :so %
-    :q
 
 ------------------------------------------------------------------------------
 BADWOLF                                                 *notes_badwolf*

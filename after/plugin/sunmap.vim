@@ -54,67 +54,13 @@ function! SunmapAll()
     Sunmap \be
     Sunmap \bs
     Sunmap \bv
-    Sunmap \a(
-    Sunmap \a,
-    Sunmap \a<
-    Sunmap \a=
-    Sunmap \a?
-    Sunmap \abox
-    Sunmap \acom
-    Sunmap \adcom
-    Sunmap \adec
-    Sunmap \adef
-    Sunmap \aenum
-    Sunmap \afnc
-    Sunmap \anum
-    Sunmap \aocom
-    Sunmap \ascom
-    Sunmap \aunum
     Sunmap \c
-    Sunmap \Htd
-    Sunmap \m=
     Sunmap \n
     Sunmap \p
     Sunmap \rh
     Sunmap \rv
     Sunmap \rwp
     Sunmap \swp
-    Sunmap \T#
-    Sunmap \t#
-    Sunmap \T,
-    Sunmap \t,
-    Sunmap \T:
-    Sunmap \t:
-    Sunmap \T;
-    Sunmap \t;
-    Sunmap \T<
-    Sunmap \t<
-    Sunmap \T=
-    Sunmap \t=
-    Sunmap \T?
-    Sunmap \t?
-    Sunmap \T@
-    Sunmap \t@
-    Sunmap \Tab
-    Sunmap \tab
-    Sunmap \tml
-    Sunmap \Ts,
-    Sunmap \ts,
-    Sunmap \ts:
-    Sunmap \ts;
-    Sunmap \ts<
-    Sunmap \ts=
-    Sunmap \Tsp
-    Sunmap \tsp
-    Sunmap \tsq
-    Sunmap \tt
-    Sunmap \tW@
-    Sunmap \TW@
-    Sunmap \T|
-    Sunmap \t|
-    Sunmap \T~
-    Sunmap \t~
-    Sunmap \w=
     Sunmap \x
     Sunmap ]%
     Sunmap a%
