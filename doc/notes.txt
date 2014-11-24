@@ -523,16 +523,19 @@ BUFMRU                                                  *notes_bufmru*
 
 Usage:
   KEY(S)            ACTION
-  <Space>           switch to the most recently used buffer and enter BufMRU
-                    mode.
+  <C-6>             switch to the most recently used buffer and enter BufMRU
+                    mode;  This is the same as Vim's CTRL-^ / CTRL-6 shortcut
+                    key for the most-recently-used buffer
 
   in BufMRU MODE:
   f  b              reach more MRU buffers (forward/backward)
   <Enter>           accept current choice
   q                 quit the mode, go back to start buffer (forcibly)
 
-  The mode times out after 'timeoutlen' ms.  A key not mapped in the mode
-  (e.g. <Space>) quits the mode and executes as usual.
+  The mode times out after 'timeoutlen' ms.  A key not mapped in the mode quits
+  the mode and executes as usual, so for example pressing CTRL-6 again will
+  cancel the current BufMRU mode, toggle back to the original buffer and
+  re-launch BufMRU mode again.
 
 Note: All unneeded keys are unmapped in BufMRU mode to avoid collisions with
 console-mode Vim's Arrow keys (and other sequences that start with <Escape>).
@@ -2839,7 +2842,8 @@ Lusty Juggler - rapidly switch among buffers
 
 BufMRU - most-recently-used buffer switcher
 
-  <space> Switch to MRU buffer and enter BufMRU mode.
+  <C-6> (CTRL-6) Switch to MRU buffer and enter BufMRU mode.  This is Vim's
+                 default keystroke for switching to the alternate buffer.
 
   See |notes_bufmru| for more details.
 

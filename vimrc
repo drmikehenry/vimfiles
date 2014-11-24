@@ -2227,6 +2227,13 @@ let g:BufKillCreateMappings = 0
 " -------------------------------------------------------------
 " bufmru
 " -------------------------------------------------------------
+
+" Set key to enter BufMRU mode (override this in vimrc-before.vim).
+if !exists("g:bufmru_switchkey")
+    " NOTE: <C-^> (CTRL-^) also works without shift (just pressing CTRL-6).
+    let g:bufmru_switchkey = "<C-^>"
+endif
+
 " Set to 1 to pre-load the number marks into buffers.
 " Set to 0 to avoid this pre-loading.
 let g:bufmru_nummarks = 0

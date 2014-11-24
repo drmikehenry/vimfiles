@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-11-24
+==========
+
+- BREAKING CHANGE: Change BufMRU key from <Space> to <C-6>.  The space key is
+  too valuable to be dedicated to this single function.  Note that <C-6> is the
+  same as <C-^>, so you don't have to press the shift key to invoke BufMRU mode.
+  This is also the same as Vim's keystroke to toggle between buffers, so it's a
+  natural fit for this plugin.
+
 2014-11-23
 ==========
 
