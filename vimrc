@@ -352,15 +352,15 @@ if !exists("g:DefaultFontFamilies")
     let g:DefaultFontFamilies = []
 endif
 let g:DefaultFontFamilies += [
-            \ "PragmataPro for Powerline",
-            \ "PragmataPro",
-            \ "DejaVu Sans Mono for Powerline",
-            \ "Droid Sans Mono for Powerline",
-            \ "Consolas for Powerline",
-            \ "DejaVu Sans Mono",
-            \ "Droid Sans Mono",
-            \ "Consolas",
-            \]
+        \ "PragmataPro for Powerline",
+        \ "PragmataPro",
+        \ "DejaVu Sans Mono for Powerline",
+        \ "Droid Sans Mono for Powerline",
+        \ "Consolas for Powerline",
+        \ "DejaVu Sans Mono",
+        \ "Droid Sans Mono",
+        \ "Consolas",
+        \]
 
 " Font Families matching the regex patterns below have known-good Unicode
 " symbols for use with Powerline.
@@ -368,10 +368,10 @@ if !exists("g:GoodUnicodeSymbolFontFamilyPatterns")
     let g:GoodUnicodeSymbolFontFamilyPatterns = []
 endif
 let g:GoodUnicodeSymbolFontFamilyPatterns += [
-            \ '^PragmataPro\>',
-            \ '^DejaVu Sans Mono\>',
-            \ '^Droid Sans Mono\>',
-            \]
+        \ '^PragmataPro\>',
+        \ '^DejaVu Sans Mono\>',
+        \ '^Droid Sans Mono\>',
+        \]
 
 " Return type of Powerline symbols to use for given font family.
 " Value will be one of "fancy", "unicode", or "compatible".
@@ -1087,7 +1087,7 @@ function! ClosestPos(positions)
     for p in a:positions
         if p[0] > 0
             if closestLine == 0 || closestLine > p[0] ||
-                        \ (closestLine == p[0] && closestCol > p[1])
+                    \ (closestLine == p[0] && closestCol > p[1])
                 let closestLine = p[0]
                 let closestCol = p[1]
             endif
@@ -1336,8 +1336,8 @@ set wildmode=longest,list
 
 " List of extensions to ignore when using wildcard matching.
 set wildignore=*.o,*.obj,*.a,*.lib,*.so,*~,*.bak,*.swp,tags,*.opt,*.ncb
-            \,*.plg,*.elf,cscope.out,*.ecc,*.exe,*.ilk
-            \,export,build,_build
+        \,*.plg,*.elf,cscope.out,*.ecc,*.exe,*.ilk
+        \,export,build,_build
 
 " Ignore some Python artifacts.
 set wildignore+=*.pyc,*.egg-info
@@ -1370,7 +1370,7 @@ set wildignore+=*.dSYM
 "   sesdir - change directory to that of the session file.
 
 set sessionoptions=blank,buffers,curdir,folds,help,resize,slash
-            \,tabpages,unix,winpos,winsize
+        \,tabpages,unix,winpos,winsize
 
 
 " Setup undofile capability if available.
@@ -1571,22 +1571,22 @@ command! -bar MatchScratchWord call SetSearch("\\<".MakeSearchString(@")."\\>")
 " Map normal-mode '*' to just highlight, not search for next.
 " Note: Yank into @a to avoid clobbering register 0 (saving and restoring @a).
 nnoremap <silent> *  :let temp_a=@a<CR>"ayiw:MatchScratchWord<CR>
-            \:let @a=temp_a<CR>
+        \:let @a=temp_a<CR>
 nnoremap <silent> g* :let temp_a=@a<CR>"ayiw:MatchScratch<CR>
-            \:let @a=temp_a<CR>
+        \:let @a=temp_a<CR>
 xnoremap <silent> *  <ESC>:let temp_a=@a<CR>gv"ay:MatchScratch<CR>
-            \:let @a=temp_a<CR>
+        \:let @a=temp_a<CR>
 
 " Setup :Regrep command to search for visual selection.
 function! VisualRegrep()
     return "y:MatchScratch\<CR>" .
-                \ ":Regrep \<C-r>=MakeEgrepString(@\")\<CR>"
+            \ ":Regrep \<C-r>=MakeEgrepString(@\")\<CR>"
 endfunction
 
 " Setup :Regrep command to search for complete word under cursor.
 function! NormalRegrep()
     return "yiw:MatchScratchWord\<CR>" .
-                \ ":Regrep \\<\<C-r>=MakeEgrepString(@\")\<CR>\\>"
+            \ ":Regrep \\<\<C-r>=MakeEgrepString(@\")\<CR>\\>"
 endfunction
 
 " :Regrep of visual selection or current word under cursor.
@@ -1758,13 +1758,13 @@ endfunction
 " While redirected, the 'more' option is reset to avoid the need
 " to press <Space> after each screen of output.
 command! -nargs=* -bar Redir
-            \ if <q-args> == "" || <q-args> ==? "end" |
-            \   set nomore |
-            \   redir END |
-            \ else |
-            \   redir <args> |
-            \   set nomore |
-            \ endif
+        \ if <q-args> == "" || <q-args> ==? "end" |
+        \   set nomore |
+        \   redir END |
+        \ else |
+        \   redir <args> |
+        \   set nomore |
+        \ endif
 
 " -------------------------------------------------------------
 " Tags
@@ -1790,9 +1790,9 @@ set tags=./tags;$HOME,tags;$HOME
 " --extra=+f, filenames are tags, too, so the following
 " mappings will work when a file isn't in the path.
 nnoremap <expr> gf empty(taglist(expand('<cfile>'))) ?
-            \ "gf" : ":ta <C-r><C-f><CR>"
+        \ "gf" : ":ta <C-r><C-f><CR>"
 nnoremap <expr> <C-w>f empty(taglist(expand('<cfile>'))) ?
-            \ "\<C-w>f" : ":stj <C-r><C-f><CR>"
+        \ "\<C-w>f" : ":stj <C-r><C-f><CR>"
 
 " Convenience for building tag files in current directory.
 command! -bar Ctags :wall|silent! !gentags
@@ -1937,13 +1937,13 @@ function! MinNumberWidth()
     " for 'relativenumber', it's based on window height.
     " With relativeNumber,
     Windo let s:minNumberWidth = max([
-                \ s:minNumberWidth,
-                \ max([
-                \     (exists("+relativenumber") && &relativenumber) *
-                \       strlen(string(winheight(0))),
-                \     (exists("+number") && &number) * strlen(string(line("$")))
-                \     ])
-                \ ])
+            \ s:minNumberWidth,
+            \ max([
+            \     (exists("+relativenumber") && &relativenumber) *
+            \       strlen(string(winheight(0))),
+            \     (exists("+number") && &number) * strlen(string(line("$")))
+            \     ])
+            \ ])
 
     if s:minNumberWidth > 0
         " Account for the blank column separating the number from the buffer.
@@ -2112,7 +2112,7 @@ nnoremap <silent> <C-w>o     :OneWindow<CR>
 " Taken from :help :DiffOrig.  Shows unsaved differences between
 " this buffer and original file.
 command! -bar DiffOrig OneWindow | vert new | set bt=nofile |
-            \ r ++edit # | 0d_ | diffthis | wincmd p | diffthis
+        \ r ++edit # | 0d_ | diffthis | wincmd p | diffthis
 
 
 " Return list of window numbers for all diff windows (in descending order).
@@ -2214,7 +2214,7 @@ augroup local_bufExplorer
     autocmd BufLeave \[BufExplorer\] nmap ds <Plug>Dsurround
     autocmd BufEnter \[BufExplorer\] nunmap drw
     autocmd BufLeave \[BufExplorer\] nnoremap drw
-                \ :<C-u>call DeleteRubbishWhitespace()<CR>
+            \ :<C-u>call DeleteRubbishWhitespace()<CR>
 augroup END
 
 " -------------------------------------------------------------
@@ -2310,23 +2310,23 @@ nnoremap <SNR>CtrlP.....<C-u> :<C-u>CtrlPUndo<CR>
 " At first, redirect to CtrlP equivalent functionality.  Later, just
 " provide an error message.  Eventually, remove this mappings.
 nnoremap <leader><leader>t :<C-u>echoe "Use CTRL-p CTRL-p instead"<Bar>
-            \ sleep 1<Bar>
-            \ CtrlP<CR>
+        \ sleep 1<Bar>
+        \ CtrlP<CR>
 
 nnoremap <leader><leader>b :<C-u>echoe "Use CTRL-p CTRL-o instead"<Bar>
-            \ sleep 1<Bar>
-            \ CtrlPBuffer<CR>
+        \ sleep 1<Bar>
+        \ CtrlPBuffer<CR>
 
 " Reverse move and history binding pairs:
 " - For consistency with other plugins that use <C-n>/<C-p> for moving around.
 " - Because <C-j> is bound to the tmux prefix key, so it's best to map
 "   that key to a less-used function.
 let g:ctrlp_prompt_mappings = {
-    \ 'PrtSelectMove("j")':   ['<C-n>', '<down>'],
-    \ 'PrtSelectMove("k")':   ['<C-p>', '<up>'],
-    \ 'PrtHistory(-1)':       ['<C-j>'],
-    \ 'PrtHistory(1)':        ['<C-k>'],
-    \ }
+        \ 'PrtSelectMove("j")':   ['<C-n>', '<down>'],
+        \ 'PrtSelectMove("k")':   ['<C-p>', '<up>'],
+        \ 'PrtHistory(-1)':       ['<C-j>'],
+        \ 'PrtHistory(1)':        ['<C-k>'],
+        \ }
 
 " Maximum height of filename window.
 let g:ctrlp_max_height = 50
@@ -2344,11 +2344,11 @@ nmap \a <Plug>(EasyAlign)
 " Setup custom alignment characters.
 "   \ - Align on backslash (such as for C/C++ line continuations).
 let g:easy_align_delimiters = {
-            \ '\':
-            \   {
-            \       'pattern':         '\\',
-            \   },
-            \ }
+        \ '\':
+        \   {
+        \       'pattern':         '\\',
+        \   },
+        \ }
 
 " -------------------------------------------------------------
 " fswitch
@@ -2368,17 +2368,17 @@ augroup local_fswitch
     " There are lots more options - :help fswitch.  We use SetFswitchVars()
     " because we don't want to override values set by a .lvimrc file.
     autocmd BufEnter *.h call SetFswitchVars(
-                \ 'c,cpp',
-                \ 'reg:/pubinc/src/'
-                \.',reg:/include/src/'
-                \.',reg:/include.*/src/'
-                \.',ifrel:|/include/|../src|')
+            \ 'c,cpp',
+            \ 'reg:/pubinc/src/'
+            \.',reg:/include/src/'
+            \.',reg:/include.*/src/'
+            \.',ifrel:|/include/|../src|')
     autocmd BufEnter *.c,*.cpp call SetFswitchVars(
-                \ 'h',
-                \ 'reg:/src/pubinc/'
-                \.',reg:/src/include/'
-                \.',reg:|src|include/**|'
-                \.',ifrel:|/src/|../include|')
+            \ 'h',
+            \ 'reg:/src/pubinc/'
+            \.',reg:/src/include/'
+            \.',reg:|src|include/**|'
+            \.',ifrel:|/src/|../include|')
 augroup END
 
 " Switch to the file and load it into the current window.
@@ -2417,7 +2417,7 @@ command! -bar A FSHere
 
 let Grep_Skip_Dirs = '.svn .bzr .git .hg build bak export .undo'
 let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
-    \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc build.out doxy.out'
+        \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc build.out doxy.out'
 
 " -------------------------------------------------------------
 " Gundo
@@ -2726,7 +2726,7 @@ if g:EnablePowerline
         if PowerlineCacheTagRead() != g:PowerlineRequiredCacheTag
             " Wipe out all Powerline cache files.
             for p in split(glob(g:Powerline_cache_dir .
-                        \ "/Powerline_*.cache", 1), '\n')
+                    \ "/Powerline_*.cache", 1), '\n')
                 silent! call delete(p)
             endfor
             call PowerlineCacheTagWrite(g:PowerlineRequiredCacheTag)
@@ -2751,7 +2751,7 @@ if g:EnablePowerline
     call Pl#Theme#InsertSegment('fileinfo', 'before', 'tagbar:currenttag')
     call Pl#Theme#RemoveSegment('syntastic:errors')
     call Pl#Theme#InsertSegment('syntastic:errors', 'before',
-                \               'tagbar:currenttag')
+            \                   'tagbar:currenttag')
 
     " Add some non-default segments.
 
@@ -2821,52 +2821,52 @@ endfunction
 
 if &t_Co >= 256 || has("gui_running")
     let g:rbpt_colorpairs_dark = [
-                \ [129,         'purple'],
-                \ ['magenta',   'magenta1'],
-                \ [111,         'slateblue1'],
-                \ ['cyan',      'cyan1'],
-                \ [48,          'springgreen1'],
-                \ ['green',     'green1'],
-                \ [154,         'greenyellow'],
-                \ ['yellow',    'yellow1'],
-                \ [214,         'orange1'],
-                \ ]
+            \ [129,         'purple'],
+            \ ['magenta',   'magenta1'],
+            \ [111,         'slateblue1'],
+            \ ['cyan',      'cyan1'],
+            \ [48,          'springgreen1'],
+            \ ['green',     'green1'],
+            \ [154,         'greenyellow'],
+            \ ['yellow',    'yellow1'],
+            \ [214,         'orange1'],
+            \ ]
     " TODO Choose better light-background colors for rainbow parentheses.
     let g:rbpt_colorpairs_light = [
-                \ [129,         'purple'],
-                \ ['magenta',   'magenta1'],
-                \ [111,         'slateblue1'],
-                \ ['cyan',      'cyan1'],
-                \ [48,          'springgreen1'],
-                \ ['green',     'green1'],
-                \ [154,         'greenyellow'],
-                \ ['yellow',    'yellow1'],
-                \ [214,         'orange1'],
-                \ ]
+            \ [129,         'purple'],
+            \ ['magenta',   'magenta1'],
+            \ [111,         'slateblue1'],
+            \ ['cyan',      'cyan1'],
+            \ [48,          'springgreen1'],
+            \ ['green',     'green1'],
+            \ [154,         'greenyellow'],
+            \ ['yellow',    'yellow1'],
+            \ [214,         'orange1'],
+            \ ]
 else
     let g:rbpt_colorpairs_dark = [
-                \ ['magenta',   'purple'],
-                \ ['cyan',      'magenta1'],
-                \ ['green',     'slateblue1'],
-                \ ['yellow',    'cyan1'],
-                \ ['red',       'springgreen1'],
-                \ ['magenta',   'green1'],
-                \ ['cyan',      'greenyellow'],
-                \ ['green',     'yellow1'],
-                \ ['yellow',    'orange1'],
-                \ ]
+            \ ['magenta',   'purple'],
+            \ ['cyan',      'magenta1'],
+            \ ['green',     'slateblue1'],
+            \ ['yellow',    'cyan1'],
+            \ ['red',       'springgreen1'],
+            \ ['magenta',   'green1'],
+            \ ['cyan',      'greenyellow'],
+            \ ['green',     'yellow1'],
+            \ ['yellow',    'orange1'],
+            \ ]
     " TODO Choose better light-background colors for rainbow parentheses.
     let g:rbpt_colorpairs_light = [
-                \ ['magenta',   'purple'],
-                \ ['cyan',      'magenta1'],
-                \ ['green',     'slateblue1'],
-                \ ['yellow',    'cyan1'],
-                \ ['red',       'springgreen1'],
-                \ ['magenta',   'green1'],
-                \ ['cyan',      'greenyellow'],
-                \ ['green',     'yellow1'],
-                \ ['yellow',    'orange1'],
-                \ ]
+            \ ['magenta',   'purple'],
+            \ ['cyan',      'magenta1'],
+            \ ['green',     'slateblue1'],
+            \ ['yellow',    'cyan1'],
+            \ ['red',       'springgreen1'],
+            \ ['magenta',   'green1'],
+            \ ['cyan',      'greenyellow'],
+            \ ['green',     'yellow1'],
+            \ ['yellow',    'orange1'],
+            \ ]
 endif
 call AdaptRainbow()
 
@@ -2934,15 +2934,15 @@ endfunction
 
 function! OverrideSaveSession()
     command! -bar -bang -nargs=?
-                \ -complete=customlist,xolox#session#complete_names
-                \ SaveSession
-                \ call SaveSessionNoDefault(<q-args>, <q-bang>, 'SaveSession')
+            \ -complete=customlist,xolox#session#complete_names
+            \ SaveSession
+            \ call SaveSessionNoDefault(<q-args>, <q-bang>, 'SaveSession')
     if g:session_command_aliases
         command! -bar -bang -nargs=?
-                    \ -complete=customlist,xolox#session#complete_names
-                    \ SessionSave
-                    \ call SaveSessionNoDefault(
-                    \   <q-args>, <q-bang>, 'SessionSave')
+                \ -complete=customlist,xolox#session#complete_names
+                \ SessionSave
+                \ call SaveSessionNoDefault(
+                \   <q-args>, <q-bang>, 'SessionSave')
     endif
 endfunction
 
@@ -2995,14 +2995,14 @@ let g:startify_files_number        = 8
 let g:startify_enable_special      = 0
 
 let g:startify_list_order = [
-            \ 'files',
-            \ ['Recent files in current directory:'],
-            \ 'dir',
-            \ ['Sessions:'],
-            \ 'sessions',
-            \ ['Bookmarks:'],
-            \ 'bookmarks',
-            \ ]
+        \ 'files',
+        \ ['Recent files in current directory:'],
+        \ 'dir',
+        \ ['Sessions:'],
+        \ 'sessions',
+        \ ['Bookmarks:'],
+        \ 'bookmarks',
+        \ ]
 
 " List of regexes to skip.
 "let g:startify_skiplist = [
@@ -3075,10 +3075,10 @@ function! SyntasticFinalSetup()
 endfunction
 
 let g:syntastic_mode_map = {
-            \ 'mode': 'passive',
-            \ 'active_filetypes': ['python', 'ruby', 'rst'],
-            \ 'passive_filetypes': []
-            \ }
+        \ 'mode': 'passive',
+        \ 'active_filetypes': ['python', 'ruby', 'rst'],
+        \ 'passive_filetypes': []
+        \ }
 
 augroup local_syntastic
     autocmd!
@@ -3122,19 +3122,19 @@ endif
 " Local tagbar settings.  Assign g:tagbar_type_rst to this value to enable
 " support for .rst files in tagbar.
 let g:local_tagbar_type_rst = {
-    \ 'ctagstype': 'rst',
-    \ 'ctagsbin' : g:rst2ctags,
-    \ 'ctagsargs' : '-f - --sort=yes',
-    \ 'kinds' : [
+        \ 'ctagstype': 'rst',
+        \ 'ctagsbin' : g:rst2ctags,
+        \ 'ctagsargs' : '-f - --sort=yes',
+        \ 'kinds' : [
         \ 's:sections',
         \ 'i:images'
-    \ ],
-    \ 'sro' : '|',
-    \ 'kind2scope' : {
+        \ ],
+        \ 'sro' : '|',
+        \ 'kind2scope' : {
         \ 's' : 'section',
-    \ },
-    \ 'sort': 0,
-\ }
+        \ },
+        \ 'sort': 0,
+        \ }
 
 " Enable support for .rst files in tagbar by default.  Disable if desired in
 " your |VIMRC_AFTER| file via:
@@ -3151,19 +3151,19 @@ endif
 " Local tagbar settings.  Assign g:tagbar_type_markdown to this value to enable
 " support for markdown files in tagbar.
 let g:local_tagbar_type_markdown = {
-    \ 'ctagstype': 'markdown',
-    \ 'ctagsbin' : g:markdown2ctags,
-    \ 'ctagsargs' : '-f - --sort=yes',
-    \ 'kinds' : [
+        \ 'ctagstype': 'markdown',
+        \ 'ctagsbin' : g:markdown2ctags,
+        \ 'ctagsargs' : '-f - --sort=yes',
+        \ 'kinds' : [
         \ 's:sections',
         \ 'i:images'
-    \ ],
-    \ 'sro' : '|',
-    \ 'kind2scope' : {
+        \ ],
+        \ 'sro' : '|',
+        \ 'kind2scope' : {
         \ 's' : 'section',
-    \ },
-    \ 'sort': 0,
-\ }
+        \ },
+        \ 'sort': 0,
+        \ }
 
 " Enable support for markdown files in tagbar by default.  Disable if desired in
 " your |VIMRC_AFTER| file via:
@@ -3183,8 +3183,8 @@ let g:tcommentMapLeader2 = ''
 
 " Setup better linewise comments for Java.
 let g:tcomment_types = {
-            \ 'java': '// %s',
-            \ }
+        \ 'java': '// %s',
+        \ }
 
 " -------------------------------------------------------------
 " textobj-diff
@@ -3286,7 +3286,7 @@ function! FindSnippetTemplate()
 
         while l:idx >= 0
             let l:snippetName = "template_" . &filetype .
-                        \ "." . strpart(l:filename, l:idx)
+                    \ "." . strpart(l:filename, l:idx)
 
             if has_key(l:snippets, l:snippetName)
                 return l:snippetName
@@ -3323,7 +3323,7 @@ function! TriggerSnippetTemplate()
     if l:snippetName != ""
         startinsert
         call feedkeys(l:snippetName .
-                    \ eval('"\' . g:UltiSnipsExpandTrigger . '"'))
+                \ eval('"\' . g:UltiSnipsExpandTrigger . '"'))
         return 1
     endif
 
@@ -3446,7 +3446,7 @@ endpython
 
         if l:filename == ""
             echoerr "Could not find a suitable location to "
-                        \ . "create snippets file."
+                    \ . "create snippets file."
         else
             exec 'e ' . l:filename
         endif
@@ -3579,7 +3579,7 @@ let g:HighlightRegex_longlines2 = '\%>80v.\+'
 let g:HighlightRegex_tabs = '\t'
 let g:HighlightRegex_commas = ',\S'
 let g:HighlightRegex_keywordspace = '\(\<' . join(
-            \ split('for if while switch'), '\|\<') . '\)\@<=('
+        \ split('for if while switch'), '\|\<') . '\)\@<=('
 let g:HighlightRegex_trailingspace = '\s\+\%#\@<!$'
 
 " Invoke as: HighlightNamedRegex('longlines1', 'HG_Warning', 1)
@@ -3593,7 +3593,7 @@ function! HighlightNamedRegex(regexName, linkedGroup, enable)
     exe "silent! syntax clear Highlight_" . a:regexName
     if a:enable
         exe "syntax match Highlight_" . a:regexName .
-                    \ " /" . g:HighlightRegex_{a:regexName} . "/"
+                \ " /" . g:HighlightRegex_{a:regexName} . "/"
         exe "highlight link Highlight_" . a:regexName . " " . a:linkedGroup
     endif
 endfunction
@@ -3666,7 +3666,7 @@ function! Highlight(...)
     endwhile
 endfunction
 command! -nargs=* -complete=custom,HighlightArgs
-            \ Highlight call Highlight(<f-args>)
+        \ Highlight call Highlight(<f-args>)
 
 function! HighlightItemEnabled(itemName)
     let varName = "b:Highlight_" . a:itemName
@@ -3941,17 +3941,17 @@ function! SetupMail()
     " space for normal diff lines.
 
     syntax region diffRegion
-                \ contains=@NoSpell,
-                \diffFile,diffIndex,diffNormal,diffRemoved,diffAdded,
-                \diffNewFile,diffOldFile,diffLine
-                \ start="\v^(
-                \(diff .*\nindex .*\n|Index: .*\n(\=+\n)?)?
-                \(^--- .*\n\+\+\+ )
-                \)"
-                \ end="^$"
-                \ end="."
-                \ matchgroup=diffEndmarker
-                \ end="^-- \n"
+            \ contains=@NoSpell,
+            \diffFile,diffIndex,diffNormal,diffRemoved,diffAdded,
+            \diffNewFile,diffOldFile,diffLine
+            \ start="\v^(
+            \(diff .*\nindex .*\n|Index: .*\n(\=+\n)?)?
+            \(^--- .*\n\+\+\+ )
+            \)"
+            \ end="^$"
+            \ end="."
+            \ matchgroup=diffEndmarker
+            \ end="^-- \n"
 
     highlight default link diffHeader diffFile
     highlight default link diffIndex diffFile
@@ -3965,7 +3965,7 @@ function! SetupMail()
     highlight default link diffEndMarker diffComment
 
     syntax match gitDiffStatLine /^ .\{-}\zs[+-]\+$/
-                \ contains=gitDiffStatAdd,gitDiffStatDelete
+            \ contains=gitDiffStatAdd,gitDiffStatDelete
     syntax match gitDiffStatAdd /+/ contained
     syntax match gitDiffStatDelete /-/ contained
 
@@ -3984,9 +3984,9 @@ let g:SpellMap["mail"] = "<on>"
 
 function! DisableMarkdownSyntaxCodeList()
     if exists ("g:markdown_fenced_languages") &&
-                \ len(g:markdown_fenced_languages) > 0
+            \ len(g:markdown_fenced_languages) > 0
         echoerr "Disabling g:markdown_fenced_languages; " .
-                    \ "use g:markdownEmbeddedLangs"
+                \ "use g:markdownEmbeddedLangs"
     endif
     let g:markdown_fenced_languages = []
 endfunction
@@ -4023,9 +4023,9 @@ function! SetupMarkdownSyntax()
         endif
 
         exe 'syntax region ' . synGroup .
-                    \ ' matchgroup=markdownCodeDelimiter start="^\s*```\s*' .
-                    \ lang . '\>.*$" end="^\s*```\ze\s*$" keepend ' .
-                    \ 'contains=@' . synGroup
+                \ ' matchgroup=markdownCodeDelimiter start="^\s*```\s*' .
+                \ lang . '\>.*$" end="^\s*```\ze\s*$" keepend ' .
+                \ 'contains=@' . synGroup
     endfor
 endfunction
 command! -bar SetupMarkdownSyntax call SetupMarkdownSyntax()
@@ -4472,7 +4472,7 @@ function! SetupVhdl()
 
     " Convert a port into a port map.
     xnoremap <buffer> <leader>pm :s/^\(\s*\)\(\w\+\)\(\s*\)\(=>\<bar>:\).*
-                \/\1\2\3=> \2,/<CR>
+            \/\1\2\3=> \2,/<CR>
 endfunction
 command! -bar SetupVhdl call SetupVhdl()
 
@@ -4858,7 +4858,7 @@ augroup local_vimrc
 
     " Start at top-of-file for Git-related files.
     autocmd FileType gitcommit,gitrelated,gitrebase SetupGit |
-                \ let b:startAtTop = 1
+            \ let b:startAtTop = 1
 
     " When editing a file, jump to the last known cursor position.
     autocmd BufReadPost * call AutoRestoreLastCursorPosition()
@@ -4880,7 +4880,7 @@ augroup local_vimrc
 
     " Set makeprg for *.snippet.py files.
     autocmd BufRead,BufNewFile *.snippets.py
-                \ setlocal makeprg=make\ -s\ -C\ %:p:h
+            \ setlocal makeprg=make\ -s\ -C\ %:p:h
 augroup END
 
 " Support for gpg-encrypted files.
@@ -4900,22 +4900,22 @@ augroup local_encrypted
     autocmd BufReadPre,FileReadPre      *.gpg let &sh='sh'
     autocmd BufReadPre,FileReadPre      *.gpg let ch_save = &ch|set ch=2
     autocmd BufReadPost,FileReadPost    *.gpg '[,']!gpg --decrypt
-        \   --default-recipient-self 2> /dev/null
+            \   --default-recipient-self 2> /dev/null
     autocmd BufReadPost,FileReadPost    *.gpg let &sh=shsave
 
     " Switch to normal mode for editing
     autocmd BufReadPost,FileReadPost    *.gpg set nobin
     autocmd BufReadPost,FileReadPost    *.gpg let &ch = ch_save|
-        \   unlet ch_save
+            \   unlet ch_save
     autocmd BufReadPost,FileReadPost    *.gpg execute
-        \   ":doautocmd BufReadPost " . expand("%:r")
+            \   ":doautocmd BufReadPost " . expand("%:r")
 
     " Convert all text to encrypted text before writing
     autocmd BufWritePre,FileWritePre    *.gpg set bin
     autocmd BufWritePre,FileWritePre    *.gpg let shsave=&sh
     autocmd BufWritePre,FileWritePre    *.gpg let &sh='sh'
     autocmd BufWritePre,FileWritePre    *.gpg '[,']!gpg --encrypt
-        \   --default-recipient-self 2>/dev/null
+            \   --default-recipient-self 2>/dev/null
     autocmd BufWritePre,FileWritePre    *.gpg let &sh=shsave
 
     " Undo the encryption so we are back in the normal text, directly
@@ -5011,9 +5011,9 @@ if has('statusline') && version >= 700
     " Use different colors for statusline in current and non-current window.
     let g:Active_statusline=&g:statusline
     let g:NCstatusline=substitute(
-                \                substitute(g:Active_statusline,
-                \                'User1', 'User3', 'g'),
-                \                'User2', 'User4', 'g')
+            \                substitute(g:Active_statusline,
+            \                'User1', 'User3', 'g'),
+            \                'User2', 'User4', 'g')
     au! WinEnter * let&l:statusline = g:Active_statusline
     au! WinLeave * let&l:statusline = g:NCstatusline
 endif
