@@ -2984,10 +2984,15 @@ let g:sneak#streak = 1
 " 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
 let g:sneak#use_ic_scs = 1
 
-" Avoid default {operator}z mapping, and force streak-mode for operators.
+" Avoid default {operator}z mapping.
 let g:sneak#textobject_z = 0
-omap z          <Plug>(SneakStreak)
-omap Z          <Plug>(SneakStreakBackward)
+
+" Use <Space>s and <Space>S for forward and backward sneak, and use streak mode
+" for operators.
+Nxmap   <Space>s        <Plug>Sneak_s
+Nxmap   <Space>S        <Plug>Sneak_S
+omap    <Space>s        <Plug>(SneakStreak)
+omap    <Space>S        <Plug>(SneakStreakBackward)
 
 " -------------------------------------------------------------
 " Startify

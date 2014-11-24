@@ -16,6 +16,11 @@ require adjustment of per-user settings.
   This is also the same as Vim's keystroke to toggle between buffers, so it's a
   natural fit for this plugin.
 
+- BREAKING CHANGE: Change key mapping of recently added "sneak" plugin.  The
+  default mappings were hard to remember, since they were different in normal,
+  visual, and operator-pending modes.  Now <Space>s sneaks forward and <Space>S
+  sneaks backward in all modes.  See ``:help notes_sneak`` for more details.
+
 2014-11-23
 ==========
 
