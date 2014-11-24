@@ -687,7 +687,7 @@ Local customizations:
   around, and to avoid binding a commonly used function to the tmux prefix key
   (CTRL-j).
 
-Version 2014-10-13 (abb4f4b) from https://github.com/ctrlpvim/ctrlp.vim.git
+Version 2014-11-17 (84a3a7e2) from https://github.com/ctrlpvim/ctrlp.vim.git
 
 (Note: kien, the original author, seems to have dropped off the grid as of
 mid-2013, so his repository is no longer being maintained at
@@ -695,21 +695,7 @@ https://github.com/kien/ctrlp.vim; instead, the above fork has been started to
 continue maintenance.)
 
 Installation:
-- Follow bundle installation instructions (|bundle_installation|), with one
-  exception.  You need to apply the following patch to allow centering of
-  the selected tag: >
-
-  diff --git a/autoload/ctrlp/tag.vim b/autoload/ctrlp/tag.vim
-  index 626363a..5addcef 100644
-  --- a/autoload/ctrlp/tag.vim
-  +++ b/autoload/ctrlp/tag.vim
-  @@ -121,6 +121,7 @@ fu! ctrlp#tag#accept(mode, str)
-                  en
-                  cal feedkeys(":".cmd." ".tg."\r".ext, 'nt')
-          en
-  +       cal feedkeys("zz", 'nt')
-          cal ctrlp#setlcdir()
-   endf
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 DUAL                                                    *notes_dual*
