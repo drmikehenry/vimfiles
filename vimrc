@@ -2345,8 +2345,8 @@ let g:ctrlp_open_new_file = 'r'
 " Easy-Align
 " -------------------------------------------------------------
 
-xmap \a <Plug>(EasyAlign)
-nmap \a <Plug>(EasyAlign)
+xmap <Leader>a <Plug>(EasyAlign)
+nmap <Leader>a <Plug>(EasyAlign)
 
 " Setup custom alignment characters.
 "   \ - Align on backslash (such as for C/C++ line continuations).

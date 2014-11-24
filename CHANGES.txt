@@ -21,6 +21,8 @@ require adjustment of per-user settings.
   visual, and operator-pending modes.  Now <Space>s sneaks forward and <Space>S
   sneaks backward in all modes.  See ``:help notes_sneak`` for more details.
 
+- Fix Easy-Align mapping prefix to be <Leader>a instead of \a.
+
 2014-11-23
 ==========
 
