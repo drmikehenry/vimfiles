@@ -4497,6 +4497,12 @@ function! SetupVimC()
 endfunction
 command! -bar SetupVimC call SetupVimC()
 
+" Set indentation for backslash-continuations (the default value of 3 *
+" &shiftwidth is excessive).  Do not define here in terms of &shiftwidth,
+" as that value won't be set yet; but make this a one-time setting here so that
+" vimrc-after can override it.
+let g:vim_indent_cont = 2 * 4
+
 " -------------------------------------------------------------
 " Setup for Linux Kernel Sources.
 " -------------------------------------------------------------

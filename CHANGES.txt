@@ -18,6 +18,9 @@ require adjustment of per-user settings.
 
 - BREAKING CHANGE: Remove Align plugin (replaced by Easy-Align).
 
+- Change indentation for backslash-continuations in vimscript to be 8 characters
+  instead of 12.
+
 2014-11-22
 ==========
 
