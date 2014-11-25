@@ -2234,6 +2234,10 @@ if !exists("g:bufmru_switchkey")
     let g:bufmru_switchkey = "<C-^>"
 endif
 
+" Use <Space><Space> as an additional map for BufMRU mode, aiming to be
+" closer to the original muscle memory of pressing a single <Space>.
+exec "nmap <Space><Space> " . g:bufmru_switchkey
+
 " Set to 1 to pre-load the number marks into buffers.
 " Set to 0 to avoid this pre-loading.
 let g:bufmru_nummarks = 0

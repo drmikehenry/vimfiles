@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-11-25
+==========
+
+- Add <Space><Space> as an additional mapping to invoke BufMRU mode.  This is
+  aimed at preserving the muscle memory of the original single-<Space> mapping
+  while retaining the use of <Space> as a leader key.
+
 2014-11-24
 ==========
 
