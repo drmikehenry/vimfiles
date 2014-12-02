@@ -2365,9 +2365,15 @@ let g:easy_align_delimiters = {
 " fswitch
 " -------------------------------------------------------------
 
+" dst - value for b:fswitchdst
+" locs - value for b:fswitchlocs
+" ... - value for b:fswitchfnames (if provided)
 function! SetFswitchVars(dst, locs, ...)
     if a:0 == 1
         let fnames = a:1
+        if !exists("b:fswitchfnames")
+            let b:fswitchfnames = fnames
+        endif
     elseif a:0 > 1
         echoerr "Invalid argument count"
         return
@@ -2378,9 +2384,6 @@ function! SetFswitchVars(dst, locs, ...)
     endif
     if !exists("b:fswitchlocs")
         let b:fswitchlocs = a:locs
-    endif
-    if exists("fnames") && !exists("b:fswitchfnames")
-        let b:fswitchfnames = fnames
     endif
 endfunction
 

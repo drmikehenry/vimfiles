@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2014-12-02
+==========
+
+- Support <Leader>of for snippets files (thanks to Mike Haig).
+- Add C snippets for static function (sfunc), function prototype (Func), and
+  enumerations (enum) (thanks to Mike Haig).
+
 2014-11-25
 ==========
 
