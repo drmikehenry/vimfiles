@@ -11,8 +11,11 @@ require adjustment of per-user settings.
 ==========
 
 - Support <Leader>of for snippets files (thanks to Mike Haig).
+
 - Add C snippets for static function (sfunc), function prototype (Func), and
   enumerations (enum) (thanks to Mike Haig).
+
+- Use 79-character comment banners.
 
 2014-11-25
 ==========
