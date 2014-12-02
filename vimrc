@@ -2362,6 +2362,48 @@ let g:easy_align_delimiters = {
         \ }
 
 " -------------------------------------------------------------
+" easymotion
+" -------------------------------------------------------------
+
+" Don't use the default maps, as there are too many deviations from
+" the defaults.
+let g:EasyMotion_do_mapping = 0
+
+" Lowercase keys will match either lowercase or uppercase buffer text.
+let g:EasyMotion_smartcase = 1
+
+" Set keys for targets (removing semi-colon from default).
+let g:EasyMotion_keys = "asdghklqwertyuiopzxcvbnmfj"
+
+Noxmap  <Space>j            <Plug>(easymotion-j)
+Noxmap  <Space>k            <Plug>(easymotion-k)
+Noxmap  <Space>f            <Plug>(easymotion-bd-f)
+Noxmap  <Space>t            <Plug>(easymotion-bd-t)
+Noxmap  <Space>w            <Plug>(easymotion-bd-w)
+Noxmap  <Space>W            <Plug>(easymotion-bd-W)
+Noxmap  <Space>e            <Plug>(easymotion-bd-e)
+Noxmap  <Space>E            <Plug>(easymotion-bd-E)
+Noxmap  <Space>a            <Plug>(easymotion-jumptoanywhere)
+
+" Setup target locations for single-line "anywhere".
+let g:EasyMotion_re_line_anywhere = '\v' .
+        \ '^$'                . '|' .
+        \ '<.'                . '|' .
+        \ '>.'                . '|' .
+        \ '\l\zs\u'           . '|' .
+        \ '_\zs.'             . '|' .
+        \ '#\zs.'
+
+" Setup target locations for "anywhere".
+let g:EasyMotion_re_anywhere = '\v' .
+        \ '^$'                . '|' .
+        \ '<.'                . '|' .
+        \ '>.'                . '|' .
+        \ '\l\zs\u'           . '|' .
+        \ '_\zs.'             . '|' .
+        \ '#\zs.'
+
+" -------------------------------------------------------------
 " fswitch
 " -------------------------------------------------------------
 

@@ -17,6 +17,9 @@ require adjustment of per-user settings.
 
 - Use 79-character comment banners.
 
+- Add EasyMotion plugin.  This adds several new kinds of motions.  See :help
+  notes_easymotion for details.
+
 2014-11-25
 ==========
 

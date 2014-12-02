@@ -20,6 +20,7 @@
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
     Easy-Align - Align text on delimiters               |notes_easyalign|
+    EasyMotion - Multiple new motions                   |notes_easymotion|
     Endwise - End certain structures automatically      |notes_endwise|
     Eunuch - helpers for UNIX                           |notes_eunuch|
     Extline - for extending lines                       |notes_extline|
@@ -727,6 +728,34 @@ Local Customizations:
       \       Align on backslash (such as for C/C++ line continuations).
 
 Version 2014-11-22 (44216b0) from https://github.com/junegunn/vim-easy-align
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+EASYMOTION                                              *notes_easymotion*
+  Multiple new motions                                  |easymotion|
+
+Local Customizations:
+- Use custom mappings only.
+- Set g:EasyMotion_smartcase so lowercase keys will match both cases.
+- Setup g:EasyMotion_keys for convenient keys.
+
+- Setup mappings:
+
+  <Space>j            <Plug>(easymotion-j)
+  <Space>k            <Plug>(easymotion-k)
+  <Space>f            <Plug>(easymotion-bd-f)
+  <Space>t            <Plug>(easymotion-bd-t)
+  <Space>w            <Plug>(easymotion-bd-w)
+  <Space>W            <Plug>(easymotion-bd-W)
+  <Space>e            <Plug>(easymotion-bd-e)
+  <Space>E            <Plug>(easymotion-bd-E)
+  <Space>a            <Plug>(easymotion-jumptoanywhere)
+
+- Setup regular expressions for "anywhere" operations.
+
+Version 2014-11-13 (2dc0025) from https://github.com/Lokaltog/vim-easymotion.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
