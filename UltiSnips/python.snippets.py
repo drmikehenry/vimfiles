@@ -11,6 +11,10 @@ from sniputil import put
 
 put(r"""
 priority -5
+
+global !p
+from sniputil import autoPeriod
+endglobal
 """)
 
 bsnip("#!", "#!/usr/bin/env python...", r"""
@@ -47,7 +51,7 @@ if __name__ == '__main__':
 ## @todo Include arguments in docstring.
 bsnip("def", "def func(...):...", r'''
 def ${1:funcName}($2):
-    """${3:Description of function $1.}"""
+    """${3:Description of function $1}`!p snip.rv = autoPeriod(t[3])`"""
     ${4:pass}
 ''', aliases=["func"])
 
@@ -113,13 +117,13 @@ finally:
 
 bsnip("class", "class definition", r'''
 class ${1:MyClass}(${2:object}):
-    """${3:Docstring for $1.}"""
+    """${3:Docstring for $1}`!p snip.rv = autoPeriod(t[3])`"""
 
     def __init__(self${4/([^,])?(.*)/(?1:, )/}${4:arg}):
         """
         @todo Document $1.__init__ (along with arguments).
-${4/.+/(?0:\n)/}${4/(\A\s*,\s*\Z)|,?\s*([A-Za-z_][A-Za-z0-9_]*)\s*(=[^,]*)?(,\s*|$)/(?2:        $2 - @todo Document argument $2.\n)/g}        """
-${2/object$|(.+)/(?1:        $0.__init__\(self\)\n\n)/}${4/(\A\s*,\s*\Z)|,?\s*([A-Za-z_][A-Za-z0-9_]*)\s*(=[^,]*)?(,\s*|$)/(?2:        self._$2 = $2\n)/g}
+${4/.+/(?0:\\n)/}${4/(\A\s*,\s*\Z)|,?\s*([A-Za-z_][A-Za-z0-9_]*)\s*(=[^,]*)?(,\s*|$)/(?2:        $2 - @todo Document argument $2.\\n)/g}        """
+${2/object$|(.+)/(?1:        $0.__init__\(self\)\\n\\n)/}${4/(\A\s*,\s*\Z)|,?\s*([A-Za-z_][A-Za-z0-9_]*)\s*(=[^,]*)?(,\s*|$)/(?2:        self._$2 = $2\\n)/g}
 ''', aliases=["cl"])
 
 # @todo Consider "cm" for "classmethod(method)".
@@ -159,7 +163,7 @@ self.assertRaises(${1:exception}, ${2:func}${3/.+/, /}${3:arguments})
 
 bsnip("property", "property", r'''
 def ${1:propName}():
-    doc = """${2:Docstring for $1.}"""
+    doc = """${2:Docstring for $1}`!p snip.rv = autoPeriod(t[2])`"""
     def fget(self):
         return self._$1
     def fset(self, value):

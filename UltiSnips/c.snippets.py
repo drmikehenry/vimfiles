@@ -16,6 +16,7 @@ priority -5
 
 global !p
 from sniputil import betterVisual
+from sniputil import autoPeriod
 endglobal
 """)
 
@@ -202,7 +203,7 @@ bsnip("Func", "type func(...);", r"""
 /******************************************************************************
     [docexport ${1:funcName}]
 *//**
-    @brief ${2:Description.}
+    @brief ${2:Description}`!p snip.rv = autoPeriod(t[2])`
 ******************************************************************************/
 ${3:void}
 $1(${4:void});
@@ -212,7 +213,7 @@ bsnip("func", "type func(...) {...}", r"""
 /******************************************************************************
     [docimport ${1:funcName}]
 *//**
-    @brief ${2:Description.}
+    @brief ${2:Description}`!p snip.rv = autoPeriod(t[2])`
 ******************************************************************************/
 ${3:void}
 $1(${4:void})
@@ -225,7 +226,7 @@ bsnip("sfunc", "static type func(...) {...}", r"""
 /******************************************************************************
     ${1:funcName}
 *//**
-    @brief ${2:Description.}
+    @brief ${2:Description}`!p snip.rv = autoPeriod(t[2])`
 ******************************************************************************/
 static ${3:void}
 $1(${4:void})
@@ -236,7 +237,7 @@ $1(${4:void})
 
 # Type-related snippets.
 bsnip("struct", "typedef struct name {...} name;", r"""
-/** @brief ${2:@todo Description of $1.}
+/** @brief ${2:@todo Description of $1}`!p snip.rv = autoPeriod(t[2])`
 */
 typedef struct ${1:name}
 {
@@ -245,7 +246,7 @@ typedef struct ${1:name}
 """)
 
 bsnip("enum", "typedef enum name {...} name;", r"""
-/** @brief ${2:@todo Description of $1.}
+/** @brief ${2:@todo Description of $1}`!p snip.rv = autoPeriod(t[2])`
 */
 typedef enum ${1:name}
 {
@@ -282,7 +283,9 @@ bsnip("@retval",    "@retval value, Description", r"""
 @retval ${1:returnValue}
     ${0:Reason to return $1.}
 """, aliases=["@rv"])
-babbr("/**",   "/** @brief ${1:Brief description with period.} */")
-babbr("todo",  "/** @todo ${1:Description of what's TO DO.} */")
-babbr("bug",   "/** @bug ${1:Description of BUG.} */")
-
+babbr("/**",   "/** @brief ${1:Brief description}" +
+        "`!p snip.rv = autoPeriod(t[1])` */")
+babbr("todo",  "/** @todo ${1:Description of what's TO DO}" +
+        "`!p snip.rv = autoPeriod(t[1])` */")
+babbr("bug",   "/** @bug ${1:Description of BUG}" +
+        "`!p snip.rv = autoPeriod(t[1])` */")

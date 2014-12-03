@@ -67,3 +67,10 @@ def betterVisual(snip, contIndentLevel=1):
         else:
             # Avoid indentation for empty lines.
             snip.rv += "\n"
+
+def autoPeriod(sentence):
+    if sentence.endswith(tuple(". !".split())):
+        period = ""
+    else:
+        period = "."
+    return period
