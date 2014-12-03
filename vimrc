@@ -2317,17 +2317,6 @@ nnoremap <SNR>CtrlP.....t     :<C-u>CtrlPBufTag<CR>
 nnoremap <SNR>CtrlP.....T     :<C-u>CtrlPBufTagAll<CR>
 nnoremap <SNR>CtrlP.....<C-u> :<C-u>CtrlPUndo<CR>
 
-" Transitional mappings to migrate from historical Command-T functionality.
-" At first, redirect to CtrlP equivalent functionality.  Later, just
-" provide an error message.  Eventually, remove this mappings.
-nnoremap <leader><leader>t :<C-u>echoe "Use CTRL-p CTRL-p instead"<Bar>
-        \ sleep 1<Bar>
-        \ CtrlP<CR>
-
-nnoremap <leader><leader>b :<C-u>echoe "Use CTRL-p CTRL-o instead"<Bar>
-        \ sleep 1<Bar>
-        \ CtrlPBuffer<CR>
-
 " Reverse move and history binding pairs:
 " - For consistency with other plugins that use <C-n>/<C-p> for moving around.
 " - Because <C-j> is bound to the tmux prefix key, so it's best to map
