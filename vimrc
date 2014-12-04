@@ -2197,7 +2197,7 @@ if !exists("g:EnablePowerline")
 endif
 
 if !exists("g:EnableUltiSnips")
-    let g:EnableUltiSnips = 1
+    let g:EnableUltiSnips = has("python")
 endif
 
 " -------------------------------------------------------------

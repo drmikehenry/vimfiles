@@ -14,6 +14,8 @@ require adjustment of per-user settings.
   definitions).  Automatically provides period to end the sentence unless a
   period or exclamation point is already provided.
 
+- Enable UltiSnips by default only when Python is built into Vim.
+
 2014-12-02
 ==========
 
