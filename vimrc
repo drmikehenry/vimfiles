@@ -2364,8 +2364,8 @@ let g:EasyMotion_smartcase = 1
 " Set keys for targets (removing semi-colon from default).
 let g:EasyMotion_keys = "asdghklqwertyuiopzxcvbnmfj"
 
-Noxmap  <Space>j            <Plug>(easymotion-j)
-Noxmap  <Space>k            <Plug>(easymotion-k)
+Noxmap  <Space>j            <Plug>(easymotion-sol-j)
+Noxmap  <Space>k            <Plug>(easymotion-sol-k)
 Noxmap  <Space>f            <Plug>(easymotion-bd-f)
 Noxmap  <Space>t            <Plug>(easymotion-bd-t)
 Noxmap  <Space>w            <Plug>(easymotion-bd-w)
