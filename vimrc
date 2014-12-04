@@ -1541,20 +1541,6 @@ function! MakeEgrepString(str)
     return substitute(escape(a:str, '\\/.*$^~[]() %#'), '\n', '\\n', 'g')
 endfunction
 
-" Initiate search of visual selection (forward '*' or backward '#').
-" E.g.:
-"   xnoremap <expr> * VisualSearch('*')
-"   xnoremap <expr> # VisualSearch('#')
-function! VisualSearch(direction)
-    if a:direction == '#'
-        let l:rhs = "y?"
-    else
-        let l:rhs = "y/"
-    endif
-    let l:rhs = l:rhs . "\<C-r>=MakeSearchString(@\")\<CR>\<CR>gV"
-    return l:rhs
-endfunction
-
 " Setup @/ to given pattern, enable highlighting and add to search history.
 function! SetSearch(pattern)
     let @/ = a:pattern
