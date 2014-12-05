@@ -1570,14 +1570,14 @@ function! VisualRegrep()
 endfunction
 
 " Setup :Regrep command to search for complete word under cursor.
-function! NormalRegrep()
+function! NormalRegrepCword()
     return "yiw:MatchScratchWord\<CR>" .
             \ ":Regrep \\<\<C-r>=MakeEgrepString(@\")\<CR>\\>"
 endfunction
 
 " :Regrep of visual selection or current word under cursor.
 vnoremap <expr> <F3> VisualRegrep()
-nnoremap <expr> <F3> NormalRegrep()
+nnoremap <expr> <F3> NormalRegrepCword()
 
 function! FoldShowExpr()
     let maxLevel = 2
