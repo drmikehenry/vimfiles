@@ -13,6 +13,9 @@ require adjustment of per-user settings.
 - Add Ack plugin for searching using the 'ack' utility.  See :help notes_ack
   for details.
 
+- Add Ag plugin for searching using the 'ag' utility.  See :help notes_ag
+  for details.
+
 2014-12-03
 ==========
 
