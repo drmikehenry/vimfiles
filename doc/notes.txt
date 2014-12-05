@@ -492,10 +492,10 @@ Installed plugins:
 ACK                                                     *notes_ack*
   Search using 'ack' utility                            |ack|
 
-Version 2014-06-11 (303bcef) from https://github.com/mileszs/ack.vim.git
-
 To use this plugin, ensure that the 'ack' utility is installed.  See
 http://beyondgrep.com/ for details.
+
+Version 2014-06-11 (303bcef) from https://github.com/mileszs/ack.vim.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -504,10 +504,10 @@ Installation:
 AG                                                      *notes_ag*
   Search using 'ag' utility                             |ag|
 
-Version 2014-07-07 (d3a00f8) from https://github.com/rking/ag.vim.git
-
 To use this plugin, ensure that the "Silver Searcher" ('ag') utility is
 installed.  See https://github.com/ggreer/the_silver_searcher for details.
+
+Version 2014-07-07 (d3a00f8) from https://github.com/rking/ag.vim.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
