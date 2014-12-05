@@ -8,6 +8,7 @@
     Setup vimfiles                                      |notes_setup_vimfiles|
     Build Vim                                           |notes_build_vim|
 3.  Plugins                                             |notes_plugins|
+    Ack - Search using 'ack' utility                    |notes_ack|
     Badwolf colorscheme                                 |notes_badwolf|
     Base16 colorscheme collection                       |notes_base16|
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
@@ -485,6 +486,18 @@ General bundle installation instructions:               *bundle_installation*
     git add -f doc/tag*
 
 Installed plugins:
+
+------------------------------------------------------------------------------
+ACK                                                     *notes_ack*
+  Search using 'ack' utility                            |ack|
+
+Version 2014-06-11 (303bcef) from https://github.com/mileszs/ack.vim.git
+
+To use this plugin, ensure that the 'ack' utility is installed.  See
+http://beyondgrep.com/ for details.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 BADWOLF                                                 *notes_badwolf*
