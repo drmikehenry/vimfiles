@@ -3148,15 +3148,33 @@ To make this easier, a visual mode mapping of capital P performs a put from
 register 0.  This allows a yank followed by repeated selections and puts.
 
 ------------------------------------------------------------------------------
-Search for word under cursor
+Search-related customizations
 
 Vim's standard "*" operator (which searches for the word under the cursor) has
 been modified to leave the cursor unmoved.  In visual mode, the selection
 becomes the search text.
 
-Use <F3> to begin a :Regrep command on the word under the cursor (or the
-selection in Visual mode).  See :help grep.txt for details on the grep plugin
-and the :Regrep command.
+Use <F3> to begin a :Regrep command on the word under the cursor (in Normal
+mode) or on the current selection (in Visual mode).  See :help grep.txt for
+details on the grep plugin and the :Regrep command.
+
+Ack is a Perl-based search tool that knows how to avoid searching in binary
+files and hidden directories.  It has several features to improve the process of
+searching for text.  The "Ack" plugin provides an interface to the 'ack'
+utility.  Inspired by Ack, the Silver Searcher ('ag') is a similar tool coded in
+"C" for speed.  The "Ag" plugin is a direct port of the "Ack" plugin.
+The "Ack" utility may be invoked explicitly using :Ack, and the Silver Searcher
+may be invoked via ":Ag".
+
+Generally, the Silver Searcher is preferred for speed.  When it is not
+available, Ack is a good alternative.  The custom command :G abstracts this
+choice for you.  When the Silver Searcher is installed, :G is equivalent to :Ag!
+(with the exclamation point to avoid jumping to the first match); when that tool
+is unavailable, :G falls back to :Ack! to use the portable 'ack' tool.
+
+In addition, "#" is mapped to search for the word under the cursor (in Normal
+mode) or the current selection (in Visual mode) using :Ag! (when available) or
+:Ack! (otherwise).
 
 Use the mapping \z after a search to fold all but the matching lines.
 

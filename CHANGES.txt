@@ -16,6 +16,12 @@ require adjustment of per-user settings.
 - Add Ag plugin for searching using the 'ag' utility.  See :help notes_ag
   for details.
 
+- Add '#' to search for the word under the cursor (in Normal mode) or the
+  current selection (in Visual mode) using :Ag! (if available) or :Ack!
+  (otherwise).
+
+- Add :G to search using :Ag! (if available) or :Ack! (otherwise).
+
 2014-12-03
 ==========
 

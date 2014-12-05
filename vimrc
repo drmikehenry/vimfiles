@@ -1541,6 +1541,15 @@ function! MakeEgrepString(str)
     return substitute(escape(a:str, '\\/.*$^~[]() %#'), '\n', '\\n', 'g')
 endfunction
 
+" Escape passed-in string for use as a Perl regular expression.
+function! MakePerlRegexString(str)
+    let s = a:str
+    let s = escape(s, '\\!.*+$^~[]()')
+    let s = substitute(s, "'", "'\\\\''", 'g')
+    let s = substitute(s, '\n', '\\n', 'g')
+    return s
+endfunction
+
 " Setup @/ to given pattern, enable highlighting and add to search history.
 function! SetSearch(pattern)
     let @/ = a:pattern
@@ -1576,8 +1585,56 @@ function! NormalRegrepCword()
 endfunction
 
 " :Regrep of visual selection or current word under cursor.
-vnoremap <expr> <F3> VisualRegrep()
+xnoremap <expr> <F3> VisualRegrep()
 nnoremap <expr> <F3> NormalRegrepCword()
+
+" Setup Perl search command for word under cursor.
+function! NormalPerlSearchCword(searchCmd)
+    return "yiw:MatchScratchWord\<CR>:" . a:searchCmd . "! " .
+            \ "'\<C-r>=MakePerlRegexString(@\")\<CR>' -w"
+endfunction
+
+" Setup :Ag (or :Ack) command to search for visual selection.
+function! VisualPerlSearch(searchCmd)
+    return "y:MatchScratch\<CR>:" . a:searchCmd . "! " .
+            \ "'\<C-r>=MakePerlRegexString(@\")\<CR>'"
+endfunction
+
+" True if have 'ag' in PATH.
+function! HaveAg()
+    return exepath("ag") != ""
+endfunction
+
+" True if have 'ack' in PATH.
+function! HaveAck()
+    return exepath("ack") != ""
+endfunction
+
+" Return "Ag" (if 'ag' is available) or "Ack" (otherwise).
+function! AgOrAck()
+    if HaveAg()
+        return "Ag"
+    else
+        return "Ack"
+    endif
+endfunction
+
+nnoremap <expr> #    NormalPerlSearchCword(AgOrAck())
+xnoremap <expr> #    VisualPerlSearch(AgOrAck())
+
+" Run "Ag!" or "Ack!" using supplied arguments.
+function! RunAgOrAck(args)
+    if HaveAg()
+        call ag#Ag('grep!', a:args)
+    elseif HaveAck()
+        call ack#Ack('grep!', a:args)
+    else
+        echoerr "Can't find 'ag' or 'ack'"
+    endif
+endfunction
+
+" Run first available of Ag! or Ack! against arguments.
+command! -bang -nargs=* -complete=file G call RunAgOrAck(<q-args>)
 
 function! FoldShowExpr()
     let maxLevel = 2
