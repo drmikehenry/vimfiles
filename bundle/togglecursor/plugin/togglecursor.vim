@@ -2,7 +2,7 @@
 " File:         togglecursor.vim
 " Description:  Toggles cursor shape in the terminal
 " Maintainer:   John Szakmeister <john@szakmeister.net>
-" Version:      0.2.0
+" Version:      0.3.0
 " License:      Same license as Vim.
 " ============================================================================
 
@@ -41,7 +41,7 @@ if !has("gui_running")
                 " \ || $VTE_VERSION != ""
         " iTerm, xterm, and future VTE based terminals support DESCCUSR.
         let s:supported_terminal = 'xterm'
-    elseif $KONSOLE_DBUS_SESSION != ""
+    elseif $TERM_PROGRAM == "Konsole" || exists("$KONSOLE_DBUS_SESSION")
         "cursorshape for konsole
         let s:supported_terminal = 'cursorshape'
     endif
@@ -65,6 +65,10 @@ if !exists("g:togglecursor_insert")
             let g:togglecursor_insert = 'underline'
         endif
     endif
+endif
+
+if !exists("g:togglecursor_replace")
+    let g:togglecursor_replace = 'underline'
 endif
 
 if !exists("g:togglecursor_leave")
@@ -123,6 +127,15 @@ function! s:ToggleCursorLeave()
     let &t_te = s:GetEscapeCode(g:togglecursor_leave) . &t_te
 endfunction
 
+function! s:ToggleCursorByMode()
+    if v:insertmode == 'r' || v:insertmode == 'v'
+        let &t_SI = s:GetEscapeCode(g:togglecursor_replace)
+    else
+        " Default to the insert mode cursor.
+        let &t_SI = s:GetEscapeCode(g:togglecursor_insert)
+    endif
+endfunction
+
 " Having our escape come first seems to work better with tmux and konsole under
 " Linux.
 let &t_ti = s:GetEscapeCode(g:togglecursor_default) . &t_ti
@@ -131,4 +144,5 @@ augroup ToggleCursorStartup
     autocmd!
     autocmd VimEnter * call <SID>ToggleCursorInit()
     autocmd VimLeave * call <SID>ToggleCursorLeave()
+    autocmd InsertEnter * call <SID>ToggleCursorByMode()
 augroup END
