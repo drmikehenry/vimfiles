@@ -492,8 +492,11 @@ Installed plugins:
 ACK                                                     *notes_ack*
   Search using 'ack' utility                            |ack|
 
-To use this plugin, ensure that the 'ack' utility is installed.  See
-http://beyondgrep.com/ for details.
+Local customizations:
+- The single-file implementation of "ack" is installed in $VIMFILES/tool/ack,
+  ensuring that it is available on all platforms with Perl installed.
+
+For more information on "ack", see http://beyondgrep.com/.
 
 Version 2014-06-11 (303bcef) from https://github.com/mileszs/ack.vim.git
 

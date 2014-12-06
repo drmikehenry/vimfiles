@@ -2244,6 +2244,31 @@ if !exists("g:EnableUltiSnips")
 endif
 
 " -------------------------------------------------------------
+" Ack
+" -------------------------------------------------------------
+
+" Default to using "ack" from vimfiles, as we aim to keep it at least as
+" up-to-date as any system-provided "ack" executable.  This will avoid picking
+" up old 1.x versions of "ack" that might be found on the system.
+if !exists("g:UseSystemAck")
+    let g:UseSystemAck = 0
+endif
+
+" Setup default Ack options.  Unfortunately this must be done in duplication of
+" the settings in ack.vim, because they have to be part of g:ackprg which we'd
+" like to set here.  Even if g:UseSystemAck is true, we set these options here
+" to ensure they are the same regardless of which executable is chosen.
+if !exists("g:ack_default_options")
+    let g:ack_default_options = " -s -H --nocolor --nogroup --column"
+endif
+
+if !g:UseSystemAck
+    " Use the "ack" executable shipped in vimfiles.
+    let g:ackprg = "perl " . $VIMFILES . "/tool/ack"
+    let g:ackprg .= g:ack_default_options
+endif
+
+" -------------------------------------------------------------
 " BufExplorer
 " -------------------------------------------------------------
 
