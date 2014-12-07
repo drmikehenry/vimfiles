@@ -1605,11 +1605,6 @@ function! HaveAg()
     return exepath("ag") != ""
 endfunction
 
-" True if have 'ack' in PATH.
-function! HaveAck()
-    return exepath("ack") != ""
-endfunction
-
 " Return "Ag" (if 'ag' is available) or "Ack" (otherwise).
 function! AgOrAck()
     if HaveAg()
@@ -1626,10 +1621,8 @@ xnoremap <expr> #    VisualPerlSearch(AgOrAck())
 function! RunAgOrAck(args)
     if HaveAg()
         call ag#Ag('grep!', a:args)
-    elseif HaveAck()
-        call ack#Ack('grep!', a:args)
     else
-        echoerr "Can't find 'ag' or 'ack'"
+        call ack#Ack('grep!', a:args)
     endif
 endfunction
 
