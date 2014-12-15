@@ -1602,7 +1602,7 @@ endfunction
 
 " True if have 'ag' in PATH.
 function! HaveAg()
-    return exepath("ag") != ""
+    return executable("ag")
 endfunction
 
 " Return "Ag" (if 'ag' is available) or "Ack" (otherwise).
