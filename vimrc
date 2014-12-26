@@ -164,7 +164,11 @@ endfunction
 " multiple user to share the same overrides (e.g., to let "root" share settings
 " with another user).
 if $VIMUSER == ""
-    let $VIMUSER = expand("$USER")
+    if has("win32")
+        let $VIMUSER = expand("$USERNAME")
+    else
+        let $VIMUSER = expand("$USER")
+    endif
 endif
 
 " By default, don't permit old-style $VIMUSER-before.vim and $VIMUSER-after.vim.
