@@ -14,6 +14,10 @@ if exists('g:loaded_syntastic_javascript_jshint_checker')
 endif
 let g:loaded_syntastic_javascript_jshint_checker = 1
 
+if !exists('g:syntastic_javascript_jshint_sort')
+    let g:syntastic_javascript_jshint_sort = 1
+endif
+
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -22,7 +26,10 @@ function! SyntaxCheckers_javascript_jshint_IsAvailable() dict
     if !executable(self.getExec())
         return 0
     endif
+
     let s:jshint_version = syntastic#util#getVersion(self.getExecEscaped() . ' --version')
+    call self.log(self.getExec() . ' version =', s:jshint_version)
+
     return syntastic#util#versionIsAtLeast(s:jshint_version, [1])
 endfunction
 
@@ -39,8 +46,6 @@ function! SyntaxCheckers_javascript_jshint_GetLocList() dict
     let errorformat = s:jshint_new ?
         \ '%A%f: line %l\, col %v\, %m \(%t%*\d\)' :
         \ '%E%f: line %l\, col %v\, %m'
-
-    call self.setWantSort(1)
 
     return SyntasticMake({
         \ 'makeprg': makeprg,

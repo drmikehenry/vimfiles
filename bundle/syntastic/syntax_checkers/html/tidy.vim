@@ -17,17 +17,6 @@
 "
 " HTML Tidy for HTML5 can be used without changes by this checker, just install
 " it and point g:syntastic_html_tidy_exec to the executable.
-"
-" Checker options:
-"
-" - g:syntastic_html_tidy_ignore_errors (list; default: [])
-"   list of errors to ignore
-" - g:syntastic_html_tidy_blocklevel_tags (list; default: [])
-"   list of additional blocklevel tags, to be added to "--new-blocklevel-tags"
-" - g:syntastic_html_tidy_inline_tags (list; default: [])
-"   list of additional inline tags, to be added to "--new-inline-tags"
-" - g:syntastic_html_tidy_empty_tags (list; default: [])
-"   list of additional empty tags, to be added to "--new-empty-tags"
 
 if exists("g:loaded_syntastic_html_tidy_checker")
     finish
@@ -55,7 +44,7 @@ set cpo&vim
 
 " TODO: join this with xhtml.vim for DRY's sake?
 function! s:TidyEncOptByFenc()
-    let tidy_opts = {
+    let TIDY_OPTS = {
             \ 'utf-8':        '-utf8',
             \ 'ascii':        '-ascii',
             \ 'latin1':       '-latin1',
@@ -69,10 +58,10 @@ function! s:TidyEncOptByFenc()
             \ 'sjis':         '-shiftjis',
             \ 'cp850':        '-ibm858',
         \ }
-    return get(tidy_opts, &fileencoding, '-utf8')
+    return get(TIDY_OPTS, &fileencoding, '-utf8')
 endfunction
 
-let s:ignore_errors = [
+let s:IGNORE_ERRORS = [
         \ "<table> lacks \"summary\" attribute",
         \ "not approved by W3C",
         \ "<input> proprietary attribute \"placeholder\"",
@@ -123,9 +112,9 @@ let s:ignore_errors = [
         \ "proprietary attribute \"aria-valuenow\"",
         \ "proprietary attribute \"aria-valuetext\""
     \ ]
-lockvar! s:ignore_errors
+lockvar! s:IGNORE_ERRORS
 
-let s:blocklevel_tags = [
+let s:BLOCKLEVEL_TAGS = [
         \ "main",
         \ "section",
         \ "article",
@@ -136,9 +125,9 @@ let s:blocklevel_tags = [
         \ "figure",
         \ "figcaption"
     \ ]
-lockvar! s:blocklevel_tags
+lockvar! s:BLOCKLEVEL_TAGS
 
-let s:inline_tags = [
+let s:INLINE_TAGS = [
         \ "video",
         \ "audio",
         \ "source",
@@ -155,17 +144,17 @@ let s:inline_tags = [
         \ "details",
         \ "datalist"
     \ ]
-lockvar! s:inline_tags
+lockvar! s:INLINE_TAGS
 
-let s:empty_tags = [
+let s:EMPTY_TAGS = [
         \ "wbr",
         \ "keygen"
     \ ]
-lockvar! s:empty_tags
+lockvar! s:EMPTY_TAGS
 
 function! s:IgnoreError(text)
-    for i in s:ignore_errors + g:syntastic_html_tidy_ignore_errors
-        if stridx(a:text, i) != -1
+    for item in s:IGNORE_ERRORS + g:syntastic_html_tidy_ignore_errors
+        if stridx(a:text, item) != -1
             return 1
         endif
     endfor
@@ -173,7 +162,7 @@ function! s:IgnoreError(text)
 endfunction
 
 function! s:NewTags(name)
-    return syntastic#util#shescape(join( s:{a:name} + g:syntastic_html_tidy_{a:name}, ',' ))
+    return syntastic#util#shescape(join( s:{toupper(a:name)} + g:syntastic_html_tidy_{a:name}, ',' ))
 endfunction
 
 function! s:Args()

@@ -8,9 +8,6 @@
 "             Want To Public License, Version 2, as published by Sam Hocevar.
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
-"
-"Installation: $ npm install -g js-yaml
-"
 "============================================================================
 
 if exists("g:loaded_syntastic_yaml_jsyaml_checker")
@@ -23,8 +20,9 @@ set cpo&vim
 
 function! SyntaxCheckers_yaml_jsyaml_GetLocList() dict
     if !exists('s:js_yaml_new')
-        let s:js_yaml_new =
-            \ syntastic#util#versionIsAtLeast(syntastic#util#getVersion(self.getExecEscaped() . ' --version'), [2])
+        let ver = syntastic#util#getVersion(self.getExecEscaped() . ' --version')
+        call self.log(self.getExec() . ' version =', ver)
+        let s:js_yaml_new = syntastic#util#versionIsAtLeast(ver, [2])
     endif
 
     let makeprg = self.makeprgBuild({ 'args_after': (s:js_yaml_new ? '' : '--compact') })

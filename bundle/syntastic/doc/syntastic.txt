@@ -34,6 +34,7 @@ CONTENTS                                                  *syntastic-contents*
         5.1.Choosing which checkers to use.........|syntastic-filetype-checkers|
         5.2.Choosing the executable................|syntastic-config-exec|
         5.3.Configuring specific checkers..........|syntastic-config-makeprg|
+        5.4.Sorting errors.........................|syntastic-config-sort|
     6.Notes........................................|syntastic-notes|
         6.1.Handling of composite filetypes........|syntastic-composite|
         6.2.Editing files over network.............|syntastic-netrw|
@@ -44,6 +45,7 @@ CONTENTS                                                  *syntastic-contents*
         6.7.Using syntastic with the fizsh shell...|syntastic-fizsh|
         6.8.Interaction with Eclim.................|syntastic-eclim|
         6.9.Interaction with vim-virtualenv........|syntastic-vim-virtualenv|
+        6.10.Interaction with vim-auto-save........|syntastic-vim-auto-save|
     7.About........................................|syntastic-about|
     8.License......................................|syntastic-license|
 
@@ -67,7 +69,7 @@ Take a look at the wiki for a list of supported filetypes and checkers:
     https://github.com/scrooloose/syntastic/wiki/Syntax-Checkers
 
 Note: This doc only deals with using syntastic. To learn how to write syntax
-checker integrations, see the guide on the github wiki:
+checker integrations, see the guide on the GitHub wiki:
 
     https://github.com/scrooloose/syntastic/wiki/Syntax-Checker-Guide
 
@@ -78,16 +80,17 @@ Syntastic comes preconfigured with a default list of enabled checkers per
 filetype. This list is kept reasonably short to prevent slowing down Vim or
 trying to use conflicting checkers.
 
-You can see the list checkers available for the current filetype with the
+You can see the list of checkers available for the current filetype with the
 |:SyntasticInfo| command.
 
-If you want to override the configured list of checkers for a filetype then
-see |syntastic-checker-options| for details. You can also change the arguments
-passed to a specific checker as well.
+You probably want to override the configured list of checkers for the
+filetypes you use, and also change the arguments passed to specific checkers
+to suit your needs. See |syntastic-checker-options| for details.
 
-Use |:SyntasticCheck| to manually check right now. Use |:SyntasticToggleMode|
-to switch between active (checking on writing the buffer) and passive (manual)
-checking.
+Use |:SyntasticCheck| to manually check right now. Use |:Errors| to open the
+|location-list| window, and |:lclose| to close it. You can clear the error
+list with |:SyntasticReset|, and you can use |:SyntasticToggleMode| to switch
+between active (checking on writing the buffer) and passive (manual) checking.
 
 ==============================================================================
 2. Functionality provided                            *syntastic-functionality*
@@ -155,13 +158,22 @@ Example: >
     highlight SyntasticErrorLine guibg=#2f0000
 <
 ------------------------------------------------------------------------------
-2.3. The error window                         *:Errors* *syntastic-error-window*
+2.3. The error window                                   *syntastic-error-window*
 
-You can use the :Errors command to display the errors for the current buffer
+You can use the |:Errors| command to display the errors for the current buffer
 in the |location-list|.
 
-Note that when you use :Errors, the current location list is overwritten with
-Syntastic's own location list.
+Note that when you use |:Errors| the current location list is overwritten with
+Syntastic's own location list. The location list is also overwritten when
+|syntastic_auto_jump| is non-zero and the cursor has to jump to an issue.
+
+By default syntastic doesn't fill the |location-list| with the errors found by
+the checkers, in order to reduce clashes with other plugins. Consequently, if
+you run |:lopen| or |:lwindow| rather than |:Errors| to open the error window you
+wouldn't see syntastic's list of errors. If you insist on using |:lopen| or
+|:lwindow| you should either run |:SyntasticSetLoclist| after running the checks,
+or set |syntastic_always_populate_loc_list| which tells syntastic to update the
+|location-list| automatically.
 
 ------------------------------------------------------------------------------
 2.4. Error highlighting                               *syntastic-highlighting*
@@ -198,7 +210,8 @@ disable generation of these labels by turning off '|syntastic_id_checkers|'.
 If |'syntastic_sort_aggregated_errors'| is set (which is the default), messages
 in the aggregated list are grouped by file, then sorted by line number, then
 type, then column number.  Otherwise messages produced by the same checker are
-grouped together.
+grouped together, and sorting within each group is decided by the variables
+|'syntastic_<filetype>_<checker>_sort'|.
 
 ------------------------------------------------------------------------------
 2.6 Filtering errors                              *syntastic-filtering-errors*
@@ -212,10 +225,13 @@ See also: |'syntastic_<filetype>_<checker>_quiet_messages'|.
 ==============================================================================
 3. Commands                                               *syntastic-commands*
 
-:Errors                                                     *:SyntasticErrors*
+:Errors                                                              *:Errors*
 
 When errors have been detected, use this command to pop up the |location-list|
 and display the error messages.
+
+Please note that the |:Errors| command overwrites the current location list with
+syntastic's own location list.
 
 :SyntasticToggleMode                                    *:SyntasticToggleMode*
 
@@ -239,7 +255,7 @@ the order specified.  The rules of |syntastic_aggregate_errors| still apply.
 Example: >
     :SyntasticCheck flake8 pylint
 <
-:SyntasticInfo                                               *:SyntasticInfo*
+:SyntasticInfo                                                *:SyntasticInfo*
 
 The command takes an optional argument, and outputs information about the
 checkers available for the filetype named by said argument, or for the current
@@ -303,9 +319,22 @@ messages grouped by checker output, set this variable to 0. >
 <
                                               *'syntastic_echo_current_error'*
 Default: 1
-If enabled, syntastic will echo the error associated with the current line to
-the command window. If multiple errors are found, the first will be used. >
+If enabled, syntastic will echo current error to the command window. If
+multiple errors are found on the same line, |syntastic_cursor_columns| is used
+to decide which one is shown. >
     let g:syntastic_echo_current_error = 1
+<
+                                                  *'syntastic_cursor_columns'*
+Default: 1
+This option controls which errors are echoed to the command window if
+|syntastic_echo_current_error| is set and multiple errors are found on the same
+line. When the option is enabled, the first error corresponding to the current
+column is show. Otherwise, the first error on the current line is echoed,
+regardless of the cursor position on the current line.
+
+When dealing with very large lists of errors, disabling this option can speed
+up navigation significantly: >
+    let g:syntastic_cursor_column = 0
 <
                                                     *'syntastic_enable_signs'*
 Default: 1
@@ -354,12 +383,17 @@ when saving or opening a file.
 When set to 0 the cursor won't jump automatically. >
     let g:syntastic_auto_jump = 0
 <
-When set to 1 the cursor will always jump to the first issue detected. >
+When set to 1 the cursor will always jump to the first issue detected,
+regardless of type. >
     let g:syntastic_auto_jump = 1
 <
 When set to 2 the cursor will jump to the first issue detected, but only if
 this issue is an error. >
     let g:syntastic_auto_jump = 2
+<
+When set to 3 the cursor will jump to the first error detected, if any. If
+all issues detected are warnings, the cursor won't jump. >
+    let g:syntastic_auto_jump = 3
 <
                                                    *'syntastic_auto_loc_list'*
 Default: 2
@@ -396,8 +430,9 @@ Default: {}
 Use this option to map non-standard filetypes to standard ones.  Corresponding
 checkers are mapped accordingly, which allows syntastic to check files with
 non-standard filetypes: >
-    let g:syntastic_filetype_map = { "latex": "tex",
-                                   \ "gentoo-metadata": "xml" }
+    let g:syntastic_filetype_map = {
+        \ "latex": "tex",
+        \ "gentoo-metadata": "xml" }
 <
 Composite filetypes can also be mapped to simple types, which disables the
 default behaviour of running both checkers against the input file: >
@@ -407,15 +442,15 @@ default behaviour of running both checkers against the input file: >
 Default: { "mode": "active",
            "active_filetypes": [],
            "passive_filetypes": [] }
-
 Use this option to fine tune when automatic syntax checking is done (or not
 done).
 
 The option should be set to something like: >
 
-    let g:syntastic_mode_map = { "mode": "active",
-                               \ "active_filetypes": ["ruby", "php"],
-                               \ "passive_filetypes": ["puppet"] }
+    let g:syntastic_mode_map = {
+        \ "mode": "active",
+        \ "active_filetypes": ["ruby", "php"],
+        \ "passive_filetypes": ["puppet"] }
 <
 "mode" can be mapped to one of two values - "active" or "passive". When set
 to "active", syntastic does automatic checking whenever a buffer is saved or
@@ -431,31 +466,49 @@ the "passive_filetypes" array ("active_filetypes" is ignored).
 If any of "mode", "active_filetypes", or "passive_filetypes" are left
 unspecified, they default to values above.
 
+If local variable |'b:syntastic_mode'| is defined its value takes precedence
+over all calculations involving |'syntastic_mode_map'| for the corresponding
+buffer.
+
 At runtime, the |:SyntasticToggleMode| command can be used to switch between
 active and passive modes.
 
+                                                          *'b:syntastic_mode'*
+Default: unset
+Only the local form |'b:syntastic_mode'| is used. When set to either "active"
+or "passive", it takes precedence over |'syntastic_mode_map'| when deciding
+whether the corresponding buffer should be checked automatically.
+
                                                   *'syntastic_quiet_messages'*
 Default: {}
-
 Use this option to filter out some of the messages produced by checkers.  The
 option should be set to something like: >
-    let g:syntastic_quiet_messages = { "level": "warnings",
-                                     \ "type":  "style",
-                                     \ "regex": '\m\[C03\d\d\]',
-                                     \ "file":  ['\m^/usr/include/', '\m\c\.h$'] }
+    let g:syntastic_quiet_messages = {
+        \ "!level":  "errors",
+        \ "type":    "style",
+        \ "regex":   '\m\[C03\d\d\]',
+        \ "file:p":  ['\m^/usr/include/', '\m\c\.h$'] }
 <
 Each element turns off messages matching the patterns specified by the
 corresponding value. Values are lists, but if a list consist of a single
-element you can omit adding the brackets (e.g. you can write "style" instead
-of ["style"]). Elements with values [] or '' are ignored (this is useful for
+element you may omit the brackets (e.g. you may write "style" instead of
+["style"]). Elements with values [] or '' are ignored (this is useful for
 overriding filters, cf. |filter-overrides|).
 
     "level" - takes one of two values, "warnings" or "errors"
     "type"  - can be either "syntax" or "style"
     "regex" - is matched against the messages' text as a case insensitive
               |regular-expression|
-    "file"  - is matched against the filename the error refers to, as a case
-              sensitive |regular-expression|.
+    "file"  - is matched against the filenames the messages refer to, as a
+              case sensitive |regular-expression|.
+
+If a key is prefixed by an exclamation mark "!", the corresponding filter is
+negated (i.e. the above example silences all messages that are NOT errors).
+
+The "file" key may be followed by one or more filename modifiers (see
+|filename-modifiers|). The modifiers are applied to the filenames the messages
+refer to before matching against the value (i.e. in the above example the full
+path of the issues are matched against '\m^/usr/include/' and '\m\c\.h$').
 
 If |'syntastic_id_checkers'| is set, filters are applied before error messages
 are labeled with the names of the checkers that created them.
@@ -506,6 +559,12 @@ statusline: >
 If the buffer had 2 warnings, starting on line 5 then this would appear: >
     [Warn: 5 #2]
 <
+                                                   *'b:syntastic_skip_checks'*
+Default: unset
+Only the local form |'b:syntastic_skip_checks'| is used. When set to a true
+value, no checks are run against the corresponding buffer. Example: >
+    let b:syntastic_skip_checks = 1
+<
                                                     *'syntastic_full_redraws'*
 Default: 0 in GUI Vim and MacVim, 1 otherwise
 Controls whether syntastic calls |:redraw| or |:redraw!| for screen redraws.
@@ -513,16 +572,24 @@ Changing it can in principle make screen redraws smoother, but it can also
 cause screen to flicker, or cause ghost characters. Leaving it to the default
 should be safe.
 
+                                                     *'syntastic_exit_checks'*
+Default: 0 when running under "cmd.exe" on Windows, 1 otherwise
+Syntastic attempts to catch abnormal termination conditions from checkers by
+looking at their exit codes. The "cmd.exe" shell on Windows make these checks
+meaningless, by returning 1 to Vim when the checkers exit with non-zero codes.
+The above variable can be used to disable exit code checks in syntastic.
+
                                                            *'syntastic_debug'*
 Default: 0
 Set this to the sum of one or more of the following flags to enable
 debugging:
 
-     1 - trace checker calls
+     1 - trace general workflow
      2 - dump location lists
      4 - trace notifiers
      8 - trace autocommands
     16 - dump options
+    32 - trace running of specific checkers
 
 Example: >
     let g:syntastic_debug = 1
@@ -580,11 +647,19 @@ Use |:SyntasticInfo| to see which checkers are available for a given filetype.
 5.2 Choosing the executable                            *syntastic-config-exec*
 
                                        *'syntastic_<filetype>_<checker>_exec'*
-The executable used by a checker is normally defined automatically, when the
-checkers is registered. You can however override it by setting the variable
+The executable run by a checker is normally defined automatically, when the
+checker is registered. You can however override it, by setting the variable
 'g:syntastic_<filetype>_<checker>_exec': >
     let g:syntastic_ruby_mri_exec = '~/bin/ruby2'
 <
+This variable has a local version, 'b:syntastic_<filetype>_<checker>_exec',
+which takes precedence over the global one in the corresponding buffer.
+
+                                                *'b:syntastic_<checker>_exec'*
+And there is also a local variable named 'b:syntastic_<checker>_exec', which
+takes precedence over both 'b:syntastic_<filetype>_<checker>_exec' and
+'g:syntastic_<filetype>_<checker>_exec' in the buffers where it is defined.
+
 ------------------------------------------------------------------------------
 5.3 Configuring specific checkers                   *syntastic-config-makeprg*
 
@@ -609,21 +684,20 @@ have local versions 'b:syntastic_<filetype>_<checker-name>_<option-name>',
 which take precedence over the global ones in the corresponding buffers.
 
 If one of these variables has a non-empty default and you want it to be empty,
-you can set it to a space, e.g.: >
-    let g:syntastic_javascript_jslint_args = " "
+you can set it to an empty string, e.g.: >
+    let g:syntastic_javascript_jslint_args = ""
 <
-(setting it to an empty string doesn't work, for implementation reasons).
-
                                         *'syntastic_<filetype>_<checker>_exe'*
 The 'exe' is normally the same as the 'exec' attribute described above, in
 which case it may be omitted. However, you can use it to add environment
-variables or additional parameters, e.g. to tell the mri checker to use KANJI
-encoding you could do something like this: >
-    let g:syntastic_ruby_mri_exe = 'RUBYOPT="-Ke" ruby'
+variables, or to change the way the checker is run. For example this setup
+allows you to run PC-Lint under Wine emulation on Linux: >
+    let  g:syntastic_c_pc_lint_exec = "wine"
+    let  g:syntastic_c_pc_lint_exe = "wine c:/path/to/lint-nt.exe"
 <
 To override the args and the tail: >
-    let g:syntastic_ruby_mri_args = "--my --args --here"
-    let g:syntastic_ruby_mri_tail = "> /tmp/my-output-file-biatch"
+    let g:syntastic_c_pc_lint_args = "-w5 -Iz:/usr/include/linux"
+    let g:syntastic_c_pc_lint_tail = "2>/dev/null"
 <
 The general form of the override options is: >
     syntastic_<filetype>_<checker>_<option-name>
@@ -638,10 +712,30 @@ options that can be set, these are usually documented in the wiki:
 In the same vein, 'g:syntastic_<filetype>_<checker-name>_quiet_messages' can
 be used to restrict message filters to messages produced by specific checkers.
 Example: >
-    let g:syntastic_python_pylama_quiet_messages = { "type":  "style",
-                                                   \ "regex": '\m\[C03\d\d\]' }
+    let g:syntastic_python_pylama_quiet_messages = {
+        \ "type":  "style",
+        \ "regex": '\m\[C03\d\d\]' }
 <
 See |syntastic_quiet_messages| for the syntax.
+
+------------------------------------------------------------------------------
+5.4 Sorting errors                                     *syntastic-config-sort*
+
+                                       *'syntastic_<filetype>_<checker>_sort'*
+Syntastic may decide to group the errors produced by some checkers by file,
+then sort them by line number, then by type, then by column number. If you'd
+prefer to see the errors in the order in which they are output by the external
+checker you can set the variable |'g:syntastic_<filetype>_<checker>_sort'| to 0.
+
+Alternatively, if syntastic doesn't reorder the errors produced by a checker
+but you'd like it to sort them, you can set the same variable to 1.
+
+There is also a local version |'b:syntastic_<filetype>_<checker>_sort'| of
+this variable, that takes precedence over it in the buffers where it is
+defined.
+
+For aggregated lists (see |syntastic-aggregating-errors|) these variables are
+ignored if |syntastic_sort_aggregated_errors| is set (which is the default).
 
 ==============================================================================
 6. Notes                                                     *syntastic-notes*
@@ -680,7 +774,7 @@ for python in syntastic (see |syntastic_mode_map|), or disable lint checks in
 
 Syntastic can be used together with the 'YouCompleteMe' Vim plugin (see
 http://valloric.github.io/YouCompleteMe/).  However, by default 'YouCompleteMe'
-disables syntastic"s checkers for the "c", "cpp", "objc", and "objcpp"
+disables syntastic's checkers for the "c", "cpp", "objc", and "objcpp"
 filetypes, in order to allow its own checkers to run.  If you want to use YCM's
 identifier completer but still run syntastic's checkers for those filetypes you
 have to set |ycm_show_diagnostics_ui| to 0. E.g.: >
@@ -722,11 +816,15 @@ interactive features of 'fizsh'. Using a more traditional shell such as "zsh",
 ------------------------------------------------------------------------------
 6.8. Interaction with Eclim                                  *syntastic-eclim*
 
-As far as syntastic is concerned there shouldn't be any compatibility problems
-with the 'Eclim' Vim plugin (see http://eclim.org/). However, at the time of
-this writing there are several reports that 'Eclim' triggers a bug in Vim that
-makes syntastic forget some of its configuration parameters. No solutions or
-workarounds are known for now.
+Syntastic can be used together with 'Eclim' (see http://eclim.org/). However,
+by default Eclim disables syntastic's checks for the filetypes it supports, in
+order to run its own validation. If you'd prefer to use Eclim but still run
+syntastic's checks, set |g:EclimFileTypeValidate| to 0: >
+    let g:EclimFileTypeValidate = 0
+<
+It is also possible to re-enable syntastic checks only for some filetypes, and
+run Eclim's validation for others. Please consult Eclim's documentation for
+details.
 
 ------------------------------------------------------------------------------
 6.9. Interaction with vim-virtualenv                *syntastic-vim-virtualenv*
@@ -736,13 +834,26 @@ in Python virtual environments activated by 'vim-virtualenv' (see
 https://github.com/jmcantrell/vim-virtualenv).  This is a limitation of
 'vim-virtualenv'.
 
+------------------------------------------------------------------------------
+6.10. Interaction with vim-auto-save                 *syntastic-vim-auto-save*
+
+At the time of this writing, syntastic checks in active mode are not triggered
+by 'vim-auto-save' (see https://github.com/907th/vim-auto-save). The reason is
+a limitation in 'vim-auto-save', namely a missing flag to an 'autocmd' (see
+|autocmd-nested|). Fortunately it's pretty easy to achieve a similar effect
+without 'vim-auto-save'': >
+    augroup syntastic
+        autocmd CursorHold * nested update
+    augroup END
+    set updatetime=200
+<
 ==============================================================================
 7. About                                                     *syntastic-about*
 
 The core maintainers of syntastic are:
-    Martin Grenfell (github: scrooloose)
-    Gregor Uhlenheuer (github: kongo2002)
-    LCD 047 (github: lcd047)
+    Martin Grenfell (GitHub: scrooloose)
+    Gregor Uhlenheuer (GitHub: kongo2002)
+    LCD 047 (GitHub: lcd047)
 
 Find the latest version of syntastic at:
 

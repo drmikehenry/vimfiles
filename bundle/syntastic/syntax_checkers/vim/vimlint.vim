@@ -36,9 +36,11 @@ function! SyntaxCheckers_vim_vimlint_GetHighlightRegex(item)
 endfunction
 
 function! SyntaxCheckers_vim_vimlint_IsAvailable() dict
-    return
-        \ globpath(&runtimepath, 'autoload/vimlparser.vim') != '' &&
-        \ globpath(&runtimepath, 'autoload/vimlint.vim') != ''
+    let vimlparser = globpath(&runtimepath, 'autoload/vimlparser.vim', 1)
+    let vimlint    = globpath(&runtimepath, 'autoload/vimlint.vim', 1)
+    call self.log("globpath(&runtimepath, 'autoload/vimlparser.vim', 1) = " . string(vimlparser) . ', ' .
+                \ "globpath(&runtimepath, 'autoload/vimlint.vim', 1) = " .    string(vimlint))
+    return vimlparser != '' && vimlint != ''
 endfunction
 
 function! SyntaxCheckers_vim_vimlint_GetLocList() dict
@@ -72,7 +74,7 @@ function! SyntaxCheckers_vim_vimlint_GetLocList() dict
         endif
     endif
 
-    return vimlint#vimlint(expand('%'), param)
+    return vimlint#vimlint(expand('%', 1), param)
 endfunction
 
 " @vimlint(EVL103, 1, a:filename)

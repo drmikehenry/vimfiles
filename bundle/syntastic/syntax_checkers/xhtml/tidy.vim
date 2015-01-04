@@ -29,7 +29,7 @@ set cpo&vim
 
 " TODO: join this with html.vim DRY's sake?
 function! s:TidyEncOptByFenc()
-    let tidy_opts = {
+    let TIDY_OPTS = {
             \ 'utf-8':        '-utf8',
             \ 'ascii':        '-ascii',
             \ 'latin1':       '-latin1',
@@ -43,12 +43,12 @@ function! s:TidyEncOptByFenc()
             \ 'sjis':         '-shiftjis',
             \ 'cp850':        '-ibm858',
         \ }
-    return get(tidy_opts, &fileencoding, '-utf8')
+    return get(TIDY_OPTS, &fileencoding, '-utf8')
 endfunction
 
 function! s:IgnoreError(text)
-    for i in g:syntastic_xhtml_tidy_ignore_errors
-        if stridx(a:text, i) != -1
+    for item in g:syntastic_xhtml_tidy_ignore_errors
+        if stridx(a:text, item) != -1
             return 1
         endif
     endfor

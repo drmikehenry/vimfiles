@@ -9,9 +9,6 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
 "============================================================================
-"
-" In order to use rubocop with the default ruby checker (mri):
-"     let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 
 if exists("g:loaded_syntastic_ruby_rubocop_checker")
     finish
@@ -22,9 +19,14 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_ruby_rubocop_IsAvailable() dict
-    return
-        \ executable(self.getExec()) &&
-        \ syntastic#util#versionIsAtLeast(syntastic#util#getVersion(self.getExecEscaped() . ' --version'), [0, 9, 0])
+    if !executable(self.getExec())
+        return 0
+    endif
+
+    let ver = syntastic#util#getVersion(self.getExecEscaped() . ' --version')
+    call self.log(self.getExec() . ' version =', ver)
+
+    return syntastic#util#versionIsAtLeast(ver, [0, 9, 0])
 endfunction
 
 function! SyntaxCheckers_ruby_rubocop_GetLocList() dict

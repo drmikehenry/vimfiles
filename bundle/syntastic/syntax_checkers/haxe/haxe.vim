@@ -24,9 +24,11 @@ function! SyntaxCheckers_haxe_haxe_GetLocList() dict
     elseif exists('g:vaxe_hxml')
         let hxml = g:vaxe_hxml
     else
-        let hxml = syntastic#util#findInParent('*.hxml', expand('%:p:h'))
+        let hxml = syntastic#util#findInParent('*.hxml', expand('%:p:h', 1))
     endif
     let hxml = fnamemodify(hxml, ':p')
+
+    call self.log('hxml =', hxml)
 
     if hxml != ''
         let makeprg = self.makeprgBuild({

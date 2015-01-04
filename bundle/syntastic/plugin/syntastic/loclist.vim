@@ -21,6 +21,8 @@ function! g:SyntasticLoclist.New(rawLoclist) " {{{2
     let newObj._rawLoclist = llist
     let newObj._name = ''
     let newObj._owner = bufnr('')
+    let newObj._sorted = 0
+    let newObj._columns = g:syntastic_cursor_columns
 
     return newObj
 endfunction " }}}2
@@ -39,7 +41,15 @@ function! g:SyntasticLoclist.extend(other) " {{{2
 endfunction " }}}2
 
 function! g:SyntasticLoclist.sort() " {{{2
-    call syntastic#util#sortLoclist(self._rawLoclist)
+    if !self._sorted
+        for e in self._rawLoclist
+            call s:_set_screen_column(e)
+        endfor
+
+        call sort(self._rawLoclist, self._columns ? 's:_compare_error_items_by_columns' : 's:_compare_error_items_by_lines')
+
+        let self._sorted = 1
+    endif
 endfunction " }}}2
 
 function! g:SyntasticLoclist.isEmpty() " {{{2
@@ -64,6 +74,10 @@ endfunction " }}}2
 
 function! g:SyntasticLoclist.getBuffers() " {{{2
     return syntastic#util#unique(map(copy(self._rawLoclist), 'str2nr(v:val["bufnr"])') + [self._owner])
+endfunction " }}}2
+
+function! g:SyntasticLoclist.getCursorColumns() " {{{2
+    return self._columns
 endfunction " }}}2
 
 function! g:SyntasticLoclist.getStatuslineFlag() " {{{2
@@ -119,8 +133,19 @@ function! g:SyntasticLoclist.getStatuslineFlag() " {{{2
     return self._stl_flag
 endfunction " }}}2
 
-function! g:SyntasticLoclist.getFirstIssue() " {{{2
-    return get(self._rawLoclist, 0, {})
+function! g:SyntasticLoclist.getFirstError(...) " {{{2
+    let max_issues = len(self._rawLoclist)
+    if a:0 && a:1 < max_issues
+        let max_issues = a:1
+    endif
+
+    for idx in range(max_issues)
+        if get(self._rawLoclist[idx], 'type', '') ==? 'E'
+            return idx + 1
+        endif
+    endfor
+
+    return 0
 endfunction " }}}2
 
 function! g:SyntasticLoclist.getName() " {{{2
@@ -159,6 +184,29 @@ function! g:SyntasticLoclist.decorate(tag) " {{{2
     endfor
 endfunction " }}}2
 
+function! g:SyntasticLoclist.balloons() " {{{2
+    if !exists("self._cachedBalloons")
+        let sep = has("balloon_multiline") ? "\n" : ' | '
+
+        let self._cachedBalloons = {}
+        for e in self._rawLoclist
+            let buf = e['bufnr']
+
+            if !has_key(self._cachedBalloons, buf)
+                let self._cachedBalloons[buf] = {}
+            endif
+
+            if has_key(self._cachedBalloons[buf], e['lnum'])
+                let self._cachedBalloons[buf][e['lnum']] .= sep . e['text']
+            else
+                let self._cachedBalloons[buf][e['lnum']] = e['text']
+            endif
+        endfor
+    endif
+
+    return get(self._cachedBalloons, bufnr(''), {})
+endfunction " }}}2
+
 function! g:SyntasticLoclist.errors() " {{{2
     if !exists("self._cachedErrors")
         let self._cachedErrors = self.filter({'type': "E"})
@@ -183,8 +231,8 @@ endfunction " }}}2
 function! g:SyntasticLoclist.messages(buf) " {{{2
     if !exists("self._cachedMessages")
         let self._cachedMessages = {}
-        let errors = self.errors() + self.warnings()
 
+        let errors = self.errors() + self.warnings()
         for e in errors
             let b = e['bufnr']
             let l = e['lnum']
@@ -194,9 +242,32 @@ function! g:SyntasticLoclist.messages(buf) " {{{2
             endif
 
             if !has_key(self._cachedMessages[b], l)
-                let self._cachedMessages[b][l] = e['text']
+                let self._cachedMessages[b][l] = [e]
+            elseif self._columns
+                call add(self._cachedMessages[b][l], e)
             endif
         endfor
+
+        if self._columns
+            if !self._sorted
+                for b in keys(self._cachedMessages)
+                    for l in keys(self._cachedMessages[b])
+                        if len(self._cachedMessages[b][l]) > 1
+                            for e in self._cachedMessages[b][l]
+                                call s:_set_screen_column(e)
+                            endfor
+                            call sort(self._cachedMessages[b][l], 's:_compare_error_items_by_columns')
+                        endif
+                    endfor
+                endfor
+            endif
+
+            for b in keys(self._cachedMessages)
+                for l in keys(self._cachedMessages[b])
+                    call s:_remove_shadowed_items(self._cachedMessages[b][l])
+                endfor
+            endfor
+        endif
     endif
 
     return get(self._cachedMessages, a:buf, {})
@@ -210,7 +281,7 @@ endfunction " }}}2
 "
 "Note that all comparisons are done with ==?
 function! g:SyntasticLoclist.filter(filters) " {{{2
-    let conditions = values(map(copy(a:filters), 's:translate(v:key, v:val)'))
+    let conditions = values(map(copy(a:filters), 's:_translate(v:key, v:val)'))
     let filter = len(conditions) == 1 ?
         \ conditions[0] : join(map(conditions, '"(" . v:val . ")"'), ' && ')
     return filter(copy(self._rawLoclist), filter)
@@ -221,14 +292,14 @@ function! g:SyntasticLoclist.setloclist() " {{{2
         let w:syntastic_loclist_set = 0
     endif
     let replace = g:syntastic_reuse_loc_lists && w:syntastic_loclist_set
-    call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: setloclist ' . (replace ? '(replace)' : '(new)'))
+    call syntastic#log#debug(g:_SYNTASTIC_DEBUG_NOTIFICATIONS, 'loclist: setloclist ' . (replace ? '(replace)' : '(new)'))
     call setloclist(0, self.getRaw(), replace ? 'r' : ' ')
     let w:syntastic_loclist_set = 1
 endfunction " }}}2
 
 "display the cached errors for this buf in the location list
 function! g:SyntasticLoclist.show() " {{{2
-    call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: show')
+    call syntastic#log#debug(g:_SYNTASTIC_DEBUG_NOTIFICATIONS, 'loclist: show')
     call self.setloclist()
 
     if !self.isEmpty()
@@ -260,19 +331,102 @@ endfunction " }}}2
 
 " }}}1
 
-" Non-method functions {{{1
+" Public functions {{{1
 
 function! SyntasticLoclistHide() " {{{2
-    call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: hide')
+    call syntastic#log#debug(g:_SYNTASTIC_DEBUG_NOTIFICATIONS, 'loclist: hide')
     silent! lclose
 endfunction " }}}2
 
 " }}}1
 
-" Private functions {{{1
+" Utilities {{{1
 
-function! s:translate(key, val) " {{{2
+function! s:_translate(key, val) " {{{2
     return 'get(v:val, ' . string(a:key) . ', "") ==? ' . string(a:val)
+endfunction " }}}2
+
+function! s:_set_screen_column(item) " {{{2
+    if !has_key(a:item, 'scol')
+        let col = get(a:item, 'col', 0)
+        if col != 0 && get(a:item, 'vcol', 0) == 0
+            let buf = str2nr(a:item['bufnr'])
+            try
+                let line = getbufline(buf, a:item['lnum'])[0]
+            catch  /\m^Vim\%((\a\+)\)\=:E684/
+                let line = ''
+            endtry
+            let a:item['scol'] = syntastic#util#screenWidth(strpart(line, 0, col), getbufvar(buf, '&tabstop'))
+        else
+            let a:item['scol'] = col
+        endif
+    endif
+endfunction " }}}2
+
+function! s:_remove_shadowed_items(errors) " {{{2
+    " keep only the first message at a given column
+    let i = 0
+    while i < len(a:errors) - 1
+        let j = i + 1
+        let dupes = 0
+        while j < len(a:errors) && a:errors[j].scol == a:errors[i].scol
+            let dupes = 1
+            let j += 1
+        endwhile
+        if dupes
+            call remove(a:errors, i + 1, j - 1)
+        endif
+        let i += 1
+    endwhile
+
+    " merge messages with the same text
+    let i = 0
+    while i < len(a:errors) - 1
+        let j = i + 1
+        let dupes = 0
+        while j < len(a:errors) && a:errors[j].text == a:errors[i].text
+            let dupes = 1
+            let j += 1
+        endwhile
+        if dupes
+            call remove(a:errors, i + 1, j - 1)
+        endif
+        let i += 1
+    endwhile
+endfunction " }}}2
+
+function! s:_compare_error_items_by_columns(a, b) " {{{2
+    if a:a['bufnr'] != a:b['bufnr']
+        " group by file
+        return a:a['bufnr'] - a:b['bufnr']
+    elseif a:a['lnum'] != a:b['lnum']
+        " sort by line
+        return a:a['lnum'] - a:b['lnum']
+    elseif a:a['scol'] != a:b['scol']
+        " sort by screen column
+        return a:a['scol'] - a:b['scol']
+    elseif a:a['type'] !=? a:b['type']
+        " errors take precedence over warnings
+        return a:a['type'] ==? 'E' ? -1 : 1
+    else
+        return 0
+    endif
+endfunction " }}}2
+
+function! s:_compare_error_items_by_lines(a, b) " {{{2
+    if a:a['bufnr'] != a:b['bufnr']
+        " group by file
+        return a:a['bufnr'] - a:b['bufnr']
+    elseif a:a['lnum'] != a:b['lnum']
+        " sort by line
+        return a:a['lnum'] - a:b['lnum']
+    elseif a:a['type'] !=? a:b['type']
+        " errors take precedence over warnings
+        return a:a['type'] ==? 'E' ? -1 : 1
+    else
+        " sort by screen column
+        return a:a['scol'] - a:b['scol']
+    endif
 endfunction " }}}2
 
 " }}}1

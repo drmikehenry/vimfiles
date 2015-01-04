@@ -21,11 +21,14 @@ set cpo&vim
 function! SyntaxCheckers_go_golint_GetLocList() dict
     let makeprg = self.makeprgBuild({})
 
-    let errorformat = '%f:%l:%c: %m,%-G%.%#'
+    let errorformat =
+        \ '%f:%l:%c: %m,' .
+        \ '%-G%.%#'
 
     return SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
+        \ 'defaults': {'type': 'w'},
         \ 'subtype': 'Style' })
 endfunction
 
