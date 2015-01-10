@@ -7,6 +7,20 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-01-04
+==========
+
+- Update the Syntastic plugin to version 2015-01-04 (thanks to John
+  Szakmeister).  This fixes an issue where wildignore was affecting calls to
+  expand(), glob(), and globpath() causing some checkers to fail in interesting
+  ways (javac, for example).
+
+2014-12-26
+==========
+
+- For determining the user's login name, use $USERNAME on Windows instead of
+  $USER (thanks to John Szakmeister).
+
 2014-12-15
 ==========
 
