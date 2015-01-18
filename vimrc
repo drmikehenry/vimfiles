@@ -1548,9 +1548,22 @@ endfunction
 " Escape passed-in string for use as a Perl regular expression.
 function! MakePerlRegexString(str)
     let s = a:str
-    let s = escape(s, '\\!.*+$^~[]()')
-    let s = substitute(s, "'", "'\\\\''", 'g')
+    let s = escape(s, '\\!$.*+^~[]()|%#')
     let s = substitute(s, '\n', '\\n', 'g')
+    return s
+endfunction
+
+" Quote Perl regex string for use on command-line.
+function! QuotePerlRegexString(str)
+    let s = MakePerlRegexString(a:str)
+    " The type of quotes we must use depends on the operating system.
+    " On Windows, we use double-quotes; otherwise, we use single-quotes.
+    " Embedded quotes must be escaped as well.
+    if has("win32")
+        let s = '"' . escape(s, '"') . '"'
+    else
+        let s = "'" . substitute(s, "'", "'\\''", 'g') . "'"
+    endif
     return s
 endfunction
 
@@ -1595,13 +1608,13 @@ nnoremap <expr> <F3> NormalRegrepCword()
 " Setup Perl search command for word under cursor.
 function! NormalPerlSearchCword(searchCmd)
     return "yiw:MatchScratchWord\<CR>:" . a:searchCmd . "! " .
-            \ "'\<C-r>=MakePerlRegexString(@\")\<CR>' -w"
+            \ "\<C-r>=QuotePerlRegexString(@\")\<CR> -w"
 endfunction
 
 " Setup :Ag (or :Ack) command to search for visual selection.
 function! VisualPerlSearch(searchCmd)
     return "y:MatchScratch\<CR>:" . a:searchCmd . "! " .
-            \ "'\<C-r>=MakePerlRegexString(@\")\<CR>'"
+            \ "\<C-r>=QuotePerlRegexString(@\")\<CR>"
 endfunction
 
 " True if have 'ag' in PATH.

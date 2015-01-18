@@ -12,6 +12,9 @@ require adjustment of per-user settings.
 
 - Escape the pipe character when using <F3> to search for a literal string.
 
+- Change "#" to use double-quotes on Windows when constructing the proper
+  arguments for :Ack/:Ag.
+
 2015-01-04
 ==========
 
