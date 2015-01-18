@@ -1542,7 +1542,7 @@ endfunction
 " Escape passed-in string for use as an egrep expression.
 function! MakeEgrepString(str)
     " @todo Can't egrep for \n.
-    return substitute(escape(a:str, '\\/.*$^~[]() %#'), '\n', '\\n', 'g')
+    return substitute(escape(a:str, '\\/.*$^~[]() |%#'), '\n', '\\n', 'g')
 endfunction
 
 " Escape passed-in string for use as a Perl regular expression.
