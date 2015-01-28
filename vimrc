@@ -2270,6 +2270,7 @@ endif
 " to ensure they are the same regardless of which executable is chosen.
 if !exists("g:ack_default_options")
     let g:ack_default_options = " -s -H --nocolor --nogroup --column"
+            \ . " --smart-case --follow"
 endif
 
 if !g:UseSystemAck
@@ -2277,6 +2278,12 @@ if !g:UseSystemAck
     let g:ackprg = "perl " . $VIMFILES . "/tool/ack"
     let g:ackprg .= g:ack_default_options
 endif
+
+" -------------------------------------------------------------
+" Ag
+" -------------------------------------------------------------
+
+let g:agprg="ag --column --smart-case"
 
 " -------------------------------------------------------------
 " BufExplorer
@@ -3126,52 +3133,6 @@ Nxmap   <Space>s        <Plug>Sneak_s
 Nxmap   <Space>S        <Plug>Sneak_S
 omap    <Space>s        <Plug>(SneakStreak)
 omap    <Space>S        <Plug>(SneakStreakBackward)
-
-" -------------------------------------------------------------
-" Startify
-" -------------------------------------------------------------
-if v:version < 703 || (v:version == 703 && !has("patch633"))
-    " There's some problem with gvim 7.3.46 on Windows on some machines
-    " that causes Startify to hang; it doesn't seem to be there for 7.3.633,
-    " so for now Startify will be disabled unless 7.3.633 or better is running.
-    let g:startify_disable_at_vimenter = 1
-endif
-let g:startify_files_number        = 8
-let g:startify_enable_special      = 0
-
-let g:startify_list_order = [
-        \ 'files',
-        \ ['Recent files in current directory:'],
-        \ 'dir',
-        \ ['Sessions:'],
-        \ 'sessions',
-        \ ['Bookmarks:'],
-        \ 'bookmarks',
-        \ ]
-
-" List of regexes to skip.
-"let g:startify_skiplist = [
-"            \ ]
-
-" List of bookmarks
-"let g:startify_bookmarks = [
-"            \ ]
-
-let g:startify_custom_header = [
-  \ "Recent files:      (Scroll for more; CTRL-e to see all footer text)",
-  \ ]
-
-let g:startify_custom_footer = [
-  \ "",
-  \ "[e] - open an empty buffer, closing startify",
-  \ "[q] - close startify window (quit Vim if only window)",
-  \ "[i] - enter insert mode in an empty buffer, closing startify",
-  \ "[:] - start an ex-mode command, e.g. ':e somefile.txt'",
-  \ "[b], [s], [v], [t] - mark to open in Buffer, Split, Vert. split, or Tab",
-  \ "<CR> - open marked entries (or current entry if nothing is marked)",
-  \ "':help notes', ':help localnotes' - get help on vimfiles configuration",
-  \ "':intro' - view Vim's standard startup screen",
-  \ ]
 
 " -------------------------------------------------------------
 " Syntastic
@@ -4581,6 +4542,14 @@ function! SetupRuby()
     SetupSource
 endfunction
 command! -bar SetupRuby call SetupRuby()
+
+" -------------------------------------------------------------
+" Setup for Rust.
+" -------------------------------------------------------------
+function! SetupRust()
+    SetupSource
+endfunction
+command! -bar SetupRust call SetupRust()
 
 " -------------------------------------------------------------
 " Setup for shell languages like sh and zsh.

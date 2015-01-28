@@ -72,7 +72,6 @@
     Signature - Signs and helpers for bookmarks         |notes_signature|
     Sneak - Motion based on two-character searching     |notes_sneak|
     Snippets - Default snippets for UltiSnips           |notes_snippets|
-    Startify - Menu of recently used files at startup   |notes_startify|
     Surround - Manipulating "surroundings"              |notes_surround|
     Svn - View Subversion diffs while writing log       |notes_svn|
     SwapIt - Cycle through related words                |notes_swapit|
@@ -2041,15 +2040,6 @@ the following to your user vimrc configuration: >
    call pathogen#surround(expand('$VIMFILES/optional-bundle/snippets'))
 <
 Version 2014-06-19 (fa45583c) from git://github.com/honza/vim-snippets.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-STARTIFY                                                 *notes_startify*
-  Menu of recently used files at startup                 |startify.txt|
-
-Version 2014-09-01 (2fe12144) from git://github.com/mhinz/vim-startify
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
