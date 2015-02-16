@@ -2151,7 +2151,7 @@ Added support for reStructuredText using rst2ctags v0.1.2.  rst2ctags can be
 found at https://github.com/jszakmeister/rst2ctags, and a copy has been
 embedded in $VIMFILES/tool/rst2ctags.
 
-Also added support for markdown using markdown2ctags v0.1.1.  markdown2ctags
+Also added support for markdown using markdown2ctags v0.1.2.  markdown2ctags
 can be found at https://github.com/jszakmeister/markdown2ctags, and a copy has
 been embedded in $VIMFILES/tool/markdown2ctags.
 

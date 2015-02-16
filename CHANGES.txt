@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-02-16
+==========
+
+- Update markdown2ctags to v0.1.2 (thanks to John Szakmeister).  This fixes an
+  issue where comments inside GitHub Flavored Markdown code blocks would be seen
+  as section headers.
+
 2015-01-28
 ==========
 
