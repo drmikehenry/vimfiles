@@ -2147,7 +2147,7 @@ Requires ctags.exe to be in the path.  Generally this comes with Linux
 distributions.  Compiled binaries may be found at
 http://ctags.sourceforge.net/
 
-Added support for reStructuredText using rst2ctags v0.1.2.  rst2ctags can be
+Added support for reStructuredText using rst2ctags v0.1.4.  rst2ctags can be
 found at https://github.com/jszakmeister/rst2ctags, and a copy has been
 embedded in $VIMFILES/tool/rst2ctags.
 

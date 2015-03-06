@@ -10,7 +10,7 @@ import sys
 import re
 
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 
 class ScriptError(Exception):
@@ -54,9 +54,13 @@ class Tag(object):
         return '\t'.join(formattedFields)
 
     def __str__(self):
-        return '%s\t%s\t%s;"\t%s' % (
-                self.tagName, self.tagFile, self.tagAddress,
-                self._formatFields())
+        tag = '%s\t%s\t%s;"\t%s' % (
+            self.tagName, self.tagFile, self.tagAddress,
+            self._formatFields())
+        if isinstance(tag, unicode):
+            return tag.encode('utf-8')
+        else:
+            return tag
 
     def __cmp__(self, other):
         return cmp(str(self), str(other))
@@ -213,8 +217,18 @@ def main():
 
     for filename in args:
         f = open(filename, 'rb')
-        lines = f.read().splitlines()
+        buf = f.read()
+
+        try:
+            buf = buf.decode('utf-8')
+        except UnicodeDecodeError:
+            pass
+
+        lines = buf.splitlines()
+
         f.close()
+        del buf
+
         sections = findSections(filename, lines)
 
         genTagsFile(output, sectionsToTags(sections), sort=options.sort)
