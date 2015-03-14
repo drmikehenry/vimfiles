@@ -13,7 +13,16 @@ require adjustment of per-user settings.
 - Update UltiSnips to version 2015-03-05.  This version supports the snippet
   flag "m" which removes end-of-line whitespace on all snippet lines.  This
   keeps the indentation of empty snippet lines from acquiring spurious extra
-  whitespace.
+  whitespace.  ~/.vim/pylib/sniputil.py has been adjusted to add the "m" flag
+  for any snippet containing a blank line; other snippets are left as-is,
+  allowing snippets such as "int8_t " to retain their trailing whitespace
+  without modification to their definitions.  This sniputil.py feature will not
+  take effect until the .snippets files are regenerated.
+  ``/.vim/UltiSnips/*.snippets`` have already been regenerated as follows::
+
+    cd ~/.vim/UltiSnips
+    touch *.py
+    make
 
 2015-03-09
 ==========
