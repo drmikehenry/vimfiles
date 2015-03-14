@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-03-14
+==========
+
+- Update UltiSnips to version 2015-03-05.  This version supports the snippet
+  flag "m" which removes end-of-line whitespace on all snippet lines.  This
+  keeps the indentation of empty snippet lines from acquiring spurious extra
+  whitespace.
+
 2015-03-09
 ==========
 
