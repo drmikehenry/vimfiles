@@ -29,7 +29,7 @@ function! SyntaxCheckers_yaml_yamlxs_IsAvailable() dict
 
     " don't call executable() here, to allow things like
     " let g:syntastic_perl_interpreter='/usr/bin/env perl'
-    silent! call system(self.getExecEscaped() . ' ' . s:Modules() . ' -e ' . syntastic#util#shescape('exit(0)'))
+    silent! call syntastic#util#system(self.getExecEscaped() . ' ' . s:Modules() . ' -e ' . syntastic#util#shescape('exit(0)'))
     return v:shell_error == 0
 endfunction
 
@@ -69,4 +69,4 @@ call g:SyntasticRegistry.CreateAndRegisterChecker({
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
-" vim: set et sts=4 sw=4:
+" vim: set sw=4 sts=4 et fdm=marker:

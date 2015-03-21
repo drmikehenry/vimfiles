@@ -41,7 +41,7 @@ function! SyntaxCheckers_php_phpmd_GetHighlightRegex(item)
     endif
     let term = matchstr(a:item['text'], "\\m\\C^The '\\S\\+()' method which returns ")
     if term != ''
-        return '\V'.substitute(term, "\\m\\C^The '\\(\\S\\+\\()' method which returns.*", '\1', '')
+        return '\V'.substitute(term, "\\m\\C^The '\\(\\S\\+\\)()' method which returns.*", '\1', '')
     endif
     let term = matchstr(a:item['text'], '\m\C variable \S\+ should begin with ')
     if term != ''
@@ -74,4 +74,4 @@ call g:SyntasticRegistry.CreateAndRegisterChecker({
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
-" vim: set et sts=4 sw=4:
+" vim: set sw=4 sts=4 et fdm=marker:

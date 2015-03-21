@@ -46,7 +46,7 @@ function! SyntaxCheckers_java_checkstyle_GetLocList() dict
     let fname = syntastic#util#shescape( expand('%:p:h', 1) . syntastic#util#Slash() . expand('%:t', 1) )
 
     if has('win32unix')
-        let fname = substitute(system('cygpath -m ' . fname), '\m\%x00', '', 'g')
+        let fname = substitute(syntastic#util#system('cygpath -m ' . fname), '\m\%x00', '', 'g')
     endif
 
     let makeprg = self.makeprgBuild({
@@ -74,4 +74,4 @@ call g:SyntasticRegistry.CreateAndRegisterChecker({
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
-" vim: set et sts=4 sw=4:
+" vim: set sw=4 sts=4 et fdm=marker:

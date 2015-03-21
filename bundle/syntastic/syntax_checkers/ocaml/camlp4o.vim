@@ -24,9 +24,7 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! SyntaxCheckers_ocaml_camlp4o_IsAvailable() dict
-    return executable(s:ocamlpp)
-endfunction
+" Checker options {{{1
 
 if !exists('g:syntastic_ocaml_use_ocamlc') || !executable('ocamlc')
     let g:syntastic_ocaml_use_ocamlc = 0
@@ -40,27 +38,49 @@ if !exists('g:syntastic_ocaml_use_ocamlbuild') || !executable("ocamlbuild")
     let g:syntastic_ocaml_use_ocamlbuild = 0
 endif
 
-function! SyntaxCheckers_ocaml_camlp4o_GetLocList() dict
+" }}}1
+
+function! SyntaxCheckers_ocaml_camlp4o_IsAvailable() dict " {{{1
+    return executable(s:ocamlpp)
+endfunction " }}}1
+
+function! SyntaxCheckers_ocaml_camlp4o_GetLocList() dict " {{{1
     let makeprg = s:GetMakeprg()
-    if makeprg == ""
+    if makeprg == ''
         return []
     endif
 
     let errorformat =
-        \ '%AFile "%f"\, line %l\, characters %c-%*\d:,'.
+        \ '%WWarning: File "%f"\, line %l\, chars %c-%n:,'.
+        \ '%WWarning: line %l\, chars %c-%n:,'.
+        \ '%AFile "%f"\, line %l\, characters %c-%n:,'.
         \ '%AFile "%f"\, line %l\, characters %c-%*\d (end at line %*\d\, character %*\d):,'.
         \ '%AFile "%f"\, line %l\, character %c:,'.
         \ '%AFile "%f"\, line %l\, character %c:%m,'.
         \ '%-GPreprocessing error %.%#,'.
         \ '%-GCommand exited %.%#,'.
-        \ '%C%tarning %n: %m,'.
+        \ '%C%tarning %*\d: %m,'.
         \ '%C%m,'.
         \ '%-G+%.%#'
 
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
-endfunction
+    let loclist = SyntasticMake({
+        \ 'makeprg': makeprg,
+        \ 'errorformat': errorformat,
+        \ 'defaults': {'bufnr': bufnr("")} })
 
-function! s:GetMakeprg()
+    for e in loclist
+        if get(e, 'col', 0) && get(e, 'nr', 0)
+            let e['hl'] = '\%>' . (e['col'] - 1) . 'c\%<' . (e['nr'] + 1) . 'c'
+            let e['nr'] = 0
+        endif
+    endfor
+
+    return loclist
+endfunction " }}}1
+
+" Utilities {{{1
+
+function! s:GetMakeprg() " {{{2
     if g:syntastic_ocaml_use_ocamlc
         return s:GetOcamlcMakeprg()
     endif
@@ -70,9 +90,9 @@ function! s:GetMakeprg()
     endif
 
     return s:GetOtherMakeprg()
-endfunction
+endfunction " }}}2
 
-function! s:GetOcamlcMakeprg()
+function! s:GetOcamlcMakeprg() " {{{2
     if g:syntastic_ocaml_use_janestreet_core
         let build_cmd = "ocamlc -I "
         let build_cmd .= expand(g:syntastic_ocaml_janestreet_core_dir, 1)
@@ -81,14 +101,14 @@ function! s:GetOcamlcMakeprg()
     else
         return "ocamlc -c " . syntastic#util#shexpand('%')
     endif
-endfunction
+endfunction " }}}2
 
-function! s:GetOcamlBuildMakeprg()
+function! s:GetOcamlBuildMakeprg() " {{{2
     return "ocamlbuild -quiet -no-log -tag annot," . s:ocamlpp . " -no-links -no-hygiene -no-sanitize " .
                 \ syntastic#util#shexpand('%:r') . ".cmi"
-endfunction
+endfunction " }}}2
 
-function! s:GetOtherMakeprg()
+function! s:GetOtherMakeprg() " {{{2
     "TODO: give this function a better name?
     "
     "TODO: should use throw/catch instead of returning an empty makeprg
@@ -106,7 +126,9 @@ function! s:GetOtherMakeprg()
     endif
 
     return makeprg
-endfunction
+endfunction " }}}2
+
+" }}}1
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'ocaml',
@@ -115,4 +137,4 @@ call g:SyntasticRegistry.CreateAndRegisterChecker({
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
-" vim: set et sts=4 sw=4:
+" vim: set sw=4 sts=4 et fdm=marker:
