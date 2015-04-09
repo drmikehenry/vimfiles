@@ -13,6 +13,9 @@ require adjustment of per-user settings.
 - Improve font size logic for OS/X (thanks for John Szakmeister).  DPI scaling
   is now done via the new AdjustBaseFontSize() function.
 
+- Treat Coverage configuration file (``.coveragerc``) as a config file (thanks
+  to John Szakmeister).
+
 2015-03-21
 ==========
 
