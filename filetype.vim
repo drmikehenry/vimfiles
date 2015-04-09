@@ -25,6 +25,7 @@ augroup filetypedetect
     au BufNewFile,BufRead svn-prop*.tmp setfiletype svn
     au BufNewFile,BufRead leinrc setfiletype sh
     au BufNewFile,BufRead .pypirc setfiletype cfg
+    au BufNewFile,BufRead .coveragerc setfiletype cfg
 
     " Setup Git-related filetypes.
     au BufNewFile,BufRead *.git/MERGE_MSG setfiletype gitcommit
