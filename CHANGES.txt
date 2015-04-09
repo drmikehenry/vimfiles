@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-04-09
+==========
+
+- Improve font size logic for OS/X (thanks for John Szakmeister).  DPI scaling
+  is now done via the new AdjustBaseFontSize() function.
+
 2015-03-21
 ==========
 
