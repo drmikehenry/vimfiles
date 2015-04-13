@@ -3490,11 +3490,11 @@ function! SyntasticBufferSetup(style)
         SyntasticBufferIgnoreRegex ..
         unlet! b:syntastic_checkers
     elseif &filetype == "python"
-        if a:style == "strict" || a:style == "strict-except-case"
+        if a:style == "strict" || a:style == "strict_except_case"
             SyntasticBufferIgnoreLevel nothing
             SyntasticBufferIgnoreRegex .
             let b:syntastic_checkers = ["python", "flake8", "pylint"]
-            if a:style == "strict-except-case"
+            if a:style == "strict_except_case"
                 " Ignore flake8 warnings about lowerMixedCase names.
                 SyntasticBufferIgnoreRegex \[N802\|N803\|N806\]
             endif
@@ -3517,7 +3517,7 @@ function! SyntasticBufferSetup(style)
 endfunction
 
 function! SyntasticBufferSetupComplete(argLead, cmdLine, cursorPos)
-    return "strict\nstrict-except-case\nlax\ninherited"
+    return "strict\nstrict_except_case\nlax\ninherited"
 endfunction
 
 command! -n=1 -bar -complete=custom,SyntasticBufferSetupComplete
