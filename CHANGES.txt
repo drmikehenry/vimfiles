@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-04-12
+==========
+
+- Stop automatically opening the location list when Syntastic discovers errors
+  by changing g:syntastic_auto_loc_list from 1 to 2.  Syntastic somehow
+  interferes with the proper operation of toggling the location list via
+  CTRL-Q CTRL-L unless the above change is made.  Hopefully eventually we'll
+  figure out what's causing that interaction such that we can re-enable
+  automatic opening of the list.  Until then, you may manually open the location
+  list via CTRL-Q CTRL-L.
+
 2015-04-09
 ==========
 

@@ -3193,6 +3193,13 @@ endif
 let g:syntastic_enable_balloons = 1
 let g:syntastic_enable_highlighting = 0
 let g:syntastic_quiet_messages = {'level': 'warnings'}
+" 0: no automatic open or close of the location list.
+" 1: automatically open and close the location list.
+" 2: automatically close but not open the location list.
+" Note: at present, setting to 1 (auto-open/close) causes problems toggling the
+" location list manually via CTRL-Q CTRL-L; it works with either 0 or 2, though
+" (neither of which perform auto-open).
+let g:syntastic_auto_loc_list = 2
 let g:syntastic_always_populate_loc_list = 1
 
 let g:syntastic_rst_rst2pseudoxml_quiet_messages = { 'level': [] }
