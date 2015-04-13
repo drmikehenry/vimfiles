@@ -18,6 +18,8 @@ require adjustment of per-user settings.
   automatic opening of the list.  Until then, you may manually open the location
   list via CTRL-Q CTRL-L.
 
+- Add many Syntastic-related commands; see :help notes_syntastic for details.
+
 2015-04-09
 ==========
 

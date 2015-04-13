@@ -94,6 +94,42 @@ function! Flatten(nestedLists)
     return flattened
 endfunction
 
+function! ListContains(list, valueToFind)
+    for item in a:list
+        if item == a:valueToFind
+            return 1
+        endif
+    endfor
+    return 0
+endfunction
+
+" -------------------------------------------------------------
+" Utility functions
+" -------------------------------------------------------------
+
+" Make sure to include the proper scope on varName (e.g., an unprefixed
+" variable will not be considered global).
+function! GetVar(varName, defaultValue)
+    if exists(a:varName)
+        return eval(a:varName)
+    endif
+    return a:defaultValue
+endfunction
+
+function! DictGet(dict, key, defaultValue)
+    if has_key(a:dict, a:key)
+        return a:dict[a:key]
+    endif
+    return a:defaultValue
+endfunction
+
+function! DictUnlet(dict, key)
+    if has_key(a:dict, a:key)
+        unlet a:dict[a:key]
+    endif
+endfunction
+
+
 " -------------------------------------------------------------
 " runtimepath manipulation
 " -------------------------------------------------------------
@@ -3185,6 +3221,310 @@ omap    <Space>S        <Plug>(SneakStreakBackward)
 " Syntastic
 " -------------------------------------------------------------
 
+function! SyntasticBufferMode(...)
+    if a:0 == 0
+        let bufferMode = GetVar("b:syntastic_mode", "inherited")
+        echo "Buffer mode=" . bufferMode
+    else
+        let bufferMode = a:1
+        if ListContains(split("active passive inherited"), bufferMode)
+            if bufferMode == "inherited"
+                unlet! b:syntastic_mode
+            else
+                let b:syntastic_mode = bufferMode
+            endif
+            SyntasticReset
+        else
+            echoerr "Invalid mode " . bufferMode
+        endif
+    endif
+endfunction
+
+function! SyntasticBufferModeComplete(argLead, cmdLine, cursorPos)
+    return "active\npassive\ninherited"
+endfunction
+
+command! -n=? -bar -complete=custom,SyntasticBufferModeComplete
+        \ SyntasticBufferMode call SyntasticBufferMode(<f-args>)
+
+
+function! SyntasticBufferChecking(...)
+    if a:0 == 0
+        if !exists("b:syntastic_skip_checks")
+            let checkingMode = "inherited"
+        else
+            let checkingMode = b:syntastic_skip_checks ? "off" : "on"
+        endif
+        echo "Buffer checking=" . checkingMode
+    else
+        let checkingMode = a:1
+        if ListContains(split("on off inherited"), checkingMode)
+            if checkingMode == "inherited"
+                unlet! b:syntastic_skip_checks
+            else
+                let b:syntastic_skip_checks = (checkingMode == "off")
+                if b:syntastic_skip_checks
+                    SyntasticReset
+                endif
+            endif
+        else
+            echoerr "Invalid argument " . checkingMode
+        endif
+    endif
+endfunction
+
+function! SyntasticBufferCheckingComplete(argLead, cmdLine, cursorPos)
+    return "on\noff\ninherited"
+endfunction
+
+command! -n=? -bar -complete=custom,SyntasticBufferCheckingComplete
+        \ SyntasticBufferChecking call SyntasticBufferChecking(<f-args>)
+
+
+" Sadly, if b:syntastic_quiet_messages is defined, Syntastic will completely
+" ignore g:syntastic_quiet_messages rather than merging the two dictionaries
+" together and giving priority to the buffer-local keys.  This means we can't
+" truly provide an "inherited" functionality for each key.  Instead, the first
+" time the buffer-local dictionary is required, we copy the global dictionary in
+" its entirety.  Any changed made to the buffer-local dictionary work as
+" expected, except that settings intended to make a given key be "inherited"
+" simply copy the current setting from the global dictionary into the
+" buffer-local dictionary.  Subsequent changes to the global settings will not
+" automatically be reflected into the buffer-local settings.
+
+function! SyntasticBufferQuietMessages()
+    let qm = GetVar("b:syntastic_quiet_messages",
+            \ deepcopy(g:syntastic_quiet_messages))
+    return qm
+endfunction
+
+function! SyntasticBufferQuietGet(varName, defaultValue)
+    let qm = SyntasticBufferQuietMessages()
+    return DictGet(qm, a:varName, a:defaultValue)
+endfunction
+
+function! SyntasticBufferQuietSet(varName, strValue)
+    let qm = SyntasticBufferQuietMessages()
+    " Unlet to avoid errors if we are changing the variable's type.
+    call DictUnlet(qm, a:varName)
+    let qm[a:varName] = a:strValue
+    let b:syntastic_quiet_messages = qm
+endfunction
+
+function! SyntasticBufferQuietInherit(varName)
+    let qm = SyntasticBufferQuietMessages()
+    if has_key(g:syntastic_quiet_messages, a:varName)
+        let qm[a:varName] = g:syntastic_quiet_messages[a:varName]
+    else
+        call DictUnlet(qm, a:varName)
+    endif
+    let b:syntastic_quiet_messages = qm
+endfunction
+
+function! SyntasticBufferQuietIsInherited(varName)
+    let gqm = g:syntastic_quiet_messages
+    let bqm = SyntasticBufferQuietMessages()
+    let ghk = has_key(gqm, a:varName)
+    let bhk = has_key(bqm, a:varName)
+    if ghk != bhk
+        " One has the key, the other doesn't ==> not inherited.
+        return 0
+    elseif !ghk
+        " Neither one has the key ==> inherited.
+        return 1
+    else
+        " Both have the key ==> inherited if the values are the same.
+        return type(gqm[a:varName]) == type(bqm[a:varName]) &&
+                \ gqm[a:varName] == bqm[a:varName]
+    endif
+endfunction
+
+
+function! SyntasticBufferIgnoreLevel(...)
+    if a:0 == 0
+        let level = SyntasticBufferQuietGet("level", "")
+        if type(level) == type([])
+            if level == []
+                let levelString = ""
+            elseif level == ["warning"]
+                let levelString = "warning"
+            else
+                " This ignores cases where level is a list containing both
+                " "warning" and "error", but in those cases it's equivalent to
+                " just disabling checking entirely, which would be much more
+                " efficient.  We presume nobody is doing that.
+                let levelString = "error"
+            endif
+            unlet level
+            let level = levelString
+        endif
+        if level == ""
+            let level = "nothing"
+        endif
+        if SyntasticBufferQuietIsInherited("level")
+            let level = level . " [inherited]"
+        endif
+        echo "Buffer ignore level=" . level
+    else
+        let level = a:1
+        if ListContains(split("warnings errors nothing inherited"), level)
+            if level == "inherited"
+                call SyntasticBufferQuietInherit("level")
+            else
+                if level == "nothing"
+                    let level = ""
+                endif
+                call SyntasticBufferQuietSet("level", level)
+            endif
+            SyntasticReset
+        else
+            echoerr "Invalid level " . level
+        endif
+    endif
+endfunction
+
+function! SyntasticBufferIgnoreLevelComplete(argLead, cmdLine, cursorPos)
+    return "warnings\nerrors\nnothing\ninherited"
+endfunction
+
+command! -n=? -bar -complete=custom,SyntasticBufferIgnoreLevelComplete
+        \ SyntasticBufferIgnoreLevel
+        \ call SyntasticBufferIgnoreLevel(<f-args>)
+
+
+function! SyntasticBufferIgnoreRegex(...)
+    if a:0 == 0
+        let regex = SyntasticBufferQuietGet("regex", [])
+        if type(regex) == type([])
+            if regex == []
+                let regexString = "<nothing>"
+            else
+                let regexString = regex[0]
+            endif
+            unlet regex
+            let regex = regexString
+        endif
+        if SyntasticBufferQuietIsInherited("regex")
+            let regex = regex . " [inherited]"
+        endif
+        echo "Ignore regex (use . for <nothing>, .. to inherit): " . regex
+    else
+        let regex = a:1
+        if regex == ".."
+            call SyntasticBufferQuietInherit("regex")
+        elseif regex == "."
+            call SyntasticBufferQuietSet("regex", [])
+        else
+            call SyntasticBufferQuietSet("regex", regex)
+        endif
+        SyntasticReset
+    endif
+endfunction
+
+function! SyntasticBufferIgnoreRegexComplete(argLead, cmdLine, cursorPos)
+    let regex = SyntasticBufferQuietGet("regex", "..")
+    if type(regex) == type("") && regex == ""
+        let regex = "."
+    endif
+    return regex
+endfunction
+
+command! -n=? -complete=custom,SyntasticBufferIgnoreRegexComplete
+        \ SyntasticBufferIgnoreRegex
+        \ call SyntasticBufferIgnoreRegex(<f-args>)
+
+
+" category is one of: "active", "passive", "default"
+" ... is a list of filetypes; "*" means "all" (for use with "default" category).
+function! SyntasticFiletypeCommand(category, ...)
+    let mm = GetVar("g:syntastic_mode_map", {})
+    let cats = {}
+    let cats["active"] = uniq(sort(DictGet(mm, "active_filetypes", [])))
+    let cats["passive"] = uniq(sort(DictGet(mm, "passive_filetypes", [])))
+    let cats["default"] = []
+    if len(a:000) == 0
+        echo a:category . ": " . join(cats[a:category], " ")
+        return
+    endif
+    for ftype in a:000
+        call add(cats[a:category], ftype)
+        for c in keys(cats)
+            " TODO: This is not quite right, but it's close.  This is the
+            " right semantic for changing "default", because it will clear
+            " everybody else.  It's also correct when the Syntastic mode
+            " matches a:category, but it's not right when the command goes
+            " the other way (e.g., when mode is passive and "active" is set
+            " to "*", which ought to put all known filetypes into the "active"
+            " list).  Revisit this if it proves that this case is valuable.
+            " The main use case here is to set "default" to "*", clearing
+            " out the lists.
+            if ftype == "*"
+                let cats[c] = []
+            elseif c != a:category
+                let cats[c] = filter(cats[c], 'v:val != ftype')
+            endif
+        endfor
+    endfor
+    let mm["active_filetypes"] = uniq(sort(cats["active"]))
+    let mm["passive_filetypes"] = uniq(sort(cats["passive"]))
+    let g:syntastic_mode_map = mm
+endfunction
+
+command! -n=* -bar SyntasticFiletypeActive
+        \ call SyntasticFiletypeCommand("active", <f-args>)
+
+command! -n=* -bar SyntasticFiletypePassive
+        \ call SyntasticFiletypeCommand("passive", <f-args>)
+
+command! -n=* -bar SyntasticFiletypeDefault
+        \ call SyntasticFiletypeCommand("default", <f-args>)
+
+function! SyntasticBufferSetup(style)
+    let unknownCombination = 0
+    let setupFunc = "SyntasticBufferSetup_" . &filetype . "_" . a:style
+    if exists("*" . setupFunc)
+        echomsg "found setupFunc = " . setupFunc
+        call {setupFunc}()
+    elseif a:style == "inherited"
+        SyntasticBufferIgnoreLevel inherited
+        SyntasticBufferIgnoreRegex ..
+        unlet! b:syntastic_checkers
+    elseif &filetype == "python"
+        if a:style == "strict" || a:style == "strict-except-case"
+            SyntasticBufferIgnoreLevel nothing
+            SyntasticBufferIgnoreRegex .
+            let b:syntastic_checkers = ["python", "flake8", "pylint"]
+            if a:style == "strict-except-case"
+                " Ignore flake8 warnings about lowerMixedCase names.
+                SyntasticBufferIgnoreRegex \[N802\|N803\|N806\]
+            endif
+        elseif a:style == "lax"
+            SyntasticBufferIgnoreLevel warnings
+            SyntasticBufferIgnoreRegex .
+            let b:syntastic_checkers = ["python", "pylint"]
+        else
+            let unknownCombination = 1
+        endif
+    else
+        let unknownCombination = 1
+    endif
+    if unknownCombination
+        echoerr "Unknown setup type '" . a:style .
+                \ "' for filetype '" . &filetype . "'"
+    else
+        SyntasticReset
+    endif
+endfunction
+
+function! SyntasticBufferSetupComplete(argLead, cmdLine, cursorPos)
+    return "strict\nstrict-except-case\nlax\ninherited"
+endfunction
+
+command! -n=1 -bar -complete=custom,SyntasticBufferSetupComplete
+        \ SyntasticBufferSetup
+        \ call SyntasticBufferSetup(<f-args>)
+
+
 if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
     let g:syntastic_error_symbol='✘'
     let g:syntastic_warning_symbol='⚠'
@@ -3234,6 +3574,8 @@ function! SyntasticFinalSetup()
     call ReplacePowerlineSyntastic()
 endfunction
 
+" Consider these for inclusion in active_filetypes:
+"   c cpp go haskell html javascript less sh vim zsh
 let g:syntastic_mode_map = {
         \ 'mode': 'passive',
         \ 'active_filetypes': ['python', 'ruby', 'rst'],

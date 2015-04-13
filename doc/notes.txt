@@ -2099,22 +2099,46 @@ Installation:
 SYNTASTIC                                                *notes_syntastic*
  Syntax checking hacks for vim                           |syntastic|
 
-Can launch "checkers" to verify syntax and hunt for errors when working with
-particular kinds of files.  For instance, it can run pylint, pyflakes, or pep8
-to check the syntax of your Python file and to hunt for other kinds of errors
-(unused imports, shadowing of variable names, etc.).
+If you just want to turn everything off, try this: >
 
-To show a location list with the errors, use the |:Errors| command.  On
-actively checked file types, Syntastic will run the checkers whenever you
-save.  On passive file types, you can run them manually with
-|:SyntasticCheck|.  You can also toggle the mode for a buffer using
-|:SyntasticToggleMode|.
+  :SyntasticFiletypeDefault *
+
+You may put that command in your vimrc-after.vim file to make it permanent.
+
+To clear existing errors on a buffer, execute the following: >
+
+  :SyntasticReset
+
+Syntastic can launch "checkers" to verify syntax and hunt for errors when
+working with particular kinds of files.  For instance, it can run pylint,
+pyflakes, or pep8 to check the syntax of your Python file and to hunt for other
+kinds of errors (unused imports, shadowing of variable names, etc.).
+
+On actively checked file types, Syntastic will run the checkers whenever you
+save.  On passive file types, you can run them manually with |:SyntasticCheck|.
+
+After checking, view a location list with the errors via the |:Errors| command,
+or toggle the location list via CTRL-Q CTRL-L.
+
+Syntastic maintains a global mode to determine when to check a file.  In
+"passive" mode, checks are done manually via |:SyntaxCheck|.  In "active" mode,
+files are checked when they are saved.  The global mode may be toggled via
+|:SyntasticToggleMode|.  Certain filetypes may be designated as always-active or
+always-passive.  To provide comfortable defaults, certain filetypes are preset
+in vimfiles to be marked "active", and the global mode is initially set to
+"passive" to avoid running Syntastic checks unexpectedly on arbitrary
+filetypes.
+
+To stop showing the current Syntastic errors, use |:SyntasticReset|; this
+clears the currently displayed errors, but will not prevent new errors
+from showing at the next Syntastic check operation.
 
 Local customizations:
-- Turned off active mode for everything but vim, python, and ruby.  You can
-  set |g:syntastic_mode_map| if you need different behavior.
-- Turned off warnings (via |g:syntastic_quiet_warnings|) because some checkers
-  are really verbose (pylint, for example).
+- Set the global mode to "passive", and configure a few filetypes to be
+  "active".  You can set |g:syntastic_mode_map| if you need different behavior.
+- Turned off warnings globally (via |g:syntastic_quiet_messages|) because some
+  checkers are really verbose (pylint, for example).  Warnings may be changed on
+  an individual buffer basis via |b:syntastic_quiet_messages|.
 - Enabled balloon support so that you can hover over the line with the error
   and see what is wrong.
 - Disabled highlighting of the portion of the line containing the error.
@@ -2122,7 +2146,139 @@ Local customizations:
   default--which is confusing.
 - Customized the Powerline segment to use a shortened form for errors and
   warnings.
-- Use nicer error and warning symbols where Vim can support it.
+- Used nicer error and warning symbols where Vim can support it.
+
+In addition, several custom commands were added to control Syntastic's behavior.
+
+:SyntasticBufferMode
+:SyntasticBufferMode active
+:SyntasticBufferMode passive
+:SyntasticBufferMode inherited
+        Adjust the active/passive mode for the current buffer.  With no
+        arguments, display the per-buffer mode.  Setting to "inherited"
+        causes the per-buffer setting to be removed so that the global setting
+        will be used.
+
+        When changing the mode, a :SyntasticReset command will be issued to
+        clear any existing errors.
+
+:SyntasticBufferChecking
+:SyntasticBufferChecking on
+:SyntasticBufferChecking off
+:SyntasticBufferChecking inherited
+        Adjust whether the buffer is eligible for checking.  With no arguments,
+        display the per-buffer setting.  Setting to "inherited" causes the
+        per-buffer setting to be removed.
+
+        When setting to "off", a :SyntasticReset command will be issued to
+        clear any existing errors.
+
+:SyntasticBufferIgnoreLevel
+:SyntasticBufferIgnoreLevel nothing
+:SyntasticBufferIgnoreLevel warnings
+:SyntasticBufferIgnoreLevel errors
+:SyntasticBufferIgnoreLevel inherited
+        Adjusts the ignore level for filtering error messages for the current
+        buffer.
+        Argument:
+          (none)        Display the per-buffer level.
+          nothing       Ignore nothing (i.e., all warnings are enabled).
+          warnings      Ignore warnings (keeping errors)
+          errors        Ignore errors (keeping warnings)
+          inherited     Set level to current global level.
+
+        When changing the level, a :SyntasticReset command will be issued to
+        clear any existing errors.
+
+:SyntasticBufferIgnoreRegex
+:SyntasticBufferIgnoreRegex .
+:SyntasticBufferIgnoreRegex ..
+        Adjusts the ignore regular expression for filtering error messages for
+        the current buffer.  With no arguments, display the per-buffer setting.
+        Argument:
+          (none)        Display the per-buffer regex.
+          (some regex)  Set regex to supplied argument.
+          .             Disable regex so nothing is ignored.
+                        (displayed as <nothing>)
+          ..            Set regex to current global regex value.
+
+        When changing the regex, a :SyntasticReset command will be issued to
+        clear any existing errors.
+
+:SyntasticFiletypeActive
+:SyntasticFiletypeActive list-of-filetypes
+:SyntasticFiletypePassive
+:SyntasticFiletypePassive list-of-filetypes
+:SyntasticFiletypeDefault list-of-filetypes
+:SyntasticFiletypeDefault *
+        Setup which filetypes to consider as "always active" or "always
+        passive".  Syntastic defines an active filetype as one that will be
+        checked on each save.  Passive filetypes are checked only via a manual
+        invocation of :SyntasticCheck.  By default, filetypes follow Syntastic's
+        global mode (which may be toggled via :SyntasticToggleMode).  Within
+        vimfiles, the global mode defaults to "passive" so that files must be
+        manually checked in general.  To override this global behavior on a
+        per-filetype basis, Syntastic maintains two separate lists of filetypes,
+        designated "active" filetypes and "passive" filetypes.  In the global
+        "passive" mode, files are generally not automatically checked except for
+        filetypes marked as "active"; similarly, in the global "active" mode,
+        all files are generally checked except for filetypes marked as
+        "passive".  Perhaps surprisingly, Syntastic permits a filetype to be
+        designated both "active" and "passive" simultaneously.  This is because
+        in the global "passive" mode, the list of "passive" filetypes is
+        ignored, and in global "active" mode, the list of "active" filetypes is
+        ignored.  But because this pathological case doesn't make much sense,
+        vimfiles treats the "active" and "passive" lists as though they were
+        disjoint.  Using the above commands to place a filetype on the "active"
+        or "passive" list will remove that filetype from the other list.
+
+        Examples:
+
+          " Show which filetypes are listed as "active".
+          SyntasticFiletypeActive
+
+          " Setup python and c as "active" filetypes.
+          SyntasticFiletypeActive python c
+
+          " Setup python as a "passive" filetype.
+          SyntasticFiletypePassive python
+
+          " Setup c to be a default filetype (tracking the global mode).
+          SyntasticFiletypeDefault c
+
+          " Setup all filetypes to track the global mode.
+          SyntasticFiletypeDefault *
+
+        When making changes, a :SyntasticReset command will be issued to
+        clear any existing errors.
+
+:SyntasticBufferSetup strict
+:SyntasticBufferSetup strict-except-case
+:SyntasticBufferSetup lax
+        These provide a convenient way to set multiple per-buffer settings.
+
+        Argument:
+          strict              Enable almost all warnings and errors.
+          strict-except-case  Enable almost all warnings and errors except those
+                              related to the case of identifiers.
+          lax                 Enable errors but disable most warnings.
+
+        These settings are subject to change over time as we learn more about
+        the behavior of the various checkers and their settings.  These commands
+        adjust things such as which checkers to use and what errors and warnings
+        to ignore.
+
+        When making changes, a :SyntasticReset command will be issued to
+        clear any existing errors.
+
+It's useful to combine the above commands with the |localvimrc| plugin (see
+|notes_localvimrc|).  For example, if a project requires strict checking, enable
+this by creating a .lvimrc file at the root of the project with the following
+content:
+
+  if &filetype == "python"
+      SyntasticBufferSetup strict
+  endif
 
 Version 2015-03-19 (ebadf9af) from git://github.com/scrooloose/syntastic.git
 
