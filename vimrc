@@ -103,6 +103,17 @@ function! ListContains(list, valueToFind)
     return 0
 endfunction
 
+" Pop leftmost element from list; if list is empty, return defaultValue instead.
+function! ListPop(list, defaultValue)
+    let value = a:defaultValue
+    if len(a:list) > 0
+        let value = a:list[0]
+        unlet a:list[0]
+    endif
+    return value
+endfunction
+
+
 " -------------------------------------------------------------
 " Utility functions
 " -------------------------------------------------------------
@@ -129,6 +140,19 @@ function! DictUnlet(dict, key)
     endif
 endfunction
 
+" Verify len(varArgs) <= maxNumArgs, then return a modifiable copy of varArgs.
+function! VarArgs(maxNumArgs, varArgs)
+    let args = copy(a:varArgs)
+    if len(args) > a:maxNumArgs
+        throw "Too many arguments supplied (>" . a:maxNumArgs . ")"
+    endif
+    return args
+endfunction
+
+" Verify len(varArgs) is 0 or 1; return sole arg or defaultValue if none given.
+function! OptArg(varArgs, defaultValue)
+    return ListPop(VarArgs(1, a:varArgs), a:defaultValue)
+endfunction
 
 " -------------------------------------------------------------
 " runtimepath manipulation
@@ -1844,6 +1868,172 @@ endfunction
 " Convert certain unicode characters to ASCII equivalents.
 command! -range=% ToAscii  call ToAscii(<line1>, <line2>)
 
+
+function! ExecInPlace(cmd)
+    let pos = winsaveview()
+    execute a:cmd
+    call winrestview(pos)
+endfunction
+
+" SubInPlace(pattern, replacement, flags?, line1?, line2?)
+" Performs "in-place" substitution of pattern to replacement.
+" Defaults: flags='g', line1='1', line2='$'.
+function! SubInPlace(pattern, replacement, ...)
+    let args = VarArgs(3, a:000)
+    let flags = ListPop(args, 'g')
+    let line1 = ListPop(args, '1')
+    let line2 = ListPop(args, '$')
+    let cmd = line1 . ',' . line2 . 's/'
+    let cmd .= a:pattern . '/' . a:replacement . '/' . flags
+    call ExecInPlace(cmd)
+    call histdel("/", -1)
+endfunction
+
+
+" Word types:
+" Word          (Any_kind_ofWord_CouldBeHere2)
+" Lmc           (lowerMixedCase)
+" Umc           (UpperMixedCase)
+" Underscore    (underscore_separated_lowercase_with_numbers25)
+"
+" "Word" words comprise letters, numbers, and underscores, starting with a
+" non-digit.
+"
+" Lmc words comprise characters limited to letters and numbers, starting with a
+" lowercase letter and containing at least one uppercase letter.
+"
+" Umc words comprise characters limited to letters and numbers, starting with an
+" uppercase letter and containing at least one lowercase letter and one
+" additional uppercase letter.
+"
+" Underscore words comprise characters limited to lowercase letters, numbers,
+" and underscores, containing at least one lowercase letter and one number.
+
+" Vim regex for a "Word".
+function! WordPattern()
+    return '\v\C<%(\l|\u|_)%(\l|\u|\d|_)*>'
+endfunction
+
+" Perl regex for a "Word".
+function! WordGrepPattern()
+    return shellescape('\b[a-zA-Z_][a-zA-Z0-9_]*\b>', 1)
+endfunction
+
+" Vim regex for lowerMixedCase identifiers.
+function! LmcPattern()
+    return '\v\C<\l(\l|\d)*\u(\a|\d)*>'
+endfunction
+
+" Perl regex for lowerMixedCase identifiers.
+function! LmcGrepPattern()
+    let regex = shellescape('\b[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b', 1)
+    return regex
+endfunction
+
+" Vim regex for UpperMixedCase identifiers.
+function! UmcPattern()
+    return '\v\C<\u(\u|\d)*\l(\l|\d)*\u(\a|\d)*>'
+endfunction
+
+" Perl regex for UpperMixedCase identifiers.
+function! UmcGrepPattern()
+    let regex = shellescape(
+            \ '\b[A-Z][A-Z0-9]*[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b', 1)
+    return regex
+endfunction
+
+" Vim regex syntax for underscore_separated identifiers.
+function! UnderscorePattern()
+    return '\v\C<\l*_+\l(\l|_)*>'
+endfunction
+
+" Perl regex syntax for underscore_separated identifiers.
+function! UnderscoreGrepPattern()
+    return shellescape('\b[a-z]*_+[a-z][a-z_]*\b', 1)
+endfunction
+
+" Convert lowerMixedCase to underscore_separated_lowercase, e.g.:
+"   "multiWordVariable" ==> "multi_word_variable"
+" If no argument is supplied, submatch(0) is assumed, allowing uses like this:
+"   :s//\=Underscore()/g
+function! Underscore(...)
+    let word = OptArg(a:000, submatch(0))
+    " Algorithm taken from Python inflection package:
+    " https://github.com/jpvanhal/inflection/blob/master/inflection.py
+    let word = substitute(word, '\v\C([A-Z]+)([A-Z][a-z])', '\1_\2', "g")
+    let word = substitute(word, '\v\C([a-z\d])([A-Z])', '\1_\2', "g")
+    let word = tolower(word)
+    return word
+endfunction
+
+
+" Convert underscore_separated_lowercase to UpperMixedCase, e.g.:
+"   "multi_word_variable" ==> "MultiWordVariable"
+" If no argument is supplied, submatch(0) is assumed, allowing uses like this:
+"   :s//\=Umc()/g
+function! Umc(...)
+    let word = OptArg(a:000, submatch(0))
+    " Algorithm taken from Python inflection package:
+    " https://github.com/jpvanhal/inflection/blob/master/inflection.py
+    let word = substitute(word, '\v\C(^|_)(.)', '\u\2', "g")
+    return word
+endfunction
+
+
+" Convert underscore_separated_lowercase to lowerMixedCase, e.g.:
+"   "multi_word_variable" ==> "multiWordVariable"
+" If no argument is supplied, submatch(0) is assumed, allowing uses like this:
+"   :s//\=Lmc()/g
+function! Lmc(...)
+    let word = Umc(OptArg(a:000, submatch(0)))
+    return tolower(word[:0]) . word[1:]
+endfunction
+
+
+function! WordSearch(...)
+    if a:0 == 0
+        let regex = WordPattern()
+    else
+        let regex = '\v\C<' . join(a:000, '>|<') . '>'
+    endif
+    call SetSearch(regex)
+endfunction
+command! -nargs=* WordSearch  call WordSearch(<f-args>)
+
+command! -bar LmcSearch  call SetSearch(LmcPattern())
+command! -bar UmcSearch  call SetSearch(UmcPattern())
+command! -bar UnderscoreSearch  call SetSearch(UnderscorePattern())
+
+" Run G with regex for lowerMixedCase identifiers.
+command! -nargs=* -complete=file LmcGrep
+        \ LmcSearch<bar>call RunAgOrAck(LmcGrepPattern() . " " . <q-args>)
+
+function! SubArgsOrCword(line1, line2, args, replacement)
+    if len(a:args) == 0
+        let regex = '\v\C<' . expand('<cword>') . '>'
+    else
+        let regex = '\v\C<' . join(a:args, '>|<') . '>'
+    endif
+    call SubInPlace(regex, a:replacement, 'g', a:line1, a:line2)
+endfunction
+
+command! -bar -range=% -nargs=* ToUnderscore
+        \ call SubArgsOrCword(<line1>, <line2>, [<f-args>], '\=Underscore()')
+
+command! -bar -range=% -nargs=* ToUmc
+        \ call SubArgsOrCword(<line1>, <line2>, [<f-args>], '\=Umc()')
+
+command! -bar -range=% -nargs=* ToLmc
+        \ call SubArgsOrCword(<line1>, <line2>, [<f-args>], '\=Lmc()')
+
+command! -bar -range=% LmcToUnderscore
+        \ call SubInPlace(LmcPattern(), '\=Underscore()', 'g',
+        \ <line1>, <line2>)
+
+" Refactor/rename identifer under cursor.
+nnoremap <M-r>iu :ToUnderscore<CR>
+nnoremap <M-r>iU :ToUmc<CR>
+nnoremap <M-r>il :ToLmc<CR>
 
 " -------------------------------------------------------------
 " Buffer manipulation

@@ -3541,6 +3541,131 @@ and generally maps some of the Unicode symbols in the range U+2000 through
 U+206F into ASCII equivalents.
 
 ------------------------------------------------------------------------------
+Converting identifer case (e.g, lowerMixedCase to underscore_separated)
+
+Several conventions exist for multi-word variable names, e.g.::
+
+  lowerMixedCase                  (a.k.a. mixedCase or lowerCamelCase)
+  UpperMixedCase                  (a.k.a. CamelCase or upperCamelCase)
+  underscore_separated_lowercase  (a.k.a. snake_case)
+
+In support of finding and converting variables of various naming conventions,
+the following features are provided.
+
+                                  *LmcSearch* *UmcSearch* *UnderscoreSearch*
+:LmcSearch
+:UmcSearch
+:UnderscoreSearch
+        Set Vim's search expression to match lowerMixedCase, UpperMixedCase,
+        or underscore_separated_lowercase identifiers.
+
+                                  *WordSearch*
+:WordSearch [ident]*
+        Set Vim's search expression to match all provided identiers; if none are
+        provided, set the search expression to WordPattern() to match all
+        identifiers.
+
+        E.g., to search for identOne and identTwo:
+
+          :WordSearch identOne identTwo
+
+                                  *LmcGrep*
+:LmcGrep args-for-G-command
+        This wraps the :G command, providing a Perl-compatible regular
+        expression matching lowerMixedCase identifiers as the implied first
+        argument to :G.  It is logically equivalent to:
+          :G <perl-regex-for-lowerMixedCase> args-for-G-command
+
+        Also sets Vim's search expression for highlighting of matched
+        identifiers.
+
+                                  *ToUnderscore* *ToUmc* *ToLmc*
+:ToUnderscore [ident]*
+:ToUmc [ident]*
+:ToLmc [ident]*
+        These commands convert the provided identifiers to the corresponding
+        convention in the current buffer using :s///.  If no identifiers are
+        provided, the identifier under the cursor is used.  These commands
+        accept a range, which defaults to the entire file.
+
+        Examples:
+
+        " Convert identOne and identTwo to ident_one and ident_two.
+        :ToUnderscore identOne identTwo
+
+        " Convert some_name to SomeName in lines 1 through 100.
+        :1,100ToUmc some_name
+
+        " Convert identifier under cursor to lowerMixedCase in entire file.
+        :ToLmc
+
+                                  *LmcToUnderscore*
+:LmcToUnderscore
+        Similar to :ToUnderscore, but uses a regular expression to match all
+        lowerMixedCase identifiers.  This is helpful for converting Python
+        multiWordVariables to multi_word_variables.
+
+                                  *LmcPattern()* *UmcPattern()*
+                                  *UnderscorePattern()*
+LmcPattern()
+UmcPattern()
+UnderscorePattern()
+        These functions return Vim regular expressions to match lowerMixedCase,
+        UpperMixedCase, and underscore_separated_lowercase identifiers,
+        respectively.  They may be useful for use with the '/' command and
+        |c_CTRL-R_=| to get hold of the regular expression for further editing.
+        For example, pressing the following keys in order will perform a search
+        for lowerMixedCase identifiers:
+
+          /<C-R>=LmcPattern()<CR>
+
+                                  *LmcGrepPattern()* *UmcGrepPattern()*
+                                  *UnderscoreGrepPattern()*
+LmcGrepPattern()
+UmcGrepPattern()
+UnderscoreGrepPattern()
+        These functions return Perl-compatible regular expressions to match
+        lowerMixedCase, UpperMixedCase, and underscore_separated_lowercase
+        identifiers, respectively.  They may be useful to create customized
+        :G commands.  For example, an :LmcGrep operation in the ~/tmp directory
+        can be simulated by pressing the following keys:
+
+          :G <C-R>=LmcGrepPattern()<CR> ~/tmp<CR>
+
+                                  *Underscore* *Umc* *Lmc*
+Underscore()
+Underscore(word)
+Umc()
+Umc(word)
+Lmc()
+Lmc(word)
+        Convert word to specified convention.  If word is not supplied, use
+        submatch(0) instead, which represent the entire matched text within
+        a :s/// command.
+
+        These functions are convenient when constructing a custom substitute
+        command.  For example, pressing "*" on an identifier under the cursor
+        will set the current search expression to match that word.  To convert
+        that word to the underscore_separated_lowercase convention, re-use the
+        search expression by leaving the pattern blank and use Vim's
+        |sub-replace-expression| feature to convert submatch(0) using the Umc()
+        function:
+
+          :%s//\=Umc()/g
+
+Some refactoring mappings exist to rename the identifier under the cursor to a
+new convention across the entire file:
+
+  <M-r>iu     Refactor identifier to underscore_separated_lowercase
+  <M-r>iU     Refactor identifier to UpperMixedCase
+  <M-r>il     Refactor identifier to lowerMixedCase
+
+This may help after a bulk :LmcToUnderscore operation.  Using <Leader>sv on a
+file will show the diffs against the most recent comment in source control (see
+|notes_vcscommand| for details).  If an identifier was converted erroneously, it
+may be converted back via <M-r>il.
+
+------------------------------------------------------------------------------
 Conflict marker navigation
 
 Inspired by vim-unimpaired, keybindings have been setup for move between
