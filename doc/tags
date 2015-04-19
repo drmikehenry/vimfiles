@@ -167,6 +167,7 @@ notes_headerguard	notes.txt	/*notes_headerguard*
 notes_hemisu	notes.txt	/*notes_hemisu*
 notes_hilinktrace	notes.txt	/*notes_hilinktrace*
 notes_hybrid	notes.txt	/*notes_hybrid*
+notes_identifier_case	notes.txt	/*notes_identifier_case*
 notes_incsearch	notes.txt	/*notes_incsearch*
 notes_indent-guides	notes.txt	/*notes_indent-guides*
 notes_installation	notes.txt	/*notes_installation*

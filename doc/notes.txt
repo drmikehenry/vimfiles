@@ -3542,6 +3542,7 @@ U+206F into ASCII equivalents.
 
 ------------------------------------------------------------------------------
 Converting identifer case (e.g, lowerMixedCase to underscore_separated)
+                                  *notes_identifier_case*
 
 Several conventions exist for multi-word variable names, e.g.::
 
