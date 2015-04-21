@@ -2552,11 +2552,19 @@ if !g:UseSystemAck
     let g:ackprg .= g:ack_default_options
 endif
 
+" Disable QuickFix/LocationList mappings.
+let g:ack_apply_qmappings = 0
+let g:ack_apply_lmappings = 0
+
 " -------------------------------------------------------------
 " Ag
 " -------------------------------------------------------------
 
 let g:agprg="ag --column --smart-case"
+
+" Disable QuickFix/LocationList mappings.
+let g:ag_apply_qmappings = 0
+let g:ag_apply_lmappings = 0
 
 " -------------------------------------------------------------
 " BufExplorer
