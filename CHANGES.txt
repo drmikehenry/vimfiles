@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-04-25
+==========
+
+- Removed space after C snippets for fixed-width integers (int8_t and friends),
+  as for several use cases the space is incorrect and must be deleted manually
+  (which feels like correcting a mistake in the snippet).  It simplifies the
+  mental model of the snippet, which is can now be viewed as an abbreviation for
+  the corresponding type.  To restore the old behavior in the event that
+  adjusting to the new snippets proves difficult, these snippets can be
+  overridden by per-user snippets that contain the space.
+
 2015-04-22
 ==========
 
