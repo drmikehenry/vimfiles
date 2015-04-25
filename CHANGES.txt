@@ -23,6 +23,14 @@ require adjustment of per-user settings.
   full-bore pylint-based checking.  Set default Python checkers to just
   'python' and 'flake8'.
 
+- Restore automatic opening of the location list when Syntastic discovers errors
+  by changing g:syntastic_auto_loc_list from 2 back to 1.  Syntastic
+  internally uses autocmds to toggle the location list.  When the location
+  list is focused and :lclose is issued, the associated buffer is re-entered
+  and Syntastic sees that the location list should be open, so it re-opens
+  it.  Now CTRL-Q CTRL-L uses ``:noautocmd lclose`` to close the location list,
+  preventing Syntastic from re-opening it.
+
 2015-04-22
 ==========
 

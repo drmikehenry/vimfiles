@@ -897,7 +897,7 @@ function! IsLocListWin()
     return (&buftype == "quickfix" && !IsQuickFixWin())
 endfunction
 
-" Return window number of quickfix buffer (or zero if not found).
+" Return window number of QuickFix buffer (or zero if not found).
 function! GetQuickFixWinNum()
     let qfWinNum = 0
     let curWinNum = winnr()
@@ -910,6 +910,11 @@ function! GetQuickFixWinNum()
     endfor
     execute "noautocmd " . curWinNum . "wincmd w"
     return qfWinNum
+endfunction
+
+" Return 1 if the QuickFix window is open.
+function! QuickFixWinIsOpen()
+    return GetQuickFixWinNum() > 0
 endfunction
 
 " Return 1 if current window's location list window is open.
@@ -934,6 +939,34 @@ function! LocListWinIsOpen()
     return isOpen
 endfunction
 
+" Return 1 is location list is "preferred" to QuickFix list.
+function! LocListIsPreferred()
+    let locOpen = LocListWinIsOpen()
+    let qfOpen = QuickFixWinIsOpen()
+
+    " Prefer open windows to closed windows;
+    " Prefer non-empty list QuickFix to empty location list;
+    " Otherwise, prefer location list.
+    if locOpen
+        let useLocList = 1
+    elseif qfOpen
+        let useLocList = 0
+    else
+        " Both are closed.  It might be useful to prefer the location list
+        " if it's non-empty, and the QuickFix window otherwise, like this:
+        "   let useLocList = len(getloclist(0)) > 0
+        " But the location list is tied to a window instead of a buffer, and
+        " that can cause problems with tools like Syntastic where the location
+        " list is holding per-buffer errors.  It's surprising for the user
+        " when the buffer is switched and Syntastic closes the associated
+        " location list (giving a stronger impression that it's tied to the
+        " buffer), only to have the list be used anyway.  So unless the location
+        " list is visible, prefer the QuickFix list when both are closed.
+        let useLocList = 0
+    endif
+    return useLocList
+endfunction
+
 " Goto previous or next QuickFix or Location List message.
 "   messageType = "c" (for QuickFix) or "l" (for Location List).
 "   whichMessage = "previous" or "next".
@@ -942,7 +975,8 @@ function! GotoMessage(messageType, whichMessage)
     try
         execute a:messageType . a:whichMessage
     catch /:E42:\|:E553:/
-        echo "No " . a:whichMessage . " message"
+        let typeName = (a:messageType == 'c') ? "QuickFix" : "Location List"
+        echo "No " . a:whichMessage . " " . typeName . " message"
         return 0
     endtry
     " Echo empty line to clear possible previous message.
@@ -955,7 +989,7 @@ endfunction
 function! GotoPrev()
     if &diff
         normal [czz
-    elseif LocListWinIsOpen()
+    elseif LocListIsPreferred()
         call GotoMessage("l", "previous")
     else
         Copen
@@ -968,7 +1002,7 @@ endfunction
 function! GotoNext()
     if &diff
         normal ]czz
-    elseif LocListWinIsOpen()
+    elseif LocListIsPreferred()
         call GotoMessage("l", "next")
     else
         Copen
@@ -2365,7 +2399,7 @@ command! -bar L4 call LayoutWindows(4)
 " Make 5-column-wide layout.
 command! -bar L5 call LayoutWindows(5)
 
-" Toggle quickfix window.
+" Toggle QuickFix window.
 function! QuickFixWinToggle()
     let numOpenWindows = winnr("$")
     if IsQuickFixWin()
@@ -2384,7 +2418,10 @@ command! -bar QuickFixWinToggle :call QuickFixWinToggle()
 " Toggle location list window.
 function! LocListWinToggle()
     let numOpenWindows = winnr("$")
-    lclose
+    " TODO: For now, don't use autocmd when closing a location list window,
+    " because otherwise when the location list window is focused,
+    " :lclose will fight with Syntastic's autocmd feature to reopen it.
+    noautocmd lclose
     if numOpenWindows == winnr("$")
         " Window was already closed, so open it.
         silent! Lopen
@@ -3738,10 +3775,12 @@ let g:syntastic_quiet_messages = {'level': 'warnings'}
 " 0: no automatic open or close of the location list.
 " 1: automatically open and close the location list.
 " 2: automatically close but not open the location list.
-" Note: at present, setting to 1 (auto-open/close) causes problems toggling the
-" location list manually via CTRL-Q CTRL-L; it works with either 0 or 2, though
-" (neither of which perform auto-open).
-let g:syntastic_auto_loc_list = 2
+" Note: Setting to 1 (auto-open/close) causes problems toggling the location
+" list via :lclose when the location list is focused.  It works when another
+" window is focused, though.  Using LocListWinToggle works because it uses
+" :noautocmd lclose.  Someday we may look into Syntastic more closely to see if
+" its logic can change to avoid this problem.
+let g:syntastic_auto_loc_list = 1
 let g:syntastic_always_populate_loc_list = 1
 
 " Remove pylint from Syntastic's default list of checkers (it's too picky).
