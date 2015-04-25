@@ -2252,14 +2252,16 @@ In addition, several custom commands were added to control Syntastic's behavior.
         When making changes, a :SyntasticReset command will be issued to
         clear any existing errors.
 
+:SyntasticBufferSetup very_strict
 :SyntasticBufferSetup strict
 :SyntasticBufferSetup strict_except_case
 :SyntasticBufferSetup lax
         These provide a convenient way to set multiple per-buffer settings.
 
         Argument:
-          strict              Enable almost all warnings and errors.
-          strict_except_case  Enable almost all warnings and errors except those
+          very_strict         Enable (almost) all warnings and errors.
+          strict              Enable most warnings and errors.
+          strict_except_case  Enable most warnings and errors except those
                               related to the case of identifiers.
           lax                 Enable errors but disable most warnings.
 

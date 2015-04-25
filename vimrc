@@ -3688,18 +3688,22 @@ function! SyntasticBufferSetup(style)
         SyntasticBufferIgnoreRegex ..
         unlet! b:syntastic_checkers
     elseif &filetype == "python"
-        if a:style == "strict" || a:style == "strict_except_case"
+        if a:style == "very_strict"
             SyntasticBufferIgnoreLevel nothing
             SyntasticBufferIgnoreRegex .
             let b:syntastic_checkers = ["python", "flake8", "pylint"]
+        elseif a:style == "strict" || a:style == "strict_except_case"
+            SyntasticBufferIgnoreLevel nothing
+            SyntasticBufferIgnoreRegex .
+            let b:syntastic_checkers = ["python", "flake8"]
             if a:style == "strict_except_case"
                 " Ignore flake8 warnings about lowerMixedCase names.
                 SyntasticBufferIgnoreRegex \[N802\|N803\|N806\]
             endif
         elseif a:style == "lax"
-            SyntasticBufferIgnoreLevel warnings
+            SyntasticBufferIgnoreLevel nothing
             SyntasticBufferIgnoreRegex .
-            let b:syntastic_checkers = ["python", "pylint"]
+            let b:syntastic_checkers = ["python"]
         else
             let unknownCombination = 1
         endif
@@ -3715,7 +3719,7 @@ function! SyntasticBufferSetup(style)
 endfunction
 
 function! SyntasticBufferSetupComplete(argLead, cmdLine, cursorPos)
-    return "strict\nstrict_except_case\nlax\ninherited"
+    return "very_strict\nstrict\nstrict_except_case\nlax\ninherited"
 endfunction
 
 command! -n=1 -bar -complete=custom,SyntasticBufferSetupComplete
@@ -3739,6 +3743,9 @@ let g:syntastic_quiet_messages = {'level': 'warnings'}
 " (neither of which perform auto-open).
 let g:syntastic_auto_loc_list = 2
 let g:syntastic_always_populate_loc_list = 1
+
+" Remove pylint from Syntastic's default list of checkers (it's too picky).
+let g:syntastic_python_checkers = ['python', 'flake8']
 
 let g:syntastic_rst_rst2pseudoxml_quiet_messages = { 'level': [] }
 let g:syntastic_rst_rstsphinx_quiet_messages = { 'level': [] }
