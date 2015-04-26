@@ -3818,7 +3818,12 @@ endif
 
 let g:syntastic_enable_balloons = 1
 let g:syntastic_enable_highlighting = 0
-let g:syntastic_quiet_messages = {'level': 'warnings'}
+
+" Options:
+"   " Disable warnings globally.
+"   let g:syntastic_quiet_messages = {'level': 'warnings'}
+let g:syntastic_quiet_messages = {}
+
 " 0: no automatic open or close of the location list.
 " 1: automatically open and close the location list.
 " 2: automatically close but not open the location list.

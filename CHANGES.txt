@@ -14,6 +14,9 @@ require adjustment of per-user settings.
   Previously, endwise's hook to this insert-mode mapping would be clobbered
   by the one in vimrc on a second :source of vimrc.
 
+- Stop squelching Syntastic warnings globally.  Use :SyntasticBufferSetup
+  in a localvimrc file to adjust Syntastic behavior on a per-directory basis.
+
 2015-04-25
 ==========
 
