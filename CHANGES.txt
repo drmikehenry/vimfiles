@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-04-26
+==========
+
+- Preserve "endwise" plugin hook of insert-mode <CR> when re-sourcing vimrc.
+  Previously, endwise's hook to this insert-mode mapping would be clobbered
+  by the one in vimrc on a second :source of vimrc.
+
 2015-04-25
 ==========
 

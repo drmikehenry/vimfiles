@@ -1314,7 +1314,12 @@ endfunction
 " Use <C-r>=FunctionCall()<CR> idiom to avoid leaving insert mode.  Using
 " <C-o>:call FunctionCall()<CR> clobbers the virtual indentation that gets
 " added as part of automatic indentation.
-inoremap <CR>  <C-r>=StripWhiteLeftOfCursor()<CR><CR>
+" Avoid remapping this because the "endwise" plugin will append to this
+" definition when it loads, and after a :source of this file, an unconditional
+" :inoremap disables endwise's hook.
+if !hasmapto('<CR>', 'i')
+    inoremap <CR>  <C-r>=StripWhiteLeftOfCursor()<CR><CR>
+endif
 
 
 " Move vertically by screen lines instead of physical lines.
