@@ -3535,6 +3535,35 @@ To fold away comments and blank lines, use this custom command: >
     :FoldComments
 
 ------------------------------------------------------------------------------
+QuickFix entry folding
+
+To group lines of QuickFix output together by files or by directories, use one
+of the following commands when a QuickFix or Location List window is focused:
+
+                                  *FoldQuickFixFiles*
+                                  *FoldQuickFixDirs*
+    :[count] FoldQuickFixFiles
+    :[count] FoldQuickFixDirs
+
+When [count] is 0 (the default), the folds will start closed; when [count] is 1,
+the folds will start open.
+
+When a QuickFix or Location List window is opened, :1FoldQuickFixFiles is
+applied by :SetupQuickFix, such that the folds start open.  Use standard Vim
+shortcut keys within the QuickFix or Location List window to change folding
+levels:
+
+    zr    Reduce amount of folding
+    zR    Reduce amount of folding fully (no folding remaining)
+    zm    More folding
+    zM    More folding (fully folded)
+    zo    Open a fold
+    zc    Close a fold
+
+In Gvim, you may also click on the symbols in the left margin of the QuickFix
+or Location List window to toggle individual folds.
+
+------------------------------------------------------------------------------
 Converting Unicode symbols to ASCII
 
 Use :ToAscii to convert a range of lines (defaulting to the entire buffer)

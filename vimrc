@@ -1832,6 +1832,48 @@ command! -nargs=? Fold          call FoldRegex('FoldHideExpr', <q-args>)
 " TODO: Extend for more than just shell comments.
 command! -nargs=? FoldComments  Fold ^\s*#\|^\s*$
 
+" 'foldexpr' for extracting folding information from QuickFix buffer.
+" pattern - used to extract portion of QuickFix path from line.
+function! FoldQuickFixPatternFoldExpr(pattern)
+    let thisLine = getline(v:lnum)
+    let nextLine = getline(v:lnum + 1)
+    let thisKey = matchstr(thisLine, a:pattern)
+    let nextKey = matchstr(nextLine, a:pattern)
+    if thisKey != nextKey
+        return '<1'
+    else
+        return '1'
+    endif
+endfunction
+
+function! FoldQuickFixDirsFoldExpr()
+    return FoldQuickFixPatternFoldExpr('\v^.*[/\\]')
+endfunction
+
+" Fold QuickFix window entries by directory.
+"   level - initial foldlevel (0 => fold everything, 1 => expand all folds)
+function! FoldQuickFixDirs(level)
+    let &l:foldlevel = a:level
+    setlocal foldcolumn=1
+    setlocal foldmethod=expr
+    setlocal foldexpr=FoldQuickFixDirsFoldExpr()
+endfunction
+command! -count=0 FoldQuickFixDirs  call FoldQuickFixDirs(<count>)
+
+function! FoldQuickFixFilesFoldExpr()
+    return FoldQuickFixPatternFoldExpr('\v^[^|]*')
+endfunction
+
+" Fold QuickFix window entries by filename.
+"   level - initial foldlevel (0 => fold everything, 1 => expand all folds)
+function! FoldQuickFixFiles(level)
+    let &l:foldlevel = a:level
+    setlocal foldcolumn=1
+    setlocal foldmethod=expr
+    setlocal foldexpr=FoldQuickFixFilesFoldExpr()
+endfunction
+command! -count=0 FoldQuickFixFiles  call FoldQuickFixFiles(<count>)
+
 " Convert certain unicode characters to ASCII equivalents in range
 " from firstLine to lastLine, included.
 function! ToAscii(firstLine, lastLine)
@@ -5174,6 +5216,14 @@ let g:IndentGuidesMap["python"] = "<on>"
 if !exists("g:python_version_2")
     let g:python_version_2 = 1
 endif
+
+" -------------------------------------------------------------
+" Setup for QuickFix window
+" -------------------------------------------------------------
+function! SetupQuickFix()
+   FoldQuickFixFiles 1
+endfunction
+command! -bar SetupQuickFix call SetupQuickFix()
 
 " -------------------------------------------------------------
 " Setup for Ruby.

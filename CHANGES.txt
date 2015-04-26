@@ -31,6 +31,9 @@ require adjustment of per-user settings.
   it.  Now CTRL-Q CTRL-L uses ``:noautocmd lclose`` to close the location list,
   preventing Syntastic from re-opening it.
 
+- Add folding support for QuickFix and Location List windows.  See
+  :help FoldQuickFixFiles and :help FoldQuickFixDirs for details.
+
 2015-04-22
 ==========
 

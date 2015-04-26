@@ -22,6 +22,8 @@
 :RmVimball	pi_vimball.txt	/*:RmVimball*
 :UseVimball	pi_vimball.txt	/*:UseVimball*
 :VimballList	pi_vimball.txt	/*:VimballList*
+FoldQuickFixDirs	notes.txt	/*FoldQuickFixDirs*
+FoldQuickFixFiles	notes.txt	/*FoldQuickFixFiles*
 IDMY	visincr.txt	/*IDMY*
 IMDY	visincr.txt	/*IMDY*
 IYMD	visincr.txt	/*IYMD*
