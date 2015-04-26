@@ -2632,7 +2632,20 @@ endif
 
 if !g:UseSystemAck
     " Use the "ack" executable shipped in vimfiles.
-    let g:ackprg = "perl " . $VIMFILES . "/tool/ack"
+    " Strawberry Perl and ActivePerl both have problems with certain arguments
+    " containing quotes.  A work-around is to chain through Python (which
+    " parses these quoted arguments correctly), as long as Python is available.
+    " Without Python, the following invocation of :Ack::
+    "   :Ack "x = ""hello"";"
+    " fails to match this line::
+    "   x = "hello";
+    " With the Python work-around, the invocation works.
+    if executable('python')
+        let g:ackprg = 'python ' . $VIMFILES . '/tool/execargs.py '
+    else
+        let g:ackprg = ''
+    endif
+    let g:ackprg .= 'perl ' . $VIMFILES . '/tool/ack'
     let g:ackprg .= g:ack_default_options
 endif
 

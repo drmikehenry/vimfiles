@@ -17,6 +17,9 @@ require adjustment of per-user settings.
 - Stop squelching Syntastic warnings globally.  Use :SyntasticBufferSetup
   in a localvimrc file to adjust Syntastic behavior on a per-directory basis.
 
+- Chain invocations of :Ack through Python where possible to work around
+  problems with quote handling in Strawberry Perl and ActivePerl on Windows.
+
 2015-04-25
 ==========
 
