@@ -20,6 +20,9 @@ require adjustment of per-user settings.
 - Chain invocations of :Ack through Python where possible to work around
   problems with quote handling in Strawberry Perl and ActivePerl on Windows.
 
+- Default to 79-column margin for Python for PEP8 compliance.  When using
+  ``:SyntasticBufferSetup lax``, however, fall back to 80-column margins.
+
 2015-04-25
 ==========
 

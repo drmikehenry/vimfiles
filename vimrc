@@ -3785,6 +3785,7 @@ function! SyntasticBufferSetup(style)
         SyntasticBufferIgnoreRegex ..
         unlet! b:syntastic_checkers
     elseif &filetype == "python"
+        setlocal tw=79
         if a:style == "very_strict"
             SyntasticBufferIgnoreLevel nothing
             SyntasticBufferIgnoreRegex .
@@ -3798,6 +3799,7 @@ function! SyntasticBufferSetup(style)
                 SyntasticBufferIgnoreRegex \[N802\|N803\|N806\]
             endif
         elseif a:style == "lax"
+            setlocal tw=80
             SyntasticBufferIgnoreLevel nothing
             SyntasticBufferIgnoreRegex .
             let b:syntastic_checkers = ["python"]
@@ -5218,6 +5220,9 @@ command! -bar SetupMoonscript call SetupMoonscript()
 " -------------------------------------------------------------
 function! SetupPython()
     SetupSource
+
+    " Lines are at most 79 characters according to PEP8.
+    setlocal tw=79
 
     " Python always thinks tabs are 8 characters wide.
     setlocal ts=8
