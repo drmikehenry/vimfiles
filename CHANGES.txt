@@ -23,6 +23,9 @@ require adjustment of per-user settings.
 - Default to 79-column margin for Python for PEP8 compliance.  When using
   ``:SyntasticBufferSetup lax``, however, fall back to 80-column margins.
 
+- Incorporated vim-python-pep8-indent plugin for improved Python indentation
+  support for PEP8 compliance.
+
 2015-04-25
 ==========
 

@@ -96,6 +96,7 @@
     Wombat256i - A dark colorscheme                     |notes_wombat256i|
 4.  Extensions                                          |notes_extensions|
     C Additions - Extra syntax highlighting for C       |notes_c_additions|
+    Python indentation support                          |notes_python_indent|
     Tmux syntax - Syntax definitions for tmux.conf      |notes_tmux_syntax|
 5.  Customizations                                      |notes_customizations|
 6.  Tips                                                |notes_tips|
@@ -2791,6 +2792,16 @@ Taken from: http://www.vim.org/scripts/script.php?script_id=3064.
 Installation:
 - Download the new syntax file from the above url.
 - Install it into bundle/c-additions/after/syntax/.
+
+------------------------------------------------------------------------------
+PYTHON INDENTATION SUPPORT                              *notes_python_indent*
+  Improved Python indentation support
+
+Version 2015-03-03 (e66de53b) from
+git://github.com/hynek/vim-python-pep8-indent.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 TMUX SYNTAX                                             *notes_tmux_syntax*
