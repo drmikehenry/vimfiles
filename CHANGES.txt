@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-04-27
+==========
+
+- Update to headerguard v0.2.2 (adds feature to use C++-style comments on the
+  "#endif" line).
+
 2015-04-26
 ==========
 

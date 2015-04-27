@@ -1,5 +1,5 @@
 *headerguard.txt*   Plugin for adding header guards to C/C++ header files
-*headerguard*       Version 0.2.1
+*headerguard*       Version 0.2.2
 
 ==============================================================================
 1.  Introduction                                    |headerguard-intro|
@@ -53,10 +53,10 @@ the downloaded archive into a bundle directory, e.g.: >
 
 The following command is provided:                  *HeaderguardAdd*  >
 
-  :HeaderguardAdd                                   
+  :HeaderguardAdd
 
 This will add a new header guard to the current file.  It checks for a
-pre-existing header guard, and if found, modifies the existing guard in-place.  
+pre-existing header guard, and if found, modifies the existing guard in-place.
 
 Detection of pre-existing header guards is somewhat primitive.  The first two
 pre-processor directives in the file must be the pre-existing header guard's
@@ -144,8 +144,25 @@ below buffer-local function will take precedence over g:HeaderguardName(): >
       return "_" . toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g'))
   endfunction
 
+There is also a possibility to fine-tune the behavior without overriding
+functions. The comments at the end can be changed by setting the value of
+g:headerguard_use_cpp_comments to 1. In this case, the default header guard
+looks like this: >
+
+  #ifndef HEADERNAME_H
+  #define HEADERNAME_H
+
+    ...header content...
+
+  #endif // HEADERNAME_H
+
 ===============================================================================
 5.  ChangeLog                                       |headerguard-changelog|
+
+Version 0.2.2    Date    2015-04-27               *headerguard-changelog-0.2.2*
+
+  - Add g:headerguard_use_cpp_comments to use C++ comments in #endif
+    (thanks to Péter Szabados).
 
 Version 0.2.1    Date    2013-10-03               *headerguard-changelog-0.2.1*
 
@@ -173,6 +190,10 @@ Developed by Michael Henry (vim at drmikehenry.com).
 Distributed under Vim's |license|.
 
 Git repository:       https://github.com/drmikehenry/vim-headerguard
+
+Contributors (in chronological order)
+
+- Péter Szabados
 
 ===============================================================================
 vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:

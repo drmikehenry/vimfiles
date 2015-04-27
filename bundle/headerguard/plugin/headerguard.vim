@@ -5,6 +5,9 @@ if exists("loaded_headerguard")
 endif
 let loaded_headerguard = 1
 
+if !exists('g:headerguard_use_cpp_comments')
+    let g:headerguard_use_cpp_comments = 0
+endif
 
 " Save 'cpoptions' and set Vim default to enable line continuations.
 let s:save_cpoptions = &cpoptions
@@ -18,7 +21,7 @@ function! s:ResolveFunc(funcName, scopes)
             return function(scopedFuncName)
         endif
     endfor
-    throw "Unknown function " . a:funcName 
+    throw "Unknown function " . a:funcName
 endfunction
 
 " Return reference to Headerguard function having given suffix.
@@ -39,7 +42,11 @@ function! s:HeaderguardLine2()
 endfunction
 
 function! s:HeaderguardLine3()
-    return "#endif /* " . s:Func('Name')() . " */"
+    if g:headerguard_use_cpp_comments
+        return "#endif // " . s:Func('Name')()
+    else
+        return "#endif /* " . s:Func('Name')() . " */"
+    endif
 endfunction
 
 function! g:HeaderguardAdd()
@@ -66,7 +73,7 @@ function! g:HeaderguardAdd()
 
     " Locate #define of desired guardName.
     call cursor(1, 1)
-    let guardDefine = search('^#\s*define\s\+' . 
+    let guardDefine = search('^#\s*define\s\+' .
                 \ s:Func('Name')() . '\>', "cW")
 
     " If the candidate guard lines were found in the proper
@@ -84,7 +91,7 @@ function! g:HeaderguardAdd()
         call cursor(guardLine1, 1)
 
     elseif guardDefine > 0
-        echoerr "Found '#define " . s:Func('Name')() . 
+        echoerr "Found '#define " . s:Func('Name')() .
                     \ "' without guard structure"
         " Position at unexpected #define.
         call cursor(guardDefine, 1)
