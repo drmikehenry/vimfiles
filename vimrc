@@ -1768,11 +1768,14 @@ xnoremap <expr> #    VisualPerlSearch(AgOrAck())
 
 " Run "Ag!" or "Ack!" using supplied arguments.
 function! RunAgOrAck(args)
+    " Invoke indirectly in case of a raised exception; without this, our
+    " "endif" below gets skipped when an exception occurs.
     if HaveAg()
-        call ag#Ag('grep!', a:args)
+        let func = 'ag#Ag'
     else
-        call ack#Ack('grep!', a:args)
+        let func = 'ack#Ack'
     endif
+    call {func}('grep!', a:args)
 endfunction
 
 " Run first available of Ag! or Ack! against arguments.
