@@ -1680,36 +1680,22 @@ set smartcase
 set nowrapscan
 
 
-" Escape passed-in string for use as a search expression.
-function! MakeSearchString(str)
+" Create vim pattern for literal string.
+function! LiteralPattern(str)
     return substitute(escape(a:str, '\\/.*$^~[]'), '\n', '\\n', 'g')
 endfunction
 
-" Escape passed-in string for use as an egrep expression.
-function! MakeEgrepString(str)
+" Create egrep pattern for literal string.
+function! LiteralEgrepPattern(str)
     " @todo Can't egrep for \n.
     return substitute(escape(a:str, '\\/.*$^~[]() |%#'), '\n', '\\n', 'g')
 endfunction
 
-" Escape passed-in string for use as a Perl regular expression.
-function! MakePerlRegexString(str)
+" Create Perl pattern for literal string.
+function! LiteralGrepPattern(str)
     let s = a:str
     let s = escape(s, '\\!$.*+^~[]()|%#')
     let s = substitute(s, '\n', '\\n', 'g')
-    return s
-endfunction
-
-" Quote Perl regex string for use on command-line.
-function! QuotePerlRegexString(str)
-    let s = MakePerlRegexString(a:str)
-    " The type of quotes we must use depends on the operating system.
-    " On Windows, we use double-quotes; otherwise, we use single-quotes.
-    " Embedded quotes must be escaped as well.
-    if has("win32")
-        let s = '"' . escape(s, '"') . '"'
-    else
-        let s = "'" . substitute(s, "'", "'\\''", 'g') . "'"
-    endif
     return s
 endfunction
 
@@ -1723,8 +1709,8 @@ function! SetSearch(pattern)
 endfunction
 
 " Set search register @/ to unnamed ("scratch") register and highlight.
-command! -bar MatchScratch     call SetSearch(MakeSearchString(@"))
-command! -bar MatchScratchWord call SetSearch("\\<".MakeSearchString(@")."\\>")
+command! -bar MatchScratch     call SetSearch(LiteralPattern(@"))
+command! -bar MatchScratchWord call SetSearch('\<' . LiteralPattern(@") . '\>')
 
 " Map normal-mode '*' to just highlight, not search for next.
 " Note: Yank into @a to avoid clobbering register 0 (saving and restoring @a).
@@ -1738,13 +1724,13 @@ xnoremap <silent> *  <ESC>:let temp_a=@a<CR>gv"ay:MatchScratch<CR>
 " Setup :Regrep command to search for visual selection.
 function! VisualRegrep()
     return "y:MatchScratch\<CR>" .
-            \ ":Regrep \<C-r>=MakeEgrepString(@\")\<CR>"
+            \ ":Regrep \<C-r>=LiteralEgrepPattern(@\")\<CR>"
 endfunction
 
 " Setup :Regrep command to search for complete word under cursor.
 function! NormalRegrepCword()
     return "yiw:MatchScratchWord\<CR>" .
-            \ ":Regrep \\<\<C-r>=MakeEgrepString(@\")\<CR>\\>"
+            \ ":Regrep \\<\<C-r>=LiteralEgrepPattern(@\")\<CR>\\>"
 endfunction
 
 " :Regrep of visual selection or current word under cursor.
@@ -1754,13 +1740,13 @@ nnoremap <expr> <F3> NormalRegrepCword()
 " Setup Perl search command for word under cursor.
 function! NormalPerlSearchCword(searchCmd)
     return "yiw:MatchScratchWord\<CR>:" . a:searchCmd . "! " .
-            \ "\<C-r>=QuotePerlRegexString(@\")\<CR> -w"
+            \ "\<C-r>=shellescape(LiteralGrepPattern((@\"))\<CR> -w"
 endfunction
 
 " Setup :Ag (or :Ack) command to search for visual selection.
 function! VisualPerlSearch(searchCmd)
     return "y:MatchScratch\<CR>:" . a:searchCmd . "! " .
-            \ "\<C-r>=QuotePerlRegexString(@\")\<CR>"
+            \ "\<C-r>=shellescape(LiteralGrepPattern(@\"))\<CR>"
 endfunction
 
 " True if have 'ag' in PATH.
