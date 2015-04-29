@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-04-29
+==========
+
+- Unmap/re-map 'ds' for BufExplorer buffers.  This eliminates the delay
+  when using 'd' in BufExplorer to delete a buffer.
+
 2015-04-27
 ==========
 

@@ -2716,6 +2716,9 @@ augroup local_bufExplorer
     autocmd BufEnter \[BufExplorer\] nunmap drw
     autocmd BufLeave \[BufExplorer\] nnoremap drw
             \ :<C-u>call DeleteRubbishWhitespace()<CR>
+    autocmd BufEnter \[BufExplorer\] nunmap dm
+    autocmd BufLeave \[BufExplorer\] nmap dm
+            \ :<C-U>call signature#Remove(v:count)<CR>
 augroup END
 
 " -------------------------------------------------------------
@@ -3521,6 +3524,9 @@ augroup END
 " Disable toggling of marks and markers.
 let g:SignatureForceMarkPlacement = 1
 let g:SignatureForceMarkerPlacement = 1
+
+" NOTE: See 'augroup local_bufExplorer' below for work-around to
+" unmap/map 'dm'.
 
 " -------------------------------------------------------------
 " Sneak
