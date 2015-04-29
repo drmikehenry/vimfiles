@@ -1740,7 +1740,7 @@ nnoremap <expr> <F3> NormalRegrepCword()
 " Setup Perl search command for word under cursor.
 function! NormalPerlSearchCword(searchCmd)
     return "yiw:MatchScratchWord\<CR>:" . a:searchCmd . "! " .
-            \ "\<C-r>=shellescape(LiteralGrepPattern((@\"))\<CR> -w"
+            \ "\<C-r>=shellescape(LiteralGrepPattern(@\"))\<CR> -w"
 endfunction
 
 " Setup :Ag (or :Ack) command to search for visual selection.
