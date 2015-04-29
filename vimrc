@@ -1990,47 +1990,96 @@ endfunction
 " Underscore words comprise characters limited to lowercase letters, numbers,
 " and underscores, containing at least one lowercase letter and one number.
 
-" Vim regex for a "Word".
-function! WordPattern()
+" Escape a Vim pattern for use with a /search/.  Escapes slashes so that
+" any embedded slashes don't halt the pattern.
+" E.g.:
+"   'path/filename'
+" ==>
+"   'path\/filename'
+function! EscapeVimPattern(pattern)
+    return escape(a:pattern, '/')
+endfunction
+
+" Vim raw regex for a "Word".
+function! RawWordPattern()
     return '\v\C<%(\l|\u|_)%(\l|\u|\d|_)*>'
 endfunction
 
-" Perl regex for a "Word".
-function! WordGrepPattern()
-    return shellescape('\b[a-zA-Z_][a-zA-Z0-9_]*\b>', 1)
+" Vim regex for a "Word" escaped for use in /search/.
+function! WordPattern()
+    return EscapeVimPattern(RawWordPattern())
 endfunction
 
-" Vim regex for lowerMixedCase identifiers.
-function! LmcPattern()
+" Perl raw regex for a "Word".
+function! RawWordGrepPattern()
+    return '\b[a-zA-Z_][a-zA-Z0-9_]*\b>'
+endfunction
+
+" Perl regex for a "Word" escaped for command-line use.
+function! WordGrepPattern()
+    return shellescape(RawWordGrepPattern())
+endfunction
+
+" Vim raw regex for lowerMixedCase identifiers.
+function! RawLmcPattern()
     return '\v\C<\l(\l|\d)*\u(\a|\d)*>'
 endfunction
 
-" Perl regex for lowerMixedCase identifiers.
-function! LmcGrepPattern()
-    let regex = shellescape('\b[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b', 1)
-    return regex
+" Vim regex for lowerMixedCase identifiers escaped for use in /search/.
+function! LmcPattern()
+    return EscapeVimPattern(RawLmcPattern())
 endfunction
 
-" Vim regex for UpperMixedCase identifiers.
-function! UmcPattern()
+" Perl raw regex for lowerMixedCase identifiers.
+function! RawLmcGrepPattern()
+    return '\b[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b'
+endfunction
+
+" Perl regex for lowerMixedCase identifiers escaped for command-line use.
+function! LmcGrepPattern()
+    return shellescape(RawLmcGrepPattern())
+endfunction
+
+" Vim raw regex for UpperMixedCase identifiers.
+function! RawUmcPattern()
     return '\v\C<\u(\u|\d)*\l(\l|\d)*\u(\a|\d)*>'
 endfunction
 
-" Perl regex for UpperMixedCase identifiers.
-function! UmcGrepPattern()
-    let regex = shellescape(
-            \ '\b[A-Z][A-Z0-9]*[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b', 1)
-    return regex
+" Vim regex for UpperMixedCase identifiers escaped for use in /search/.
+function! UmcPattern()
+    return EscapeVimPattern(RawUmcPattern())
 endfunction
 
-" Vim regex syntax for underscore_separated identifiers.
-function! UnderscorePattern()
+" Perl raw regex for UpperMixedCase identifiers.
+function! RawUmcGrepPattern()
+    return '\b[A-Z][A-Z0-9]*[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b'
+endfunction
+
+" Perl regex for UpperMixedCase identifiers escaped for command-line use.
+function! UmcGrepPattern()
+    return shellescape(RawUmcGrepPattern())
+endfunction
+
+" Vim raw regex syntax for underscore_separated identifiers.
+function! RawUnderscorePattern()
     return '\v\C<\l*_+\l(\l|_)*>'
 endfunction
 
-" Perl regex syntax for underscore_separated identifiers.
+" Vim regex syntax for underscore_separated identifiers escaped for use in
+" /search/.
+function! UnderscorePattern()
+    return EscapeVimPattern(RawUnderscorePattern())
+endfunction
+
+" Perl raw regex syntax for underscore_separated identifiers.
+function! RawUnderscoreGrepPattern()
+    return '\b[a-z]*_+[a-z][a-z_]*\b'
+endfunction
+
+" Perl regex syntax for underscore_separated identifiers escaped for
+" command-line use.
 function! UnderscoreGrepPattern()
-    return shellescape('\b[a-z]*_+[a-z][a-z_]*\b', 1)
+    return shellescape(RawUnderscoreGrepPattern())
 endfunction
 
 " Convert lowerMixedCase to underscore_separated_lowercase, e.g.:
