@@ -492,6 +492,10 @@ Installed plugins:
 ACK                                                     *notes_ack*
   Search using 'ack' utility                            |ack|
 
+Note that the regular expressions used in invocations of :Ack must be
+quoted using the shell-specific rules of your environment.  See |:G|
+for more details.
+
 Local customizations:
 - The single-file implementation of "ack" is installed in $VIMFILES/tool/ack,
   ensuring that it is available on all platforms with Perl installed.
@@ -506,6 +510,10 @@ Installation:
 ------------------------------------------------------------------------------
 AG                                                      *notes_ag*
   Search using 'ag' utility                             |ag|
+
+Note that the regular expressions used in invocations of :Ag must be
+quoted using the shell-specific rules of your environment.  See |:G|
+for more details.
 
 To use this plugin, ensure that the "Silver Searcher" ('ag') utility is
 installed.  See https://github.com/ggreer/the_silver_searcher for details.
@@ -3329,16 +3337,52 @@ The "Ack" utility may be invoked explicitly using :Ack, and the Silver Searcher
 may be invoked via ":Ag".
 
 Generally, the Silver Searcher is preferred for speed.  When it is not
-available, Ack is a good alternative.  The custom command :G abstracts this
-choice for you.  When the Silver Searcher is installed, :G is equivalent to :Ag!
-(with the exclamation point to avoid jumping to the first match); when that tool
-is unavailable, :G falls back to :Ack! to use the portable 'ack' tool.
+available, Ack is a good alternative.  The custom command |:G| (see below)
+abstracts this choice for you, choosing the best option available on your
+system.
 
 In addition, "#" is mapped to search for the word under the cursor (in Normal
 mode) or the current selection (in Visual mode) using :Ag! (when available) or
 :Ack! (otherwise).
 
 Use the mapping \z after a search to fold all but the matching lines.
+
+------------------------------------------------------------------------------
+:G 'search pattern'                                   *:G*   *notes_G*
+
+Depending on your environment, you may not have :Ag available, but if you have
+Perl installed, you will at least be able to use :Ack via the single-file
+implementation bundled with vimfiles.  Because :Ag and :Ack are so similar, in
+most cases you don't have to care which one gets called.  The custom command :G
+is provided to abstract this choice for you.  When the Silver Searcher is
+installed, :G is equivalent to :Ag!  (with the exclamation point to avoid
+jumping to the first match); when that tool is unavailable, :G falls back to
+:Ack! to use the portable 'ack' tool embedded within vimfiles.
+
+For all of these tools (:Ack, :Ag, and :G), the command line is passed directly
+to the shell, and the syntax you must use depends on the details of your
+environment.
+
+For Unix-like systems, it's best to use single-quotes around the entire regular
+expression.  Single-quotes within the regular expression should be handled by
+closing the quotes, escaping a single-quote with a backslash, then re-opening
+the quotes.  For example, to quote this string:
+
+  I'm here
+
+Replace the apostrophe with the four characters '\'' and surround the entire
+expression with single-quotes like this:
+
+  'I'\''m here'
+
+For Windows, surround the pattern with double-quotes, and double any
+double-quotes embedded within the pattern.  For example, to quote this string:
+
+  I said "That's painful" in my loudest voice.
+
+Use the following:
+
+  "I said ""That's painful"" in my loudest voice."
 
 ------------------------------------------------------------------------------
 Pasting lines into Vim

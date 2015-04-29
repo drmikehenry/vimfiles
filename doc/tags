@@ -1,3 +1,4 @@
+:G	notes.txt	/*:G*
 :I	visincr.txt	/*:I*
 :IA	visincr.txt	/*:IA*
 :ID	visincr.txt	/*:ID*
@@ -133,6 +134,7 @@ matchit.vim	matchit.txt	/*matchit.vim*
 not	notes.txt	/*not*
 notes	notes.txt	/*notes*
 notes.txt	notes.txt	/*notes.txt*
+notes_G	notes.txt	/*notes_G*
 notes_ack	notes.txt	/*notes_ack*
 notes_ag	notes.txt	/*notes_ag*
 notes_badwolf	notes.txt	/*notes_badwolf*
