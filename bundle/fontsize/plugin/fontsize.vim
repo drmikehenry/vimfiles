@@ -1,6 +1,6 @@
 " Plugin for modifying guifont size.
 
-if exists("loaded_fontsize")
+if exists("loaded_fontsize") || !has('gui')
     finish
 endif
 let loaded_fontsize = 1
