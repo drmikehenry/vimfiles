@@ -13,6 +13,11 @@ require adjustment of per-user settings.
 - Unmap/re-map 'ds' for BufExplorer buffers.  This eliminates the delay
   when using 'd' in BufExplorer to delete a buffer.
 
+- Add Quickfix-reflector plugin, allowing the user to edit the results of a
+  QuickFix-based search and then save the QuickFix buffer itself, propagating
+  the changes back to the original files.  See :help notes-quickfix-reflector
+  for details.
+
 2015-04-27
 ==========
 

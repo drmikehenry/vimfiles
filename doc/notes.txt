@@ -61,6 +61,7 @@
     Project - Managing "projects" of files              |notes_project|
     Python - Python Syntax file with folding            |notes_python|
     PythonComplete - Python Omnicompletion              |notes_pythoncomplete|
+    Quickfix-reflector - edit QuickFix and save changes |notes_quickfix-reflector|
     Rainbow Parentheses - Highlight nested parens       |notes_rainbow-parens|
     Repeat - Repeat operations for supported plugins    |notes_repeat|
     Redl - Provides a debug REPL to Clojure             |notes_redl|
@@ -1785,6 +1786,28 @@ Version 0.9 from http://www.vim.org/scripts/script.php?script_id=1542
 
 Installation:
 - Install as ~/.vim/autoload/pythoncomplete.vim
+
+------------------------------------------------------------------------------
+QUICKFIX-REFLECTOR                                      *notes_quickfix-reflector*
+  Edit QuickFix and save changes                        |quickfix-reflector.txt|
+
+Version 2015-04-29 (16ea660a) from
+git@github.com:drmikehenry/quickfix-reflector.vim.git (branch undojoin).
+
+Forked from version (3958eff4) of
+git@github.com:stefandtw/quickfix-reflector.vim.git
+
+Perform a search that populates the QuickFix list, then edit the contents of
+the QuickFix list itself.  Delete any lines you don't want to be modified,
+and edit the text of lines you'd like to change.  In particular, it's very
+convenient to perform :%s/old/new/g within the QuickFix window to replace
+strings across many files at once.  Then, when you are satisfied with the
+contents of the QuickFix window, perform :w on the QuickFix window itself and
+your changes will be written back to the corresponding locations in the original
+files that were searched.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 RAINBOW PARENTHESES                                     *notes_rainbow-parens*

@@ -3370,6 +3370,13 @@ nmap <silent> <C-q><C-p>  <Plug>ToggleProject
 nmap <silent> <C-q>p      <Plug>ToggleProject
 
 " -------------------------------------------------------------
+" Quickfix-reflector
+" -------------------------------------------------------------
+
+" Join changes within each buffer for easier :undo.
+let g:qf_join_changes = 1
+
+" -------------------------------------------------------------
 " Rainbow Parentheses
 " -------------------------------------------------------------
 
