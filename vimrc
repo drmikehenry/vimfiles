@@ -3004,9 +3004,13 @@ nmap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
 " incsearch
 " -------------------------------------------------------------
 
-nmap /      <Plug>(incsearch-forward)
-nmap ?      <Plug>(incsearch-backward)
-nmap g/     <Plug>(incsearch-stay)
+" Requires at least Vim 7.3.032:
+" https://github.com/haya14busa/incsearch.vim/issues/61
+if v:version ># 703 || (v:version is 703 && has('patch32'))
+    nmap /      <Plug>(incsearch-forward)
+    nmap ?      <Plug>(incsearch-backward)
+    nmap g/     <Plug>(incsearch-stay)
+endif
 
 " -------------------------------------------------------------
 " indent-guides
