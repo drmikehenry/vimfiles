@@ -1,10 +1,10 @@
 *incsearch.txt*	Incrementally highlight all pattern matches
 
 Author  : haya14busa <hayabusa1419@gmail.com>
-Version : 0.9.8
+Version : 1.1.0
 License : MIT license {{{
 
-	Copyright (c) 2014 haya14busa
+	Copyright (c) 2014-2015 haya14busa
 
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
@@ -36,40 +36,26 @@ CONTENTS				*incsearch-contents*
 	    Command line interface	|incsearch-commandline-interface|
 	    Highlight			|incsearch-highlight|
 	    AUTOCMD			|incsearch-autocmd|
+	API				|incsearch-api|
 	Known Issues			|incsearch-known-issues|
 	ChangeLog			|incsearch-changelog|
 
 ==============================================================================
 INTRODUCTION					    *incsearch-introduction*
 
-	*incsearch.vim* provide incremental highlighting for __ALL__ pattern
+	*incsearch.vim* provides incremental highlighting for __ALL__ pattern
 	matches unlike default 'incsearch'.
-	You can use incsearch.vim as improved |/| & |?|.
+	You can use incsearch.vim as improved versions of |/| & |?|.
 
 ==============================================================================
 INSTALL						    *incsearch-install*
 
-	Install with |NeoBundle|:
-
-		1. Add the following configuration to your vimrc.
+	Install with your favorite plugin managers like NeoBundle/Plugin/Plug
 >
 		NeoBundle 'haya14busa/incsearch.vim'
+		Plugin 'haya14busa/incsearch.vim'
+		Plug 'haya14busa/incsearch.vim'
 <
-		2. Install with |:NeoBundleInstall|.
-
-	Install with |NeoBundleLazy|:
-
-		1. Add the following configuration sample to your vimrc.
->
-		NeoBundleLazy 'haya14busa/incsearch.vim', {
-		\   'autoload' : {
-		\     'mappings' : ['<Plug>(incsearch-']
-		\   }
-		\ }
-<
-		2. Install with |:NeoBundleInstall|.
-
-
 ==============================================================================
 USAGE							*incsearch-usage*
 
@@ -85,11 +71,11 @@ Basic usage~
 		map ?  <Plug>(incsearch-backward)
 		map g/ <Plug>(incsearch-stay)
 <
-    <Plug>(incsearch-forward)  : Incremental searching to forward
-    <Plug>(incsearch-backward) : Incremental searching to backward
-    <Plug>(incsearch-stay)     : It doesn't move the cursor unless explicitly
-                                 using cursor move command while incremental
-                                 searching.
+    <Plug>(incsearch-forward):   Incremental searching forward
+    <Plug>(incsearch-backward):  Incremental searching backward
+    <Plug>(incsearch-stay):      It doesn't move the cursor unless you
+                                 explicitly use cursor move commands during
+                                 incremental search.
 
 ------------------------------------------------------------------------------
 Additional usage~
@@ -97,6 +83,7 @@ Additional usage~
 
 						*g:incsearch#auto_nohlsearch*
 <Plug>(incsearch-nohl)				*<Plug>(incsearch-nohl)*
+<Plug>(incsearch-nohl0)				*<Plug>(incsearch-nohl0)*
 <Plug>(incsearch-nohl-n)			*<Plug>(incsearch-nohl-n)*
 <Plug>(incsearch-nohl-N)			*<Plug>(incsearch-nohl-N)*
 <Plug>(incsearch-nohl-*)			*<Plug>(incsearch-nohl-star)*
@@ -104,7 +91,7 @@ Additional usage~
 <Plug>(incsearch-nohl-g*)			*<Plug>(incsearch-nohl-gstar)*
 <Plug>(incsearch-nohl-g#)			*<Plug>(incsearch-nohl-g#)*
 
-	Let's farewell to this kind of mapping! >
+	Let's farewell to this kind of mappings! >
 	    nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 <
 	If you set |g:incsearch#auto_nohlsearch| to 1 (default: 0) and use
@@ -120,18 +107,34 @@ Additional usage~
 	    map g* <Plug>(incsearch-nohl-g*)
 	    map g# <Plug>(incsearch-nohl-g#)
 <
-	NOTE: |<Plug>(incsearch-nohl-n)| staffs are just alias to
-	`<Plug>(incsearch-nohl)n` except |n| doesn't be remapped, so the basic
-	behavior is completely same as default one.
+	NOTE: |<Plug>(incsearch-nohl-n)| stuff are just aliases to
+	`<Plug>(incsearch-nohl)n` except |n| doesn't get remapped, so the
+	basic behaviour is completely same as the default one.
 
 	If you want to use this feature with other search related plugins, use
-	|<Plug>(incsearch-nohl)|. Please make sure to place |<Plug>(incsearch-nohl)|
-	before the cursor moving mappings.
+	|<Plug>(incsearch-nohl)|.
+	Please make sure to place |<Plug>(incsearch-nohl)| before the cursor
+	moving mappings. |<Plug>(incsearch-nohl0)| handles search enhancement
+	mappings without |CursorMoved| event.
 
 	Working with |anzu.txt| example:
+	    https://github.com/osyo-manga/vim-anzu
 >
 	    map n <Plug>(incsearch-nohl)<Plug>(anzu-n-with-echo)
 	    map N <Plug>(incsearch-nohl)<Plug>(anzu-N-with-echo)
+<
+	Working with |asterisk.txt| example:
+	    https://github.com/haya14busa/vim-asterisk
+>
+	    map *   <Plug>(incsearch-nohl)<Plug>(asterisk-*)
+	    map g*  <Plug>(incsearch-nohl)<Plug>(asterisk-g*)
+	    map #   <Plug>(incsearch-nohl)<Plug>(asterisk-#)
+	    map g#  <Plug>(incsearch-nohl)<Plug>(asterisk-g#)
+
+	    map z*  <Plug>(incsearch-nohl0)<Plug>(asterisk-z*)
+	    map gz* <Plug>(incsearch-nohl0)<Plug>(asterisk-gz*)
+	    map z#  <Plug>(incsearch-nohl0)<Plug>(asterisk-z#)
+	    map gz# <Plug>(incsearch-nohl0)<Plug>(asterisk-gz#)
 <
 
 					    *g:incsearch#consistent_n_direction*
@@ -177,11 +180,24 @@ Improved 'magic' option~
 <
 	default: ''
 
+Smart backward word~
+					*g:incsearch#smart_backward_word*
+	If this option is set to 1, the backward word detection which is used
+	when |c_Ctrl-w| and |c_CTRL-R_CTRL-W| become smart. Smart backward
+	word doesn't include unexpected reglular expression and treats regular
+	expression flag as one word. For example, when the command line is
+	`/\vword` and type <C-w>, the vim default command line will become
+	`/\`, but since |\v| is not the part of word but just a regular
+	expression flag, it's useful not to include 'v' as a backward word.
+	This option fix this problem.
+
+	default: 1
+
 ------------------------------------------------------------------------------
 Command line interface~
 					*incsearch-commandline-interface*
 
-:IncSearchNoreMap {lhs} {rhs}				*IncSearchNoreMap*
+:IncSearchNoreMap {lhs} {rhs}				*:IncSearchNoreMap*
 
 	Map the key sequence {lhs} to {rhs} for the |incsearch.vim| command
 	line interface. This command doesn't load while loading your vimrc,
@@ -206,6 +222,10 @@ Command line interface~
 				    default: <C-j>
 	<Over>(incsearch-scroll-b) : scroll to the previous page match.
 				    default: <C-k>
+		NOTE: if you want to use |digraphs| feature, please overwrite
+		<C-k> or map another key to <C-k> like this. >
+		    IncSearchNoreMap <C-k> <C-k>
+<
 
 	Example:
 >
@@ -222,7 +242,9 @@ Command line interface~
 <
 						*g:incsearch#vim_cmdline_keymap*
 	Apply vim default |:cnoremap| and |:cmap| mappings to custom command line
-	interface of |incsearch.vim|. default: 1
+	interface of |incsearch.vim|. |:IncSearchNoreMap| has higher priority
+	than :cnoremap and :cmap mappings
+	    default: 1
 
 						*g:incsearch#emacs_like_keymap*
 	It enables Emacs-like keymappings if you set
@@ -242,11 +264,17 @@ Command line interface~
 		<A-d>  | |<C-w>|
 
 Buffer completion			*incsearch-<Over>(buffer-complete)*
+					*incsearch-<Over>(buffer-complete-prev)*
 	Completion with the buffer text.
 
-	<Over>(buffer-complete)  start buffer text completion. default: <C-l>
-	<Right>			 select next candidate while completion
-	<Left>			 select candidate while completion
+	<Over>(buffer-complete)
+	    start buffer text completion. default: <C-l>
+	<Over>(buffer-complete-prev)
+	    start buffer text completion to backward direction.
+	<Right>
+	    select next candidate while completion
+	<Left>
+	    select candidate while completion
 
 	Example: >
 		augroup incsearch-keymap
@@ -255,6 +283,7 @@ Buffer completion			*incsearch-<Over>(buffer-complete)*
 		augroup END
 		function! s:incsearch_keymap()
 		    IncSearchNoreMap <Tab> <Over>(buffer-complete)
+		    IncSearchNoreMap <S-Tab> <Over>(buffer-complete-prev)
 		endfunction
 <
 ------------------------------------------------------------------------------
@@ -310,6 +339,18 @@ Customize highlight ~
 		\   }
 		\ }
 <
+
+						*g:incsearch#no_inc_hlsearch*
+	Use 'hlsearch' incrementally to highlight matched patterns including
+	patterns in the other windows. The highlight of |IncSearchMatch| have
+	higher priority than 'hlsearch' in the current window but it doesn't
+	applied to other windows right now. If you do not want to highlight
+	with 'hlsearch', turn on this variable. >
+
+	    let g:incsearch#no_inc_hlsearch = 1
+
+<	default: 0
+
 ------------------------------------------------------------------------------
 AUTOCMD ~
 							    *incsearch-autocmd*
@@ -320,13 +361,115 @@ Name			triggered by ~
 IncSearchEnter		triggered when you enter the command line
 IncSearchLeave		triggered when you leave the command line
 IncSearchExecutePre	triggered before a command execution
+IncSearchExecute	triggered after a command execution
 IncSearchCharPre	triggered before every character insertion
 IncSearchChar		triggered after every character insertion
-IncSearchCancel		triggered when you exit without running the line
 
 NOTE:
-	incsearch.vim uses |:map-<expr>| for visual and operator-pending
-	mappings, so the same restriction apply to your defined autocmd.
+	incsearch.vim uses |:map-<expr>| for operator-pending mappings, so the
+	same restriction apply to your defined autocmd for operator-pending.
+
+==============================================================================
+API							*incsearch-api*
+	incsearch.vim's API. It may changes because it's EXPERIMENTAL but I
+	try to keep it as much as possible.
+
+------------------------------------------------------------------------------
+Functions ~
+							*incsearch-functions*
+
+incsearch#go([{config}])			*incsearch#go()*
+	Starts incsearch.vim's search interface. It assumes called by <expr>
+	mappings. It doesn't work nicely if you call it directly, so if you
+	want to call from command-line, use |incsearch#call()|. It returns
+	command to execute search, but you have no need to execute it to move
+	cursor because it's handled by <expr> mapping.
+	See |incsearch-config| for available configuration.
+
+	Example: >
+	noremap <expr> z/ incsearch#go()
+	noremap <expr> z? incsearch#go({'command': '?'})
+	noremap <expr> <Space>/ incsearch#go({'pattern': histget('/', -1)})
+
+incsearch#call([{config}])			*incsearch#call()*
+	Starts incsearch.vim's search interface with function call. If you
+	want to create mapping to start incsearch.vim's search interface,
+	please use |incsearch#go()|. It returns primitive command to execute
+	search, but you have no need to execute it explicitly because calling
+	this function already move the cursor to destination.
+	See |incsearch-config| for available configuration.
+
+	Example: >
+	:call incsearch#call()
+	:call incsearch#call({'command': '?'})
+	:call incsearch#call({'pattern': histget('/', -1)})
+
+incsearch#cli()					*incsearch#cli()*
+	Returns current |Vital.Over.Commandline-object|.
+
+------------------------------------------------------------------------------
+Config ~
+							*incsearch-config*
+	Here are available configurations you can specify to call
+	incsearch.vim's search interface like |incsearch#go()| and
+	|incsearch#call()|.
+
+command						*incsearch-config-command*
+	Search command to use. You can use |/| or |?|.
+	  Type: |string|
+	  Default: '/'
+	  Example: >
+	  noremap <expr> z? incsearch#go({'command': '?'})
+
+is_stay						*incsearch-config-is_stay*
+	Boolean option for stay feature |<Plug>(incsearch-stay)|.
+	If you set this option to 1, the cursor will not move while
+	incremental searching unless you explicitly move it.
+	  Type: boolean (0 or 1)
+	  Default: false (0)
+	  Example: >
+	  noremap <expr> g/ incsearch#go({'is_stay': 1})
+
+is_expr						*incsearch-config-is_expr*
+	Boolean option for calling main function with <expr> state or
+	not. This value is turned on by default for
+	|Operator-pending-mode| to support dot-repeat(|.|) without any
+	additional library. But <expr> has a constraint like
+	|textlock| and moving cursor etc... see |:map-<expr>| for
+	detail. So if you want to avoid these constraint, turn off
+	this value explicitly. As for the dot-repeat(|.|) handling, if
+	vim-repeat[1] is installed, use it to handle dot-repeat(|.|).
+	  [1]:
+	    - https://github.com/tpope/vim-repeat
+	    - https://github.com/kana/vim-repeat
+	  Type: boolean (0 or 1)
+	  Default: false (0) or true (1) for |Operator-pending-mode|
+	  Example: >
+	  noremap <expr> z/ incsearch#go({'is_expr': 0})
+
+pattern						*incsearch-config-pattern*
+	Default pattern to start incsearch.vim's search interface.
+	  Type: |string|
+	  Default: ''
+	  Example: >
+	  noremap <expr> <Space>/ incsearch#go({'pattern': histget('/', -1)})
+
+modules						*incsearch-config-modules*
+	Additional |Vital.Over.Commandline-modules| to connect.
+	  Type: |list| of |Vital.Over.Commandline-modules|
+	  Default: []
+	  Example: >
+	  let s:pcount = {'name': 'PromptCount'}
+
+	  function! s:pcount.on_char(cmdline) abort
+	    call a:cmdline.set_prompt(len(a:cmdline.getline()) . '/')
+	  endfunction
+
+	  function! s:config() abort
+	    return {'modules': [s:pcount]}
+	  endfunction
+
+	  noremap <expr> z/ incsearch#go(<SID>config())
 
 ==============================================================================
 KNOWN ISSUES						*incsearch-issues*
@@ -338,15 +481,69 @@ KNOWN ISSUES						*incsearch-issues*
 ==============================================================================
 CHANGELOG						*incsearch-changelog*
 
-Version 1.0 Roadmap~
-
-1.0.0	1. Pattern converter feature
+Version 2.0(?) Roadmap~
+2.0.0	1. Pattern converter feature
 	    - https://github.com/haya14busa/incsearch.vim/tree/converter
 	    - Implement fuzzy-search, migemo, spellcheck and other feature
 	    - Make public pattern converter API for customization
 	    - Write test for converer feature
-	2. More configurable options
+	3. More configurable options
 	    - e.g. option for prompt format including right prompt feature
+
+1.1.0	2015-05-03
+	1. Add experimental API |incsearch-api|.
+	    - Now you can pass a default pattern |incsearch-config-pattern|
+	    - Use |incsearch#cli()| with |incsearch-autocmd| to extend
+	      incsearch.vim's search interface
+	    - vim-repeat support if needed |incsearch-config-is_expr|
+	    - You can pass additional vital-over module to connect
+	      |incsearch-config-modules|
+
+
+1.0.3	2015-05-03
+	1. Fix 'hlsearch' handling #74
+
+1.0.2	2015-04-16
+	1. Implement experimental API (undocumented) to access vital-over
+	   command line object
+	2. Add LiteralInsert module to insert special character literally
+	  - e.g. <C-v><Tab> now inserts literal <Tab> and search them.
+	3. Add workaround pasting issue for MacVim #35
+	4. Fix to redraw commandline when leaving with <Esc> #67
+	5. Fix <SID> handling for <expr> mappings #51
+	6. Fix flicker at entering incsearch's commands #73
+
+
+1.0.1	2015-01-04
+	1. Fix keymapping escape
+	2. Fix |last-pattern| with |g:incsearch#magic|
+
+Version 1.0~
+
+1.0.0	2014-12-14
+	1. Improve compatibility with default commandline behavior
+	    - Automatically apply mappings defined with |:cnoremap| and |:cmap|
+	      See |g:incsearch#vim_cmdline_keymap|
+	    - Support multi {lhs} and <expr> mappings
+	2. Support incremental highlighting in other windows.
+	    - See |g:incsearch#no_inc_hlsearch|
+	3. Add |<Over>(buffer-complete-prev)|
+	4. Add |IncsearchExecute| event
+	5. Implement |:digraph| feature
+	6. Fix minor problems.
+
+0.9.9	2014-11-17
+	1. Smart backward word feature. See: |g:incsearch#smart_backward_word|
+	2. Implement |g:incsearch#vim_cmdline_keymap| option which apply
+	   mappings defined with |:cmap| and |:cnoremap| to custome command line
+	   interface of incsearch.vim
+	3. Do not highlight annoying patterns which matches everything like
+	   `\v`, `vim\|`, etc..
+	4. Interactive module management (e.g. |g:incsearch#emacs_like_keymap|)
+	6. Fix |c_<C-r>_<C-w>| behavoir to be compatible with default one
+	7. Fix cancel behavior
+	8. Fix & improve {rhs} handling (after exit mappings, <C-r>=, etc...)
+	9. Fix minor problems
 
 0.9.8	2014-10-25
 	1. Handle |last-pattern| incrementally. See: |<Over>(incsearch-next)|

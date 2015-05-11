@@ -1,9 +1,13 @@
-incsearch.vim: Improved incremental searching
-=============================================
+![incsearch.vim](https://raw.githubusercontent.com/haya14busa/i/master/incsearch.vim/incsearch_logo.png)
+
 [![Build Status](https://travis-ci.org/haya14busa/incsearch.vim.svg?branch=master)](https://travis-ci.org/haya14busa/incsearch.vim)
 [![Build status](https://ci.appveyor.com/api/projects/status/ks6gtsu46c1djoo6/branch/master)](https://ci.appveyor.com/project/haya14busa/incsearch-vim/branch/master)
+[![](http://img.shields.io/github/tag/haya14busa/incsearch.vim.svg)](https://github.com/haya14busa/incsearch.vim/releases)
+[![](http://img.shields.io/github/issues/haya14busa/incsearch.vim.svg)](https://github.com/haya14busa/incsearch.vim/issues)
+[![](http://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![](http://img.shields.io/badge/doc-%3Ah%20incsearch.txt-red.svg)](doc/incsearch.txt)
 
-![](https://cloud.githubusercontent.com/assets/3797062/3866249/573444b2-1fc8-11e4-859a-7e5fb940c1bb.gif)
+![](https://raw.githubusercontent.com/haya14busa/i/master/incsearch.vim/incremental_regex_building.gif)
 
 Introduction
 ------------
@@ -31,8 +35,6 @@ while incremental searching.
 Usage
 -----
 
-See `:h incsearch.txt` for detail.
-
 ### Installation
 
 [Neobundle](https://github.com/Shougo/neobundle.vim) / [Vundle](https://github.com/gmarik/Vundle.vim) / [vim-plug](https://github.com/junegunn/vim-plug)
@@ -59,10 +61,11 @@ map g/ <Plug>(incsearch-stay)
 `<Plug>(incsearch-stay)` doesn't move the cursor.
 
 ### Additional usages
+README introduces some features, but please see [:h incsearch.vim](doc/incsearch.txt) for more information.
 
 #### Automatic :nohlsearch
 
-![](https://cloud.githubusercontent.com/assets/3797062/4518938/f3c11110-4ca6-11e4-88c6-708f510a0c3c.gif)
+![](https://raw.githubusercontent.com/haya14busa/i/master/incsearch.vim/incsearch_auto_nohlsearch.gif)
 
 Farewell, `nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>`!
 This feature turns 'hlsearch' off automatically after searching-related motions.
@@ -79,41 +82,6 @@ map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
 ```
 
-#### Consistent n and N direction
-`n` and `N` directions are always forward and backward respectively even after performing `<Plug>(incsearch-backward)`.
-
-```vim
-let g:incsearch#consistent_n_direction = 1
-```
-
-#### Improved 'magic' option
-- `:h 'magic'`
-- `:h g:incsearch#magic`
-
-You can set very magic option with no portability problem.
-
-```vim
-let g:incsearch#magic = '\v'
-```
-
-### Command Line Interface Keymappings
-incsearch.vim uses a custom command line interface, so it provides a custom
-keymapping interface(`IncSearchNoreMap`) like `cnoremap`. To use this command
-in your vimrc, please call it on `VimEnter`. The mappings defined with this
-command have higher priority than vim default command line mappings if
-`g:incsearch#vim_cmdline_keymap` option is 1 (default: 1).
-
-```vim
-augroup incsearch-keymap
-    autocmd!
-    autocmd VimEnter * call s:incsearch_keymap()
-augroup END
-function! s:incsearch_keymap()
-    IncSearchNoreMap <C-f> <Over>(incsearch-scroll-f)
-    IncSearchNoreMap <C-b> <Over>(incsearch-scroll-b)
-endfunction
-```
-
 ### Emacs-like incsearch: move the cursor while incremental searching
 
 ![](https://cloud.githubusercontent.com/assets/3797062/3866152/40e11c48-1fc4-11e4-8cfd-ace452a19f90.gif)
@@ -127,22 +95,12 @@ Move the cursor to next/previous matches while incremental searching like Emacs.
 
 ### Scroll-like feature while incremental searching
 
-![](https://cloud.githubusercontent.com/assets/3797062/3931538/36979326-245a-11e4-9565-bd3d91e699d5.gif)
+![](https://raw.githubusercontent.com/haya14busa/i/master/incsearch.vim/incremental_move_and_scroll.gif)
 
 | Mapping                      | description                                         |
 | ------------------------     | ---------------------------------                   |
 | `<Over>(incsearch-scroll-f)` | scroll to the next page match. default: `<C-j>`     |
 | `<Over>(incsearch-scroll-b)` | scroll to the previous page match. default: `<C-k>` |
-
-
-### BufferCompletion
-
-![](https://cloud.githubusercontent.com/assets/3797062/3866279/2ce7939c-1fca-11e4-8851-d83773dff4a0.gif)
-
-| Mapping                   | description                         |
-| ------------------------- | ----------------------------------  |
-| `<Over>(buffer-complete)` | buffer completion. default: `<C-l>` |
-
 
 Author
 ------
@@ -154,35 +112,13 @@ osyo-manga(https://github.com/osyo-manga), the author of
 the custom command line library, https://github.com/osyo-manga/vital-over,
 which incsearch.vim heavily depends on.
 
-License
--------
-
-MIT License
-
-```
-Copyright (c) 2014 haya14busa
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
-THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-```
-
 Links
 -----
 
 ### VimConf2014
 - [/-improved](https://docs.google.com/presentation/d/1ie2VCSt9onXmoY3v_zxJdMjYJSbAelVR-QExdUQK-Tw/pub?start=false&loop=false&delayms=3000&slide=id.g4e7add63c_05) at [VimConf 2014](http://vimconf.vim-jp.org/2014/)
   - I talked in Japanese but wrote slide in English ;)
+
+Document
+--------
+[:h incsearch.vim](doc/incsearch.txt)
