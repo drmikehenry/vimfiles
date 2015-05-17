@@ -3299,7 +3299,7 @@ Original meanings:
 <C-p>   Prev. match after wildchar, or recall prev. command-line history
 
 ------------------------------------------------------------------------------
-Windows-style clipboard support
+Clipboard support
 
 Because the Windows standard keys for clipboard support are already taken in
 Vim, they have been mapped to the same keys using Alt:
@@ -3313,13 +3313,29 @@ Vim, they have been mapped to the same keys using Alt:
 In addition, old-style mappings exist:
 
 <S-Insert>    Paste from clipboard
-<C-S-Insert>  Paste from primary X selection
-<C-Insert>    Copy to clipboard
+<C-S-Insert>  Paste from X11 primary selection
+<C-Insert>    Copy to clipboard and X11 primary selection
 
 For ease of use and mnemonic value, the "undo" functionality is also
 available as <M-u><M-u>.
 
 All of these mappings are available in Normal, Visual, and Insert modes.
+
+In addition, the "unnamed" register (which is the default source for "puts"
+and the default destination for "yanks") has been configured to use the
+system clipboard by default for puts, and to use both the system clipboard
+and the X11 primary selection as the destination for yanks.  This provides
+smoother integration with the bulk of applications that use the system
+clipboard.  To put from the primary selection, either use <C-S-Insert> or
+reference the "*" register explicitly, e.g.: >
+
+  "*p
+
+Note that registers can be set via :let, which allows for moving one register
+into another easily.  For example, to move the contents of the clipboard into
+the primary selection, use: >
+
+  let @*=@+
 
 ------------------------------------------------------------------------------
 Putting most-recently-yanked text

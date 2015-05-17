@@ -13,6 +13,16 @@ require adjustment of per-user settings.
 - Enable UltiSnips if either Python 2 or Python 3 is available (previously,
   it was enabled only for Python 2).
 
+- Use the system clipboard in addition to the X11 primary selection for the
+  unnamed register.  Yanks will go into both the clipboard and the primary
+  selection; puts will come from the clipboard.  To use the primary selection
+  directly, use <C-S-Insert> or reference the ``*`` register explicitly, e.g.::
+
+    "*p
+
+  This provides smoother integration with the bulk of applications that use
+  the clipboard instead of the primary selection.
+
 2015-05-11
 ==========
 

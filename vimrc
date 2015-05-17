@@ -526,6 +526,8 @@ if has("gui_running")
 
     " 'a' is for Autoselect mode, in which selections will automatically be
     " added to the clipboard (on Windows) or the primary selection (on Unix).
+    " This makes it hard to create a selection and then overwrite it with
+    " something from the clipboard, so we disable it.
     set guioptions-=a
 
     " 'L' causes a left-side scrollbar to automatically appear when a
@@ -2169,12 +2171,17 @@ set hidden
 " and :set nopaste by executing :set invpaste).
 set pastetoggle=<S-F12>
 
-" Change default from unnamed register ('"') to the primary selection
-" register ("*") for general yank and put operations. Avoid autoselect mode.
-" Inspired by Tip #21.  Notice also you can append to a register and then
-" assign it to the primary selection (@*) or the clipboard (@+).  E.g.:
-"   :let @*=@a
-set clipboard=unnamed
+" For smoother integration with typical applications that use the clipboard,
+" set both "unnamed" and "unnamedplus".  This causes yanks to go to both
+" the system clipboard (because of "unnamedplus") and the X11 primary selection
+" (because of "unnamed"); in addition, puts use the clipboard as their default
+" source (because "unnamedplus" takes priority over "unnamed" for puts).
+" Disable "autoselect" mode, as that option makes it hard to create a selection
+" and then overwrite it with something from the clipboard.
+" Use "^=" to prepend these new settings to ensure they come before a possible
+" "exclude" option that must be last.
+set clipboard-=autoselect
+set clipboard^=unnamed,unnamedplus
 
 " taken from tip #330 - setup sometime...
 " map <F11> :call InvertPasteAndMouse()<CR>
