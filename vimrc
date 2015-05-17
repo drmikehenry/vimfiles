@@ -539,6 +539,18 @@ if has("gui_running")
     " left-side scrollbar anyway.
     set guioptions-=L
 
+    " We don't need an always-present left-side scrollbar, either.
+    set guioptions-=l
+
+    " Remove additional GUI features that take up space unnecessarily.
+    " 'r' - right-hand scrollbar is always present.
+    set guioptions-=r
+
+    " 'R' - right-hand scrollbar is present for vertical splits.
+    set guioptions-=R
+
+    " 'm' - menu bar is present.
+    set guioptions-=m
     SetFont
 
     " Number of lines of text overall.

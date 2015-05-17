@@ -23,6 +23,14 @@ require adjustment of per-user settings.
   This provides smoother integration with the bulk of applications that use
   the clipboard instead of the primary selection.
 
+- Remove some extra GUI features that take up screen space unnecessarily.
+  Now disabled are:
+
+  - Scrollbars.
+  - GUI menu.
+
+  To learn how to re-enable these features, see :help notes_guioptions.
+
 2015-05-11
 ==========
 

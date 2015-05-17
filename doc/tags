@@ -166,6 +166,7 @@ notes_fswitch	notes.txt	/*notes_fswitch*
 notes_fugitive	notes.txt	/*notes_fugitive*
 notes_grep	notes.txt	/*notes_grep*
 notes_gruvbox	notes.txt	/*notes_gruvbox*
+notes_guioptions	notes.txt	/*notes_guioptions*
 notes_gundo	notes.txt	/*notes_gundo*
 notes_headerguard	notes.txt	/*notes_headerguard*
 notes_hemisu	notes.txt	/*notes_hemisu*

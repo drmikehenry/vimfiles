@@ -2966,6 +2966,25 @@ lives in such a "pylib" path, it may be imported from any Python code executed
 within Vim.
 
 ------------------------------------------------------------------------------
+GUI options                                    *notes_guioptions*
+
+To conserve screen space, several GUI features are disabled by default.
+The 'guioptions' option controls these settings.  You can use any of the
+below lines in your |VIMRC_AFTER| script to bring back these GUI features. >
+
+  " Enable menu bar.
+  set guioptions+=r
+
+  " Enable right-side scrollbar always.
+  set guioptions+=r
+
+  " Enable left-side scrollbar always.
+  set guioptions+=l
+
+  " Enable the toolbar.
+  set guioptions+=T
+
+------------------------------------------------------------------------------
 Colorschemes
 
 By default, vimfiles chooses a default colorscheme.  To override this, setup
