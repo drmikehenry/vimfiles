@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-05-17
+==========
+
+- Enable UltiSnips if either Python 2 or Python 3 is available (previously,
+  it was enabled only for Python 2).
+
 2015-05-11
 ==========
 
