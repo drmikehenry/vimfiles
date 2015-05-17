@@ -2180,8 +2180,12 @@ set pastetoggle=<S-F12>
 " and then overwrite it with something from the clipboard.
 " Use "^=" to prepend these new settings to ensure they come before a possible
 " "exclude" option that must be last.
+" Note that the "unnamedplus" feature was added in Vim 7.3.74.
 set clipboard-=autoselect
-set clipboard^=unnamed,unnamedplus
+set clipboard^=unnamed
+if has('unnamedplus')
+    set clipboard^=unnamedplus
+endif
 
 " taken from tip #330 - setup sometime...
 " map <F11> :call InvertPasteAndMouse()<CR>
