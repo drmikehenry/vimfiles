@@ -2973,7 +2973,7 @@ The 'guioptions' option controls these settings.  You can use any of the
 below lines in your |VIMRC_AFTER| script to bring back these GUI features. >
 
   " Enable menu bar.
-  set guioptions+=r
+  set guioptions+=m
 
   " Enable right-side scrollbar always.
   set guioptions+=r
