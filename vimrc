@@ -989,9 +989,13 @@ function! GotoMessage(messageType, whichMessage)
     try
         execute a:messageType . a:whichMessage
     catch /:E42:\|:E553:/
-        let typeName = (a:messageType == 'c') ? "QuickFix" : "Location List"
-        echo "No " . a:whichMessage . " " . typeName . " message"
-        return 0
+        try
+            execute a:messageType . a:messageType
+        catch /:E42:\|:E553:/
+            let typeName = (a:messageType == 'c') ? "QuickFix" : "Location List"
+            echo "No " . a:whichMessage . " " . typeName . " message"
+            return 0
+        endtry
     endtry
     " Echo empty line to clear possible previous message.
     echo ""

@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-05-28
+==========
+
+- When pressing <F4>/<s-F4> to traverse the QuickFix or Location list, detect
+  when it has run off the end/beginning of the list and use :cc/:ll to jump to
+  the last/first entry; this allows these keys to be useful when there is only
+  one entry in the list to begin with (such as when there is a single Syntastic
+  error in the Location list).
+
 2015-05-17
 ==========
 
