@@ -781,15 +781,7 @@ Local Customizations:
 
 - Setup mappings:
 
-  <Space>j            <Plug>(easymotion-j)
-  <Space>k            <Plug>(easymotion-k)
-  <Space>f            <Plug>(easymotion-bd-f)
-  <Space>t            <Plug>(easymotion-bd-t)
-  <Space>w            <Plug>(easymotion-bd-w)
-  <Space>W            <Plug>(easymotion-bd-W)
-  <Space>e            <Plug>(easymotion-bd-e)
-  <Space>E            <Plug>(easymotion-bd-E)
-  <Space>a            <Plug>(easymotion-jumptoanywhere)
+  <Space>l            <Plug>(easymotion-sol-bd-jk)
 
 - Setup regular expressions for "anywhere" operations.
 

@@ -24,6 +24,9 @@ require adjustment of per-user settings.
   CTRL-PageUp/PageDown that switch tabs).  This works only in Gvim, not in
   console Vim.
 
+- Remove most EasyMotion mappings that in practice didn't get used.
+  Map <Space>l to (easymotion-bd-jk) to navigate to lines.
+
 2015-05-28
 ==========
 
