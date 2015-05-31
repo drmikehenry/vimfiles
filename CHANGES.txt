@@ -7,6 +7,19 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-05-31
+==========
+
+- Turn off Syntastic's automatic opening of the Location list.  It causes
+  problems when doing a quick edit on a file with errors, as ``:wq`` causes the
+  Location list to pop up and prevent exiting Vim.  The Location list may always
+  be toggled via CTRL-Q CTRL-L.  Because the Location list is no longer opened
+  automatically, <F4>/<s-F4> have changed to prioritize the use of the Location
+  list when both it and the QuickFix list are closed (or both open); as before,
+  if one list is open and the other is closed, the open window takes precedence.
+  Syntastic will still automatically close the Location list when it becomes
+  empty.
+
 2015-05-28
 ==========
 

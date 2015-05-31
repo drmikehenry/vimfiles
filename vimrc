@@ -959,24 +959,12 @@ function! LocListIsPreferred()
     let qfOpen = QuickFixWinIsOpen()
 
     " Prefer open windows to closed windows;
-    " Prefer non-empty list QuickFix to empty location list;
-    " Otherwise, prefer location list.
-    if locOpen
-        let useLocList = 1
-    elseif qfOpen
-        let useLocList = 0
+    " Otherwise, prefer the location list if it is non-empty;
+    " Otherwise, use the QuickFix list.
+    if locOpen != qfOpen
+        let useLocList = locOpen
     else
-        " Both are closed.  It might be useful to prefer the location list
-        " if it's non-empty, and the QuickFix window otherwise, like this:
-        "   let useLocList = len(getloclist(0)) > 0
-        " But the location list is tied to a window instead of a buffer, and
-        " that can cause problems with tools like Syntastic where the location
-        " list is holding per-buffer errors.  It's surprising for the user
-        " when the buffer is switched and Syntastic closes the associated
-        " location list (giving a stronger impression that it's tied to the
-        " buffer), only to have the list be used anyway.  So unless the location
-        " list is visible, prefer the QuickFix list when both are closed.
-        let useLocList = 0
+        let useLocList = len(getloclist(0)) > 0
     endif
     return useLocList
 endfunction
@@ -1010,9 +998,10 @@ function! GotoPrev()
     elseif LocListIsPreferred()
         call GotoMessage("l", "previous")
     else
-        Copen
-        wincmd p
-        call GotoMessage("c", "previous")
+        if GotoMessage("c", "previous")
+            Copen
+            wincmd p
+        endif
     endif
 endfunction
 
@@ -1023,9 +1012,10 @@ function! GotoNext()
     elseif LocListIsPreferred()
         call GotoMessage("l", "next")
     else
-        Copen
-        wincmd p
-        call GotoMessage("c", "next")
+        if GotoMessage("c", "next")
+            Copen
+            wincmd p
+        endif
     endif
 endfunction
 
@@ -3929,7 +3919,7 @@ let g:syntastic_quiet_messages = {}
 " window is focused, though.  Using LocListWinToggle works because it uses
 " :noautocmd lclose.  Someday we may look into Syntastic more closely to see if
 " its logic can change to avoid this problem.
-let g:syntastic_auto_loc_list = 1
+let g:syntastic_auto_loc_list = 2
 let g:syntastic_always_populate_loc_list = 1
 
 " Remove pylint from Syntastic's default list of checkers (it's too picky).
