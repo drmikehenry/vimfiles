@@ -3129,6 +3129,13 @@ they are executable, e.g.: >
 Note: At present, fifosignal and fifowait are Unix-only.
 
 ------------------------------------------------------------------------------
+Tab page support
+
+Use <C-S-PageUp>/<C-S-PageDown> in Gvim to move the current tab page left or
+right.  This unfortunately doesn't work in console Vim because those key
+sequences aren't visible to Vim.
+
+------------------------------------------------------------------------------
 QuickFix window, diff mode
 
 Use <F4> and <S-F4> to navigate forward and backward.  When diff mode is

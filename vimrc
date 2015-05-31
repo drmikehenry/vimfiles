@@ -861,6 +861,16 @@ function! NumCpus()
 endfunction
 
 " -------------------------------------------------------------
+" Tab page support
+" -------------------------------------------------------------
+
+" CTRL-PageUp/CTRL-PageDown are pre-defined to switch between tabs;
+" now adding SHIFT will move the current tab.
+
+nnoremap <silent> <C-S-PageUp>   :-tabmove<CR>
+nnoremap <silent> <C-S-PageDown> :+tabmove<CR>
+
+" -------------------------------------------------------------
 " QuickFix/Location List support
 " -------------------------------------------------------------
 

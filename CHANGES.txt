@@ -20,6 +20,10 @@ require adjustment of per-user settings.
   Syntastic will still automatically close the Location list when it becomes
   empty.
 
+- Use CTRL-SHIFT-PageUp/PageDown to move tab pages (in analogy to the built-in
+  CTRL-PageUp/PageDown that switch tabs).  This works only in Gvim, not in
+  console Vim.
+
 2015-05-28
 ==========
 
