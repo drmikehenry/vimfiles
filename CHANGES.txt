@@ -29,6 +29,9 @@ require adjustment of per-user settings.
 
 - Ignore Syntastic warnings about unused imports from Python's "future" package.
 
+- Default to ":SyntasticBufferSetup strict" for Python files.  For details on
+  controlling this via localvimrc files, see :help notes_syntastic.
+
 2015-05-28
 ==========
 

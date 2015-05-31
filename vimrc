@@ -5331,6 +5331,8 @@ function! SetupPython()
 
     " Re-synchronize syntax highlighting from start of file.
     syntax sync fromstart
+
+    SyntasticBufferSetup strict
 endfunction
 command! -bar SetupPython call SetupPython()
 let g:IndentGuidesMap["python"] = "<on>"
