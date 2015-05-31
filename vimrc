@@ -3848,6 +3848,23 @@ command! -n=* -bar SyntasticFiletypePassive
 command! -n=* -bar SyntasticFiletypeDefault
         \ call SyntasticFiletypeCommand("default", <f-args>)
 
+" Python's "future" package imports some builtins that aren't always used, but
+" it's important to import the entire list to avoid the evils of
+" "from builtins import *" and to avoid the maintenance problems of adding
+" and removing modules from the import line.
+
+" List of imports that should be ignored by Flake8.
+let g:Flake8IgnoredImports = split(
+        \ 'ascii bytes chr dict filter hex input ' .
+        \ 'int map next oct open pow range round ' .
+        \ 'str super zip')
+
+" Convert list of unused imports into ignore regex.
+function! Flake8IgnoredImportsRegex(unused_imports)
+    let rex = '\(' . join(a:unused_imports, '\|')  . '\).*\[F401\]'
+    return rex
+endfunction
+
 function! SyntasticBufferSetup(style)
     let unknownCombination = 0
     let setupFunc = "SyntasticBufferSetup_" . &filetype . "_" . a:style
@@ -3860,18 +3877,22 @@ function! SyntasticBufferSetup(style)
         unlet! b:syntastic_checkers
     elseif &filetype == "python"
         setlocal tw=79
+        let regex = Flake8IgnoredImportsRegex(g:Flake8IgnoredImports)
         if a:style == "very_strict"
             SyntasticBufferIgnoreLevel nothing
-            SyntasticBufferIgnoreRegex .
+            execute 'SyntasticBufferIgnoreRegex ' . regex
             let b:syntastic_checkers = ["python", "flake8", "pylint"]
         elseif a:style == "strict" || a:style == "strict_except_case"
             SyntasticBufferIgnoreLevel nothing
-            SyntasticBufferIgnoreRegex .
             let b:syntastic_checkers = ["python", "flake8"]
             if a:style == "strict_except_case"
                 " Ignore flake8 warnings about lowerMixedCase names.
-                SyntasticBufferIgnoreRegex \[N802\|N803\|N806\]
+                if regex != ''
+                    let regex .= '\|'
+                endif
+                let regex .= '\[\(N802\|N803\|N806\)\]'
             endif
+            execute 'SyntasticBufferIgnoreRegex ' . regex
         elseif a:style == "lax"
             setlocal tw=80
             SyntasticBufferIgnoreLevel nothing

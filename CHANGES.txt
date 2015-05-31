@@ -27,6 +27,8 @@ require adjustment of per-user settings.
 - Remove most EasyMotion mappings that in practice didn't get used.
   Map <Space>l to (easymotion-bd-jk) to navigate to lines.
 
+- Ignore Syntastic warnings about unused imports from Python's "future" package.
+
 2015-05-28
 ==========
 

@@ -2297,6 +2297,13 @@ In addition, several custom commands were added to control Syntastic's behavior.
         When making changes, a :SyntasticReset command will be issued to
         clear any existing errors.
 
+        Python's "future" package imports a number of modules from "builtins";
+        these are often unused and "flake8" will complain about them by default,
+        but for maintainability reasons it's important to keep them all imported
+        anyway.  g:Flake8IgnoredImports holds this list of modules, and
+        :SyntasticBufferSetup will adjust :SyntasticBufferIgnoreRegex to ignore
+        warnings about these unused imports.
+
 It's useful to combine the above commands with the |localvimrc| plugin (see
 |notes_localvimrc|).  For example, if a project requires strict checking, enable
 this by creating a .lvimrc file at the root of the project with the following
