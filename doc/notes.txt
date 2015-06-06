@@ -241,11 +241,18 @@ or, for more automation: >
 
 Prerequisites for Fedora: >
     sudo yum install -y ruby ruby-devel perl-ExtUtils-Embed python-devel
-    sudo yum install -y gtk+-devel gtk2-devel gpm gpm-devel
+    sudo yum install -y gtk+-devel gtk2-devel gpm gpm-devel ncurses-devel
 or, for more automation: >
     sudo yum-builddep -y vim-X11
 
-(Note: this fix is obsolete in modern Vim.)
+    # Not sure why this is not a dependency of vim-X11 on Fedora 22, but
+    # seemingly it needs explicit installation.
+    sudo yum install ncurses-devel
+
+    # Use ``dnf install`` and ``dnf builddep`` on Fedora 22, since ``yum`` has
+    # been retired.
+
+(Note: the below fix is obsolete in modern Vim.)
 On 64-bit Linux, Python libraries live in /usr/lib64/pythonx.y,
 and Vim's configuration script doesn't find the config directory.
 One fix appears to be the following symlink: >
