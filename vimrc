@@ -3861,7 +3861,7 @@ let g:Flake8IgnoredImports = split(
 
 " Convert list of unused imports into ignore regex.
 function! Flake8IgnoredImportsRegex(unused_imports)
-    let rex = '\(' . join(a:unused_imports, '\|')  . '\).*\[F401\]'
+    let rex = '\<\(' . join(a:unused_imports, '\|')  . '\)\>.*\[F401\]'
     return rex
 endfunction
 
