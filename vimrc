@@ -2587,7 +2587,7 @@ nnoremap <silent> <C-w>o     :OneWindow<CR>
 " Taken from :help :DiffOrig.  Shows unsaved differences between
 " this buffer and original file.
 command! -bar DiffOrig OneWindow | vert new | set bt=nofile |
-        \ r ++edit # | 0d_ | diffthis | wincmd p | diffthis
+        \ r ++edit # | 0d_ | diffthis | wincmd p | diffthis | wincmd L
 
 
 " Return list of window numbers for all diff windows (in descending order).
