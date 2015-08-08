@@ -72,9 +72,16 @@ def betterVisual(snip, contIndentLevel=1):
             # Avoid indentation for empty lines.
             snip.rv += "\n"
 
-def autoPeriod(sentence):
-    if sentence.endswith(tuple(". !".split())):
-        period = ""
+
+def autoPeriod(paragraph):
+    # Only consider the final line in a paragraph; if empty or just contains
+    # whitespace, no final punctuation is needed.
+    if paragraph.endswith('\n'):
+        last_line = ''
     else:
-        period = "."
+        last_line = ('\n' + paragraph).splitlines()[-1].rstrip()
+    if last_line.endswith(tuple(". ! ?".split())) or not last_line:
+        period = ''
+    else:
+        period = '.'
     return period
