@@ -3555,6 +3555,18 @@ augroup END
 let g:SignatureForceMarkPlacement = 1
 let g:SignatureForceMarkerPlacement = 1
 
+" Disable maps that hide valuable Vim built-in functionality for jumping to
+" the start or end of recent yanks or changes:
+"   '[, '], `[, and `]
+" To restore this functionality, unlet g:SignatureMap in your vimrc-after.vim
+" file.
+let g:SignatureMap = {
+        \ 'GotoNextLineAlpha'  :  "",
+        \ 'GotoPrevLineAlpha'  :  "",
+        \ 'GotoNextSpotAlpha'  :  "",
+        \ 'GotoPrevSpotAlpha'  :  "",
+        \ }
+
 " NOTE: See 'augroup local_bufExplorer' below for work-around to
 " unmap/map 'dm'.
 

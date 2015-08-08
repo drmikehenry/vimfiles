@@ -15,6 +15,14 @@ require adjustment of per-user settings.
   in certain dialects of shell script.  We now set "g:sh_noisk" to disable the
   addition of ".".
 
+- Remove Signature maps that hide valuable Vim built-in functionality for
+  jumping to the start or end of recent yanks or changes::
+
+    '[, '], `[, and `]
+
+  This is done via assignment to g:SignatureMap in vimrc.  To restore this
+  functionality, unlet g:SignatureMap in your vimrc-after.vim file.
+
 2015-07-04
 ==========
 
