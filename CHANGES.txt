@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-07-08
+==========
+
+- Vim's syntax file for shell scripts has grown a mis-feature of adding "." to
+  'iskeyword'.  This breaks editing expectations for an extremely rare use case
+  in certain dialects of shell script.  We now set "g:sh_noisk" to disable the
+  addition of ".".
+
 2015-07-04
 ==========
 

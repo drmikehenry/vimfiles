@@ -5370,6 +5370,15 @@ command! -bar SetupRust call SetupRust()
 " Setup for shell languages like sh and zsh.
 " -------------------------------------------------------------
 
+" Avoid adding "." to 'iskeyword'.  The 'sh' syntax file started adding
+" this a while ago, apparently because certain dialects of shell syntax
+" permit using a "." inside of an identifier; but changing 'iskeyword'
+" breaks expectations for word-related editing commands like ``dw``.
+" Given that using a "." in an identifier is a very rare use-case, whereas
+" editing words is a very common use-case, this is a mis-feature that needs
+" to be undone by the following assignment.
+let g:sh_noisk = 1
+
 function! SetupShell()
     SetupSource
 
