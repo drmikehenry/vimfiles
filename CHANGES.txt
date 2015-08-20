@@ -7,7 +7,18 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
-2015-07-08
+2015-08-20
+==========
+
+- Update to v0.5.0 of vim-togglecursor (thanks to John Szakmeister).  This adds
+  support for enabling cursor changing under Neovim, VTE3 support, along with
+  better XTerm support. It also allows you to force the particular kind of
+  escape sequence used, if your terminal is not automatically detected.
+
+  Note: the new versios does change the default cursors to be blinking to better
+  match gvim's behavior.
+
+2015-08-08
 ==========
 
 - Vim's syntax file for shell scripts has grown a mis-feature of adding "." to
@@ -25,7 +36,7 @@ require adjustment of per-user settings.
 
 - Improve automatic period insertion behavior in snippets like ``@todo``.
 
-2015-07-04
+2015-08-04
 ==========
 
 - Adjust :DiffOrig command to work correctly if the user sets the 'splitright'
