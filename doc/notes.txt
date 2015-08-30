@@ -633,7 +633,7 @@ make it easier to unmap the undesired keys: >
 
 ------------------------------------------------------------------------------
 BUFKILL                                                 *notes_bufkill*
-  BufKill - Kill buffer without closing window
+  BufKill - Kill buffer without closing window          |bufkill|
 
 Usage:
 
@@ -647,7 +647,7 @@ See also:
 :bd       - delete a buffer, closing window (vim built-in)    |:bdelete|
 :bw       - wipe a buffer, closing window (vim built-in)      |:buwipe|
 
-Version 1.11 from http://vim.sourceforge.net/scripts/script.php?script_id=1147
+Version 2015-05-15 (cf928d33) from git://github.com/qpkorr/vim-bufkill.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
