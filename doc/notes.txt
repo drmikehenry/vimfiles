@@ -1979,7 +1979,7 @@ Installation:
 SESSION                                                 *notes_session*
   Provides better session management                    |session.txt|
 
-Version 2.7 from https://github.com/xolox/vim-session
+Version 2.13 from https://github.com/xolox/vim-session
 
 Note: this plugin requires the misc plugin.
 
@@ -1995,6 +1995,7 @@ Local Customizations:
   |:SaveSession!|, or ":SaveSession default".
 - The session storage (|g:session_directory|) has been configured to be
   $VIM_CACHE_DIR/sessions.
+- Persisting font settings is disabled.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

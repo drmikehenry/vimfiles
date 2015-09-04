@@ -13,6 +13,8 @@ g:loaded_session	session.txt	/*g:loaded_session*
 g:session_autoload	session.txt	/*g:session_autoload*
 g:session_autosave	session.txt	/*g:session_autosave*
 g:session_autosave_periodic	session.txt	/*g:session_autosave_periodic*
+g:session_autosave_silent	session.txt	/*g:session_autosave_silent*
+g:session_autosave_to	session.txt	/*g:session_autosave_to*
 g:session_command_aliases	session.txt	/*g:session_command_aliases*
 g:session_default_name	session.txt	/*g:session_default_name*
 g:session_default_overwrite	session.txt	/*g:session_default_overwrite*
@@ -20,9 +22,11 @@ g:session_default_to_last	session.txt	/*g:session_default_to_last*
 g:session_directory	session.txt	/*g:session_directory*
 g:session_extension	session.txt	/*g:session_extension*
 g:session_lock_directory	session.txt	/*g:session_lock_directory*
+g:session_lock_enabled	session.txt	/*g:session_lock_enabled*
 g:session_menu	session.txt	/*g:session_menu*
 g:session_name_suggestion_function	session.txt	/*g:session_name_suggestion_function*
 g:session_persist_colors	session.txt	/*g:session_persist_colors*
+g:session_persist_font	session.txt	/*g:session_persist_font*
 g:session_persist_globals	session.txt	/*g:session_persist_globals*
 g:session_restart_environment	session.txt	/*g:session_restart_environment*
 g:session_verbose_messages	session.txt	/*g:session_verbose_messages*
@@ -34,7 +38,6 @@ session-contact	session.txt	/*session-contact*
 session-function-reference	session.txt	/*session-function-reference*
 session-installation	session.txt	/*session-installation*
 session-introduction	session.txt	/*session-introduction*
-session-known-issues	session.txt	/*session-known-issues*
 session-license	session.txt	/*session-license*
 session-options	session.txt	/*session-options*
 session-references	session.txt	/*session-references*
@@ -52,7 +55,9 @@ xolox#session#find_current_session()	session.txt	/*xolox#session#find_current_se
 xolox#session#get_label()	session.txt	/*xolox#session#get_label()*
 xolox#session#get_names()	session.txt	/*xolox#session#get_names()*
 xolox#session#include_tabs()	session.txt	/*xolox#session#include_tabs()*
+xolox#session#is_empty()	session.txt	/*xolox#session#is_empty()*
 xolox#session#is_tab_scoped()	session.txt	/*xolox#session#is_tab_scoped()*
+xolox#session#locking_enabled()	session.txt	/*xolox#session#locking_enabled()*
 xolox#session#name_to_path()	session.txt	/*xolox#session#name_to_path()*
 xolox#session#options_include()	session.txt	/*xolox#session#options_include()*
 xolox#session#path_to_name()	session.txt	/*xolox#session#path_to_name()*

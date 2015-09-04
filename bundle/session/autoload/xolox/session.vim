@@ -1,10 +1,10 @@
 " Public API for the vim-session plug-in.
 "
 " Author: Peter Odding
-" Last Change: September 14, 2014
+" Last Change: September 4, 2015
 " URL: http://peterodding.com/code/vim/session/
 
-let g:xolox#session#version = '2.7'
+let g:xolox#session#version = '2.13'
 
 " Public API for session persistence. {{{1
 
@@ -40,7 +40,9 @@ function! xolox#session#save_session(commands, filename) " {{{2
   " the session is restored in a GUI Vim, things will look funky :-).
   if has('gui') && is_all_tabs
     call add(a:commands, 'set guioptions=' . escape(&go, ' "\'))
-    call add(a:commands, 'silent! set guifont=' . escape(&gfn, ' "\'))
+    if xolox#misc#option#get('session_persist_font', 1)
+      call add(a:commands, 'silent! set guifont=' . escape(&gfn, ' "\'))
+    endif
   endif
   call xolox#session#save_globals(a:commands)
   if is_all_tabs
@@ -386,10 +388,7 @@ function! xolox#session#auto_load() " {{{2
     return
   endif
   " Check that the user has started Vim without editing any files.
-  let current_buffer_is_empty = (&modified == 0 && getline(1, '$') == [''])
-  let buffer_list_is_empty = (bufname('%') == '' && empty(filter(range(1, bufnr('$')), 'buflisted(v:val) && v:val != ' . bufnr(''))))
-  let buffer_list_is_persistent = (index(xolox#misc#option#split(&viminfo), '%') >= 0)
-  if current_buffer_is_empty && (buffer_list_is_empty || buffer_list_is_persistent)
+  if xolox#session#is_empty()
     " Check whether a session matching the user-specified server name exists.
     if v:servername !~ '^\cgvim\d*$'
       for session in xolox#session#get_names(0)
@@ -409,9 +408,9 @@ function! xolox#session#auto_load() " {{{2
             \ is_default_session ? 'default' : 'last used',
             \ is_default_session ? '' : printf(' (%s)', session))
       " Prepare the list of choices.
-      let choices = ['&Yes', '&No']
+      let choices = ["&Restore", "&Don't Restore"]
       if g:session_default_to_last && has_last_session
-        call add(choices, '&Forget')
+        call add(choices, "&Forget")
       endif
       " Prompt the user (if not configured otherwise).
       let choice = s:prompt(msg, choices, 'g:session_autoload')
@@ -422,6 +421,23 @@ function! xolox#session#auto_load() " {{{2
       endif
     endif
   endif
+endfunction
+
+function! xolox#session#is_empty() " {{{2
+  " Check that the user has started Vim without editing any files. Used by
+  " `xolox#session#auto_load()` to determine whether automatic session loading
+  " should be performed. Currently checks the following conditions:
+  "
+  " 1. That the current buffer is either empty (contains no lines and is not
+  "    modified) or showing [vim-startify] [].
+  " 2. That the buffer list either empty or persistent.
+  "
+  " [vim-startify]: https://github.com/mhinz/vim-startify/
+  let current_buffer_is_empty = (&modified == 0 && getline(1, '$') == [''])
+  let current_buffer_is_startify = (&filetype == 'startify')
+  let buffer_list_is_empty = (bufname('%') == '' && empty(filter(range(1, bufnr('$')), 'buflisted(v:val) && v:val != ' . bufnr(''))))
+  let buffer_list_is_persistent = (index(xolox#misc#option#split(&viminfo), '%') >= 0)
+  return (current_buffer_is_empty || current_buffer_is_startify) && (buffer_list_is_empty || buffer_list_is_persistent)
 endfunction
 
 function! xolox#session#auto_save() " {{{2
@@ -437,18 +453,22 @@ function! xolox#session#auto_save() " {{{2
     " We won't save the session if auto-save is explicitly disabled.
     return
   endif
-  " Get the name of the active session (if any).
-  let name = xolox#session#find_current_session()
-  " If no session is active and the user doesn't have any sessions yet, help
-  " them get started by suggesting to create the default session.
-  if empty(name) && (empty(xolox#session#get_names(0)) || g:session_default_overwrite)
-    let name = g:session_default_name
+  " Get the name of the session for automatic saving.
+  let name = xolox#misc#option#get('session_autosave_to')
+  if empty(name)
+    " Get the name of the active session (if any).
+    let name = xolox#session#find_current_session()
+    " If no session is active and the user doesn't have any sessions yet,
+    " help them get started by suggesting to create the default session.
+    if empty(name) && (empty(xolox#session#get_names(0)) || g:session_default_overwrite)
+      let name = g:session_default_name
+    endif
   endif
   " Prompt the user to save the active/first/default session?
   if !empty(name)
     let is_tab_scoped = xolox#session#is_tab_scoped()
     let msg = "Do you want to save your %s before quitting Vim?"
-    if s:prompt(printf(msg, xolox#session#get_label(name, is_tab_scoped)), ['&Yes', '&No'], 'g:session_autosave') == 1
+    if s:prompt(printf(msg, xolox#session#get_label(name, is_tab_scoped)), ["&Save", "&Don't Save"], 'g:session_autosave') == 1
       if g:session_default_overwrite && (name == g:session_default_name)
         let bang = '!'
       else
@@ -477,9 +497,18 @@ function! xolox#session#auto_save_periodic() " {{{2
       let name = xolox#session#find_current_session()
       if !empty(name)
         if xolox#session#is_tab_scoped()
-          call xolox#session#save_tab_cmd(name, '', 'SaveTabSession')
+          let function = 'xolox#session#save_tab_cmd'
+          let arguments = [name, '', 'SaveTabSession']
         else
-          call xolox#session#save_cmd(name, '', 'SaveSession')
+          let function = 'xolox#session#save_cmd'
+          let arguments = [name, '', 'SaveSession']
+        endif
+        if xolox#misc#option#get('session_autosave_silent', 0)
+          " Silence informational messages perceived as noisy.
+          " https://github.com/xolox/vim-session/issues/120
+          silent call call(function, arguments)
+        else
+          call call(function, arguments)
         endif
       endif
     endif
@@ -499,15 +528,17 @@ function! xolox#session#auto_unlock() " {{{2
   " [VimLeavePre] [] automatic command event.
   "
   " [VimLeavePre]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#VimLeavePre
-  let i = 0
-  while i < len(s:lock_files)
-    let lock_file = s:lock_files[i]
-    if delete(lock_file) == 0
-      call remove(s:lock_files, i)
-    else
-      let i += 1
-    endif
-  endwhile
+  if xolox#session#locking_enabled()
+    let i = 0
+    while i < len(s:lock_files)
+      let lock_file = s:lock_files[i]
+      if delete(lock_file) == 0
+        call remove(s:lock_files, i)
+      else
+        let i += 1
+      endif
+    endwhile
+  endif
 endfunction
 
 " Commands that enable users to manage multiple sessions. {{{1
@@ -520,7 +551,7 @@ function! s:prompt(msg, choices, option_name)
     return 0
   else
     if g:session_verbose_messages
-      let format = "%s Note that you can permanently disable this dialog by adding the following line to your %s script:\n\n\t:let %s = 'no'"
+      let format = "%s\n\nNote that you can permanently disable this dialog by adding the following line to your %s script:\n\n\t:let %s = 'no'"
       let prompt = printf(format, a:msg, xolox#misc#os#is_win() ? '~\_vimrc' : '~/.vimrc', a:option_name)
     else
       let prompt = a:msg
@@ -655,9 +686,9 @@ function! xolox#session#close_cmd(bang, silent, save_allowed, command) abort " {
   let name = xolox#session#find_current_session()
   if name != ''
     if a:save_allowed
-      let msg = "Do you want to save your current %s before closing it?"
+      let msg = "Do you want to save your %s before closing it?"
       let label = xolox#session#get_label(name, !is_all_tabs)
-      if s:prompt(printf(msg, label), ['&Yes', '&No'], 'g:session_autosave') == 1
+      if s:prompt(printf(msg, label), ["&Save", "&Don't Save"], 'g:session_autosave') == 1
         call xolox#session#save_cmd(name, a:bang, a:command)
       endif
     else
@@ -930,7 +961,15 @@ function! xolox#session#get_label(name, is_tab_scoped) " {{{2
   " name of a session. The first argument is the name (a string) and the
   " second argument is a boolean indicating the scope of the session; 1 (true)
   " means tab scoped and 0 (false) means global scope. Returns a string.
-  return printf('%s session %s', a:is_tab_scoped ? 'tab scoped' : 'global', string(a:name))
+  if a:name == g:session_default_name
+    let description = 'default editing session'
+  else
+    let description = printf('editing session %s', string(a:name))
+  endif
+  if a:is_tab_scoped
+    let description = printf('tab scoped %s', description)
+  endif
+  return description
 endfunction
 
 function! xolox#session#options_include(value) " {{{2
@@ -1007,6 +1046,15 @@ if !exists('s:lock_files')
   let s:lock_files = []
 endif
 
+function! xolox#session#locking_enabled()
+  " Check whether session locking is enabled. Returns true (1) when locking is
+  " enabled, false (0) otherwise.
+  "
+  " By default session locking is enabled but users can opt-out by setting
+  " `g:session_lock_enabled` to false (0).
+  return xolox#misc#option#get('session_lock_enabled', 1)
+endfunction
+
 function! s:vim_instance_id()
   let id = {'pid': getpid()}
   if !empty(v:servername)
@@ -1020,6 +1068,22 @@ endfunction
 
 function! s:lock_file_path(session_path)
   let directory = xolox#misc#option#get('session_lock_directory', '')
+  if empty(directory)
+    " Stale lock files can be really annoying, especially after a reboot
+    " because that just shouldn't happen - it's always a bug. References:
+    "  - https://github.com/xolox/vim-session/issues/97
+    "  - https://github.com/xolox/vim-session/issues/110
+    " One simple way to give a large group of users what they want is to use a
+    " volatile directory that is specifically meant for storing lock files.
+    " I've decided to make this the default when possible. The best reference
+    " I've been able to find on the proper system wide location for lock files
+    " is the following (yes, I know, it's Linux specific, so sue me):
+    " http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/var.html
+    let global_lock_directory = '/var/lock'
+    if filewritable(global_lock_directory) == 2
+      let directory = global_lock_directory
+    endif
+  endif
   if !empty(directory)
     let pathname = xolox#misc#path#merge(directory, xolox#misc#path#encode(a:session_path))
   else
@@ -1029,6 +1093,9 @@ function! s:lock_file_path(session_path)
 endfunction
 
 function! s:lock_session(session_path)
+  if !xolox#session#locking_enabled()
+    return 1
+  endif
   let lock_file = s:lock_file_path(a:session_path)
   if xolox#misc#persist#save(lock_file, s:vim_instance_id())
     if index(s:lock_files, lock_file) == -1
@@ -1039,6 +1106,9 @@ function! s:lock_session(session_path)
 endfunction
 
 function! s:unlock_session(session_path)
+  if !xolox#session#locking_enabled()
+    return 1
+  endif
   let lock_file = s:lock_file_path(a:session_path)
   if delete(lock_file) == 0
     let idx = index(s:lock_files, lock_file)
@@ -1050,6 +1120,9 @@ function! s:unlock_session(session_path)
 endfunction
 
 function! s:session_is_locked(session_name, command)
+  if !xolox#session#locking_enabled()
+    return 0
+  endif
   let session_path = xolox#session#name_to_path(a:session_name)
   let lock_file = s:lock_file_path(session_path)
   if filereadable(lock_file)

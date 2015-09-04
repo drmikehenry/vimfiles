@@ -21,24 +21,27 @@ Contents ~
   1. The |sessionoptions| setting
   2. The |g:session_directory| option
   3. The |g:session_lock_directory| option
-  4. The |g:session_default_name| option
-  5. The |g:session_default_overwrite| option
-  6. The |g:session_extension| option
-  7. The |g:session_autoload| option
-  8. The |g:session_autosave| option
-  9. The |g:session_autosave_periodic| option
-  10. The |g:session_verbose_messages| option
-  11. The |g:session_default_to_last| option
-  12. The |g:session_persist_colors| option
-  13. The |g:session_persist_globals| option
-  14. The |g:session_restart_environment| option
-  15. The |g:session_command_aliases| option
-  16. The |g:session_menu| option
-  17. The |g:session_name_suggestion_function| option
-  18. The |g:loaded_session| option
+  4. The |g:session_lock_enabled| option
+  5. The |g:session_default_name| option
+  6. The |g:session_default_overwrite| option
+  7. The |g:session_extension| option
+  8. The |g:session_autoload| option
+  9. The |g:session_autosave| option
+  10. The |g:session_autosave_to| option
+  11. The |g:session_autosave_periodic| option
+  12. The |g:session_autosave_silent| option
+  13. The |g:session_verbose_messages| option
+  14. The |g:session_default_to_last| option
+  15. The |g:session_persist_font| option
+  16. The |g:session_persist_colors| option
+  17. The |g:session_persist_globals| option
+  18. The |g:session_restart_environment| option
+  19. The |g:session_command_aliases| option
+  20. The |g:session_menu| option
+  21. The |g:session_name_suggestion_function| option
+  22. The |g:loaded_session| option
  5. Compatibility with other plug-ins |session-compatibility-with-other-plug-ins|
- 6. Known issues                                         |session-known-issues|
- 7. Function reference                             |session-function-reference|
+ 6. Function reference                             |session-function-reference|
   1. Public API for the vim-session plug-in |public-api-for-vim-session-plug-in|
    1. The |xolox#session#save_session()| function
    2. The |xolox#session#save_globals()| function
@@ -49,28 +52,30 @@ Contents ~
    7. The |xolox#session#save_state()| function
    8. The |xolox#session#save_special_windows()| function
    9. The |xolox#session#auto_load()| function
-   10. The |xolox#session#auto_save()| function
-   11. The |xolox#session#auto_save_periodic()| function
-   12. The |xolox#session#auto_unlock()| function
-   13. The |xolox#session#prompt_for_name()| function
-   14. The |xolox#session#name_to_path()| function
-   15. The |xolox#session#path_to_name()| function
-   16. The |xolox#session#get_names()| function
-   17. The |xolox#session#complete_names()| function
-   18. The |xolox#session#complete_names_with_suggestions()| function
-   19. The |xolox#session#is_tab_scoped()| function
-   20. The |xolox#session#find_current_session()| function
-   21. The |xolox#session#get_label()| function
-   22. The |xolox#session#options_include()| function
-   23. The |xolox#session#include_tabs()| function
-   24. The |xolox#session#change_tab_options()| function
-   25. The |xolox#session#restore_tab_options()| function
+   10. The |xolox#session#is_empty()| function
+   11. The |xolox#session#auto_save()| function
+   12. The |xolox#session#auto_save_periodic()| function
+   13. The |xolox#session#auto_unlock()| function
+   14. The |xolox#session#prompt_for_name()| function
+   15. The |xolox#session#name_to_path()| function
+   16. The |xolox#session#path_to_name()| function
+   17. The |xolox#session#get_names()| function
+   18. The |xolox#session#complete_names()| function
+   19. The |xolox#session#complete_names_with_suggestions()| function
+   20. The |xolox#session#is_tab_scoped()| function
+   21. The |xolox#session#find_current_session()| function
+   22. The |xolox#session#get_label()| function
+   23. The |xolox#session#options_include()| function
+   24. The |xolox#session#include_tabs()| function
+   25. The |xolox#session#change_tab_options()| function
+   26. The |xolox#session#restore_tab_options()| function
+   27. The |xolox#session#locking_enabled()| function
   2. Example function for session name suggestions |example-function-for-session-name-suggestions|
    1. The |xolox#session#suggestions#vcs_feature_branch()| function
- 8. Contact                                                   |session-contact|
- 9. License                                                   |session-license|
- 10. Sample session script                              |sample-session-script|
- 11. References                                            |session-references|
+ 7. Contact                                                   |session-contact|
+ 8. License                                                   |session-license|
+ 9. Sample session script                               |sample-session-script|
+ 10. References                                            |session-references|
 
 ===============================================================================
                                                          *session-introduction*
@@ -121,23 +126,8 @@ contains menu items for most commands defined by the plug-in.
                                                          *session-installation*
 Installation ~
 
-_Please note that the vim-session plug-in requires my vim-misc plug-in which is
-separately distributed._
-
-Unzip the most recent ZIP archives of the vim-session [4] and vim-misc [5]
-plug-ins inside your Vim profile directory (usually this is '~/.vim' on UNIX
-and '%USERPROFILE%\vimfiles' on Windows), restart Vim and execute the command
-':helptags ~/.vim/doc' (use ':helptags ~\vimfiles\doc' instead on Windows). To
-get started execute ':Note' or ':edit note:', this will start a new note that
-contains instructions on how to continue from there (and how to use the plug-in
-in general).
-
-If you prefer you can also use Pathogen [6], Vundle [7] or a similar tool to
-install & update the vim-session [8] and vim-misc [9] plug-ins using a local
-clone of the git repository.
-
-After you've installed the plug-in and restarted Vim, the following commands
-will be available to you:
+Please refer to the installation instructions [4] available on GitHub. Once
+you've installed the plug-in the commands below will be available to you.
 
 ===============================================================================
                                                              *session-commands*
@@ -193,7 +183,7 @@ The *:RestartVim* command
 
 This command saves your current editing session, restarts Vim and restores your
 editing session. This can come in handy when you're debugging Vim scripts which
-can't be easily/safely reloaded using a more lightweight approach [10]. It
+can't be easily/safely reloaded using a more lightweight approach [5]. It
 should work fine on Windows and UNIX alike but because of technical limitations
 it only works in graphical Vim.
 
@@ -291,6 +281,14 @@ how it works by setting |'sessionoptions'| in your |vimrc| script, for example:
   " If you don't want help windows to be restored:
   set sessionoptions-=help
 <
+A lot of people don't like Vim's default behavior of saving hidden and unloaded
+buffers in sessions (which vim-session inherits due to the use of
+|:mksession|). To disable this behavior you can add the following line to your
+|vimrc| script:
+>
+  " Don't save hidden and unloaded buffers in sessions.
+  set sessionoptions-=buffers
+<
 Note that the vim-session plug-in automatically and unconditionally executes
 the following change just before saving a session:
 >
@@ -310,12 +308,28 @@ for you. Note that a leading '~' is expanded to your current home directory
 The *g:session_lock_directory* option
 
 The vim-session plug-in uses lock files to prevent double loading of sessions.
-By default the lock files are stored in the same directory as the sessions. If
-you'd rather store lock files in a dedicated lock file directory you can use
-this option:
+The default location (directory) of these lock files depends on a couple of
+factors:
+
+1. If you have explicitly set the |g:session_lock_directory| option that
+   defines the directory.
+
+2. If the directory '/var/lock' exists and is writable that is used as a
+   sane default.
+
+3. As a sane fall back for platforms where '/var/lock' is not available the
+   directory that stores the session scripts themselves is used.
+
+-------------------------------------------------------------------------------
+The *g:session_lock_enabled* option
+
+Depending on your workflow locking of editing sessions can get annoying at
+times, so if you don't care about opening a session more than once and
+potentially "losing a version of your session" then you can use this option to
+completely disable session locking as follows:
 >
-  " Store lock files in a tmpfs that doesn't persist between reboots.
-  let g:session_lock_directory = '/var/lock'
+  " Disable all session locking - I know what I'm doing :-).
+  let g:session_lock_enabled = 0
 <
 -------------------------------------------------------------------------------
 The *g:session_default_name* option
@@ -355,6 +369,16 @@ sessions when you quit Vim. To completely disable automatic saving you can set
 this option to "'no'".
 
 -------------------------------------------------------------------------------
+The *g:session_autosave_to* option
+
+If |g:session_autosave| is "'yes'" and this option is a nonempty string,
+automatic session saving always saves to the session with the name given by
+|g:session_autosave_to| regardless of what the current session is or any other
+options. In particular, |g:session_default_overwrite| does not have any effect.
+By default this option isn't set so none of this applies. Refer to pull request
+81 [6] for a more detailed use case.
+
+-------------------------------------------------------------------------------
 The *g:session_autosave_periodic* option
 
 This option sets the interval in minutes for automatic, periodic saving of
@@ -362,6 +386,12 @@ active sessions. The default is zero which disables the feature.
 
 Note that when the plug-in automatically saves a session (because you enabled
 this feature) the plug-in will not prompt for your permission.
+
+-------------------------------------------------------------------------------
+The *g:session_autosave_silent* option
+
+If you set this option to true (1) the messages normally emitted by automatic,
+periodic saving of active sessions are silenced.
 
 -------------------------------------------------------------------------------
 The *g:session_verbose_messages* option
@@ -380,6 +410,15 @@ instead of the default session. Note that the session plug-in will still show
 you the dialog asking whether you want to restore the last used session. To get
 rid of the dialog you have to set |g:session_autoload| to "'yes'".
 
+-------------------------------------------------------------------------------
+The *g:session_persist_font* option
+
+By default the plug-in will save the GUI font with the session to be reused the
+next time that session is loaded, this can be disabled by adding the following
+line to your |vimrc| script:
+>
+  :let g:session_persist_font = 0
+<
 -------------------------------------------------------------------------------
 The *g:session_persist_colors* option
 
@@ -499,9 +538,9 @@ Vim's |:mksession| command isn't really compatible with plug-ins that create
 buffers with generated content and because of this the vim-session plug-in
 includes specific workarounds for a couple of popular plug-ins:
 
-- BufExplorer [11], Conque Shell [12], NERD tree [13], Project [14] and
-  taglist [15] windows are supported;
-- When shell.vim [16] is installed Vim's full-screen state is persisted;
+- BufExplorer [7], Conque Shell [8], NERD tree [9], Project [10] and taglist
+  [11] windows are supported;
+- When shell.vim [12] is installed Vim's full-screen state is persisted;
 - The netrw (see |netrw-start|) plug-in supports sessions out of the box.
 
 If your favorite plug-in doesn't work with the vim-session plug-in drop me a
@@ -509,23 +548,11 @@ mail and I'll see what I can do. Please include a link to the plug-in in your
 e-mail so that I can install and test the plug-in.
 
 ===============================================================================
-                                                         *session-known-issues*
-Known issues ~
-
-Recently this plug-in switched from reimplementing |:mksession| to actually
-using it because this was the only way to support complex split window layouts.
-Only after making this change did I realize |:mksession| doesn't support
-|quickfix| and location list (see |location-list|) windows and of course it
-turns out that bolting on support for these after the fact is going to
-complicate the plug-in significantly (in other words, I'm working on it but it
-might take a while...)
-
-===============================================================================
                                                    *session-function-reference*
 Function reference ~
 
-The documentation of the 37 functions below was extracted from 2 Vim scripts on
-September 14, 2014 at 13:07.
+The documentation of the 39 functions below was extracted from 2 Vim scripts on
+April 1, 2015 at 22:22.
 
 -------------------------------------------------------------------------------
                                            *public-api-for-vim-session-plug-in*
@@ -577,7 +604,7 @@ session script.
 The *xolox#session#save_fullscreen()* function
 
 Save the full screen state of Vim. This function provides integration between
-my vim-session [17] and vim-shell [18] plug-ins. The first argument is expected
+my vim-session [13] and vim-shell [14] plug-ins. The first argument is expected
 to be a list, it will be extended with the lines to be added to the session
 script.
 
@@ -608,6 +635,17 @@ The *xolox#session#auto_load()* function
 
 Automatically load the default or last used session when Vim starts. Normally
 called by the |VimEnter| automatic command event.
+
+-------------------------------------------------------------------------------
+The *xolox#session#is_empty()* function
+
+Check that the user has started Vim without editing any files. Used by
+|xolox#session#auto_load()| to determine whether automatic session loading
+should be performed. Currently checks the following conditions:
+
+1. That the current buffer is either empty (contains no lines and is not
+   modified) or showing vim-startify [15].
+2. That the buffer list either empty or persistent.
 
 -------------------------------------------------------------------------------
 The *xolox#session#auto_save()* function
@@ -739,6 +777,15 @@ Restore the original value of Vim's sessionoptions (see |'sessionoptions'|)
 option.
 
 -------------------------------------------------------------------------------
+The *xolox#session#locking_enabled()* function
+
+Check whether session locking is enabled. Returns true (1) when locking is
+enabled, false (0) otherwise.
+
+By default session locking is enabled but users can opt-out by setting
+|g:session_lock_enabled| to false (0).
+
+-------------------------------------------------------------------------------
                                 *example-function-for-session-name-suggestions*
 Example function for session name suggestions ~
 
@@ -758,13 +805,13 @@ Contact ~
 If you have questions, bug reports, suggestions, etc. the author can be
 contacted at peter@peterodding.com. The latest version is available at
 http://peterodding.com/code/vim/session/ and http://github.com/xolox/vim-
-session. If you like the script please vote for it on Vim Online [19].
+session. If you like the script please vote for it on Vim Online [16].
 
 ===============================================================================
                                                               *session-license*
 License ~
 
-This software is licensed under the MIT license [20]. ÂŠ 2014 Peter Odding
+This software is licensed under the MIT license [17]. © 2015 Peter Odding
 <peter@peterodding.com> and Ingo Karkat.
 
 Thanks go out to everyone who has helped to improve the vim-session plug-in
@@ -874,25 +921,22 @@ was editing the plug-in itself in Vim:
                                                            *session-references*
 References ~
 
-[1] http://peterodding.com/code/vim/session/autosave.png
-[2] http://peterodding.com/code/vim/session/autoopen.png
+[1] https://raw.githubusercontent.com/xolox/vim-session/master/screenshots/session-save-prompt.png
+[2] https://raw.githubusercontent.com/xolox/vim-session/master/screenshots/session-restore-prompt.png
 [3] http://peterodding.com/code/vim/session/#sample_session_script
-[4] http://peterodding.com/code/vim/downloads/session.zip
-[5] http://peterodding.com/code/vim/downloads/misc.zip
-[6] http://www.vim.org/scripts/script.php?script_id=2332
-[7] https://github.com/gmarik/vundle
-[8] http://github.com/xolox/vim-session
-[9] http://github.com/xolox/vim-misc
-[10] http://peterodding.com/code/vim/reload/
-[11] http://www.vim.org/scripts/script.php?script_id=42
-[12] http://www.vim.org/scripts/script.php?script_id=2771
-[13] http://www.vim.org/scripts/script.php?script_id=1658
-[14] http://www.vim.org/scripts/script.php?script_id=69
-[15] http://www.vim.org/scripts/script.php?script_id=273
-[16] http://peterodding.com/code/vim/shell/
-[17] http://peterodding.com/code/vim/session
-[18] http://peterodding.com/code/vim/shell
-[19] http://www.vim.org/scripts/script.php?script_id=3150
-[20] http://en.wikipedia.org/wiki/MIT_License
+[4] https://github.com/xolox/vim-session/blob/master/INSTALL.md
+[5] http://peterodding.com/code/vim/reload/
+[6] https://github.com/xolox/vim-session/pull/81
+[7] http://www.vim.org/scripts/script.php?script_id=42
+[8] http://www.vim.org/scripts/script.php?script_id=2771
+[9] http://www.vim.org/scripts/script.php?script_id=1658
+[10] http://www.vim.org/scripts/script.php?script_id=69
+[11] http://www.vim.org/scripts/script.php?script_id=273
+[12] http://peterodding.com/code/vim/shell/
+[13] http://peterodding.com/code/vim/session
+[14] http://peterodding.com/code/vim/shell
+[15] https://github.com/mhinz/vim-startify/
+[16] http://www.vim.org/scripts/script.php?script_id=3150
+[17] http://en.wikipedia.org/wiki/MIT_License
 
 vim: ft=help

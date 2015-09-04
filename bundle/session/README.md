@@ -4,11 +4,11 @@ The vim-session plug-in improves upon [Vim](http://www.vim.org/)'s built-in [:mk
 
 To persist your current editing session you can execute the `:SaveSession` command. If you don't provide a name for the session 'default' is used (you can change this name with an option). You're free to use whatever characters you like in session names. When you want to restore your session simply execute `:OpenSession`. Again the name 'default' is used if you don't provide one. When a session is active, has been changed and you quit Vim you'll be prompted whether you want to save the open session before quitting Vim:
 
-![Screenshot of auto-save prompt](http://peterodding.com/code/vim/session/autosave.png)
+![Screenshot of auto-save prompt](https://raw.githubusercontent.com/xolox/vim-session/master/screenshots/session-save-prompt.png)
 
 If you want, the plug-in can also automatically save your session every few minutes (see the `g:session_autosave_periodic` option). When you start Vim without editing any files and the default session exists, you'll be prompted whether you want to restore the default session:
 
-![Screenshot of auto-open prompt](http://peterodding.com/code/vim/session/autoopen.png)
+![Screenshot of auto-open prompt](https://raw.githubusercontent.com/xolox/vim-session/master/screenshots/session-restore-prompt.png)
 
 When you start Vim with a custom [server name](http://vimdoc.sourceforge.net/htmldoc/remote.html#--servername) that matches one of the existing session names then the matching session will be automatically restored. For example I use several sessions to quickly edit my Vim plug-ins:
 
@@ -22,13 +22,7 @@ If you're still getting to know the plug-in, the "Sessions" menu may help: It co
 
 ## Installation
 
-*Please note that the vim-session plug-in requires my vim-misc plug-in which is separately distributed.*
-
-Unzip the most recent ZIP archives of the [vim-session] [download-session] and [vim-misc] [download-misc] plug-ins inside your Vim profile directory (usually this is `~/.vim` on UNIX and `%USERPROFILE%\vimfiles` on Windows), restart Vim and execute the command `:helptags ~/.vim/doc` (use `:helptags ~\vimfiles\doc` instead on Windows). To get started execute `:Note` or `:edit note:`, this will start a new note that contains instructions on how to continue from there (and how to use the plug-in in general).
-
-If you prefer you can also use [Pathogen] [pathogen], [Vundle] [vundle] or a similar tool to install & update the [vim-session] [github-session] and [vim-misc] [github-misc] plug-ins using a local clone of the git repository.
-
-After you've installed the plug-in and restarted Vim, the following commands will be available to you:
+Please refer to the [installation instructions] [howto-install] available on GitHub. Once you've installed the plug-in the commands below will be available to you.
 
 ## Commands
 
@@ -118,6 +112,11 @@ Because the vim-session plug-in uses Vim's [:mksession][mksession] command you c
     " If you don't want help windows to be restored:
     set sessionoptions-=help
 
+A lot of people don't like Vim's default behavior of saving hidden and unloaded buffers in sessions (which vim-session inherits due to the use of [:mksession][mksession]). To disable this behavior you can add the following line to your [vimrc script] [vimrc]:
+
+    " Don't save hidden and unloaded buffers in sessions.
+    set sessionoptions-=buffers
+
 Note that the vim-session plug-in automatically and unconditionally executes the following change just before saving a session:
 
     " Don't persist options and mappings because it can corrupt sessions.
@@ -129,10 +128,18 @@ This option controls the location of your session scripts. Its default value is 
 
 ### The `g:session_lock_directory` option
 
-The vim-session plug-in uses lock files to prevent double loading of sessions. By default the lock files are stored in the same directory as the sessions. If you'd rather store lock files in a dedicated lock file directory you can use this option:
+The vim-session plug-in uses lock files to prevent double loading of sessions. The default location (directory) of these lock files depends on a couple of factors:
 
-    " Store lock files in a tmpfs that doesn't persist between reboots.
-    let g:session_lock_directory = '/var/lock'
+1. If you have explicitly set the `g:session_lock_directory` option that defines the directory.
+2. If the directory `/var/lock` exists and is writable that is used as a sane default.
+3. As a sane fall back for platforms where `/var/lock` is not available the directory that stores the session scripts themselves is used.
+
+### The `g:session_lock_enabled` option
+
+Depending on your workflow locking of editing sessions can get annoying at times, so if you don't care about opening a session more than once and potentially "losing a version of your session" then you can use this option to completely disable session locking as follows:
+
+    " Disable all session locking - I know what I'm doing :-).
+    let g:session_lock_enabled = 0
 
 ### The `g:session_default_name` option
 
@@ -154,11 +161,19 @@ By default this option is set to `'prompt'`. This means that when you start Vim 
 
 By default this option is set to `'prompt'`. When you've opened a session and you quit Vim, the session plug-in will ask whether you want to save the changes to your session. Set this option to `'yes'` to always automatically save open sessions when you quit Vim. To completely disable automatic saving you can set this option to `'no'`.
 
+### The `g:session_autosave_to` option
+
+If `g:session_autosave` is `'yes'` and this option is a nonempty string, automatic session saving always saves to the session with the name given by `g:session_autosave_to` regardless of what the current session is or any other options. In particular, `g:session_default_overwrite` does not have any effect. By default this option isn't set so none of this applies. Refer to [pull request 81] [81] for a more detailed use case.
+
 ### The `g:session_autosave_periodic` option
 
 This option sets the interval in minutes for automatic, periodic saving of active sessions. The default is zero which disables the feature.
 
 Note that when the plug-in automatically saves a session (because you enabled this feature) the plug-in will not prompt for your permission.
+
+### The `g:session_autosave_silent` option
+
+If you set this option to true (1) the messages normally emitted by automatic, periodic saving of active sessions are silenced.
 
 ### The `g:session_verbose_messages` option
 
@@ -167,6 +182,12 @@ The session load/save prompts are quite verbose by default because they explain 
 ### The `g:session_default_to_last` option
 
 By default this option is set to false (0). When you set this option to true (1) and you start Vim, the session plug-in will open your last used session instead of the default session. Note that the session plug-in will still show you the dialog asking whether you want to restore the last used session. To get rid of the dialog you have to set `g:session_autoload` to `'yes'`.
+
+### The `g:session_persist_font` option
+
+By default the plug-in will save the GUI font with the session to be reused the next time that session is loaded, this can be disabled by adding the following line to your [vimrc script] [vimrc]:
+
+    :let g:session_persist_font = 0
 
 ### The `g:session_persist_colors` option
 
@@ -254,16 +275,12 @@ Vim's [:mksession][mksession] command isn't really compatible with plug-ins that
 
 If your favorite plug-in doesn't work with the vim-session plug-in drop me a mail and I'll see what I can do. Please include a link to the plug-in in your e-mail so that I can install and test the plug-in.
 
-## Known issues
-
-Recently this plug-in switched from reimplementing [:mksession][mksession] to actually using it because this was the only way to support complex split window layouts. Only after making this change did I realize [:mksession][mksession] doesn't support [quickfix](http://vimdoc.sourceforge.net/htmldoc/quickfix.html#quickfix) and [location list](http://vimdoc.sourceforge.net/htmldoc/quickfix.html#location-list) windows and of course it turns out that bolting on support for these after the fact is going to complicate the plug-in significantly (in other words, I'm working on it but it might take a while...)
-
 ## Function reference
 
 <!-- Start of generated documentation -->
 
-The documentation of the 37 functions below was extracted from
-2 Vim scripts on September 14, 2014 at 13:07.
+The documentation of the 39 functions below was extracted from
+2 Vim scripts on April  1, 2015 at 22:22.
 
 ### Public API for the vim-session plug-in
 
@@ -347,6 +364,18 @@ Automatically load the default or last used session when Vim starts.
 Normally called by the [VimEnter] [] automatic command event.
 
 [VimEnter]: http://vimdoc.sourceforge.net/htmldoc/autocmd.html#VimEnter
+
+#### The `xolox#session#is_empty()` function
+
+Check that the user has started Vim without editing any files. Used by
+`xolox#session#auto_load()` to determine whether automatic session loading
+should be performed. Currently checks the following conditions:
+
+1. That the current buffer is either empty (contains no lines and is not
+   modified) or showing [vim-startify] [].
+2. That the buffer list either empty or persistent.
+
+[vim-startify]: https://github.com/mhinz/vim-startify/
 
 #### The `xolox#session#auto_save()` function
 
@@ -470,6 +499,14 @@ scoped session. Saves a copy of the original value to be restored later.
 
 Restore the original value of Vim's [sessionoptions] [] option.
 
+#### The `xolox#session#locking_enabled()` function
+
+Check whether session locking is enabled. Returns true (1) when locking is
+enabled, false (0) otherwise.
+
+By default session locking is enabled but users can opt-out by setting
+`g:session_lock_enabled` to false (0).
+
 ### Example function for session name suggestions
 
 #### The `xolox#session#suggestions#vcs_feature_branch()` function
@@ -488,8 +525,8 @@ If you have questions, bug reports, suggestions, etc. the author can be contacte
 
 ## License
 
-This software is licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License).  
-© 2014 Peter Odding &lt;<peter@peterodding.com>&gt; and Ingo Karkat.
+This software is licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
+© 2015 Peter Odding &lt;<peter@peterodding.com>&gt; and Ingo Karkat.
 
 Thanks go out to everyone who has helped to improve the vim-session plug-in (whether through pull requests, bug reports or personal e-mails).
 
@@ -591,16 +628,12 @@ Here's an example session script generated by the vim-session plug-in while I wa
     unlet SessionLoad
 
 
+[81]: https://github.com/xolox/vim-session/pull/81
 [bg]: http://vimdoc.sourceforge.net/htmldoc/options.html#'background'
 [delcommand]: http://vimdoc.sourceforge.net/htmldoc/map.html#:delcommand
-[download-misc]: http://peterodding.com/code/vim/downloads/misc.zip
-[download-session]: http://peterodding.com/code/vim/downloads/session.zip
-[github-misc]: http://github.com/xolox/vim-misc
-[github-session]: http://github.com/xolox/vim-session
+[howto-install]: https://github.com/xolox/vim-session/blob/master/INSTALL.md
 [mksession]: http://vimdoc.sourceforge.net/htmldoc/starting.html#:mksession
-[pathogen]: http://www.vim.org/scripts/script.php?script_id=2332
 [sessionoptions]: http://vimdoc.sourceforge.net/htmldoc/options.html#%27sessionoptions%27
 [source]: http://vimdoc.sourceforge.net/htmldoc/repeat.html#:source
 [tabnew]: http://vimdoc.sourceforge.net/htmldoc/tabpage.html#:tabnew
 [vimrc]: http://vimdoc.sourceforge.net/htmldoc/starting.html#vimrc
-[vundle]: https://github.com/gmarik/vundle

@@ -3490,6 +3490,7 @@ let g:session_autoload = 'yes'
 let g:session_autosave = 'no'
 let g:session_verbose_messages = 0
 let g:session_command_aliases = 1
+let g:session_persist_font = 0
 
 " Lifted from session.
 function! s:unescape(s)
