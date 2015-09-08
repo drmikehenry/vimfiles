@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-09-08
+==========
+
+- Update vim-session plugin to version 2.13 (thanks to John Szakmeister).  This
+  new version allows persisting of 'guifont' to be disabled.  Now changes to
+  'guifont' in a configuration file will not be overwritten when a session is
+  reloaded.
+
 2015-09-02
 ==========
 
