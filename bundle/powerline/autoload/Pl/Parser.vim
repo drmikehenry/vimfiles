@@ -79,6 +79,10 @@ function! Pl#Parser#ParseChars(arg) " {{{
 	let arg = a:arg
 
 	if type(arg) == type([])
+		" Retain our own copy of the list.  Otherwise, the original
+		" list might get stomped on.
+		let arg = copy(arg)
+
 		" Hex array
 		call map(arg, 'nr2char(v:val)')
 

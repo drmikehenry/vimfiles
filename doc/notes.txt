@@ -1721,6 +1721,26 @@ If you don't want to use Powerline, you can add the following to your
 
     let g:EnablePowerline = 0
 <
+
+Powerline requires a patch to fix a bug where symbols in the symbol dictionary
+could get clobbered with empty results.  This fixes the issue by creating a
+copy of the original list:
+
+diff --git a/bundle/powerline/autoload/Pl/Parser.vim b/bundle/powerline/autoload/Pl/Parser.vim
+index a6f3428..3c91f56 100644
+--- a/bundle/powerline/autoload/Pl/Parser.vim
++++ b/bundle/powerline/autoload/Pl/Parser.vim
+@@ -79,6 +79,10 @@ function! Pl#Parser#ParseChars(arg) " {{{
+        let arg = a:arg
+
+        if type(arg) == type([])
++               " Retain our own copy of the list.  Otherwise, the original
++               " list might get stomped on.
++               let arg = copy(arg)
++
+                " Hex array
+                call map(arg, 'nr2char(v:val)')
+
 Version 2012-08-17 from https://github.com/Lokaltog/vim-powerline
 
 Installation:

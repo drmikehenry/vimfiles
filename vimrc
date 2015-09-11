@@ -3279,7 +3279,7 @@ endif
 "   :2013-11-11.1
 " This vimfiles-wide setting will be appended to whatever value may have been
 " set via a |VIMRC_BEFORE| file.
-let g:PowerlineRequiredCacheTag .= ":2013-11-14"
+let g:PowerlineRequiredCacheTag .= ":2015-09-11"
 
 " This file records the current Powerline "tag".
 let g:PowerlineCacheTagFile = expand('$VIM_CACHE_DIR/PowerlineCacheTag')
