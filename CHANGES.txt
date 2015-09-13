@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2015-09-13
+==========
+
+- Patch Powerline to work around buggy behavior (thanks to John Szakmeister).
+  This fixes a problem where BRANCH and LINE symbols would eventually become
+  ["].
+
 2015-09-08
 ==========
 
