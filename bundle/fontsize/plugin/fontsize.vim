@@ -9,36 +9,36 @@ let loaded_fontsize = 1
 let s:save_cpoptions = &cpoptions
 set cpoptions&vim
 
-if ! hasmapto("<Plug>FontsizeBegin")
+if !hasmapto("<Plug>FontsizeBegin")
     nmap <silent> <Leader><Leader>=  <Plug>FontsizeBegin
 endif
 
-if ! hasmapto("<Plug>FontsizeInc", "n")
+if !hasmapto("<Plug>FontsizeInc", "n")
     nmap <silent> <Leader><Leader>+  <Plug>FontsizeInc
 endif
 
-if ! hasmapto("<Plug>FontsizeDec", "n")
+if !hasmapto("<Plug>FontsizeDec", "n")
     nmap <silent> <Leader><Leader>-  <Plug>FontsizeDec
 endif
 
-if ! hasmapto("<Plug>FontsizeDefault", "n")
+if !hasmapto("<Plug>FontsizeDefault", "n")
     nmap <silent> <Leader><Leader>0  <Plug>FontsizeDefault
 endif
 
 " "font size" mode mappings are inspired by the bufmru.vim plugin.
 " The concept is to enter a "mode" via an initial mapping.  Once
 " in this mode, some mode-specific keystrokes now behave as if they
-" were mapped.  After 'timeoutlen' milliseconds have elapsed, the
-" new "mode" times out and the new "mappings" are effectively disabled.
+" were mapped.  When time-outs are enabled (see g:fontsize_timeout), the
+" new "mode" times out and the new "mappings" are effectively turned off.
 "
 " This emulation of a "mode" is accomplished via a clever techinque
 " wherein each operation terminates with a partial mapping to <SID>(fontsize).
 " Each new keystroke completes a mapping that itself terminates with
 " <SID>(fontsize), keeping an extensible chain of mappings going as long as
-" they arrive before 'timeoutlen' milliseconds elapses between keystrokes.
-" The string "(fontsize)" is chosen to take the entire ten characters of
-" space available for Vim's 'showcmd' option.  It provides better visual
-" appearance than <SID>m_, which comes out looking something like 
+" they arrive before g:fontsize_timeoutlen milliseconds elapses between
+" keystrokes.  The string "(fontsize)" is chosen to take the entire ten
+" characters of space available for Vim's 'showcmd' option.  It provides better
+" visual appearance than <SID>m_, which comes out looking something like
 " 80>yR91_m_.
 
 " Externally mappable mappings to internal mappings.

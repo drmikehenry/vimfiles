@@ -1,5 +1,5 @@
 *fontsize.txt*   Plugin for modifying guifont size
-*fontsize*       Version 0.3.4
+*fontsize*       Version 0.4.0
 
 ==============================================================================
 1.  Introduction                                    |fontsize-intro|
@@ -71,9 +71,10 @@ Other keys pressed will exit "font size" mode and then perform their normal
 function (e.g., pressing "j" will cancel "font size" mode and move down one
 line).
 
-In addition, "font size" mode will automatically timeout after |timeoutlen|
-milliseconds have elapsed without a keypress, because "font size" mode is
-based on mappings.
+In addition, the mappings that implement "font size" mode may time out, causing
+the mode to terminate after a sufficient amount of time without a keypress.  See
+|fontsize-customization| for details on adjusting or disabling the time-out
+functionality.
 
 While "font size" mode is active, the prompt "(fontsize)" will be shown if
 'showcmd' is set.
@@ -84,14 +85,53 @@ of the included documentation.
 ===============================================================================
 4.  Customization                                   *fontsize-customization*
 
-The default value of |timeoutlen| is 1000 milliseconds (1 second), which might
-be too fast.  The author uses the following setting in his |vimrc|: >
+"Font size" mode is implemented using key mappings that remain partially
+complete while the mode is active.  Mappings in Vim are configured to
+time out based on the 'timeout' setting; if enabled, time-out occurs in
+'timeoutlen' milliseconds.
 
-  " Slow down mapping timeout from default 1000 milliseconds.
+By default, 'timeout' is on and 'timeoutlen' is 1000 milliseconds, which may be
+too fast.  One option is to configure the global settings which will apply for
+all mappings.  The author uses the following setting in his |vimrc|: >
+
+  " Slow down mapping time-out from default 1000 milliseconds.
   set timeoutlen=3000
 
+Alternatively, setting either of both of the following variables will override
+the corresponding built-in setting during "font size" mode:
+
+                                                  *g:fontsize#timeout*
+g:fontsize#timeout               boolean (default: follows 'timeout')
+    If this value is true (non-zero), "font size" mode time outs are enabled;
+    the mode will exit after |g:fontsize_timeoutlen| milliseconds have elapsed
+    with no keypress.  If this value is false (zero), "font size" mode will
+    never automatically time out, and the mode must be explicitly exited via a
+    keystroke.
+
+    If |g:fontsize#timeout| is not defined, it follows the value of 'timeout'.
+
+    E.g.: To ensure "font size" mode time outs are disabled: >
+
+      let g:fontsize#timeout = 0
+<
+                                                  *g:fontsize#timeoutlen*
+g:fontsize#timeoutlen            number (default: same as 'timeoutlen')
+
+    This value determines the amount of time that must elapse without a
+    keystroke before "font size" mode will automatically exit (assuming
+    time outs are enabled via |g:fontsize#timeout|).
+
+    If |g:fontsize#timeoutlen| is not defined, it follows the value of
+    'timeoutlen'.
+
+    E.g.: To force "font size" mode time-outs with a duration of 3 seconds (3000
+    milliseconds): >
+
+      let g:fontsize#timeout = 1
+      let g:fontsize#timeoutlen = 3000
+<
 You may change the mappings that initiate "font size" mode by creating
-your own mappings in your |vimrc|file.  For example, use these mappings
+your own mappings in your |vimrc| file.  For example, use these mappings
 to use <Leader> instead of <Leader><Leader> as a prefix:
 
   nmap <silent> <Leader>=  <Plug>FontsizeBegin
@@ -125,6 +165,12 @@ the font names.  For example, on Chinese Windows XP, the fonts are encoded in
 
 ===============================================================================
 5.  ChangeLog                                       *fontsize-changelog*
+
+Version 0.4.0    Date    2015-10-04                 *fontsize-changelog-0.4.0*
+
+  - Provide configurable time-out for font mode (suggested by cyboflash);
+    implementation inspired by the vim-submode plugin authored by Kana:
+    https://github.com/kana/vim-submode
 
 Version 0.3.4    Date    2015-04-30                 *fontsize-changelog-0.3.4*
 

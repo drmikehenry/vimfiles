@@ -107,16 +107,8 @@ function! fontsize#display()
     echo fontsize#fontString(getfontname()) . " (+/= - 0 ! q CR SP)"
 endfunction
 
-function! fontsize#begin()
-    call fontsize#display()
-endfunction
-
-function! fontsize#quit()
-    echo fontsize#fontString(getfontname()) . " (Done)"
-endfunction
-
 function! fontsize#ensureDefault()
-    if ! exists("g:fontsize#defaultSize")
+    if !exists("g:fontsize#defaultSize")
         let g:fontsize#defaultSize = 0
     endif
     if g:fontsize#defaultSize == 0
@@ -124,7 +116,78 @@ function! fontsize#ensureDefault()
     endif
 endfunction
 
+" True when options have already been setup.
+let g:fontsize#optionsActive = 0
+
+function! fontsize#setupOptions()
+    if g:fontsize#optionsActive
+        return
+    endif
+    let g:fontsize#optionsActive = 1
+    let g:fontsize#original_timeout = &timeout
+    let g:fontsize#original_timeoutlen = &timeoutlen
+    let g:fontsize#original_ttimeout = &ttimeout
+    let g:fontsize#original_ttimeoutlen = &ttimeoutlen
+
+    let mappingTimeout = &timeout
+    let mappingTimeoutMsec = &timeoutlen
+    let keyCodeTimeout = &timeout || &ttimeout
+    let keyCodeTimeoutMsec = &ttimeoutlen < 0 ?  &timeoutlen : &ttimeoutlen
+
+    if exists("g:fontsize#timeout")
+        let modeTimeout = g:fontsize#timeout
+    else
+        let modeTimeout = &timeout
+    endif
+    if exists("g:fontsize#timeoutlen")
+        let modeTimeoutMsec = g:fontsize#timeoutlen
+    else
+        let modeTimeoutMsec = &timeoutlen
+    endif
+
+    " In the worst case, the user had no keyCodeTimeout, but he wants "font
+    " size" mode to timeout.  This means we have to enable a mapping timeout
+    " which has the unfortunate side-effect of turning on the keyCodeTimeout.
+    " The best we can do is make a long keyCodeTimeoutMsec in this case.
+    if !keyCodeTimeout
+        let keyCodeTimeoutMsec = 10000
+    endif
+
+    " Apply the user's effective keyCodeTimeout settings.
+    let &ttimeoutlen = keyCodeTimeoutMsec
+    let &ttimeout = keyCodeTimeout
+
+    " To avoid any hint of a race condition, change 'timeoutlen' only if
+    " we are going to enable timeouts.
+    if modeTimeout
+        let &timeoutlen = modeTimeoutMsec
+    endif
+    let &timeout = modeTimeout
+endfunction
+
+function! fontsize#restoreOptions()
+    if !g:fontsize#optionsActive
+        return
+    endif
+    let &timeout = g:fontsize#original_timeout
+    let &timeoutlen = g:fontsize#original_timeoutlen
+    let &ttimeout = g:fontsize#original_ttimeout
+    let &ttimeoutlen = g:fontsize#original_ttimeoutlen
+    let g:fontsize#optionsActive = 0
+endfunction
+
+function! fontsize#begin()
+    call fontsize#setupOptions()
+    call fontsize#display()
+endfunction
+
+function! fontsize#quit()
+    echo fontsize#fontString(getfontname()) . " (Done)"
+    call fontsize#restoreOptions()
+endfunction
+
 function! fontsize#default()
+    call fontsize#setupOptions()
     call fontsize#ensureDefault()
     let &guifont = fontsize#setSize(getfontname(), g:fontsize#defaultSize)
     let &guifontwide = fontsize#setSize(&guifontwide, g:fontsize#defaultSize)
@@ -132,10 +195,12 @@ function! fontsize#default()
 endfunction
 
 function! fontsize#setDefault()
+    call fontsize#setupOptions()
     let g:fontsize#defaultSize = fontsize#getSize(getfontname())
 endfunction
 
 function! fontsize#inc()
+    call fontsize#setupOptions()
     call fontsize#ensureDefault()
     let newSize = fontsize#getSize(getfontname()) + v:count1
     let &guifont = fontsize#setSize(getfontname(), newSize)
@@ -144,6 +209,7 @@ function! fontsize#inc()
 endfunction
 
 function! fontsize#dec()
+    call fontsize#setupOptions()
     call fontsize#ensureDefault()
     let newSize = fontsize#getSize(getfontname()) - v:count1
     if newSize > 0
