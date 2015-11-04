@@ -1279,7 +1279,7 @@ might contain: >
 To re-use a group of settings, create a function (say, in the global vimrc
 file), then call it from the .lvimrc files.
 
-Version 2013-01-12 (516ec0f5) from git://github.com/embear/vim-localvimrc.git
+Version 2015-10-02 (7ed3573a) from git://github.com/embear/vim-localvimrc.git
 
 Local customizations:
 
