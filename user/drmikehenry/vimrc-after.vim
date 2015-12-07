@@ -14,6 +14,3 @@ command! -bar SetupMake call CustomSetupMake()
 
 " Override bufmru mapping to something more useful.
 Noxmap  <Space><Space>            <Plug>(easymotion-s)
-
-" Test drive using 'splitright'.
-set splitright
