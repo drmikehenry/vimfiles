@@ -21,15 +21,17 @@ EOF
     done
     cat <<EOF
 Valid ACTIONs are:
-  update            - use "hg pull -u" to update hg/ directory
+  update            - use "git pull" to update git/ directory
   unpack            - unpack Vim sources below CWD
   configure         - configure Vim with standard build options
   build             - build Vim and create binary tarball
 Default action list: unpack configure build
 
 Building takes place in "vim-MAJOR.MINOR" in current working directory.
-Vim source must be MAJOR.MINOR/hg/ or MAJOR.MINOR/vim-MAJOR.MINOR.tar.bz2.
-Checkout vim with hg:  hg clone https://vim.googlecode.com/hg/
+Vim source must be MAJOR.MINOR/git/ or MAJOR.MINOR/vim-MAJOR.MINOR.tar.bz2.
+Checkout vim with git, e.g.:
+  cd .../vim
+  git clone https://github.com/vim/vim.git git
 EOF
 }
 
@@ -75,11 +77,11 @@ function setup()
 
 function update()
 {
-    hgDir="$DIR/hg"
-    if [ -d "$hgDir" ]; then
-        (cd "$hgDir"; hg pull -u)
+    gitDir="$DIR/git"
+    if [ -d "$gitDir" ]; then
+        (cd "$gitDir"; git pull)
     else
-        die "Cannot update; missing path \"$hgDir\""
+        die "Cannot update; missing path \"$gitDir\""
     fi
 }
 
@@ -124,12 +126,15 @@ function unpack()
         die "Must remove directory $VIMDIR manually before continuing"
     fi
     echo "Unpacking Vim $VERSION..."
-    if [ -d "$DIR/hg" ]; then
-        echo "  Extracting source from hg to $VIMDIR..."
-        hg archive --repository "$DIR/hg" "$VIMDIR"
-        SRCTAR="$VIMDIR/$VIMDIR.`patchlevel`.tar.bz2"
+    if [ -d "$DIR/git" ]; then
+        echo "  Extracting source from git to $VIMDIR..."
+        mkdir "$VIMDIR" || die "Couldn't create $VIMDIR"
+        (cd "$DIR/git"; git archive master) | tar -C "$VIMDIR" -x
+        TARNAME="$VIMDIR.`patchlevel`.tar.bz2"
+        SRCTAR="$VIMDIR/$TARNAME"
         echo "  Creating source archive $SRCTAR..."
-        hg archive --repository "$DIR/hg" --prefix "$VIMDIR" "$SRCTAR"
+        tar -jcf "$TARNAME" --exclude "$TARNAME" "$VIMDIR"
+        mv "$TARNAME" "$SRCTAR"
     else
         TARPREFIX="$DIR/$VIMNAME."
         suffix=".tar.bz2"

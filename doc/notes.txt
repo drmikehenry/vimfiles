@@ -262,20 +262,20 @@ The detailed steps for download and building Vim are captured in
 the script ~/.vim/buildtool.  Run the script with no arguments for usage
 help, or read the script for more detailed information.
 
-Update the hg directory (in the default download location) with the latest Vim
+Update the git directory (in the default download location) with the latest Vim
 source: >
 
-  # From any directory; updates clone in <download>/vim/7.3/hg:
-  ~/.vim/buildtool 7.3 update
+  # From any directory; updates clone in <download>/vim/7.4/git:
+  ~/.vim/buildtool 7.4 update
 
 Unpack, configure, build, and create binary and source tarballs: >
 
   cd ~/build
-  rm -rf vim-7.3
-  ~/.vim/buildtool 7.3
+  rm -rf vim-7.4
+  ~/.vim/buildtool 7.4
 
 Installation of final tarball is done as follows: >
-    sudo tar -C / -zxf vim-7.3/vim-7.3.patchlevel.i386.tar.gz
+    sudo tar -C / -zxf vim-7.4/vim-7.4.patchlevel.x86_64.tar.gz
 
 After installation on Linux, the distro-provided global vimrc file will not be
 used, so Vim will come up in VI-compatible mode for users (e.g. root) that
@@ -316,12 +316,12 @@ On Linux, ensure the following fonts are available:
 Sources
 -------
 
-Vim source lives in a mercurial repository as described here:
+Vim source lives in a git repository as described here:
   http://www.vim.org/download.php
 
 Clone the repository via: >
   cd ~/build
-  hg clone https://vim.googlecode.com/hg/ vim
+  git clone https://github.com/vim/vim.git
 
 Windows build notes:
 --------------------
