@@ -549,7 +549,7 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Version 7.4.5 (e5645d6) from https://github.com/jlanzarotta/bufexplorer
+Version 2015-10-02 (ad2cff7) from https://github.com/jlanzarotta/bufexplorer
 
 Note: The releases at http://www.vim.org/scripts/script.php?script_id=42 don't
 appear to be kept as up-to-date as on Github.

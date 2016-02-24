@@ -2735,19 +2735,6 @@ let g:ag_apply_lmappings = 0
 let g:bufExplorerShowRelativePath = 1
 let g:bufExplorerShowNoName = 1
 
-" Unmap Surround plugin's "ds" mapping during BufExplorer operation.
-augroup local_bufExplorer
-    autocmd!
-    autocmd BufEnter \[BufExplorer\] unmap ds
-    autocmd BufLeave \[BufExplorer\] nmap ds <Plug>Dsurround
-    autocmd BufEnter \[BufExplorer\] nunmap drw
-    autocmd BufLeave \[BufExplorer\] nnoremap drw
-            \ :<C-u>call DeleteRubbishWhitespace()<CR>
-    autocmd BufEnter \[BufExplorer\] nunmap dm
-    autocmd BufLeave \[BufExplorer\] nmap dm
-            \ :<C-U>call signature#utils#Remove(v:count)<CR>
-augroup END
-
 " -------------------------------------------------------------
 " bufkill
 " -------------------------------------------------------------
@@ -3567,9 +3554,6 @@ let g:SignatureMap = {
         \ 'GotoNextSpotAlpha'  :  "",
         \ 'GotoPrevSpotAlpha'  :  "",
         \ }
-
-" NOTE: See 'augroup local_bufExplorer' below for work-around to
-" unmap/map 'dm'.
 
 " -------------------------------------------------------------
 " Sneak
