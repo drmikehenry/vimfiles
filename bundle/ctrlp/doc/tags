@@ -7,6 +7,7 @@
 'ctrlp-wildignore'	ctrlp.txt	/*'ctrlp-wildignore'*
 'g:ctrlp_abbrev'	ctrlp.txt	/*'g:ctrlp_abbrev'*
 'g:ctrlp_arg_map'	ctrlp.txt	/*'g:ctrlp_arg_map'*
+'g:ctrlp_brief_prompt'	ctrlp.txt	/*'g:ctrlp_brief_prompt'*
 'g:ctrlp_buffer_func'	ctrlp.txt	/*'g:ctrlp_buffer_func'*
 'g:ctrlp_buftag_ctags_bin'	ctrlp.txt	/*'g:ctrlp_buftag_ctags_bin'*
 'g:ctrlp_buftag_systemenc'	ctrlp.txt	/*'g:ctrlp_buftag_systemenc'*
@@ -20,7 +21,9 @@
 'g:ctrlp_follow_symlinks'	ctrlp.txt	/*'g:ctrlp_follow_symlinks'*
 'g:ctrlp_key_loop'	ctrlp.txt	/*'g:ctrlp_key_loop'*
 'g:ctrlp_lazy_update'	ctrlp.txt	/*'g:ctrlp_lazy_update'*
+'g:ctrlp_line_prefix'	ctrlp.txt	/*'g:ctrlp_line_prefix'*
 'g:ctrlp_map'	ctrlp.txt	/*'g:ctrlp_map'*
+'g:ctrlp_match_current_file'	ctrlp.txt	/*'g:ctrlp_match_current_file'*
 'g:ctrlp_match_func'	ctrlp.txt	/*'g:ctrlp_match_func'*
 'g:ctrlp_match_window'	ctrlp.txt	/*'g:ctrlp_match_window'*
 'g:ctrlp_max_depth'	ctrlp.txt	/*'g:ctrlp_max_depth'*
@@ -29,6 +32,7 @@
 'g:ctrlp_mruf_case_sensitive'	ctrlp.txt	/*'g:ctrlp_mruf_case_sensitive'*
 'g:ctrlp_mruf_default_order'	ctrlp.txt	/*'g:ctrlp_mruf_default_order'*
 'g:ctrlp_mruf_exclude'	ctrlp.txt	/*'g:ctrlp_mruf_exclude'*
+'g:ctrlp_mruf_exclude_nomod'	ctrlp.txt	/*'g:ctrlp_mruf_exclude_nomod'*
 'g:ctrlp_mruf_include'	ctrlp.txt	/*'g:ctrlp_mruf_include'*
 'g:ctrlp_mruf_max'	ctrlp.txt	/*'g:ctrlp_mruf_max'*
 'g:ctrlp_mruf_relative'	ctrlp.txt	/*'g:ctrlp_mruf_relative'*
@@ -36,6 +40,7 @@
 'g:ctrlp_open_func'	ctrlp.txt	/*'g:ctrlp_open_func'*
 'g:ctrlp_open_multiple_files'	ctrlp.txt	/*'g:ctrlp_open_multiple_files'*
 'g:ctrlp_open_new_file'	ctrlp.txt	/*'g:ctrlp_open_new_file'*
+'g:ctrlp_open_single_match'	ctrlp.txt	/*'g:ctrlp_open_single_match'*
 'g:ctrlp_prompt_mappings'	ctrlp.txt	/*'g:ctrlp_prompt_mappings'*
 'g:ctrlp_regexp'	ctrlp.txt	/*'g:ctrlp_regexp'*
 'g:ctrlp_reuse_window'	ctrlp.txt	/*'g:ctrlp_reuse_window'*
@@ -44,6 +49,7 @@
 'g:ctrlp_status_func'	ctrlp.txt	/*'g:ctrlp_status_func'*
 'g:ctrlp_switch_buffer'	ctrlp.txt	/*'g:ctrlp_switch_buffer'*
 'g:ctrlp_tabpage_position'	ctrlp.txt	/*'g:ctrlp_tabpage_position'*
+'g:ctrlp_tilde_homedir'	ctrlp.txt	/*'g:ctrlp_tilde_homedir'*
 'g:ctrlp_use_caching'	ctrlp.txt	/*'g:ctrlp_use_caching'*
 'g:ctrlp_user_command'	ctrlp.txt	/*'g:ctrlp_user_command'*
 'g:ctrlp_working_path_mode'	ctrlp.txt	/*'g:ctrlp_working_path_mode'*
@@ -73,6 +79,7 @@ ClearCtrlPCache	ctrlp.txt	/*ClearCtrlPCache*
 ControlP	ctrlp.txt	/*ControlP*
 CtrlP	ctrlp.txt	/*CtrlP*
 ResetCtrlP	ctrlp.txt	/*ResetCtrlP*
+ctrlp-autoignore-extension	ctrlp.txt	/*ctrlp-autoignore-extension*
 ctrlp-changelog	ctrlp.txt	/*ctrlp-changelog*
 ctrlp-commands	ctrlp.txt	/*ctrlp-commands*
 ctrlp-contents	ctrlp.txt	/*ctrlp-contents*
@@ -98,3 +105,4 @@ g:ctrlp_mru_files	ctrlp.txt	/*g:ctrlp_mru_files*
 g:ctrlp_open_multi	ctrlp.txt	/*g:ctrlp_open_multi*
 g:ctrlp_persistent_input	ctrlp.txt	/*g:ctrlp_persistent_input*
 g:ctrlp_regexp_search	ctrlp.txt	/*g:ctrlp_regexp_search*
+string-match	ctrlp.txt	/*string-match*

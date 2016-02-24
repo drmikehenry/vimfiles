@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Update signature plugin to version 2016-02-21.  This fixes some instances of
   signs being left behind after deletion of the associated mark.
 
+- Update CtrlP plugin to version 2016-01-17.
+
 2016-01-02
 ==========
 

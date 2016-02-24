@@ -30,6 +30,7 @@
 'g:ctrlp_mruf_case_sensitive'	ctrlp.cnx	/*'g:ctrlp_mruf_case_sensitive'*
 'g:ctrlp_mruf_default_order'	ctrlp.cnx	/*'g:ctrlp_mruf_default_order'*
 'g:ctrlp_mruf_exclude'	ctrlp.cnx	/*'g:ctrlp_mruf_exclude'*
+'g:ctrlp_mruf_exclude_nomod'	ctrlp.cnx	/*'g:ctrlp_mruf_exclude_nomod'*
 'g:ctrlp_mruf_include'	ctrlp.cnx	/*'g:ctrlp_mruf_include'*
 'g:ctrlp_mruf_max'	ctrlp.cnx	/*'g:ctrlp_mruf_max'*
 'g:ctrlp_mruf_relative'	ctrlp.cnx	/*'g:ctrlp_mruf_relative'*
@@ -45,6 +46,7 @@
 'g:ctrlp_status_func'	ctrlp.cnx	/*'g:ctrlp_status_func'*
 'g:ctrlp_switch_buffer'	ctrlp.cnx	/*'g:ctrlp_switch_buffer'*
 'g:ctrlp_tabpage_position'	ctrlp.cnx	/*'g:ctrlp_tabpage_position'*
+'g:ctrlp_tilde_homedir'	ctrlp.cnx	/*'g:ctrlp_tilde_homedir'*
 'g:ctrlp_use_caching'	ctrlp.cnx	/*'g:ctrlp_use_caching'*
 'g:ctrlp_user_command'	ctrlp.cnx	/*'g:ctrlp_user_command'*
 'g:ctrlp_working_path_mode'	ctrlp.cnx	/*'g:ctrlp_working_path_mode'*
@@ -86,6 +88,7 @@ ctrlp-mappings	ctrlp.cnx	/*ctrlp-mappings*
 ctrlp-miscellaneous-configs	ctrlp.cnx	/*ctrlp-miscellaneous-configs*
 ctrlp-options	ctrlp.cnx	/*ctrlp-options*
 ctrlp.txt	ctrlp.cnx	/*ctrlp.txt*
+ctrl默认值	ctrlp.cnx	/*ctrl默认值*
 g:ctrlp_dont_split	ctrlp.cnx	/*g:ctrlp_dont_split*
 g:ctrlp_dotfiles	ctrlp.cnx	/*g:ctrlp_dotfiles*
 g:ctrlp_highlight_match	ctrlp.cnx	/*g:ctrlp_highlight_match*

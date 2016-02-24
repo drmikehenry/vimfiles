@@ -87,7 +87,12 @@ let [s:pref, s:bpref, s:opts, s:new_opts, s:lc_opts] =
 	\ 'tabpage_position':      ['s:tabpage', 'ac'],
 	\ 'use_caching':           ['s:caching', 1],
 	\ 'user_command':          ['s:usrcmd', ''],
+	\ 'validate':              ['s:validate', ''],
 	\ 'working_path_mode':     ['s:pathmode', 'ra'],
+	\ 'line_prefix':           ['s:lineprefix', '> '],
+	\ 'open_single_match':     ['s:opensingle', []],
+	\ 'brief_prompt':          ['s:brfprt', 0],
+	\ 'match_current_file':    ['s:matchcrfile', 0],
 	\ }, {
 	\ 'open_multiple_files':   's:opmul',
 	\ 'regexp':                's:regexp',
@@ -181,6 +186,14 @@ let s:hlgrps = {
 	\ 'PrtText': 'Normal',
 	\ 'PrtCursor': 'Constant',
 	\ }
+
+" lname, sname of the basic(non-extension) modes
+let s:coretypes = [
+	\ ['files', 'fil'],
+	\ ['buffers', 'buf'],
+	\ ['mru files', 'mru'],
+\ ]
+
 " Get the options {{{2
 fu! s:opts(...)
 	unl! s:usrign s:usrcmd s:urprtmaps
@@ -218,6 +231,7 @@ fu! s:opts(...)
 	for each in ['byfname', 'regexp'] | if exists(each)
 		let s:{each} = {each}
 	en | endfo
+	if !exists('g:ctrlp_tilde_homedir') | let g:ctrlp_tilde_homedir = 0 | en
 	if !exists('g:ctrlp_newcache') | let g:ctrlp_newcache = 0 | en
 	let s:maxdepth = min([s:maxdepth, 100])
 	let s:glob = s:showhidden ? '.*\|*' : '*'
@@ -343,7 +357,9 @@ fu! ctrlp#files()
 		" Get the list of files
 		if empty(lscmd)
 			if !ctrlp#igncwd(s:dyncwd)
+				cal s:InitCustomFuncs()
 				cal s:GlobPath(s:fnesc(s:dyncwd, 'g', ','), 0)
+        cal s:CloseCustomFuncs()
 			en
 		el
 			sil! cal ctrlp#progress('Indexing...')
@@ -369,6 +385,18 @@ fu! ctrlp#files()
 	retu g:ctrlp_allfiles
 endf
 
+fu! s:InitCustomFuncs()
+	if s:igntype == 4 && has_key(s:usrign, 'func-init') && s:usrign['func-init'] != ''
+		exe call(s:usrign['func-init'], [])
+	en
+endf
+
+fu! s:CloseCustomFuncs()
+	if s:igntype == 4 && has_key(s:usrign, 'func-close') && s:usrign['func-close'] != ''
+		exe call(s:usrign['func-close'], [])
+	en
+endf
+
 fu! s:GlobPath(dirs, depth)
 	let entries = split(globpath(a:dirs, s:glob), "\n")
 	let [dnf, depth] = [ctrlp#dirnfile(entries), a:depth + 1]
@@ -391,7 +419,11 @@ fu! s:UserCmd(lscmd)
 		let lscmd = substitute(lscmd, '\v(^|\&\&\s*)\zscd (/d)@!', 'cd /d ', '')
 	en
 	let path = exists('*shellescape') ? shellescape(path) : path
-	let g:ctrlp_allfiles = split(system(printf(lscmd, path)), "\n")
+	if has('patch-7.4-597')
+		let g:ctrlp_allfiles = systemlist(printf(lscmd, path))
+	else
+		let g:ctrlp_allfiles = split(system(printf(lscmd, path)), "\n")
+	end
 	if exists('+ssl') && exists('ssl')
 		let &ssl = ssl
 		cal map(g:ctrlp_allfiles, 'tr(v:val, "\\", "/")')
@@ -440,8 +472,8 @@ fu! s:lsCmd()
 endf
 " - Buffers {{{1
 fu! ctrlp#buffers(...)
-	let ids = sort(filter(range(1, bufnr('$')), 'empty(getbufvar(v:val, "&bt"))'
-		\ .' && getbufvar(v:val, "&bl")'), 's:compmreb')
+	let ids = sort(filter(range(1, bufnr('$')), '(empty(getbufvar(v:val, "&bt"))'
+		\ .' || s:isneovimterminal(v:val)) && getbufvar(v:val, "&bl")'), 's:compmreb')
 	if a:0 && a:1 == 'id'
 		retu ids
 	el
@@ -463,9 +495,12 @@ fu! s:MatchIt(items, pat, limit, exc)
 		\ : s:martcs.a:pat
 	for item in a:items
 		let id += 1
-		try | if !( s:ispath && item == a:exc ) && call(s:mfunc, [item, pat]) >= 0
-			cal add(lines, item)
-		en | cat | brea | endt
+		try
+			if (s:matchcrfile || !( s:ispath && item == a:exc )) && 
+						\call(s:mfunc, [item, pat]) >= 0
+				cal add(lines, item)
+			en
+		cat | brea | endt
 		if a:limit > 0 && len(lines) >= a:limit | brea | en
 	endfo
 	let s:mdata = [s:dyncwd, s:itemtype, s:regexp, s:sublist(a:items, id, -1)]
@@ -574,11 +609,14 @@ fu! s:Update(str)
 	let str = s:sanstail(a:str)
 	" Stop if the string's unchanged
 	if str == oldstr && !empty(str) && !exists('s:force') | retu | en
+	" Optionally send the string to a custom validate function
+	if s:validate != '' | let str = call(s:validate, [str]) | en
 	let s:martcs = &scs && str =~ '\u' ? '\C' : ''
 	let pat = s:matcher == {} ? s:SplitPattern(str) : str
 	let lines = s:nolim == 1 && empty(str) ? copy(g:ctrlp_lines)
 		\ : s:MatchedItems(g:ctrlp_lines, pat, s:mw_res)
 	cal s:Render(lines, pat)
+	return lines
 endf
 
 fu! s:ForceUpdate()
@@ -641,6 +679,10 @@ endf
 
 fu! s:PrtBS()
 	if !s:focus | retu | en
+	if empty(s:prompt[0]) && s:brfprt != 0
+		cal s:PrtExit()
+		retu
+	endif
 	unl! s:hstgot
 	let [s:prompt[0], s:matches] = [substitute(s:prompt[0], '.$', '', ''), 1]
 	cal s:BuildPrompt(1)
@@ -872,7 +914,7 @@ fu! s:MapSpecs()
 	if !( exists('s:smapped') && s:smapped == s:bufnr )
 		" Correct arrow keys in terminal
 		if ( has('termresponse') && v:termresponse =~ "\<ESC>" )
-			\ || &term =~? '\vxterm|<k?vt|gnome|screen|linux|ansi'
+			\ || &term =~? '\vxterm|<k?vt|gnome|screen|linux|ansi|tmux'
 			for each in ['\A <up>','\B <down>','\C <right>','\D <left>']
 				exe s:lcmap.' <esc>['.each
 			endfo
@@ -1000,7 +1042,7 @@ fu! ctrlp#acceptfile(...)
 	cal s:PrtExit()
 	let tail = s:tail()
 	let j2l = atl != '' ? atl : matchstr(tail, '^ +\zs\d\+$')
-	if ( s:jmptobuf =~ md || ( s:jmptobuf && md =~ '[et]' ) ) && bufnr > 0
+	if ( s:jmptobuf =~ md || ( !empty(s:jmptobuf) && s:jmptobuf !~# '\v^0$' && md =~ '[et]' ) ) && bufnr > 0
 		\ && !( md == 'e' && bufnr == bufnr('%') )
 		let [jmpb, bufwinnr] = [1, bufwinnr(bufnr)]
 		let buftab = ( s:jmptobuf =~# '[tTVH]' || s:jmptobuf > 1 )
@@ -1368,11 +1410,7 @@ endf
 " Statusline {{{2
 fu! ctrlp#statusline()
 	if !exists('s:statypes')
-		let s:statypes = [
-			\ ['files', 'fil'],
-			\ ['buffers', 'buf'],
-			\ ['mru files', 'mru'],
-			\ ]
+		let s:statypes = copy(s:coretypes)
 		if !empty(g:ctrlp_ext_vars)
 			cal map(copy(g:ctrlp_ext_vars),
 				\ 'add(s:statypes, [ v:val["lname"], v:val["sname"] ])')
@@ -1443,7 +1481,7 @@ fu! s:formatline(str)
 		let str .= idc != '' ? ' '.idc : ''
 	en
 	let cond = s:ispath && ( s:winw - 4 ) < s:strwidth(str)
-	retu '> '.( cond ? s:pathshorten(str) : str )
+	retu s:lineprefix.( cond ? s:pathshorten(str) : str )
 endf
 
 fu! s:pathshorten(str)
@@ -1606,8 +1644,8 @@ fu! ctrlp#setpathmode(pmode, ...)
 		let spath = a:0 ? a:1 : s:crfpath
 		let markers = ['.git', '.hg', '.svn', '.bzr', '_darcs']
 		if type(s:rmarkers) == 3 && !empty(s:rmarkers)
-			if s:findroot(spath, s:rmarkers, 0, 0) != [] | retu 1 | en
 			cal filter(markers, 'index(s:rmarkers, v:val) < 0')
+			let markers = s:rmarkers + markers
 		en
 		if s:findroot(spath, markers, 0, 0) != [] | retu 1 | en
 	en
@@ -1814,7 +1852,7 @@ endf
 fu! ctrlp#normcmd(cmd, ...)
 	if a:0 < 2 && s:nosplit() | retu a:cmd | en
 	let norwins = filter(range(1, winnr('$')),
-		\ 'empty(getbufvar(winbufnr(v:val), "&bt"))')
+		\ 'empty(getbufvar(winbufnr(v:val), "&bt")) || s:isneovimterminal(winbufnr(v:val))')
 	for each in norwins
 		let bufnr = winbufnr(each)
 		if empty(bufname(bufnr)) && empty(getbufvar(bufnr, '&ft'))
@@ -2059,6 +2097,10 @@ fu! s:delent(rfunc)
 	let g:ctrlp_lines = call(a:rfunc, [tbrem])
 	cal s:BuildPrompt(1)
 	unl s:force
+endf
+
+fu! s:isneovimterminal(buf)
+	retu has('nvim') && getbufvar(a:buf, "&bt") == "terminal"
 endf
 " Entering & Exiting {{{2
 fu! s:getenv()
@@ -2305,6 +2347,24 @@ fu! ctrlp#setlines(...)
 	let g:ctrlp_lines = eval(types[s:itemtype])
 endf
 
+" Returns [lname, sname]
+fu! s:CurTypeName()
+	if s:itemtype < 3
+		return s:coretypes[s:itemtype]
+	else
+		return [s:getextvar("lname"), s:getextvar('sname')]
+	endif
+endfu
+
+fu! s:ExitIfSingleCandidate()
+	if len(s:Update(s:prompt[0])) == 1
+		call s:AcceptSelection('e')
+		call ctrlp#exit()
+		return 1
+	endif
+	return 0
+endfu
+
 fu! ctrlp#init(type, ...)
 	if exists('s:init') || s:iscmdwin() | retu | en
 	let [s:ermsg, v:errmsg] = [v:errmsg, '']
@@ -2317,8 +2377,14 @@ fu! ctrlp#init(type, ...)
 	cal ctrlp#syntax()
 	cal ctrlp#setlines(s:settype(a:type))
 	cal s:SetDefTxt()
+	let curName = s:CurTypeName()
+	let shouldExitSingle = index(s:opensingle, curName[0])>=0 || index(s:opensingle, curName[1])>=0
+	if shouldExitSingle && s:ExitIfSingleCandidate()
+		return 0
+	endif
 	cal s:BuildPrompt(1)
 	if s:keyloop | cal s:KeyLoop() | en
+	return 1
 endf
 " - Autocmds {{{1
 if has('autocmd')
