@@ -1,19 +1,18 @@
-" vim-signature is a plugin to toggle, display and navigate marks.
-"
-" Maintainer:
-" Kartik Shenoy
-"
 " vim: fdm=marker:et:ts=4:sw=2:sts=2
+
+" Description: vim-signature is a plugin to toggle, display and navigate marks.
+"
+" Maintainer: Kartik Shenoy
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Exit if the signs feature is not available or if the app has already been loaded (or "compatible" mode set)
 if !has('signs') || &cp
   finish
 endif
-if exists("g:loaded_Signature")
+if exists('g:loaded_Signature')
   finish
 endif
-let g:loaded_Signature = "3"
+let g:loaded_Signature = 3
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -23,7 +22,11 @@ call signature#utils#Set('g:SignaturePrioritizeMarks',             1            
 call signature#utils#Set('g:SignatureIncludeMarks',                'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 call signature#utils#Set('g:SignatureIncludeMarkers',              ')!@#$%^&*('                                          )
 call signature#utils#Set('g:SignatureMarkTextHL',                  '"Exception"'                                         )
+call signature#utils#Set('g:SignatureMarkTextHLDynamic',           0                                                     )
+call signature#utils#Set('g:SignatureMarkLineHL',                  '""'                                                  )
 call signature#utils#Set('g:SignatureMarkerTextHL',                '"WarningMsg"'                                        )
+call signature#utils#Set('g:SignatureMarkerTextHLDynamic',         0                                                     )
+call signature#utils#Set('g:SignatureMarkerLineHL',                '""'                                                  )
 call signature#utils#Set('g:SignatureWrapJumps',                   1                                                     )
 call signature#utils#Set('g:SignatureMarkOrder',                   "\p\m"                                                )
 call signature#utils#Set('g:SignatureDeleteConfirmation',          0                                                     )
@@ -42,100 +45,29 @@ call signature#utils#Set('g:SignatureMap',                         {}           
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" Commands, Autocmds and Maps                                                                                      {{{1
 "
-call signature#utils#CreateMaps()
+call signature#utils#Maps('create')
 
 if has('autocmd')
   augroup sig_autocmds
     autocmd!
     autocmd BufEnter,CmdwinEnter * call signature#sign#Refresh()
-    autocmd CursorHold * if g:SignaturePeriodicRefresh | call signature#sign#Refresh() | endif
+    autocmd CursorHold * if g:SignaturePeriodicRefresh
+                       \|  call signature#sign#Refresh()
+                       \|endif
+    autocmd BufEnter,FileType * if (  (&filetype ==? 'nerdtree')
+                             \     || (&filetype ==? 'netrw')
+                             \     )
+                             \|   call signature#utils#Maps('remove')
+                             \| endif
+    autocmd BufLeave * if (  (&filetype ==? 'nerdtree')
+                    \     || (&filetype ==? 'netrw')
+                    \     )
+                    \|   call signature#utils#Maps('create')
+                    \| endif
   augroup END
 endif
 
-command! -nargs=0 SignatureToggleSigns call signature#Toggle()
+command! -nargs=0 SignatureToggleSigns call signature#utils#Toggle()
 command! -nargs=0 SignatureRefresh     call signature#sign#Refresh('force')
-command! -nargs=0 SignatureListMarks   call signature#mark#List('buf_curr')
+command! -nargs=? SignatureListMarks   call signature#mark#List('buf_curr', <args>)
 command! -nargs=? SignatureListMarkers call signature#marker#List(<args>)
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" Misc                                                                                                             {{{1
-"
-function! signature#Input()                                                                                       " {{{2
-  " Description: Grab input char
-
-  " Obtain input from user ...
-  let l:char = nr2char(getchar())
-
-  " ... if the input is not a number eg. '!' ==> Delete all '!' markers
-  if stridx(b:SignatureIncludeMarkers, l:char) >= 0
-    return signature#marker#Purge(l:char)
-  endif
-
-  " ... but if input is a number, convert it to corresponding marker before proceeding
-  if match( l:char, '\d' ) >= 0
-    let l:char = split(')!@#$%^&*(', '\zs')[l:char]
-  endif
-
-  if stridx(b:SignatureIncludeMarkers, l:char) >= 0
-    return signature#marker#Toggle(l:char)
-  elseif stridx(b:SignatureIncludeMarks, l:char) >= 0
-    return signature#mark#Toggle(l:char)
-  else
-    " l:char is probably one of `'[]<>
-    execute 'normal! m' . l:char
-  endif
-endfunction
-
-
-function! signature#Toggle()                                                                                      " {{{2
-  " Description: Toggles and refreshes sign display in the buffer.
-
-  let b:sig_enabled = !b:sig_enabled
-
-  if b:sig_enabled
-    " Signature enabled ==> Refresh signs
-    call signature#sign#Refresh()
-
-    " Add signs for markers ...
-    for i in keys( b:sig_markers )
-      call signature#sign#Toggle( b:sig_markers[i], "place", i )
-    endfor
-  else
-    " Signature disabled ==> Remove signs
-    for i in keys( b:sig_markers )
-      let l:id = i * 1000 + bufnr('%')
-      silent! execute 'sign unplace ' . l:id
-    endfor
-    for i in keys( b:sig_marks )
-      let l:id = i * 1000 + bufnr('%')
-      silent! execute 'sign unplace ' . l:id
-    endfor
-    unlet b:sig_marks
-    " Also remove the dummy sign
-    call signature#sign#ToggleDummy('remove')
-  endif
-endfunction
-
-
-function! signature#Remove(lnum)                                                                                  " {{{2
-  " Description: Obtain mark or marker from the user and remove it from the specified line number.
-  "              If lnum is not specified for marker, or is 0, removes the marker from current line
-  "              NOTE: lnum is meaningless for a mark
-  " Arguments:   lnum - Line no. to delete the marker from
-
-  let l:char = nr2char(getchar())
-
-  if (l:char =~ '^\d$')
-    let l:lnum = (a:lnum == 0 ? line('.') : a:lnum)
-    let l:char = split(')!@#$%^&*(', '\zs')[l:char]
-    call signature#marker#Remove(lnum, l:char)
-  elseif (l:char =~? '^[a-z]$')
-    call signature#mark#Remove(l:char)
-  endif
-
-  " If there are no marks and markers left, also remove the dummy sign
-  if (len(b:sig_marks) + len(b:sig_markers) == 0)
-    call signature#sign#ToggleDummy('remove')
-  endif
-endfunction

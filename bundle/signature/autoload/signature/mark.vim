@@ -19,27 +19,31 @@ function! signature#mark#Toggle(mark)                                           
       endif
       " Remove a local mark
       let l:marks_list = signature#mark#GetList('used', 'buf_curr')[0]
+      call signature#mark#Remove(l:marks_list[0])
     endif
-    call signature#mark#Move(l:marks_list[0])
+    call s:Place(l:marks_list[0])
 
   else
     " Toggle Mark
     let l:used_marks = filter(signature#mark#GetList('used', 'buf_all'), 'v:val[0] ==# a:mark')
-    if ( len(l:used_marks) > 0 )
+    if (len(l:used_marks) > 0)
       let l:mark_pos = l:used_marks[0][1]
       let l:mark_buf = l:used_marks[0][2]
 
       if (l:mark_buf == bufnr('%'))
         " If the mark is not in use in current buffer then it's a global ==> Don't worry about deleting it
         if (  (l:mark_pos == line('.'))
-              \ && !g:SignatureForceMarkPlacement
-              \ )
+         \ && !g:SignatureForceMarkPlacement
+         \ )
           " Mark is present on the current line. Remove it and return
           call signature#mark#Remove(a:mark)
+          call signature#sign#ToggleDummy()
           return
         else
-          " Mark is present elsewhere in the current buffer or g:SignatureForceMarkPlacement is set
-          " Remove it but fall-through to place new mark
+          " Mark is present elsewhere in the current buffer ==> Remove it and fall-through to place new mark.
+          " If g:SignatureForceMarkPlacement is set, we remove and re-place it so that the sign string can be true
+          " to the order in which the marks were placed.
+          " For eg. if we place 'a, 'b and then 'a again, the sign string changes from "ab" to "ba"
           " Ask for confirmation before moving mark
           if (g:SignatureDeleteConfirmation)
             let choice = confirm("Mark '" . a:mark . "' has been used elsewhere. Reuse it?", "&Yes\n&No", 1)
@@ -51,7 +55,7 @@ function! signature#mark#Toggle(mark)                                           
     endif
 
     " Place new mark
-    call signature#mark#Place(a:mark)
+    call s:Place(a:mark)
   endif
 endfunction
 
@@ -65,25 +69,20 @@ function! signature#mark#Remove(mark)                                           
   endif
 
   let l:lnum = line("'" . a:mark)
-  call signature#sign#Toggle(a:mark, "remove", l:lnum)
+  call signature#sign#Remove(a:mark, l:lnum)
   execute 'delmarks ' . a:mark
-  call signature#mark#ForceGlobalRemoval(a:mark)
+  call s:ForceGlobalRemoval(a:mark)
 endfunction
 
 
-function! signature#mark#Place(mark)                                                                              " {{{2
+function! s:Place(mark)                                                                                           " {{{2
   " Description: Place new mark at current cursor position
   " Arguments:   mark = [a-z,A-Z]
+  " If a line is deleted or mark is manipulated using any non-signature method then b:sig_marks can go out of sync
+  " Thus, we forcibly remove signs for the mark present on any line before proceeding
+  call signature#sign#Remove(a:mark, 0)
   execute 'normal! m' . a:mark
-  call signature#sign#Toggle( a:mark, "place", line('.'))
-endfunction
-
-
-function! signature#mark#Move(mark)                                                                               " {{{2
-  " Description: Move a mark by removing and placing again
-  " Arguments:   mark = [a-z,A-Z]
-  call signature#mark#Remove(a:mark)
-  call signature#mark#Place(a:mark)
+  call signature#sign#Place(a:mark, line('.'))
 endfunction
 
 
@@ -110,7 +109,7 @@ function! signature#mark#Purge(mode)                                            
     call filter(l:used_marks, 'v:val[1] == ' . line('.'))
   endif
 
-  if (  !empty( l:used_marks )
+  if (  !empty(l:used_marks)
    \ && g:SignaturePurgeConfirmation
    \ )
     let l:msg = 'Are you sure you want to delete all marks' . (a:mode ==? 'line' ? ' from the current line' : '') . '?'
@@ -122,10 +121,13 @@ function! signature#mark#Purge(mode)                                            
     call signature#mark#Remove(i[0])
   endfor
 
-  " If there are no marks and markers left, also remove the dummy sign
-  if len(b:sig_marks) + len(b:sig_markers) == 0
-    call signature#sign#ToggleDummy( 'remove' )
+  " If marks are modified using any non-signature method, b:sig_marks can go out of sync
+  if (a:mode ==? 'all')
+    for l:lnum in keys(b:sig_marks)
+      call signature#sign#Unplace(l:lnum)
+    endfor
   endif
+  call signature#sign#ToggleDummy()
 endfunction
 " }}}2
 
@@ -135,17 +137,20 @@ endfunction
 "
 function! signature#mark#Goto(dir, loc, mode)                                                                     " {{{2
   " Arguments:
-  "   dir  = next  : Jump forward
-  "          prev  : Jump backward
-  "   loc  = line  : Jump to first column of line with mark
-  "          spot  : Jump to exact column of the mark
-  "   mode = pos   : Jump to next mark by position
-  "          alpha : Jump to next mark by alphabetical order
+  "   dir   = next   : Jump forward
+  "           prev   : Jump backward
+  "   loc   = line   : Jump to first column of line with mark
+  "           spot   : Jump to exact column of the mark
+  "   mode  = pos    : Jump to next mark by position
+  "           alpha  : Jump to next mark by alphabetical order
+  "           global : Jump only to global marks (applies to all buffers and alphabetical order)
 
   let l:mark = ""
   let l:dir  = a:dir
 
-  if a:mode ==? "alpha"
+  if a:mode ==? "global"
+    let l:mark = s:GotoByAlphaGlobal(a:dir)
+  elseif a:mode ==? "alpha"
     let l:mark = s:GotoByAlpha(a:dir)
   elseif a:mode ==? "pos"
     let l:mark = s:GotoByPos(a:dir)
@@ -164,8 +169,8 @@ endfunction
 
 function! s:GotoByPos(dir)                                                                                        " {{{2
   " Description: Jump to next/prev mark by location.
-  " Arguments: dir = next : Jump forward
-  "                  prev : Jump backward
+  " Arguments: dir  = next   : Jump forward
+  "                   prev   : Jump backward
 
   " We need at least one mark to be present. If not, then return an empty string so that no movement will be made
   if empty( b:sig_marks ) | return "" | endif
@@ -199,7 +204,7 @@ function! s:GotoByAlpha(dir)                                                    
   endif
 
   " Since we can place multiple marks on a line, to jump by alphabetical order we need to know what the current mark is.
-  " This information is kept in the b:sig_GotoByAlpha_CurrMark variable. For instance, if we have marks a, b, and c
+  " This information is kept in the b:sig_GotoByAlpha_CurrMark variable. For instance, if we have marks a, b and c
   " on the current line and b:sig_GotoByAlpha_CurrMark has the value 'a' then we jump to 'b' and set the value of
   " the variable to 'b'. Reinvoking this function will thus now jump to 'c'
   if empty(l:line_marks)
@@ -229,40 +234,80 @@ function! s:GotoByAlpha(dir)                                                    
     endif
   endfor
 endfunction
+
+
+function! s:GotoByAlphaGlobal(dir)                                                                                " {{{2
+  " Description: Jump to next/prev Global mark in any buffer by alphabetical order.
+  "              Direction is specified as input argument
+
+  let l:used_marks = signature#mark#GetList('used', 'buf_all', 'global')
+  let l:line_marks = filter(copy(l:used_marks), 'v:val[1] == ' . line('.'))
+
+  " If there is only one mark in the current file, return it
+  if (len(l:used_marks) == 1)
+    return l:used_marks[0][0]
+  endif
+  " If current line does not have a global mark on it then return the first used global mark
+  if empty(l:line_marks)
+    if exists('b:sig_GotoByAlphaGlobal_CurrMark')
+      unlet b:sig_GotoByAlphaGlobal_CurrMark
+    endif
+    return l:used_marks[0][0]
+  endif
+
+  " Since we can place multiple marks on a line, to jump by alphabetical order we need to know what the current mark is.
+  " This information is kept in the b:sig_GotoByAlphaGlobal_CurrMark variable. For instance, if we have marks A, B & C
+  " on the current line and b:sig_GotoByAlphaGlobal_CurrMark has the value 'A' then we jump to 'B' and set the value of
+  " the variable to 'B'. Reinvoking this function will thus now jump to 'C'
+  if (  (len(l:line_marks) == 1)
+   \ || !exists('b:sig_GotoByAlpha_CurrMark')
+   \ || (b:sig_GotoByAlphaGlobal_CurrMark ==? "")
+   \ )
+    let b:sig_GotoByAlphaGlobal_CurrMark = l:line_marks[0][0]
+  endif
+
+  for i in range( 0, len(l:used_marks) - 1 )
+    if l:used_marks[i][0] ==# b:sig_GotoByAlphaGlobal_CurrMark
+      if a:dir ==? "next"
+        if (( i != len(l:used_marks)-1 ) || b:SignatureWrapJumps)
+          let b:sig_GotoByAlphaGlobal_CurrMark = l:used_marks[(i+1)%len(l:used_marks)][0]
+        endif
+      elseif a:dir ==? "prev"
+        if ((i != 0) || b:SignatureWrapJumps)
+          let b:sig_GotoByAlphaGlobal_CurrMark = l:used_marks[i-1][0]
+        endif
+      endif
+      return b:sig_GotoByAlphaGlobal_CurrMark
+    endif
+  endfor
+endfunction
 " }}}2
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" Misc                                                                                                             {{{1
 "
-function! signature#mark#GetList(mode, scope)                                                                     " {{{2
-  " Description: Takes two optional arguments - mode/line no. and scope
-  "              If no arguments are specified, returns a list of [mark, line no.] pairs that are in use in the buffer
-  "              or are free to be placed in which case, line no. is 0
-  "
-  " Arguments: mode  = 'used'     : Returns list of [ [used marks, line no., buf no.] ]
-  "                    'free'     : Returns list of [ free marks ]
-  "            scope = 'buf_curr' : Limits scope to current buffer i.e used/free marks in current buffer
-  "                    'buf_all'  : Set scope to all buffers i.e used/free marks from all buffers
+function! signature#mark#GetList(mode, scope, ...)                                                                " {{{2
+  " Arguments: mode    = 'used'     : Returns list of [ [used marks, line no., buf no.] ]
+  "                      'free'     : Returns list of [ free marks ]
+  "            scope   = 'buf_curr' : Limits scope to current buffer i.e used/free marks in current buffer
+  "                      'buf_all'  : Set scope to all buffers i.e used/free marks from all buffers
+  "            [type]  = 'global'   : Return only global marks
 
   let l:marks_list = []
   let l:line_tot = line('$')
   let l:buf_curr = bufnr('%')
+  let l:type     = (a:0 ? a:1 : "")
 
   " Add local marks first
-  for i in filter( split( b:SignatureIncludeMarks, '\zs' ), 'v:val =~# "[a-z]"' )
-    let l:marks_list = add(l:marks_list, [i, line("'" .i), l:buf_curr])
-  endfor
-
+  if (l:type !=? "global")
+    for i in filter(split(b:SignatureIncludeMarks, '\zs'), 'v:val =~# "[a-z]"')
+      let l:marks_list = add(l:marks_list, [i, line("'" .i), l:buf_curr])
+    endfor
+  endif
   " Add global (uppercase) marks to list
   for i in filter( split( b:SignatureIncludeMarks, '\zs' ), 'v:val =~# "[A-Z]"' )
     let [ l:buf, l:line, l:col, l:off ] = getpos( "'" . i )
-    if (a:scope ==? 'buf_curr')
-      " If it is not in use in the current buffer treat it as free
-      if l:buf != l:buf_curr
-        let l:line = 0
-      endif
-    endif
     let l:marks_list = add(l:marks_list, [i, l:line, l:buf])
   endfor
 
@@ -278,14 +323,14 @@ function! signature#mark#GetList(mode, scope)                                   
     else
       call filter( l:marks_list, '(v:val[1] == 0) || (v:val[2] != l:buf_curr)' )
     endif
-    call map( filter( l:marks_list, 'v:val[1] == 0' ), 'v:val[0]' )
+    call map( l:marks_list, 'v:val[0]' )
   endif
 
   return l:marks_list
 endfunction
 
 
-function! signature#mark#ForceGlobalRemoval(mark)                                                                 " {{{2
+function! s:ForceGlobalRemoval(mark)                                                                              " {{{2
   " Description: Edit .viminfo file to forcibly delete Global mark since vim's handling is iffy
   " Arguments:   mark - The mark to delete
 
@@ -295,8 +340,14 @@ function! signature#mark#ForceGlobalRemoval(mark)                               
     return
   endif
 
-  let l:filename = expand($HOME . '/' . (has('unix') ? '.' : '_') . 'viminfo')
-  if (filewritable(l:filename) != 1)
+  " See if custom .viminfo location is specified. If not, try to piece it together
+  if (&viminfo =~ ',n')
+    let l:filename = expand(substitute(&viminfo, '^.*,n', '', ''))
+  else
+    let l:filename = expand($HOME . '/' . (has('unix') ? '.' : '_') . 'viminfo')
+  endif
+
+  if (!filewritable(l:filename))
     echohl WarningMsg
     echomsg "Signature: Unable to read/write .viminfo ('" . l:filename . "')"
     echohl None
@@ -326,12 +377,16 @@ function! s:ReportNoAvailableMarks()                                            
 endfunction
 
 
-function! signature#mark#List(scope)                                                                              " {{{2
+function! signature#mark#List(scope, ...)                                                                         " {{{2
   " Description: Opens and populates location list with marks from current buffer
-  " Arguments:   scope = buf_curr : List marks from current buffer
-  "          ~~~FIXME~~~ buf_all  : List marks from all buffers
+  " Arguments:   scope     = 'buf_curr' : List marks from current buffer
+  "                          'buf_all'  : List marks from all buffers FIXME
+  "              [context] = 0          : Adds context around the mark
 
-  let l:list_map = map(signature#mark#GetList('used', a:scope),
+  let l:count = (a:0 ? a:1 : 0)
+  let l:list_map = signature#mark#GetList('used', a:scope)
+
+  let l:list_map = map(l:list_map,
                    \   '{
                    \     "bufnr": v:val[2],
                    \     "lnum" : v:val[1],
@@ -341,6 +396,31 @@ function! signature#mark#List(scope)                                            
                    \   }'
                    \  )
 
+  if l:count
+    let l:temp_list = []
+    for i in range(0, len(l:list_map)-1)
+      for l:context in range(-l:count, l:count)
+        let l:item_context = copy(l:list_map[i])
+        if (l:context != 0)
+          let l:item_context.lnum = l:list_map[i].lnum + l:context
+          let l:item_context.text = (l:context < 0 ? "-" : "+") . ": " . getline(l:item_context.lnum)
+        endif
+        let l:item_context.text = substitute(l:item_context.text, '\s\+$', '', '')
+        let l:temp_list = add(l:temp_list, l:item_context)
+      endfor
+      if (i != len(l:list_map)-1)
+        " Removed the text field to avoid wrapping in Location List if window width is less than separator length
+        let l:temp_list = add(l:temp_list, { 'bufnr': '',
+                                           \ 'lnum' : '',
+                                           \ 'col'  : '',
+                                           \ 'type' : '',
+                                           \ 'text' : ''
+                                           \ })
+      endif
+    endfor
+    let l:list_map = l:temp_list
+  endif
+
   if (a:scope ==? 'buf_curr')
     call setloclist(0, l:list_map,)|lopen
   "else
@@ -349,7 +429,6 @@ function! signature#mark#List(scope)                                            
 
   if !exists("g:signature_set_location_list_convenience_maps") || g:signature_set_location_list_convenience_maps
     nnoremap <buffer> <silent> q        :q<CR>
-    noremap  <buffer> <silent> <ESC>    :q<CR>
     noremap  <buffer> <silent> <ENTER>  <CR>:lcl<CR>
   endif
 endfunction

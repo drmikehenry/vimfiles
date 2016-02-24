@@ -41,7 +41,7 @@ Out of the box, the followings mappings are defined by default
   `[           Jump by alphabetical order to prev mark
   ']           Jump by alphabetical order to start of next line having a mark
   '[           Jump by alphabetical order to start of prev line having a mark
-  '?           Open location list and display local marks
+  m/           Open location list and display marks from current buffer
 
   m[0-9]       Toggle the corresponding marker !@#$%^&*()
   m<S-[0-9]>   Remove all markers of the same type
@@ -49,24 +49,51 @@ Out of the box, the followings mappings are defined by default
   [-           Jump to prev line having a marker of the same type
   ]=           Jump to next line having a marker of any type
   [=           Jump to prev line having a marker of any type
+  m?           Open location list and display markers from current buffer
   m<BS>        Remove all markers
 
 This will allow the use of default behavior of m to set marks and, if
 the line already contains the mark, it'll be unset. The default behavior
 of ]', [', ]` and [` is supported and enhanced by wrapping around when
-beginning or end of file is reached.
+beginning or end of file is reached. ]-, [-, ]= and [= also accept a count.
+
+To directly jump to a given marker, the following maps can be used
+>
+  nnoremap [1 :call signature#marker#Goto('prev', 1, v:count)
+  nnoremap ]1 :call signature#marker#Goto('next', 1, v:count)
+  nnoremap [2 :call signature#marker#Goto('prev', 2, v:count)
+  nnoremap ]2 :call signature#marker#Goto('next', 2, v:count)
+<
+etc. These are not defined by default
 
 
 ==============================================================================
 3. Commands                                               *signature-commands*
 
-'SignatureToggleSigns'
+SignatureToggleSigns
   Toggle the display of signs. This won't affect the marks or the mappings.
 
-'SignatureRefresh'
+SignatureRefresh
   Force the display of signs in the buffer to refresh. Use this to correct
   the signs if things go awry
 
+SignatureListMarks [n]
+  List all the marks used in the current buffer in the location list
+  Accepts an optional argument to provide 'n' lines of context
+
+SignatureListMarkers [marker] [n]
+  List all instances of the specified marker used in the current buffer in
+  the location list. If no argument is given, it lists all markers
+  Accepts an optional argument to provide 'n' lines of context
+>
+  :SignatureListMakers          : List all markers
+  :SignatureListMarkers 1       : List only the '!' marker
+  :SignatureListMarkers @       : List only the '@' marker
+  :SignatureListMarkers 0, 2    : List only ')' marker with 2 lines of context
+  :SignatureListMarkers '', 2   : List all markers and show 2 lines of context
+  :SignatureListMarkers '!@', 2 : List only the '!' and '@' markers and show
+                                  2 lines of context around them
+<
 
 ==============================================================================
 4. Customization                                     *signature-customization*
@@ -74,7 +101,7 @@ beginning or end of file is reached.
                                                             *'g:SignatureMap'*
   Type: Dictionary, Default:
   To set up your own mappings copy the following dictionary and edit it
-
+>
       let g:SignatureMap = {
         \ 'Leader'             :  "m",
         \ 'PlaceNextMark'      :  "m,",
@@ -95,9 +122,10 @@ beginning or end of file is reached.
         \ 'GotoPrevMarker'     :  "[-",
         \ 'GotoNextMarkerAny'  :  "]=",
         \ 'GotoPrevMarkerAny'  :  "[=",
-        \ 'ListLocalMarks'     :  "'?"
+        \ 'ListBufferMarks'    :  "m/",
+        \ 'ListBufferMarkers'  :  "m?"
         \ }
-
+<
   By default, it defines the mappings as shown in |signature-mappings|
   To disable a map entirely, specify it as an empty string.
   If a key is not specified, the default value will be picked up.
@@ -139,11 +167,10 @@ beginning or end of file is reached.
   Both can't be displayed simultaenously.
 
   To set this to mapleader or maplocalleader
+>
     let g:SignatureMap['Leader'] = '<Leader>'
     let g:SignatureMap['Leader'] = '<LocalLeader>'
-
-  Assigning this to <LocalLeader> allows this to be buffer-specific
-
+<
 
                                                       *'g:SignatureWrapJumps'*
   Boolean, Default : 1
@@ -160,12 +187,12 @@ beginning or end of file is reached.
     '\m' indicates the current or latest mark placed on the line
     '\p' indicates the previous mark placed on the line
 
-  For eg.
-    g:SignatureMarkOrder = "\m."  : Display last mark with '.' suffixed
-    g:SignatureMarkOrder = "_\m"  : Display last mark with '_' prefixed
-    g:SignatureMarkOrder = ">"    : Display only a ">" for a line with a mark.
-                                    The mark is not displayed
-    g:SignatureMarkOrder = "\m\p" : Display last two marks placed
+  For eg,
+    `g:SignatureMarkOrder="\m."`  : Display last mark with '.' suffixed
+    `g:SignatureMarkOrder="_\m"`  : Display last mark with '_' prefixed
+    `g:SignatureMarkOrder=">"`    : Display only a ">" for a line with a mark.
+                                  The mark is not displayed
+    `g:SignatureMarkOrder="\m\p"` : Display last two marks placed
 
   Note:
   The signs feature allows only 2 characters to be displayed. This is not and
@@ -173,14 +200,77 @@ beginning or end of file is reached.
 
 
                                                      *'g:SignatureMarkTextHL'*
-  String, Default : 'Exception'
+  String, Default : "'Exception'"
 
-  The highlight group used for mark signs.
+  The highlight group used for mark signs. This can be set either to a string
+  or to a |Funcref|.
+
+  If it holds a string, it must be an expression suitable for passing to
+  |eval()|. In the simple case, it can be the name of a highlight group. It can
+  also hold more complicated expressions, in which case the expression `a:lnum`
+  may be helpful. It holds the number of the line where the current mark is to
+  be highlighted.
+
+  If it holds a |Funcref|, then the function will be called with one argument,
+  the line number of the mark to be highlighted. The function should return
+  the name of a highlight group.
+
+  Example of simple string highlight group. Note the two sets of quotation
+  marks:
+>
+    let g:SignatureMarkTextHL = "'Exception'"
+<
+  Example of complex string expression:
+>
+    function Example(lineno)
+    endfunction
+    let g:SignatureMarkTextHL = "Example(a:lnum)"
+<
+  Example of |Funcref|:
+>
+    function Example(lineno)
+      return "Exception"
+    endfunction
+    let g:SignatureMarkTextHL = function("Example")
+<
+
+                                              *'g:SignatureMarkTextHLDynamic'*
+  Boolean, Default: 0
+
+  Highlight signs of marks dynamically based upon state indicated by
+  vim-gitgutter or vim-signify. Setting this to `1` prior to plugin
+  initialization overwrites |g:SignatureMarkTextHL|.
+
+
+                                                     *'g:SignatureMarkLineHL'*
+  String, Default : ''
+
+  The highlight group used for hightlighting lines having mark signs. This can
+  be a string or a |Funcref|. See |g:SignatureMarkTextHL| for details.
+
 
                                                    *'g:SignatureMarkerTextHL'*
-  String, Default : 'WarningMsg'
+  String, Default : "'WarningMsg'"
 
-  The highlight group used for marker signs.
+  The highlight group used for marker signs. This can be a string or a
+  |Funcref|. See |g:SignatureMarkTextHL| for details.
+>
+    let g:SignatureMarkTextHL = "'WarningMsg'"
+<
+
+                                            *'g:SignatureMarkerTextHLDynamic'*
+  Boolean, Default: 0
+
+  Highlight signs of markers dynamically based upon state indicated by
+  vim-gitgutter or vim-signify. Setting this to `1` prior to plugin
+  initialization overwrites |g:SignatureMarkerTextHL|.
+
+
+                                                   *'g:SignatureMarkerLineHL'*
+  String, Default : ''
+
+  The highlight group used for hightlighting lines having marker signs. This
+  can be a string or a |Funcref|. See |g:SignatureMarkTextHL| for details.
 
 
                                              *'g:SignatureDeleteConfirmation'*
@@ -264,7 +354,6 @@ beginning or end of file is reached.
   Boolean, Default: 0
 
   When set to 1, will always place markers instead of toggling them
-
 
 
 ==============================================================================

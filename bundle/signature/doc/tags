@@ -9,9 +9,13 @@
 'g:SignatureIncludeMarkers'	signature.txt	/*'g:SignatureIncludeMarkers'*
 'g:SignatureIncludeMarks'	signature.txt	/*'g:SignatureIncludeMarks'*
 'g:SignatureMap'	signature.txt	/*'g:SignatureMap'*
+'g:SignatureMarkLineHL'	signature.txt	/*'g:SignatureMarkLineHL'*
 'g:SignatureMarkOrder'	signature.txt	/*'g:SignatureMarkOrder'*
 'g:SignatureMarkTextHL'	signature.txt	/*'g:SignatureMarkTextHL'*
+'g:SignatureMarkTextHLDynamic'	signature.txt	/*'g:SignatureMarkTextHLDynamic'*
+'g:SignatureMarkerLineHL'	signature.txt	/*'g:SignatureMarkerLineHL'*
 'g:SignatureMarkerTextHL'	signature.txt	/*'g:SignatureMarkerTextHL'*
+'g:SignatureMarkerTextHLDynamic'	signature.txt	/*'g:SignatureMarkerTextHLDynamic'*
 'g:SignaturePeriodicRefresh'	signature.txt	/*'g:SignaturePeriodicRefresh'*
 'g:SignaturePrioritizeMarks'	signature.txt	/*'g:SignaturePrioritizeMarks'*
 'g:SignaturePurgeConfirmation'	signature.txt	/*'g:SignaturePurgeConfirmation'*

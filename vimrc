@@ -2745,7 +2745,7 @@ augroup local_bufExplorer
             \ :<C-u>call DeleteRubbishWhitespace()<CR>
     autocmd BufEnter \[BufExplorer\] nunmap dm
     autocmd BufLeave \[BufExplorer\] nmap dm
-            \ :<C-U>call signature#Remove(v:count)<CR>
+            \ :<C-U>call signature#utils#Remove(v:count)<CR>
 augroup END
 
 " -------------------------------------------------------------

@@ -2031,7 +2031,7 @@ Apart from the above, you can also:
 - Display multiple marks (up to 2, limited by the signs feature)
 - Placing custom signs !@#$%^&*() as visual markers
 
-Version 2014-11-03 (29fc0955) from git://github.com/kshenoy/vim-signature.git
+Version 2016-02-21 (8b7b4004) from git://github.com/kshenoy/vim-signature.git
 
 Local Customizations:
 - Mark placement is "forced", which means the toggling feature is disabled.
