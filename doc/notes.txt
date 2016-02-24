@@ -506,7 +506,8 @@ Local customizations:
 
 For more information on "ack", see http://beyondgrep.com/.
 
-Version 2014-06-11 (303bcef) from https://github.com/mileszs/ack.vim.git
+Version 2014-06-11 (303bcef) from:
+https://github.com/mileszs/ack.vim.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -522,7 +523,8 @@ for more details.
 To use this plugin, ensure that the "Silver Searcher" ('ag') utility is
 installed.  See https://github.com/ggreer/the_silver_searcher for details.
 
-Version 2014-07-07 (d3a00f8) from https://github.com/rking/ag.vim.git
+Version 2014-07-07 (d3a00f8) from:
+https://github.com/rking/ag.vim.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -531,7 +533,8 @@ Installation:
 BADWOLF                                                 *notes_badwolf*
   A dark colorscheme
 
-Version 2013-07-19 (e6fdf18) from git://github.com/sjl/badwolf.git
+Version 2013-07-19 (e6fdf18) from:
+https://github.com/sjl/badwolf.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -540,7 +543,8 @@ Installation:
 BASE16                                                  *notes_base16*
   A colorscheme collection
 
-Version 2014-07-22 (1ce4b84) from git://github.com/chriskempson/base16-vim.git
+Version 2014-07-22 (1ce4b84) from:
+https://github.com/chriskempson/base16-vim.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -549,7 +553,8 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Version 2015-10-02 (ad2cff7) from https://github.com/jlanzarotta/bufexplorer
+Version 2015-10-02 (ad2cff7) from:
+https://github.com/jlanzarotta/bufexplorer
 
 Note: The releases at http://www.vim.org/scripts/script.php?script_id=42 don't
 appear to be kept as up-to-date as on Github.
@@ -587,7 +592,8 @@ console-mode Vim's Arrow keys (and other sequences that start with <Escape>).
 This maximizes buffer switching speed without needing to press the
 often-redundant <Enter> to exit BufMRU mode.
 
-Version 3.3 from http://www.vim.org/scripts/script.php?script_id=2346
+Version 3.3 from:
+http://www.vim.org/scripts/script.php?script_id=2346
 
 Installation:
 - Copy into ~/.vim/plugin/
@@ -647,7 +653,8 @@ See also:
 :bd       - delete a buffer, closing window (vim built-in)    |:bdelete|
 :bw       - wipe a buffer, closing window (vim built-in)      |:buwipe|
 
-Version 2015-05-15 (cf928d33) from git://github.com/qpkorr/vim-bufkill.git
+Version 2015-05-15 (cf928d33) from:
+https://github.com/qpkorr/vim-bufkill.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -659,7 +666,8 @@ CHARACTERIZE                                             *notes_characterize*
 Replaces the builtin 'ga' with one that shows more information, including
 Unicode character name, Vim digraph, Emoji code, and HTML entity.
 
-Version 2013-03-13 (d5ba608) from git://github.com/tpope/vim-characterize.git
+Version 2013-03-13 (d5ba608) from:
+https://github.com/tpope/vim-characterize.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -671,7 +679,8 @@ CLOJURE-STATIC                                          *notes_clojure-static*
 Syntax, indent, filetype, and other miscellaneous support for editing Clojure
 without having a runtime environment.
 
-Version 2014-02-13 (3910ac4) from git://github.com/guns/vim-clojure-static.git
+Version 2014-02-13 (3910ac4) from:
+https://github.com/guns/vim-clojure-static.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -681,7 +690,8 @@ CLOSETAG                                                *notes_closetag*
   Close XML and HTML tags automatically
 
 
-Version 0.9.1 from http://www.vim.org/scripts/script.php?script_id=13
+Version 0.9.1 from:
+http://www.vim.org/scripts/script.php?script_id=13
 
 Installation:
 - Install as ~/.vim/scripts/closetag.vim
@@ -692,7 +702,8 @@ Installation:
 COLORSAMPLERPACK                                        *notes_colorsamplerpack*
   Color schemes and theme menu
 
-Version 2012.10.28 from http://www.vim.org/scripts/script.php?script_id=625
+Version 2012.10.28 from:
+http://www.vim.org/scripts/script.php?script_id=625
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -735,7 +746,8 @@ Local customizations:
   around, and to avoid binding a commonly used function to the tmux prefix key
   (CTRL-j).
 
-Version 2016-01-17 (7f74368) from https://github.com/ctrlpvim/ctrlp.vim.git
+Version 2016-01-17 (7f74368) from:
+https://github.com/ctrlpvim/ctrlp.vim.git
 
 (Note: kien, the original author, seems to have dropped off the grid as of
 mid-2013, so his repository is no longer being maintained at
@@ -749,7 +761,8 @@ Installation:
 DUAL                                                    *notes_dual*
   Dual color scheme (gvim, vim)                         |notes_dual|
 
-Version 1.1 from http://www.vim.org/scripts/script.php?script_id=2688
+Version 1.1 from:
+http://www.vim.org/scripts/script.php?script_id=2688
 
 Installation:
 - Copy to ~/.vim/colors/dual.vim
@@ -768,7 +781,8 @@ Local Customizations:
   Delimiter   Purpose
       \       Align on backslash (such as for C/C++ line continuations).
 
-Version 2014-11-22 (44216b0) from https://github.com/junegunn/vim-easy-align
+Version 2014-11-22 (44216b0) from:
+https://github.com/junegunn/vim-easy-align
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -788,7 +802,8 @@ Local Customizations:
 
 - Setup regular expressions for "anywhere" operations.
 
-Version 2014-11-13 (2dc0025) from https://github.com/Lokaltog/vim-easymotion.git
+Version 2014-11-13 (2dc0025) from:
+https://github.com/Lokaltog/vim-easymotion.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -806,7 +821,8 @@ support.
 This plugin does remap <CR> in insert mode.  It also adds a <C-x><CR> mapping to
 force inserting an end.  However, the forced version isn't always correct.
 
-Version 2014-10-01 (96eb117) from https://github.com/tpope/vim-endwise
+Version 2014-10-01 (96eb117) from:
+https://github.com/tpope/vim-endwise
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -826,7 +842,8 @@ Vim sugar for the UNIX shell commands that need it the most. Commands include:
   :SudoWrite  Write a privileged file with sudo.
   :W          Write every open window. Handy for kicking off tools like guard.
 
-Version 2014-06-23 (c856e5d6) from https://github.com/tpope/vim-eunuch
+Version 2014-06-23 (c856e5d6) from:
+https://github.com/tpope/vim-eunuch
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -835,7 +852,8 @@ Installation:
 EXTLINE                                                 *notes_extline*
   Extend lines (e.g., for underlined titles)            |extline.txt|
 
-Version 0.2.0 (704ec96) from https://github.com/drmikehenry/vim-extline
+Version 0.2.0 (704ec96) from:
+https://github.com/drmikehenry/vim-extline
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -847,7 +865,8 @@ FIREPLACE                                               *notes_fireplace*
 Provides an enhanced environment for editing Clojure code (including
 completion support), if you're connected via nREPL.
 
-Version 2014-02-08 (54476927) from git://github.com/tpope/vim-fireplace.git
+Version 2014-02-08 (54476927) from:
+https://github.com/tpope/vim-fireplace.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -856,7 +875,8 @@ Installation:
 FIXKEY                                                  *notes_fixkey*
   Fix key code for console Vim                          |fixkey.txt|
 
-Version 0.3.5 (0189eb9) from https://github.com/drmikehenry/vim-fixkey
+Version 0.3.5 (0189eb9) from:
+https://github.com/drmikehenry/vim-fixkey
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -867,7 +887,8 @@ See |fixkey.txt| for details on setting up your terminal.
 FONTDETECT                                              *notes_fontdetect*
   Detect installed fonts                                |fontdetect.txt|
 
-Version 0.2.2 (9770b2c) from https://github.com/drmikehenry/vim-fontdetect
+Version 0.2.2 (9770b2c) from:
+https://github.com/drmikehenry/vim-fontdetect
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -911,7 +932,8 @@ based on mappings.
 While "font size" mode is active, the prompt "(fontsize)" will be shown if
 'showcmd' is set.
 
-Version 0.3.3 (a5fb55a) from https://github.com/drmikehenry/vim-fontsize
+Version 0.3.3 (a5fb55a) from:
+https://github.com/drmikehenry/vim-fontsize
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -941,7 +963,8 @@ Compatibility command for Alternate.vim:
 
   :A        Same as :FSHere
 
-Version 0.9.5 (e716da1) from https://github.com/derekwyatt/vim-fswitch
+Version 0.9.5 (e716da1) from:
+https://github.com/derekwyatt/vim-fswitch
 
 Installation:
 
@@ -961,7 +984,8 @@ more useful ones are:
             See |fugitive-:Gstatus| for more information
   :Git      Run an arbitrary git command from within Vim
 
-Version 2014-07-07 (9af975c8) from git://github.com/tpope/vim-fugitive.git
+Version 2014-07-07 (9af975c8) from:
+https://github.com/tpope/vim-fugitive.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1042,13 +1066,15 @@ Installation:
 - Note: grep.txt is not directly downloadable; it was created from a
   copy-and-paste of the plugin web page.
 
-Version 1.11 from http://www.vim.org/scripts/script.php?script_id=311
+Version 1.11 from:
+http://www.vim.org/scripts/script.php?script_id=311
 
 ------------------------------------------------------------------------------
 GRUVBOX                                                 *notes_gruvbox*
   A dark colorscheme
 
-Version 2014-08-22 (d1a55f7) from git://github.com/cmorhetz/gruvbox
+Version 2014-08-22 (d1a55f7) from:
+https://github.com/cmorhetz/gruvbox
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1061,7 +1087,8 @@ Gundo is a Vim plugin for visualizing your undo tree to make it usable.
 
 To toggle the undo view, use :GundoToggle.
 
-Version 2.4.0 from http://www.vim.org/scripts/script.php?script_id=3304
+Version 2.4.0 from:
+http://www.vim.org/scripts/script.php?script_id=3304
 
 - Unzipped into ~/.vim/bundle.
 - :Helptags
@@ -1074,7 +1101,8 @@ To add or update a header guard in a .h file: >
 
     :HeaderguardAdd
 
-Version 0.2.2 (e53b37fa) from https://github.com/drmikehenry/vim-headerguard
+Version 0.2.2 (e53b37fa) from:
+https://github.com/drmikehenry/vim-headerguard
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1083,7 +1111,8 @@ Installation:
 HEMISU                                                  *notes_hemisu*
   A dark colorscheme
 
-Version 2013-09-05 (37ea6aa) from git://github.com/noahfrederick/vim-hemisu.git
+Version 2013-09-05 (37ea6aa) from:
+https://github.com/noahfrederick/vim-hemisu.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1104,7 +1133,7 @@ Local Customizations:
 
 - Disable mappings for <S-F10> and <Leader>hlt.
 
-Version 4l (lowercase "L") from
+Version 4l (lowercase "L") from:
 http://www.drchip.org/astronaut/vim/index.html#HILINKS
 
 Installation:
@@ -1114,7 +1143,8 @@ Installation:
 HYBRID                                                  *notes_hybrid*
   A dark colorscheme
 
-Version 2014-05-10 (81b7e55) from git://github.com/w0ng/vim-hybrid.git
+Version 2014-05-10 (81b7e55) from:
+https://github.com/w0ng/vim-hybrid.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1123,7 +1153,8 @@ Installation:
 INCSEARCH                                                *notes_incsearch*
   Incrementally highlight all pattern matches            |incsearch.txt|
 
-Version 2015-05-04 (f40dfa57) from git://github.com/haya14busa/incsearch.vim.git
+Version 2015-05-04 (f40dfa57) from:
+https://github.com/haya14busa/incsearch.vim.git
 
 Local Customizations:
 - The recommended mappings for "/", "?", and "g/" were made; see
@@ -1160,8 +1191,8 @@ Local Customizations:
 - If your colorscheme has IndentGuidesOdd and IndentGuidesEven setup, then use
   those colors instead of letting the plugin automatically chose the colors.
 
-Version 2013-06-23 (eec1b629) from
-git://github.com/nathanaelkane/vim-indent-guides.git
+Version 2013-06-23 (eec1b629) from:
+https://github.com/nathanaelkane/vim-indent-guides.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1170,7 +1201,7 @@ Installation:
 JAVACOMPLETE                                           *notes_javacomplete*
   Java Omnicompletion
 
-Version 0.77.1.2 from
+Version 0.77.1.2 from:
 http://vim.sourceforge.net/scripts/script.php?script_id=1785
 
 Installation:
@@ -1243,13 +1274,15 @@ KeepCaseSameLen(original_word, new_word)
 Installation:
 - Install keepcase.vim in ~/.vim/plugin
 
-Version 2.0 from http://www.vim.org/scripts/script.php?script_id=6
+Version 2.0 from:
+http://www.vim.org/scripts/script.php?script_id=6
 
 ------------------------------------------------------------------------------
 LESS                                                    *notes_less*
   Syntax highlighting for LessCSS
 
-Version 2012-10-01 (0223dcdf) from https://github.com/groenewege/vim-less
+Version 2012-10-01 (0223dcdf) from:
+https://github.com/groenewege/vim-less
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1279,7 +1312,8 @@ might contain: >
 To re-use a group of settings, create a function (say, in the global vimrc
 file), then call it from the .lvimrc files.
 
-Version 2015-10-02 (7ed3573a) from git://github.com/embear/vim-localvimrc.git
+Version 2015-10-02 (7ed3573a) from:
+https://github.com/embear/vim-localvimrc.git
 
 Local customizations:
 
@@ -1305,7 +1339,8 @@ With [!], inserts as a single paragraph.
 
 More options exist - see |loremipsum.txt| for details.
 
-Version 0.2 from http://www.vim.org/scripts/script.php?script_id=2289
+Version 0.2 from:
+http://www.vim.org/scripts/script.php?script_id=2289
 
 Installation:
 - Distributed as a |vimball|  >
@@ -1418,9 +1453,12 @@ Buffer Grep:
 Development versions found at: http://github.com/sjbach/lusty
 
 Released versions appear here:
-Version 4.3 from http://www.vim.org/scripts/script.php?script_id=1890
+Version 4.3 from:
+http://www.vim.org/scripts/script.php?script_id=1890
 
-Version 2014-11-15 (0e73d8d) from https://github.com/sjbach/lusty.git
+Version 2014-11-15 (0e73d8d) from:
+https://github.com/sjbach/lusty.git
+
 Installation:
 - Install in ~/.vim/plugin and ~/.vim/autoload
 
@@ -1502,9 +1540,12 @@ Bonus: This plugin also includes the following command, which will
 Development versions found at: http://github.com/sjbach/lusty
 
 Released versions appear here:
-Version 1.5.1 from http://www.vim.org/scripts/script.php?script_id=2050
+Version 1.5.1 from:
+http://www.vim.org/scripts/script.php?script_id=2050
 
-Version 2014-11-15 (0e73d8d) from https://github.com/sjbach/lusty.git
+Version 2014-11-15 (0e73d8d) from:
+https://github.com/sjbach/lusty.git
+
 Installation:
 - Install in ~/.vim/plugin and ~/.vim/autoload
 
@@ -1512,7 +1553,8 @@ Installation:
 MANPAGEVIEW                                             *notes_manpageview*
   File reading and writing across networks              |manpageview|
 
-Version 25l from http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
+Version 25l from:
+http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
 
 Version 25l requires patching of "sleep 2" to become "sleep 250m" to avoid
 freezing Vim for two tiresome seconds while ManPageView displays an error
@@ -1548,7 +1590,8 @@ Installation:
 MARKDOWN                                                 *notes_markdown*
   Markdown syntax support
 
-Version 2013-06-24 (fccf76f6) from https://github.com/tpope/vim-markdown.
+Version 2013-06-24 (fccf76f6) from:
+https://github.com/tpope/vim-markdown.
 
 Local Customizations:
 - Disable built-in embedded language support and setup our own--mainly to
@@ -1572,7 +1615,8 @@ Press '%' to match:
   - HTML tags <start> / </end>
   - etc.
 
-Version 1.13.2 from http://www.vim.org/scripts/script.php?script_id=39
+Version 1.13.2 from:
+http://www.vim.org/scripts/script.php?script_id=39
 
 Installation:
 - Unzip in ~/.vim/
@@ -1582,7 +1626,8 @@ Installation:
 MISC                                                    *notes_misc*
   Contains many useful Vimscript functions              |misc.txt|
 
-Version 1.16.1 from https://github.com/xolox/vim-misc
+Version 1.16.1 from:
+https://github.com/xolox/vim-misc
 
 This plugin is also used by the session plugin.
 
@@ -1593,7 +1638,8 @@ Installation:
 MONOKAI                                                 *notes_monokai*
   A dark colorscheme
 
-Version 2014-06-10 (168adea) from git://github.com/w0ng/vim-hybrid.git
+Version 2014-06-10 (168adea) from:
+https://github.com/w0ng/vim-hybrid.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1602,7 +1648,7 @@ Installation:
 MOONSCRIPT - support for a dialect of Lua               *notes_moonscript*
   Support for a dialect of Lua
 
-Version 77cf9ef0 (December 4, 2013) from
+Version 77cf9ef0 (December 4, 2013) from:
 https://github.com/leafo/moonscript-vim
 
 Installation:
@@ -1612,7 +1658,9 @@ Installation:
 NETRW                                                   *notes_netrw*
   File reading and writing across networks              |netrw|
 
-Version 147e from http://www.vim.org/scripts/script.php?script_id=1075
+Version 147e from:
+http://www.vim.org/scripts/script.php?script_id=1075
+
 (Also check Dr. Chip's site: http://mysite.verizon.net/astronaut/vim/#NETRW)
 
 Use <Leader>fe to invoke :Explore.  This will explore in the directory
@@ -1654,7 +1702,8 @@ Requires Exuberant ctags database with these options: >
 
 For more details on insert-mode completion:|ins-completion|
 
-Version 0.41 from http://www.vim.org/scripts/script.php?script_id=1520
+Version 0.41 from:
+http://www.vim.org/scripts/script.php?script_id=1520
 
 Installation:
 - Unzip in ~/.vim/
@@ -1668,7 +1717,8 @@ Paredit tries to maintain a balanced state of matched characters, similar to
 paredit.el for Emacs.  This is helpful for Lisp programming languages like
 Clojure.
 
-Version 0.9.7 from http://www.vim.org/scripts/script.php?script_id=3988
+Version 0.9.7 from:
+http://www.vim.org/scripts/script.php?script_id=3988
 
 Installation (via pathogen):
 - Unzip in ~/.vim/bundle/paredit
@@ -1678,7 +1728,8 @@ Installation (via pathogen):
 PATHOGEN                                                *notes_pathogen*
   Runtime path management for bundles                   |notes_pathogen|
 
-Version 2013-01-19 from https://github.com/tpope/vim-pathogen
+Version 2013-01-19 from:
+https://github.com/tpope/vim-pathogen
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1696,7 +1747,7 @@ Also, the GUI version can make use of a "fancy" patched font.
 bundle/powerline/fontpatches/README.rst provides more information.
 If you use Droid Sans Mono as your font, a patched version of the font is
 available here:
-  https://github.com/jszakmeister/etc/blob/master/fonts/DroidSansMonoSlashed-Powerline.ttf
+https://github.com/jszakmeister/etc/blob/master/fonts/DroidSansMonoSlashed-Powerline.ttf
 
 You can also use the following block on Linux and Mac OS X to help detect the
 font and use it: >
@@ -1741,7 +1792,8 @@ index a6f3428..3c91f56 100644
                 " Hex array
                 call map(arg, 'nr2char(v:val)')
 
-Version 2012-08-17 from https://github.com/Lokaltog/vim-powerline
+Version 2012-08-17 from:
+https://github.com/Lokaltog/vim-powerline
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1758,7 +1810,8 @@ Local customizations:
   CTRL-q CTRL-p   - toggles the project window on and off.
   CTRL-q P        - toggles the project window on and off.
 
-Version 1.4.1 from http://www.vim.org/scripts/script.php?script_id=69
+Version 1.4.1 from:
+http://www.vim.org/scripts/script.php?script_id=69
 
 Installation:
 - Unzip in ~/.vim/
@@ -1768,9 +1821,11 @@ Installation:
 PYTHON                                                  *notes_python*
   Python Syntax file with folding
 
-Version 3.3.5 (69f8e12a) from https://github.com/hdima/python-syntax
+Version 3.3.5 (69f8e12a) from:
+https://github.com/hdima/python-syntax
 
-(Also found here: http://www.vim.org/scripts/script.php?script_id=790)
+Also found here:
+http://www.vim.org/scripts/script.php?script_id=790
 
 Maintained by Dmitry Vasiliev.
 
@@ -1797,7 +1852,8 @@ PYTHONCOMPLETE                                          *notes_pythoncomplete*
 Although this is distributed with Vim, it lags behind in the official
 distribution.
 
-Version 0.9 from http://www.vim.org/scripts/script.php?script_id=1542
+Version 0.9 from:
+http://www.vim.org/scripts/script.php?script_id=1542
 
 Installation:
 - Install as ~/.vim/autoload/pythoncomplete.vim
@@ -1806,11 +1862,11 @@ Installation:
 QUICKFIX-REFLECTOR                                      *notes_quickfix-reflector*
   Edit QuickFix and save changes                        |quickfix-reflector.txt|
 
-Version 2015-04-29 (16ea660a) from
-git@github.com:drmikehenry/quickfix-reflector.vim.git (branch undojoin).
+Version 2015-04-29 (16ea660a) from:
+https://github.com/drmikehenry/quickfix-reflector.vim.git (branch undojoin).
 
-Forked from version (3958eff4) of
-git@github.com:stefandtw/quickfix-reflector.vim.git
+Forked from version (3958eff4) of:
+https://github.com/stefandtw/quickfix-reflector.vim.git
 
 Perform a search that populates the QuickFix list, then edit the contents of
 the QuickFix list itself.  Delete any lines you don't want to be modified,
@@ -1862,7 +1918,7 @@ Local customizations:
   take advantage of a 256-color terminal, if available.
 
 Version 2013-03-04 (eb8baa54) from:
-  git://github.com/kien/rainbow_parentheses.vim
+https://github.com/kien/rainbow_parentheses.vim
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1874,7 +1930,8 @@ REPEAT                                                  *notes_repeat*
 Plugins need to support this feature explicitly (such as the
 surround plugin).
 
-Version 1.1 (a81bef76) from https://github.com/tpope/vim-repeat
+Version 1.1 (a81bef76) from:
+https://github.com/tpope/vim-repeat
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1903,7 +1960,8 @@ like: >
           :injections [(require 'spyscope.core)
                        (require '[redl complete core])]}}
 <
-Version 2014-01-20 (a5f13665) from git://github.com/dgrnbrg/vim-redl.git
+Version 2014-01-20 (a5f13665) from:
+https://github.com/dgrnbrg/vim-redl.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1912,7 +1970,8 @@ Installation:
 RUNVIEW                                                 *notes_runview*
   Run lines through filter into buffer                  |RunView|
 
-Version 1e from http://mysite.verizon.net/astronaut/vim/#RUNVIEW
+Version 1e from:
+http://mysite.verizon.net/astronaut/vim/#RUNVIEW
 
 Installation:
 - Distributed as a |vimball|  >
@@ -1953,7 +2012,8 @@ Usage:
                 It's so handy, in fact, that it probably deserves its own
                 plugin.
 
-Version 1.0 (47872691) from git://github.com/tpope/vim-scriptease.git
+Version 1.0 (47872691) from:
+https://github.com/tpope/vim-scriptease.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1969,7 +2029,8 @@ Usage: >
   :PREVCOLOR  Move to alphabetically previous color
   :NEXTCOLOR  Move to alphabetically next color
 
-Version 2006-07-19 from http://www.vim.org/scripts/script.php?script_id=1488
+Version 2006-07-19 from:
+http://www.vim.org/scripts/script.php?script_id=1488
 
 Installation:
 - Copy ScrollColor.vim to ~/.vim/plugin/ScrollColor.vim
@@ -1990,7 +2051,8 @@ to work around.)
 Pressing "." in insert mode will cause "self." to be inserted
 in cases where "." would be a syntax error in Python.
 
-Version 1.0.2 from http://www.vim.org/scripts/script.php?script_id=2911
+Version 1.0.2 from:
+http://www.vim.org/scripts/script.php?script_id=2911
 
 Installation:
 - Copy to ~/.vim/plugin
@@ -1999,7 +2061,8 @@ Installation:
 SESSION                                                 *notes_session*
   Provides better session management                    |session.txt|
 
-Version 2.13 from https://github.com/xolox/vim-session
+Version 2.13 from:
+https://github.com/xolox/vim-session
 
 Note: this plugin requires the misc plugin.
 
@@ -2031,7 +2094,8 @@ Apart from the above, you can also:
 - Display multiple marks (up to 2, limited by the signs feature)
 - Placing custom signs !@#$%^&*() as visual markers
 
-Version 2016-02-21 (8b7b4004) from git://github.com/kshenoy/vim-signature.git
+Version 2016-02-21 (8b7b4004) from:
+https://github.com/kshenoy/vim-signature.git
 
 Local Customizations:
 - Mark placement is "forced", which means the toggling feature is disabled.
@@ -2078,7 +2142,9 @@ Nxmap   <Space>S        <Plug>Sneak_S
 omap    <Space>s        <Plug>(SneakStreak)
 omap    <Space>S        <Plug>(SneakStreakBackward)
 
-Version 2015-04-28 (0f033073) from git://github.com/justinmk/vim-sneak.git
+Version 2015-04-28 (0f033073) from:
+https://github.com/justinmk/vim-sneak.git
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
@@ -2094,7 +2160,8 @@ the following to your user vimrc configuration: >
 
    call pathogen#surround(expand('$VIMFILES/optional-bundle/snippets'))
 <
-Version 2014-06-19 (fa45583c) from git://github.com/honza/vim-snippets.git
+Version 2014-06-19 (fa45583c) from:
+https://github.com/honza/vim-snippets.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2113,7 +2180,8 @@ Usage (An asterisk (*) is used to denote the cursor position):
 
 See |surround.txt| for more complete examples and documentation.
 
-Version 2014-07-26 (fa433e0) from https://github.com/tpope/vim-surround
+Version 2014-07-26 (fa433e0) from:
+https://github.com/tpope/vim-surround
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2127,7 +2195,8 @@ editor for Subversion's command-line interface.  When editing a
 commit log message, the Subversion diffs will be displayed in a
 separate window.
 
-Version 0.5 from http://www.vim.org/scripts/script.php?script_id=978
+Version 0.5 from:
+http://www.vim.org/scripts/script.php?script_id=978
 
 Note: Named svn-diff.vim in the index, but svn.vim is the new name.
 
@@ -2145,7 +2214,8 @@ Works in Normal and Visual mode.
 
 E.g., with cursor on "true" pressing CTRL-a changes the word to "false".
 
-Version 0.3.2 from http://www.vim.org/scripts/script.php?script_id=2294
+Version 0.3.2 from:
+http://www.vim.org/scripts/script.php?script_id=2294
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2344,7 +2414,8 @@ content:
       SyntasticBufferSetup strict
   endif
 
-Version 2015-03-19 (ebadf9af) from git://github.com/scrooloose/syntastic.git
+Version 2015-03-19 (ebadf9af) from:
+https://github.com/scrooloose/syntastic.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2358,7 +2429,8 @@ Local customizations:
   CTRL-q CTRL-t - toggle the tagbar (:TagbarToggle)
   CTRL-q T      - toggle the tagbar (:TagbarToggle)
 
-Version 2014-02-14 (614b5b24) from https://github.com/majutsushi/tagbar
+Version 2014-02-14 (614b5b24) from:
+https://github.com/majutsushi/tagbar
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2382,7 +2454,8 @@ TAGSIGNATURE                                            *notes_tagsignature*
 Displays the signature of a tag when you hover the mouse over that tag.
 Requires a tags file.
 
-Version r714 from http://www.vim.org/scripts/script.php?script_id=2714
+Version r714 from:
+http://www.vim.org/scripts/script.php?script_id=2714
 
 Installation:
 - Copy to ~/.vim/plugin/tag_signature.vim
@@ -2415,7 +2488,8 @@ Local customizations:
 Blank lines are not commented, and the <c-_> and <Leader>_ mappings are turned
 off.  'gc' will do what you want most of the time.
 
-Version 2013-01-06 (b18839a7) from git://github.com/tomtom/tcomment_vim.git
+Version 2013-01-06 (b18839a7) from:
+https://github.com/tomtom/tcomment_vim.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2435,7 +2509,8 @@ entire hunk.  So 'vadh' and 'vidh' both select the entire hunk.
 Supports navigating between files and hunks with some movement mappings.  File
 mappings move based on diff or index lines.  Hunks look for '@@'.
 
-Version 0.0.2 (822ae0a1) from git://github.com/kana/vim-textobj-diff.git
+Version 0.0.2 (822ae0a1) from:
+https://github.com/kana/vim-textobj-diff.git
 
 Local customizations:
 
@@ -2461,7 +2536,8 @@ Use "f" for text objects based on functions.
 
 To add more language support, see |textobj-function-customizing|.
 
-Version 0.4.0 (adb50f38) from git://github.com/kana/vim-textobj-function.git
+Version 0.4.0 (adb50f38) from:
+https://github.com/kana/vim-textobj-function.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2477,7 +2553,8 @@ Use "i" for text objects based on indentation.
 E.g., to select block:
     vii
 
-Version 0.0.5 (a17bd544) from git://github.com/kana/vim-textobj-indent.git
+Version 0.0.5 (a17bd544) from:
+https://github.com/kana/vim-textobj-indent.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2495,8 +2572,8 @@ Use "rs" for text objects based on sections.
 E.g., to select the contents of a section:
     virs
 
-Version 0.2.0 (72c511b7) from
-git://github.com/jszakmeister/vim-textobj-rst.git
+Version 0.2.0 (72c511b7) from:
+https://github.com/jszakmeister/vim-textobj-rst.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2508,7 +2585,8 @@ TEXTOBJ-USER                                            *notes_textobj-user*
 Library to support construction of user-defined text objects; by itself,
 library is not terribly useful.  Enables things like |textobj-indent|.
 
-Version 0.6.2 (96aeac30) from git://github.com/kana/vim-textobj-user.git
+Version 0.6.2 (96aeac30) from:
+https://github.com/kana/vim-textobj-user.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2523,8 +2601,8 @@ Xterm is partially supported as well (it will use an underline versus a line
 cursor by default).  This technique also works with tmux, although you may
 need version 1.7 or better.
 
-Version 0.5.0 (79b6ad85) from
-git://github.com/jszakmeister/vim-togglecursor.git
+Version 0.5.0 (79b6ad85) from:
+https://github.com/jszakmeister/vim-togglecursor.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2543,7 +2621,8 @@ To run from within Vim: >
   vim ~/.vim/test/test_vimrc.vim
   :UnitTest
 
-Version 2012-04-02 (92778771) from git://github.com/h1mesuke/vim-unittest
+Version 2012-04-02 (92778771) from:
+https://github.com/h1mesuke/vim-unittest
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2620,7 +2699,8 @@ To disable UltiSnips entirely, set the below variable before vimrc runs: >
 This is useful for forks of Vim that don't support Python bindings (e.g.,
 NeoVim).
 
-Version 2015-03-05 (1971030b) from git://github.com/SirVer/ultisnips.git
+Version 2015-03-05 (1971030b) from:
+https://github.com/SirVer/ultisnips.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2655,11 +2735,11 @@ Maps work on file associated with current buffer
 The ex commands allow additional parameters which are generally passed to
 the underlying source control system.
 
-Version 2c1dc008d4eeb7204f01c01f71cb8a01c066e9d0
-from git://github.com/drmikehenry/vcscommand.vim.git
+Version 2c1dc008d4eeb7204f01c01f71cb8a01c066e9d0 from:
+https://github.com/drmikehenry/vcscommand.vim.git
 
-(Originally version 1.99.46
-from http://www.vim.org/scripts/script.php?script_id=90)
+Originally version 1.99.46 from:
+http://www.vim.org/scripts/script.php?script_id=90
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2668,7 +2748,8 @@ Installation:
 VIMBALL                                                 *notes_vimball*
   "Package manager" for supporting .vba VimBalls        |vimball|
 
-Version 26 from http://vim.sourceforge.net/scripts/script.php?script_id=1502
+Version 26 from:
+http://vim.sourceforge.net/scripts/script.php?script_id=1502
 
 Installation:
 - Untar in ~/.vim/
@@ -2726,7 +2807,7 @@ Installation:
     :so %
     :q
 
-Version 20a from section "Visual Block Commands" at
+Version 20a from section "Visual Block Commands" at:
 http://mysite.verizon.net/astronaut/vim/index.html
 
 ------------------------------------------------------------------------------
@@ -2771,7 +2852,7 @@ Installation:
     :so %
     :q
 
-Version 20b from section "Visual Incrementing" at
+Version 20b from section "Visual Incrementing" at:
 http://mysite.verizon.net/astronaut/vim/index.html
 
 ------------------------------------------------------------------------------
@@ -2809,7 +2890,7 @@ Installation:
     :so %
     :q
 
-Version 4c from section "Visual Block Sorting" at
+Version 4c from section "Visual Block Sorting" at:
 http://mysite.verizon.net/astronaut/vim/index.html
 
 ------------------------------------------------------------------------------
@@ -2829,14 +2910,15 @@ Installation:
     :so %
     :q
 
-Version 4e from section "Visual Mode Based Swap" at
+Version 4e from section "Visual Mode Based Swap" at:
 http://mysite.verizon.net/astronaut/vim/index.html
 
 ------------------------------------------------------------------------------
 WOMBAT256I                                              *notes_wombat256i*
   A dark colorscheme
 
-Version 2013-08-04 (f99475e) from git://github.com/dsolstad/vim-wombat256i.git
+Version 2013-08-04 (f99475e) from:
+https://github.com/dsolstad/vim-wombat256i.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2848,7 +2930,8 @@ Installation:
 C ADDITIONS                                             *notes_c_additions*
   Extra syntax highlighting for C
 
-Taken from: http://www.vim.org/scripts/script.php?script_id=3064.
+Taken from:
+http://www.vim.org/scripts/script.php?script_id=3064
 
 Installation:
 - Download the new syntax file from the above url.
@@ -2858,8 +2941,8 @@ Installation:
 PYTHON INDENTATION SUPPORT                              *notes_python_indent*
   Improved Python indentation support
 
-Version 2015-03-03 (e66de53b) from
-git://github.com/hynek/vim-python-pep8-indent.git
+Version 2015-03-03 (e66de53b) from:
+https://github.com/hynek/vim-python-pep8-indent.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
