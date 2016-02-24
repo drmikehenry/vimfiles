@@ -12,5 +12,19 @@ endfunction
 command! -bar SetupMake call CustomSetupMake()
 
 
-" Override bufmru mapping to something more useful.
-Noxmap  <Space><Space>            <Plug>(easymotion-s)
+Noxmap Y  y$
+
+Noxmap   <Space>jj          <Plug>(easymotion-s)
+Noxmap   <Space>jJ          <Plug>(easymotion-s2)
+Noxmap   <Space>jl          <Plug>(easymotion-sol-bd-jk)
+
+nnoremap <Space>bb          :<C-u>CtrlPBuffer<CR>
+nnoremap <Space>bd          :BW<CR>
+
+nnoremap <Space>wc          <C-w>c
+nnoremap <Space>ww          <C-w>w
+
+nnoremap <Space>ff          :<C-u>CtrlPCurFile<CR>
+nnoremap <Space>pf          :<C-u>CtrlPRoot<CR>
+
+Noxmap   <Space>xdw         :StripTrailingWhitespace<CR>
