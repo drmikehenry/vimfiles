@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-02-24
+==========
+
+- Update quickfix-reflector plugin to version 2015-11-21.  This fixes an issue
+  with modifying long lines in the QuickFix window (around 181 characters long).
+
 2016-02-23
 ==========
 

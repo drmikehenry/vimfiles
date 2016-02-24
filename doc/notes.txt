@@ -1862,10 +1862,7 @@ Installation:
 QUICKFIX-REFLECTOR                                      *notes_quickfix-reflector*
   Edit QuickFix and save changes                        |quickfix-reflector.txt|
 
-Version 2015-04-29 (16ea660a) from:
-https://github.com/drmikehenry/quickfix-reflector.vim.git (branch undojoin).
-
-Forked from version (3958eff4) of:
+Version 2015-11-21 (410e551) from:
 https://github.com/stefandtw/quickfix-reflector.vim.git
 
 Perform a search that populates the QuickFix list, then edit the contents of

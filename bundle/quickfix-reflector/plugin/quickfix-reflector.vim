@@ -3,11 +3,15 @@ let s:originalCpo = &cpo
 set cpo&vim
 
 if !exists("g:qf_modifiable")
-  let g:qf_modifiable=1
+  let g:qf_modifiable = 1
 endif
 
 if !exists("g:qf_join_changes")
   let g:qf_join_changes = 0
+endif
+
+if !exists("g:qf_write_changes")
+  let g:qf_write_changes = 1
 endif
 
 let s:regexpEngine = '\%#=1'
@@ -18,14 +22,19 @@ endif
 augroup quickfix_reflector
 	autocmd!
 	autocmd BufReadPost quickfix nested :call <SID>OnQuickfixInit()
-	autocmd BufWriteCmd quickfix-reflector-* :call <SID>OnWrite()
 augroup END
 
 function! s:OnQuickfixInit()
+	if &filetype !=# 'qf' || !&write
+		return
+	endif
+	execute 'augroup quickfix_reflector_' . bufnr('%')
+		autocmd!
+		execute 'autocmd BufWriteCmd quickfix-' . bufnr('%') . ' :call <SID>OnWrite()'
+	augroup END
 	" Set a file name for the buffer. This makes it possible to write the
 	" buffer using :w, :x and other built-in commands.
-	execute 'write! quickfix-reflector-' .  bufnr('%')
-
+	execute 'write! quickfix-' .  bufnr('%')
 	call s:PrepareBuffer()
 endfunction
 
@@ -81,7 +90,7 @@ function! s:OnWrite()
 			let change = {}
 			let change.qfEntry = entry
 			let changeMatchList = matchlist(getline(lineNumberForChange), entry.markerPatternForChanges)
-			let change.originalFromQf = qfDescriptionTrimmed
+			let change.originalFromQf = qfDescriptionTrimmed . matchList[2]
 			let change.replacementFromQf = changeMatchList[2]
 			call add(changes, change)
 		endif
@@ -150,15 +159,20 @@ function! s:Replace(changes)
 				undojoin
 			endif
 			execute change.qfEntry.lnum . 'snomagic/\V' . commonInQfAndFile . '/' . commonInQfAndFile_replacement . '/'
-			write
+			if g:qf_write_changes == 1
+				write
+			endif
 			let change.qfEntry.text = change.replacementFromQf
 			let successfulChanges += 1
 			let bufferHasChanged[change.qfEntry.bufnr] = 1
 		else
 			let change.qfEntry.text = substitute(change.qfEntry.text, '^\v(\[ERROR\])?', '[ERROR]', '')
 		endif
-		tabclose
-		if !bufferWasListed
+		if !bufferWasListed && g:qf_write_changes == 0
+			set buflisted
+		endif
+		tabclose!
+		if !bufferWasListed && g:qf_write_changes == 1
 			execute 'silent! bdelete ' . change.qfEntry.bufnr
 		endif
 	endfor

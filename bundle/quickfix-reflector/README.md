@@ -32,10 +32,24 @@ Options
 =======
 
 ```
-let g:qf_modifiable=1
+let g:qf_modifiable = 1
 ```
 If 1, automatically sets quickfix buffers 'modifiable'. If you prefer to do
 this manually, set the value to 0. Default: 1.
+
+```
+let g:qf_join_changes = 1
+```
+If 1, changes within a single buffer will be joined using |:undojoin|, allowing
+them to be undone as a unit.  Default: 0.
+
+```
+let g:qf_write_changes = 1
+```
+If 1, writing the quickfix buffer will also write corresponding files. If 0,
+buffers of corresponding files will be changed but not written, allowing you
+to preview the changes before writing the individual buffers yourself.
+Default: 1
 
 
 Links

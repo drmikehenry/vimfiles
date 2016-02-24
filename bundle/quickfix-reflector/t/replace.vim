@@ -2,8 +2,6 @@ source plugin/quickfix-reflector.vim
 
 describe 'changing quickfix entries'
 	before
-		set noundofile
-		let g:qf_join_changes = 0
 	end
 
 	after
@@ -311,6 +309,51 @@ describe 'changing quickfix entries'
 		call delete(tmpFile1)
 		call delete(tmpFile2)
 	end
+
+	it 'does not write their buffers if option is set'
+		let g:qf_write_changes = 0
+		let tmpFile = CreateTmpFile('t/3-lines.txt')
+		execute 'vimgrep /^/j ' . tmpFile
+		copen
+		1substitute/line 1/Line 1 word/
+		write
+		execute "normal! \<CR>"
+		Expect expand('%:p') ==# tmpFile
+		Expect getline(1) ==# 'Line 1 word'
+		Expect &modified == 1
+		bdelete!
+		execute 'edit ' . tmpFile
+		Expect expand('%:p') ==# tmpFile
+		Expect getline(1) ==# 'line 1'
+		call delete(tmpFile)
+	end
+
+  it 'works for problematic lines'
+		vimgrep /^/ t/problematic-lines.txt
+		let originalLength = len(getline(1))
+		copen
+		normal AHello
+		write
+		execute "normal! \<CR>"
+		Expect getline(1) =~# '\v^.+Hello.+$'
+		Expect getline(1) =~# '\v^.{' . (originalLength + len('Hello')) . '}$'
+	end 
+
+  it 'does not remove space at the start of the line'
+		vimgrep /^/ t/lines-with-space.txt
+		let original1 = getline(1)
+		let original2 = getline(2)
+		let original3 = getline(3)
+		copen
+		normal A:)
+		normal jA:)
+		normal jA:)
+		write
+		execute "normal! \<CR>"
+		Expect getline(1) == original1 . ':)'
+		Expect getline(2) == original2 . ':)'
+		Expect getline(3) == original3 . ':)'
+	end 
 
 	function! CreateTmpFile(source)
 		let tmpFile = tempname()
