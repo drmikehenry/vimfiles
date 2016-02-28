@@ -40,13 +40,21 @@ and |g:tcommentMapLeaderOp2|):
     gc<Count>c{motion} :: Toggle comment text with count argument 
                     (see |tcomment#Comment()|)
     gcc          :: Toggle comment for the current line
-    gC{motion}   :: Comment region
-    gCc          :: Comment the current line
+
+Explicit commenting/uncommenting:
+
+    g<{motion}   :: Uncomment region
+    g<c          :: Uncomment the current line
+    g<b          :: Uncomment the current region as block
+
+    g>{motion}   :: Comment region
+    g>c          :: Comment the current line
+    g>b          :: Comment the current region as block
 
 In visual mode:
 
     gc           :: Toggle comments
-    gC           :: Comment selected text
+    g>           :: Comment selected text
 
 CAVEAT: If you visually select text within a line, the visual mode map will 
 comment out the selected text. If you selected text across several lines, the 
@@ -63,23 +71,33 @@ Primary key maps for normal and insert mode:
     <c-_><c-_>   :: :TComment
     <c-_><space> :: :TComment <QUERY COMMENT-BEGIN ?COMMENT-END>
     <c-_>b       :: :TCommentBlock
+                    In insert mode, the cursor will be positioned inside 
+                    the comment. In normal mode, the cursor will stay 
+                    put.
     <c-_>a       :: :TCommentAs <QUERY COMMENT TYPE>
     <c-_>n       :: :TCommentAs &filetype <QUERY COUNT>
     <c-_>s       :: :TCommentAs &filetype_<QUERY COMMENT SUBTYPE>
     <c-_>i       :: :TCommentInline (in normal and insert mode, this map will 
                     create an empty inline comment, which isn't suitable for 
                     all filetypes though)
+                    In insert mode, the cursor will be positioned inside 
+                    the comment. In normal mode, the cursor will stay 
+                    put.
     <c-_>r       :: :TCommentRight
     <c-_>p       :: Comment the current inner paragraph
-    <c-_><Count> :: :TComment with count argument (a number from 1 to 9)
-                    (see |tcomment#Comment()|)
+    <c-_><Count> :: Set the count argument (a number from 1 to 9) for use with 
+                    the subsequent tcomment map/command (see 
+                    |tcomment#Comment()|)
+                    E.g. in JavaScript, in order to get an empty /** */ 
+                    comment for documentation purposes, in insert mode type 
+                    <c-_>2<c-_>i
+                    In order to get an empty block comment like >
+                      /**
+                       *
+                       */
+<                   type <c-_>2<c-_>b
 
-Primary key maps for visual mode:
-
-    <c-_><c-_>   :: :TComment
-    <c-_>i       :: :TCommentInline
-    <c-_><Count> :: :TComment with count argument (a number from 1 to 9)
-                    (see |tcomment#Comment()|)
+Most of the above maps are also available in visual mode.
 
 A secondary set of key maps is defined for normal and insert mode:
 
@@ -114,50 +132,102 @@ please make sure, you have the current version of vimball (vimscript
 ========================================================================
 Contents~
 
-        g:tcommentMaps ...................... |g:tcommentMaps|
-        g:tcommentMapLeader1 ................ |g:tcommentMapLeader1|
-        g:tcommentMapLeader2 ................ |g:tcommentMapLeader2|
-        g:tcommentMapLeaderOp1 .............. |g:tcommentMapLeaderOp1|
-        g:tcommentMapLeaderOp2 .............. |g:tcommentMapLeaderOp2|
-        :TComment ........................... |:TComment|
-        :TCommentAs ......................... |:TCommentAs|
-        :TCommentRight ...................... |:TCommentRight|
-        :TCommentBlock ...................... |:TCommentBlock|
-        :TCommentInline ..................... |:TCommentInline|
-        :TCommentMaybeInline ................ |:TCommentMaybeInline|
-        g:tcommentBlankLines ................ |g:tcommentBlankLines|
-        g:tcommentModeExtra ................. |g:tcommentModeExtra|
-        g:tcommentOpModeExtra ............... |g:tcommentOpModeExtra|
-        g:tcommentOptions ................... |g:tcommentOptions|
-        g:tcomment#ignore_char_type ......... |g:tcomment#ignore_char_type|
-        g:tcommentGuessFileType ............. |g:tcommentGuessFileType|
-        g:tcommentGuessFileType_dsl ......... |g:tcommentGuessFileType_dsl|
-        g:tcommentGuessFileType_php ......... |g:tcommentGuessFileType_php|
-        g:tcommentGuessFileType_html ........ |g:tcommentGuessFileType_html|
-        g:tcommentGuessFileType_tskeleton ... |g:tcommentGuessFileType_tskeleton|
-        g:tcommentGuessFileType_vim ......... |g:tcommentGuessFileType_vim|
-        g:tcommentGuessFileType_django ...... |g:tcommentGuessFileType_django|
-        g:tcommentGuessFileType_eruby ....... |g:tcommentGuessFileType_eruby|
-        g:tcommentGuessFileType_smarty ...... |g:tcommentGuessFileType_smarty|
-        g:tcommentIgnoreTypes_php ........... |g:tcommentIgnoreTypes_php|
-        g:tcomment#syntax_substitute ........ |g:tcomment#syntax_substitute|
-        g:tcommentSyntaxMap ................. |g:tcommentSyntaxMap|
-        g:tcomment#replacements_c ........... |g:tcomment#replacements_c|
-        g:tcommentBlockC .................... |g:tcommentBlockC|
-        g:tcommentBlockC2 ................... |g:tcommentBlockC2|
-        g:tcommentInlineC ................... |g:tcommentInlineC|
-        g:tcommentBlockXML .................. |g:tcommentBlockXML|
-        g:tcommentInlineXML ................. |g:tcommentInlineXML|
-        tcomment#DefineType ................. |tcomment#DefineType()|
-        g:tcomment_types .................... |g:tcomment_types|
-        tcomment#Comment .................... |tcomment#Comment()|
-        tcomment#SetOption .................. |tcomment#SetOption()|
-        tcomment#Operator ................... |tcomment#Operator()|
-        tcomment#OperatorLine ............... |tcomment#OperatorLine()|
-        tcomment#OperatorAnyway ............. |tcomment#OperatorAnyway()|
-        tcomment#OperatorLineAnyway ......... |tcomment#OperatorLineAnyway()|
-        tcomment#CommentAs .................. |tcomment#CommentAs()|
-        tcomment#GuessCommentType ........... |tcomment#GuessCommentType()|
+        g:tcommentMaps ................................ |g:tcommentMaps|
+        g:tcommentMapLeader1 .......................... |g:tcommentMapLeader1|
+        g:tcommentMapLeader2 .......................... |g:tcommentMapLeader2|
+        g:tcommentMapLeaderOp1 ........................ |g:tcommentMapLeaderOp1|
+        g:tcommentMapLeaderUncommentAnyway ............ |g:tcommentMapLeaderUncommentAnyway|
+        g:tcommentMapLeaderCommentAnyway .............. |g:tcommentMapLeaderCommentAnyway|
+        g:tcommentTextObjectInlineComment ............. |g:tcommentTextObjectInlineComment|
+        :TComment ..................................... |:TComment|
+        :TCommentAs ................................... |:TCommentAs|
+        :TCommentRight ................................ |:TCommentRight|
+        :TCommentBlock ................................ |:TCommentBlock|
+        :TCommentInline ............................... |:TCommentInline|
+        :TCommentMaybeInline .......................... |:TCommentMaybeInline|
+        <Plug>TComment_<c-_><c-_> ..................... |<Plug>TComment_<c-_><c-_>|
+        v_<Plug>TComment_<c-_><c-_> ................... |v_<Plug>TComment_<c-_><c-_>|
+        i_<Plug>TComment_<c-_><c-_> ................... |i_<Plug>TComment_<c-_><c-_>|
+        <Plug>TComment_<c-_>p ......................... |<Plug>TComment_<c-_>p|
+        i_<Plug>TComment_<c-_>p ....................... |i_<Plug>TComment_<c-_>p|
+        <Plug>TComment_<c-_><space> ................... |<Plug>TComment_<c-_><space>|
+        i_<Plug>TComment_<c-_><space> ................. |i_<Plug>TComment_<c-_><space>|
+        i_<Plug>TComment_<c-_>r ....................... |i_<Plug>TComment_<c-_>r|
+        <Plug>TComment_<c-_>r ......................... |<Plug>TComment_<c-_>r|
+        v_<Plug>TComment_<c-_>i ....................... |v_<Plug>TComment_<c-_>i|
+        <Plug>TComment_<c-_>i ......................... |<Plug>TComment_<c-_>i|
+        i_<Plug>TComment_<c-_>i ....................... |i_<Plug>TComment_<c-_>i|
+        <Plug>TComment_<c-_>b ......................... |<Plug>TComment_<c-_>b|
+        i_<Plug>TComment_<c-_>b ....................... |i_<Plug>TComment_<c-_>b|
+        <Plug>TComment_<c-_>a ......................... |<Plug>TComment_<c-_>a|
+        i_<Plug>TComment_<c-_>a ....................... |i_<Plug>TComment_<c-_>a|
+        <Plug>TComment_<c-_>n ......................... |<Plug>TComment_<c-_>n|
+        i_<Plug>TComment_<c-_>n ....................... |i_<Plug>TComment_<c-_>n|
+        <Plug>TComment_<c-_>s ......................... |<Plug>TComment_<c-_>s|
+        i_<Plug>TComment_<c-_>s ....................... |i_<Plug>TComment_<c-_>s|
+        <Plug>TComment_<c-_>cc ........................ |<Plug>TComment_<c-_>cc|
+        <Plug>TComment_<c-_>ca ........................ |<Plug>TComment_<c-_>ca|
+        <Plug>TComment_<Leader>__ ..................... |<Plug>TComment_<Leader>__|
+        x_<Plug>TComment_<Leader>__ ................... |x_<Plug>TComment_<Leader>__|
+        <Plug>TComment_<Leader>_p ..................... |<Plug>TComment_<Leader>_p|
+        <Plug>TComment_<Leader>_<space> ............... |<Plug>TComment_<Leader>_<space>|
+        x_<Plug>TComment_<Leader>_i ................... |x_<Plug>TComment_<Leader>_i|
+        <Plug>TComment_<Leader>_r ..................... |<Plug>TComment_<Leader>_r|
+        <Plug>TComment_<Leader>_b ..................... |<Plug>TComment_<Leader>_b|
+        <Plug>TComment_<Leader>_a ..................... |<Plug>TComment_<Leader>_a|
+        <Plug>TComment_<Leader>_n ..................... |<Plug>TComment_<Leader>_n|
+        <Plug>TComment_<Leader>_s ..................... |<Plug>TComment_<Leader>_s|
+        x_<Plug>TComment_Uncomment .................... |x_<Plug>TComment_Uncomment|
+        x_<Plug>TComment_Comment ...................... |x_<Plug>TComment_Comment|
+        v_<Plug>TComment_ic ........................... |v_<Plug>TComment_ic|
+        <Plug>TComment_ic ............................. |<Plug>TComment_ic|
+        x_<Plug>TComment_gc ........................... |x_<Plug>TComment_gc|
+        g:tcomment#blank_lines ........................ |g:tcomment#blank_lines|
+        g:tcomment#rstrip_on_uncomment ................ |g:tcomment#rstrip_on_uncomment|
+        g:tcommentModeExtra ........................... |g:tcommentModeExtra|
+        g:tcommentOpModeExtra ......................... |g:tcommentOpModeExtra|
+        g:tcommentOptions ............................. |g:tcommentOptions|
+        g:tcomment#options_comments ................... |g:tcomment#options_comments|
+        g:tcomment#options_commentstring .............. |g:tcomment#options_commentstring|
+        g:tcomment#ignore_char_type ................... |g:tcomment#ignore_char_type|
+        g:tcommentGuessFileType ....................... |g:tcommentGuessFileType|
+        g:tcommentGuessFileType_dsl ................... |g:tcommentGuessFileType_dsl|
+        g:tcommentGuessFileType_php ................... |g:tcommentGuessFileType_php|
+        g:tcommentGuessFileType_blade ................. |g:tcommentGuessFileType_blade|
+        g:tcommentGuessFileType_html .................. |g:tcommentGuessFileType_html|
+        g:tcommentGuessFileType_tskeleton ............. |g:tcommentGuessFileType_tskeleton|
+        g:tcommentGuessFileType_vim ................... |g:tcommentGuessFileType_vim|
+        g:tcommentGuessFileType_django ................ |g:tcommentGuessFileType_django|
+        g:tcommentGuessFileType_eruby ................. |g:tcommentGuessFileType_eruby|
+        g:tcommentGuessFileType_jinja ................. |g:tcommentGuessFileType_jinja|
+        g:tcommentGuessFileType_smarty ................ |g:tcommentGuessFileType_smarty|
+        g:tcommentGuessFileType_rnoweb ................ |g:tcommentGuessFileType_rnoweb|
+        g:tcommentIgnoreTypes_php ..................... |g:tcommentIgnoreTypes_php|
+        g:tcomment#syntax_substitute .................. |g:tcomment#syntax_substitute|
+        g:tcommentSyntaxMap ........................... |g:tcommentSyntaxMap|
+        g:tcomment#replacements_c ..................... |g:tcomment#replacements_c|
+        tcomment#GetLineC ............................. |tcomment#GetLineC()|
+        g:tcommentInlineC ............................. |g:tcommentInlineC|
+        g:tcommentBlockC2 ............................. |g:tcommentBlockC2|
+        g:tcomment#replacements_xml ................... |g:tcomment#replacements_xml|
+        g:tcommentBlockXML ............................ |g:tcommentBlockXML|
+        g:tcommentInlineXML ........................... |g:tcommentInlineXML|
+        g:tcomment#ignore_comment_def ................. |g:tcomment#ignore_comment_def|
+        g:tcomment#must_escape_expression_backslash ... |g:tcomment#must_escape_expression_backslash|
+        tcomment#DefineType ........................... |tcomment#DefineType()|
+        tcomment#GetCommentDef ........................ |tcomment#GetCommentDef()|
+        g:tcomment_types .............................. |g:tcomment_types|
+        tcomment#Comment .............................. |tcomment#Comment()|
+        tcomment#MaybeReuseOptions .................... |tcomment#MaybeReuseOptions()|
+        tcomment#ResetOption .......................... |tcomment#ResetOption()|
+        tcomment#SetOption ............................ |tcomment#SetOption()|
+        tcomment#Operator ............................. |tcomment#Operator()|
+        tcomment#OperatorLine ......................... |tcomment#OperatorLine()|
+        tcomment#OperatorAnyway ....................... |tcomment#OperatorAnyway()|
+        tcomment#OperatorLineAnyway ................... |tcomment#OperatorLineAnyway()|
+        tcomment#CommentAs ............................ |tcomment#CommentAs()|
+        tcomment#GuessCommentType ..................... |tcomment#GuessCommentType()|
+        tcomment#TextObjectInlineComment .............. |tcomment#TextObjectInlineComment()|
 
 
 ========================================================================
@@ -181,9 +251,16 @@ g:tcommentMapLeader2           (default: '<Leader>_')
 g:tcommentMapLeaderOp1         (default: 'gc')
     See |tcomment-operator|.
 
-                                                    *g:tcommentMapLeaderOp2*
-g:tcommentMapLeaderOp2         (default: 'gC')
+                                                    *g:tcommentMapLeaderUncommentAnyway*
+g:tcommentMapLeaderUncommentAnyway (default: 'g<')
     See |tcomment-operator|.
+
+                                                    *g:tcommentMapLeaderCommentAnyway*
+g:tcommentMapLeaderCommentAnyway (default: 'g>')
+    See |tcomment-operator|.
+
+                                                    *g:tcommentTextObjectInlineComment*
+g:tcommentTextObjectInlineComment (default: 'ic')
 
                                                     *:TComment*
 :[range]TComment[!] ?ARGS...
@@ -243,13 +320,131 @@ g:tcommentMapLeaderOp2         (default: 'gC')
       1. a list of key=value pairs
       2. 1-2 values for: ?commentBegin, ?commentEnd
 
+                                                    *<Plug>TComment_<c-_><c-_>*
+<Plug>TComment_<c-_><c-_> ... :TComment<cr>
+
+                                                    *v_<Plug>TComment_<c-_><c-_>*
+v_<Plug>TComment_<c-_><c-_> ... :TCommentMaybeInline<cr>
+
+                                                    *i_<Plug>TComment_<c-_><c-_>*
+i_<Plug>TComment_<c-_><c-_> ... <c-o>:TComment<cr>
+
+                                                    *<Plug>TComment_<c-_>p*
+<Plug>TComment_<c-_>p ... m`vip:TComment<cr>``
+
+                                                    *i_<Plug>TComment_<c-_>p*
+i_<Plug>TComment_<c-_>p ... <c-o>:norm! m`vip<cr>:TComment<cr><c-o>``
+
+                                                    *<Plug>TComment_<c-_><space>*
+<Plug>TComment_<c-_><space> ... :TComment
+
+                                                    *i_<Plug>TComment_<c-_><space>*
+i_<Plug>TComment_<c-_><space> ... <c-o>:TComment
+
+                                                    *i_<Plug>TComment_<c-_>r*
+i_<Plug>TComment_<c-_>r ... <c-o>:TCommentRight<cr>
+
+                                                    *<Plug>TComment_<c-_>r*
+<Plug>TComment_<c-_>r ... :TCommentRight<cr>
+
+                                                    *v_<Plug>TComment_<c-_>i*
+v_<Plug>TComment_<c-_>i ... :TCommentInline<cr>
+
+                                                    *<Plug>TComment_<c-_>i*
+<Plug>TComment_<c-_>i ... v:TCommentInline mode=I#<cr>
+
+                                                    *i_<Plug>TComment_<c-_>i*
+i_<Plug>TComment_<c-_>i ... <c-\><c-o>v:TCommentInline mode=#<cr>
+
+                                                    *<Plug>TComment_<c-_>b*
+<Plug>TComment_<c-_>b ... :TCommentBlock<cr>
+
+                                                    *i_<Plug>TComment_<c-_>b*
+i_<Plug>TComment_<c-_>b ... <c-\><c-o>:TCommentBlock mode=#<cr>
+
+                                                    *<Plug>TComment_<c-_>a*
+<Plug>TComment_<c-_>a ... :TCommentAs
+
+                                                    *i_<Plug>TComment_<c-_>a*
+i_<Plug>TComment_<c-_>a ... <c-o>:TCommentAs
+
+                                                    *<Plug>TComment_<c-_>n*
+<Plug>TComment_<c-_>n ... :TCommentAs <c-r>=&ft<cr>
+
+                                                    *i_<Plug>TComment_<c-_>n*
+i_<Plug>TComment_<c-_>n ... <c-o>:TCommentAs <c-r>=&ft<cr>
+
+                                                    *<Plug>TComment_<c-_>s*
+<Plug>TComment_<c-_>s ... :TCommentAs <c-r>=&ft<cr>_
+
+                                                    *i_<Plug>TComment_<c-_>s*
+i_<Plug>TComment_<c-_>s ... <c-o>:TCommentAs <c-r>=&ft<cr>_
+
+                                                    *<Plug>TComment_<c-_>cc*
+<Plug>TComment_<c-_>cc ... :<c-u>call tcomment#SetOption("count", v:count1)<cr>
+
+                                                    *<Plug>TComment_<c-_>ca*
+<Plug>TComment_<c-_>ca ... :<c-u>call tcomment#SetOption("as", input("Comment as: ", &filetype, "customlist,tcomment#Complete"))<cr>
+
+                                                    *<Plug>TComment_<Leader>__*
+<Plug>TComment_<Leader>__ ... :TComment<cr>
+
+                                                    *x_<Plug>TComment_<Leader>__*
+x_<Plug>TComment_<Leader>__ ... :TCommentMaybeInline<cr>
+
+                                                    *<Plug>TComment_<Leader>_p*
+<Plug>TComment_<Leader>_p ... vip:TComment<cr>
+
+                                                    *<Plug>TComment_<Leader>_<space>*
+<Plug>TComment_<Leader>_<space> ... :TComment
+
+                                                    *x_<Plug>TComment_<Leader>_i*
+x_<Plug>TComment_<Leader>_i ... :TCommentInline<cr>
+
+                                                    *<Plug>TComment_<Leader>_r*
+<Plug>TComment_<Leader>_r ... :TCommentRight<cr>
+
+                                                    *<Plug>TComment_<Leader>_b*
+<Plug>TComment_<Leader>_b ... :TCommentBlock<cr>
+
+                                                    *<Plug>TComment_<Leader>_a*
+<Plug>TComment_<Leader>_a ... :TCommentAs
+
+                                                    *<Plug>TComment_<Leader>_n*
+<Plug>TComment_<Leader>_n ... :TCommentAs <c-r>=&ft<cr>
+
+                                                    *<Plug>TComment_<Leader>_s*
+<Plug>TComment_<Leader>_s ... :TCommentAs <c-r>=&ft<cr>_
+
+                                                    *x_<Plug>TComment_Uncomment*
+x_<Plug>TComment_Uncomment ... :<c-u>if v:count > 0 \| call tcomment#SetOption("count", v:count) \| endif \| call tcomment#SetOption("mode_extra", "U") \| '<,'>TCommentMaybeInline<cr>
+
+                                                    *x_<Plug>TComment_Comment*
+x_<Plug>TComment_Comment ... :<c-u>if v:count > 0 \| call tcomment#SetOption("count", v:count) \| endif \| '<,'>TCommentMaybeInline!<cr>
+
+                                                    *v_<Plug>TComment_ic*
+v_<Plug>TComment_ic ... :<c-U>call tcomment#TextObjectInlineComment()<cr>
+
+                                                    *<Plug>TComment_ic*
+<Plug>TComment_ic ... :<c-U>call tcomment#TextObjectInlineComment()<cr>
+
+                                                    *x_<Plug>TComment_gc*
+x_<Plug>TComment_gc ... :TCommentMaybeInline<cr>
+
 
 ========================================================================
 autoload/tcomment.vim~
 
-                                                    *g:tcommentBlankLines*
-g:tcommentBlankLines           (default: 1)
-    If true, comment blank lines too
+                                                    *g:tcomment#blank_lines*
+g:tcomment#blank_lines         (default: 2)
+    If 1, comment blank lines too.
+    If 2, also comment blank lines within indented code blocks 
+    (requires mixedindent -- see |tcomment#Comment()|).
+
+                                                    *g:tcomment#rstrip_on_uncomment*
+g:tcomment#rstrip_on_uncomment (default: 1)
+    If 1, remove right-hand whitespace on uncomment from empty lines.
+    If 2, remove right-hand whitespace on uncomment from all lines.
 
                                                     *g:tcommentModeExtra*
 g:tcommentModeExtra            (default: '')
@@ -270,11 +465,25 @@ g:tcommentOpModeExtra          (default: '')
 g:tcommentOptions              (default: {})
     Other key-value options used by |tcomment#Comment()|.
 
-    Example: If you want to put the opening comment marker always in 
-    the first column regardless of the block's indentation, put this 
-    into your |vimrc| file: >
+    Examples:
+    Put the opening comment marker always in the first column 
+    regardless of the block's indentation, put this into your |vimrc| 
+    file: >
       let g:tcommentOptions = {'col': 1}
+
+<   Indent uncommented lines: >
+      let g:tcommentOptions = {'postprocess_uncomment': 'norm! %sgg=%sgg'}
 <
+
+                                                    *g:tcomment#options_comments*
+g:tcomment#options_comments    (default: {'whitespace': get(g:tcommentOptions, 'whitespace', 'both')})
+    Additional args for |tcomment#Comment()| when using the 'comments' 
+    option.
+
+                                                    *g:tcomment#options_commentstring*
+g:tcomment#options_commentstring (default: {'whitespace': get(g:tcommentOptions, 'whitespace', 'both')})
+    Additional args for |tcomment#Comment()| when using the 
+    'commentstring' option.
 
                                                     *g:tcomment#ignore_char_type*
 g:tcomment#ignore_char_type    (default: 1)
@@ -308,6 +517,10 @@ g:tcommentGuessFileType_php    (default: 'html')
     thus assume that the buffers default comment style isn't php but 
     html.
 
+                                                    *g:tcommentGuessFileType_blade*
+g:tcommentGuessFileType_blade  (default: 'html')
+    See |g:tcommentGuessFileType_php|.
+
                                                     *g:tcommentGuessFileType_html*
 g:tcommentGuessFileType_html   (default: 1)
 
@@ -323,8 +536,14 @@ g:tcommentGuessFileType_django (default: 1)
                                                     *g:tcommentGuessFileType_eruby*
 g:tcommentGuessFileType_eruby  (default: 1)
 
+                                                    *g:tcommentGuessFileType_jinja*
+g:tcommentGuessFileType_jinja  (default: 'html')
+
                                                     *g:tcommentGuessFileType_smarty*
 g:tcommentGuessFileType_smarty (default: 1)
+
+                                                    *g:tcommentGuessFileType_rnoweb*
+g:tcommentGuessFileType_rnoweb (default: 'r')
 
                                                     *g:tcommentIgnoreTypes_php*
 g:tcommentIgnoreTypes_php      (default: 'sql')
@@ -346,28 +565,53 @@ g:tcommentSyntaxMap            (default: {...})
 g:tcomment#replacements_c      (default: {...})
     Replacements for c filetype.
 
-                                                    *g:tcommentBlockC*
-g:tcommentBlockC               (default: {...})
-    Generic c-like block comments.
+                                                    *tcomment#GetLineC()*
+tcomment#GetLineC(...)
+
+                                                    *g:tcommentInlineC*
+g:tcommentInlineC              (default: {...})
+    Generic c-like comments.
 
                                                     *g:tcommentBlockC2*
 g:tcommentBlockC2              (default: {...})
     Generic c-like block comments (alternative markup).
 
-                                                    *g:tcommentInlineC*
-g:tcommentInlineC              (default: g:tcommentLineC)
-    Generic c-like comments.
+                                                    *g:tcomment#replacements_xml*
+g:tcomment#replacements_xml    (default: {...})
+    Replacements for xml filetype.
 
                                                     *g:tcommentBlockXML*
-g:tcommentBlockXML             (default: "<!--%s-->\n  ")
+g:tcommentBlockXML             (default: {...})
     Generic xml-like block comments.
 
                                                     *g:tcommentInlineXML*
-g:tcommentInlineXML            (default: "<!-- %s -->")
+g:tcommentInlineXML            (default: {...})
     Generic xml-like comments.
 
+                                                    *g:tcomment#ignore_comment_def*
+g:tcomment#ignore_comment_def  (default: [])
+    A list of names or filetypes, which should be ignored by 
+    |tcomment#DefineType()| -- no custom comment definition will be 
+    stored for these names.
+
+    This variable should be set before loading autoload/tcomment.vim.
+
+                                                    *g:tcomment#must_escape_expression_backslash*
+g:tcomment#must_escape_expression_backslash (default: 0)
+    Users of vim earlier than 7.3 might have to set this variable to 
+    true. Set this variable to 0, if you see unexpected "\r" char 
+    sequences in comments.
+
+    The reommended value was `!(v:version > 702 || (v:version == 702 && has('patch407')))`.
+    It is now assumed though, that no unpatched versions of vim are in 
+    use.
+
+    References:
+    Patch 7.2.407  when using :s with an expression backslashes are dropped
+    https://github.com/tomtom/tcomment_vim/issues/102
+
                                                     *tcomment#DefineType()*
-tcomment#DefineType(name, commentdef)
+tcomment#DefineType(name, commentdef, ?cdef={}, ?anyway=0)
     If you don't explicitly define a comment style, |:TComment| will use 
     'commentstring' instead. We override the default values here in order 
     to have a blank after the comment marker. Block comments work only if 
@@ -396,6 +640,13 @@ tcomment#DefineType(name, commentdef)
     args is a list of key=value pairs) to find out which fields can be 
     used.
 
+                                                    *tcomment#GetCommentDef()*
+tcomment#GetCommentDef(name, ...)
+    Return the comment definition for NAME.
+                                                          *b:tcomment_def_{NAME}*
+    Return b:tcomment_def_{NAME} if the variable exists. Otherwise return 
+    the comment definition as set with |tcomment#DefineType|.
+
                                                     *g:tcomment_types*
 g:tcomment_types               (default: {})
     A dictionary of NAME => COMMENT DEFINITION (see |tcomment#DefineType|) 
@@ -406,7 +657,7 @@ g:tcomment_types               (default: {})
 
                                                     *tcomment#Comment()*
 tcomment#Comment(beg, end, ...)
-    tcomment#Comment(line1, line2, ?commentMode, ?commentAnyway, ?args...)
+    tcomment#Comment(line1, line2, ?comment_mode, ?comment_anyway, ?args...)
     args... are either:
       1. a list of key=value pairs where known keys are (see also 
          |g:tcommentOptions|):
@@ -414,7 +665,8 @@ tcomment#Comment(beg, end, ...)
             count=N          ... Repeat the comment string N times
             col=N            ... Start the comment at column N (in block 
                                  mode; must be smaller than |indent()|)
-            mode=STRING      ... See the notes below on the "commentMode" argument
+            mode=STRING      ... See the notes below on the "comment_mode" argument
+            mode_extra=STRING ... Add to comment_mode
             begin=STRING     ... Comment prefix
             end=STRING       ... Comment postfix
             middle=STRING    ... Middle line comments in block mode
@@ -422,25 +674,50 @@ tcomment#Comment(beg, end, ...)
                                  that should be multiplied by "count"
             rxend=N          ... The above for "end"
             rxmid=N          ... The above for "middle"
+            mixedindent=BOOL ... If true, allow use of mixed 
+                                 characters for indentation
             commentstring_rx ... A regexp format string that matches 
                                  commented lines (no new groups may be 
                                  introduced, the |regexp| is |\V|; % have 
                                  to be doubled); "commentstring", "begin" 
                                  and optionally "end" must be defined or 
                                  deducible.
+            whitespace       ... Define whether commented text is 
+                                 surrounded with whitespace; if
+                                 both ... surround with whitespace (default)
+                                 left ... keep whitespace on the left
+                                 right... keep whitespace on the right
+                                 no   ... don't use whitespace
+            strip_whitespace ... Strip trailing whitespace: if 1 
+                                 (default), strip from empty lines only, 
+                                 if 2, always strip whitespace; if 0, 
+                                 don't strip any whitespace
+            postprocess_uncomment .. Run a |printf()| expression with 2 
+                                 placeholders on uncommented lines, e.g. 
+                                 'norm! %sgg=%sgg'.
       2. 1-2 values for: ?commentPrefix, ?commentPostfix
       3. a dictionary (internal use only)
 
-    commentMode:
-      G ... guess the value of commentMode
+    comment_mode (see also ¦g:tcommentModeExtra¦):
+      G ... guess the value of comment_mode
       B ... block (use extra lines for the comment markers)
+      L ... lines
       i ... maybe inline, guess
       I ... inline
       R ... right (comment the line right of the cursor)
       v ... visual
       o ... operator
+      C ... force comment
+      K ... comment only uncommented lines
+      U ... force uncomment (if U and C are present, U wins)
     By default, each line in range will be commented by adding the comment 
     prefix and postfix.
+
+                                                    *tcomment#MaybeReuseOptions()*
+tcomment#MaybeReuseOptions(name)
+
+                                                    *tcomment#ResetOption()*
+tcomment#ResetOption()
 
                                                     *tcomment#SetOption()*
 tcomment#SetOption(name, arg)
@@ -458,7 +735,7 @@ tcomment#OperatorAnyway(type)
 tcomment#OperatorLineAnyway(type)
 
                                                     *tcomment#CommentAs()*
-tcomment#CommentAs(beg, end, commentAnyway, filetype, ?args...)
+tcomment#CommentAs(beg, end, comment_anyway, filetype, ?args...)
     Where args is either:
       1. A count NUMBER
       2. An args list (see the notes on the "args" argument of 
@@ -474,7 +751,7 @@ tcomment#GuessFileType(?options={})
 
       beg ................ (default = line("."))
       end ................ (default = line("."))
-      commentMode ........ (default = "G")
+      comment_mode ........ (default = "G")
       filetype ........... (default = &filetype)
       fallbackFiletype ... (default = "")
 
@@ -483,6 +760,9 @@ tcomment#GuessFileType(?options={})
     between lines "beg" and "end" is in the "filetype" key of the return 
     value. It returns the first discernible filetype it encounters.
 
+                                                    *tcomment#TextObjectInlineComment()*
+tcomment#TextObjectInlineComment()
 
 
-vim:tw=78:fo=tcq2:isk=!-~,^*,^|,^":ts=8:ft=help:norl:
+
+vim:tw=78:fo=w2croql:isk=!-~,^*,^|,^":ts=8:ft=help:norl:

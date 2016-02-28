@@ -4080,7 +4080,7 @@ let g:tagbar_type_markdown = g:local_tagbar_type_markdown
 " -------------------------------------------------------------
 
 " Don't comment blank lines.
-let g:tcommentBlankLines = 0
+let g:tcomment#blank_lines = 0
 
 " Turn off the <C-_> and <Leader>_ mappings.
 let g:tcommentMapLeader1 = ''
