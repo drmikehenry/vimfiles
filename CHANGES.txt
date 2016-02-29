@@ -16,6 +16,8 @@ require adjustment of per-user settings.
 
 - Update Snippets examples to version 2016-02-19.
 
+- Update Bufkill plugin to version 2015-09-24.
+
 2016-02-24
 ==========
 

@@ -653,7 +653,7 @@ See also:
 :bd       - delete a buffer, closing window (vim built-in)    |:bdelete|
 :bw       - wipe a buffer, closing window (vim built-in)      |:buwipe|
 
-Version 2015-05-15 (cf928d33) from:
+Version 2015-09-24 (ba8b570) from:
 https://github.com/qpkorr/vim-bufkill.git
 
 Installation:
