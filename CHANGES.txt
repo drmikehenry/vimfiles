@@ -14,6 +14,8 @@ require adjustment of per-user settings.
 
 - Update Ultisnips plugin to version 2016-02-13.
 
+- Update Snippets examples to version 2016-02-19.
+
 2016-02-24
 ==========
 

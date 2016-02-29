@@ -40,6 +40,8 @@ snippet j.u
 ## Class
 snippet cl
 	class ${1:`vim_snippets#Filename("$1", "untitled")`} ${0}
+snippet pcl
+	public class ${1:`vim_snippets#Filename("$1", "untitled")`} ${0}
 snippet in
 	interface ${1:`vim_snippets#Filename("$1", "untitled")`} ${2:extends Parent}
 snippet tc
@@ -110,7 +112,7 @@ snippet singlet
 
 	private $1() { }
 
-	private static $1 getInstance() {
+	public static $1 getInstance() {
 		return Holder.INSTANCE;
 	}
 ##
@@ -135,6 +137,24 @@ snippet errln
 ## Exception Handling
 snippet as
 	assert ${1:test} : "${2:Failure message}";
+snippet ae
+	assertEquals("${1:Failure message}", ${2:expected}, ${3:actual});
+snippet aae
+	assertArrayEquals("${1:Failure message}", ${2:expecteds}, ${3:actuals});
+snippet af
+	assertFalse("${1:Failure message}", ${2:condition});
+snippet at
+	assertTrue("${1:Failure message}", ${2:condition});
+snippet an
+	assertNull("${1:Failure message}", ${2:object});
+snippet ann
+	assertNotNull("${1:Failure message}", ${2:object});
+snippet ass
+	assertSame("${1:Failure message}", ${2:expected}, ${3:actual});
+snippet asns
+	assertNotSame("${1:Failure message}", ${2:expected}, ${3:actual});
+snippet fa
+	fail("${1:Failure message}");
 snippet ca
 	catch(${1:Exception} ${2:e}) ${0}
 snippet thr
@@ -206,6 +226,8 @@ snippet printf
 	System.out.printf("${1:Message}", ${0:args});
 snippet println
 	System.out.println(${0});
+snippet printlna
+	System.out.println(Arrays.toString(${0}));
 ##
 ## Render Methods
 snippet ren

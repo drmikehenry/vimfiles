@@ -1,7 +1,7 @@
 #PREAMBLE
 #newcommand
 snippet nc \newcommand
-	\newcommand{\${1:cmd}}[${2:opt}]{${3:realcmd}} ${0}
+	\newcommand{\\${1:cmd}}[${2:opt}]{${3:realcmd}} ${0}
 #usepackage
 snippet up \usepackage
 	\usepackage[${1:options}]{${2:package}} ${0}
@@ -45,8 +45,13 @@ snippet gat gather(ed) environment
 # Equation
 snippet eq equation environment
 	\begin{equation}
-	\label{eq:${2}}
 		${0}
+	\end{equation}
+# Equation
+snippet eql Labeled equation environment
+	\begin{equation}
+		\label{eq:${2}}
+	${0}
 	\end{equation}
 # Equation
 snippet eq* unnumbered equation environment
@@ -69,6 +74,14 @@ snippet lab \label
 # Enumerate
 snippet enum enumerate environment
 	\begin{enumerate}
+		\item ${0}
+	\end{enumerate}
+snippet enuma enumerate environment
+	\begin{enumerate}[(a)]
+		\item ${0}
+	\end{enumerate}
+snippet enumi enumerate environment
+	\begin{enumerate}[(i)]
 		\item ${0}
 	\end{enumerate}
 # Itemize
@@ -206,6 +219,13 @@ snippet rm roman font text
 	\textrm{${0:text}}
 snippet tt typewriter (monospace) text
 	\texttt{${0:text}}
+#Math font
+snippet mf mathfrak
+	\mathfrak{${0:text}}
+snippet mc mathcal
+	\mathcal{${0:text}}
+snippet ms mathscr
+	\mathscr{${0:text}}
 #misc
 snippet ft \footnote
 	\footnote{${0:text}}
@@ -237,7 +257,7 @@ snippet frac \frac{}{}
 snippet sum \sum^{}_{}
 	\sum^{${1:n}}_{${2:i=1}} ${0}
 snippet lim \lim_{}
-	\lim_{${1:x \to +\infty}} ${0}
+	\lim_{${1:n \to \infty}} ${0}
 snippet frame frame environment
 	\begin{frame}[${1:t}]{${2:title}}
 		${0}
@@ -263,3 +283,35 @@ snippet col2 two-column environment
 			${0}
 		\end{column}
 	\end{columns}
+snippet \{ \{ \}
+	\\{ ${0} \\}
+#delimiter
+snippet lr left right
+	\left${1} ${0} \right$1
+snippet lr( left( right) 
+	\left( ${0} \right)
+snippet lr| left| right| 
+	\left| ${0} \right|
+snippet lr{ left\{ right\} 
+	\left\\{ ${0} \right\\}
+snippet lr[ left[ right] 
+	\left[ ${0} \right]
+snippet lra langle rangle 
+	\langle ${0} \rangle
+# Code listings
+snippet lst
+	\begin{listing}[language=${1:language}]
+		${0}
+	\end{listing}
+snippet lsi
+	\lstinline|${1}| ${0}
+# Hyperlinks
+snippet url
+	\url{${1}} ${0}
+snippet href
+	\href{${1}}{${2}} ${0}
+# URL from Clipboard.
+snippet urlc
+	\url{`@+`} ${0}
+snippet hrefc
+	\href{`@+`}{${1}} ${0}
