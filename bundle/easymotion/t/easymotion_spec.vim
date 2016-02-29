@@ -217,7 +217,7 @@ describe 'Default settings'
         "}}}
     end
 
-    it 'provide default <Plug> mappings for regrex motion'
+    it 'provide default <Plug> mappings for regex motion'
         "(is_visual, direction)
         " direction:
         "   - 0: forward
@@ -1411,8 +1411,8 @@ describe 'Word motion'
         close!
     end
 
-    " Default word motion {{
-    it 'Default word motion'
+    " Word motion {{
+    it 'Word motion'
         normal! 0
         let l = line('.')
         Expect CursorPos() == [l,1,'p']
@@ -1430,7 +1430,41 @@ describe 'Word motion'
         normal bh
         Expect CursorPos() == [l,1,'p']
     end
-    "}}}
+    "}}
+end
+
+describe 'Verbose'
+    before
+        new
+        map s <Plug>(easymotion-s)
+        map f <Plug>(easymotion-f)
+        map F <Plug>(easymotion-F)
+        map t <Plug>(easymotion-t)
+        map T <Plug>(easymotion-T)
+        call EasyMotion#init()
+        call AddLine('some words in the sentence')
+    end
+
+    after
+        close!
+    end
+
+    it 'Verbose global variable'
+        Expect g:EasyMotion_verbose ==# 1
+    end
+
+    it 'Turned On'
+        let g:EasyMotion_verbose = 1
+        let &verbosefile = tempname()
+        normal sa
+        " TODO: l:tmp_name_verbose should have one line
+    end
+    it 'Turned Off'
+        let g:EasyMotion_verbose = 0
+        let &verbosefile = &verbosefile
+        normal s_
+        " TODO: l:tmp_name_not_verbose should have no lines
+    end
 end
 "}}}
 

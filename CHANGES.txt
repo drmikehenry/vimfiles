@@ -18,6 +18,8 @@ require adjustment of per-user settings.
 
 - Update Bufkill plugin to version 2015-09-24.
 
+- Update Easymotion plugin to version 2016-02-15.
+
 2016-02-24
 ==========
 

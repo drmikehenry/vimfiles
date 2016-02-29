@@ -802,7 +802,7 @@ Local Customizations:
 
 - Setup regular expressions for "anywhere" operations.
 
-Version 2014-11-13 (2dc0025) from:
+Version 2016-02-15 (649120e) from:
 https://github.com/Lokaltog/vim-easymotion.git
 
 Installation:
