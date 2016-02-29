@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Update tcomment plugin to version 2016-02-28.
 
+- Update Ultisnips plugin to version 2016-02-13.
+
 2016-02-24
 ==========
 

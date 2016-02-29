@@ -6,11 +6,14 @@ UltiSnips#Anon	UltiSnips.txt	/*UltiSnips#Anon*
 UltiSnips#SnippetsInCurrentScope	UltiSnips.txt	/*UltiSnips#SnippetsInCurrentScope*
 UltiSnips-acknowledgments	UltiSnips.txt	/*UltiSnips-acknowledgments*
 UltiSnips-adding-snippets	UltiSnips.txt	/*UltiSnips-adding-snippets*
+UltiSnips-autotrigger	UltiSnips.txt	/*UltiSnips-autotrigger*
+UltiSnips-buffer-proxy	UltiSnips.txt	/*UltiSnips-buffer-proxy*
 UltiSnips-character-escaping	UltiSnips.txt	/*UltiSnips-character-escaping*
 UltiSnips-clearing-snippets	UltiSnips.txt	/*UltiSnips-clearing-snippets*
 UltiSnips-commands	UltiSnips.txt	/*UltiSnips-commands*
-UltiSnips-contact	UltiSnips.txt	/*UltiSnips-contact*
+UltiSnips-context-snippets	UltiSnips.txt	/*UltiSnips-context-snippets*
 UltiSnips-contributors	UltiSnips.txt	/*UltiSnips-contributors*
+UltiSnips-custom-autocommands	UltiSnips.txt	/*UltiSnips-custom-autocommands*
 UltiSnips-demos	UltiSnips.txt	/*UltiSnips-demos*
 UltiSnips-description	UltiSnips.txt	/*UltiSnips-description*
 UltiSnips-extending	UltiSnips.txt	/*UltiSnips-extending*
@@ -24,6 +27,9 @@ UltiSnips-mirrors	UltiSnips.txt	/*UltiSnips-mirrors*
 UltiSnips-other-plugins	UltiSnips.txt	/*UltiSnips-other-plugins*
 UltiSnips-placeholders	UltiSnips.txt	/*UltiSnips-placeholders*
 UltiSnips-plaintext-snippets	UltiSnips.txt	/*UltiSnips-plaintext-snippets*
+UltiSnips-post-expand-actions	UltiSnips.txt	/*UltiSnips-post-expand-actions*
+UltiSnips-post-jump-actions	UltiSnips.txt	/*UltiSnips-post-jump-actions*
+UltiSnips-pre-expand-actions	UltiSnips.txt	/*UltiSnips-pre-expand-actions*
 UltiSnips-python	UltiSnips.txt	/*UltiSnips-python*
 UltiSnips-python-module-path	UltiSnips.txt	/*UltiSnips-python-module-path*
 UltiSnips-python-warning	UltiSnips.txt	/*UltiSnips-python-warning*
@@ -32,6 +38,8 @@ UltiSnips-requirements	UltiSnips.txt	/*UltiSnips-requirements*
 UltiSnips-settings	UltiSnips.txt	/*UltiSnips-settings*
 UltiSnips-shellcode	UltiSnips.txt	/*UltiSnips-shellcode*
 UltiSnips-snipMate	UltiSnips.txt	/*UltiSnips-snipMate*
+UltiSnips-snippet-actions	UltiSnips.txt	/*UltiSnips-snippet-actions*
+UltiSnips-snippet-options	UltiSnips.txt	/*UltiSnips-snippet-options*
 UltiSnips-snippet-search-path	UltiSnips.txt	/*UltiSnips-snippet-search-path*
 UltiSnips-syntax	UltiSnips.txt	/*UltiSnips-syntax*
 UltiSnips-tabstops	UltiSnips.txt	/*UltiSnips-tabstops*
@@ -44,6 +52,9 @@ UltiSnips-vimscript	UltiSnips.txt	/*UltiSnips-vimscript*
 UltiSnips-visual-placeholder	UltiSnips.txt	/*UltiSnips-visual-placeholder*
 UltiSnips-warning-smappings	UltiSnips.txt	/*UltiSnips-warning-smappings*
 UltiSnips.txt	UltiSnips.txt	/*UltiSnips.txt*
+UltiSnipsEnterFirstSnippet	UltiSnips.txt	/*UltiSnipsEnterFirstSnippet*
+UltiSnipsExitLastSnippet	UltiSnips.txt	/*UltiSnipsExitLastSnippet*
+Warning:	UltiSnips.txt	/*Warning:*
 g:UltiSnipsEditSplit	UltiSnips.txt	/*g:UltiSnipsEditSplit*
 g:UltiSnipsEnableSnipMate	UltiSnips.txt	/*g:UltiSnipsEnableSnipMate*
 g:UltiSnipsExpandTrigger	UltiSnips.txt	/*g:UltiSnipsExpandTrigger*
@@ -52,5 +63,6 @@ g:UltiSnipsJumpForwardTrigger	UltiSnips.txt	/*g:UltiSnipsJumpForwardTrigger*
 g:UltiSnipsListSnippets	UltiSnips.txt	/*g:UltiSnipsListSnippets*
 g:UltiSnipsSnippetDirectories	UltiSnips.txt	/*g:UltiSnipsSnippetDirectories*
 g:UltiSnipsSnippetsDir	UltiSnips.txt	/*g:UltiSnipsSnippetsDir*
+not	UltiSnips.txt	/*not*
 snippet	UltiSnips.txt	/*snippet*
 snippets	UltiSnips.txt	/*snippets*
