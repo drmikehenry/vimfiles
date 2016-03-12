@@ -17,6 +17,8 @@ Noxmap Y  y$
 Noxmap   <Space>jj          <Plug>(easymotion-s)
 Noxmap   <Space>jJ          <Plug>(easymotion-s2)
 Noxmap   <Space>jl          <Plug>(easymotion-sol-bd-jk)
+" Remove mapping to force use of new <Space>jl mapping.
+unmap    <Space>l
 
 nnoremap <Space>bb          :<C-u>CtrlPBuffer<CR>
 nnoremap <Space>bd          :BW<CR>
