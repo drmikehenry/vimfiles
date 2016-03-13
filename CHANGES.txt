@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-03-12
+==========
+
+- Update fixkey to version 0.3.7.  This corrects a problem with Fedora's
+  patched version of Vim, allowing F1 to F4 to work correctly in the
+  terminal.
+
 2016-02-28
 ==========
 
