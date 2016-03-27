@@ -2659,8 +2659,8 @@ command! -bar -nargs=? Diff  call Diff(<q-args>)
 " To disable one of the specified plugins below, define the corresponding
 " g:EnableXxx variables below to be 0 (typically, this would be done in
 " the per-user VIMRC_BEFORE file; see top of this file).
-" For example, to disable the Powerline plugin, use the following:
-"   let g:EnablePowerline = 0
+" For example, to disable the UltiSnips plugin, use the following:
+"   let g:EnableUltiSnips = 0
 
 " Don't use Powerline on 8-color terminals... it just doesn't look good.
 if !has("gui_running") && &t_Co == 8
@@ -3950,6 +3950,9 @@ let g:syntastic_rst_rstsphinx_quiet_messages = { 'level': [] }
 let g:syntastic_rst_rstsphinx_args_before = '-j ' . NumCpus()
 
 function! ReplacePowerlineSyntastic()
+    if !g:EnablePowerline
+        return
+    endif
     function! Powerline#Functions#syntastic#GetErrors(line_symbol) " {{{
         if ! exists('g:syntastic_stl_format')
             " Syntastic hasn't been loaded yet
