@@ -2662,13 +2662,22 @@ command! -bar -nargs=? Diff  call Diff(<q-args>)
 " For example, to disable the UltiSnips plugin, use the following:
 "   let g:EnableUltiSnips = 0
 
-" Don't use Powerline on 8-color terminals... it just doesn't look good.
+" Don't use Powerline or Airline on 8-color terminals; they don't look good.
 if !has("gui_running") && &t_Co == 8
+    let g:EnableAirline = 0
     let g:EnablePowerline = 0
 endif
 
 if !exists("g:EnablePowerline")
     let g:EnablePowerline = 1
+endif
+
+if !exists("g:EnableAirline")
+    let g:EnableAirline = 0
+endif
+
+if g:EnableAirline
+    let g:EnablePowerline = 0
 endif
 
 if !exists("g:EnableUltiSnips")
@@ -2727,6 +2736,92 @@ let g:agprg="ag --column --smart-case"
 " Disable QuickFix/LocationList mappings.
 let g:ag_apply_qmappings = 0
 let g:ag_apply_lmappings = 0
+
+" -------------------------------------------------------------
+" Airline
+" -------------------------------------------------------------
+
+if g:EnableAirline
+" Default sections (from documentation):
+"   g:airline_section_a       (mode, crypt, paste, spell, iminsert)
+"   g:airline_section_b       (hunks, branch)
+"   g:airline_section_c       (bufferline or filename)
+"   g:airline_section_gutter  (readonly, csv)
+"   g:airline_section_x       (tagbar, filetype, virtualenv)
+"   g:airline_section_y       (fileencoding, fileformat)
+"   g:airline_section_z       (percentage, line number, column number)
+"   g:airline_section_error   (ycm_error_count, syntastic, eclim)
+"   g:airline_section_warning (ycm_warning_count, whitespace)
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+" let g:airline_left_sep = '»'
+" let g:airline_left_sep = '▶'
+" let g:airline_left_sep = '│'
+let g:airline_left_sep = ''
+" let g:airline_right_sep = '«'
+" let g:airline_right_sep = '◀'
+" let g:airline_right_sep = '│'
+let g:airline_right_sep = ''
+let g:airline_symbols.crypt = '🔒'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⚡'
+" let g:airline_symbols.branch = '⭠'
+let g:airline_symbols.paste = 'PASTE'
+" let g:airline_symbols.whitespace = 'Ξ'
+let g:airline_symbols.whitespace = 'WS'
+
+function! AirlineInit()
+    " Remove parts that are redundant or which don't change often enough to
+    " warrant perpetual space taken in the status line.
+
+    " Remove 'filetype'.
+    let g:airline_section_x = airline#section#create(['tagbar'])
+
+    " Remove 'fileencoding'.
+    let g:airline_section_y = ''
+
+    " Use smaller margins for percentage, line/column numbers.
+    " Left-justify column number.
+    let g:airline_section_z = airline#section#create([
+        \ 'windowswap', '%2p%% ',
+        \ '%{g:airline_symbols.linenr} %#__accent_bold#%3l%#__restore__#',
+        \ ':%-2v'])
+endfunction
+autocmd User AirlineAfterInit call AirlineInit()
+
+" Default checks: ['indent', 'trailing', 'mixed-indent-file']
+" Permit only trailing whitespace check; the others take too much
+" space to describe in the status line, and belong in a linter instead.
+let g:airline#extensions#whitespace#checks = ['trailing']
+
+" Just show line number for trailing whitespace.
+let airline#extensions#whitespace#trailing_format = '%s'
+
+" Configure format for SyntasticStatuslineFlag() (which generates the
+" text for airline's Syntastic support).
+let g:syntastic_stl_format = '%E{%ee}%B{ }%W{%ww}'
+
+" Provide short forms of mode names.
+let g:airline_mode_map = {
+      \ '__' : '-',
+      \ 'n'  : 'N',
+      \ 'i'  : 'I',
+      \ 'R'  : 'R',
+      \ 'c'  : 'C',
+      \ 'v'  : 'V',
+      \ 'V'  : 'V⋅LINE',
+      \ "\<C-v>" : 'V⋅BLOCK',
+      \ 's'  : 'SELECT',
+      \ 'S'  : 'S⋅LINE',
+      \ "\<C-s>" : 'S⋅BLOCK',
+      \ }
+else
+    " Airline will not load if this variable is defined:
+    let g:Airline_loaded = 1
+endif
+
 
 " -------------------------------------------------------------
 " BufExplorer

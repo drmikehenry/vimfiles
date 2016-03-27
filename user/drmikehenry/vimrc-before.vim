@@ -1,5 +1,7 @@
 let did_install_default_menus = 1
 
+let g:EnableAirline = 1
+
 function! Drmikehenry_adjustSzakDark()
 "    if exists('+colorcolumn')
 "        if &t_Co > 255 || has("gui_running")
