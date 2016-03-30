@@ -2745,18 +2745,20 @@ endif
 " let g:airline_left_sep = '»'
 " let g:airline_left_sep = '▶'
 " let g:airline_left_sep = '│'
-let g:airline_left_sep = ''
+" let g:airline_left_sep = ''
+let g:airline_left_sep = '>'
 " let g:airline_right_sep = '«'
 " let g:airline_right_sep = '◀'
 " let g:airline_right_sep = '│'
-let g:airline_right_sep = ''
+" let g:airline_right_sep = ''
+let g:airline_right_sep = '<'
 let g:airline_symbols.crypt = '🔒'
 let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.branch = '⚡'
 " let g:airline_symbols.branch = '⭠'
 let g:airline_symbols.paste = 'PASTE'
 " let g:airline_symbols.whitespace = 'Ξ'
-let g:airline_symbols.whitespace = 'WS'
+let g:airline_symbols.whitespace = 'WS:'
 
 function! AirlineInit()
     " Remove parts that are redundant or which don't change often enough to
@@ -2777,13 +2779,29 @@ function! AirlineInit()
 endfunction
 autocmd User AirlineAfterInit call AirlineInit()
 
-" Default checks: ['indent', 'trailing', 'mixed-indent-file']
-" Permit only trailing whitespace check; the others take too much
-" space to describe in the status line, and belong in a linter instead.
-let g:airline#extensions#whitespace#checks = ['trailing']
+" Avoid "SPELL" indicator.
+let g:airline_detect_spell = 0
 
-" Just show line number for trailing whitespace.
-let airline#extensions#whitespace#trailing_format = '%s'
+" Disable word counting; it takes too much space.  "g CTRL-G" checks on-demand.
+let g:airline#extensions#wordcount#enabled = 0
+
+" Types of whitespace violations:
+" - indent:            mixed indent within a line
+" - long:              overlong lines
+" - trailing:          trailing whitespace
+" - mixed-indent-file: different indentation in different lines
+" Default checks: ['indent', 'trailing', 'mixed-indent-file']
+let g:airline#extensions#whitespace#checks = [
+        \ 'indent', 'mixed-indent-file', 'trailing', 'long']
+
+" Don't display a message on whitespace issues.
+" let g:airline#extensions#whitespace#show_message = 0
+
+" Configure short whitespace indicators.
+let airline#extensions#whitespace#trailing_format = '$%.0s'
+let g:airline#extensions#whitespace#mixed_indent_format = 'mix%.0s'
+let g:airline#extensions#whitespace#long_format = '+%.0s'
+let g:airline#extensions#whitespace#mixed_indent_file_format = '\t%.0s'
 
 " Configure format for SyntasticStatuslineFlag() (which generates the
 " text for airline's Syntastic support).
