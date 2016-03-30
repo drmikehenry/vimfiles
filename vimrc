@@ -2792,7 +2792,7 @@ let g:airline#extensions#wordcount#enabled = 0
 " - mixed-indent-file: different indentation in different lines
 " Default checks: ['indent', 'trailing', 'mixed-indent-file']
 let g:airline#extensions#whitespace#checks = [
-        \ 'indent', 'mixed-indent-file', 'trailing', 'long']
+        \ 'indent', 'trailing', 'mixed-indent-file']
 
 " Don't display a message on whitespace issues.
 " let g:airline#extensions#whitespace#show_message = 0
