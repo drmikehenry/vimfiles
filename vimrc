@@ -3070,7 +3070,8 @@ command! -bar A FSHere
 
 let Grep_Skip_Dirs = '.svn .bzr .git .hg build bak export .undo'
 let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
-        \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc build.out doxy.out'
+        \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc ' .
+        \ 'build.out doxy.out'
 
 " -------------------------------------------------------------
 " Gundo
@@ -4535,21 +4536,25 @@ endfunction
 function! HighlightDefineGroups()
     if !HighlightGroupExists("HG_Subtle")
         if &background == "dark"
-            highlight HG_Subtle  ctermfg=brown  ctermbg=darkgray  guibg=red       guifg=white
+            highlight HG_Subtle  ctermfg=brown  ctermbg=darkgray
+                    \ guibg=red       guifg=white
         else
-            highlight HG_Subtle  ctermfg=yellow ctermbg=lightgray guibg=#efeff7
+            highlight HG_Subtle  ctermfg=yellow ctermbg=lightgray
+                    \ guibg=#efeff7
         endif
     endif
     if !HighlightGroupExists("HG_Warning")
         if &background == "dark"
-            highlight HG_Warning ctermfg=lightred  ctermbg=darkgray  guibg=#505000   guifg=lightgray
+            highlight HG_Warning ctermfg=lightred  ctermbg=darkgray
+                    \ guibg=#505000   guifg=lightgray
         else
             highlight HG_Warning ctermfg=yellow ctermbg=lightgray guibg=#ffffdd
         endif
     endif
     if !HighlightGroupExists("HG_Error")
         if &background == "dark"
-            highlight HG_Error   ctermfg=white  ctermbg=darkred  guibg=red       guifg=white
+            highlight HG_Error   ctermfg=white  ctermbg=darkred
+                    \ guibg=red       guifg=white
         else
             highlight HG_Error   ctermfg=red    ctermbg=lightgray guibg=#ffe0e0
         endif
