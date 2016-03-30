@@ -1586,20 +1586,6 @@ set completeopt=longest,menuone
 
 set complete=.,w,b,u,t
 
-" TODO Cleanup these mappings (Make them work, or remove them).
-" Remap <CR> such that when popup menu is active, the current menu
-" option is automatically selected (as if CTRL-y were pressed), and
-" when popup is not present, normal <CR> is performed (with automatic
-" breaking of undo sequence via CTRL-g u).
-" inoremap <expr> <CR> pumvisible() ? "\<lt>C-y>" : "\<lt>C-g>u\<lt>CR>"
-
-" Remap CTRL-n to simply move to next menu option if popup menu already
-" visible, or to invoke omni completion and automatically press the
-" down arrow to ensure a menu item is always selected.
-" inoremap <expr> <C-n> pumvisible() ? "\<lt>c-n>" : "\<lt>c-n>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>"
-
-" inoremap <expr> <M-;> pumvisible() ? "\<lt>c-n>" : "\<lt>c-x>\<lt>c-o>\<lt>c-n>\<lt>c-p>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>"
-
 " -------------------------------------------------------------
 " Begin "inspired by mswin.vim"
 " -------------------------------------------------------------
