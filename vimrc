@@ -2825,7 +2825,7 @@ let g:airline_mode_map = {
       \ }
 else
     " Airline will not load if this variable is defined:
-    let g:Airline_loaded = 1
+    let g:loaded_airline = 1
 endif
 
 
