@@ -3978,7 +3978,7 @@ Lmc(word)
         |sub-replace-expression| feature to convert submatch(0) using the Umc()
         function:
 
-          :%s//\=Umc()/g
+          :%s//\=Underscore()/g
 
 Some refactoring mappings exist to rename the identifier under the cursor to a
 new convention across the entire file:
