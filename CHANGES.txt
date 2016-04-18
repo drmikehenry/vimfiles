@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-04-18
+==========
+
+- Update to the new method that UltiSnips uses to disable itself.  Without this
+  change, UltiSnips warns about missing Python integration.
+
 2016-04-12
 ==========
 

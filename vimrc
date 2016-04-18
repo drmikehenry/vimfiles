@@ -4473,13 +4473,7 @@ if g:EnableUltiSnips
     augroup END
 else
     " UltiSnips will not load if this variable is defined:
-    let g:did_UltiSnips_after = 1
-    let g:did_UltiSnips_autoload = 1
-    let g:did_UltiSnips_plugin = 1
-
-    " The definition of UltiSnips#FileTypeChanged is in
-    " after/plugin/UltiSnips.vim to prevent an error about the function name not
-    " matching the script file name.
+    let g:did_plugin_ultisnips = 1
 endif
 
 " -------------------------------------------------------------
