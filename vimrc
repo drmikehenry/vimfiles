@@ -1743,13 +1743,13 @@ nnoremap <expr> <F3> NormalRegrepCword()
 
 " Setup Perl search command for word under cursor.
 function! NormalPerlSearchCword(searchCmd)
-    return "yiw:MatchScratchWord\<CR>:" . a:searchCmd . "! " .
+    return "yiw:MatchScratchWord\<CR>:" . a:searchCmd . " " .
             \ "\<C-r>=shellescape(LiteralGrepPattern(@\"))\<CR> -w"
 endfunction
 
 " Setup :Ag (or :Ack) command to search for visual selection.
 function! VisualPerlSearch(searchCmd)
-    return "y:MatchScratch\<CR>:" . a:searchCmd . "! " .
+    return "y:MatchScratch\<CR>:" . a:searchCmd . " " .
             \ "\<C-r>=shellescape(LiteralGrepPattern(@\"))\<CR>"
 endfunction
 
@@ -1767,8 +1767,8 @@ function! AgOrAck()
     endif
 endfunction
 
-nnoremap <expr> #    NormalPerlSearchCword(AgOrAck())
-xnoremap <expr> #    VisualPerlSearch(AgOrAck())
+nnoremap <expr> #    NormalPerlSearchCword('G')
+xnoremap <expr> #    VisualPerlSearch('G')
 
 " Run "Ag!" or "Ack!" using supplied arguments.
 function! RunAgOrAck(args)
