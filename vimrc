@@ -5467,6 +5467,18 @@ endfunction
 command! -bar SetupRust call SetupRust()
 
 " -------------------------------------------------------------
+" Setup for Scheme code.
+" -------------------------------------------------------------
+function! SetupScheme()
+    SetupSource
+    setlocal ts=8 sts=2 sw=2
+
+    RainbowParenthesesLoadRound
+    RainbowParenthesesActivate
+endfunction
+command! -bar SetupScheme call SetupScheme()
+
+" -------------------------------------------------------------
 " Setup for shell languages like sh and zsh.
 " -------------------------------------------------------------
 
