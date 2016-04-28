@@ -1505,7 +1505,7 @@ set wildmode=longest,list
 " List of extensions to ignore when using wildcard matching.
 set wildignore=*.o,*.obj,*.a,*.lib,*.so,*~,*.bak,*.swp,tags,*.opt,*.ncb
         \,*.plg,*.elf,cscope.out,*.ecc,*.exe,*.ilk
-        \,export,build,_build
+        \,export,build,_build,pkgexp
 
 " Ignore some Python artifacts.
 set wildignore+=*.pyc,*.egg-info
