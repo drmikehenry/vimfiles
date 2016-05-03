@@ -12,6 +12,9 @@ require adjustment of per-user settings.
 
 - On <F4>/<s-F4>, leave Quickfix window closed if already closed.
 
+- :Copen/:Lopen now do nothing if the QuickFix/Location List window is already
+  open, which preserves the existing window height.
+
 2016-04-28
 ==========
 

@@ -892,12 +892,6 @@ augroup local_QuickFix
     autocmd QuickfixCmdPost * call ShortenFilenames()
 augroup END
 
-" Open QuickFix window using standard position and height.
-command! -bar Copen  execute "botright copen " . g:QuickFixWinHeight
-
-" Open Location List window using standard height.
-command! -bar Lopen  execute "lopen " . g:LocListWinHeight
-
 " Return 1 if current window is the QuickFix window.
 function! IsQuickFixWin()
     if &buftype == "quickfix"
@@ -962,6 +956,26 @@ function! LocListWinIsOpen()
     endif
     return isOpen
 endfunction
+
+" Open Quickfix window (if not already open).
+function! Copen()
+    if !QuickFixWinIsOpen()
+        execute "silent botright copen " . g:QuickFixWinHeight
+    endif
+endfunction
+
+" Open QuickFix window using standard position and height.
+command! -bar Copen  call Copen()
+
+" Open Location List window (if not already open).
+function! Lopen()
+    if !LocListWinIsOpen()
+        execute "silent lopen " . g:LocListWinHeight
+    endif
+endfunction
+
+" Open Location List window using standard height.
+command! -bar Lopen  call Lopen()
 
 " Return 1 is location list is "preferred" to QuickFix list.
 function! LocListIsPreferred()
