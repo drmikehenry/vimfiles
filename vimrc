@@ -1008,10 +1008,7 @@ function! GotoPrev()
     elseif LocListIsPreferred()
         call GotoMessage("l", "previous")
     else
-        if GotoMessage("c", "previous")
-            Copen
-            wincmd p
-        endif
+        call GotoMessage("c", "previous")
     endif
 endfunction
 
@@ -1022,10 +1019,7 @@ function! GotoNext()
     elseif LocListIsPreferred()
         call GotoMessage("l", "next")
     else
-        if GotoMessage("c", "next")
-            Copen
-            wincmd p
-        endif
+        call GotoMessage("c", "next")
     endif
 endfunction
 

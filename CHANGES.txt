@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-05-02
+==========
+
+- On <F4>/<s-F4>, leave Quickfix window closed if already closed.
+
 2016-04-28
 ==========
 

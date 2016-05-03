@@ -3315,7 +3315,7 @@ QuickFix window, diff mode
 
 Use <F4> and <S-F4> to navigate forward and backward.  When diff mode is
 active, browses through diff hunks; otherwise, when a Location List window is
-open, browses through the Location List; otherwise, opens and browses through
+open, browses through the Location List; otherwise, browses through
 the QuickFix list.
 
 New diff commands:
