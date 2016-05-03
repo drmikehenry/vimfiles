@@ -550,7 +550,7 @@ index da8abf6..b469f0e 100644
 --- a/bundle/airline/autoload/airline/extensions/tagbar.vim
 +++ b/bundle/airline/autoload/airline/extensions/tagbar.vim
 @@ -25,11 +25,21 @@ endfunction
- 
+
  let s:airline_tagbar_last_lookup_time = 0
  let s:airline_tagbar_last_lookup_val = ''
 +let s:airline_tagbar_lookup_count = 0
