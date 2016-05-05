@@ -901,7 +901,7 @@ function! IsQuickFixWin()
         " If this is a QuickFix window, there will be an exception and the
         " focus will stay on this window.
         try
-            lopen
+            noautocmd lopen
         catch /E776:/
             " This was a QuickFix window.
             return 1
