@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-05-07
+==========
+
+- Remove mapping of ``svn-prop*.tmp`` to filetype ``svn``.  That filetype is
+  intended only for Subversion commit messages, and it doesn't play well when
+  editing other properites like ``svn:externals`` and ``svn:ignore``.  When
+  using ``svn propset --revprop svn:log ...``, use ``:setf svn`` to turn on
+  the ``svn`` filetype.
+
 2016-05-05
 ==========
 

@@ -22,7 +22,6 @@ augroup filetypedetect
     au BufNewFile,BufRead *.rest setfiletype rst
     au BufNewFile,BufRead *.td setfiletype tablegen
     au BufNewFile,BufRead bash-fc-* SetupBashFixcommand
-    au BufNewFile,BufRead svn-prop*.tmp setfiletype svn
     au BufNewFile,BufRead leinrc setfiletype sh
     au BufNewFile,BufRead .pypirc setfiletype cfg
     au BufNewFile,BufRead .coveragerc setfiletype cfg
