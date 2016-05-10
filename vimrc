@@ -1877,6 +1877,7 @@ function! FoldQuickFixFiles(level)
     setlocal foldcolumn=1
     setlocal foldmethod=expr
     setlocal foldexpr=FoldQuickFixFilesFoldExpr()
+    setlocal foldenable
 endfunction
 command! -count=0 FoldQuickFixFiles  call FoldQuickFixFiles(<count>)
 
@@ -5453,8 +5454,148 @@ endif
 " -------------------------------------------------------------
 " Setup for QuickFix window
 " -------------------------------------------------------------
+
+" Parse line for 'path/to/filename|', return 'path/to/filename' or ''.
+function! QuickFixFilename(line)
+    return matchstr(a:line, '\v^[^|]+\ze\|')
+endfunction
+
+" Use getline() to search current buffer at lineNum and backward until
+" a valid QuickFixFilename() is located; return it or '' if not found.
+function! QuickFixFilenameAt(lineNum)
+    let i = a:lineNum
+    while i >= 1
+        let filename = QuickFixFilename(getline(i))
+        if filename != ''
+            return filename
+        endif
+        let i -= 1
+    endwhile
+    return ''
+endfunction
+
+" Find the "leading" line number starting at lineNum and working backward.
+" Uses getline() to determine prevailing filename at lineNum, then determines
+" first line number with that same filename.  If no such filename, return 0.
+function! QuickFixLeadingLineNum(lineNum)
+    let leadingFilename = QuickFixFilenameAt(a:lineNum)
+    if leadingFilename == ''
+        return 0
+    endif
+    let leadingLineNum = a:lineNum
+    let i = a:lineNum - 1
+    while i >= 1
+        let filename = QuickFixFilename(getline(i))
+        if filename == leadingFilename
+            let leadingLineNum = i
+        elseif filename != ''
+            break
+        endif
+        let i -= 1
+    endwhile
+    return leadingLineNum
+endfunction
+
+function! QuickFixPrevFileLineNum()
+    let lineNum = line('.')
+    let leadingLineNum = QuickFixLeadingLineNum(lineNum)
+    if leadingLineNum == lineNum
+        let leadingLineNum = QuickFixLeadingLineNum(leadingLineNum - 1)
+    endif
+    if leadingLineNum > 0
+        let lineNum = leadingLineNum
+    endif
+    return lineNum
+endfunction
+
+function! QuickFixNextFileLineNum()
+    let lineNum = line('.')
+    let leadingFilename = QuickFixFilenameAt(lineNum)
+    " Set destLineNum to line number of next non-empty filename (if any).
+    let destLineNum = lineNum
+    while lineNum < line('$')
+        let lineNum += 1
+        let filename = QuickFixFilename(getline(lineNum))
+        if (filename != '') && (filename != leadingFilename)
+            let destLineNum = lineNum
+            break
+        endif
+    endwhile
+    return destLineNum
+endfunction
+
+" Save height of QuickFix window.
+function! SaveQuickFixHeight()
+    if &buftype == 'quickfix'
+        let b:QuickFixHeight = winheight(0)
+    endif
+endfunction
+
+" Restore height of QuickFix window.
+function! RestoreQuickFixHeight()
+    if &buftype == 'quickfix' && exists('b:QuickFixHeight')
+        execute 'resize ' . b:QuickFixHeight
+    endif
+endfunction
+
+" Add mappings to QuickFix and Location List windows.
+function! AddQuickFixMappings()
+    if &buftype == 'quickfix'
+        let pre = 'nmap <buffer> <silent> '
+        let saveH = ':call SaveQuickFixHeight()<CR>'
+        let restoreH = ':call RestoreQuickFixHeight()<CR>'
+        if IsQuickFixWin()
+            let close = ':cclose<CR>'
+        else
+            let close = ':lclose<CR>'
+        endif
+        let openNew = '<C-w><CR>'
+        let prevWin = '<C-w>p'
+
+        " Allow escaping out of mappings without performing o/O editing actions.
+        nnoremap <buffer> <silent> o <Nop>
+        nnoremap <buffer> <silent> O <Nop>
+
+        execute pre . 'oo ' . prevWin
+        execute pre . 'OO ' . close
+
+        let openStay = '<CR>' . prevWin
+        execute pre . '<s-CR>  ' . openStay
+        execute pre . 'o<CR> '   . '<CR>'
+        execute pre . 'o<s-CR> ' . openStay
+        execute pre . 'O<CR> '   . openStay . close
+        execute pre . 'O<s-CR> ' . openStay . close
+
+        let openStay = openNew . '<C-w>K' . prevWin
+        execute pre . 'oh ' . saveH . openStay . restoreH . prevWin
+        execute pre . 'oH ' . saveH . openStay . restoreH
+        execute pre . 'Oh '         . openStay . close    . prevWin
+        execute pre . 'OH '         . openStay . close    . prevWin
+
+        let openStay = openNew . '<C-w>H' . prevWin . '<C-w>J'
+        execute pre . 'ov ' . saveH . openStay . restoreH . prevWin
+        execute pre . 'oV ' . saveH . openStay . restoreH
+        execute pre . 'Ov '         . openStay . close    . prevWin
+        execute pre . 'OV '         . openStay . close    . prevWin
+
+        let openStay = openNew . '<C-w>T' . 'gT<C-w>j'
+        execute pre . 'ot ' . saveH . openStay . restoreH . 'gt'
+        execute pre . 'oT ' . saveH . openStay . restoreH
+        execute pre . 'Ot '         . openStay . close    . 'gt'
+        execute pre . 'OT '         . openStay . close    . 'gt'
+
+        nnoremap <buffer> <F1> :help notes_quickfix<CR>
+
+        nnoremap <buffer> <silent> <expr> {
+                \ ':' . QuickFixPrevFileLineNum() . '<CR>'
+        nnoremap <buffer> <silent> <expr> }
+                \ ':' . QuickFixNextFileLineNum() . '<CR>'
+    endif
+endfunction
+
 function! SetupQuickFix()
    FoldQuickFixFiles 1
+   call AddQuickFixMappings()
 endfunction
 command! -bar SetupQuickFix call SetupQuickFix()
 

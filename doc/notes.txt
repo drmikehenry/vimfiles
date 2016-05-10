@@ -101,6 +101,7 @@
     Python indentation support                          |notes_python_indent|
     Tmux syntax - Syntax definitions for tmux.conf      |notes_tmux_syntax|
 5.  Customizations                                      |notes_customizations|
+    Quickfix keys                                       |notes_quickfix_keys|
 6.  Tips                                                |notes_tips|
 
 
@@ -3309,6 +3310,22 @@ Tab page support
 Use <C-S-PageUp>/<C-S-PageDown> in Gvim to move the current tab page left or
 right.  This unfortunately doesn't work in console Vim because those key
 sequences aren't visible to Vim.
+
+------------------------------------------------------------------------------
+QuickFix keys                                           *notes_quickfix_keys*
+
+  oo      Return to other window
+  OO      Return to other window, close QF
+  <CR>    Open in existing        (<s-CR>  = stay in QF)
+  o<CR>   Open in existing        (o<s-CR> = stay in QF; O<s-CR> = close QF)
+  oh      Open horizontal split   (oH      = stay in QF; OH      = close QF)
+  ov      Open vertical split     (oV      = stay in QF; OV      = close QF)
+  ot      Open in new tab         (oT      = stay in QF; OT      = close QF)
+  <F1>    Display this help section (:help notes_quickfix_keys)
+  { / }   Move cursor to previous/next filename in QuickFix window
+
+The above mappings are active in QuickFix and Location List windows.
+Note: "O + unshifted" is the same as "O + shifted" (so "Oh" = "OH", etc.).
 
 ------------------------------------------------------------------------------
 QuickFix window, diff mode
