@@ -798,13 +798,56 @@ inoremap <F12> <ESC>:wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
 " Support routines
 " -------------------------------------------------------------
 
-" Return last selected text (as defined by `< and `>).
+" Return regContents=[regValueAsList, regType] for given register reg.
+function! GetReg(reg)
+    return [getreg(a:reg, 1, 1), getregtype(a:reg)]
+endfunction
+
+" Set register reg to regContents as returned from GetReg().
+" NOTE: Avoids changing the unnamed register '"' when reg != '"' (this is
+" an unfortunate side-effect of setting other registers).
+function! SetReg(reg, regContents)
+    let saveUnnamed = GetReg('"')
+    call setreg(a:reg, a:regContents[0], a:regContents[1])
+    if a:reg != '"'
+        call setreg('"', saveUnnamed[0], saveUnnamed[1])
+    endif
+endfunction
+
+" This implements a "stack" for saving values (typically registers).
+let s:Stack = []
+
+function! Push(value)
+    let s:Stack += [a:value]
+endfunction
+
+function! Pop()
+    let i = len(s:Stack) - 1
+    if i >= 0
+        let value = s:Stack[i]
+        unlet s:Stack[i]
+        return value
+    else
+        throw 'Stack Underflow'
+    endif
+endfunction
+
+" Push register 'a' onto stack; must be followed by a subsequent PopA().
+function! PushA()
+    call Push(GetReg('a'))
+endfunction
+
+" Pop register 'a' from stack as pushed by PushA().
+function! PopA()
+    call SetReg('a', Pop())
+endfunction
+
+" Return last visually selected text (as defined by `< and `>).
 function! SelectedText()
-    let regA = getreg("a")
-    let regTypeA = getregtype("a")
-    silent execute 'normal! `<v`>"ay'
+    call PushA()
+    normal! gv"ay
     let text = @a
-    call setreg("a", regA, regTypeA)
+    call PopA()
     return text
 endfunction
 
@@ -1725,58 +1768,22 @@ command! -bar MatchScratch     call SetSearch(LiteralPattern(@"))
 command! -bar MatchScratchWord call SetSearch('\<' . LiteralPattern(@") . '\>')
 
 " Map normal-mode '*' to just highlight, not search for next.
-" Note: Yank into @a to avoid clobbering register 0 (saving and restoring @a).
-nnoremap <silent> *  :let temp_a=@a<CR>"ayiw:MatchScratchWord<CR>
-        \:let @a=temp_a<CR>
-nnoremap <silent> g* :let temp_a=@a<CR>"ayiw:MatchScratch<CR>
-        \:let @a=temp_a<CR>
-xnoremap <silent> *  <ESC>:let temp_a=@a<CR>gv"ay:MatchScratch<CR>
-        \:let @a=temp_a<CR>
+" Note: Yank into @a to avoid clobbering register 0.
+nnoremap <silent> * :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
+nnoremap <silent> g* :call PushA()<CR>"ayiw:MatchScratch<CR>:call PopA()<CR>
+xnoremap <silent> * <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
 
-" Setup :Regrep command to search for visual selection.
-function! VisualRegrep()
-    return "y:MatchScratch\<CR>" .
-            \ ":Regrep \<C-r>=LiteralEgrepPattern(@\")\<CR>"
-endfunction
-
-" Setup :Regrep command to search for complete word under cursor.
-function! NormalRegrepCword()
-    return "yiw:MatchScratchWord\<CR>" .
-            \ ":Regrep \\<\<C-r>=LiteralEgrepPattern(@\")\<CR>\\>"
-endfunction
-
-" :Regrep of visual selection or current word under cursor.
-xnoremap <expr> <F3> VisualRegrep()
-nnoremap <expr> <F3> NormalRegrepCword()
-
-" Setup Perl search command for word under cursor.
-function! NormalPerlSearchCword(searchCmd)
-    return "yiw:MatchScratchWord\<CR>:" . a:searchCmd . " " .
-            \ "\<C-r>=shellescape(LiteralGrepPattern(@\"))\<CR> -w"
-endfunction
-
-" Setup :Ag (or :Ack) command to search for visual selection.
-function! VisualPerlSearch(searchCmd)
-    return "y:MatchScratch\<CR>:" . a:searchCmd . " " .
-            \ "\<C-r>=shellescape(LiteralGrepPattern(@\"))\<CR>"
-endfunction
+" :Regrep of word under cursor.
+nnoremap <F3> :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
+        \:Regrep \<<C-r>=LiteralEgrepPattern(@")<CR>\>
+" :Regrep of visual selection.
+xnoremap <F3> <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
+        \:Regrep <C-r>=LiteralEgrepPattern(@")<CR>
 
 " True if have 'ag' in PATH.
 function! HaveAg()
     return executable("ag")
 endfunction
-
-" Return "Ag" (if 'ag' is available) or "Ack" (otherwise).
-function! AgOrAck()
-    if HaveAg()
-        return "Ag"
-    else
-        return "Ack"
-    endif
-endfunction
-
-nnoremap <expr> #    NormalPerlSearchCword('G')
-xnoremap <expr> #    VisualPerlSearch('G')
 
 " Run "Ag!" or "Ack!" using supplied arguments.
 function! RunAgOrAck(args)
@@ -1792,6 +1799,11 @@ endfunction
 
 " Run first available of Ag! or Ack! against arguments.
 command! -bang -nargs=* -complete=file G call RunAgOrAck(<q-args>)
+
+nnoremap # :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
+        \:G <C-r>=shellescape(LiteralGrepPattern(@"))<CR> -w
+xnoremap # <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
+        \:G <C-r>=shellescape(LiteralGrepPattern(@"))<CR>
 
 function! FoldShowExpr()
     let maxLevel = 2
