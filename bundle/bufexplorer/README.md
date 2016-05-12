@@ -28,12 +28,12 @@ This plugin can also be found at http://www.vim.org/scripts/script.php?script_id
 
 ## Installation
 
-If you do not have a preferred installation method, I would recommend installing [vundle.vim](https://github.com/gmarik/vundle), and
+If you do not have a preferred installation method, I would recommend installing [neobundle.vim](https://github.com/Shougo/neobundle.vim), and
 then simply putting the following in your _vimrc or .vimrc file:
 
-    Bundle 'jlanzarotta/bufexplorer'
+    Neobundle 'jlanzarotta/bufexplorer'
 
-If you do not want to use [vundle.vim](https://github.com/gmarik/vundle), you can take the zip file from vim.org and unzip it and copy the plugin to your vimfiles\plugin directory and the txt file to your vimfiles\doc directory.  If you do that, make sure you generate the help by executing
+If you do not want to use [neobundle.vim](https://github.com/Shougo/neobundle.vim), you can take the zip file from vim.org and unzip it and copy the plugin to your vimfiles\plugin directory and the txt file to your vimfiles\doc directory.  If you do that, make sure you generate the help by executing
 
 `:helptag <your runtime directory>/doc`
 
@@ -41,7 +41,7 @@ Once help tags have been generated, you can view the manual with
 `:help bufexplorer`.
 
 ## License
-Copyright (c) 2001-2015, Jeff Lanzarotta
+Copyright (c) 2001-2016, Jeff Lanzarotta
 
 All rights reserved.
 

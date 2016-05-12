@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Preserve register "0 (the most recent yank) for ``#`` mapping (which launches
   a :G operation to search using Ag or Ack).
 
+- Upgrade BufExplorer to version 2016-04-16.
+
 2016-05-10
 ==========
 
