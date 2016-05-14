@@ -1561,10 +1561,53 @@ set whichwrap=b,s,<,>,[,]
 
 set wildmode=longest,list
 
-" List of extensions to ignore when using wildcard matching.
-set wildignore=*.o,*.obj,*.a,*.lib,*.so,*~,*.bak,*.swp,tags,*.opt,*.ncb
-        \,*.plg,*.elf,cscope.out,*.ecc,*.exe,*.ilk
-        \,export,build,_build,pkgexp
+" Notes about 'wildignore' patterns:
+" - ``*`` matches directory characters (unlike for shell); there is no ``**``.
+"
+" - A pattern without a slash will be compared against basename; with a slash,
+"   it will be compared against the expanded (absolute) path.  So in the absence
+"   of a slash in the pattern, ``*`` will never be presented a slash character
+"   to match against, which makes ``*`` equivalent to what the shell provides in
+"   this specific case.
+" - To prevent descent into a directory named DIRNAME, it is sufficient to
+"   use the bare name DIRNAME (without slashes or asterisks).  This allows
+"   the user to explicitly visit paths within DIRNAME if desired, e.g., with
+"   a directory named 'top' containing only 'DIRNAME/somefile', then:
+"
+"     echo glob('top/*') -> returns nothing
+"     echo glob('top/DIRNAME/*') -> returns /.../top/DIRNAME/somefile
+"
+" - To permanently ban DIRNAME from appearing as a directory component in a
+"   longer path, use '*/DIRNAME/*', but note that it won't match the directory
+"   DIRNAME itself (with no following slash); for that, you must use a bare
+"   DIRNAME in addition, e.g.::
+"
+"     set wildignore=DIRNAME,*/DIRNAME/*
+"
+"   Generally, just using the bare DIRNAME is preferred.
+
+" Setup 'wildignore' property.  This is used for many kinds of filename matching
+" in Vim.  In particular, it's used by some VCS plugins to detect the presence
+" of .git/.hg/etc directories, so those directories shouldn't be ignored using
+" 'wildignore'.
+
+" *NOTE* When changing 'wildignore' below, consider making corresponding changes
+" to $VIMFILES/etc/agignore.
+
+" Ignore some Vim-related artifacts.
+set wildignore+=*.swp,tags,cscope.out
+
+" Ignore common file backup extensions.
+set wildignore+=*~,*.bak
+
+" Ignore some binary build artifacts for Unix.
+set wildignore+=*.o,*.a,*.so,*.elf
+
+" Ignore some binary build artifacts for Windows.
+set wildignore+=*.obj,*.lib,*.exe,*.opt,*.ncb,*.plg,*.ilk
+
+" Ignore some build-related directories.
+set wildignore+=build,_build,export,pkgexp
 
 " Ignore some Python artifacts.
 set wildignore+=*.pyc,*.egg-info
@@ -1573,7 +1616,7 @@ set wildignore+=*.pyc,*.egg-info
 set wildignore+=*.ko,*.mod.c,*.order,modules.builtin
 
 " Ignore some Java and Clojure-related files.
-set wildignore+=*.class,classes/**,*.jar,.lein-*
+set wildignore+=*.class,classes,*.jar,.lein-*
 
 " Ignore debug symbols on Mac OS X.
 set wildignore+=*.dSYM

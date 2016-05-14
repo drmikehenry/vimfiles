@@ -1,0 +1,37 @@
+# Explicitly ignore version control so that ``ag --hidden`` still skips them.
+.git
+.svn
+.hg
+
+# These are taken from the 'wildignore' property in vimfiles.
+*.swp
+tags
+cscope.out
+*~
+*.bak
+*.o
+*.a
+*.so
+*.elf
+*.obj
+*.lib
+*.exe
+*.opt
+*.ncb
+*.plg
+*.ilk
+build
+_build
+export
+pkgexp
+*.pyc
+*.egg-info
+*.ko
+*.mod.c
+*.order
+modules.builtin
+*.class
+classes
+*.jar
+.lein-*
+*.dSYM
