@@ -621,6 +621,14 @@ set timeout timeoutlen=3000
 " without causing other problems.
 set ttimeout ttimeoutlen=5
 
+" Configure the inactivity timeout.  After this amount of idleness, the
+" CursorHold autocmd will be invoked.  Many plugins use this autocmd to perform
+" some processing that would be too expensive to perform on each change or
+" movement.  The default value is 4000; reducing this lowers the latency for
+" plugins to refresh certain slow operations (e.g., airline's tagbar will update
+" out-of-date tag names during CursorHold).
+set updatetime=1000
+
 " Disallow octal numbers for increment/decrement (CTRL-a/CTRL-x).
 set nrformats-=octal
 
@@ -2801,6 +2809,9 @@ function! AirlineInit()
         \ ':%-2v'])
 endfunction
 autocmd User AirlineAfterInit call AirlineInit()
+
+" Skip any empty airline sections, eliminating spurious '<' symbols and spaces.
+let g:airline_skip_empty_sections = 1
 
 " Avoid "SPELL" indicator.
 let g:airline_detect_spell = 0

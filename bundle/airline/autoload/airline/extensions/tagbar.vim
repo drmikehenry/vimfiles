@@ -25,21 +25,11 @@ endfunction
 
 let s:airline_tagbar_last_lookup_time = 0
 let s:airline_tagbar_last_lookup_val = ''
-let s:airline_tagbar_lookup_count = 0
 function! airline#extensions#tagbar#currenttag()
   if get(w:, 'airline_active', 0)
     if s:airline_tagbar_last_lookup_time != localtime()
-      let s:airline_tagbar_last_lookup_time = localtime()
-      let s:airline_tagbar_lookup_count = 1
-      let refresh = 1
-    elseif s:airline_tagbar_lookup_count < 5
-      let s:airline_tagbar_lookup_count = s:airline_tagbar_lookup_count + 1
-      let refresh = 1
-    else
-      let refresh = 0
-    endif
-    if refresh
       let s:airline_tagbar_last_lookup_val = tagbar#currenttag('%s', '', s:flags)
+      let s:airline_tagbar_last_lookup_time = localtime()
     endif
     return s:airline_tagbar_last_lookup_val
   endif
