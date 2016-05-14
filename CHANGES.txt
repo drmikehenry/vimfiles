@@ -13,6 +13,9 @@ require adjustment of per-user settings.
 - Upgrade airline to version 2016-05-13 and airline-themes to version
   2016-05-10.  Airline now supports suppression of empty sections.
 
+- Patch airline to support disabling whitespace checks on a per-buffer basis,
+  and disable these checks for QuickFix windows.
+
 2016-05-11
 ==========
 

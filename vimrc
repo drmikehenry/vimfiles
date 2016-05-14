@@ -5619,6 +5619,10 @@ endfunction
 function! SetupQuickFix()
    FoldQuickFixFiles 1
    call AddQuickFixMappings()
+   " Don't do whitespace checking on QuickFix windows.
+   " By default, QuickFix would be ignored because it's readonly, but we have
+   " a writable QuickFix due to the QuickFix Reflector plugin.
+   let b:airline_whitespace_disabled = 1
 endfunction
 command! -bar SetupQuickFix call SetupQuickFix()
 
