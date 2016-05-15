@@ -7,6 +7,30 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-05-15
+==========
+
+- Add experimental support for CtrlP matcher plugins:
+
+  - cpsm::
+
+      let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
+      let g:cpsm_query_inverting_delimiter = ' '
+
+  - ctrlp-py-matcher::
+
+      let g:ctrlp_match_func = {'match': 'pymatcher#PyMatch'}
+
+  - ctrlp-cmatcher::
+
+      let g:ctrlp_match_func = {'match' : 'matcher#cmatch'}
+
+  - abbrev-matcher::
+
+      let g:ctrlp_match_func = {'match': 'ctrlp#abbrev_matcher#match'}
+
+  None of these are enabled by default during their evaluation phase.
+
 2016-05-14
 ==========
 
