@@ -536,26 +536,11 @@ Installation:
 AIRLINE                                                 *notes_airline*
   Statusline utility in pure vimscript                  |airline.txt|
 
-Version 2016-05-13 (99cd26c) from:
+Version 2016-05-15 (70c16f4) from:
 https://github.com/vim-airline/vim-airline
 
 Themes version 2016-05-10 (bf0be1d) from:
 https://github.com/vim-airline/vim-airline-themes
-
-This patch adds a 'b:airline_whitespace_disabled' feature to allow turning
-off whitespace checking for a given buffer (used for writable QuickFix windows).
-
-diff --git a/bundle/airline/autoload/airline/extensions/whitespace.vim b/bundle/airline/autoload/airline/extensions/whitespace.vim
-index 7e13d47..5f7dae2 100644
---- a/bundle/airline/autoload/airline/extensions/whitespace.vim
-+++ b/bundle/airline/autoload/airline/extensions/whitespace.vim
-@@ -51,6 +51,7 @@ endfunction
- 
- function! airline#extensions#whitespace#check()
-   if &readonly || !&modifiable || !s:enabled || line('$') > s:max_lines
-+          \ || exists('b:airline_whitespace_disabled')
-     return ''
-   endif
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
