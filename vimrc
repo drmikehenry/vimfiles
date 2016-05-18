@@ -811,14 +811,25 @@ function! GetReg(reg)
     return [getreg(a:reg, 1, 1), getregtype(a:reg)]
 endfunction
 
+" Work around bug in setreg() prior to Vim 7.4.725.
+" In previous versions, invoking setreg() with an empty list for the value
+" would cause an internal error.
+function! SetRegWrapper(reg, value, options)
+    if len(a:value) == 0
+        call setreg(a:reg, '', a:options)
+    else
+        call setreg(a:reg, a:value, a:options)
+    endif
+endfunction
+
 " Set register reg to regContents as returned from GetReg().
 " NOTE: Avoids changing the unnamed register '"' when reg != '"' (this is
 " an unfortunate side-effect of setting other registers).
 function! SetReg(reg, regContents)
     let saveUnnamed = GetReg('"')
-    call setreg(a:reg, a:regContents[0], a:regContents[1])
+    call SetRegWrapper(a:reg, a:regContents[0], a:regContents[1])
     if a:reg != '"'
-        call setreg('"', saveUnnamed[0], saveUnnamed[1])
+        call SetRegWrapper('"', saveUnnamed[0], saveUnnamed[1])
     endif
 endfunction
 
