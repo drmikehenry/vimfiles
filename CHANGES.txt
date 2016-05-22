@@ -12,6 +12,10 @@ require adjustment of per-user settings.
 
 - Upgrade Fugitive plugin to version 2016-05-11.
 
+- Fix :DiffClose to use new :DiffOff command that understands how to restore
+  Fugitive's diff-restoration logic.  Now 'cursorbind' is no longer left set on
+  Fugitive working-copy windows after :OneWindow command (bound to CTRL-w o).
+
 2016-05-17
 ==========
 

@@ -2673,6 +2673,20 @@ function! GetDiffWinNums()
     return diffWinNums
 endfunction
 
+" Turn off diff mode for current window.
+" Understands Fugitive diff restoration.
+function! DiffOff()
+    if exists('w:fugitive_diff_restore')
+        execute w:fugitive_diff_restore
+        unlet w:fugitive_diff_restore
+    else
+        diffoff
+        setl noscrollbind
+        setl nocursorbind
+    endif
+endfunction
+command! -bar DiffOff call DiffOff()
+
 " Restore all diff windows and close them all except current window.
 " Since folding is enabled for certain kinds of diffs, folds are
 " expanded as part of restoring settings.
@@ -2684,7 +2698,7 @@ function! DiffClose()
         let name = bufname("%")
         if &modified || (curWinNum == diffWinNum)
             " Leave this window in-place, but turn off diff.
-            diffoff
+            DiffOff
             normal zR
         else
             if &buftype == "nofile" || name =~# "^fugitive:"
