@@ -16,6 +16,8 @@ require adjustment of per-user settings.
   Fugitive's diff-restoration logic.  Now 'cursorbind' is no longer left set on
   Fugitive working-copy windows after :OneWindow command (bound to CTRL-w o).
 
+- Have CtrlP plugin follow symlinks.
+
 2016-05-17
 ==========
 

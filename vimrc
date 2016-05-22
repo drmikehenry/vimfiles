@@ -3053,6 +3053,12 @@ let g:ctrlp_max_height = 50
 " Reuse the current window when opening new files.
 let g:ctrlp_open_new_file = 'r'
 
+" Symlinks:
+" 0 - Do not follow symlinks.
+" 1 - Follow non-looped symlinks.
+" 2 - Follow all symlinks.
+let g:ctrlp_follow_symlinks = 1
+
 " -------------------------------------------------------------
 " Easy-Align
 " -------------------------------------------------------------
