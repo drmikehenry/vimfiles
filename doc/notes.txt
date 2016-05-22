@@ -1000,7 +1000,7 @@ more useful ones are:
             See |fugitive-:Gstatus| for more information
   :Git      Run an arbitrary git command from within Vim
 
-Version 2014-07-07 (9af975c8) from:
+Version 2016-05-11 (3439f99) from:
 https://github.com/tpope/vim-fugitive.git
 
 Installation:
