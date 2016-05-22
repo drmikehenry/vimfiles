@@ -2681,8 +2681,8 @@ function! DiffOff()
         unlet w:fugitive_diff_restore
     else
         diffoff
-        setl noscrollbind
-        setl nocursorbind
+        setlocal noscrollbind
+        setlocal nocursorbind
     endif
 endfunction
 command! -bar DiffOff call DiffOff()
@@ -4880,9 +4880,9 @@ function! SetSpell()
     let key = LookupKey("b:SpellType", "g:SpellMap")
 
     if key == "<on>"
-        setl spell
+        setlocal spell
     elseif key == "<off>"
-        setl nospell
+        setlocal nospell
     endif
 endfunction
 
