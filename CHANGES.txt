@@ -14,6 +14,8 @@ require adjustment of per-user settings.
 
 - Port vimrc unit tests to Vader.
 
+- Remove UnitTest plugin (Vader has replaced its function).
+
 2016-05-22
 ==========
 

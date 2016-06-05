@@ -87,7 +87,6 @@
     TextObj-Rst - Text objects for reStructuredText     |notes_textobj-rst|
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
     ToggleCursor - Changes cursor shape in terminal     |notes_togglecursor|
-    UnitTest - Support for unit tests in vimscript      |notes_unittest|
     UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
     VCScommand - Version Control System integration     |notes_vcscommand|
     VimBall - Vim "package manager"                     |notes_vimball|
@@ -2634,26 +2633,6 @@ need version 1.7 or better.
 
 Version 0.5.0 (79b6ad85) from:
 https://github.com/jszakmeister/vim-togglecursor.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-UNITTEST                                                *notes_unittest*
-    Support for unit tests in vimscript                 |unittest.txt|
-
-To run the vimfiles unit test from the command line: >
-
-  cd ~/.vim/test
-  ../bundle/unittest/bin/vunit test_vimrc.vim
-
-To run from within Vim: >
-
-  vim ~/.vim/test/test_vimrc.vim
-  :UnitTest
-
-Version 2012-04-02 (92778771) from:
-https://github.com/h1mesuke/vim-unittest
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
