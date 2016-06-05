@@ -1,0 +1,47 @@
+" Tests for vimrc.
+
+Execute (Flatten):
+    AssertEqual [],              Flatten([])
+    AssertEqual [],              Flatten([[]])
+    AssertEqual [],              Flatten([[[]]])
+    AssertEqual [1],             Flatten([1])
+    AssertEqual [1],             Flatten([[1]])
+    AssertEqual [1, 2, 3, 4],    Flatten([1, [2], [[3], 4]])
+
+Execute (PathEscape):
+    AssertEqual '',              PathEscape('')
+    AssertEqual 'p',             PathEscape('p')
+    AssertEqual '\\p',           PathEscape('\p')
+    AssertEqual '\\\\p',         PathEscape('\\p')
+    AssertEqual '\\\,p',         PathEscape('\,p')
+
+Execute (PathUnescape):
+    AssertEqual '',              PathUnescape('')
+    AssertEqual 'p',             PathUnescape('p')
+    AssertEqual '\p',            PathUnescape('\p')
+    AssertEqual '\p',            PathUnescape('\\p')
+    AssertEqual ',p',            PathUnescape('\,p')
+    AssertEqual '\,p',           PathUnescape('\\,p')
+    AssertEqual '\,p',           PathUnescape('\\\,p')
+    AssertEqual '\,p',           PathUnescape('\\\,p')
+
+Execute (PathSplit):
+    AssertEqual [],                  PathSplit('')
+    AssertEqual ['p'],               PathSplit('p')
+    AssertEqual ['p', 'q'],          PathSplit('p,q')
+    AssertEqual ['p,q'],             PathSplit('p\,q')
+    AssertEqual ['p\q'],             PathSplit('p\\q')
+    AssertEqual ['p\', 'q'],         PathSplit('p\\,q')
+    AssertEqual ['p\,q'],            PathSplit('p\\\,q')
+    AssertEqual ['p', 'q', 'r'],     PathSplit('p,q,r')
+
+Execute (PathJoin):
+    AssertEqual '',                  PathJoin('')
+    AssertEqual '',                  PathJoin([])
+    AssertEqual '',                  PathJoin([''])
+    AssertEqual ',',                 PathJoin(['', ''])
+    AssertEqual ',',                 PathJoin(['', ''], [])
+    AssertEqual 'p,q,r',             PathJoin('p', 'q', 'r')
+    AssertEqual 'p,\,,r',            PathJoin('p', ',', 'r')
+    AssertEqual '\\,\\\,',           PathJoin('\', '\,')
+

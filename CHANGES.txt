@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Add Vader plugin version 2016-05-22 for Vim unit testing.
 
+- Port vimrc unit tests to Vader.
+
 2016-05-22
 ==========
 
