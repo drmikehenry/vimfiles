@@ -2738,6 +2738,16 @@ Installation:
 - See ~/.vim/vimrc for detailed configuration steps.
 
 ------------------------------------------------------------------------------
+VADER                                                   *notes_vader*
+    Unit testing for vimscript                          |vader.txt|
+
+Version 2016-05-22 (6b966e1) from:
+https://github.com/junegunn/vader.vim
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 VCSCOMMAND                                               *notes_vcscommand*
   Version Control System integration                     |vcscommand|
 
