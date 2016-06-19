@@ -5758,6 +5758,15 @@ function! SetupSvn()
 endfunction
 command! -bar SetupSvn call SetupSvn()
 
+" --------------------------------------
+" Setup for Vader (Vim testing language)
+" --------------------------------------
+function! SetupVader()
+    SetupSource
+    HighlightOff
+endfunction
+command! -bar SetupVader call SetupVader()
+
 " -------------------------------------------------------------
 " Setup for VHDL.
 " -------------------------------------------------------------
