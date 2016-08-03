@@ -541,6 +541,10 @@ https://github.com/vim-airline/vim-airline
 Themes version 2016-05-10 (bf0be1d) from:
 https://github.com/vim-airline/vim-airline-themes
 
+Local Customizations:
+- Added an AirlineCustomizeSymbols command to customize separators and symbols
+  based on whether g:FontFamily supports Powerline symbols or not.
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
