@@ -154,6 +154,62 @@ function! OptArg(varArgs, defaultValue)
     return ListPop(VarArgs(1, a:varArgs), a:defaultValue)
 endfunction
 
+" Acquire the list of all loaded scripts as absolute paths.
+"   Paths will use native separators (e.g., /unix/path or \windows\path).
+function! ScriptPaths()
+    redir => lines
+    silent! scriptnames
+    redir END
+    let paths = []
+    for line in split(lines, '\n')
+        let path = substitute(line, '^\s*[0-9]\+:\s*\(.*\)', '\1', '')
+        call add(paths, fnamemodify(path, ':p'))
+    endfor
+    return paths
+endfunction
+
+" Return absolute ScriptPath that matches given script.
+"   If an exact match can be found, it will be returned.  Otherwise, if exactly
+"   one absolute path has a:script as a suffix, it will be returned.
+"   The empty string is returned on failure.
+function! GetScript(script)
+    let paths = ScriptPaths()
+    let matches = []
+    for path in paths
+        if path == a:script
+            return path
+        elseif path[-len(a:script):] == a:script
+            call add(matches, path)
+        endif
+    endfor
+    if len(matches) == 1
+        return matches[0]
+    endif
+    return ''
+endfunction
+
+" Lookup the <SID> for a given script.  This allows for accessing
+" script-local variables.
+" Return 0 on failure.
+function! GetSID(script)
+    let path = GetScript(a:script)
+    if path != ''
+        return index(ScriptPaths(), path) + 1
+    endif
+    return 0
+endfunction
+
+" Lookup symbol in s: of given script.
+" Uses GetSID(script) to locate the <SID> of the given script; if found,
+" creates the script-local name ('<SNR>' . sid . '_' . symbol).
+function! GetSymbol(script, symbol)
+    let sid = GetSID(a:script)
+    if sid > 0
+        return '<SNR>' . sid . '_' . a:symbol
+    endif
+    return ''
+endfunction
+
 " -------------------------------------------------------------
 " runtimepath manipulation
 " -------------------------------------------------------------
