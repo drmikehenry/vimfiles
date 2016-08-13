@@ -11,6 +11,14 @@ function! CustomSetupMake()
 endfunction
 command! -bar SetupMake call CustomSetupMake()
 
+" Use <CR>/<s-CR> for forward/backward sneak; use streak mode for operators.
+" Nxmap   <CR>                <Plug>Sneak_s
+" Nxmap   <s-CR>              <Plug>Sneak_S
+" omap    <CR>                <Plug>(SneakStreak)
+" omap    <s-CR>              <Plug>(SneakStreakBackward)
+
+" Use <CR> for easymotion 2-character movement.
+Noxmap   <CR>               <Plug>(easymotion-s2)
 
 Noxmap Y  y$
 

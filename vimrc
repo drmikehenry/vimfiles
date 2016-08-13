@@ -5721,6 +5721,9 @@ function! AddQuickFixMappings()
         execute pre . 'oo ' . prevWin
         execute pre . 'OO ' . close
 
+        " Ensure <CR> does the out-of-the-box behavior.
+        nnoremap <buffer> <silent> <CR> <CR>
+
         let openStay = '<CR>' . prevWin
         execute pre . '<s-CR>  ' . openStay
         execute pre . 'o<CR> '   . '<CR>'
