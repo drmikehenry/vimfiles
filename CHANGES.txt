@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Add some functions in vimrc to help locate script-local symbols
   (GetSymbol(), GetSID(), GetScript(), ScriptPaths()).
 
+- Add support for JSON files.
+
 2016-06-19
 ==========
 

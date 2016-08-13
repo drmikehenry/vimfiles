@@ -5527,6 +5527,15 @@ endfunction
 command! -bar SetupJavaScript call SetupJavaScript()
 
 " -------------------------------------------------------------
+" Setup for JSON
+" -------------------------------------------------------------
+function! SetupJson()
+    SetupSource
+    Highlight nolonglines
+endfunction
+command! -bar SetupJson call SetupJson()
+
+" -------------------------------------------------------------
 " Setup for LLVM source code.
 " -------------------------------------------------------------
 
