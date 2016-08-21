@@ -41,6 +41,8 @@
     HiLinkTrace - Display syntax highlighting stack     |notes_hilinktrace|
     Hybrid - A dark colorscheme                         |notes_hybrid|
     Indent-guides - Adds indent guides                  |notes_indent-guides|
+    Incsearch - Incrementally highlight pattern matches |notes_incsearch|
+    Incsearch-fuzzy - incsearch with fuzzy patterns     |notes_incsearch-fuzzy|
     JavaComplete - Java Omnicompletion                  |notes_javacomplete|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
     Less - Syntax highlighting for LessCSS              |notes_less|
@@ -1166,9 +1168,9 @@ Installation:
 
 ------------------------------------------------------------------------------
 INCSEARCH                                                *notes_incsearch*
-  Incrementally highlight all pattern matches            |incsearch.txt|
+  Incrementally highlight pattern matches                |incsearch.txt|
 
-Version 2015-05-04 (f40dfa57) from:
+Version 2016-05-06 (161c5b6) from:
 https://github.com/haya14busa/incsearch.vim.git
 
 Local Customizations:
@@ -1181,6 +1183,20 @@ Useful keys during "/" operation:
   <C-j>/<C-k>     move to next/previous page of matches on screen
   <C-l>           start buffer text completion; use <Right>/<Left> to
                   scroll through options while completing
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+INCSEARCH-FUZZY                                          *notes_incsearch-fuzzy*
+  Incsearch with fuzzy patterns
+
+Version 2016-01-06 (c0e5846) from:
+https://github.com/haya14busa/incsearch-fuzzy.vim.git
+
+Local Customizations:
+- The recommended mappings for "z/", "z?", and "zg/" were made; see
+  incsearch-fuzzy's README for more details.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

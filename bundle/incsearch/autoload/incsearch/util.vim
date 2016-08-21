@@ -28,6 +28,14 @@ let s:save_cpo = &cpo
 set cpo&vim
 " }}}
 
+let s:TRUE = !0
+let s:FALSE = 0
+
+" Public Utilities:
+function! incsearch#util#deepextend(...) abort
+  return call(function('s:deepextend'), a:000)
+endfunction
+
 " Utilities:
 
 function! incsearch#util#import() abort
@@ -52,6 +60,9 @@ let s:functions = [
 \   , 'sort_pos'
 \   , 'count_pattern'
 \   , 'silent_feedkeys'
+\   , 'deepextend'
+\   , 'dictfunction'
+\   , 'regexp_join'
 \ ]
 
 
@@ -106,18 +117,22 @@ endfunction
 " parameter: pattern, from, to
 function! s:count_pattern(pattern, ...) abort
   let w = winsaveview()
-  let [from, to] = s:sort_pos([
+  let [from, to] = [
   \   get(a:, 1, [1, 1]),
   \   get(a:, 2, [line('$'), s:get_max_col('$')])
-  \ ])
+  \ ]
+  let ignore_at_cursor_pos = get(a:, 3, 0)
+  " direction flag
+  let d_flag = s:compare_pos(from, to) > 0 ? 'b' : ''
   call cursor(from)
   let cnt = 0
+  let base_flag = d_flag . 'W'
   try
     " first: accept a match at the cursor position
-    let pos = searchpos(a:pattern, 'cW')
-    while (pos != [0, 0] && s:is_pos_less_equal(pos, to))
+    let pos = searchpos(a:pattern, (ignore_at_cursor_pos ? '' : 'c' ) . base_flag)
+    while (pos != [0, 0] && s:compare_pos(pos, to) isnot# (d_flag is# 'b' ? -1 : 1))
       let cnt += 1
-      let pos = searchpos(a:pattern, 'W')
+      let pos = searchpos(a:pattern, base_flag)
     endwhile
   finally
     call winrestview(w)
@@ -126,18 +141,19 @@ function! s:count_pattern(pattern, ...) abort
 endfunction
 
 " NOTE: support vmap?
+" It doesn't handle feedkeys() on incsert or command-line mode
 function! s:silent_feedkeys(expr, name, ...) abort
   " Ref:
   " https://github.com/osyo-manga/vim-over/blob/d51b028c29661d4a5f5b79438ad6d69266753711/autoload/over.vim#L6
-  let mode = get(a:, 1, "m")
-  let name = "incsearch-" . a:name
-  let map = printf("<Plug>(%s)", name)
-  if mode == "n"
-    let command = "nnoremap"
+  let mode = get(a:, 1, 'm')
+  let name = 'incsearch-' . a:name
+  let map = printf('<Plug>(%s)', name)
+  if mode ==# 'n'
+    let command = 'nnoremap'
   else
-    let command = "nmap"
+    let command = 'nmap'
   endif
-  execute command "<silent>" map printf("%s:nunmap %s<CR>", a:expr, map)
+  execute command '<silent>' map printf('%s:nunmap %s<CR>', a:expr, map)
   if mode(1) !=# 'ce'
     " FIXME: mode(1) !=# 'ce' exists only for the test
     "        :h feedkeys() doesn't work while runnning a test script
@@ -145,6 +161,116 @@ function! s:silent_feedkeys(expr, name, ...) abort
     call feedkeys(printf("\<Plug>(%s)", name))
   endif
 endfunction
+
+" deepextend (nest: 1)
+function! s:deepextend(expr1, expr2) abort
+  let expr2 = copy(a:expr2)
+  for [k, V] in items(a:expr1)
+    if (type(V) is type({}) || type(V) is type([])) && has_key(expr2, k)
+      let a:expr1[k] = extend(a:expr1[k], expr2[k])
+      unlet expr2[k]
+    endif
+    unlet V
+  endfor
+  return extend(a:expr1, expr2)
+endfunction
+
+let s:funcmanage = {}
+function! s:funcmanage() abort
+  return s:funcmanage
+endfunction
+
+function! s:dictfunction(dictfunc, dict) abort
+  let funcname = '_' . matchstr(string(a:dictfunc), '\d\+')
+  let s:funcmanage[funcname] = {
+  \   'func': a:dictfunc,
+  \   'dict': a:dict
+  \ }
+  let prefix = '<SNR>' . s:SID() . '_'
+  let fm = printf("%sfuncmanage()['%s']", prefix, funcname)
+  execute join([
+  \   printf('function! s:%s(...) abort', funcname),
+  \   printf("  return call(%s['func'], a:000, %s['dict'])", fm, fm),
+  \          'endfunction'
+  \ ], "\n")
+  return function(printf('%s%s', prefix, funcname))
+endfunction
+
+
+"--- regexp
+
+let s:escaped_backslash = '\m\%(^\|[^\\]\)\%(\\\\\)*\zs'
+
+function! s:regexp_join(ps) abort
+  let rs = map(filter(copy(a:ps), 's:_is_valid_regexp(v:val)'), 's:escape_unbalanced_left_r(v:val)')
+  return printf('\m\%%(%s\m\)', join(rs, '\m\|'))
+endfunction
+
+function! s:_is_valid_regexp(pattern) abort
+  try
+    if '' =~# a:pattern
+    endif
+    return s:TRUE
+  catch
+    return s:FALSE
+  endtry
+endfunction
+
+" \m,\v:  [ -> \[
+" \M,\V:  \[ -> [
+function! s:escape_unbalanced_left_r(pattern) abort
+  let rs = []
+  let cs = split(a:pattern, '\zs')
+  " escape backslash (\, \\\, \\\\\, ...)
+  let escape_bs = s:FALSE
+  let flag = &magic ? 'm' : 'M'
+  let i = 0
+  while i < len(cs)
+    let c = cs[i]
+    " characters to add to rs
+    let addcs = [c]
+    if escape_bs && s:_is_flag(c)
+      let flag = c
+    elseif c is# '[' && s:_may_replace_left_r_cond(escape_bs, flag)
+      let idx = s:_find_right_r(cs, i)
+      if idx is# -1
+        if s:_is_flag(flag, 'MV')
+          " Remove `\` before unbalanced `[`
+          let rs = rs[:-2]
+        else
+          " Escape unbalanced `[`
+          let addcs = ['\' . c]
+        endif
+      else
+        let addcs = cs[(i):(i+idx)]
+        let i += idx
+      endif
+    endif
+    let escape_bs = (escape_bs || c isnot# '\') ? s:FALSE : s:TRUE
+    let rs += addcs
+    let i += 1
+  endwhile
+  return join(rs, '')
+endfunction
+
+" @ return boolean
+function! s:_is_flag(flag, ...) abort
+  let chars = get(a:, 1, 'mMvV')
+  return a:flag =~# printf('\m[%s]', chars)
+endfunction
+
+" @ return boolean
+function! s:_may_replace_left_r_cond(escape_bs, flag) abort
+  return (a:escape_bs && s:_is_flag(a:flag, 'MV')) || (!a:escape_bs && s:_is_flag(a:flag, 'mv'))
+endfunction
+
+" @return index
+function! s:_find_right_r(cs, i) abort
+  return match(join(a:cs[(a:i+1):], ''), s:escaped_backslash . ']')
+endfunction
+
+"--- end of regexp
+
 
 " Restore 'cpoptions' {{{
 let &cpo = s:save_cpo

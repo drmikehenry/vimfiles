@@ -29,6 +29,7 @@ g:incsearch#no_inc_hlsearch	incsearch.txt	/*g:incsearch#no_inc_hlsearch*
 g:incsearch#separate_highlight	incsearch.txt	/*g:incsearch#separate_highlight*
 g:incsearch#smart_backward_word	incsearch.txt	/*g:incsearch#smart_backward_word*
 g:incsearch#vim_cmdline_keymap	incsearch.txt	/*g:incsearch#vim_cmdline_keymap*
+g:incsearch_cli_key_mappings	incsearch.txt	/*g:incsearch_cli_key_mappings*
 incsearch#call()	incsearch.txt	/*incsearch#call()*
 incsearch#cli()	incsearch.txt	/*incsearch#cli()*
 incsearch#go()	incsearch.txt	/*incsearch#go()*
@@ -42,10 +43,13 @@ incsearch-changelog	incsearch.txt	/*incsearch-changelog*
 incsearch-commandline-interface	incsearch.txt	/*incsearch-commandline-interface*
 incsearch-config	incsearch.txt	/*incsearch-config*
 incsearch-config-command	incsearch.txt	/*incsearch-config-command*
+incsearch-config-converters	incsearch.txt	/*incsearch-config-converters*
 incsearch-config-is_expr	incsearch.txt	/*incsearch-config-is_expr*
 incsearch-config-is_stay	incsearch.txt	/*incsearch-config-is_stay*
+incsearch-config-keymap	incsearch.txt	/*incsearch-config-keymap*
 incsearch-config-modules	incsearch.txt	/*incsearch-config-modules*
 incsearch-config-pattern	incsearch.txt	/*incsearch-config-pattern*
+incsearch-config-prompt	incsearch.txt	/*incsearch-config-prompt*
 incsearch-contents	incsearch.txt	/*incsearch-contents*
 incsearch-functions	incsearch.txt	/*incsearch-functions*
 incsearch-highlight	incsearch.txt	/*incsearch-highlight*

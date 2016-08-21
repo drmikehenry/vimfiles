@@ -26,8 +26,8 @@ function! s:suite.mappings()
   call s:assert.equals(maparg('<Plug>(incsearch-backward)', 'nvo'), "incsearch#go({'command': '?'})")
   call s:assert.equals(maparg('<Plug>(incsearch-stay)'    , 'nvo'), "incsearch#go({'command': '/', 'is_stay': 1})")
   " Additional:
-  call s:assert.equals(maparg('<Plug>(incsearch-nohl)', 'nvo'), 'incsearch#auto_nohlsearch(1)')
-  call s:assert.equals(maparg('<Plug>(incsearch-nohl0)', 'nvo'), 'incsearch#auto_nohlsearch(0)')
+  call s:assert.equals(maparg('<Plug>(incsearch-nohl)', 'nvo'), 'incsearch#autocmd#auto_nohlsearch(1)')
+  call s:assert.equals(maparg('<Plug>(incsearch-nohl0)', 'nvo'), 'incsearch#autocmd#auto_nohlsearch(0)')
   call s:assert.equals(maparg('<Plug>(incsearch-nohl-n)' , 'nvo'), '<Plug>(incsearch-nohl)<Plug>(_incsearch-n)')
   call s:assert.equals(maparg('<Plug>(incsearch-nohl-N)' , 'nvo'), '<Plug>(incsearch-nohl)<Plug>(_incsearch-N)')
   call s:assert.equals(maparg('<Plug>(incsearch-nohl-*)' , 'nvo'), '<Plug>(incsearch-nohl)<Plug>(_incsearch-*)')
@@ -35,8 +35,8 @@ function! s:suite.mappings()
   call s:assert.equals(maparg('<Plug>(incsearch-nohl-g*)', 'nvo'), '<Plug>(incsearch-nohl)<Plug>(_incsearch-g*)')
   call s:assert.equals(maparg('<Plug>(incsearch-nohl-g#)', 'nvo'), '<Plug>(incsearch-nohl)<Plug>(_incsearch-g#)')
   " Alias To The Default:
-  call s:assert.equals(maparg('<Plug>(_incsearch-n)' , 'nvo'), 'n')
-  call s:assert.equals(maparg('<Plug>(_incsearch-N)' , 'nvo'), 'N')
+  call s:assert.equals(maparg('<Plug>(_incsearch-n)' , 'nvo'), 'g:incsearch#consistent_n_direction && !v:searchforward ? ''N'' : ''n''')
+  call s:assert.equals(maparg('<Plug>(_incsearch-N)' , 'nvo'), 'g:incsearch#consistent_n_direction && !v:searchforward ? ''n'' : ''N''')
   call s:assert.equals(maparg('<Plug>(_incsearch-*)' , 'nvo'), '*')
   call s:assert.equals(maparg('<Plug>(_incsearch-#)' , 'nvo'), '#')
   call s:assert.equals(maparg('<Plug>(_incsearch-g*)', 'nvo'), 'g*')
@@ -67,7 +67,6 @@ function! s:suite.test_autoload_function()
   endtry
   call s:assert.exists('*incsearch#go')
   call s:assert.exists('*incsearch#_go')
-  call s:assert.exists('*incsearch#stay')
   call s:assert.exists('*incsearch#parse_pattern')
 endfunction
 
@@ -78,9 +77,12 @@ endfunction
 " https://github.com/haya14busa/incsearch.vim/issues/69
 function! s:suite.handle_keymapping_option()
   call s:assert.equals(g:incsearch_cli_key_mappings, {})
-  let d = copy(incsearch#cli().keymapping())
-  let g:incsearch_cli_key_mappings['a'] = 'b'
-  call s:assert.equals(incsearch#cli().keymapping(), extend(copy(d), {'a': 'b'}))
-  unlet g:incsearch_cli_key_mappings['a']
-  call s:assert.equals(incsearch#cli().keymapping(), d)
+  let d = copy(incsearch#make().keymapping())
+  try
+    let g:incsearch_cli_key_mappings['a'] = 'b'
+    call s:assert.equals(incsearch#make().keymapping(), extend(copy(d), {'a': 'b'}))
+  finally
+    unlet g:incsearch_cli_key_mappings['a']
+  endtry
+  call s:assert.equals(incsearch#make().keymapping(), d)
 endfunction

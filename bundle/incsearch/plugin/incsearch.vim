@@ -38,6 +38,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 " }}}
 
+" <silent>: do not show command in command line
 noremap <silent><expr> <Plug>(incsearch-forward)  incsearch#go({'command': '/'})
 noremap <silent><expr> <Plug>(incsearch-backward) incsearch#go({'command': '?'})
 noremap <silent><expr> <Plug>(incsearch-stay)     incsearch#go({'command': '/', 'is_stay': 1})
@@ -49,9 +50,9 @@ noremap <silent><expr> <Plug>(incsearch-stay)     incsearch#go({'command': '/', 
 "   - Make sure calling this mapping __before__ moving commands
 "     e.g. `<Plug>(incsearch-nohl)n` works but `n<Plug>(incsearch-nohl)` doesn't
 "     work
-noremap <expr> <Plug>(incsearch-nohl) incsearch#auto_nohlsearch(1)
-noremap <expr> <Plug>(incsearch-nohl0) incsearch#auto_nohlsearch(0)
-noremap <expr> <Plug>(incsearch-nohl2) incsearch#auto_nohlsearch(2)
+noremap <expr> <Plug>(incsearch-nohl)  incsearch#autocmd#auto_nohlsearch(1)
+noremap <expr> <Plug>(incsearch-nohl0) incsearch#autocmd#auto_nohlsearch(0)
+noremap <expr> <Plug>(incsearch-nohl2) incsearch#autocmd#auto_nohlsearch(2)
 
 
 map <Plug>(incsearch-nohl-n)  <Plug>(incsearch-nohl)<Plug>(_incsearch-n)
@@ -63,12 +64,12 @@ map <Plug>(incsearch-nohl-g#) <Plug>(incsearch-nohl)<Plug>(_incsearch-g#)
 
 " These mappings are just alias to default mappings except they won't be
 " remapped any more
-noremap <Plug>(_incsearch-n)  n
-noremap <Plug>(_incsearch-N)  N
-noremap <Plug>(_incsearch-*)  *
-noremap <Plug>(_incsearch-#)  #
-noremap <Plug>(_incsearch-g*) g*
-noremap <Plug>(_incsearch-g#) g#
+noremap <expr> <Plug>(_incsearch-n)  g:incsearch#consistent_n_direction && !v:searchforward ? 'N' : 'n'
+noremap <expr> <Plug>(_incsearch-N)  g:incsearch#consistent_n_direction && !v:searchforward ? 'n' : 'N'
+noremap        <Plug>(_incsearch-*)  *
+noremap        <Plug>(_incsearch-#)  #
+noremap        <Plug>(_incsearch-g*) g*
+noremap        <Plug>(_incsearch-g#) g#
 
 " CommandLine Mapping {{{
 let g:incsearch_cli_key_mappings = get(g:, 'incsearch_cli_key_mappings', {})
@@ -81,8 +82,7 @@ function! s:key_mapping(lhs, rhs, noremap) abort
 endfunction
 
 function! s:as_keymapping(key) abort
-  execute 'let result = "' . substitute(escape(a:key, '\"'), '\(<.\{-}>\)', '\\\1', 'g') . '"'
-  return result
+  return eval('"' . substitute(escape(a:key, '\"'), '\(<.\{-}>\)', '\\\1', 'g') . '"')
 endfunction
 
 command! -nargs=* IncSearchNoreMap

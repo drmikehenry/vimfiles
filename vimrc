@@ -3283,6 +3283,17 @@ if v:version ># 703 || (v:version is 703 && has('patch32'))
 endif
 
 " -------------------------------------------------------------
+" incsearch-fuzzy
+" -------------------------------------------------------------
+
+" Requires at least Vim 7.3.032 (probably; assuming like incsearch)
+if v:version ># 703 || (v:version is 703 && has('patch32'))
+    nmap z/     <Plug>(incsearch-fuzzy-/)
+    nmap z?     <Plug>(incsearch-fuzzy-?)
+    nmap zg/    <Plug>(incsearch-fuzzy-stay)
+endif
+
+" -------------------------------------------------------------
 " indent-guides
 " -------------------------------------------------------------
 
