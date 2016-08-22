@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-08-22
+==========
+
+- Add better support for Airline fonts (thanks to John Szakmeister).  Redefine
+  the AirlineCustomizeSymbols command in your vimrc-after file to change the
+  airline symbol definitions.
+
 2016-08-21
 ==========
 
