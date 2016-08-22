@@ -3345,7 +3345,7 @@ Dragging text in four directions
 
 Text may be "dragged" in any of the four directions (Up, Down, Left, or
 Right).  In normal and insert modes, the current line will be dragged; in
-select mode, the selection will be dragged.
+visual mode, the visual selection will be dragged.
 
 Lines dragged vertically move as whole lines.
 
@@ -3355,24 +3355,24 @@ shift width ('sw') variable temporarily set to one.  For block-wise
 selections, this implies that only the selected block is shifted.
 
 Dragging up:
-  <M-Up>        (select mode, insert mode, normal mode)
-  <M-k>         (select mode, insert mode, normal mode)
-  -             (select mode)
+  <M-Up>        (visual mode, insert mode, normal mode)
+  <M-k>         (visual mode, insert mode, normal mode)
+  -             (visual mode)
 
 Dragging down:
-  <M-Down>      (select mode, insert mode, normal mode)
-  <M-j>         (select mode, insert mode, normal mode)
-  +             (select mode)
+  <M-Down>      (visual mode, insert mode, normal mode)
+  <M-j>         (visual mode, insert mode, normal mode)
+  +             (visual mode)
 
 Dragging left:
-  <M-Left>      (select mode, insert mode, normal mode)
-  <M-h>         (select mode, insert mode, normal mode)
-  <Backspace>   (select mode)
+  <M-Left>      (visual mode, insert mode, normal mode)
+  <M-h>         (visual mode, insert mode, normal mode)
+  <Backspace>   (visual mode)
 
 Dragging right:
-  <M-Left>      (select mode, insert mode, normal mode)
-  <M-h>         (select mode, insert mode, normal mode)
-  <Space>       (select mode)
+  <M-Left>      (visual mode, insert mode, normal mode)
+  <M-h>         (visual mode, insert mode, normal mode)
+  <Space>       (visual mode)
 
 ------------------------------------------------------------------------------
 Deleting "Rubbish" Whitespace
