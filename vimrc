@@ -540,10 +540,18 @@ let g:GoodUnicodeSymbolFontFamilyPatterns += [
         \ '^Droid Sans Mono\>',
         \]
 
+function! FontSupportsPowerlineSymbols(family)
+    if a:family =~# ' Powerline$' || a:family == 'Hack'
+        return 1
+    endif
+
+    return 0
+endfunction
+
 " Return type of Powerline symbols to use for given font family.
 " Value will be one of "fancy", "unicode", or "compatible".
 function! PowerlineSymbolsForFontFamily(family)
-    if a:family =~# ' Powerline$'
+    if FontSupportsPowerlineSymbols(a:family)
         return "fancy"
     endif
     for pattern in g:GoodUnicodeSymbolFontFamilyPatterns
@@ -553,6 +561,45 @@ function! PowerlineSymbolsForFontFamily(family)
     endfor
     return "compatible"
 endfunction
+
+function! AirlineCustomizeSymbols()
+    if !exists("g:airline_symbols")
+        let g:airline_symbols = {}
+    endif
+
+    if exists("g:FontFamily") && FontSupportsPowerlineSymbols(g:FontFamily)
+        let g:airline_left_sep = "\ue0b0"
+        let g:airline_left_alt_sep = "\ue0b1"
+        let g:airline_right_sep = "\ue0b2"
+        let g:airline_right_alt_sep = "\ue0b3"
+        let g:airline_symbols.crypt = "\ue0a2"
+        let g:airline_symbols.whitespace = "\u2739"
+        let g:airline_symbols.linenr = "\ue0a1"
+        let g:airline_symbols.maxlinenr = "\u2630"
+        let g:airline_symbols.branch = "\ue0a0"
+    else
+        " let g:airline_left_sep = '»'
+        " let g:airline_left_sep = '▶'
+        " let g:airline_left_sep = '│'
+        " let g:airline_left_sep = ''
+        " let g:airline_left_sep = '>'
+        let g:airline_left_sep = ' '
+        let g:airline_left_alt_sep = '>'
+        " let g:airline_right_sep = '«'
+        " let g:airline_right_sep = '◀'
+        " let g:airline_right_sep = '│'
+        " let g:airline_right_sep = ''
+        " let g:airline_right_sep = '<'
+        let g:airline_right_sep = ' '
+        let g:airline_right_alt_sep = '<'
+        let g:airline_symbols.crypt = '🔒'
+        let g:airline_symbols.whitespace = 'WS:'
+        let g:airline_symbols.linenr = '¶'
+        let g:airline_symbols.maxlinenr = ''
+        let g:airline_symbols.branch = '⚡'
+    endif
+endfunction
+command! -bar AirlineCustomizeSymbols call AirlineCustomizeSymbols()
 
 function! SetFont()
     if !has("gui_running")
@@ -572,6 +619,7 @@ function! SetFont()
         endif
         let &guifont = font
         let g:Powerline_symbols = PowerlineSymbolsForFontFamily(g:FontFamily)
+        AirlineCustomizeSymbols
     endif
 endfunction
 command! -bar SetFont call SetFont()
@@ -2895,25 +2943,7 @@ if g:EnableAirline
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
-" let g:airline_left_sep = '»'
-" let g:airline_left_sep = '▶'
-" let g:airline_left_sep = '│'
-" let g:airline_left_sep = ''
-" let g:airline_left_sep = '>'
-let g:airline_left_sep = ' '
-" let g:airline_right_sep = '«'
-" let g:airline_right_sep = '◀'
-" let g:airline_right_sep = '│'
-" let g:airline_right_sep = ''
-" let g:airline_right_sep = '<'
-let g:airline_right_sep = ' '
-let g:airline_symbols.crypt = '🔒'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⚡'
-" let g:airline_symbols.branch = '⭠'
-let g:airline_symbols.paste = 'PASTE'
-" let g:airline_symbols.whitespace = 'Ξ'
-let g:airline_symbols.whitespace = 'WS:'
+
 
 function! AirlineInit()
     " Remove parts that are redundant or which don't change often enough to
