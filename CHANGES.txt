@@ -12,6 +12,9 @@ require adjustment of per-user settings.
 
 - Use two-space indentation and disable spell checking for YAML files.
 
+- Disable auto-indentation on certain keypresses in YAML files (most importantly
+  for ``:`` and ``#``).
+
 2016-08-22
 ==========
 

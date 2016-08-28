@@ -6163,6 +6163,16 @@ endfunction
 command! -bar SetupYaml call SetupYaml()
 let g:SpellMap["<yaml>"] = "<off>"
 
+function! SetupYamlIndent()
+    " Turn off re-indenting feature for the following keys:
+    setlocal indentkeys-=0{
+    setlocal indentkeys-=0}
+    setlocal indentkeys-=0)
+    setlocal indentkeys-=<:>
+    setlocal indentkeys-=0#
+endfunction
+command! -bar SetupYamlIndent call SetupYamlIndent()
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
