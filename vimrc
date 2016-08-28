@@ -6157,8 +6157,11 @@ command! -bar SetupTmux call SetupTmux()
 
 function! SetupYaml()
     SetupSource
+    setlocal sts=2 sw=2
+    let b:SpellType = "<yaml>"
 endfunction
 command! -bar SetupYaml call SetupYaml()
+let g:SpellMap["<yaml>"] = "<off>"
 
 " Source support for :Man command.
 runtime ftplugin/man.vim

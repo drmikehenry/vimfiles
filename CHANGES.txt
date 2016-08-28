@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-08-28
+==========
+
+- Use two-space indentation and disable spell checking for YAML files.
+
 2016-08-22
 ==========
 
