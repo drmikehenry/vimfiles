@@ -16,6 +16,15 @@ require adjustment of per-user settings.
   support Powerline symbols (used by Airline as well), making Vim's status line
   look a bit better.
 
+- Remove <Space>l mapping for easymotion-sol-bd-jk, and replace with three
+  mappings beginning with <Space>j ("j" for "jump"):
+
+    <Space>jj          easymotion-s
+    <Space>jJ          easymotion-s2
+    <Space>jl          easymotion-sol-bd-jk
+
+  Also map <CR> to be a more convenient alias for easymotion-s2.
+
 2016-08-28
 ==========
 

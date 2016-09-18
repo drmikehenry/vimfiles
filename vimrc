@@ -3176,7 +3176,10 @@ let g:EasyMotion_smartcase = 1
 " Set keys for targets (removing semi-colon from default).
 let g:EasyMotion_keys = "asdghklqwertyuiopzxcvbnmfj"
 
-Noxmap  <Space>l            <Plug>(easymotion-sol-bd-jk)
+Noxmap   <Space>jj          <Plug>(easymotion-s)
+Noxmap   <Space>jJ          <Plug>(easymotion-s2)
+Noxmap   <Space>jl          <Plug>(easymotion-sol-bd-jk)
+Noxmap   <CR>               <Plug>(easymotion-s2)
 
 " Setup target locations for single-line "anywhere".
 let g:EasyMotion_re_line_anywhere = '\v' .

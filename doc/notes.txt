@@ -819,7 +819,9 @@ Local Customizations:
 
 - Setup mappings:
 
-  <Space>l            <Plug>(easymotion-sol-bd-jk)
+  <Space>jj          <Plug>(easymotion-s)
+  <Space>jJ          <Plug>(easymotion-s2)
+  <Space>jl          <Plug>(easymotion-sol-bd-jk)
 
 - Setup regular expressions for "anywhere" operations.
 
