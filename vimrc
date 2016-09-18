@@ -519,6 +519,7 @@ if !exists("g:DefaultFontFamilies")
     let g:DefaultFontFamilies = []
 endif
 let g:DefaultFontFamilies += [
+        \ "Hack",
         \ "PragmataPro for Powerline",
         \ "PragmataPro",
         \ "DejaVu Sans Mono for Powerline",

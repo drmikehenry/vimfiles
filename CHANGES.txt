@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-09-18
+==========
+
+- Use "Hack" as the preferred font (if installed).  Most systems don't have it
+  installed by default, so mostly this won't be noticeable unless you've gone
+  out of your way to install Hack.  Notably, Hack includes font patches to
+  support Powerline symbols (used by Airline as well), making Vim's status line
+  look a bit better.
+
 2016-08-28
 ==========
 
