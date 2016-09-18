@@ -3584,6 +3584,15 @@ mode) or the current selection (in Visual mode) using :Ag! (when available) or
 Use the mapping \z after a search to fold all but the matching lines.
 
 ------------------------------------------------------------------------------
+findx-related commands
+
+The external findx utility may be invoked using any of the below commands: >
+
+  :Findx <args>           Invoke ``findx``
+  :FFX <args>             Invoke ``ffx`` (a.k.a. ``findx -ffx``)
+  :FFG <args>             Invoke ``ffg`` (a.k.a. ``findx -ffg``)
+
+------------------------------------------------------------------------------
 :G 'search pattern'                                   *:G*   *notes_G*
 
 Depending on your environment, you may not have :Ag available, but if you have

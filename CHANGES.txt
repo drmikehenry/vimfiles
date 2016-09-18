@@ -25,6 +25,8 @@ require adjustment of per-user settings.
 
   Also map <CR> to be a more convenient alias for easymotion-s2.
 
+- Add new commands :Findx, :FFG, :FFX to integrate the findx utility.
+
 2016-08-28
 ==========
 

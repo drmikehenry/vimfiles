@@ -1972,6 +1972,35 @@ nnoremap # :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
 xnoremap # <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
         \:G <C-r>=shellescape(LiteralGrepPattern(@"))<CR>
 
+
+" =============================================================
+" findx-related commands
+" =============================================================
+
+function! QuickFixSystem(command)
+    cgetexpr system(a:command)
+    Copen
+endfunction
+
+function! FindxSystem(command)
+    let oldErrorformat = &errorformat
+    " For plain find output, accept a bare file path.
+    set errorformat=%f
+    try
+        call QuickFixSystem(a:command)
+    finally
+        let &errorformat = oldErrorformat
+    endtry
+endfunction
+
+command! -nargs=* Findx call FindxSystem('findx ' . <q-args>)
+command! -nargs=* FFX call FindxSystem('ffx ' . <q-args>)
+command! -nargs=+ FFG call QuickFixSystem('ffg -n ' . <q-args>)
+
+" =============================================================
+" Folding
+" =============================================================
+
 function! FoldShowExpr()
     let maxLevel = 2
     let level = 0
