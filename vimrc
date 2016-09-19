@@ -1354,6 +1354,72 @@ function! Rstrip(s)
     return substitute(a:s, '\s\+$', '', "")
 endfunction
 
+" Truncate string to at most length characters.
+function! TruncStr(str, length)
+    if len(a:str) < a:length
+        return a:str
+    elseif a:length > 0
+        return a:str[:(a:length - 1)]
+    else
+        return ''
+    endif
+endfunction
+
+" Return leading whitespace characters for string.
+function! LeadingWhitespace(str)
+    let remaining = Lstrip(a:str)
+    let whiteLen = len(a:str) - len(remaining)
+    return TruncStr(a:str, len(a:str) - len(remaining))
+endfunction
+
+" Return longest common prefix of two strings s1 and s2.
+function! CommonPrefix(s1, s2)
+    let i = 0
+    while i < len(a:s1) && i < len(a:s2) && a:s1[i] == a:s2[i]
+        let i += 1
+    endwhile
+    return TruncStr(a:s1, i)
+endfunction
+
+" Given a paragraph (string with embedded newlines), remove the largest common
+" whitespace prefix from each line.
+function! DedentParagraph(para)
+    " Track trailing newline separately, since we allow split() to remove it.
+    if a:para =~# '\n$'
+        let finalNewline = "\n"
+    else
+        let finalNewline = ''
+    endif
+    let lines = split(a:para, "\n")
+    if len(lines) > 0
+        let i = 0
+        let leading = substitute(lines[0], '.', ' ', '')
+        while i < len(lines)
+            let leading = CommonPrefix(leading, LeadingWhitespace(lines[i]))
+            let i += 1
+        endwhile
+
+        let i = 0
+        while i < len(lines)
+            let lines[i] = lines[i][len(leading):]
+            let i += 1
+        endwhile
+    endif
+    return join(lines, "\n") . finalNewline
+endfunction
+
+" Yank-related mappings.
+
+" Yank to end-of-line instead of entire line (use "yy" for yanking a line).
+nnoremap Y      y$
+
+" Yank and dedent the visual selection.
+" TODO For now, assumes yanking to register 0 and that * and + are destinations.
+" Someday this should take into account the actual destination register and
+" whether such a yank should influence the clipboard.
+xnoremap Y      y:let @0=DedentParagraph(@0)<CR>:let @+=@0<CR>:let @*=@0<CR>
+
+
 " Remove "rubbish" whitespace (from Andy Wokula posting).
 
 nnoremap <silent> drw :<C-u>call DeleteRubbishWhitespace()<CR>

@@ -11,8 +11,6 @@ function! CustomSetupMake()
 endfunction
 command! -bar SetupMake call CustomSetupMake()
 
-Noxmap Y  y$
-
 nnoremap <Space>bb          :<C-u>CtrlPBuffer<CR>
 nnoremap <Space>bd          :BW<CR>
 

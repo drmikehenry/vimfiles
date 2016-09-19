@@ -3554,6 +3554,19 @@ To make this easier, a visual mode mapping of capital P performs a put from
 register 0.  This allows a yank followed by repeated selections and puts.
 
 ------------------------------------------------------------------------------
+Yank-related mappings
+
+Normal-mode "Y" has been remapped to mean "yank to end of line" (equivalent to
+"y$"), for consistency with most other uppercase variants (e.g., "D", "C", ...).
+To yank a single line, use "yy".
+
+Visual-mode "Y" performs a yank-and-dedent operation on the selected text, where
+the largest common whitespace prefix is removed from all lines.  For now, the
+destination register is hard-coded to be "0 (along with both clipboard-related
+registers "+ and "*).  This is convenient when yanking shell commands to be
+pasted into a terminal.
+
+------------------------------------------------------------------------------
 Search-related customizations
 
 Vim's standard "*" operator (which searches for the word under the cursor) has

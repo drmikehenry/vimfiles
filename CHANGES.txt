@@ -27,6 +27,16 @@ require adjustment of per-user settings.
 
 - Add new commands :Findx, :FFG, :FFX to integrate the findx utility.
 
+- Map normal-mode ``Y`` to mean "yank to end of line" (equivalent to ``y$``),
+  for consistency with most other uppercase variants (e.g., ``D``, ``C``, ...).
+  To yank a single line, use ``yy``.
+
+- Map visual-mode "Y" to perform a yank-and-dedent operation on the selected
+  text, where the largest common whitespace prefix is removed from all lines.
+  For now, the destination register is hard-coded to be ``"0`` (along with both
+  clipboard-related registers ``"+`` and ``"*``).  This is convenient when
+  yanking shell commands to be pasted into a terminal.
+
 2016-08-28
 ==========
 
