@@ -1,0 +1,352 @@
+*grepper.txt*  Helps you win at grep!
+*grepper*
+
+  by Marco Hinz~
+
+  Twitter: https://twitter.com/_mhinz_
+  Github:  http://github.com/mhinz
+>
+  If you use any of my plugins, please star them on github. It's a great way
+  of getting feedback and gives me the kick to put more time into their
+  development.
+
+  If you encounter any bugs or have feature requests, just open an issue
+  report on Github.
+
+  Get your Vim on!
+<
+==============================================================================
+CONTENTS                                                      *grepper-contents*
+
+            INTRO .................. |grepper-intro|
+            TOOLS .................. |grepper-tools|
+            COMMANDS ............... |grepper-:Grepper|
+            OPERATOR ............... |grepper-operator|
+            MAPPINGS ............... |grepper-mappings|
+            OPTIONS ................ |grepper-options|
+            ADD TOOL ............... |grepper-add-tool|
+            AUTOCMD ................ |grepper-autocmd|
+            COLORS ................. |grepper-colors|
+            FAQ .................... |grepper-faq|
+            EXAMPLE ................ |grepper-example|
+
+==============================================================================
+INTRO                                                            *grepper-intro*
+
+This plugin is a convenience wrapper around |'grepprg'| and |'grepformat'|,
+supports most common grep tools, and is easily extendable.
+
+You choose a tool, enter a query, and get your matches into a |quickfix| list.
+
+Searches (Neovim and Vim 7.4.1967+) will be executed asynchronously. Thus you
+will be able to continue editing while the grep program is still running.
+
+==============================================================================
+TOOLS                                                            *grepper-tools*
+
+These tools are supported by default:
+
+    'ag'
+    'ack'
+    'grep'
+    'findstr'
+    'rg'
+    'pt'
+    'git'
+
+==============================================================================
+COMMANDS                                                      *grepper-:Grepper*
+
+There is only one command:
+
+:Grepper [flags]     Opens the search prompt with the first tool in
+                     |grepper-options-tools|.
+
+                     After you inserted a query, an external process will be
+                     kicked off and its result will be put into the quickfix
+                     list.
+
+                     If the query is empty, |:<cword>| will be used as query.
+
+Flags:~
+
+-[no]highlight       Highlight found matches.
+
+-[no]jump            Jump to first match.
+
+-[no]open            Open the quickfix/location window.
+
+-[no]switch          Switch to quickfix/location window.
+
+-[no]quickfix        Use the quickfix list. If -noquickfix is given, use the
+-[no]qf              location list instead.
+
+-[no]prompt          To prompt or not to prompt! Common uses are together with
+                     -cword or -grepprg in a command.
+
+-tool <tool>         Any supported tool. Either from |grepper-tools| or ones
+                     you added yourself via |grepper-add-tool|.
+
+-grepprg <cmd>       Use this flag to overwrite the default |'grepprg'| which
+                     is set according to the used tool. Also use -tool first,
+                     so the output gets escaped properly. See |grepper-add-tool|
+                     for examples.
+
+                     This must be the last flag!~
+
+-query <query>       This way the commandline pops up populated with this line
+                     already and you can use the full power of file
+                     completion. And since the query is specified on the
+                     commandline already, the search prompt is skipped.
+
+                     Use <up> and <down> to go through the input history or
+                     <c-f> to open it in the |cmdwin|.
+
+                     This must be the last flag!~
+
+-cword               Populate the prompt with the word under cursor. Useful
+                     when paired with -noprompt.
+
+Examples:~
+>
+    nnoremap <leader>* :Grepper -tool git -open -switch -cword -noprompt<cr>
+
+    :Grepper -tool ag -grepprg ag --vimgrep -G '^.+\.txt'
+<
+==============================================================================
+OPERATOR                                                      *grepper-operator*
+
+There is no default mapping for the operator, but you can set it like this:
+>
+    nmap gs  <plug>(GrepperOperator)
+    xmap gs  <plug>(GrepperOperator)
+<
+This defines an |operator| "gs" that takes any |{motion}| and uses that
+selection to populate the search prompt. The query is quoted automatically.
+
+Useful examples are gsW, gsiw, or gsi". See |text-objects| for all of them.
+
+In visual mode, it uses the current selection.
+
+If you have vim-repeat installed, you can repeat the operator action. For
+example, you can "gsiw" on "nice_word" to populate the search prompt with
+"nice_word". Next time you hit ".", "gsiw" will be repeated and the search
+prompt populated with the current |word| under the cursor.
+
+==============================================================================
+MAPPINGS                                                      *grepper-mappings*
+
+Search prompt:~
+
+    <cr>     Start search with current query.
+    <tab>    Next tool. (See |grepper-options-tools| on how to change this.)
+    <esc>    Close prompt without searching.
+    <c-c>    Close prompt without searching.
+    <c-f>    Open |cmdline-window|. Use <c-c><c-c> to quit without searching.
+
+If you crave any mappings for the quickfix window, I suggest having a look at
+dedicated plugins:
+
+    - https://github.com/yssl/QFEnter
+    - https://github.com/romainl/vim-qf
+
+==============================================================================
+OPTIONS                                                        *grepper-options*
+
+This plugin uses a single |Dictionary| for all configuration: g:grepper. If you
+are unsure how to use a dictionary, have a look at |grepper-example|. The
+supported keys are:
+
+highlight    Highlight found matches. Defaults to 0.
+
+quickfix     Use the quickfix list for the matches or the location list
+             otherwise. Defaults to 1.
+
+open         Open the quickfix/location window after the grep tool finished
+             running (and there was at least one match). Defaults to 1.
+
+switch       When the quickfix/location window opens, switch to it.
+             Defaults to 1.
+
+jump         Automatically jump to the first match. Defaults to 0.
+
+prompt       To prompt or not to prompt! Defaults to 1.
+
+                                                         *grepper-options-tools*
+tools        These are the tools that you can choose between. The order
+             matters. The first element is the default tool and will be used
+             if no tool was specified.
+
+             NOTE: Because of a name clash, some systems use "ack-grep"
+             instead of "ack". If you include "ack" here, "ack-grep" will be
+             found, too.
+
+             Defaults to:
+>
+                 ['ag', 'ack', 'grep', 'findstr', 'rg', 'pt', 'git']
+<
+next_tool    These keys will be used at the prompt for switching to the next
+             tool. Defaults to <tab>.
+
+             NOTE: This could also be the same keys as the ones that opened
+             the search prompt in the first place, e.g.:
+>
+                 nnoremap <leader>g :Grepper<cr>
+                 let g:grepper = { 'next_tool': '<leader>g' }
+<
+==============================================================================
+ADD TOOL                                                      *grepper-add-tool*
+
+If you don't like the default arguments to a grep tool or you want to add a
+new one, just add/replace the key to g:grepper:
+>
+    let g:grepper = {
+        \ 'tools': ['pt'],
+        \ 'pt': {
+        \   'grepprg':    'pt --nocolor --nogroup',
+        \   'grepformat': '%f:%l:%m',
+        \   'escape':     '\+*^$()[]',
+        \ }}
+<
+grepprg:~
+
+    The tool has be executable, but it doesn't have to be in $PATH. This works
+    just as well:
+>
+    'grepprg': '~/bin/greppy -a -b --c'
+<
+    In cases where the arguments don't come last, use $* as a placeholder:
+>
+    'grepprg': 'grep -Rn $* .'
+<
+    If you want to use the tool on all currently opened files (instead of the
+    current directory), use $+ as a placeholder:
+>
+    'grepprg': 'ag --vimgrep $* $+'
+<
+    If you want to use the tool only on the current file, use $. as a
+    placeholder:
+>
+    'grepprg': 'ag --vimgrep $* $.'
+<
+grepformat:~
+
+    This is optional. If the output of 'grepprg' uses a format that is not
+    already recognized by the default |'grepformat'|, define it yourself here.
+
+escape:~
+
+    This is optional. All these characters will be escaped in the query.
+
+==============================================================================
+AUTOCMD                                                        *grepper-autocmd*
+
+When a grep tool finishes running, the plugin emits an event. Handle it like
+this:
+>
+    autocmd User Grepper <any commands here>
+<
+NOTE: Autocmds don't nest by default. If you use any command that would
+trigger new events, be sure to add "nested": |autocmd-nested|.
+
+==============================================================================
+COLORS                                                          *grepper-colors*
+
+The search prompt is highlighted via the |hl-Question| group. Change it like
+this:
+>
+    highlight Question ctermfg=160 guifg=#ff0000 cterm=NONE
+>
+For error messages, |hl-ErrorMsg| is used.
+
+==============================================================================
+FAQ                                                                *grepper-faq*
+
+    |grepper-faq-01|  How to git grep from the root directory?
+    |grepper-faq-02|  How to change the colors of the quickfix window?
+    |grepper-faq-03|  How to use queries that begin with dashes?
+
+------------------------------------------------------------------------------
+                                                                *grepper-faq-01*
+How to git grep from the root directory?~
+
+Usually git grep considers the current working directory (|:pwd|) and only
+searches that part of the repo. If you always want to search from the root
+directory, consider replacing the default |'grepprg'| for git like this:
+>
+    let g:grepper.git =
+      \ { 'grepprg': 'git grep -nI $* -- `git rev-parse --show-toplevel`' }
+<
+------------------------------------------------------------------------------
+                                                                *grepper-faq-02*
+How to change the colors of the quickfix window?~
+
+The quickfix window uses these highlight groups:
+
+    qfFileName (inherits from Directory highlight group)
+    qfSeparator
+    qfLineNr
+
+E.g. the colors used in grepper.gif come from my colorscheme:
+
+    https://github.com/mhinz/vim-janah
+
+This colorscheme uses these settings:
+>
+    highlight Directory
+      \ ctermfg=216 ctermbg=NONE cterm=NONE guifg=#ffaf87 guibg=NONE gui=NONE
+    highlight qfLineNr
+      \ ctermfg=238 ctermbg=NONE cterm=NONE guifg=#444444 guibg=NONE gui=NONE
+    highlight qfSeparator
+      \ ctermfg=243 ctermbg=NONE cterm=NONE guifg=#767676 guibg=NONE gui=NONE
+<
+------------------------------------------------------------------------------
+                                                                *grepper-faq-03*
+
+A query is put on the command-line as-is. If it starts with a dash, the search
+fails. The VCS tool thinks you try to provide an option and that the actual
+argument is missing.
+
+To avoid that, most Unix programs interpret "--" (double-dash) as separator
+between options and arguments. Thus, if you want to seek '-foo', use '-- -foo'
+as query instead.
+
+If you never use any options in the search prompt anyway, you can make it the
+default like this:
+>
+    let g:grepper.rg = { 'grepprg': 'rg --no-heading --vimgrep -i --' }
+<
+==============================================================================
+EXAMPLE                                                        *grepper-example*
+
+This is a possible configuration..
+>
+    " for browsing the input history
+    cnoremap <c-n> <down>
+    cnoremap <c-p> <up>
+
+    nmap gs <plug>(GrepperOperator)
+    xmap gs <plug>(GrepperOperator)
+
+    nnoremap <leader>g :Grepper -tool git<cr>
+    nnoremap <leader>G :Grepper -tool ag<cr>
+    nnoremap <leader>* :Grepper -tool ag -cword -noprompt<cr>
+
+    let g:grepper = {
+        \ 'tools':     ['git', 'ag', 'grep'],
+        \ 'open':      0,
+        \ 'jump':      1,
+        \ 'next_tool': '<leader>g',
+        \ }
+<
+If you don't like this way of setting options, you can also set them like
+this:
+>
+    let g:grepper           = {}
+    let g:grepper.tools     = ['git', 'ag', 'grep']
+    let g:grepper.open      = 0
+    let g:grepper.jump      = 1
+    let g:grepper.next_tool = '<leader>g'
+<
+==============================================================================
+vim: tw=78

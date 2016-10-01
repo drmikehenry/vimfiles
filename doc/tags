@@ -166,6 +166,7 @@ notes_fontsize	notes.txt	/*notes_fontsize*
 notes_fswitch	notes.txt	/*notes_fswitch*
 notes_fugitive	notes.txt	/*notes_fugitive*
 notes_grep	notes.txt	/*notes_grep*
+notes_grepper	notes.txt	/*notes_grepper*
 notes_gruvbox	notes.txt	/*notes_gruvbox*
 notes_guioptions	notes.txt	/*notes_guioptions*
 notes_gundo	notes.txt	/*notes_gundo*

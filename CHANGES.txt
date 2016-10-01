@@ -13,6 +13,10 @@ require adjustment of per-user settings.
 - Make :Copen and :Lopen always switch to the QuickFix/Location list, even if
   the window is already open.
 
+- Add Grepper plugin.  ``:help grepper`` for details.  For now, using a forked
+  version with better quoting/escaping.  Implement :Findx, :FFX, :FFG in terms
+  of :Grepper.
+
 2016-09-30
 ==========
 

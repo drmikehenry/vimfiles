@@ -34,6 +34,7 @@
     FSwitch - Filename switching (e.g., .c <=> .h)      |notes_fswitch|
     Fugitive - A wrapper for Git in Vim                 |notes_fugitive|
     Grep - Wrapper for grep/xargs                       |notes_grep|
+    Grepper - Extensible wrapper for grep-like tools    |notes_grepper|
     Gruvbox - a dark colorscheme                        |notes_gruvbox|
     Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
@@ -1091,6 +1092,19 @@ Installation:
 
 Version 1.11 from:
 http://www.vim.org/scripts/script.php?script_id=311
+
+------------------------------------------------------------------------------
+GREPPER                                                 *notes_grepper*
+  Extensible wrapper for grep-like tools                |grepper|
+
+Original version:
+https://github.com/mhinz/vim-grepper
+
+Using branch "patched" from:
+https://github.com/drmikehenry/vim-grepper
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 GRUVBOX                                                 *notes_gruvbox*

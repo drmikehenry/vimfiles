@@ -2049,25 +2049,16 @@ xnoremap # <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
 " findx-related commands
 " =============================================================
 
-function! QuickFixSystem(command)
-    cgetexpr system(a:command)
+function! GrepperWrapper(tool, query)
     Copen
+    execute 'Grepper -noopen -tool ' . a:tool . ' -query ' . a:query
 endfunction
 
-function! FindxSystem(command)
-    let oldErrorformat = &errorformat
-    " For plain find output, accept a bare file path.
-    set errorformat=%f
-    try
-        call QuickFixSystem(a:command)
-    finally
-        let &errorformat = oldErrorformat
-    endtry
-endfunction
-
-command! -nargs=* Findx call FindxSystem('findx ' . <q-args>)
-command! -nargs=* FFX call FindxSystem('ffx ' . <q-args>)
-command! -nargs=+ FFG call QuickFixSystem('ffg -n ' . <q-args>)
+command! -nargs=* Findx
+        \ call GrepperWrapper('findx', <q-args> == '' ? '.' : <q-args>)
+command! -nargs=* FFX
+        \ call GrepperWrapper('ffx', <q-args> == '' ? '.' : <q-args>)
+command! -nargs=+ FFG call GrepperWrapper('ffg', '-n ' . <q-args>)
 
 " =============================================================
 " Folding
@@ -3388,6 +3379,45 @@ let Grep_Skip_Dirs = '.svn .bzr .git .hg build bak export .undo'
 let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
         \ '*.o *.elf cscope.out *.ecc *.exe *.ilk *.out *.pyc ' .
         \ 'build.out doxy.out'
+
+" -------------------------------------------------------------
+" Grepper
+" -------------------------------------------------------------
+
+let g:grepper = {}
+
+" These are the default tools.  It's a shame there's not a smoother way to
+" extend the list without pasting it here.
+let g:grepper.tools = ['rg', 'ag', 'ack', 'grep', 'findstr', 'pt', 'git']
+
+" ack.
+let g:grepper.ack = {}
+" ``--nofilter`` prevents ack from searching stdin.
+let g:grepper.ack.grepprg = 'ack --nofilter --noheading --column'
+
+" prargs (just for debugging quoting issues).
+let g:grepper.tools += ['prargs']
+let g:grepper.prargs = {}
+let g:grepper.prargs.grepprg = 'prargs'
+let g:grepper.prargs.escape = ''
+
+" ffg.
+let g:grepper.tools += ['ffg']
+let g:grepper.ffg = {}
+let g:grepper.ffg.grepprg = 'ffg -Pn'
+let g:grepper.ffg.escape = '\^$.*+?()[]|'
+
+" ffx.
+let g:grepper.tools += ['ffx']
+let g:grepper.ffx = {}
+let g:grepper.ffx.grepprg = 'ffx'
+let g:grepper.ffx.grepformat = '%f'
+
+" findx.
+let g:grepper.tools += ['findx']
+let g:grepper.findx = {}
+let g:grepper.findx.grepprg = 'findx'
+let g:grepper.findx.grepformat = '%f'
 
 " -------------------------------------------------------------
 " Gundo
