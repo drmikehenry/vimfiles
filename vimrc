@@ -1124,9 +1124,12 @@ function! LocListWinIsOpen()
     return isOpen
 endfunction
 
-" Open Quickfix window (if not already open).
+" Open Quickfix window.
+"   If already open, leave size alone; otherwise, open with standard size.
 function! Copen()
-    if !QuickFixWinIsOpen()
+    if QuickFixWinIsOpen()
+        copen
+    else
         execute "silent botright copen " . g:QuickFixWinHeight
     endif
 endfunction
@@ -1134,9 +1137,12 @@ endfunction
 " Open QuickFix window using standard position and height.
 command! -bar Copen  call Copen()
 
-" Open Location List window (if not already open).
+" Open Location List window.
+"   If already open, leave size alone; otherwise, open with standard size.
 function! Lopen()
-    if !LocListWinIsOpen()
+    if LocListWinIsOpen()
+        lopen
+    else
         execute "silent lopen " . g:LocListWinHeight
     endif
 endfunction
