@@ -216,7 +216,7 @@ endfunction
 
 " Escape commas and backslashes in path.
 function! PathEscape(path)
-    return substitute(a:path, '[\\,]', '\\&', "g")
+    return escape(a:path, ',\')
 endfunction
 
 " Un-escape commas and backslashes in path.
@@ -1976,19 +1976,19 @@ set nowrapscan
 
 " Create vim pattern for literal string.
 function! LiteralPattern(str)
-    return substitute(escape(a:str, '\\/.*$^~[]'), '\n', '\\n', 'g')
+    return substitute(escape(a:str, '\/.*$^~[]'), '\n', '\\n', 'g')
 endfunction
 
 " Create egrep pattern for literal string.
 function! LiteralEgrepPattern(str)
     " @todo Can't egrep for \n.
-    return substitute(escape(a:str, '\\/.*$^~[]() |%#'), '\n', '\\n', 'g')
+    return substitute(escape(a:str, '\/.*$^~[]() |%#'), '\n', '\\n', 'g')
 endfunction
 
 " Create Perl pattern for literal string.
 function! LiteralGrepPattern(str)
     let s = a:str
-    let s = escape(s, '\\!$.*+^~[]()|%#')
+    let s = escape(s, '\!$.*+^~[]()|%#')
     let s = substitute(s, '\n', '\\n', 'g')
     return s
 endfunction
@@ -2294,7 +2294,7 @@ endfunction
 
 " Perl raw regex for a "Word".
 function! RawWordGrepPattern()
-    return '\b[a-zA-Z_][a-zA-Z0-9_]*\b>'
+    return '\b[a-zA-Z_][a-zA-Z0-9_]*\b'
 endfunction
 
 " Perl regex for a "Word" escaped for command-line use.
