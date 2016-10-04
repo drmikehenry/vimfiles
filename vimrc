@@ -1973,78 +1973,6 @@ set smartcase
 " Do not wrap around buffer when searching.
 set nowrapscan
 
-
-" Create vim pattern for literal string.
-function! LiteralPattern(str)
-    return substitute(escape(a:str, '\/.*$^~[]'), '\n', '\\n', 'g')
-endfunction
-
-" Create egrep pattern for literal string.
-function! LiteralEgrepPattern(str)
-    " @todo Can't egrep for \n.
-    return substitute(escape(a:str, '\/.*$^~[]() |%#'), '\n', '\\n', 'g')
-endfunction
-
-" Create Perl pattern for literal string.
-function! LiteralGrepPattern(str)
-    let s = a:str
-    let s = escape(s, '\!$.*+^~[]()|%#')
-    let s = substitute(s, '\n', '\\n', 'g')
-    return s
-endfunction
-
-" Setup @/ to given pattern, enable highlighting and add to search history.
-function! SetSearch(pattern)
-    let @/ = a:pattern
-    call histadd("search", a:pattern)
-    set hlsearch
-    " Without redraw, pressing '*' at startup fails to highlight.
-    redraw
-endfunction
-
-" Set search register @/ to unnamed ("scratch") register and highlight.
-command! -bar MatchScratch     call SetSearch(LiteralPattern(@"))
-command! -bar MatchScratchWord call SetSearch('\<' . LiteralPattern(@") . '\>')
-
-" Map normal-mode '*' to just highlight, not search for next.
-" Note: Yank into @a to avoid clobbering register 0.
-nnoremap <silent> * :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
-nnoremap <silent> g* :call PushA()<CR>"ayiw:MatchScratch<CR>:call PopA()<CR>
-xnoremap <silent> * <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
-
-" :Regrep of word under cursor.
-nnoremap <F3> :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
-        \:Regrep \<<C-r>=LiteralEgrepPattern(@")<CR>\>
-" :Regrep of visual selection.
-xnoremap <F3> <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
-        \:Regrep <C-r>=LiteralEgrepPattern(@")<CR>
-
-" True if have 'ag' in PATH.
-function! HaveAg()
-    return executable("ag")
-endfunction
-
-" Run "Ag!" or "Ack!" using supplied arguments.
-function! RunAgOrAck(args)
-    " Invoke indirectly in case of a raised exception; without this, our
-    " "endif" below gets skipped when an exception occurs.
-    if HaveAg()
-        let func = 'ag#Ag'
-    else
-        let func = 'ack#Ack'
-    endif
-    call {func}('grep!', a:args)
-endfunction
-
-" Run first available of Ag! or Ack! against arguments.
-command! -bang -nargs=* -complete=file G call RunAgOrAck(<q-args>)
-
-nnoremap # :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
-        \:G <C-r>=shellescape(LiteralGrepPattern(@"))<CR> -w
-xnoremap # <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
-        \:G <C-r>=shellescape(LiteralGrepPattern(@"))<CR>
-
-
 " =============================================================
 " findx-related commands
 " =============================================================
@@ -2059,6 +1987,313 @@ command! -nargs=* Findx
 command! -nargs=* FFX
         \ call GrepperWrapper('ffx', <q-args> == '' ? '.' : <q-args>)
 command! -nargs=+ FFG call GrepperWrapper('ffg', '-n ' . <q-args>)
+
+" =============================================================
+" ack utility
+" =============================================================
+
+" Default to using "ack" from vimfiles, as we aim to keep it at least as
+" up-to-date as any system-provided "ack" executable.  This will avoid picking
+" up old 1.x versions of "ack" that might be found on the system.
+if !exists('g:UseSystemAck')
+    if executable('perl') == 1 && executable('python') == 1
+        " We've got enough to reliably use the "ack" in vimfiles.
+        let g:UseSystemAck = 0
+    else
+        " Better use the system-supplied ack.
+        " TODO: Should allow for "perl without python, no system ack" case.
+        let g:UseSystemAck = 1
+    endif
+endif
+
+if !exists('g:AckExecutable')
+    let g:AckExecutable = ''
+    if g:UseSystemAck
+        if executable('ack') == 1
+            let g:AckExecutable = 'ack'
+        elseif executable('ack-grep') == 1
+            let g:AckExecutable = 'ack-grep'
+        endif
+    elseif executable('perl') == 1
+        " Use the "ack" executable shipped in vimfiles.  Strawberry Perl and
+        " ActivePerl both have problems with certain arguments containing
+        " quotes.  A work-around is to chain through Python (which parses these
+        " quoted arguments correctly), as long as Python is available.
+        " Without Python, the following invocation of :Ack::
+        "   :Ack "x = ""hello"";"
+        " fails to match this line::
+        "   x = "hello";
+        " With the Python work-around, the invocation works.
+        if executable('python')
+            let g:AckExecutable = 'python ' . $VIMFILES . '/tool/execargs.py '
+        else
+            let g:AckExecutable = ''
+        endif
+        let g:AckExecutable .= 'perl ' . $VIMFILES . '/tool/ack'
+    endif
+endif
+
+" =============================================================
+" Grep tool
+" =============================================================
+
+if !exists('g:DefaultGrepTool')
+    if executable('ag') == 1
+        let g:DefaultGrepTool = 'ag'
+    elseif executable('rg') == 1
+        let g:DefaultGrepTool = 'rg'
+    elseif executable('ffg') == 1
+        let g:DefaultGrepTool = 'ffg'
+    elseif g:AckExecutable != ''
+        let g:DefaultGrepTool = 'ack'
+    else
+        let g:DefaultGrepTool = ''
+    endif
+endif
+
+" Run "best" full-featured grep tool.
+function! RunGrep(args)
+    " Invoke indirectly in case of a raised exception; without this, our
+    " "endif" below gets skipped when an exception occurs.
+    let tool = 'ag'
+    if g:DefaultGrepTool != ''
+        Copen
+        execute 'Grepper -noopen -tool ' . g:DefaultGrepTool
+                \ . ' -query ' . a:args
+    else
+        throw 'Grep Tool unavailable'
+    endif
+endfunction
+
+" Run first available of Ag! or Ack! against arguments.
+command! -nargs=* G call RunGrep(<q-args>)
+
+" =============================================================
+" Search naming conventions
+" =============================================================
+
+" "Search" is for built-in Vim search like :vimgrep.
+" "Grep" is the common dialect in many tools (ag, ack, rg, perl, ...).
+" "Posix" is POSIX regular expressions.
+" "Egrep" is POSIX extended regular expressions as found in egrep.
+
+" Escape chars in str, then replace newlines with '\n'.
+function! EolEscape(str, chars)
+    return substitute(escape(a:str, a:chars), '\n', '\\n', 'g')
+endfunction
+
+" Escape a pattern for use with a /search/.  Escapes slashes so that
+" any embedded slashes don't halt the pattern.
+" E.g.:
+"   'path/filename'
+" ==>
+"   'path\/filename'
+function! SearchEscape(pattern)
+    return escape(a:pattern, '/')
+endfunction
+
+" Escape for use with shell commands.
+" Basically this will be a bug-fixed implementation of shellescape().
+function! ShellEscape(str)
+    return shellescape(a:str)
+endfunction
+
+" Escape for use with the :Regrep command.
+function! ShellEscapeForRegrep(str)
+    " TODO Deal with <cword> also.
+    return escape(a:str, ' %#')
+endfunction
+
+" Patterns:
+" Literal       (any literal string converted to a pattern that matches)
+" Word          (Any_kind_ofWord_CouldBeHere2)
+" Lmc           (lowerMixedCase)
+" Umc           (UpperMixedCase)
+" Underscore    (underscore_separated_lowercase_with_numbers25)
+"
+" "Word" words comprise letters, numbers, and underscores, starting with a
+" non-digit.
+"
+" Lmc words comprise characters limited to letters and numbers, starting with a
+" lowercase letter and containing at least one uppercase letter.
+"
+" Umc words comprise characters limited to letters and numbers, starting with an
+" uppercase letter and containing at least one lowercase letter and one
+" additional uppercase letter.
+"
+" Underscore words comprise characters limited to lowercase letters, numbers,
+" and underscores, containing at least one lowercase letter and one number.
+
+" Create raw Search pattern for literal string.
+function! SearchRawLiteralPattern(str)
+    return EolEscape(a:str, '\^$.*[]~')
+endfunction
+
+" Create Search pattern for literal string.
+function! SearchLiteralPattern(str)
+    return SearchEscape(SearchRawLiteralPattern(a:str))
+endfunction
+
+" Create raw Grep pattern for literal string.
+function! GrepRawLiteralPattern(str)
+    return EolEscape(a:str, '\^$.*+?()[]{}|')
+endfunction
+
+" Create Grep pattern for literal string.
+function! GrepLiteralPattern(str)
+    return ShellEscape(GrepRawLiteralPattern(a:str))
+endfunction
+
+" Create raw Egrep pattern for literal string.
+function! EgrepRawLiteralPattern(str)
+    " @todo Can't egrep for \n.
+    return EolEscape(a:str, '\^$.*+?()[]{}|')
+endfunction
+
+" Create Egrep pattern for literal string.
+function! EgrepLiteralPattern(str)
+    return ShellEscapeForRegrep(EgrepRawLiteralPattern(a:str))
+endfunction
+
+" Create raw Search pattern for a "Word".
+function! SearchRawWordPattern()
+    return '\v\C<%(\l|\u|_)%(\l|\u|\d|_)*>'
+endfunction
+
+" Create Search pattern for a "Word".
+function! SearchWordPattern()
+    return SearchEscape(SearchRawWordPattern())
+endfunction
+
+" Create raw Grep pattern for a "Word".
+function! GrepRawWordPattern()
+    return '\b[a-zA-Z_][a-zA-Z0-9_]*\b'
+endfunction
+
+" Create Grep pattern for a "Word".
+function! GrepWordPattern()
+    return ShellEscape(GrepRawWordPattern())
+endfunction
+
+" Create raw Search pattern for lowerMixedCase identifiers.
+function! SearchRawLmcPattern()
+    return '\v\C<\l(\l|\d)*\u(\a|\d)*>'
+endfunction
+
+" Create Search pattern for lowerMixedCase identifiers.
+function! SearchLmcPattern()
+    return SearchEscape(SearchRawLmcPattern())
+endfunction
+
+" Create raw Grep pattern for lowerMixedCase identifiers.
+function! GrepRawLmcPattern()
+    return '\b[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b'
+endfunction
+
+" Create Grep pattern for lowerMixedCase identifiers.
+function! GrepLmcPattern()
+    return ShellEscape(GrepRawLmcPattern())
+endfunction
+
+" Create raw Search pattern for UpperMixedCase identifiers.
+function! SearchRawUmcPattern()
+    return '\v\C<\u(\u|\d)*\l(\l|\d)*\u(\a|\d)*>'
+endfunction
+
+" Create Search pattern for UpperMixedCase identifiers.
+function! SearchUmcPattern()
+    return SearchEscape(SearchRawUmcPattern())
+endfunction
+
+" Create raw Grep pattern for UpperMixedCase identifiers.
+function! GrepRawUmcPattern()
+    return '\b[A-Z][A-Z0-9]*[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b'
+endfunction
+
+" Create Grep pattern for UpperMixedCase identifiers.
+function! GrepUmcPattern()
+    return ShellEscape(GrepRawUmcPattern())
+endfunction
+
+" Create raw Search pattern for underscore_separated identifiers.
+function! SearchRawUnderscorePattern()
+    return '\v\C<\l*_+\l(\l|_)*>'
+endfunction
+
+" Create Search pattern for underscore_separated identifiers.
+function! SearchUnderscorePattern()
+    return SearchEscape(SearchRawUnderscorePattern())
+endfunction
+
+" Create raw Grep pattern for underscore_separated identifiers.
+function! GrepRawUnderscorePattern()
+    return '\b[a-z]*_+[a-z][a-z_]*\b'
+endfunction
+
+" Create Grep pattern for underscore_separated identifiers.
+function! GrepUnderscorePattern()
+    return ShellEscape(GrepRawUnderscorePattern())
+endfunction
+
+
+" Setup @/ to given pattern, enable highlighting and add to search history.
+function! SetSearch(pattern)
+    let @/ = a:pattern
+    call histadd("search", a:pattern)
+    set hlsearch
+    " Without redraw, pressing '*' at startup fails to highlight.
+    redraw
+endfunction
+
+" Set search register @/ to unnamed ("scratch") register and highlight.
+command! -bar MatchScratch     call SetSearch(SearchLiteralPattern(@"))
+command! -bar MatchScratchWord call SetSearch('\<' . SearchLiteralPattern(@") . '\>')
+
+" Map normal-mode '*' to just highlight, not search for next.
+" Note: Yank into @a to avoid clobbering register 0.
+nnoremap <silent> * :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
+nnoremap <silent> g* :call PushA()<CR>"ayiw:MatchScratch<CR>:call PopA()<CR>
+xnoremap <silent> * <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
+
+" :Regrep of word under cursor.
+nnoremap <F3> :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
+        \:Regrep \<<C-r>=EgrepLiteralPattern(@")<CR>\>
+" :Regrep of visual selection.
+xnoremap <F3> <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
+        \:Regrep <C-r>=EgrepLiteralPattern(@")<CR>
+
+nnoremap # :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
+        \:G <C-r>=GrepLiteralPattern(@")<CR> -w
+xnoremap # <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
+        \:G <C-r>=GrepLiteralPattern(@")<CR>
+
+function! SearchWord(...)
+    if a:0 == 0
+        let regex = SearchWordPattern()
+    else
+        let regex = '\v\C<' . join(a:000, '>|<') . '>'
+    endif
+    call SetSearch(regex)
+endfunction
+command! -nargs=* SearchWord  call SearchWord(<f-args>)
+
+command! -bar SearchLmc  call SetSearch(SearchLmcPattern())
+command! -bar SearchUmc  call SetSearch(SearchUmcPattern())
+command! -bar SearchUnderscore  call SetSearch(SearchUnderscorePattern())
+
+" Run :G with regex for lowerMixedCase identifiers.
+command! -nargs=* GrepLmc
+        \ SearchLmc<bar>call RunGrep(GrepLmcPattern() . ' ' . <q-args>)
+
+" Run :G with regex for UpperMixedCase identifiers.
+command! -nargs=* GrepUmc
+        \ SearchUmc<bar>call RunGrep(GrepUmcPattern() . ' ' . <q-args>)
+
+" Run :G with regex for underscore_separated identifiers.
+command! -nargs=* GrepUnderscore
+        \ SearchUnderscore<bar>
+        \ call RunGrep(GrepUnderscorePattern() . ' ' . <q-args>)
+
 
 " =============================================================
 " Folding
@@ -2244,117 +2479,6 @@ function! SubInPlace(pattern, replacement, ...)
 endfunction
 
 
-" Word types:
-" Word          (Any_kind_ofWord_CouldBeHere2)
-" Lmc           (lowerMixedCase)
-" Umc           (UpperMixedCase)
-" Underscore    (underscore_separated_lowercase_with_numbers25)
-"
-" "Word" words comprise letters, numbers, and underscores, starting with a
-" non-digit.
-"
-" Lmc words comprise characters limited to letters and numbers, starting with a
-" lowercase letter and containing at least one uppercase letter.
-"
-" Umc words comprise characters limited to letters and numbers, starting with an
-" uppercase letter and containing at least one lowercase letter and one
-" additional uppercase letter.
-"
-" Underscore words comprise characters limited to lowercase letters, numbers,
-" and underscores, containing at least one lowercase letter and one number.
-
-" Escape a Vim pattern for use with a /search/.  Escapes slashes so that
-" any embedded slashes don't halt the pattern.
-" E.g.:
-"   'path/filename'
-" ==>
-"   'path\/filename'
-function! EscapeVimPattern(pattern)
-    return escape(a:pattern, '/')
-endfunction
-
-" Vim raw regex for a "Word".
-function! RawWordPattern()
-    return '\v\C<%(\l|\u|_)%(\l|\u|\d|_)*>'
-endfunction
-
-" Vim regex for a "Word" escaped for use in /search/.
-function! WordPattern()
-    return EscapeVimPattern(RawWordPattern())
-endfunction
-
-" Perl raw regex for a "Word".
-function! RawWordGrepPattern()
-    return '\b[a-zA-Z_][a-zA-Z0-9_]*\b'
-endfunction
-
-" Perl regex for a "Word" escaped for command-line use.
-function! WordGrepPattern()
-    return shellescape(RawWordGrepPattern())
-endfunction
-
-" Vim raw regex for lowerMixedCase identifiers.
-function! RawLmcPattern()
-    return '\v\C<\l(\l|\d)*\u(\a|\d)*>'
-endfunction
-
-" Vim regex for lowerMixedCase identifiers escaped for use in /search/.
-function! LmcPattern()
-    return EscapeVimPattern(RawLmcPattern())
-endfunction
-
-" Perl raw regex for lowerMixedCase identifiers.
-function! RawLmcGrepPattern()
-    return '\b[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b'
-endfunction
-
-" Perl regex for lowerMixedCase identifiers escaped for command-line use.
-function! LmcGrepPattern()
-    return shellescape(RawLmcGrepPattern())
-endfunction
-
-" Vim raw regex for UpperMixedCase identifiers.
-function! RawUmcPattern()
-    return '\v\C<\u(\u|\d)*\l(\l|\d)*\u(\a|\d)*>'
-endfunction
-
-" Vim regex for UpperMixedCase identifiers escaped for use in /search/.
-function! UmcPattern()
-    return EscapeVimPattern(RawUmcPattern())
-endfunction
-
-" Perl raw regex for UpperMixedCase identifiers.
-function! RawUmcGrepPattern()
-    return '\b[A-Z][A-Z0-9]*[a-z][a-z0-9]*[A-Z][a-zA-Z0-9]*\b'
-endfunction
-
-" Perl regex for UpperMixedCase identifiers escaped for command-line use.
-function! UmcGrepPattern()
-    return shellescape(RawUmcGrepPattern())
-endfunction
-
-" Vim raw regex syntax for underscore_separated identifiers.
-function! RawUnderscorePattern()
-    return '\v\C<\l*_+\l(\l|_)*>'
-endfunction
-
-" Vim regex syntax for underscore_separated identifiers escaped for use in
-" /search/.
-function! UnderscorePattern()
-    return EscapeVimPattern(RawUnderscorePattern())
-endfunction
-
-" Perl raw regex syntax for underscore_separated identifiers.
-function! RawUnderscoreGrepPattern()
-    return '\b[a-z]*_+[a-z][a-z_]*\b'
-endfunction
-
-" Perl regex syntax for underscore_separated identifiers escaped for
-" command-line use.
-function! UnderscoreGrepPattern()
-    return shellescape(RawUnderscoreGrepPattern())
-endfunction
-
 " Convert lowerMixedCase to underscore_separated_lowercase, e.g.:
 "   "multiWordVariable" ==> "multi_word_variable"
 " If no argument is supplied, submatch(0) is assumed, allowing uses like this:
@@ -2393,24 +2517,6 @@ function! Lmc(...)
 endfunction
 
 
-function! WordSearch(...)
-    if a:0 == 0
-        let regex = WordPattern()
-    else
-        let regex = '\v\C<' . join(a:000, '>|<') . '>'
-    endif
-    call SetSearch(regex)
-endfunction
-command! -nargs=* WordSearch  call WordSearch(<f-args>)
-
-command! -bar LmcSearch  call SetSearch(LmcPattern())
-command! -bar UmcSearch  call SetSearch(UmcPattern())
-command! -bar UnderscoreSearch  call SetSearch(UnderscorePattern())
-
-" Run G with regex for lowerMixedCase identifiers.
-command! -nargs=* -complete=file LmcGrep
-        \ LmcSearch<bar>call RunAgOrAck(LmcGrepPattern() . " " . <q-args>)
-
 function! SubArgsOrCword(line1, line2, args, replacement)
     if len(a:args) == 0
         let regex = '\v\C<' . expand('<cword>') . '>'
@@ -2430,7 +2536,7 @@ command! -bar -range=% -nargs=* ToLmc
         \ call SubArgsOrCword(<line1>, <line2>, [<f-args>], '\=Lmc()')
 
 command! -bar -range=% LmcToUnderscore
-        \ call SubInPlace(LmcPattern(), '\=Underscore()', 'g',
+        \ call SubInPlace(SearchLmcPattern(), '\=Underscore()', 'g',
         \ <line1>, <line2>)
 
 " Refactor/rename identifer under cursor.
@@ -2984,24 +3090,7 @@ if !exists("g:ack_default_options")
             \ . " --smart-case --follow"
 endif
 
-if !g:UseSystemAck
-    " Use the "ack" executable shipped in vimfiles.
-    " Strawberry Perl and ActivePerl both have problems with certain arguments
-    " containing quotes.  A work-around is to chain through Python (which
-    " parses these quoted arguments correctly), as long as Python is available.
-    " Without Python, the following invocation of :Ack::
-    "   :Ack "x = ""hello"";"
-    " fails to match this line::
-    "   x = "hello";
-    " With the Python work-around, the invocation works.
-    if executable('python')
-        let g:ackprg = 'python ' . $VIMFILES . '/tool/execargs.py '
-    else
-        let g:ackprg = ''
-    endif
-    let g:ackprg .= 'perl ' . $VIMFILES . '/tool/ack'
-    let g:ackprg .= g:ack_default_options
-endif
+let g:ackprg = g:AckExecutable . g:ack_default_options
 
 " Disable QuickFix/LocationList mappings.
 let g:ack_apply_qmappings = 0
@@ -3393,7 +3482,7 @@ let g:grepper.tools = ['rg', 'ag', 'ack', 'grep', 'findstr', 'pt', 'git']
 " ack.
 let g:grepper.ack = {}
 " ``--nofilter`` prevents ack from searching stdin.
-let g:grepper.ack.grepprg = 'ack --nofilter --noheading --column'
+let g:grepper.ack.grepprg = g:AckExecutable . ' --nofilter --noheading --column'
 
 " prargs (just for debugging quoting issues).
 let g:grepper.tools += ['prargs']

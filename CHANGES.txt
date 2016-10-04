@@ -17,6 +17,27 @@ require adjustment of per-user settings.
   version with better quoting/escaping.  Implement :Findx, :FFX, :FFG in terms
   of :Grepper.
 
+- BREAKING CHANGE: Reorganize some search-related functions and commands to make
+  them easier to discover (via ``:Search<tab>``, for example) and to base them
+  on the Grepper plugin::
+
+    :LmcSearch              --> :SearchLmc
+    :UmcSearch              --> :SearchUmc
+    :UnderscoreSearch       --> :UnderscoreUmc
+    :WordSearch             --> :SearchWord
+    :LmcGrep                --> :GrepLmc
+    LmcPattern()            --> SearchLmcPattern()
+    UmcPattern()            --> SearchUmcPattern()
+    UnderscorePattern()     --> SearchUnderscorePattern()
+    :LmcGrepPattern         --> :GrepLmcPattern
+    :UmcGrepPattern         --> :GrepUmcPattern
+    :UnderscoreGrepPattern  --> :GrepUnderscorePattern
+
+  Also add the following::
+
+    :GrepUmc
+    :GrepUnderscore
+
 2016-09-30
 ==========
 

@@ -3911,29 +3911,32 @@ Several conventions exist for multi-word variable names, e.g.::
 In support of finding and converting variables of various naming conventions,
 the following features are provided.
 
-                                  *LmcSearch* *UmcSearch* *UnderscoreSearch*
-:LmcSearch
-:UmcSearch
-:UnderscoreSearch
+                                  *SearchLmc* *SearchUmc* *SearchUnderscore*
+:SearchLmc
+:SearchUmc
+:SearchUnderscore
         Set Vim's search expression to match lowerMixedCase, UpperMixedCase,
         or underscore_separated_lowercase identifiers.
 
-                                  *WordSearch*
-:WordSearch [ident]*
+                                  *SearchWord*
+:SearchWord [ident]*
         Set Vim's search expression to match all provided identiers; if none are
         provided, set the search expression to WordPattern() to match all
         identifiers.
 
         E.g., to search for identOne and identTwo:
 
-          :WordSearch identOne identTwo
+          :SearchWord identOne identTwo
 
-                                  *LmcGrep*
-:LmcGrep args-for-G-command
+                                  *GrepLmc* *GrepUmc* *GrepUnderscore*
+:GrepLmc args-for-G-command
+:GrepUmc args-for-G-command
+:GrepUnderscore args-for-G-command
         This wraps the :G command, providing a Perl-compatible regular
-        expression matching lowerMixedCase identifiers as the implied first
+        expression matching lowerMixedCase, UpperMixedCase, or
+        underscore_separated identifiers as the implied first
         argument to :G.  It is logically equivalent to:
-          :G <perl-regex-for-lowerMixedCase> args-for-G-command
+          :G <perl-regex-for-identifier-type> args-for-G-command
 
         Also sets Vim's search expression for highlighting of matched
         identifiers.
@@ -3964,11 +3967,11 @@ the following features are provided.
         lowerMixedCase identifiers.  This is helpful for converting Python
         multiWordVariables to multi_word_variables.
 
-                                  *LmcPattern()* *UmcPattern()*
-                                  *UnderscorePattern()*
-LmcPattern()
-UmcPattern()
-UnderscorePattern()
+                                  *SearchLmcPattern()* *SearchUmcPattern()*
+                                  *SearchUnderscorePattern()*
+SearchLmcPattern()
+SearchUmcPattern()
+SearchUnderscorePattern()
         These functions return Vim regular expressions to match lowerMixedCase,
         UpperMixedCase, and underscore_separated_lowercase identifiers,
         respectively.  They may be useful for use with the '/' command and
@@ -3976,20 +3979,20 @@ UnderscorePattern()
         For example, pressing the following keys in order will perform a search
         for lowerMixedCase identifiers:
 
-          /<C-R>=LmcPattern()<CR>
+          /<C-R>=SearchLmcPattern()<CR>
 
-                                  *LmcGrepPattern()* *UmcGrepPattern()*
-                                  *UnderscoreGrepPattern()*
-LmcGrepPattern()
-UmcGrepPattern()
-UnderscoreGrepPattern()
+                                  *GrepLmcPattern()* *GrepUmcPattern()*
+                                  *GrepUnderscorePattern()*
+GrepLmcPattern()
+GrepUmcPattern()
+GrepUnderscorePattern()
         These functions return Perl-compatible regular expressions to match
         lowerMixedCase, UpperMixedCase, and underscore_separated_lowercase
         identifiers, respectively.  They may be useful to create customized
-        :G commands.  For example, an :LmcGrep operation in the ~/tmp directory
+        :G commands.  For example, an :GrepLmc operation in the ~/tmp directory
         can be simulated by pressing the following keys:
 
-          :G <C-R>=LmcGrepPattern()<CR> ~/tmp<CR>
+          :G <C-R>=GrepLmcPattern()<CR> ~/tmp<CR>
 
                                   *Underscore* *Umc* *Lmc*
 Underscore()
