@@ -899,7 +899,7 @@ Installation:
 FIXKEY                                                  *notes_fixkey*
   Fix key code for console Vim                          |fixkey.txt|
 
-Version 0.3.5 (0189eb9) from:
+Version 0.3.8 (ce59fe8) from:
 https://github.com/drmikehenry/vim-fixkey
 
 Installation:

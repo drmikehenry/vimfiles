@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-10-04
+==========
+
+- Upgrade to Fixkey version 0.3.8, which works around a problem with TERM=tmux
+  wherein the <Home> and <End> keys weren't working correctly due to conflicts
+  with Vim's incorrectly detected mouse settings.
+
 2016-10-01
 ==========
 
