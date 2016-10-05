@@ -2055,7 +2055,6 @@ endif
 function! RunGrep(args)
     " Invoke indirectly in case of a raised exception; without this, our
     " "endif" below gets skipped when an exception occurs.
-    let tool = 'ag'
     if g:DefaultGrepTool != ''
         Copen
         execute 'Grepper -noopen -tool ' . g:DefaultGrepTool
