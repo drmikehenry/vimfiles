@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Copyright (C) 2013 John Szakmeister <john@szakmeister.net>
 # All rights reserved.
@@ -10,7 +10,7 @@ import sys
 import re
 
 
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 
 
 class ScriptError(Exception):
@@ -99,7 +99,7 @@ class Section(object):
         return '<Section %s %d %d>' % (self.name, self.level, self.lineNumber)
 
 
-headingRe = re.compile(r'''^[-=~:^"#*._+`']+$''')
+headingRe = re.compile(r'''^([-=~:^"#*._+`'])\1+$''')
 subjectRe = re.compile(r'^[^\s]+.*$')
 
 def findSections(filename, lines):
