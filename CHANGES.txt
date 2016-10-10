@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-10-10
+==========
+
+- Update rst2ctags to version 0.1.5, which uses python2 in the shebang line and
+  ensures the heading characters are homogeneous (thanks to John Szakmeister).
+
 2016-10-04
 ==========
 
