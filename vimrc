@@ -1973,6 +1973,33 @@ set smartcase
 " Do not wrap around buffer when searching.
 set nowrapscan
 
+" Trivial file completion implementation.  It's not as good as the built-in
+" "file" completion option, but it will not muck with the command string.  The
+" built-in file completion ("-complete=file") does these undesirable things:
+" - Always expands certain special strings unless they are backslash-escaped,
+"   even if they are inside shell quotes (e.g., $ENVIRONMENT_VARIABLES,
+"   characters such as '%' and '#', `backticks`, etc.).
+" - Uses backslashes to escape spaces in filenames even though that's not useful
+"   with system() on Windows.
+" Unfortunately, it's not possible to replicate the good features of the
+" built-in file completion using ``-complete=customlist``, since Vim will always
+" generate the "argLead" argument based on its own model of generic argument
+" splitting.  Therefore, when the user types "some/path/<Tab>", the list
+" of completions will always have "some/path/" at the start (e.g.,
+" "some/path/file1", "some/path/file2", etc.), unlike the built-in completion
+" that knows to start the effective "argLead" value after the final path
+" separator yielding shorter completions (e.g., "file1", "file2", etc.).  Fixing
+" this would require changes to the core Vim completion model.
+function! FileCompleteList(argLead, cmdLine, cursorPos)
+    let pathsep = '/'
+    if exists("+shellslash") && !&shellslash
+        let pathsep = '\'
+    endif
+    let comps = glob(a:argLead . '*', 0, 1)
+    call map(comps,'isdirectory(v:val) ? v:val . pathsep : v:val')
+    return sort(comps)
+endfunction
+
 " =============================================================
 " findx-related commands
 " =============================================================
@@ -1982,11 +2009,12 @@ function! GrepperWrapper(tool, query)
     execute 'Grepper -noopen -tool ' . a:tool . ' -query ' . a:query
 endfunction
 
-command! -nargs=* Findx
+command! -nargs=* -complete=customlist,FileCompleteList Findx
         \ call GrepperWrapper('findx', <q-args> == '' ? '.' : <q-args>)
-command! -nargs=* FFX
+command! -nargs=* -complete=customlist,FileCompleteList FFX
         \ call GrepperWrapper('ffx', <q-args> == '' ? '.' : <q-args>)
-command! -nargs=+ FFG call GrepperWrapper('ffg', '-n ' . <q-args>)
+command! -nargs=+ -complete=customlist,FileCompleteList FFG
+        \ call GrepperWrapper('ffg', '-n ' . <q-args>)
 
 " =============================================================
 " ack utility
@@ -2065,7 +2093,8 @@ function! RunGrep(args)
 endfunction
 
 " Run first available of Ag! or Ack! against arguments.
-command! -nargs=* G call RunGrep(<q-args>)
+command! -nargs=* -complete=customlist,FileCompleteList G
+        \ call RunGrep(<q-args>)
 
 " =============================================================
 " Search naming conventions
