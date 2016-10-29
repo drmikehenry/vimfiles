@@ -70,6 +70,7 @@
     Repeat - Repeat operations for supported plugins    |notes_repeat|
     Redl - Provides a debug REPL to Clojure             |notes_redl|
     RunView - Run lines through filter into buffer      |notes_runview|
+    Rust - Language support for Rust                    |notes_rust|
     Scriptease - Debugging tools for Vimscripts         |notes_scriptease|
     ScrollColor - Scroll through color schemes          |notes_scrollcolor|
     Selfdot - Changes "." to "self." in Python          |notes_selfdot|
@@ -2031,6 +2032,16 @@ Installation:
 Local customizations: >
   " Setup Bash as default view to run.
   let g:runview_filtcmd="bash"
+
+------------------------------------------------------------------------------
+RUST SUPPORT                                            *notes_rust*
+  Language support for Rust                             |rust|
+
+Version 2016-09-30 (2030019) from:
+https://github.com/rust-lang/rust.vim.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 SCRIPTEASE                                              *notes_scriptease*
