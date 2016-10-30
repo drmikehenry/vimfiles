@@ -300,9 +300,17 @@ function! RtpAppend(path, refPath)
     endif
 endfunction
 
+" If script exists, source it.
+function! Source(script)
+    let expandedPath = expand(a:script)
+    if filereadable(expandedPath)
+        execute 'source ' . expandedPath
+    endif
+endfunction
+
 " Inserts directory "path" right after $VIMUSERFILES in &runtimepath. If
 " "path/after" exists, it will be inserted just before $VIMUSERFILES/after (or
-" appended to the end of &runtimepath if $VIMUSEFILES/after is not in
+" appended to the end of &runtimepath if $VIMUSERFILES/after is not in
 " &runtimepath).
 "
 " The goal is to allow inheriting another user's configuration. This will get
@@ -327,49 +335,30 @@ endfunction
 " multiple user to share the same overrides (e.g., to let "root" share settings
 " with another user).
 if $VIMUSER == ""
-    if has("win32")
-        let $VIMUSER = expand("$USERNAME")
-    else
-        let $VIMUSER = expand("$USER")
+    let $VIMUSER = expand(has('win32') ? '$USERNAME' : '$USER')
+endif
+
+" Parent directory of .vim/vimfiles (typically $HOME).
+let s:vimParent = fnamemodify($VIMFILES, ':h')
+
+let s:slashdot = has('win32') ? '/_' : '/.'
+
+if $VIMLOCALFILES == ''
+    let $VIMLOCALFILES = s:vimParent . s:slashdot . 'vimlocal'
+    if !isdirectory($VIMLOCALFILES)
+        let $VIMLOCALFILES = expand('$VIMFILES/local')
     endif
 endif
 
-" By default, don't permit old-style $VIMUSER-before.vim and $VIMUSER-after.vim.
-let s:allowOldVimuserScripts = 0
-
-" Probe for per-user directories.  To allow them to be separately
-" source-controlled, check outside $VIMFILES tree first, then inside.
-if $VIMUSERFILES == ""
-    let $VIMUSERFILES  = fnamemodify($VIMFILES, ":h")
-    if has("win32")
-        let $VIMUSERFILES .= "/_vimuser"
-    else
-        let $VIMUSERFILES .= "/.vimuser"
-    endif
+if $VIMUSERFILES == ''
+    let $VIMUSERFILES = s:vimParent . s:slashdot . 'vimuser'
     if !isdirectory($VIMUSERFILES)
-        let $VIMUSERFILES = expand("$VIMFILES/user/$VIMUSER")
-        " For backward compatibility, allow old-style $VIMUSER-before.vim and
-        " $VIMUSER-after.vim scripts.
-        let s:allowOldVimuserScripts = 1
+        let $VIMUSERFILES = expand('$VIMFILES/user/$VIMUSER')
     endif
 endif
 
-" VIMRC_BEFORE points directly to the script to execute.
-if $VIMRC_BEFORE == ""
-    let $VIMRC_BEFORE = expand("$VIMUSERFILES/vimrc-before.vim")
-    " For backward compatibility:
-    if !filereadable($VIMRC_BEFORE) && s:allowOldVimuserScripts
-        let $VIMRC_BEFORE = expand("$VIMFILES/user/$VIMUSER-before.vim")
-    endif
-endif
-
-" VIMRC_AFTER points directly to the script to execute.
-if $VIMRC_AFTER == ""
-    let $VIMRC_AFTER = expand("$VIMUSERFILES/vimrc-after.vim")
-    " For backward compatibility:
-    if !filereadable($VIMRC_AFTER) && s:allowOldVimuserScripts
-        let $VIMRC_AFTER = expand("$VIMFILES/user/$VIMUSER-after.vim")
-    endif
+if $VIMUSERLOCALFILES == ''
+    let $VIMUSERLOCALFILES = s:vimParent . s:slashdot . 'vimuserlocal'
 endif
 
 " Define an empty g:pathogen_disabled so users can assume it always exists.
@@ -388,18 +377,17 @@ let g:pathogen_disabled = []
 
 runtime bundle/pathogen/autoload/pathogen.vim
 
-" Source the user's |VIMRC_VARS| file (if it exists).
+" Source |VIMRC_VARS| files (if they exist), lowest-to-highest priority order.
 " Note that $VIMUSERFILES won't yet be in the 'runtimepath'.
-let $VIMRC_VARS = $VIMUSERFILES . "/vimrc-vars.vim"
-if filereadable($VIMRC_VARS)
-    source $VIMRC_VARS
-endif
+call Source('$VIMLOCALFILES/vimrc-vars.vim')
+call Source('$VIMUSERFILES/vimrc-vars.vim')
+call Source('$VIMUSERLOCALFILES/vimrc-vars.vim')
 
-" If local customizations directory exists, it takes precedence over $VIMFILES.
-call RtpPrepend($VIMFILES . "/local")
-
-" Prepend per-user directory to runtimepath (provides the highest priority).
+" Prepend override directories in lowest-to-highest priority order, so that
+" the highest priority ends up first in 'runtimepath'.
+call RtpPrepend($VIMLOCALFILES)
 call RtpPrepend($VIMUSERFILES)
+call RtpPrepend($VIMUSERLOCALFILES)
 
 " Setup an environment variable for cache-related bits.  This follows
 " XDG_CACHE_HOME by default, but can be overridden by the user.
@@ -427,13 +415,14 @@ call pathogen#infect()
 call pathogen#infect('pre-bundle/{}')
 
 " -------------------------------------------------------------
-" Per-user "vimrc-before" configuration
+" "vimrc-before" overrides
 " -------------------------------------------------------------
 
-" If it exists, source the specified |VIMRC_BEFORE| hook.
-if filereadable($VIMRC_BEFORE)
-    source $VIMRC_BEFORE
-endif
+" Execute in highest-to-lowest priority order, so that high-priority
+" gets the first word (and also the last word via vimrc-after).
+call Source('$VIMUSERLOCALFILES/vimrc-before.vim')
+call Source('$VIMUSERFILES/vimrc-before.vim')
+call Source('$VIMLOCALFILES/vimrc-before.vim')
 
 " In general there is no good way to reliably detect console background color.
 " However, if COLORFGBG is set and we're running in a console, we assume we can
@@ -6707,7 +6696,12 @@ endif
 set laststatus=2
 
 
-" If it exists, source the specified |VIMRC_AFTER| hook.
-if filereadable($VIMRC_AFTER)
-    source $VIMRC_AFTER
-endif
+" -------------------------------------------------------------
+" "vimrc-after" overrides
+" -------------------------------------------------------------
+
+" Execute in lowest-to-highest priority order, so that highest-priority
+" gets the last word.
+call Source('$VIMLOCALFILES/vimrc-after.vim')
+call Source('$VIMUSERFILES/vimrc-after.vim')
+call Source('$VIMUSERLOCALFILES/vimrc-after.vim')
