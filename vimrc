@@ -6509,11 +6509,21 @@ function! ChangeRebaseAction(action)
 endfunction
 
 function! SetupRebaseMappings()
-    nnoremap <buffer> <Leader><Leader>e :call ChangeRebaseAction('edit')<CR>
-    nnoremap <buffer> <Leader><Leader>f :call ChangeRebaseAction('fixup')<CR>
-    nnoremap <buffer> <Leader><Leader>p :call ChangeRebaseAction('pick')<CR>
-    nnoremap <buffer> <Leader><Leader>r :call ChangeRebaseAction('reword')<CR>
-    nnoremap <buffer> <Leader><Leader>s :call ChangeRebaseAction('squash')<CR>
+    nnoremap <buffer> <Leader><Leader>e
+            \ :call ChangeRebaseAction('edit') <bar>
+            \ silent! call repeat#set("\<Leader>\<Leader>e")<CR>
+    nnoremap <buffer> <Leader><Leader>f
+            \ :call ChangeRebaseAction('fixup') <bar>
+            \ silent! call repeat#set("\<Leader>\<Leader>f")<CR>
+    nnoremap <buffer> <Leader><Leader>p
+            \ :call ChangeRebaseAction('pick') <bar>
+            \ silent! call repeat#set("\<Leader>\<Leader>p")<CR>
+    nnoremap <buffer> <Leader><Leader>r
+            \ :call ChangeRebaseAction('reword') <bar>
+            \ silent! call repeat#set("\<Leader>\<Leader>r")<CR>
+    nnoremap <buffer> <Leader><Leader>s
+            \ :call ChangeRebaseAction('squash') <bar>
+            \ silent! call repeat#set("\<Leader>\<Leader>s")<CR>
 endfunction
 
 " Put these in an autocmd group, so that we can delete them easily.
