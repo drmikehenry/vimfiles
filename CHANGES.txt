@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-11-16
+==========
+
+- Allow the Git rebase actions to be repeated with dot (thanks to John
+  Szakmeister).  See the SetupRebaseMappings() function in vimrc for details.
+
 2016-10-30
 ==========
 
