@@ -3,72 +3,99 @@
 " Escaping test line:
 " ..ad\\f40+$':-# @=,!;%^&&*()_{}/ /4304\'""?`9$343%$ ^adfadf[ad)[(
 
-let s:options = {
-      \ 'quickfix':  1,
-      \ 'open':      1,
-      \ 'switch':    1,
-      \ 'jump':      0,
-      \ 'cword':     0,
-      \ 'prompt':    1,
-      \ 'highlight': 0,
-      \ 'next_tool': '<tab>',
-      \ 'tools':     ['ag', 'ack', 'grep', 'findstr', 'rg', 'pt', 'git'],
-      \ 'git':       { 'grepprg':    'git grep -nI',
-      \                'grepformat': '%f:%l:%m',
-      \                'escape':     '\^$.*[]' },
-      \ 'ag':        { 'grepprg':    'ag --vimgrep',
-      \                'grepformat': '%f:%l:%c:%m,%f:%l:%m',
-      \                'escape':     '\^$.*+?()[]{}|' },
-      \ 'rg':        { 'grepprg':    'rg --no-heading --vimgrep -i',
-      \                'grepformat': '%f:%l:%c:%m',
-      \                'escape':     '\^$.*+?()[]{}|' },
-      \ 'pt':        { 'grepprg':    'pt --nogroup',
-      \                'grepformat': '%f:%l:%m' },
-      \ 'ack':       { 'grepprg':    'ack --noheading --column',
-      \                'grepformat': '%f:%l:%c:%m',
-      \                'escape':     '\^$.*+?()[]{}|' },
-      \ 'grep':      { 'grepprg':    'grep -Rn $* .',
-      \                'grepformat': '%f:%l:%m',
-      \                'escape':     '\^$.*[]' },
-      \ 'findstr':   { 'grepprg':    'findstr -rspnc:"$*" *',
-      \                'grepformat': '%f:%l:%m' },
+"
+" Default values that get used for missing values in g:grepper.
+"
+let s:defaults = {
+      \ 'quickfix':      1,
+      \ 'open':          1,
+      \ 'switch':        1,
+      \ 'jump':          0,
+      \ 'cword':         0,
+      \ 'prompt':        1,
+      \ 'simple_prompt': 0,
+      \ 'highlight':     0,
+      \ 'buffer':        0,
+      \ 'buffers':       0,
+      \ 'next_tool':     '<tab>',
+      \ 'tools':         ['ag', 'ack', 'grep', 'findstr', 'rg', 'pt', 'sift', 'git'],
+      \ 'git':           { 'grepprg':    'git grep -nI',
+      \                    'grepformat': '%f:%l:%m',
+      \                    'escape':     '\^$.*[]' },
+      \ 'ag':            { 'grepprg':    'ag --vimgrep',
+      \                    'grepformat': '%f:%l:%c:%m,%f:%l:%m',
+      \                    'escape':     '\^$.*+?()[]{}|' },
+      \ 'rg':            { 'grepprg':    'rg -H --no-heading --vimgrep',
+      \                    'grepformat': '%f:%l:%c:%m',
+      \                    'escape':     '\^$.*+?()[]{}|' },
+      \ 'pt':            { 'grepprg':    'pt --nogroup',
+      \                    'grepformat': '%f:%l:%m' },
+      \ 'sift':          { 'grepprg':    'sift -n --column --binary-skip $* .',
+      \                    'grepprgbuf': 'sift -n --column --binary-skip --filename -- $* $.',
+      \                    'grepformat': '%f:%l:%c:%m',
+      \                    'escape':     '\+*?^$%#()[]' },
+      \ 'ack':           { 'grepprg':    'ack --noheading --column',
+      \                    'grepformat': '%f:%l:%c:%m',
+      \                    'escape':     '\^$.*+?()[]{}|' },
+      \ 'grep':          { 'grepprg':    'grep -Rn $* .',
+      \                    'grepprgbuf': 'grep -Hn -- $* $.',
+      \                    'grepformat': '%f:%l:%m',
+      \                    'escape':     '\^$.*[]' },
+      \ 'findstr':       { 'grepprg':    'findstr -rspnc:"$*" *',
+      \                    'grepprgbuf': 'findstr -rpnc:"$*" $.',
+      \                    'grepformat': '%f:%l:%m' },
       \ }
 
 let s:has_doau_modeline = v:version > 703 || v:version == 703 && has('patch442')
 
+"
+" Enrich missing values in g:grepper with default ones.
+"
+" Making g:grepper a deep copy of the default values and enriching it with the
+" user configuration afterwards takes less copying than taking the user
+" configuration and enriching it with the default values.
+"
 if exists('g:grepper')
-  for key in keys(g:grepper)
-    if type(g:grepper[key]) == type({})
-      if !has_key(s:options, key)
-        let s:options[key] = {}
+  let userconfig = deepcopy(g:grepper)
+  let g:grepper = s:defaults
+  for key in keys(userconfig)
+    if type(userconfig[key]) == type({})
+      if !has_key(g:grepper, key)
+        let g:grepper[key] = {}
       endif
-      call extend(s:options[key], g:grepper[key])
+      call extend(g:grepper[key], userconfig[key])
     else
-      let s:options[key] = g:grepper[key]
+      let g:grepper[key] = userconfig[key]
     endif
   endfor
+else
+  let g:grepper = s:defaults
 endif
 
-for tool in s:options.tools
-  if !has_key(s:options, tool)
-        \ || !has_key(s:options[tool], 'grepprg')
-        \ || !executable(expand(matchstr(s:options[tool].grepprg, '^[^ ]*')))
-    call remove(s:options.tools, index(s:options.tools, tool))
+for tool in g:grepper.tools
+  if !has_key(g:grepper, tool)
+        \ || !has_key(g:grepper[tool], 'grepprg')
+        \ || !executable(expand(matchstr(g:grepper[tool].grepprg, '^[^ ]*')))
+    call remove(g:grepper.tools, index(g:grepper.tools, tool))
   endif
 endfor
 
+"
 " Special case: ag (-vimgrep isn't available in versions < 0.25)
-if index(s:options.tools, 'ag') >= 0
+"
+if index(g:grepper.tools, 'ag') >= 0
       \ && !exists('g:grepper.ag.grepprg')
       \ && split(system('ag --version'))[2] =~ '^\v\d+\.%([01]|2[0-4])'
-  let s:options.ag.grepprg = 'ag --column --nogroup'
+  let g:grepper.ag.grepprg = 'ag --column --nogroup'
 endif
 
+"
 " Special case: ack (different distros use different names for ack)
-let ack     = index(s:options.tools, 'ack')
-let ackgrep = index(s:options.tools, 'ack-grep')
+"
+let ack     = index(g:grepper.tools, 'ack')
+let ackgrep = index(g:grepper.tools, 'ack-grep')
 if (ack >= 0) && (ackgrep >= 0)
-  call remove(s:options.tools, ackgrep)
+  call remove(g:grepper.tools, ackgrep)
 endif
 
 let s:cmdline = ''
@@ -77,6 +104,7 @@ let s:magic   = { 'next': '$$$next###', 'esc': '$$$esc###' }
 
 " s:error() {{{1
 function! s:error(msg)
+  redraw
   echohl ErrorMsg
   echomsg a:msg
   echohl NONE
@@ -85,7 +113,13 @@ endfunction
 
 " s:on_stdout_nvim() {{{1
 function! s:on_stdout_nvim(job_id, data) dict abort
-  let self.stdoutbuf += a:data
+  if empty(self.stdoutbuf) || empty(self.stdoutbuf[-1])
+    let self.stdoutbuf += a:data
+  else
+    let self.stdoutbuf = self.stdoutbuf[:-2]
+          \ + [self.stdoutbuf[-1] . get(a:data, 0, '')]
+          \ + a:data[1:]
+  endif
 endfunction
 
 " s:on_stdout_vim() {{{1
@@ -117,12 +151,13 @@ endfunction
 " #complete() {{{1
 function! grepper#complete(lead, line, _pos) abort
   if a:lead =~ '^-'
-    let flags = ['-cword', '-grepprg', '-highlight', '-jump', '-open', '-prompt',
-          \ '-query', '-quickfix', '-switch', '-tool', '-nohighlight', '-nojump',
-          \ '-noopen', '-noprompt', '-noquickfix', '-noswitch']
+    let flags = ['-buffer', '-buffers', '-cword', '-grepprg', '-highlight',
+          \ '-jump', '-open', '-prompt', '-query', '-quickfix', '-switch',
+          \ '-tool', '-nohighlight', '-nojump', '-noopen', '-noprompt',
+          \ '-noquickfix', '-noswitch']
     return filter(map(flags, 'v:val." "'), 'v:val[:strlen(a:lead)-1] ==# a:lead')
   elseif a:line =~# '-tool \w*$'
-    return filter(map(sort(copy(s:options.tools)), 'v:val." "'),
+    return filter(map(sort(copy(g:grepper.tools)), 'v:val." "'),
           \ 'empty(a:lead) || v:val[:strlen(a:lead)-1] ==# a:lead')
   else
     return grepper#complete_files(a:lead, 0, 0)
@@ -176,7 +211,7 @@ endfunction
 
 " #parse_flags() {{{1
 function! grepper#parse_flags(args) abort
-  let flags = extend({ 'query': '', 'query_escaped': 0 }, s:options)
+  let flags = extend({ 'query': '', 'query_escaped': 0 }, g:grepper)
   let [flag, args] = s:split_one(a:args)
 
   while flag != ''
@@ -186,17 +221,19 @@ function! grepper#parse_flags(args) abort
     elseif flag =~? '\v^-%(no)?jump$'          | let flags.jump      = flag !~? '^-no'
     elseif flag =~? '\v^-%(no)?prompt$'        | let flags.prompt    = flag !~? '^-no'
     elseif flag =~? '\v^-%(no)?highlight$'     | let flags.highlight = flag !~? '^-no'
+    elseif flag =~? '\v^-%(no)?buffer$'        | let flags.buffer    = flag !~? '^-no'
+    elseif flag =~? '\v^-%(no)?buffers$'       | let flags.buffers   = flag !~? '^-no'
     elseif flag =~? '^-cword$'                 | let flags.cword     = 1
     elseif flag =~? '^-grepprg$'
       if args != ''
         if !exists('tool')
-          let tool = s:options.tools[0]
+          let tool = g:grepper.tools[0]
         endif
         let flags.tools = [tool]
-        let flags[tool] = copy(s:options[tool])
+        let flags[tool] = copy(g:grepper[tool])
         let flags[tool].grepprg = args
       else
-        echomsg 'Missing argument for: -grepprg'
+        call s:error('Missing argument for: -grepprg')
       endif
       break
     elseif flag =~? '^-query$'
@@ -213,17 +250,17 @@ function! grepper#parse_flags(args) abort
     elseif flag =~? '^-tool$'
       let [tool, args] = s:split_one(args)
       if tool == ''
-        echomsg 'Missing argument for: -tool'
+        call s:error('Missing argument for: -tool')
         break
       endif
-      if index(s:options.tools, tool) >= 0
+      if index(g:grepper.tools, tool) >= 0
         let flags.tools =
-              \ [tool] + filter(copy(s:options.tools), 'v:val != tool')
+              \ [tool] + filter(copy(g:grepper.tools), 'v:val != tool')
       else
-        echomsg 'No such tool: '. tool
+        call s:error('No such tool: '. tool)
       endif
     else
-      echomsg 'Ignore unknown flag: '. flag
+      call s:error('Ignore unknown flag: '. flag)
     endif
 
     let [flag, args] = s:split_one(args)
@@ -234,6 +271,23 @@ endfunction
 
 " s:process_flags() {{{1
 function! s:process_flags(flags)
+  if a:flags.buffer
+    let a:flags.buflist = [bufname('')]
+    if !filereadable(a:flags.buflist[0])
+      call s:error('This buffer is not backed by a file!')
+      return 1
+    endif
+  endif
+
+  if a:flags.buffers
+    let a:flags.buflist = filter(map(filter(range(1, bufnr('$')),
+          \ 'bufloaded(v:val)'), 'bufname(v:val)'), 'filereadable(v:val)')
+    if empty(a:flags.buflist)
+      call s:error('No buffer is backed by a file!')
+      return 1
+    endif
+  endif
+
   if a:flags.cword
     let a:flags.query = s:escape_query(a:flags, expand('<cword>'))
   endif
@@ -252,6 +306,8 @@ function! s:process_flags(flags)
   endif
 
   call histadd('input', a:flags.query)
+
+  return 0
 endfunction
 
 " s:highlight_query() {{{1
@@ -299,12 +355,14 @@ endfunction
 
 " s:start() {{{1
 function! s:start(flags) abort
-  if empty(s:options.tools)
+  if empty(g:grepper.tools)
     call s:error('No grep tool found!')
     return
   endif
 
-  call s:process_flags(a:flags)
+  if s:process_flags(a:flags)
+    return
+  endif
 
   if a:flags.query =~# s:magic.esc
     redraw!
@@ -316,18 +374,21 @@ endfunction
 
 " s:prompt() {{{1
 function! s:prompt(flags)
-  let tool = s:get_current_tool(a:flags)
-  let mapping = maparg(s:options.next_tool, 'c', '', 1)
-  execute 'cnoremap' s:options.next_tool s:magic.next .'<cr>'
+  let prompt_text = a:flags.simple_prompt
+        \ ? s:get_current_tool_name(a:flags)
+        \ : s:get_grepprg(a:flags)
+
+  let mapping = maparg(g:grepper.next_tool, 'c', '', 1)
+  execute 'cnoremap' g:grepper.next_tool s:magic.next .'<cr>'
   execute 'cnoremap <esc>' s:magic.esc .'<cr>'
   echohl Question
   call inputsave()
 
   try
-    let a:flags.query = input(tool.grepprg .'> ', a:flags.query,
+    let a:flags.query = input(prompt_text .'> ', a:flags.query,
           \ 'customlist,grepper#complete_files')
   finally
-    execute 'cunmap' s:options.next_tool
+    execute 'cunmap' g:grepper.next_tool
     call inputrestore()
     cunmap <esc>
     call s:restore_mapping(mapping)
@@ -338,7 +399,7 @@ function! s:prompt(flags)
     call histdel('input', -1)
     call s:next_tool(a:flags)
     let a:flags.query = has_key(a:flags, 'query_orig')
-          \ ? s:escape_query(a:flags, a:flags.query_orig)
+          \ ? '-- '. s:escape_query(a:flags, a:flags.query_orig)
           \ : a:flags.query[:-len(s:magic.next)-1]
     return s:prompt(a:flags)
   elseif a:flags.query =~# s:magic.esc
@@ -346,17 +407,35 @@ function! s:prompt(flags)
   endif
 endfunction
 
+" s:get_grepprg() {{{1
+function! s:get_grepprg(flags) abort
+  let tool = s:get_current_tool(a:flags)
+  if a:flags.buffers
+    return has_key(tool, 'grepprgbuf')
+          \ ? substitute(tool.grepprgbuf, '\V$.', '$+', '')
+          \ : tool.grepprg .' -- $* $+'
+  elseif a:flags.buffer
+    return has_key(tool, 'grepprgbuf')
+          \ ? tool.grepprgbuf
+          \ : tool.grepprg .' -- $* $.'
+  endif
+  return tool.grepprg
+endfunction
+
 " s:build_cmdline() {{{1
 function! s:build_cmdline(flags) abort
-  let grepprg = s:get_current_tool(a:flags).grepprg
-  let grepprg = substitute(grepprg, '\V$.', bufname(''), '')
+  let grepprg = s:get_grepprg(a:flags)
 
-  if stridx(grepprg, '$+') >= 0
-    let buffers = filter(map(filter(range(1, bufnr('$')), 'bufloaded(v:val)'),
-          \ 'bufname(v:val)'), 'filereadable(v:val)')
-    let grepprg = substitute(grepprg, '\V$+', join(buffers), '')
+  if has_key(a:flags, 'buflist')
+    call map(a:flags.buflist, 'shellescape(v:val)')
   endif
 
+  if stridx(grepprg, '$.') >= 0
+    let grepprg = substitute(grepprg, '\V$.', a:flags.buflist[0], '')
+  endif
+  if stridx(grepprg, '$+') >= 0
+    let grepprg = substitute(grepprg, '\V$+', join(a:flags.buflist), '')
+  endif
   if stridx(grepprg, '$*') >= 0
     let grepprg = substitute(grepprg, '\V$*', escape(a:flags.query, '\&'), 'g')
   else
@@ -402,11 +481,11 @@ function! s:run(flags)
           \ 'on_exit':   function('s:on_exit'),
           \ }))
   elseif !get(w:, 'testing') && (v:version > 704 || v:version == 704 && has('patch1967'))
-        \ && a:flags.tools[0] !~# '\v(ack|pt|rg)'
     if exists('s:id')
       silent! call job_stop(s:id)
     endif
     let s:id = job_start(cmd, {
+          \ 'in_io':    'null',
           \ 'err_io':   'out',
           \ 'out_cb':   function('s:on_stdout_vim', options),
           \ 'close_cb': function('s:on_exit', options),
@@ -420,6 +499,11 @@ endfunction
 " s:get_current_tool() {{{1
 function! s:get_current_tool(flags) abort
   return a:flags[a:flags.tools[0]]
+endfunction
+
+" s:get_current_tool_name() {{{1
+function! s:get_current_tool_name(flags) abort
+  return a:flags.tools[0]
 endfunction
 
 " s:store_errorformat() {{{1
@@ -451,18 +535,17 @@ endfunction
 " s:finish_up() {{{1
 function! s:finish_up(flags)
   let qf = a:flags.quickfix
-  let qlist = getqflist()
-  let llist = getloclist(0)
-  let size = len(qf ? qlist : llist)
+  let list = qf ? getqflist() : getloclist(0)
+  let size = len(list)
 
   call s:restore_errorformat()
 
   try
     let title = has('nvim') ? s:cmdline : {'title': s:cmdline}
     if qf
-      call setqflist(qlist, 'r', title)
+      call setqflist(list, 'r', title)
     else
-      call setloclist(0, llist, 'r', title)
+      call setloclist(0, list, 'r', title)
     endif
   catch /E118/
   endtry
@@ -475,10 +558,11 @@ function! s:finish_up(flags)
   endif
 
   if a:flags.jump
-    execute 'silent' (qf ? 'cfirst' : 'lfirst')
+    execute (qf ? 'cfirst' : 'lfirst')
   endif
 
-  if a:flags.open
+  " Also open if the list contains any invalid entry.
+  if a:flags.open || !empty(filter(list, 'v:val.valid == 0'))
     execute (qf ? 'botright copen' : 'lopen') (size > 10 ? 10 : size)
     let w:quickfix_title = s:cmdline
     setlocal nowrap
@@ -490,7 +574,7 @@ function! s:finish_up(flags)
 
   redraw
   echo printf('Found %d matches.', size)
-  
+
   if exists('#User#Grepper')
     execute 'doautocmd' (s:has_doau_modeline ? '<nomodeline>' : '') 'User Grepper'
   endif
@@ -525,10 +609,10 @@ function! grepper#operator(type) abort
   endif
 
   let &selection = selsave
-  let flags = deepcopy(s:options)
+  let flags = deepcopy(g:grepper)
   let flags.query_orig = @@
   let flags.query_escaped = 0
-  let flags.query = s:escape_query(flags, @@)
+  let flags.query = '-- '. s:escape_query(flags, @@)
   let @@ = regsave
 
   return s:start(flags)

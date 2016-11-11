@@ -7,7 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
-2016-11-16
+2016-11-11
+==========
+
+- Update the Grepper plugin to version 2016-11-11.  This fixes problems with
+  hanging for certain search tools (ag, ack, rg, ...) that try to detect
+  whether stdin is a pipe, and if so, search the data on stdin.
+
+2016-10-31
 ==========
 
 - Allow the Git rebase actions to be repeated with dot (thanks to John
