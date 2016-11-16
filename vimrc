@@ -602,7 +602,7 @@ function! SetFont()
         let g:FontSize = AdjustBaseFontSize(14)
     endif
     if g:FontFamily != "" && g:FontSize > 0
-        if has("gui_gtk2")
+        if has("gui_gtk2") || has("gui_gtk3")
             let font = g:FontFamily . " " . g:FontSize
         else
             let font = g:FontFamily . ":h" . g:FontSize

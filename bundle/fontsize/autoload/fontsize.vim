@@ -30,7 +30,7 @@ let fontsize#regex_x11 = '\(.\{-}-\)\(\d\+\)\(.*\)'
 " gui_other: Courier_New:h11:cDEFAULT
 let fontsize#regex_other = '\(.\{-}:h\)\(\d\+\)\(.*\)'
 
-if has("gui_gtk2")
+if has("gui_gtk2") || has("gui_gtk3")
     let s:regex = fontsize#regex_gtk2
 elseif has("gui_photon")
     let s:regex = fontsize#regex_photon

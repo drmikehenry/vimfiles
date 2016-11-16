@@ -957,7 +957,7 @@ based on mappings.
 While "font size" mode is active, the prompt "(fontsize)" will be shown if
 'showcmd' is set.
 
-Version 0.3.3 (a5fb55a) from:
+Version 0.4.1 (2f1af78) from:
 https://github.com/drmikehenry/vim-fontsize
 
 Installation:
