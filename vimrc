@@ -3289,6 +3289,10 @@ let g:ctrlp_open_multiple_files = '1vr'
 " "t" - On <C-t>, jump to open window on current tab.
 let g:ctrlp_switch_buffer=""
 
+" The default of 10,000 files isn't enough, but as Jim points out, 640K
+" ought to be enough for anybody :-)
+let g:ctrlp_max_files = 640000
+
 " :C [path]  ==> :CtrlP [path]
 command! -n=? -com=dir C CtrlP <args>
 

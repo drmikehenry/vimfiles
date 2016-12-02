@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-12-02
+==========
+
+- Ctrlp defaults to a maximum 10,000 files which has proved to be insufficient,
+  so the limit has been raised to Jim's suggested value because, as he pointed
+  out, 640K ought to be enough for anyone.
+
 2016-11-15
 ==========
 
