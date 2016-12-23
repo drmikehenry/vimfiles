@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2016-12-23
+==========
+
+- Update togglecursor to version 0.5.1 to support OS X's native Terminal in
+  Sierra or better.
+
 2016-12-02
 ==========
 
