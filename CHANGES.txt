@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2017-01-01
+==========
+
+- Add notes for building on Fedora 23+.  As of Fedora 23, all RPMs are
+  "hardened" by default.  When building with ``--enable-rubyinterp``, Vim
+  uses hardened linker settings provided by the Fedora-supplied ruby libraries
+  without using the necessary hardened compiler settings, causing the
+  ``./configure`` operation to fail.
+
 2016-12-23
 ==========
 
