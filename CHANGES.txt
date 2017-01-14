@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2017-01-14
+==========
+
+- Fix visual-mode ``Y`` mapping to handle blank lines.  ``Y`` maps to
+  DedentParagraph() which removes common prefixes of whitespace from the
+  selected lines before yanking.  This function now ignores empty lines when
+  computing the common whitespace prefix.
+
 2017-01-01
 ==========
 

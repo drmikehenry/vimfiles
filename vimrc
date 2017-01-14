@@ -1364,7 +1364,7 @@ endfunction
 function! LeadingWhitespace(str)
     let remaining = Lstrip(a:str)
     let whiteLen = len(a:str) - len(remaining)
-    return TruncStr(a:str, len(a:str) - len(remaining))
+    return TruncStr(a:str, whiteLen)
 endfunction
 
 " Return longest common prefix of two strings s1 and s2.
@@ -1386,19 +1386,17 @@ function! DedentParagraph(para)
         let finalNewline = ''
     endif
     let lines = split(a:para, "\n")
-    if len(lines) > 0
-        let i = 0
-        let leading = substitute(lines[0], '.', ' ', '')
-        while i < len(lines)
-            let leading = CommonPrefix(leading, LeadingWhitespace(lines[i]))
-            let i += 1
+    let nonEmptyLines = filter(copy(lines), 'v:val !~# ''^\s*$''')
+    if len(nonEmptyLines) > 0
+        let prefixes = map(copy(nonEmptyLines), 'LeadingWhitespace(v:val)')
+        let longestPrefix = prefixes[0]
+        let i = 1
+        while i < len(prefixes)
+            let longestPrefix = CommonPrefix(longestPrefix, prefixes[i])
+            let i = i + 1
         endwhile
-
-        let i = 0
-        while i < len(lines)
-            let lines[i] = lines[i][len(leading):]
-            let i += 1
-        endwhile
+        let skipLen = len(longestPrefix)
+        call map(lines, 'v:val[skipLen:]')
     endif
     return join(lines, "\n") . finalNewline
 endfunction
@@ -1406,13 +1404,13 @@ endfunction
 " Yank-related mappings.
 
 " Yank to end-of-line instead of entire line (use "yy" for yanking a line).
-nnoremap Y      y$
+nnoremap <silent> Y      y$
 
 " Yank and dedent the visual selection.
 " TODO For now, assumes yanking to register 0 and that * and + are destinations.
 " Someday this should take into account the actual destination register and
 " whether such a yank should influence the clipboard.
-xnoremap Y      y:let @0=DedentParagraph(@0)<CR>:let @+=@0<CR>:let @*=@0<CR>
+xnoremap <silent> Y y:let @0=DedentParagraph(@0)<CR>:let @+=@0<CR>:let @*=@0<CR>
 
 
 " Remove "rubbish" whitespace (from Andy Wokula posting).
