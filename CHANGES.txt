@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2017-03-01
+==========
+
+- Update markdown2ctags to v0.1.3 (thanks to John Szakmeister).  This fixes a
+  bug when nesting sections that were more than one-level apart from the current
+  section (putting h4's in h2's).
+
 2017-01-14
 ==========
 
