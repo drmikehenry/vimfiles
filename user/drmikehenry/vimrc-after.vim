@@ -21,3 +21,7 @@ nnoremap <Space>ff          :<C-u>CtrlPCurFile<CR>
 nnoremap <Space>pf          :<C-u>CtrlPRoot<CR>
 
 Noxmap   <Space>xdw         :StripTrailingWhitespace<CR>
+
+" Use cpsm matcher for CtrlP.
+let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
+let g:cpsm_query_inverting_delimiter = ' '
