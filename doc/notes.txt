@@ -320,6 +320,15 @@ On Fedora: >
 
 On Ubuntu: >
     ln -s /etc/vim/vimrc /usr/local/share/vim/vimrc
+    cp /usr/share/vim/vim80/debian.vim /usr/local/share/vim/vim80/debian.vim
+<
+  Change the above source `vim80` directory to whatever you have on your system,
+  and change the destination `vim80` directory to match the version of Vim you
+  are installing.
+
+  The debian.vim file is important on Ubuntu systems; without that, nothing sets
+  'nocompatible' before executing `syntax on` in /etc/vim/vimrc which can lead
+  to issues when ~/.vim/filetype.vim is read.
 
 To register as the system alternative: >
 
