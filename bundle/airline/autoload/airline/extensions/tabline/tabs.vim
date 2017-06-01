@@ -1,6 +1,8 @@
 " MIT License. Copyright (c) 2013-2016 Bailey Ling.
 " vim: et ts=2 sts=2 sw=2
 
+scriptencoding utf-8
+
 let s:show_close_button = get(g:, 'airline#extensions#tabline#show_close_button', 1)
 let s:show_tab_type = get(g:, 'airline#extensions#tabline#show_tab_type', 1)
 let s:show_tab_nr = get(g:, 'airline#extensions#tabline#show_tab_nr', 1)
@@ -34,7 +36,7 @@ endfunction
 function! airline#extensions#tabline#tabs#get()
   let curbuf = bufnr('%')
   let curtab = tabpagenr()
-  call s:map_keys()
+  call airline#extensions#tabline#tabs#map_keys()
   if curbuf == s:current_bufnr && curtab == s:current_tabnr
     if !g:airline_detect_modified || getbufvar(curbuf, '&modified') == s:current_modified
       return s:current_tabline
@@ -94,7 +96,7 @@ function! airline#extensions#tabline#tabs#get()
   return s:current_tabline
 endfunction
 
-function! s:map_keys()
+function! airline#extensions#tabline#tabs#map_keys()
   noremap <silent> <Plug>AirlineSelectTab1 :1tabn<CR>
   noremap <silent> <Plug>AirlineSelectTab2 :2tabn<CR>
   noremap <silent> <Plug>AirlineSelectTab3 :3tabn<CR>

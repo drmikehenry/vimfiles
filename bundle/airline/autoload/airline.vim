@@ -1,6 +1,8 @@
 " MIT License. Copyright (c) 2013-2016 Bailey Ling.
 " vim: et ts=2 sts=2 sw=2
 
+scriptencoding utf-8
+
 let g:airline_statusline_funcrefs = get(g:, 'airline_statusline_funcrefs', [])
 
 let s:sections = ['a','b','c','gutter','x','y','z', 'error', 'warning']
@@ -65,6 +67,8 @@ function! airline#switch_theme(name)
   let w:airline_lastmode = ''
   call airline#load_theme()
 
+  silent doautocmd User AirlineAfterTheme
+
   " this is required to prevent clobbering the startup info message, i don't know why...
   call airline#check_mode(winnr())
 endfunction
@@ -107,11 +111,8 @@ function! airline#update_statusline()
     call s:invoke_funcrefs(context, s:inactive_funcrefs)
   endfor
 
-  unlet! w:airline_render_left
-  unlet! w:airline_render_right
-  for section in s:sections
-    unlet! w:airline_section_{section}
-  endfor
+  unlet! w:airline_render_left w:airline_render_right
+  exe 'unlet! ' 'w:airline_section_'. join(s:sections, ' w:airline_section_')
 
   let w:airline_active = 1
   let context = { 'winnr': winnr(), 'active': 1, 'bufnr': winbufnr(winnr()) }
@@ -186,10 +187,9 @@ function! airline#check_mode(winnr)
   let mode_string = join(l:mode)
   if get(w:, 'airline_lastmode', '') != mode_string
     call airline#highlighter#highlight_modified_inactive(context.bufnr)
-    call airline#highlighter#highlight(l:mode)
+    call airline#highlighter#highlight(l:mode, context.bufnr)
     let w:airline_lastmode = mode_string
   endif
 
   return ''
 endfunction
-

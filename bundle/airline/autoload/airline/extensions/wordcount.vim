@@ -1,12 +1,15 @@
 " MIT License. Copyright (c) 2013-2016 Bailey Ling.
 " vim: et ts=2 sts=2 sw=2
 
-let s:filetypes = get(g:, 'airline#extensions#wordcount#filetypes', '\vhelp|markdown|rst|org|text|asciidoc')
+scriptencoding utf-8
+
 let s:format = get(g:, 'airline#extensions#wordcount#format', '%d words')
 let s:formatter = get(g:, 'airline#extensions#wordcount#formatter', 'default')
+let g:airline#extensions#wordcount#filetypes = get(g:, 'airline#extensions#wordcount#filetypes',
+      \ '\vhelp|markdown|rst|org|text|asciidoc|tex|mail')
 
 function! s:update()
-  if match(&ft, s:filetypes) > -1
+  if match(&ft, get(g:, 'airline#extensions#wordcount#filetypes')) > -1
     let l:mode = mode()
     if l:mode ==# 'v' || l:mode ==# 'V' || l:mode ==# 's' || l:mode ==# 'S'
       let b:airline_wordcount = airline#extensions#wordcount#formatters#{s:formatter}#format()
@@ -25,7 +28,7 @@ function! s:update()
 endfunction
 
 function! airline#extensions#wordcount#apply(...)
-  if &ft =~ s:filetypes
+  if match(&ft, get(g:, 'airline#extensions#wordcount#filetypes')) > -1
     call airline#extensions#prepend_to_section('z', '%{get(b:, "airline_wordcount", "")}')
   endif
 endfunction

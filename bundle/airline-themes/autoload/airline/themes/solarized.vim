@@ -4,9 +4,11 @@ function! airline#themes#solarized#refresh()
   """"""""""""""""""""""""""""""""""""""""""""""""
   " Options
   """"""""""""""""""""""""""""""""""""""""""""""""
-  let s:background  = get(g:, 'airline_solarized_bg', &background)
-  let s:ansi_colors = get(g:, 'solarized_termcolors', 16) != 256 && &t_Co >= 16 ? 1 : 0
-  let s:tty         = &t_Co == 8
+  let s:background           = get(g:, 'airline_solarized_bg', &background)
+  let s:ansi_colors          = get(g:, 'solarized_termcolors', 16) != 256 && &t_Co >= 16 ? 1 : 0
+  let s:use_green            = get(g:, 'airline_solarized_normal_green', 0)
+  let s:dark_inactive_border = get(g:, 'airline_solarized_dark_inactive_border', 0)
+  let s:tty                  = &t_Co == 8
 
   """"""""""""""""""""""""""""""""""""""""""""""""
   " Colors
@@ -58,11 +60,11 @@ function! airline#themes#solarized#refresh()
   """"""""""""""""""""""""""""""""""""""""""""""""
   " Normal mode
   if s:background == 'dark'
-    let s:N1 = [s:base3, s:base1, 'bold']
+    let s:N1 = [s:base3, (s:use_green ? s:green : s:base1), 'bold']
     let s:N2 = [s:base2, (s:tty ? s:base01 : s:base00), '']
     let s:N3 = [s:base01, s:base02, '']
   else
-    let s:N1 = [s:base2, s:base00, 'bold']
+    let s:N1 = [s:base2, (s:use_green ? s:green : s:base00), 'bold']
     let s:N2 = [(s:tty ? s:base01 : s:base2), s:base1, '']
     let s:N3 = [s:base1, s:base2, '']
   endif
@@ -100,7 +102,11 @@ function! airline#themes#solarized#refresh()
   " Inactive, according to VertSplit in solarized
   " (bg dark: base00; bg light: base0)
   if s:background == 'dark'
-    let s:IA = [s:base02, s:base00, '']
+    if s:dark_inactive_border
+      let s:IA = [s:base01, s:base02, '']
+    else
+      let s:IA = [s:base02, s:base00, '']
+    endif
   else
     let s:IA = [s:base2, s:base0, '']
   endif
@@ -131,6 +137,9 @@ function! airline#themes#solarized#refresh()
         \ [s:N3[0].g, s:N3[1].g, s:N3[0].t, s:N3[1].t, s:N3[2]])
 
   let g:airline#themes#solarized#palette.normal.airline_warning = [
+        \ s:NW[0].g, s:NW[1].g, s:NW[0].t, s:NW[1].t, s:NW[2]]
+
+  let g:airline#themes#solarized#palette.normal.airline_error = [
         \ s:NW[0].g, s:NW[1].g, s:NW[0].t, s:NW[1].t, s:NW[2]]
 
   let g:airline#themes#solarized#palette.normal_modified = {

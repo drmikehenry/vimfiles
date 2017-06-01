@@ -59,7 +59,7 @@ function! airline#extensions#tabline#ctrlspace#add_buffer_section(builder, cur_t
       let buf_name = '%(%{airline#extensions#tabline#get_buffer_name('.buffer.index.')}%)'
 
       if has("tablineat")
-        let buf_name = '%'.buffer.index.'@airline#extensions#tabline#buffers#switchbuf@'.buf_name.'%X'
+        let buf_name = '%'.buffer.index.'@airline#extensions#tabline#buffers#clickbuf@'.buf_name.'%X'
       endif
 
       call a:builder.add_section_spaced(group, buf_name)
@@ -95,6 +95,7 @@ endfunction
 function! airline#extensions#tabline#ctrlspace#get()
   let cur_buf = bufnr('%')
 
+  call airline#extensions#tabline#tabs#map_keys()
   let s:tab_list = ctrlspace#api#TabList()
   for tab in s:tab_list
     if tab.current

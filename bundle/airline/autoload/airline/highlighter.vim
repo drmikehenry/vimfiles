@@ -1,6 +1,8 @@
 " MIT License. Copyright (c) 2013-2016 Bailey Ling.
 " vim: et ts=2 sts=2 sw=2
 
+scriptencoding utf-8
+
 let s:is_win32term = (has('win32') || has('win64')) && !has('gui_running') && (empty($CONEMUBUILD) || &term !=? 'xterm')
 
 let s:separators = {}
@@ -20,22 +22,25 @@ function! s:get_syn(group, what)
   if !exists("g:airline_gui_mode")
     let g:airline_gui_mode = airline#init#gui_mode()
   endif
-  let color = synIDattr(synIDtrans(hlID(a:group)), a:what, g:airline_gui_mode)
-  if empty(color) || color == -1
-    let color = synIDattr(synIDtrans(hlID('Normal')), a:what, g:airline_gui_mode)
+  let color = ''
+  if hlexists(a:group)
+    let color = synIDattr(synIDtrans(hlID(a:group)), a:what, g:airline_gui_mode)
   endif
   if empty(color) || color == -1
-    let color = 'NONE'
+    " should always exists
+    let color = synIDattr(synIDtrans(hlID('Normal')), a:what, g:airline_gui_mode)
+    " however, just in case
+    if empty(color) || color == -1
+      let color = 'NONE'
+    endif
   endif
   return color
 endfunction
 
 function! s:get_array(fg, bg, opts)
-  let fg = a:fg
-  let bg = a:bg
   return g:airline_gui_mode ==# 'gui'
-        \ ? [ fg, bg, '', '', join(a:opts, ',') ]
-        \ : [ '', '', fg, bg, join(a:opts, ',') ]
+        \ ? [ a:fg, a:bg, '', '', join(a:opts, ',') ]
+        \ : [ '', '', a:fg, a:bg, join(a:opts, ',') ]
 endfunction
 
 function! airline#highlighter#get_highlight(group, ...)
@@ -63,18 +68,51 @@ function! airline#highlighter#exec(group, colors)
     let colors[2] = s:gui2cui(get(colors, 0, ''), get(colors, 2, ''))
     let colors[3] = s:gui2cui(get(colors, 1, ''), get(colors, 3, ''))
   endif
-  let cmd= printf('hi %s %s %s %s %s %s %s %s',
-        \ a:group, s:Get(colors, 0, 'guifg=', ''), s:Get(colors, 1, 'guibg=', ''),
-        \ s:Get(colors, 2, 'ctermfg=', ''), s:Get(colors, 3, 'ctermbg=', ''),
-        \ s:Get(colors, 4, 'gui=', ''), s:Get(colors, 4, 'cterm=', ''),
-        \ s:Get(colors, 4, 'term=', ''))
   let old_hi = airline#highlighter#get_highlight(a:group)
   if len(colors) == 4
     call add(colors, '')
   endif
-  if old_hi != colors
+  let colors = s:CheckDefined(colors)
+  if old_hi != colors || !hlexists(a:group)
+    let cmd = printf('hi %s %s %s %s %s %s %s %s',
+        \ a:group, s:Get(colors, 0, 'guifg=', ''), s:Get(colors, 1, 'guibg=', ''),
+        \ s:Get(colors, 2, 'ctermfg=', ''), s:Get(colors, 3, 'ctermbg=', ''),
+        \ s:Get(colors, 4, 'gui=', ''), s:Get(colors, 4, 'cterm=', ''),
+        \ s:Get(colors, 4, 'term=', ''))
     exe cmd
   endif
+endfunction
+
+function! s:CheckDefined(colors)
+  " Checks, whether the definition of the colors is valid and is not empty or NONE
+  " e.g. if the colors would expand to this:
+  " hi airline_c ctermfg=NONE ctermbg=NONE
+  " that means to clear that highlighting group, therefore, fallback to Normal
+  " highlighting group for the cterm values
+
+  " This only works, if the Normal highlighting group is actually defined, so
+  " return early, if it has been cleared
+  if !exists("g:airline#highlighter#normal_fg_hi")
+    let g:airline#highlighter#normal_fg_hi = synIDattr(synIDtrans(hlID('Normal')), 'fg', 'cterm')
+  endif
+  if empty(g:airline#highlighter#normal_fg_hi) || g:airline#highlighter#normal_fg_hi < 0
+    return a:colors
+  endif
+
+  for val in a:colors
+    if !empty(val) && val !=# 'NONE'
+      return a:colors
+    endif
+  endfor
+  " this adds the bold attribute to the term argument of the :hi command,
+  " but at least this makes sure, the group will be defined
+  let fg = g:airline#highlighter#normal_fg_hi
+  let bg = synIDattr(synIDtrans(hlID('Normal')), 'bg', 'cterm')
+  if bg < 0
+    " in case there is no background color defined for Normal
+    let bg = a:colors[3]
+  endif
+  return a:colors[0:1] + [fg, bg] + [a:colors[4]]
 endfunction
 
 function! s:Get(dict, key, prefix, default)
@@ -109,7 +147,11 @@ function! airline#highlighter#load_theme()
     call airline#highlighter#highlight_modified_inactive(winbufnr(winnr))
   endfor
   call airline#highlighter#highlight(['inactive'])
-  call airline#highlighter#highlight(['normal'])
+  if getbufvar( bufnr('%'), '&modified'  )
+    call airline#highlighter#highlight(['normal', 'modified'])
+  else
+    call airline#highlighter#highlight(['normal'])
+  endif
 endfunction
 
 function! airline#highlighter#add_separator(from, to, inverse)
@@ -135,7 +177,8 @@ function! airline#highlighter#highlight_modified_inactive(bufnr)
   endif
 endfunction
 
-function! airline#highlighter#highlight(modes)
+function! airline#highlighter#highlight(modes, ...)
+  let bufnr = a:0 ? a:1 : ''
   let p = g:airline#themes#{g:airline_theme}#palette
 
   " draw the base mode, followed by any overrides
@@ -146,7 +189,11 @@ function! airline#highlighter#highlight(modes)
       let dict = g:airline#themes#{g:airline_theme}#palette[mode]
       for kvp in items(dict)
         let mode_colors = kvp[1]
-        call airline#highlighter#exec(kvp[0].suffix, mode_colors)
+        let name = kvp[0]
+        if name is# 'airline_c' && !empty(bufnr) && suffix is# '_inactive'
+          let name = 'airline_c'.bufnr
+        endif
+        call airline#highlighter#exec(name.suffix, mode_colors)
 
         for accent in keys(s:accents)
           if !has_key(p.accents, accent)
@@ -164,7 +211,7 @@ function! airline#highlighter#highlight(modes)
           else
             call add(colors, get(p.accents[accent], 4, ''))
           endif
-          call airline#highlighter#exec(kvp[0].suffix.'_'.accent, colors)
+          call airline#highlighter#exec(name.suffix.'_'.accent, colors)
         endfor
       endfor
 

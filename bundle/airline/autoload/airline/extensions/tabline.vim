@@ -1,6 +1,8 @@
 " MIT License. Copyright (c) 2013-2016 Bailey Ling.
 " vim: et ts=2 sts=2 sw=2
 
+scriptencoding utf-8
+
 let s:formatter = get(g:, 'airline#extensions#tabline#formatter', 'default')
 let s:show_buffers = get(g:, 'airline#extensions#tabline#show_buffers', 1)
 let s:show_tabs = get(g:, 'airline#extensions#tabline#show_tabs', 1)
@@ -138,19 +140,24 @@ function! airline#extensions#tabline#title(n)
   if empty(title)
     let buflist = tabpagebuflist(a:n)
     let winnr = tabpagewinnr(a:n)
-    return airline#extensions#tabline#get_buffer_name(buflist[winnr - 1])
+    let all_buffers = airline#extensions#tabline#buflist#list()
+    return airline#extensions#tabline#get_buffer_name(
+          \ buflist[winnr - 1],
+          \ filter(buflist, 'index(all_buffers, v:val) != -1'))
   endif
 
   return title
 endfunction
 
-function! airline#extensions#tabline#get_buffer_name(nr)
-  return airline#extensions#tabline#formatters#{s:formatter}#format(a:nr, airline#extensions#tabline#buflist#list())
+function! airline#extensions#tabline#get_buffer_name(nr, ...)
+  let buffers = a:0 ? a:1 : airline#extensions#tabline#buflist#list()
+  return airline#extensions#tabline#formatters#{s:formatter}#format(a:nr, buffers)
 endfunction
 
 function! airline#extensions#tabline#new_builder()
   let builder_context = {
         \ 'active'        : 1,
+        \ 'tabline'       : 1,
         \ 'right_sep'     : get(g:, 'airline#extensions#tabline#right_sep'    , g:airline_right_sep),
         \ 'right_alt_sep' : get(g:, 'airline#extensions#tabline#right_alt_sep', g:airline_right_alt_sep),
         \ }
