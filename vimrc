@@ -1056,12 +1056,27 @@ function! IsQuickFixWin()
         " then this will succeed and the focus will stay on this window.
         " If this is a QuickFix window, there will be an exception and the
         " focus will stay on this window.
-        try
-            noautocmd lopen
-        catch /E776:/
-            " This was a QuickFix window.
-            return 1
-        endtry
+        "
+        " Unfortunately, the above technique broke with newer versions of Vim
+        " ls lopen was considered to be editing the buffer.  Instead, we'll use
+        " the new win_getid() to grab the window id and then use that to check
+        " the window information to see if it's a quickfix window (it does
+        " distinguish between quickfix and loclist).
+        if exists('*win_getid')
+            let info = getwininfo(win_getid())
+            if len(info) && info[0]['quickfix']
+                return 1
+            else
+                return 0
+            endif
+        else
+            try
+                noautocmd lopen
+            catch /E776:/
+                " This was a QuickFix window.
+                return 1
+            endtry
+        endif
     endif
     return 0
 endfunction
