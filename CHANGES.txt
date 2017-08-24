@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2017-08-24
+==========
+
+- Update the IsQuickFixWin() function to work with Vim 8.0 (thanks for John
+  Szakmeister).
+
 2017-06-28
 ==========
 
