@@ -1064,7 +1064,7 @@ function! IsQuickFixWin()
         " distinguish between quickfix and loclist).
         if exists('*win_getid')
             let info = getwininfo(win_getid())
-            if len(info) && info[0]['quickfix']
+            if info[0]['quickfix']
                 return 1
             else
                 return 0
