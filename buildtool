@@ -171,6 +171,9 @@ function build()
     echo "Building in $VIMDIR..."
     PATCHLEVEL=`patchlevel`
     VIMFULLNAME="$VIMNAME.$PATCHLEVEL"
+    [ tar --version | grep 'GNU tar' > /dev/null 2>&1 ] && \
+        TAROPTS="--owner=0 --group=0"
+
     (
         TARNAME="$VIMFULLNAME.`uname -m`.tar.gz"
         cd $VIMDIR
@@ -181,10 +184,9 @@ function build()
             make && \
             echo "  Installing in $VIMDIR/DESTDIR..." && \
             make install DESTDIR=`pwd`/DESTDIR && \
-            find DESTDIR -type d -print0 | xargs -0 chmod go-w && \
+            chmod -R u=rwX,go=rX DESTDIR && \
             echo "  Creating tar from $VIMDIR/DESTDIR" && \
-            tar -C DESTDIR --numeric-owner --owner=0 --group=0 \
-                -zcf $TARNAME . && \
+            tar -C DESTDIR --numeric-owner $TAROPTS -zcf $TARNAME . && \
             echo "  Created archive $VIMDIR/$TARNAME"
     )
 }
