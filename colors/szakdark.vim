@@ -23,6 +23,7 @@ hi NonText          guifg=#303030     guibg=#1c1c1c     gui=NONE      ctermfg=23
 
 hi Cursor           guifg=black       guibg=white       gui=NONE      ctermfg=black       ctermbg=white       cterm=reverse
 hi LineNr           guifg=#4e4e4e     guibg=#262626     gui=NONE      ctermfg=239         ctermbg=235         cterm=NONE
+hi CursorLineNr     guifg=#6c6c6c     guibg=#262626     gui=BOLD      ctermfg=242         ctermbg=235         cterm=BOLD
 hi FoldColumn       guifg=#878700     guibg=#262626     gui=NONE      ctermfg=100         ctermbg=235         cterm=NONE
 hi SignColumn       guifg=#00afff     guibg=#262626     gui=NONE      ctermfg=39          ctermbg=235         cterm=NONE
 
