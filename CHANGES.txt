@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2017-10-17
+==========
+
+- Pressing '*' on Vim versions prior to 7.4.243 could lead to the error 'E118:
+  Too many arguments for function: getreg' because support for using lists for
+  register values in getreg() and setreg() was not completed until 7.4.243.  As
+  a work-around, the string-flavored getreg() and setreg() are now used on these
+  older versions of Vim.
+
 2017-09-27
 ==========
 

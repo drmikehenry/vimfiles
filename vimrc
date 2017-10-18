@@ -900,16 +900,33 @@ inoremap <F12> <ESC>:wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
 " Support routines
 " -------------------------------------------------------------
 
+" Vim 7.4.242 introduced support for the third argument to getreg()
+" (which indicates that a list should be returned).  7.4.243 added corresponding
+" support to setreg().
+
+if v:version > 704 || v:version == 704 && has("patch242") && has("patch243")
+    let g:GetSetRegWithLists = 1
+else
+    let g:GetSetRegWithLists = 0
+endif
+
 " Return regContents=[regValueAsList, regType] for given register reg.
+" Note: For Vim versions before 7.4.243 that do not support register values as
+" lists, the return value will be [regValueAsString, regType].
 function! GetReg(reg)
-    return [getreg(a:reg, 1, 1), getregtype(a:reg)]
+    if g:GetSetRegWithLists
+        let regVal = getreg(a:reg, 1, 1)
+    else
+        let regVal = getreg(a:reg, 1)
+    endif
+    return [regVal, getregtype(a:reg)]
 endfunction
 
 " Work around bug in setreg() prior to Vim 7.4.725.
 " In previous versions, invoking setreg() with an empty list for the value
 " would cause an internal error.
 function! SetRegWrapper(reg, value, options)
-    if len(a:value) == 0
+    if g:GetSetRegWithLists && len(a:value) == 0
         call setreg(a:reg, '', a:options)
     else
         call setreg(a:reg, a:value, a:options)
