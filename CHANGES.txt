@@ -13,6 +13,12 @@ require adjustment of per-user settings.
 - Change ``<F12>`` mapping to use ``:silent! wall`` so that it works even when
   unnamed (and thus unwritable) buffers are present.
 
+- Add some new 'C' snippets:
+
+    ``st`` --> ``size_t``
+    ``sst`` --> ``ssize_t``
+    ``un`` --> ``unsigned``
+
 2017-10-17
 ==========
 

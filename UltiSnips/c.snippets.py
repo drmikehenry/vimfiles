@@ -272,6 +272,10 @@ for width in [8, 16, 32, 64]:
     wabbr("i" + t,  "int" + t_t)
     wabbr("ui" + t,  "uint" + t_t, aliases=[t])
 
+wabbr("st", "size_t")
+wabbr("sst", "ssize_t")
+wabbr("un", "unsigned")
+
 # Doxygen.
 babbr("@param",     "@param[in] ${1:inParam}  ${0:@todo Description of $1.}",
         aliases=["@p", "@pi"])
