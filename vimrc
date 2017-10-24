@@ -893,7 +893,8 @@ function! EscapedFileDir()
 endfunction
 
 " Signal fifo using fifosignal script.
-nnoremap <F12> :wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
+nnoremap <F12> :silent! wall<bar>
+        \call system("fifosignal " . EscapedFileDir())<CR>
 inoremap <F12> <ESC>:wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
 
 " -------------------------------------------------------------
