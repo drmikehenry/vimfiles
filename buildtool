@@ -171,7 +171,7 @@ function build()
     echo "Building in $VIMDIR..."
     PATCHLEVEL=`patchlevel`
     VIMFULLNAME="$VIMNAME.$PATCHLEVEL"
-    [ tar --version | grep 'GNU tar' > /dev/null 2>&1 ] && \
+    tar --version | grep 'GNU tar' > /dev/null 2>&1 &&
         TAROPTS="--owner=0 --group=0"
 
     (
