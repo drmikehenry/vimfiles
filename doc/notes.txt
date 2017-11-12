@@ -2525,7 +2525,7 @@ Local customizations:
   CTRL-q CTRL-t - toggle the tagbar (:TagbarToggle)
   CTRL-q T      - toggle the tagbar (:TagbarToggle)
 
-Version 2014-02-14 (614b5b24) from:
+Version 2017-10-18 (dc155af2) from:
 https://github.com/majutsushi/tagbar
 
 Installation:

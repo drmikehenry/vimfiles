@@ -4,7 +4,7 @@
 " Author:      Jan Larres <jan@majutsushi.net>
 " Licence:     Vim licence
 " Website:     http://majutsushi.github.com/tagbar/
-" Version:     2.6.1
+" Version:     2.7
 " Note:        This plugin was heavily inspired by the 'Taglist' plugin by
 "              Yegappan Lakshmanan and uses a small amount of code from it.
 "
@@ -48,31 +48,41 @@ function! s:init_var(var, value) abort
     endif
 endfunction
 
-let s:options = [
-    \ ['autoclose', 0],
-    \ ['autofocus', 0],
-    \ ['autopreview', 0],
-    \ ['autoshowtag', 0],
-    \ ['compact', 0],
-    \ ['expand', 0],
-    \ ['foldlevel', 99],
-    \ ['hide_nonpublic', 0],
-    \ ['indent', 2],
-    \ ['left', 0],
-    \ ['previewwin_pos', 'topleft'],
-    \ ['show_visibility', 1],
-    \ ['show_linenumbers', 0],
-    \ ['singleclick', 0],
-    \ ['sort', 1],
-    \ ['systemenc', &encoding],
-    \ ['width', 40],
-    \ ['zoomwidth', 1],
-\ ]
+function! s:setup_options() abort
+    if !exists('g:tagbar_vertical') || g:tagbar_vertical == 0
+        let previewwin_pos = 'topleft'
+    else
+        let previewwin_pos = 'rightbelow vertical'
+    endif
+    let options = [
+        \ ['autoclose', 0],
+        \ ['autofocus', 0],
+        \ ['autopreview', 0],
+        \ ['autoshowtag', 0],
+        \ ['case_insensitive', 0],
+        \ ['compact', 0],
+        \ ['expand', 0],
+        \ ['foldlevel', 99],
+        \ ['hide_nonpublic', 0],
+        \ ['indent', 2],
+        \ ['left', 0],
+        \ ['previewwin_pos', previewwin_pos],
+        \ ['show_visibility', 1],
+        \ ['show_linenumbers', 0],
+        \ ['singleclick', 0],
+        \ ['sort', 1],
+        \ ['systemenc', &encoding],
+        \ ['vertical', 0],
+        \ ['width', 40],
+        \ ['zoomwidth', 1],
+        \ ['silent', 0],
+    \ ]
 
-for [opt, val] in s:options
-    call s:init_var(opt, val)
-endfor
-unlet s:options
+    for [opt, val] in options
+        call s:init_var(opt, val)
+    endfor
+endfunction
+call s:setup_options()
 
 if !exists('g:tagbar_iconchars')
     if has('multi_byte') && has('unix') && &encoding == 'utf-8' &&
@@ -83,32 +93,40 @@ if !exists('g:tagbar_iconchars')
     endif
 endif
 
-let s:keymaps = [
-    \ ['jump',          '<CR>'],
-    \ ['preview',       'p'],
-    \ ['previewwin',    'P'],
-    \ ['nexttag',       '<C-N>'],
-    \ ['prevtag',       '<C-P>'],
-    \ ['showproto',     '<Space>'],
-    \ ['hidenonpublic', 'v'],
-    \
-    \ ['openfold',      ['+', '<kPlus>', 'zo']],
-    \ ['closefold',     ['-', '<kMinus>', 'zc']],
-    \ ['togglefold',    ['o', 'za']],
-    \ ['openallfolds',  ['*', '<kMultiply>', 'zR']],
-    \ ['closeallfolds', ['=', 'zM']],
-    \
-    \ ['togglesort', 's'],
-    \ ['zoomwin',    'x'],
-    \ ['close',      'q'],
-    \ ['help',       '<F1>'],
-\ ]
+function! s:setup_keymaps() abort
+    let keymaps = [
+        \ ['jump',          '<CR>'],
+        \ ['preview',       'p'],
+        \ ['previewwin',    'P'],
+        \ ['nexttag',       '<C-N>'],
+        \ ['prevtag',       '<C-P>'],
+        \ ['showproto',     '<Space>'],
+        \ ['hidenonpublic', 'v'],
+        \
+        \ ['openfold',      ['+', '<kPlus>', 'zo']],
+        \ ['closefold',     ['-', '<kMinus>', 'zc']],
+        \ ['togglefold',    ['o', 'za']],
+        \ ['openallfolds',  ['*', '<kMultiply>', 'zR']],
+        \ ['closeallfolds', ['=', 'zM']],
+        \ ['incrementfolds',  ['zr']],
+        \ ['decrementfolds',  ['zm']],
+        \ ['nextfold',      'zj'],
+        \ ['prevfold',      'zk'],
+        \
+        \ ['togglesort',            's'],
+        \ ['togglecaseinsensitive', 'i'],
+        \ ['toggleautoclose',       'c'],
+        \ ['zoomwin',               'x'],
+        \ ['close',                 'q'],
+        \ ['help',                  ['<F1>', '?']],
+    \ ]
 
-for [map, key] in s:keymaps
-    call s:init_var('map_' . map, key)
-    unlet key
-endfor
-unlet s:keymaps
+    for [map, key] in keymaps
+        call s:init_var('map_' . map, key)
+        unlet key
+    endfor
+endfunction
+call s:setup_keymaps()
 
 augroup TagbarSession
     autocmd!
@@ -125,8 +143,8 @@ command! -nargs=1 -bang TagbarSetFoldlevel  call tagbar#SetFoldLevel(<args>, <ba
 command! -nargs=0 TagbarShowTag       call tagbar#highlighttag(1, 1)
 command! -nargs=? TagbarCurrentTag    echo tagbar#currenttag('%s', 'No current tag', <f-args>)
 command! -nargs=1 TagbarGetTypeConfig call tagbar#gettypeconfig(<f-args>)
-command! -nargs=? TagbarDebug         call tagbar#StartDebug(<f-args>)
-command! -nargs=0 TagbarDebugEnd      call tagbar#StopDebug()
+command! -nargs=? TagbarDebug         call tagbar#debug#start_debug(<f-args>)
+command! -nargs=0 TagbarDebugEnd      call tagbar#debug#stop_debug()
 command! -nargs=0 TagbarTogglePause   call tagbar#toggle_pause()
 
 " Modeline {{{1
