@@ -4452,6 +4452,8 @@ function! SyntasticBufferSetup(style)
         SyntasticBufferIgnoreLevel inherited
         SyntasticBufferIgnoreRegex ..
         unlet! b:syntastic_checkers
+    elseif &filetype == "ruby"
+        let b:syntastic_checkers = ["mri", "rubocop"]
     elseif &filetype == "python"
         setlocal tw=79
         let regex = Flake8IgnoredImportsRegex(g:Flake8IgnoredImports)
@@ -6089,6 +6091,9 @@ command! -bar SetupQuickFix call SetupQuickFix()
 " -------------------------------------------------------------
 function! SetupRuby()
     SetupSource
+    setlocal ts=8 sts=2 sw=2
+    " TODO May want ``default`` as another strictness value.
+    SyntasticBufferSetup strict
 endfunction
 command! -bar SetupRuby call SetupRuby()
 
