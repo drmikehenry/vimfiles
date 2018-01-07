@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-01-07
+==========
+
+- Move ``omni#cpp#utils#IsCursorInCommentOrString()`` work-around from
+  ``~/.vim/vimrc`` into ``~/.vim/autoload/omni/cpp/utils.vim`` to avoid error
+  ``E746: Function name does not match script file name:`` on Fedora 27.
+
 2018-01-01
 ==========
 

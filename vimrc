@@ -3813,13 +3813,6 @@ nnoremap <silent> <Leader>fe :Explore<CR>
 "   1 ==> initially selects first item in the menu.
 " default: let OmniCpp_SelectFirstItem = 0
 
-" Work-around for Doxygen comments.  Forces Doxygen comments to be
-" skipped for Omnicompletion.
-function! omni#cpp#utils#IsCursorInCommentOrString()
-    let attr= '\C\<cComment\|\<cCppString\|\<cIncluded\|\<doxygen'
-    return match(synIDattr(synID(line("."), col(".")-1, 1), "name"), attr) >= 0
-endfunc
-
 
 " -------------------------------------------------------------
 " Powerline

@@ -138,8 +138,11 @@ function! omni#cpp#utils#SimplifyScope(szScope)
 endfunc
 
 " Check if the cursor is in comment
+" Work-around for Doxygen comments.  Forces Doxygen comments to be
+" skipped for Omnicompletion.
 function! omni#cpp#utils#IsCursorInCommentOrString()
-    return match(synIDattr(synID(line("."), col(".")-1, 1), "name"), '\C\<cComment\|\<cCppString\|\<cIncluded')>=0
+    let attr= '\C\<cComment\|\<cCppString\|\<cIncluded\|\<doxygen'
+    return match(synIDattr(synID(line("."), col(".")-1, 1), "name"), attr) >= 0
 endfunc
 
 " Tokenize the current instruction until the cursor position.
