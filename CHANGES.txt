@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-02/18
+==========
+
+- Make tagbar leave tag order unsorted so it matches the order of declaration in
+  files (rather than being sorted alphabetically).  Pressing ``s`` will still
+  toggle sorting on and off; this only affects the startup default.
+
 2018-01-07
 ==========
 

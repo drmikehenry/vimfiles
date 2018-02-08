@@ -4590,6 +4590,7 @@ endif
 let g:tagbar_width = 40
 let g:tagbar_autoclose = 1
 let g:tagbar_autofocus = 1
+let g:tagbar_sort = 0
 
 nnoremap <silent> <S-F8>     :TagbarToggle<CR>
 nnoremap <silent> <C-q><C-t> :TagbarToggle<CR>
