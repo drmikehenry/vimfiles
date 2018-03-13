@@ -7,7 +7,7 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
-2018-02/18
+2018-02-18
 ==========
 
 - Make tagbar leave tag order unsorted so it matches the order of declaration in
@@ -24,7 +24,7 @@ require adjustment of per-user settings.
 2018-01-01
 ==========
 
-- Setup Ruby for two-space indendation to match community standards.
+- Setup Ruby for two-space indentation to match community standards.
 
 - Add "Rubocop" as Syntastic checker for Ruby.
 
