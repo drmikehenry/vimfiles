@@ -1,15 +1,17 @@
 # scriptease.vim
 
-Enjoy this amalgamation of crap I use for editing runtime files.
+I make so many Vim plugins I had to make a Vim plugin for making Vim plugins.
 
 ## Features
 
-* `:PP`: Pretty print.
+* `:PP`: Pretty print.  With no argument, acts as a REPL.
 * `:Runtime`: Reload runtime files.  Like `:runtime!`, but it unlets any
   include guards first.
 * `:Disarm`: Remove a runtime file's maps, commands, and autocommands,
   effectively disabling it.
 * `:Scriptnames`: Load `:scriptnames` into the quickfix list.
+* `:Messages`: Load `:messages` into the quickfix list, with stack trace
+  parsing.
 * `:Verbose`: Capture the output of a `:verbose` invocation into the preview
   window.
 * `:Time`: Measure how long a command takes.
@@ -23,6 +25,8 @@ Enjoy this amalgamation of crap I use for editing runtime files.
 * `g!`: Eval a motion or selection as VimL and replace it with the result.
   This is handy for doing math, even outside of VimL.  It's so handy, in fact,
   that it probably deserves its own plugin.
+* Projections for
+  [projectionist.vim](https://github.com/tpope/vim-projectionist).
 
 See the `:help` for details.
 

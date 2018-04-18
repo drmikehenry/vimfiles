@@ -2,6 +2,7 @@ scriptease	scriptease.txt	/*scriptease*
 scriptease-:Breakadd	scriptease.txt	/*scriptease-:Breakadd*
 scriptease-:Breakdel	scriptease.txt	/*scriptease-:Breakdel*
 scriptease-:Disable	scriptease.txt	/*scriptease-:Disable*
+scriptease-:Messages	scriptease.txt	/*scriptease-:Messages*
 scriptease-:PP	scriptease.txt	/*scriptease-:PP*
 scriptease-:PPmsg	scriptease.txt	/*scriptease-:PPmsg*
 scriptease-:Runtime	scriptease.txt	/*scriptease-:Runtime*

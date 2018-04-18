@@ -2172,7 +2172,7 @@ Usage:
                 It's so handy, in fact, that it probably deserves its own
                 plugin.
 
-Version 1.0 (47872691) from:
+Version 2018-04-12 (f0ea516) from:
 https://github.com/tpope/vim-scriptease.git
 
 Installation:
