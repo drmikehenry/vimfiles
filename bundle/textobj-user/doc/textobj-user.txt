@@ -1,8 +1,8 @@
 *textobj-user.txt*	Create your own text objects
 
-Version 0.6.3
+Version 0.7.5
 Script ID: 2100
-Copyright (C) 2007-2014 Kana Natsuno <http://whileimautomaton.net/>
+Copyright (C) 2007-2017 Kana Natsuno <http://whileimautomaton.net/>
 License: MIT license  {{{
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -120,9 +120,6 @@ Requirements:
 Latest version:
 https://github.com/kana/vim-textobj-user
 
-Document in HTML format:
-http://vim-doc.heroku.com/view?https://raw.github.com/kana/vim-textobj-user/master/doc/textobj-user.txt
-
 
 
 
@@ -190,9 +187,9 @@ textobj#user#plugin({plugin-name}, {specs})
 	key mappings are defined for extra customization for users.
 
 	For example, one might prefer "aT" and "iT" to select a time, because
-	|at| and |it| are bound to the extremely useful text objects by
-	default, and it is usually a bad idea to override them.  In this case,
-	interface key mappings are used as follows:
+	|at| and |it| are bound to the extremely useful text objects to select
+	a tag block by default, and it is usually a bad idea to override them.
+	In this case, interface key mappings are used as follows:
 >
 		xmap aT  <Plug>(textobj-datetime-time)
 		omap aT  <Plug>(textobj-datetime-time)
@@ -204,13 +201,13 @@ textobj#user#plugin({plugin-name}, {specs})
 	to define default key mappings -- "ad", "id", "at" and "it".
 
 	As described in (b), sometimes users do not want to use default key
-	mappings such as "at" and "at".  If
+	mappings such as "at" and "it".  If
 	g:textobj_datetime_no_default_key_mappings is set to true, default key
 	mappings will not be defined.
 
 	For backward compatibility, if {specs} contains a key
 	"*no-default-key-mappings*", default key mappings will not be defined.
-	But this feature will be removed from furture version.
+	But this feature will be removed in a future version.
 
 
 							  *textobj-user-specs*
@@ -244,8 +241,7 @@ The following properties are available:
 
 "select"			{lhs} or [{lhs}, ...]
 	Like "move-n", but {lhs} is used as a default key mapping to select
-	the text object under the cursor.  If there is no text object under
-	the cursor, the next text object is selected.
+	the text object under the cursor.  See also |textobj-user-scan|.
 
 	A target text object is determined by
 	- the "pattern" property with a single regular expression, or
@@ -285,6 +281,33 @@ The following properties are available:
 		"v"             Characterwise
 		"V"             Linewise
 		"\<C-v>"        Blockwise
+
+							   *textobj-user-scan*
+"scan"				{string}  (default: "forward")
+	A string that specifies how to find a "pattern"-based text object for
+	"select".  Possible values are:
+
+	"cursor"
+		Try to find from text under the cursor.
+
+	"forward"
+		Try to find from text:
+		(1) Under the cursor
+		(2) After the cursor
+
+	"line"
+		Try to find from text:
+		(1) Under the cursor
+		(2) In the current line and after the cursor
+		(3) In the current line and before the cursor
+
+	"nearest"
+		Try to find from text:
+		(1) Under the cursor
+		(2) In the current line and after the cursor
+		(3) In the current line and before the cursor
+		(4) After the current line
+		(5) Before the current line
 
 "{property}-function"		{fname}
 	If this property is defined, the function named {fname} instead of the
@@ -381,22 +404,13 @@ textobj#user#map({plugin-name}, {specs})
 	  filetype plugins.
 
 	As a result, textobj#user#map() cannot detect whether {plugin-name} is
-	right or not.  To notice something wrong, an error message will be
-	shown when
+	correct.  So that an error message will be shown when
 
 	- A key mapping defined by textobj#user#map() is actually used, and
 	- The corresponding text object does not exist at that moment.
 
-
-
-
-==============================================================================
-OBSOLETE API					*textobj-user-obsolete-api*
-
 						*textobj#user#move()*
 textobj#user#move({pattern}, {flags}, {previous-mode})
-	Note: This function is obsolete.  It will be removed in sometime.
-
 	Move the cursor to the appropriate object defined by {pattern}.
 
 	{flags} is a string, which can contain the following character flags:
@@ -419,31 +433,37 @@ textobj#user#move({pattern}, {flags}, {previous-mode})
 
 						*textobj#user#select()*
 textobj#user#select({pattern}, {flags}, {prevous-mode})
-	Note: This function is obsolete.  It will be removed in sometime.
+	Select an appropriate object defined by {pattern}.  The following
+	places are scaned to find an appropriate object:
 
-	Select the appropriate object defined by {pattern}.
-	If the cursor is already in the range of an object, select it.
-	If the cursor is not in the range of an object, select the nearest
-	object after the cursor.
+		(1) Under the cursor
+		(2) In the current line and after the cursor
+		(3) In the current line and before the cursor
+		(4) After the current line
+		(5) Before the current line
 
 	{flags} is a string, which can contain the following character flags:
 
 		Character       Meaning ~
 		---------       -------------------------------------------- ~
-		"b"             select the nearest object BEFORE the cursor if
-		                the cursor is not in the range of an object.
+		"b"             find an object from (1), (3), (5).
+		"c"             find an object from (1).
+		"f"             find an object from (1), (2), (4).  (default)
+		"l"             find an object from (1), (2), (3).
+		"n"             find an object from (1), (2), (3), (4), (5).
 		"v"             select an object characterwise.  (default)
 		"V"             select an object linewise.
 		"\<C-v>"        select an object blockwise.
+		"N"             find the range but don't select.
 
 	For the detail of {previous-mode}, see |textobj#user#move()|.
 
-	Return value is not defined.
+	This function returns a list of the start position and the end
+	position for an object.  Each position is [{lnum}, {col}].
+	If there is no appropriate object, 0 is returned instead.
 
 						*textobj#user#select_pair()*
 textobj#user#select_pair({pattern1}, {pattern2}, {flags}, {previous-mode})
-	Note: This function is obsolete.  It will be removed in sometime.
-
 	Select the appropriate object which starts with {pattern1} and ends
 	with {pattern2}.
 
@@ -466,6 +486,12 @@ textobj#user#select_pair({pattern1}, {pattern2}, {flags}, {previous-mode})
 	For the detail of {previous-mode}, see |textobj#user#move()|.
 
 	Return value is not defined.
+
+
+
+
+==============================================================================
+OBSOLETE API					*textobj-user-obsolete-api*
 
 						*textobj#user#define()*
 textobj#user#define({pattern}, {pattern1}, {pattern2}, {guideline})
@@ -526,6 +552,11 @@ KNOWN ISSUES					*textobj-user-known-issues*
 - In Vim older than 7.3.918, |.| fails to correctly repeat the last operation
   with a custom text object.
 
+- In Vim 7.3.918 or later, |.| shows underlying key sequence in Command line
+  to repeat the last operation with a custom text object.  (The key sequence
+  seems to be stored in the redo buffer for repeatability.  So that it is not
+  possible to hide the key sequence by |:map-<silent>|.)
+
 - See also: https://github.com/kana/vim-textobj-user/issues
 
 
@@ -533,6 +564,37 @@ KNOWN ISSUES					*textobj-user-known-issues*
 
 ==============================================================================
 CHANGELOG					*textobj-user-changelog*
+
+0.7.5	2017-09-28T20:38:39+09:00		*textobj-user-changelog-0.7.5*
+	- Revert changes from 0.7.3-0.7.4 for compatibility with custom
+	  operators which use |getchar()|.
+
+0.7.4	2017-09-25T20:42:58+09:00		*textobj-user-changelog-0.7.4*
+	- Fix a bug that random characters are inserted if custom text objects
+	  are used with |c|.
+
+0.7.3	2017-09-23T11:10:34+09:00		*textobj-user-changelog-0.7.3*
+	- Fix a bug that |'<| and |'>| are overridden after using any custom
+	  text object in |Operator-pending| mode.  For example, '< and '> were
+	  set to the same region as `vaX` after typing `yaX`.
+
+0.7.2	2017-08-22T21:07:30+09:00		*textobj-user-changelog-0.7.2*
+	- |textobj#user#select()|: Support a new flag 'N'.
+	- Fix the plugin itself to be easily reloaded.
+
+0.7.1	2015-05-03T01:45:37+09:00		*textobj-user-changelog-0.7.1*
+	- Fix a bug that count given to "move-n" and others for
+	  "pattern"-based text objects in Visual mode is ignored.
+
+0.7.0	2015-04-27T21:42:27+09:00		*textobj-user-changelog-0.7.0*
+	- Add "scan" to specify how to find a "pattern"-based text object for
+	  "select".  See |textobj-user-scan| for the details.
+
+0.6.4	2014-10-29T20:59:54+09:00		*textobj-user-changelog-0.6.4*
+	- Fix a bug that text objects are not correctly selected if those
+	  objects match single characters.  See also:
+	  https://github.com/kana/vim-textobj-user/issues/41
+	- Fix a few typos in the document.
 
 0.6.3	2014-06-22T17:40:07+09:00		*textobj-user-changelog-0.6.3*
 	- Fix a bug that using script-local functions as "{property}-function"
@@ -683,4 +745,4 @@ CHANGELOG					*textobj-user-changelog*
 
 
 ==============================================================================
-vim:tw=78:ts=8:ft=help:norl:fen:fdl=0:fdm=marker:
+vim:tw=78:ts=8:ft=help:norl:fen:fdl=0:fdm=marker:noet:

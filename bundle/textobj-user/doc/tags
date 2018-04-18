@@ -36,6 +36,13 @@ textobj-user-changelog-0.6.0	textobj-user.txt	/*textobj-user-changelog-0.6.0*
 textobj-user-changelog-0.6.1	textobj-user.txt	/*textobj-user-changelog-0.6.1*
 textobj-user-changelog-0.6.2	textobj-user.txt	/*textobj-user-changelog-0.6.2*
 textobj-user-changelog-0.6.3	textobj-user.txt	/*textobj-user-changelog-0.6.3*
+textobj-user-changelog-0.6.4	textobj-user.txt	/*textobj-user-changelog-0.6.4*
+textobj-user-changelog-0.7.0	textobj-user.txt	/*textobj-user-changelog-0.7.0*
+textobj-user-changelog-0.7.1	textobj-user.txt	/*textobj-user-changelog-0.7.1*
+textobj-user-changelog-0.7.2	textobj-user.txt	/*textobj-user-changelog-0.7.2*
+textobj-user-changelog-0.7.3	textobj-user.txt	/*textobj-user-changelog-0.7.3*
+textobj-user-changelog-0.7.4	textobj-user.txt	/*textobj-user-changelog-0.7.4*
+textobj-user-changelog-0.7.5	textobj-user.txt	/*textobj-user-changelog-0.7.5*
 textobj-user-contents	textobj-user.txt	/*textobj-user-contents*
 textobj-user-example-between	textobj-user.txt	/*textobj-user-example-between*
 textobj-user-example-complex	textobj-user.txt	/*textobj-user-example-complex*
@@ -47,5 +54,6 @@ textobj-user-obsolete-properties	textobj-user.txt	/*textobj-user-obsolete-proper
 textobj-user-philosophy	textobj-user.txt	/*textobj-user-philosophy*
 textobj-user-reference	textobj-user.txt	/*textobj-user-reference*
 textobj-user-region-type	textobj-user.txt	/*textobj-user-region-type*
+textobj-user-scan	textobj-user.txt	/*textobj-user-scan*
 textobj-user-specs	textobj-user.txt	/*textobj-user-specs*
 textobj-user.txt	textobj-user.txt	/*textobj-user.txt*
