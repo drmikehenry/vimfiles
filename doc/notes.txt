@@ -2080,7 +2080,7 @@ REPEAT                                                  *notes_repeat*
 Plugins need to support this feature explicitly (such as the
 surround plugin).
 
-Version 1.1 (a81bef76) from:
+Version 1.2 (8106e14) from:
 https://github.com/tpope/vim-repeat
 
 Installation:
