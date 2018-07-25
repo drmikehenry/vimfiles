@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-07-24
+==========
+
+- Similar to the mapping for <F12>, add a new mapping for <F11> to signal the
+  fifo ``.fifo2`` in the current working directory.  See the "Building and
+  Running" section of ``:help notes`` for details.
+
 2018-02-18
 ==========
 

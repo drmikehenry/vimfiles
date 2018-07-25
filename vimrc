@@ -892,10 +892,15 @@ function! EscapedFileDir()
     return shellescape(expand("%:p:h"))
 endfunction
 
-" Signal fifo using fifosignal script.
+" Signal .fifo using fifosignal script.
 nnoremap <F12> :silent! wall<bar>
         \call system("fifosignal " . EscapedFileDir())<CR>
 inoremap <F12> <ESC>:wall<bar>call system("fifosignal " . EscapedFileDir())<CR>
+
+" Signal .fifo2 using fifosignal script.
+nnoremap <F11> :silent! wall<bar>
+        \call system("fifosignal .fifo2")<CR>
+inoremap <F11> <ESC>:wall<bar>call system("fifosignal .fifo2")<CR>
 
 " -------------------------------------------------------------
 " Support routines

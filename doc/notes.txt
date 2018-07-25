@@ -3384,9 +3384,16 @@ Press <F9> to save all buffers and execute :make in current directory.
 Press <F5> to execute current buffer (useful when editing Python scripts,
 for example).
 
-Press <F12> to execute the fifosignal command (a separate program).  Useful
-in combination with a separate command prompt using the fifowait command,
-commonly used to trigger a build outside of Vim.  For example: >
+<F11> and <F12> signal fifos using the fifosignal command (a separate program).
+Each key causes a ":wall" followed by a signal to a particular fifo in a
+particular directory.
+
+<F11> signals the fifo named ".fifo2" in the current working directory.
+<F12> signals the fifo named ".fifo" in the parent directory of the current
+file.
+
+These signals are useful in combination with a separate command prompt using the
+fifowait command, commonly used to trigger a build outside of Vim.  For example:
 
     while fifowait; do echo "Building"; ./buildall; done
 
