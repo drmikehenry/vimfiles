@@ -16,6 +16,10 @@ require adjustment of per-user settings.
 
 - Add support for Z80 assembly language via the vim-z80 plugin.
 
+- Check for the existence of the relatively recently added ``getwininfo()``
+  function in addition to ``win_getid()`` to avoid errors on Vim 7.4 (thanks to
+  Jonathan Shuman).
+
 2018-02-18
 ==========
 

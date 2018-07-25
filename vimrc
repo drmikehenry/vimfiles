@@ -1081,11 +1081,11 @@ function! IsQuickFixWin()
         " focus will stay on this window.
         "
         " Unfortunately, the above technique broke with newer versions of Vim
-        " ls lopen was considered to be editing the buffer.  Instead, we'll use
+        " as lopen was considered to be editing the buffer.  Instead, we'll use
         " the new win_getid() to grab the window id and then use that to check
         " the window information to see if it's a quickfix window (it does
         " distinguish between quickfix and loclist).
-        if exists('*win_getid')
+        if exists('*win_getid') && exists('*getwininfo')
             let info = getwininfo(win_getid())
             if info[0]['quickfix']
                 return 1
