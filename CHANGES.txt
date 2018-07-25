@@ -20,6 +20,8 @@ require adjustment of per-user settings.
   function in addition to ``win_getid()`` to avoid errors on Vim 7.4 (thanks to
   Jonathan Shuman).
 
+- Fix ``:Redir END`` to ``:set more`` instead of ``:set nomore``.
+
 2018-02-18
 ==========
 

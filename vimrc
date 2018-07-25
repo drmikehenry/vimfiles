@@ -2656,7 +2656,7 @@ endfunction
 " to press <Space> after each screen of output.
 command! -nargs=* -bar Redir
         \ if <q-args> == "" || <q-args> ==? "end" |
-        \   set nomore |
+        \   set more |
         \   redir END |
         \ else |
         \   redir <args> |
