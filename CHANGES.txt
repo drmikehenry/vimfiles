@@ -14,6 +14,8 @@ require adjustment of per-user settings.
   fifo ``.fifo2`` in the current working directory.  See the "Building and
   Running" section of ``:help notes`` for details.
 
+- Add support for Z80 assembly language via the vim-z80 plugin.
+
 2018-02-18
 ==========
 

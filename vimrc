@@ -6452,6 +6452,32 @@ function! SetupYamlIndent()
 endfunction
 command! -bar SetupYamlIndent call SetupYamlIndent()
 
+function! IndentZ80()
+    if getline(v:lnum) =~ '^\s*\w\+:$'
+        return 0
+    elseif getline(v:lnum) =~ '^\s*#'
+        return 0
+    elseif v:lnum > 1 && getline(v:lnum - 1) =~ '^\s*\w\+:$'
+        return 8
+    else
+        return indent(v:lnum)
+    endif
+endfunction
+
+function! SetupZ80()
+    SetupSource
+
+    " Use 8-space indentation.
+    setlocal sts=8 sw=8
+
+    setlocal indentexpr=IndentZ80()
+    setlocal indentkeys=!^F,o,O,<:>,0#
+    setlocal commentstring=;%s
+    let b:SpellType = "<z80>"
+endfunction
+command! -bar SetupZ80 call SetupZ80()
+let g:SpellMap["<z80>"] = "<off>"
+
 " Source support for :Man command.
 runtime ftplugin/man.vim
 
