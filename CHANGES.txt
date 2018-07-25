@@ -22,6 +22,9 @@ require adjustment of per-user settings.
 
 - Fix ``:Redir END`` to ``:set more`` instead of ``:set nomore``.
 
+- Remove unused ctrlp matchers (ctrlp-py-matcher, ctrlp-cmatcher,
+  abbrev-matcher).
+
 2018-02-18
 ==========
 
