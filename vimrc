@@ -3109,16 +3109,16 @@ if !has("gui_running") && &t_Co == 8
     let g:EnablePowerline = 0
 endif
 
-if !exists("g:EnablePowerline")
-    let g:EnablePowerline = 1
-endif
-
 if !exists("g:EnableAirline")
-    let g:EnableAirline = 0
+    let g:EnableAirline = 1
 endif
 
-if g:EnableAirline
+if !exists("g:EnablePowerline")
     let g:EnablePowerline = 0
+endif
+
+if g:EnablePowerline
+    let g:EnableAirline = 0
 endif
 
 if !exists("g:EnableUltiSnips")

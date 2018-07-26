@@ -38,6 +38,13 @@ require adjustment of per-user settings.
     <C-p><C-q> CtrlPQuickfix
     <C-q>q     CtrlPQuickfix
 
+- Change default from Powerline to Airline.  This change of default fell through
+  the cracks (support for Airline was added to Vimfiles over two years ago!).
+  To use Powerline instead of Airline, place the following line in your
+  ``VIMRC_BEFORE`` file::
+
+    let g:EnablePowerline = 1
+
 2018-07-24
 ==========
 
