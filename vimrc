@@ -648,7 +648,7 @@ if has("gui_running")
     SetFont
 
     " Number of lines of text overall.
-    set lines=45
+    set lines=40
 endif
 
 " MacVim-specific setup.  MacVim has a gvimrc setup that alters some bindings.
