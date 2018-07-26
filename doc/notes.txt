@@ -938,7 +938,7 @@ Installation:
 FIXKEY                                                  *notes_fixkey*
   Fix key code for console Vim                          |fixkey.txt|
 
-Version 0.3.8 (ce59fe8) from:
+Version 0.3.9 (9327cc8) from:
 https://github.com/drmikehenry/vim-fixkey
 
 Installation:

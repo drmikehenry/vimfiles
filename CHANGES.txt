@@ -45,6 +45,10 @@ require adjustment of per-user settings.
 
     let g:EnablePowerline = 1
 
+- Update Fixkey plugin to version 0.3.9.  This is a documentation-only fix
+  clarifying that Konsole need not be reconfigured just for the <S-F1> through
+  <S-F4> keys to work.
+
 2018-07-24
 ==========
 
