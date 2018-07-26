@@ -17,6 +17,27 @@ require adjustment of per-user settings.
   need to reduce ``lines`` allows Gvim to properly restore the saved window
   geometry from a session file.
 
+- Make <Space>-based mappings for things requiring ``CTRL-q``.  This avoids the
+  need to fix the XON/XOFF problem when using Vim in a terminal.  The
+  replacement mappings are documented throughout notes.txt; briefly, they are::
+
+    <C-q><C-q> Toggle QuickFix window
+    <Space>qq  Toggle QuickFix window
+    <C-q><C-l> Toggle Location List window
+    <Space>ql  Toggle Location List window
+
+    <C-q><C-h> Toggle help window
+    <Space>qh  Toggle help window
+
+    <C-q><C-p> Toggle project window
+    <Space>qp  Toggle project window
+
+    <C-q><C-t> Toggle tagbar window
+    <Space>qt  Toggle tagbar window
+
+    <C-p><C-q> CtrlPQuickfix
+    <C-q>q     CtrlPQuickfix
+
 2018-07-24
 ==========
 

@@ -793,6 +793,7 @@ Local customizations:
     CTRL-p CTRL-o        CtrlPBuffer    ; Mnemonic: buffers are "Open" files.
     CTRL-p CTRL-p        CtrlP          ; From current working directory.
     CTRL-p CTRL-q        CtrlPQuickfix
+    CTRL-p q             CtrlPQuickfix  ; Avoids CTRL-q (XOFF in terminal).
     CTRL-p CTRL-r        CtrlPRoot      ; From nearest enclosing project root.
     CTRL-p CTRL-t        CtrlPTag
     CTRL-p t             CtrlPBufTag
@@ -1919,6 +1920,7 @@ Local customizations:
   <F8>            - toggles the project window on and off.
   CTRL-q CTRL-p   - toggles the project window on and off.
   CTRL-q P        - toggles the project window on and off.
+  <Space> q p     - toggles the project window on and off.
 
 Version 1.4.1 from:
 http://www.vim.org/scripts/script.php?script_id=69
@@ -2361,7 +2363,7 @@ On actively checked file types, Syntastic will run the checkers whenever you
 save.  On passive file types, you can run them manually with |:SyntasticCheck|.
 
 After checking, view a location list with the errors via the |:Errors| command,
-or toggle the location list via CTRL-Q CTRL-L.
+or toggle the location list via CTRL-Q CTRL-L (or <Space> q l).
 
 Syntastic maintains a global mode to determine when to check a file.  In
 "passive" mode, checks are done manually via |:SyntaxCheck|.  In "active" mode,
@@ -2546,6 +2548,7 @@ Local customizations:
   <S-F8>        - toggle the tagbar (:TagbarToggle)
   CTRL-q CTRL-t - toggle the tagbar (:TagbarToggle)
   CTRL-q T      - toggle the tagbar (:TagbarToggle)
+  <Space> q t   - toggle the tagbar (:TagbarToggle)
 
 Version 2017-10-18 (dc155af2) from:
 https://github.com/majutsushi/tagbar
@@ -3905,7 +3908,9 @@ controlled by the following global variables: >
 QuickFix and Location Window
 
 <C-q><C-l>  Toggle the Location window on or off
+<Space>ql   Toggle the Location window on or off
 <C-q><C-q>  Toggle the QuickFix window on or off
+<Space>qq   Toggle the QuickFix window on or off
 
 NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
 
@@ -3982,6 +3987,7 @@ The following normal-mode mappings toggle the help window on and off:
   <F1>
   <C-q><C-h>
   <C-q>h
+  <Space>qh
 
 In visual mode, these same keys perform :help on the selected text.
 

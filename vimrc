@@ -2950,6 +2950,7 @@ function! QuickFixWinToggle()
     endif
 endfunction
 nnoremap <silent> <C-q><C-q> :call QuickFixWinToggle()<CR>
+nnoremap <silent> <Space>qq  :call QuickFixWinToggle()<CR>
 command! -bar QuickFixWinToggle :call QuickFixWinToggle()
 
 " Toggle location list window.
@@ -2965,6 +2966,7 @@ function! LocListWinToggle()
     endif
 endfunction
 nnoremap <silent> <C-q><C-l> :call LocListWinToggle()<CR>
+nnoremap <silent> <Space>ql  :call LocListWinToggle()<CR>
 command! -bar LocListWinToggle :call LocListWinToggle()
 
 " Like windo but restore the current window.
@@ -3355,6 +3357,7 @@ nnoremap <SNR>CtrlP.....m     :<C-u>CtrlPMixed<CR>
 nnoremap <SNR>CtrlP.....<C-o> :<C-u>CtrlPBuffer<CR>
 nnoremap <SNR>CtrlP.....<C-p> :<C-u>CtrlP<CR>
 nnoremap <SNR>CtrlP.....<C-q> :<C-u>CtrlPQuickfix<CR>
+nnoremap <SNR>CtrlP.....q     :<C-u>CtrlPQuickfix<CR>
 nnoremap <SNR>CtrlP.....<C-r> :<C-u>CtrlPRoot<CR>
 nnoremap <SNR>CtrlP.....<C-t> :<C-u>CtrlPTag<CR>
 nnoremap <SNR>CtrlP.....t     :<C-u>CtrlPBufTag<CR>
@@ -3935,7 +3938,7 @@ endif
 " 'g:proj_window_width'
 "   Width of project window (default 24).
 " 'g:proj_window_increment'
-"   Increment by which to increase Window when pressing <space> (default 100).
+"   Increment by which to increase Window when pressing <Space> (default 100).
 
 " Remove 'b' flag from default 'imstb' to turn off broken browse()-based
 " directory selection on Linux.
@@ -3956,6 +3959,7 @@ let g:proj_window_width = 40
 nmap <silent> <F8>        <Plug>ToggleProject
 nmap <silent> <C-q><C-p>  <Plug>ToggleProject
 nmap <silent> <C-q>p      <Plug>ToggleProject
+nmap <silent> <Space>qp   <Plug>ToggleProject
 
 " -------------------------------------------------------------
 " Quickfix-reflector
@@ -4600,6 +4604,7 @@ let g:tagbar_sort = 0
 nnoremap <silent> <S-F8>     :TagbarToggle<CR>
 nnoremap <silent> <C-q><C-t> :TagbarToggle<CR>
 nnoremap <silent> <C-q>t     :TagbarToggle<CR>
+nnoremap <silent> <Space>qt  :TagbarToggle<CR>
 
 " Support for reStructuredText, if available.
 if executable("rst2ctags")
@@ -6317,6 +6322,7 @@ command! -bar HelpToggle call HelpToggle()
 nnoremap <F1>       :<C-u>HelpToggle<CR>
 nnoremap <C-q>h     :<C-u>HelpToggle<CR>
 nnoremap <C-q><C-h> :<C-u>HelpToggle<CR>
+nnoremap <Space>qh  :<C-u>HelpToggle<CR>
 
 " Get help on visual selection.
 function! VisualHelp()
@@ -6327,6 +6333,7 @@ command! -bar VisualHelp call VisualHelp()
 xnoremap <F1>       :<C-u>call VisualHelp()<CR>
 xnoremap <C-q>h     :<C-u>call VisualHelp()<CR>
 xnoremap <C-q><C-h> :<C-u>call VisualHelp()<CR>
+xnoremap <Space>qh  :<C-u>call VisualHelp()<CR>
 
 
 " -------------------------------------------------------------
