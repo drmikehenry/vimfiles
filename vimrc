@@ -424,11 +424,46 @@ call Source('$VIMUSERLOCALFILES/vimrc-before.vim')
 call Source('$VIMUSERFILES/vimrc-before.vim')
 call Source('$VIMLOCALFILES/vimrc-before.vim')
 
-" In general there is no good way to reliably detect console background color.
-" However, if COLORFGBG is set and we're running in a console, we assume we can
-" trust the value of 'background'.
+" Determine if Vim's auto-detected 'background' option is trustworthy.
 function! BackgroundIsTrustworthy()
-    return !has("gui_running") && $COLORFGBG != ""
+    if has('gui_running')
+        " Without a terminal, there is no background context to detect.
+        return 0
+    endif
+
+    if $COLORFGBG != ''
+        " COLORFBBG is a good indicator of the terminal background color.
+        return 1
+    endif
+
+    " In Vim 7.4.757 (2015-06-25), support was added to probe for the terminal's
+    " background color.  This is a feature of xterm that some other terminals
+    " have added (notably, and sadly, not tmux (yet)).  However, there is no
+    " easy way for us to tell whether the terminal responded to the request for
+    " background color with this early support.  Later, Vim 8.0.1016
+    " (2017-08-30) brought in the variable v:termrgbresp (mis-spelled) to hold
+    " the terminal's response to the background color query.  The spelling was
+    " corrected to v:termrbgresp in Vim 8.0.1194 (2017-10-14) (though the
+    " runtime documentation wasn't corrected until 2017-11-02).  If either of
+    " these variables exists and is non-empty, then Vim successfully learned the
+    " true background color from the terminal and 'background' is trustworthy.
+
+    " Well, bummer.  The above paragraph sounds nice, but the reality is that
+    " v:termrbgresp isn't set yet while the .vimrc is being processed.  Other
+    " than setting a timer and probing for it, there isn't a way to use the
+    " automatically probed values.  The question has come up on the list:
+    " https://groups.google.com/forum/#!topic/vim_use/zV2sO-m3fD0
+    " Sounds like there may someday be an autocommand for reporting back
+    " the background color, but it's not clear how that can help us determine
+    " which colorscheme to choose since it will come later than we'd like.
+    "
+    " TODO: Revisit this if Vim ever gets better support for v:termrbgresp:
+    " if (exists('v:termrgbresp') && v:termrgbresp != '') ||
+    "         \ (exists('v:termrbgresp') && v:termrbgresp != '')
+    "    return 1
+    " endif
+
+    return 0
 endfunction
 
 " -------------------------------------------------------------
