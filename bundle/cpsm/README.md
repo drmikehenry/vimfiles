@@ -1,6 +1,8 @@
 cpsm
 ====
 
+[![Build Status](https://travis-ci.org/nixprime/cpsm.svg?branch=master)](https://travis-ci.org/nixprime/cpsm)
+
 cpsm is a matcher for [CtrlP][]. Although it supports all kinds of queries, it
 is highly optimized for file paths (and, to a lesser extent, similar strings
 like identifiers in source code).
@@ -52,6 +54,27 @@ Requirements
 - Python headers (Ubuntu: package `python-dev`).
 
 - Optional, required for Unicode support: ICU (Ubuntu: package `libicu-dev`).
+
+Pyenv users on Mac OS X: cpsm requires dynamic Python libraries, which pyenv
+does not build by default. If CMake indicates that it's using static libraries,
+e.g.:
+
+```
+-- Found PythonLibs: /Users/<username>/.pyenv/versions/3.5.2/lib/python3.5/config-3.5m/libpython3.5m.a
+```
+
+Rebuild with dynamic library support by running `env
+PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install <version>`.
+
+Python 3 Support
+----------------
+
+If your Vim is compiled against Python 3 instead (`+python3` flag) the install
+script should detect this in most cases and everything should just work. You may
+need different python headers installed (e.g. `python3-dev` on Ubuntu).
+
+If the detection does not work for any reason you can set `PY3=ON` or `PY3=OFF`
+as appropriate when running `./install.sh` to override it.
 
 Installation
 ------------

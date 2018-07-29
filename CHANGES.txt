@@ -14,6 +14,10 @@ require adjustment of per-user settings.
   Python, buildtool is easier to use and more flexible.
   Run ``~/.vim/buildtool --help`` for details.
 
+- Upgrade CtrlP plugin to version 2018-06-27.
+
+- Upgrade cpsm plugin to version 2018-02-01.
+
 2018-07-26
 ==========
 

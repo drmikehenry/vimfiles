@@ -1,5 +1,5 @@
 // cpsm - fuzzy path matcher
-// Copyright (C) 2015 Jamie Liu
+// Copyright (C) 2015 the Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -266,7 +266,15 @@ class Matcher : public MatchInfo {
     if (!match_crfile_ && crfile_path_distance_ == 0) {
       return false;
     }
-    item_basename_ = path_basename<PathTraits>(item_.cbegin(), item_.cend());
+    // If the last character in the item is a path separator, skip it for the
+    // purposes of determining the item basename to be consistent with
+    // `consume_path_component_match_front`.
+    if (!item_.empty() && PathTraits::is_path_separator(item_.back())) {
+      item_basename_ =
+          path_basename<PathTraits>(item_.cbegin(), item_.cend() - 1);
+    } else {
+      item_basename_ = path_basename<PathTraits>(item_.cbegin(), item_.cend());
+    }
     auto props_it = props_.begin() + (item_basename_ - item_.cbegin());
     for (auto item_it = item_basename_, item_last = item_.cend();
          item_it != item_last; ++item_it, ++props_it) {
@@ -380,11 +388,9 @@ class Matcher : public MatchInfo {
 
     auto item_it = item_basename_;
     auto const item_last = item_.cend();
-    // The item's basename can't be empty, because the item can't be empty (or
-    // else we would have returned early in `match`) and the item's basename
-    // must contain at least a single character (due to
-    // `consume_path_component`'s postcondition in
-    // `check_component_match_front`).
+    if (item_it == item_last) {
+      return false;
+    }
     auto query_it = qit_basename_;
     auto const query_last = query_.cend();
     if (query_it == query_last) {
@@ -521,13 +527,13 @@ class Matcher : public MatchInfo {
     auto const item_last = item_.cend();
     auto query_it = qit_basename_;
     auto const query_last = query_.cend();
-    if (query_it == query_last) {
+    if (item_it == item_last || query_it == query_last) {
       return;
     }
 
     CharCount current_submatch = 0;
 
-    for (; item_it != item_last; ++item_it) {
+    while (true) {
       if (*item_it == *query_it) {
         ++query_it;
         current_submatch++;
@@ -539,9 +545,15 @@ class Matcher : public MatchInfo {
             std::max(basename_longest_submatch_, current_submatch);
         current_submatch = 0;
       }
+      ++item_it;
+      if (item_it == item_last) {
+        break;
+      }
     }
     basename_longest_submatch_ =
         std::max(basename_longest_submatch_, current_submatch);
+    // -1 here because we broke out upon reaching the last match (`query_it ==
+    // query_last`) before incrementing `item_it`.
     unmatched_suffix_len_ = item_last - item_it - 1;
   }
 
@@ -605,7 +617,8 @@ class Matcher : public MatchInfo {
                                   InputIt1 const item_first, InputIt1 item_it,
                                   InputIt2 query_it,
                                   InputIt2 const query_last) const {
-    while (query_it != query_last) {
+    auto const item_last = item_.cend();
+    while (item_it != item_last && query_it != query_last) {
       if (*item_it == *query_it) {
         ++query_it;
         posns.push_back(item_it - item_first);

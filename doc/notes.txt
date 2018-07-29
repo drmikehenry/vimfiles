@@ -20,6 +20,7 @@
     Clojure-static - Edit Clojure without runtime       |notes_clojure-static|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
+    CPSM - CtrlP matcher in C++ for speed               |notes_cpsm|
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
     Easy-Align - Align text on delimiters               |notes_easyalign|
@@ -778,6 +779,43 @@ Installation:
 - Unpack in bundle/colorsamplerpack.
 
 ------------------------------------------------------------------------------
+CPSM                                                    *notes_cpsm*
+    CtrlP matcher in C++ for speed
+
+To use:
+
+- Install any prerequisites:
+
+  - A C++ compiler supporting C++11.
+  - Boost (Ubuntu: package `libboost-all-dev`).
+  - CMake (Ubuntu: package `cmake`).
+  - Python headers (Ubuntu: package `python-dev`).
+  - Optional, required for Unicode support: ICU (Ubuntu: package `libicu-dev`).
+
+- Build the CPSM executable: >
+
+    cd ~/.vim/bundle/cpsm
+    ./install.sh
+<
+- Configure CtrlpP to use the matcher: >
+
+      let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
+      " Pressing <Space> will cause later characters to be placed before
+      " earlier, e.g.:
+      "   "foo bar qux" is matched as if it were "quxbarfoo".
+      let g:cpsm_query_inverting_delimiter = ' '
+<
+
+See cpsm/README.md for additional optional settings.
+
+Version 2018-02-01 (8a4a0a0) from:
+https://github.com/ctrlpvim/ctrlp.vim.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+  However, leave the .gitignore so that bin/ and build/ are ignored.
+
+------------------------------------------------------------------------------
 CTRLP                                                   *notes_ctrlp*
   Fuzzy matches for files, buffers, etc.                |ctrlp|
 
@@ -815,13 +853,8 @@ Local customizations:
   around, and to avoid binding a commonly used function to the tmux prefix key
   (CTRL-j).
 
-Version 2016-01-17 (7f74368) from:
+Version 2018-06-27 (43cc73b) from:
 https://github.com/ctrlpvim/ctrlp.vim.git
-
-(Note: kien, the original author, seems to have dropped off the grid as of
-mid-2013, so his repository is no longer being maintained at
-https://github.com/kien/ctrlp.vim; instead, the above fork has been started to
-continue maintenance.)
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

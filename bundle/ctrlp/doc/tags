@@ -9,6 +9,8 @@
 'g:ctrlp_arg_map'	ctrlp.txt	/*'g:ctrlp_arg_map'*
 'g:ctrlp_brief_prompt'	ctrlp.txt	/*'g:ctrlp_brief_prompt'*
 'g:ctrlp_buffer_func'	ctrlp.txt	/*'g:ctrlp_buffer_func'*
+'g:ctrlp_bufname_mod'	ctrlp.txt	/*'g:ctrlp_bufname_mod'*
+'g:ctrlp_bufpath_mod'	ctrlp.txt	/*'g:ctrlp_bufpath_mod'*
 'g:ctrlp_buftag_ctags_bin'	ctrlp.txt	/*'g:ctrlp_buftag_ctags_bin'*
 'g:ctrlp_buftag_systemenc'	ctrlp.txt	/*'g:ctrlp_buftag_systemenc'*
 'g:ctrlp_buftag_types'	ctrlp.txt	/*'g:ctrlp_buftag_types'*
@@ -32,7 +34,6 @@
 'g:ctrlp_mruf_case_sensitive'	ctrlp.txt	/*'g:ctrlp_mruf_case_sensitive'*
 'g:ctrlp_mruf_default_order'	ctrlp.txt	/*'g:ctrlp_mruf_default_order'*
 'g:ctrlp_mruf_exclude'	ctrlp.txt	/*'g:ctrlp_mruf_exclude'*
-'g:ctrlp_mruf_exclude_nomod'	ctrlp.txt	/*'g:ctrlp_mruf_exclude_nomod'*
 'g:ctrlp_mruf_include'	ctrlp.txt	/*'g:ctrlp_mruf_include'*
 'g:ctrlp_mruf_max'	ctrlp.txt	/*'g:ctrlp_mruf_max'*
 'g:ctrlp_mruf_relative'	ctrlp.txt	/*'g:ctrlp_mruf_relative'*
@@ -50,6 +51,7 @@
 'g:ctrlp_switch_buffer'	ctrlp.txt	/*'g:ctrlp_switch_buffer'*
 'g:ctrlp_tabpage_position'	ctrlp.txt	/*'g:ctrlp_tabpage_position'*
 'g:ctrlp_tilde_homedir'	ctrlp.txt	/*'g:ctrlp_tilde_homedir'*
+'g:ctrlp_types'	ctrlp.txt	/*'g:ctrlp_types'*
 'g:ctrlp_use_caching'	ctrlp.txt	/*'g:ctrlp_use_caching'*
 'g:ctrlp_user_command'	ctrlp.txt	/*'g:ctrlp_user_command'*
 'g:ctrlp_working_path_mode'	ctrlp.txt	/*'g:ctrlp_working_path_mode'*
@@ -64,6 +66,8 @@
 :CtrlPChangeAll	ctrlp.txt	/*:CtrlPChangeAll*
 :CtrlPClearAllCaches	ctrlp.txt	/*:CtrlPClearAllCaches*
 :CtrlPClearCache	ctrlp.txt	/*:CtrlPClearCache*
+:CtrlPCurFile	ctrlp.txt	/*:CtrlPCurFile*
+:CtrlPCurWD	ctrlp.txt	/*:CtrlPCurWD*
 :CtrlPDir	ctrlp.txt	/*:CtrlPDir*
 :CtrlPLastMode	ctrlp.txt	/*:CtrlPLastMode*
 :CtrlPLine	ctrlp.txt	/*:CtrlPLine*

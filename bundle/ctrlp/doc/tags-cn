@@ -8,7 +8,10 @@
 'ctrlp-wildignore'	ctrlp.cnx	/*'ctrlp-wildignore'*
 'g:ctrlp_abbrev'	ctrlp.cnx	/*'g:ctrlp_abbrev'*
 'g:ctrlp_arg_map'	ctrlp.cnx	/*'g:ctrlp_arg_map'*
+'g:ctrlp_brief_prompt'	ctrlp.cnx	/*'g:ctrlp_brief_prompt'*
 'g:ctrlp_buffer_func'	ctrlp.cnx	/*'g:ctrlp_buffer_func'*
+'g:ctrlp_bufname_mod'	ctrlp.cnx	/*'g:ctrlp_bufname_mod'*
+'g:ctrlp_bufpath_mod'	ctrlp.cnx	/*'g:ctrlp_bufpath_mod'*
 'g:ctrlp_buftag_ctags_bin'	ctrlp.cnx	/*'g:ctrlp_buftag_ctags_bin'*
 'g:ctrlp_buftag_systemenc'	ctrlp.cnx	/*'g:ctrlp_buftag_systemenc'*
 'g:ctrlp_buftag_types'	ctrlp.cnx	/*'g:ctrlp_buftag_types'*
@@ -21,7 +24,9 @@
 'g:ctrlp_follow_symlinks'	ctrlp.cnx	/*'g:ctrlp_follow_symlinks'*
 'g:ctrlp_key_loop'	ctrlp.cnx	/*'g:ctrlp_key_loop'*
 'g:ctrlp_lazy_update'	ctrlp.cnx	/*'g:ctrlp_lazy_update'*
+'g:ctrlp_line_prefix'	ctrlp.cnx	/*'g:ctrlp_line_prefix'*
 'g:ctrlp_map'	ctrlp.cnx	/*'g:ctrlp_map'*
+'g:ctrlp_match_current_file'	ctrlp.cnx	/*'g:ctrlp_match_current_file'*
 'g:ctrlp_match_func'	ctrlp.cnx	/*'g:ctrlp_match_func'*
 'g:ctrlp_match_window'	ctrlp.cnx	/*'g:ctrlp_match_window'*
 'g:ctrlp_max_depth'	ctrlp.cnx	/*'g:ctrlp_max_depth'*
@@ -30,7 +35,6 @@
 'g:ctrlp_mruf_case_sensitive'	ctrlp.cnx	/*'g:ctrlp_mruf_case_sensitive'*
 'g:ctrlp_mruf_default_order'	ctrlp.cnx	/*'g:ctrlp_mruf_default_order'*
 'g:ctrlp_mruf_exclude'	ctrlp.cnx	/*'g:ctrlp_mruf_exclude'*
-'g:ctrlp_mruf_exclude_nomod'	ctrlp.cnx	/*'g:ctrlp_mruf_exclude_nomod'*
 'g:ctrlp_mruf_include'	ctrlp.cnx	/*'g:ctrlp_mruf_include'*
 'g:ctrlp_mruf_max'	ctrlp.cnx	/*'g:ctrlp_mruf_max'*
 'g:ctrlp_mruf_relative'	ctrlp.cnx	/*'g:ctrlp_mruf_relative'*
@@ -38,6 +42,7 @@
 'g:ctrlp_open_func'	ctrlp.cnx	/*'g:ctrlp_open_func'*
 'g:ctrlp_open_multiple_files'	ctrlp.cnx	/*'g:ctrlp_open_multiple_files'*
 'g:ctrlp_open_new_file'	ctrlp.cnx	/*'g:ctrlp_open_new_file'*
+'g:ctrlp_open_single_match'	ctrlp.cnx	/*'g:ctrlp_open_single_match'*
 'g:ctrlp_prompt_mappings'	ctrlp.cnx	/*'g:ctrlp_prompt_mappings'*
 'g:ctrlp_regexp'	ctrlp.cnx	/*'g:ctrlp_regexp'*
 'g:ctrlp_reuse_window'	ctrlp.cnx	/*'g:ctrlp_reuse_window'*
@@ -47,6 +52,7 @@
 'g:ctrlp_switch_buffer'	ctrlp.cnx	/*'g:ctrlp_switch_buffer'*
 'g:ctrlp_tabpage_position'	ctrlp.cnx	/*'g:ctrlp_tabpage_position'*
 'g:ctrlp_tilde_homedir'	ctrlp.cnx	/*'g:ctrlp_tilde_homedir'*
+'g:ctrlp_types'	ctrlp.cnx	/*'g:ctrlp_types'*
 'g:ctrlp_use_caching'	ctrlp.cnx	/*'g:ctrlp_use_caching'*
 'g:ctrlp_user_command'	ctrlp.cnx	/*'g:ctrlp_user_command'*
 'g:ctrlp_working_path_mode'	ctrlp.cnx	/*'g:ctrlp_working_path_mode'*
@@ -61,6 +67,8 @@
 :CtrlPChangeAll	ctrlp.cnx	/*:CtrlPChangeAll*
 :CtrlPClearAllCaches	ctrlp.cnx	/*:CtrlPClearAllCaches*
 :CtrlPClearCache	ctrlp.cnx	/*:CtrlPClearCache*
+:CtrlPCurFile	ctrlp.cnx	/*:CtrlPCurFile*
+:CtrlPCurWD	ctrlp.cnx	/*:CtrlPCurWD*
 :CtrlPDir	ctrlp.cnx	/*:CtrlPDir*
 :CtrlPLastMode	ctrlp.cnx	/*:CtrlPLastMode*
 :CtrlPLine	ctrlp.cnx	/*:CtrlPLine*
@@ -76,11 +84,13 @@ ClearCtrlPCache	ctrlp.cnx	/*ClearCtrlPCache*
 ControlP	ctrlp.cnx	/*ControlP*
 CtrlP	ctrlp.cnx	/*CtrlP*
 ResetCtrlP	ctrlp.cnx	/*ResetCtrlP*
+ctrlp-autoignore-extension	ctrlp.cnx	/*ctrlp-autoignore-extension*
 ctrlp-changelog	ctrlp.cnx	/*ctrlp-changelog*
 ctrlp-commands	ctrlp.cnx	/*ctrlp-commands*
 ctrlp-content	ctrlp.cnx	/*ctrlp-content*
 ctrlp-credits	ctrlp.cnx	/*ctrlp-credits*
 ctrlp-customization	ctrlp.cnx	/*ctrlp-customization*
+ctrlp-default-value	ctrlp.cnx	/*ctrlp-default-value*
 ctrlp-extensions	ctrlp.cnx	/*ctrlp-extensions*
 ctrlp-input-formats	ctrlp.cnx	/*ctrlp-input-formats*
 ctrlp-intro	ctrlp.cnx	/*ctrlp-intro*
@@ -88,7 +98,6 @@ ctrlp-mappings	ctrlp.cnx	/*ctrlp-mappings*
 ctrlp-miscellaneous-configs	ctrlp.cnx	/*ctrlp-miscellaneous-configs*
 ctrlp-options	ctrlp.cnx	/*ctrlp-options*
 ctrlp.txt	ctrlp.cnx	/*ctrlp.txt*
-ctrl默认值	ctrlp.cnx	/*ctrl默认值*
 g:ctrlp_dont_split	ctrlp.cnx	/*g:ctrlp_dont_split*
 g:ctrlp_dotfiles	ctrlp.cnx	/*g:ctrlp_dotfiles*
 g:ctrlp_highlight_match	ctrlp.cnx	/*g:ctrlp_highlight_match*
@@ -101,3 +110,4 @@ g:ctrlp_mru_files	ctrlp.cnx	/*g:ctrlp_mru_files*
 g:ctrlp_open_multi	ctrlp.cnx	/*g:ctrlp_open_multi*
 g:ctrlp_persistent_input	ctrlp.cnx	/*g:ctrlp_persistent_input*
 g:ctrlp_regexp_search	ctrlp.cnx	/*g:ctrlp_regexp_search*
+string-match	ctrlp.cnx	/*string-match*

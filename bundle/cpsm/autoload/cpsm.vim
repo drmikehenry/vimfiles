@@ -1,5 +1,5 @@
 " cpsm - fuzzy path matcher
-" Copyright (C) 2015 Jamie Liu
+" Copyright (C) 2015 the Authors
 "
 " Licensed under the Apache License, Version 2.0 (the "License");
 " you may not use this file except in compliance with the License.
@@ -37,20 +37,76 @@ if !exists('g:cpsm_unicode')
 endif
 
 let s:script_dir = escape(expand('<sfile>:p:h'), '\')
-
-execute 'pyfile ' . s:script_dir . '/cpsm.py'
+" s:status is:
+" - 0: no Python support, or module loading failed for other reasons
+" - 1: cpsm module built with incompatible version of Python
+" - 2: cpsm module usable with Python 2
+" - 3: cpsm module usable with Python 3
+let s:status = 0
+if has('python3')
+  try
+    execute 'py3file ' . s:script_dir . '/cpsm.py'
+    let s:status = 3
+  catch
+    " Ideally we'd check specifically for the exception
+    " 'ImportError: dynamic module does not define module export function',
+    " but Vim's handling of multiline exceptions seems to be completely
+    " broken.
+    if !has('python')
+      let s:status = 1
+    endif
+  endtry
+endif
+if s:status == 0 && has('python')
+  try
+    execute 'pyfile ' . s:script_dir . '/cpsm.py'
+    let s:status = 2
+  catch
+    let s:status = 1
+  endtry
+endif
 
 function cpsm#CtrlPMatch(items, str, limit, mmode, ispath, crfile, regex)
-  if !has('python')
-    return ['ERROR: cpsm requires Vim built with Python support']
+  if !has('python3') && !has('python')
+    return ['ERROR: cpsm requires Vim built with Python or Python3 support']
+  elseif s:status == 0
+    return ['ERROR: failed to load cpsm module']
+  elseif s:status == 1
+    return ['ERROR: cpsm built with version of Python not supported by Vim']
   endif
+
   if empty(a:str) && g:cpsm_match_empty_query == 0
     let s:results = a:items[0:(a:limit)]
     let s:regexes = []
   else
     let s:match_crfile = exists('g:ctrlp_match_current_file') ? g:ctrlp_match_current_file : 0
-    py ctrlp_match()
+    let s:regex_line_prefix = '> '
+    if exists('g:ctrlp_line_prefix')
+      let s:regex_line_prefix = g:ctrlp_line_prefix
+    endif
+    let s:input = {
+    \   'items': a:items,
+    \   'query': a:str,
+    \   'limit': a:limit,
+    \   'mmode': a:mmode,
+    \   'ispath': a:ispath,
+    \   'crfile': a:crfile,
+    \   'highlight_mode': g:cpsm_highlight_mode,
+    \   'match_crfile': s:match_crfile,
+    \   'max_threads': g:cpsm_max_threads,
+    \   'query_inverting_delimiter': g:cpsm_query_inverting_delimiter,
+    \   'regex_line_prefix': s:regex_line_prefix,
+    \   'unicode': g:cpsm_unicode,
+    \ }
+    if s:status == 3
+      let s:output = py3eval('_ctrlp_match_evalinput()')
+    else
+      let s:output = pyeval('_ctrlp_match_evalinput()')
+    endif
+    let s:results = s:output[0]
+    let s:regexes = s:output[1]
   endif
+
   call clearmatches()
   " Apply highlight regexes.
   for r in s:regexes
@@ -60,4 +116,3 @@ function cpsm#CtrlPMatch(items, str, limit, mmode, ispath, crfile, regex)
   call matchadd('CtrlPLinePre', '^>')
   return s:results
 endfunction
-

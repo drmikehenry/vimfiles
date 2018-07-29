@@ -53,11 +53,13 @@ let s:types = {
 	\ 'cpp'    : '%sc++%sc++%snvdtcgsuf',
 	\ 'cs'     : '%sc#%sc#%sdtncEgsipm',
 	\ 'cobol'  : '%scobol%scobol%sdfgpPs',
+	\ 'delphi' : '%spascal%spascal%sfp',
 	\ 'dosbatch': '%sdosbatch%sdosbatch%slv',
 	\ 'eiffel' : '%seiffel%seiffel%scf',
 	\ 'erlang' : '%serlang%serlang%sdrmf',
 	\ 'expect' : '%stcl%stcl%scfp',
 	\ 'fortran': '%sfortran%sfortran%spbceiklmntvfs',
+	\ 'go'     : '%sgo%sgo%sfctv',
 	\ 'html'   : '%shtml%shtml%saf',
 	\ 'java'   : '%sjava%sjava%spcifm',
 	\ 'javascript': '%sjavascript%sjavascript%sf',
@@ -72,6 +74,7 @@ let s:types = {
 	\ 'python' : '%spython%spython%scmf',
 	\ 'rexx'   : '%srexx%srexx%ss',
 	\ 'ruby'   : '%sruby%sruby%scfFm',
+	\ 'rust'   : '%srust%srust%sfTgsmctid',
 	\ 'scheme' : '%sscheme%sscheme%ssf',
 	\ 'sh'     : '%ssh%ssh%sf',
 	\ 'csh'    : '%ssh%ssh%sf',
@@ -136,7 +139,7 @@ fu! s:exectags(cmd)
 endf
 
 fu! s:exectagsonfile(fname, ftype)
-	let [ags, ft] = ['-f - --sort=no --excmd=pattern --fields=nKs --extra= ', a:ftype]
+	let [ags, ft] = ['-f - --sort=no --excmd=pattern --fields=nKs --extra= --file-scope=yes ', a:ftype]
 	if type(s:types[ft]) == 1
 		let ags .= s:types[ft]
 		let bin = s:bin
@@ -157,7 +160,11 @@ fu! s:esctagscmd(bin, args, ...)
 		let [ssl, &ssl] = [&ssl, 0]
 	en
 	let fname = a:0 ? shellescape(a:1) : ''
-	let cmd = shellescape(a:bin).' '.a:args.' '.fname
+	if  (has('win32') || has('win64'))
+		let cmd = a:bin.' '.a:args.' '.fname
+	else
+		let cmd = shellescape(a:bin).' '.a:args.' '.fname
+	endif
 	if &sh =~ 'cmd\.exe'
 		let cmd = substitute(cmd, '[&()@^<>|]', '^\0', 'g')
 	en

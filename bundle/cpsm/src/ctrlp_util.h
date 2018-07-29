@@ -1,5 +1,5 @@
 // cpsm - fuzzy path matcher
-// Copyright (C) 2015 Jamie Liu
+// Copyright (C) 2015 the Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -98,7 +98,8 @@ struct CtrlPItem {
 // for the given highlight mode. `positions` must be sorted.
 void get_highlight_regexes(boost::string_ref mode, boost::string_ref item,
                            std::vector<std::size_t> const& positions,
-                           std::vector<std::string>& regexes);
+                           std::vector<std::string>& regexes,
+                           boost::string_ref line_prefix);
 
 }  // namespace cpsm
 
