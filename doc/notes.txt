@@ -274,8 +274,9 @@ help, or read the script for more detailed information.
 Update the git directory (in the default download location) with the latest Vim
 source: >
 
-  # From any directory; updates clone in <download>/vim/8.0/git:
-  ~/.vim/buildtool 8.0 update
+  # From any directory; updates the newest Vim source clone in <download>/,
+  # probing for valid git clones containing Vim source:
+  ~/.vim/buildtool update
 
 On Fedora 23+, use the below options to setup some environment variables for
 building "hardened" binaries.  This is needed (at least through vim-8.0.0133)
@@ -303,12 +304,19 @@ without also asking about CFLAGS; this leads to mismatched values of certain
 
 Unpack, configure, build, and create binary and source tarballs: >
 
+  # Source will be unpacked and built below the current directory:
   cd ~/build
-  rm -rf vim-8.0
-  ~/.vim/buildtool 8.0
+  # Build the newest version available in download directories:
+  ~/.vim/buildtool build
 
-Installation of final tarball is done as follows: >
-    sudo tar -C / -zxf vim-8.0/vim-8.0.patchlevel.x86_64.tar.gz
+  # Or build a particular tarball:
+  ~/.vim/buildtool build path/to/vim-x.y.z.tar.gz
+
+  # Or build a particular Git clone:
+  ~/.vim/buildtool build path/to/some/git-clone
+
+Installation of final tarball is done as follows (for example): >
+    sudo tar -C / -zxf vim-x.y.z/vim-x.y.z.x86_64.tar.gz
 
 After installation on Linux, the distro-provided global vimrc file will not be
 used, so Vim will come up in VI-compatible mode for users (e.g. root) that

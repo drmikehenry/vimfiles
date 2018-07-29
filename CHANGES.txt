@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-07-29
+==========
+
+- Rewrite ~/.vim/buildtool, a tool for building Vim from source.  Now written in
+  Python, buildtool is easier to use and more flexible.
+  Run ``~/.vim/buildtool --help`` for details.
+
 2018-07-26
 ==========
 
