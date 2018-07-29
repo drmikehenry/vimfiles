@@ -527,7 +527,7 @@ General bundle installation instructions:               *bundle_installation*
 
 - Remove unwanted hidden directories: >
 
-    rm -rf {.git,.bzr,.hg,.svn,.gitignore,.VimballRecord}
+    rm -rf {.git,.bzr,.hg,.svn,.VimballRecord}
 
 - Add clean bundle tree to Git: >
 
@@ -782,7 +782,7 @@ Installation:
 CPSM                                                    *notes_cpsm*
     CtrlP matcher in C++ for speed
 
-To use:
+Setting up cpsm                                         *notes_cpsm_setup*
 
 - Install any prerequisites:
 
@@ -797,7 +797,7 @@ To use:
     cd ~/.vim/bundle/cpsm
     ./install.sh
 <
-- Configure CtrlpP to use the matcher: >
+- Configure CtrlP to use the matcher: >
 
       let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
       " Pressing <Space> will cause later characters to be placed before
