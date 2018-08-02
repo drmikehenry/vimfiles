@@ -4711,12 +4711,13 @@ let g:tagbar_type_markdown = g:local_tagbar_type_markdown
 let g:tcomment#blank_lines = 0
 
 " Turn off the <C-_> and <Leader>_ mappings.
-let g:tcommentMapLeader1 = ''
-let g:tcommentMapLeader2 = ''
+let g:tcomment_mapleader1 = ''
+let g:tcomment_mapleader2 = ''
 
 " Setup better linewise comments for Java.
 let g:tcomment_types = {
         \ 'java': '// %s',
+        \ 'kscript': '# %s',
         \ }
 
 " -------------------------------------------------------------

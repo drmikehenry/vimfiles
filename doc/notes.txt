@@ -2650,25 +2650,7 @@ Local customizations:
 Blank lines are not commented, and the <c-_> and <Leader>_ mappings are turned
 off.  'gc' will do what you want most of the time.
 
-Version 2016-02-28 (742632b) from:
-https://github.com/tomtom/tcomment_vim.git
-
-Along with a small patch to allow ``g:tcomment#blank_lines = 0``:
-
-diff --git a/bundle/tcomment_vim/autoload/tcomment.vim b/bundle/tcomment_vim/autoload/tcomment.vim
-index 8a72f9e..67b2d1c 100644
---- a/bundle/tcomment_vim/autoload/tcomment.vim
-+++ b/bundle/tcomment_vim/autoload/tcomment.vim
-@@ -1546,7 +1546,7 @@ function! s:ProcessLine(comment_do, match, checkRx, replace)
-     " TLogVAR a:comment_do, a:match, a:checkRx, a:replace
-     try
-         if !(g:tcomment#blank_lines > 0 || a:match =~ '\S')
--            return a:match
-+            return ['', 0]
-         endif
-         if a:comment_do ==# 'k'
-             if a:match =~ a:checkRx
-
+Version 2018-08-01 (1acf5b9) from: https://github.com/tomtom/tcomment_vim.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

@@ -6,7 +6,7 @@ contains uncommented lines, and it will remove comment markup for
 already commented text (i.e. text that contains no uncommented lines).
 
 If the file-type is properly defined, TComment will figure out which 
-comment string to use. Otherwise you use |tcomment#DefineType()| to 
+comment string to use. Otherwise you use |tcomment#type#Define()| to 
 override the default choice.
 
 TComment can properly handle an embedded syntax, e.g., ruby/python/perl 
@@ -28,15 +28,19 @@ Most of the time the default toggle keys will do what you want (or to be
 more precise: what I think you want it to do ;-).
 
                                                     *tcomment-operator*
-As operator (the prefix can be customized via |g:tcommentMapLeaderOp1| 
-and |g:tcommentMapLeaderOp2|):
+As operator (the prefix can be customized via |g:tcomment_opleader1|):
 
     gc{motion}   :: Toggle comments (for small comments within one line 
                     the &filetype_inline style will be used, if 
                     defined)
-    gc<Count>c{motion} :: Toggle comment text with count argument 
+    gc<Count>c{motion} :: Toggle comment with count argument 
                     (see |tcomment#Comment()|)
     gcc          :: Toggle comment for the current line
+
+Force line-wise operation:
+    gC{motion}   :: Toggle comments by line
+    gC<Count>c{motion} :: Toggle comment by line with count argument 
+                    (see |tcomment#Comment()|)
 
 Explicit commenting/uncommenting:
 
@@ -60,10 +64,10 @@ since this is how many vim maps work. In order to make tcomment use e.g. inline
 comments anyway, use the <c-_>i map -- see below.
 
 By default the cursor stays put. If you want the cursor to the end of 
-the commented text, set |g:tcommentOpModeExtra| to '>' (but this may not 
+the commented text, set |g:tcomment#operator#mode_extra| to '>' (but this may not 
 work properly with exclusive motions).
 
-Primary key maps for normal and insert mode:
+Primary key maps for normal and insert mode (see also |g:tcomment_mapleader1|):
 
     <c-_><c-_>   :: :TComment
     <c-_><space> :: :TComment <QUERY COMMENT-BEGIN ?COMMENT-END>
@@ -96,7 +100,8 @@ Primary key maps for normal and insert mode:
 
 Most of the above maps are also available in visual mode.
 
-A secondary set of key maps is defined for normal and insert mode:
+A secondary set of key maps is defined for normal and insert mode (see also 
+|g:tcomment_mapleader2|):
 
     <Leader>__       :: :TComment
     <Leader>_p       :: Comment the current inner paragraph
@@ -115,9 +120,29 @@ A secondary set of key maps is defined for normal and insert mode:
 
 
 -----------------------------------------------------------------------
+Install~
+
+Either use the zip archive:
+
+- Download the zip archive
+- Extract it to `~/.vim/pack/tml/start/tcomment`
+
+or install from github:
+
+- Start a terminal
+- Change the working directory to `~/.vim/pack/tml/start/`
+- Type: `git clone https://github.com/tomtom/tcomment_vim`
+
+NOTE: If you don't want to run this plugin on startup, use 
+`~/.vim/pack/tml/opt/`.
+
+NOTE: On Windows, ~/.vim might be ~/vimfiles. Please see 'runtimepath' for 
+details.
+
+
+
 
 
 License: GPLv3 or later
-Install: See http://github.com/tomtom/vimtlib/blob/master/INSTALL.TXT
-See http://github.com/tomtom for related plugins.
+
 
