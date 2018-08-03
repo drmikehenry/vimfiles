@@ -7,6 +7,16 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-08-02
+==========
+
+- Update plugins (thanks to John Szakmeister):
+
+  - textobj-user
+  - scriptease
+  - vim-repeat
+  - tcomment_vim
+
 2018-07-29
 ==========
 
