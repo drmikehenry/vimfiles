@@ -6520,6 +6520,10 @@ function! SetupZ80()
     setlocal indentexpr=IndentZ80()
     setlocal indentkeys=!^F,o,O,<:>,0#
     setlocal commentstring=;%s
+    " It's too jarring to have ; and . be part of iskeyword.
+    setlocal iskeyword-=.
+    setlocal iskeyword-='
+
     let b:SpellType = "<z80>"
 endfunction
 command! -bar SetupZ80 call SetupZ80()
