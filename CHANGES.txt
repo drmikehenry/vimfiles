@@ -18,6 +18,11 @@ require adjustment of per-user settings.
   ALT-n/ALT-p.  (For backward compatibility, CTRL-j/CTRL-k remain as aliases for
   ALT-n/ALT-p.)
 
+- For incsearch plugin, change bindings for scrolling from CTRL-j/CTRL-k to
+  ALT-n/ALT-p to avoid conflict with tmux's CTRL-j key and to allow entry of
+  digraphs via CTRL-k.  Also, change "g/" to invoke the stock Vim "/" behavior
+  for cases where incsearch is too slow.
+
 2018-08-09
 ==========
 

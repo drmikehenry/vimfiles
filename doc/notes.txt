@@ -1276,13 +1276,16 @@ Version 2017-11-23 (25e2547) from:
 https://github.com/haya14busa/incsearch.vim.git
 
 Local Customizations:
-- The recommended mappings for "/", "?", and "g/" were made; see
-  |incsearch| for more details.
+- The recommended mappings for "/" and "?" were made; see |incsearch| for more
+  details.
+
+- The mapping "g/" is bound to "/" to invoke the standard Vim search behavior
+  for cases where the incsearch behavior is too slow.
 
 Useful keys during "/" operation:
 
   <Tab>/<S-Tab>   move to next/previous match on screen
-  <C-j>/<C-k>     move to next/previous page of matches on screen
+  <M-n>/<M-p>     move to next/previous page of matches on screen
   <C-l>           start buffer text completion; use <Right>/<Left> to
                   scroll through options while completing
 

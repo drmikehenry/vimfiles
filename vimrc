@@ -3632,7 +3632,23 @@ nmap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
 if v:version ># 703 || (v:version is 703 && has('patch32'))
     nmap /      <Plug>(incsearch-forward)
     nmap ?      <Plug>(incsearch-backward)
-    nmap g/     <Plug>(incsearch-stay)
+    " Keep g/ as alias for unmodified search.
+    nnoremap g/ /
+
+    augroup incsearch-keymap
+        autocmd!
+        autocmd VimEnter * call s:incsearch_keymap()
+    augroup END
+    function! s:incsearch_keymap()
+        " The default mappings <C-j>/<C-k> are problematic for scrolling.
+        " C-k is useful for digraph mapping, so we restore that functionality
+        " by mapping it back to the built-in meaning.
+        " C-j is used by tmux, so it's inconvenient to use.
+        IncSearchNoreMap <C-k>  <C-k>
+        IncSearchNoreMap <C-j>  <C-j>
+        IncSearchNoreMap <M-p>  <Over>(incsearch-scroll-b)
+        IncSearchNoreMap <M-n>  <Over>(incsearch-scroll-f)
+    endfunction
 endif
 
 " -------------------------------------------------------------
