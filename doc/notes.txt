@@ -948,7 +948,7 @@ Vim sugar for the UNIX shell commands that need it the most. Commands include:
   :SudoWrite  Write a privileged file with sudo.
   :W          Write every open window. Handy for kicking off tools like guard.
 
-Version 2014-06-23 (c856e5d6) from:
+Version 2018-08-10 (632d92e) from:
 https://github.com/tpope/vim-eunuch
 
 Installation:

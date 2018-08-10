@@ -23,6 +23,8 @@ require adjustment of per-user settings.
   digraphs via CTRL-k.  Also, change "g/" to invoke the stock Vim "/" behavior
   for cases where incsearch is too slow.
 
+- Upgrade eunuch plugin to version 2018-08-10.
+
 2018-08-09
 ==========
 

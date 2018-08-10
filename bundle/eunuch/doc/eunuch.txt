@@ -19,15 +19,22 @@ invoked on it when you first write the file.
 File type detection for files edited with `sudoedit` and `sudo -e` happens
 based on the original file name.
 
+New init scripts are automatically prepopulated with `/etc/init.d/skeleton`,
+if available.
+
 COMMANDS                                        *eunuch-commands*
 
-                                                *eunuch-:Unlink*
-:Unlink[!]              |:bdelete|, and, if successful, delete the file from
+                                                *eunuch-:Delete*
+:Delete[!]              |:bdelete|, and, if successful, delete the file from
                         disk.  If a bang is given, it is passed along to
                         :bdelete.
 
+                                                *eunuch-:Unlink*
+:Unlink[!]              Delete the file from disk and reload the buffer.
+                        If a bang is given, discard unsaved changes.
+
                                                 *eunuch-:Remove*
-:Remove[!]              Alias for |:Unlink|.
+:Remove[!]              Alias for :Unlink.
 
                                                 *eunuch-:Move*
 :Move[!] {file}         Like |:saveas|, but delete the old file afterwards.
@@ -48,12 +55,22 @@ COMMANDS                                        *eunuch-commands*
 :Mkdir[!]               With no argument, create the containing directory for
                         the current file.
 
+                                                *eunuch-:Cfind*
                                                 *eunuch-:Find*
-:Find[!] {args}         Run `find` and load the results into the quickfix
+:Cfind[!] {args}        Run `find` and load the results into the quickfix
                         list.  Jump to the first result unless ! is given.
 
+                                                *eunuch-:Lfind*
+:Lfind[!] {args}        Run `find` and load the results into the location
+                        list.  Jump to the first result unless ! is given.
+
+                                                *eunuch-:Clocate*
                                                 *eunuch-:Locate*
-:Locate[!] {args}       Run `locate` and load the results into the quickfix
+:Clocate[!] {args}      Run `locate` and load the results into the quickfix
+                        list.  Jump to the first result unless ! is given.
+
+                                                *eunuch-:Llocate*
+:Llocate[!] {args}      Run `locate` and load the results into the location
                         list.  Jump to the first result unless ! is given.
 
                                                 *eunuch-:SudoEdit*
