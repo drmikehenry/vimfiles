@@ -5672,6 +5672,11 @@ function! SetupRst()
     SetupText
     setlocal tw=80 ts=8 sts=2 sw=2 et ai
 
+    " Vim v8.1.0225 enable syntax-based folding for reST files by default.
+    " Change the foldlevel to prevent user annoyance at having to expand folds
+    " every time.
+    setlocal foldlevel=99
+
     if has("python") && findfile('conf.py', '.;') != ''
         let b:syntastic_checkers = ['rstsphinx']
     endif
