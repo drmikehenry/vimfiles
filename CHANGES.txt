@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-08-10
+==========
+
+- Update incsearch plugin to version 2017-11-23 and incsearch-fuzzy plugin to
+  version 2016-02-15.
+
 2018-08-09
 ==========
 

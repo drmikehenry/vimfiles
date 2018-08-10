@@ -1270,7 +1270,7 @@ Installation:
 INCSEARCH                                                *notes_incsearch*
   Incrementally highlight pattern matches                |incsearch.txt|
 
-Version 2016-05-06 (161c5b6) from:
+Version 2017-11-23 (25e2547) from:
 https://github.com/haya14busa/incsearch.vim.git
 
 Local Customizations:
@@ -1291,7 +1291,7 @@ Installation:
 INCSEARCH-FUZZY                                          *notes_incsearch-fuzzy*
   Incsearch with fuzzy patterns
 
-Version 2016-01-06 (c0e5846) from:
+Version 2016-02-15 (b08fa8f) from:
 https://github.com/haya14busa/incsearch-fuzzy.vim.git
 
 Local Customizations:

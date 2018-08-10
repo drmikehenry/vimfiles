@@ -66,9 +66,8 @@ call s:cli.connect('Delete')
 call s:cli.connect('DrawCommandline')
 call s:cli.connect('ExceptionExit')
 call s:cli.connect('LiteralInsert')
-" call s:cli.connect('Exit')
 call s:cli.connect(incsearch#over#modules#exit#make())
-call s:cli.connect('InsertRegister')
+call s:cli.connect(incsearch#over#modules#insert_register#make())
 call s:cli.connect('Paste')
 let s:Doautocmd = s:modules.get('Doautocmd')
 call s:cli.connect(s:Doautocmd.make('IncSearch'))
@@ -95,6 +94,7 @@ unlet s:KeyMapping s:emacs_like s:vim_cmap s:smartbackword
 
 call s:cli.connect(incsearch#over#modules#pattern_saver#make())
 call s:cli.connect(incsearch#over#modules#bulk_input_char#make())
+call s:cli.connect(incsearch#over#modules#bracketed_paste#make())
 call s:cli.connect(incsearch#over#modules#incsearch#make())
 
 function! s:cli.__keymapping__() abort
