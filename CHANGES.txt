@@ -13,6 +13,11 @@ require adjustment of per-user settings.
 - Update incsearch plugin to version 2017-11-23 and incsearch-fuzzy plugin to
   version 2016-02-15.
 
+- To further avoid conflict with tmux's CTRL-j key, the CtrlP plugin's primary
+  keybindings for navigating its command prompt history have been changed to
+  ALT-n/ALT-p.  (For backward compatibility, CTRL-j/CTRL-k remain as aliases for
+  ALT-n/ALT-p.)
+
 2018-08-09
 ==========
 

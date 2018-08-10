@@ -847,7 +847,9 @@ Local customizations:
     CTRL-p CTRL-u        CtrlPUndo
 
 - When CtrlP is active, the pair CTRL-n/CTRL-p moves the cursor vertically to
-  make a select, and CTRL-j/CTRL-k move through the command prompt history.
+  make a selection, and ALT-n/ALT-p move through the command prompt history.
+  (For backward compatibility, CTRL-J/CTRL-k remain as aliases for
+  ALT-n/ALT-p.)
 
   This is for consistency with other plugins that use CTRL-n/CTRL-p for moving
   around, and to avoid binding a commonly used function to the tmux prefix key

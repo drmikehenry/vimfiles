@@ -3403,15 +3403,16 @@ nnoremap <SNR>CtrlP.....t     :<C-u>CtrlPBufTag<CR>
 nnoremap <SNR>CtrlP.....T     :<C-u>CtrlPBufTagAll<CR>
 nnoremap <SNR>CtrlP.....<C-u> :<C-u>CtrlPUndo<CR>
 
-" Reverse move and history binding pairs:
+" Adjust move and history binding pairs:
 " - For consistency with other plugins that use <C-n>/<C-p> for moving around.
-" - Because <C-j> is bound to the tmux prefix key, so it's best to map
-"   that key to a less-used function.
+" - Because <C-j> is bound to the tmux prefix key, it's best to avoid the use
+"   of that key.  But for backward compatibility, <C-j>/<C-k> have been retained
+"   as aliases.
 let g:ctrlp_prompt_mappings = {
         \ 'PrtSelectMove("j")':   ['<C-n>', '<down>'],
         \ 'PrtSelectMove("k")':   ['<C-p>', '<up>'],
-        \ 'PrtHistory(-1)':       ['<C-j>'],
-        \ 'PrtHistory(1)':        ['<C-k>'],
+        \ 'PrtHistory(-1)':       ['<M-n>', '<C-j>'],
+        \ 'PrtHistory(1)':        ['<M-p>', '<C-k>'],
         \ }
 
 " Maximum height of filename window.
