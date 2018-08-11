@@ -11,15 +11,53 @@ import textwrap
 from UltiSnips import _vim
 from UltiSnips.compatibility import as_unicode
 from UltiSnips.indent_util import IndentUtil
-from UltiSnips.position import Position
 from UltiSnips.text import escape
 from UltiSnips.text_objects import SnippetInstance
-from UltiSnips.text_objects._python_code import SnippetUtilCursor, SnippetUtilForAction
+from UltiSnips.text_objects._python_code import SnippetUtilForAction
 
 __WHITESPACE_SPLIT = re.compile(r"\s")
+
+
+class _SnippetUtilCursor(object):
+    def __init__(self, cursor):
+        self._cursor = [cursor[0] - 1, cursor[1]]
+        self._set = False
+
+    def preserve(self):
+        self._set = True
+        self._cursor = [
+            _vim.buf.cursor[0],
+            _vim.buf.cursor[1],
+        ]
+
+    def is_set(self):
+        return self._set
+
+    def set(self, line, column):
+        self.__setitem__(0, line)
+        self.__setitem__(1, column)
+
+    def to_vim_cursor(self):
+        return (self._cursor[0] + 1, self._cursor[1])
+
+    def __getitem__(self, index):
+        return self._cursor[index]
+
+    def __setitem__(self, index, value):
+        self._set = True
+        self._cursor[index] = value
+
+    def __len__(self):
+        return 2
+
+    def __str__(self):
+        return str((self._cursor[0], self._cursor[1]))
+
+
 def split_at_whitespace(string):
     """Like string.split(), but keeps empty words as empty words."""
     return re.split(__WHITESPACE_SPLIT, string)
+
 
 def _words_for_line(trigger, before, num_words=None):
     """Gets the final 'num_words' words from 'before'.
@@ -87,14 +125,25 @@ class SnippetDefinition(object):
             return match
         return False
 
-    def _context_match(self):
+    def _context_match(self, visual_content):
         # skip on empty buffer
         if len(vim.current.buffer) == 1 and vim.current.buffer[0] == "":
             return
 
-        return self._eval_code('snip.context = ' + self._context_code, {
-            'context': None
-        }).context
+        locals = {
+            'context': None,
+            'visual_mode': '',
+            'visual_text': '',
+            'last_placeholder': None
+        }
+
+        if visual_content:
+            locals['visual_mode'] = visual_content.mode
+            locals['visual_text'] = visual_content.text
+            locals['last_placeholder'] = visual_content.placeholder
+
+        return self._eval_code('snip.context = ' + self._context_code,
+                               locals).context
 
     def _eval_code(self, code, additional_locals={}):
         code = "\n".join([
@@ -110,7 +159,7 @@ class SnippetDefinition(object):
             'buffer': current.buffer,
             'line': current.window.cursor[0]-1,
             'column': current.window.cursor[1]-1,
-            'cursor': SnippetUtilCursor(current.window.cursor)
+            'cursor': _SnippetUtilCursor(current.window.cursor),
         }
 
         locals.update(additional_locals)
@@ -120,27 +169,7 @@ class SnippetDefinition(object):
         try:
             exec(code, {'snip': snip})
         except Exception as e:
-            e.snippet_info = textwrap.dedent("""
-                Defined in: {}
-                Trigger: {}
-                Description: {}
-                Context: {}
-                Pre-expand: {}
-                Post-expand: {}
-            """).format(
-                self._location,
-                self._trigger,
-                self._description,
-                self._context_code if self._context_code else '<none>',
-                self._actions['pre_expand'] if 'pre_expand' in self._actions
-                    else '<none>',
-                self._actions['post_expand'] if 'post_expand' in self._actions
-                    else '<none>',
-                code,
-            )
-
-            e.snippet_code = code
-
+            self._make_debug_exception(e, code)
             raise
 
         return snip
@@ -189,6 +218,28 @@ class SnippetDefinition(object):
 
         return snip
 
+    def _make_debug_exception(self, e, code=''):
+        e.snippet_info = textwrap.dedent("""
+            Defined in: {}
+            Trigger: {}
+            Description: {}
+            Context: {}
+            Pre-expand: {}
+            Post-expand: {}
+        """).format(
+            self._location,
+            self._trigger,
+            self._description,
+            self._context_code if self._context_code else '<none>',
+            self._actions['pre_expand'] if 'pre_expand' in self._actions
+                else '<none>',
+            self._actions['post_expand'] if 'post_expand' in self._actions
+                else '<none>',
+            code,
+        )
+
+        e.snippet_code = code
+
     def has_option(self, opt):
         """Check if the named option is set."""
         return opt in self._opts
@@ -225,7 +276,7 @@ class SnippetDefinition(object):
         """The matched context."""
         return self._context
 
-    def matches(self, before):
+    def matches(self, before, visual_content=None):
         """Returns True if this snippet matches 'before'."""
         # If user supplies both "w" and "i", it should perhaps be an
         # error, but if permitted it seems that "w" should take precedence
@@ -236,7 +287,12 @@ class SnippetDefinition(object):
         words = _words_for_line(self._trigger, before)
 
         if 'r' in self._opts:
-            match = self._re_match(before)
+            try:
+                match = self._re_match(before)
+            except Exception as e:
+                self._make_debug_exception(e)
+                raise
+
         elif 'w' in self._opts:
             words_len = len(self._trigger)
             words_prefix = words[:-words_len]
@@ -267,7 +323,7 @@ class SnippetDefinition(object):
 
         self._context = None
         if match and self._context_code:
-            self._context = self._context_match()
+            self._context = self._context_match(visual_content)
             if not self.context:
                 match = False
 
@@ -417,6 +473,6 @@ class SnippetDefinition(object):
             last_re=self._last_re, globals=self._globals,
             context=self._context)
         self.instantiate(snippet_instance, initial_text, indent)
-
-        snippet_instance.update_textobjects()
+        snippet_instance.replace_initial_text(_vim.buf)
+        snippet_instance.update_textobjects(_vim.buf)
         return snippet_instance

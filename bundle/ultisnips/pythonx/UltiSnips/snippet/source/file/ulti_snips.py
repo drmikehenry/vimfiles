@@ -11,7 +11,7 @@ from UltiSnips import _vim
 from UltiSnips.snippet.definition import UltiSnipsSnippetDefinition
 from UltiSnips.snippet.source.file._base import SnippetFileSource
 from UltiSnips.snippet.source.file._common import handle_extends, \
-    handle_action
+    handle_action, handle_context
 from UltiSnips.text import LineIterator, head_tail
 
 
@@ -25,20 +25,19 @@ def find_snippet_files(ft, directory):
             ret.add(os.path.realpath(fn))
     return ret
 
+def _find_all_snippet_directories():
+    """Returns a list of the absolute path of all snippet directories to
+    search."""
 
-def find_all_snippet_files(ft):
-    """Returns all snippet files matching 'ft' in the given runtime path
-    directory."""
     if _vim.eval("exists('b:UltiSnipsSnippetDirectories')") == '1':
         snippet_dirs = _vim.eval('b:UltiSnipsSnippetDirectories')
     else:
         snippet_dirs = _vim.eval('g:UltiSnipsSnippetDirectories')
     if len(snippet_dirs) == 1 and os.path.isabs(snippet_dirs[0]):
-        check_dirs = ['']
-    else:
-        check_dirs = _vim.eval('&runtimepath').split(',')
-    patterns = ['%s.snippets', '%s_*.snippets', os.path.join('%s', '*')]
-    ret = set()
+        return snippet_dirs
+
+    all_dirs = []
+    check_dirs = _vim.eval('&runtimepath').split(',')
     for rtp in check_dirs:
         for snippet_dir in snippet_dirs:
             if snippet_dir == 'snippets':
@@ -48,14 +47,25 @@ def find_all_snippet_files(ft):
                     'directory for UltiSnips snippets.')
             pth = os.path.realpath(os.path.expanduser(
                 os.path.join(rtp, snippet_dir)))
-            for pattern in patterns:
-                for fn in glob.glob(os.path.join(pth, pattern % ft)):
-                    ret.add(fn)
+            if os.path.isdir(pth):
+                all_dirs.append(pth)
+    return all_dirs
+
+
+def find_all_snippet_files(ft):
+    """Returns all snippet files matching 'ft' in the given runtime path
+    directory."""
+    patterns = ['%s.snippets', '%s_*.snippets', os.path.join('%s', '*')]
+    ret = set()
+    for directory in _find_all_snippet_directories():
+        for pattern in patterns:
+            for fn in glob.glob(os.path.join(directory, pattern % ft)):
+                ret.add(fn)
     return ret
 
 
 def _handle_snippet_or_global(
-    filename, line, lines, python_globals, priority, pre_expand
+    filename, line, lines, python_globals, priority, pre_expand, context
 ):
     """Parses the snippet that begins at the current line."""
     start_line_index = lines.line_index
@@ -75,8 +85,7 @@ def _handle_snippet_or_global(
             opts = words[-1]
             remain = remain[:-len(opts) - 1].rstrip()
 
-    context = None
-    if 'e' in opts:
+    if 'e' in opts and not context:
         left = remain[:-1].rfind('"')
         if left != -1 and left != 0:
             context, remain = remain[left:].strip('"'), remain[:left]
@@ -134,6 +143,7 @@ def _parse_snippets_file(data, filename):
     lines = LineIterator(data)
     current_priority = 0
     actions = {}
+    context = None
     for line in lines:
         if not line.strip():
             continue
@@ -144,16 +154,22 @@ def _parse_snippets_file(data, filename):
                 filename, line, lines,
                 python_globals,
                 current_priority,
-                actions
+                actions,
+                context
             )
 
             actions = {}
+            context = None
             if snippet is not None:
                 yield snippet
         elif head == 'extends':
             yield handle_extends(tail, lines.line_index)
         elif head == 'clearsnippets':
             yield 'clearsnippets', (current_priority, tail.split())
+        elif head == 'context':
+            head, context, = handle_context(tail, lines.line_index)
+            if head == 'error':
+                yield (head, tail)
         elif head == 'priority':
             try:
                 current_priority = int(tail.split()[0])

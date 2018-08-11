@@ -3,12 +3,13 @@
 
 """Some classes to conserve Vim's state for comparing over time."""
 
-from collections import deque
+from collections import deque, namedtuple
 
 from UltiSnips import _vim
 from UltiSnips.compatibility import as_unicode, byte2col
 from UltiSnips.position import Position
 
+_Placeholder = namedtuple('_FrozenPlaceholder', ['current_text', 'start', 'end'])
 
 class VimPosition(Position):
 
@@ -113,9 +114,10 @@ class VisualContentPreserver(object):
         """Forget the preserved state."""
         self._mode = ''
         self._text = as_unicode('')
+        self._placeholder = None
 
     def conserve(self):
-        """Save the last visual selection ond the mode it was made in."""
+        """Save the last visual selection and the mode it was made in."""
         sl, sbyte = map(int,
                         (_vim.eval("""line("'<")"""), _vim.eval("""col("'<")""")))
         el, ebyte = map(int,
@@ -123,6 +125,12 @@ class VisualContentPreserver(object):
         sc = byte2col(sl, sbyte - 1)
         ec = byte2col(el, ebyte - 1)
         self._mode = _vim.eval('visualmode()')
+
+        # When 'selection' is 'exclusive', the > mark is one column behind the
+        # actual content being copied, but never before the < mark.
+        if _vim.eval('&selection') == 'exclusive':
+            if not (sl == el and sbyte == ebyte):
+                ec -= 1
 
         _vim_line_with_eol = lambda ln: _vim.buf[ln] + '\n'
 
@@ -135,6 +143,16 @@ class VisualContentPreserver(object):
             text += _vim_line_with_eol(el - 1)[:ec + 1]
         self._text = text
 
+    def conserve_placeholder(self, placeholder):
+        if placeholder:
+            self._placeholder = _Placeholder(
+                placeholder.current_text,
+                placeholder.start,
+                placeholder.end
+            )
+        else:
+            self._placeholder = None
+
     @property
     def text(self):
         """The conserved text."""
@@ -144,3 +162,8 @@ class VisualContentPreserver(object):
     def mode(self):
         """The conserved visualmode()."""
         return self._mode
+
+    @property
+    def placeholder(self):
+        """Returns latest selected placeholder."""
+        return self._placeholder

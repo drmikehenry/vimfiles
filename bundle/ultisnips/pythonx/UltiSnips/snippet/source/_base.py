@@ -16,22 +16,21 @@ class SnippetSource(object):
         self._snippets = defaultdict(SnippetDictionary)
         self._extends = defaultdict(set)
 
-    def ensure(self, filetypes, cached):
-        """Update/reload the snippets in the source when needed.
+    def ensure(self, filetypes):
+        """Ensures that snippets are loaded."""
 
-        It makes sure that the snippets are not outdated.
-
+    def refresh(self):
+        """Resets all snippets, so that they are reloaded on the next call to
+        ensure.
         """
-
-    def loaded(self, filetypes):
-        return len(self._snippets) > 0
 
     def _get_existing_deep_extends(self, base_filetypes):
         """Helper for get all existing filetypes extended by base filetypes."""
         deep_extends = self.get_deep_extends(base_filetypes)
         return [ft for ft in deep_extends if ft in self._snippets]
 
-    def get_snippets(self, filetypes, before, possible, autotrigger_only):
+    def get_snippets(self, filetypes, before, possible, autotrigger_only,
+            visual_content):
         """Returns the snippets for all 'filetypes' (in order) and their
         parents matching the text 'before'. If 'possible' is true, a partial
         match is enough. Base classes can override this method to provide means
@@ -44,7 +43,8 @@ class SnippetSource(object):
         for ft in self._get_existing_deep_extends(filetypes):
             snips = self._snippets[ft]
             result.extend(snips.get_matching_snippets(before, possible,
-                                                      autotrigger_only))
+                                                      autotrigger_only,
+                                                      visual_content))
         return result
 
     def get_clear_priority(self, filetypes):

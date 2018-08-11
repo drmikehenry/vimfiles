@@ -10,6 +10,7 @@ from UltiSnips import _vim
 from UltiSnips.compatibility import as_unicode
 from UltiSnips.indent_util import IndentUtil
 from UltiSnips.text_objects._base import NoneditableTextObject
+from UltiSnips.vim_state import _Placeholder
 import UltiSnips.snippet_manager
 
 
@@ -28,6 +29,15 @@ class _Tabs(object):
             return ''
         return ts.current_text
 
+    def __setitem__(self, no, value):
+        ts = self._to._get_tabstop(
+            self._to,
+            int(no))  # pylint:disable=protected-access
+        if ts is None:
+            return
+        # TODO(sirver): The buffer should be passed into the object on construction.
+        ts.overwrite(_vim.buf, value)
+
 _VisualContent = namedtuple('_VisualContent', ['mode', 'text'])
 
 
@@ -43,42 +53,6 @@ class SnippetUtilForAction(dict):
         self.cursor.preserve()
 
 
-class SnippetUtilCursor(object):
-    def __init__(self, cursor):
-        self._cursor = [cursor[0] - 1, cursor[1]]
-        self._set = False
-
-    def preserve(self):
-        self._set = True
-        self._cursor = [
-            _vim.buf.cursor[0],
-            _vim.buf.cursor[1],
-        ]
-
-    def is_set(self):
-        return self._set
-
-    def set(self, line, column):
-        self.__setitem__(0, line)
-        self.__setitem__(1, column)
-
-    def to_vim_cursor(self):
-        return (self._cursor[0] + 1, self._cursor[1])
-
-    def __getitem__(self, index):
-        return self._cursor[index]
-
-    def __setitem__(self, index, value):
-        self._set = True
-        self._cursor[index] = value
-
-    def __len__(self):
-        return 2
-
-    def __str__(self):
-        return str((self._cursor[0], self._cursor[1]))
-
-
 class SnippetUtil(object):
 
     """Provides easy access to indentation, etc.
@@ -87,12 +61,15 @@ class SnippetUtil(object):
 
     """
 
-    def __init__(self, initial_indent, vmode, vtext, context):
+    def __init__(self, initial_indent, vmode, vtext, context, parent):
         self._ind = IndentUtil()
         self._visual = _VisualContent(vmode, vtext)
         self._initial_indent = self._ind.indent_to_spaces(initial_indent)
         self._reset('')
         self._context = context
+        self._start = parent.start
+        self._end = parent.end
+        self._parent = parent
 
     def _reset(self, cur):
         """Gets the snippet ready for another update.
@@ -200,6 +177,13 @@ class SnippetUtil(object):
         return self._visual
 
     @property
+    def p(self):
+        if self._parent.current_placeholder:
+            return self._parent.current_placeholder
+        else:
+            return _Placeholder('', 0, 0)
+
+    @property
     def context(self):
         return self._context
 
@@ -226,6 +210,24 @@ class SnippetUtil(object):
         """Same as shift."""
         self.shift(other)
 
+    @property
+    def snippet_start(self):
+        """
+        Returns start of the snippet in format (line, column).
+        """
+        return self._start
+
+    @property
+    def snippet_end(self):
+        """
+        Returns end of the snippet in format (line, column).
+        """
+        return self._end
+
+    @property
+    def buffer(self):
+        return _vim.buf
+
 
 class PythonCode(NoneditableTextObject):
 
@@ -242,9 +244,9 @@ class PythonCode(NoneditableTextObject):
                 mode = snippet.visual_content.mode
                 context = snippet.context
                 break
-            except AttributeError:
+            except AttributeError as e:
                 snippet = snippet._parent  # pylint:disable=protected-access
-        self._snip = SnippetUtil(token.indent, mode, text, context)
+        self._snip = SnippetUtil(token.indent, mode, text, context, snippet)
 
         self._codes = ((
             'import re, os, vim, string, random',
@@ -253,7 +255,7 @@ class PythonCode(NoneditableTextObject):
         ))
         NoneditableTextObject.__init__(self, parent, token)
 
-    def _update(self, done):
+    def _update(self, done, buf):
         path = _vim.eval('expand("%")') or ''
         ct = self.current_text
         self._locals.update({
@@ -279,6 +281,6 @@ class PythonCode(NoneditableTextObject):
         )
 
         if ct != rv:
-            self.overwrite(rv)
+            self.overwrite(buf, rv)
             return False
         return True

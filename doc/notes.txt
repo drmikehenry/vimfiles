@@ -2262,7 +2262,7 @@ the following to your user vimrc configuration: >
 
    call pathogen#surround(expand('$VIMFILES/optional-bundle/snippets'))
 <
-Version 2016-02-19 (732978a) from:
+Version 2018-07-16 (1143432) from:
 https://github.com/honza/vim-snippets.git
 
 Installation:
@@ -2782,7 +2782,7 @@ To disable UltiSnips entirely, set the below variable before vimrc runs: >
 This is useful for forks of Vim that don't support Python bindings (e.g.,
 NeoVim).
 
-Version 2016-02-13 (25882e9) from:
+Version 2018-05-01 (6fdc364) from:
 https://github.com/SirVer/ultisnips.git
 
 Installation:

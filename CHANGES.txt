@@ -32,6 +32,9 @@ require adjustment of per-user settings.
 
 - Update bufkill plugin to version 2018-03-20.
 
+- Update ultisnips plugin to version 2018-05-01 and sample snippets plugin to
+  version 2018-07-16.
+
 2018-08-10
 ==========
 

@@ -5,7 +5,7 @@ from test.constant import *
 def check_required_vim_version(test):
     if test.vim_flavor == 'neovim':
         return None
-    if not test.vim.has_patch(1):
+    if not test.vim.has_version(7, 4, 1):
         return 'Vim newer than 7.4.1 is required'
     else:
         return None
@@ -131,7 +131,7 @@ class Backspace_TabStop_NotZero(_VimTest):
     wanted = 'AA BBB'
 # End: Pressing BS in TabStop  #}}}
 
-class UpdateModifiedSnippetWithoutCursorMove(_VimTest):
+class UpdateModifiedSnippetWithoutCursorMove1(_VimTest):
     skip_if = check_required_vim_version
     snippets = ('test', '${1:one}(${2:xxx})${3:three}')
     keys = 'test' + EX + 'aaaaa' + JF + BS + JF + '3333'

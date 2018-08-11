@@ -52,6 +52,10 @@ class VimBuffer(object):
         return vim.current.buffer.number
 
     @property
+    def filetypes(self):
+        return [ft for ft in vim.eval('&filetype').split('.') if ft]
+
+    @property
     def cursor(self):  # pylint:disable=no-self-use
         """The current windows cursor.
 
@@ -71,8 +75,8 @@ class VimBuffer(object):
 buf = VimBuffer()  # pylint:disable=invalid-name
 
 @contextmanager
-def toggle_opt(name, new_value):
-    old_value = eval('&' + name)
+def option_set_to(name, new_value):
+    old_value = vim.eval('&' + name)
     command('set {0}={1}'.format(name, new_value))
     try:
         yield
@@ -115,6 +119,14 @@ def command(cmd):
 def eval(text):
     """Wraps vim.eval."""
     rv = vim.eval(as_vimencoding(text))
+    if not isinstance(rv, (dict, list)):
+        return as_unicode(rv)
+    return rv
+
+
+def bindeval(text):
+    """Wraps vim.bindeval."""
+    rv = vim.bindeval(as_vimencoding(text))
     if not isinstance(rv, (dict, list)):
         return as_unicode(rv)
     return rv
@@ -238,7 +250,13 @@ def _unmap_select_mode_mapping():
                     '| redir END')
 
             # Check if any mappings where found
-            all_maps = list(filter(len, eval(r"_tmp_smaps").splitlines()))
+            if hasattr(vim, 'bindeval'):
+                # Safer to use bindeval, if it exists, because it can deal with
+                # non-UTF-8 characters in mappings; see GH #690.
+                all_maps = bindeval(r"_tmp_smaps")
+            else:
+                all_maps = eval(r"_tmp_smaps")
+            all_maps = list(filter(len, all_maps.splitlines()))
             if len(all_maps) == 1 and all_maps[0][0] not in ' sv':
                 # "No maps found". String could be localized. Hopefully
                 # it doesn't start with any of these letters in any
