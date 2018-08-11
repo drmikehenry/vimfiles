@@ -1035,7 +1035,7 @@ more useful ones are:
             See |fugitive-:Gstatus| for more information
   :Git      Run an arbitrary git command from within Vim
 
-Version 2016-05-11 (3439f99) from:
+Version 2018-08-11 (e9ce313) from:
 https://github.com/tpope/vim-fugitive.git
 
 Installation:

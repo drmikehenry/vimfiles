@@ -1,12 +1,14 @@
+FugitiveHead(...)	fugitive.txt	/*FugitiveHead(...)*
+FugitiveStatusline()	fugitive.txt	/*FugitiveStatusline()*
 fugitive	fugitive.txt	/*fugitive*
 fugitive#head(...)	fugitive.txt	/*fugitive#head(...)*
 fugitive#statusline()	fugitive.txt	/*fugitive#statusline()*
 fugitive--	fugitive.txt	/*fugitive--*
-fugitive-.	fugitive.txt	/*fugitive-.*
 fugitive-:Gblame	fugitive.txt	/*fugitive-:Gblame*
 fugitive-:Gbrowse	fugitive.txt	/*fugitive-:Gbrowse*
 fugitive-:Gcd	fugitive.txt	/*fugitive-:Gcd*
 fugitive-:Gcommit	fugitive.txt	/*fugitive-:Gcommit*
+fugitive-:Gdelete	fugitive.txt	/*fugitive-:Gdelete*
 fugitive-:Gdiff	fugitive.txt	/*fugitive-:Gdiff*
 fugitive-:Ge	fugitive.txt	/*fugitive-:Ge*
 fugitive-:Gedit	fugitive.txt	/*fugitive-:Gedit*
@@ -26,7 +28,9 @@ fugitive-:Gpull	fugitive.txt	/*fugitive-:Gpull*
 fugitive-:Gpush	fugitive.txt	/*fugitive-:Gpush*
 fugitive-:Gread	fugitive.txt	/*fugitive-:Gread*
 fugitive-:Gread!	fugitive.txt	/*fugitive-:Gread!*
+fugitive-:Grebase	fugitive.txt	/*fugitive-:Grebase*
 fugitive-:Gremove	fugitive.txt	/*fugitive-:Gremove*
+fugitive-:Grename	fugitive.txt	/*fugitive-:Grename*
 fugitive-:Gsdiff	fugitive.txt	/*fugitive-:Gsdiff*
 fugitive-:Gsplit	fugitive.txt	/*fugitive-:Gsplit*
 fugitive-:Gsplit!	fugitive.txt	/*fugitive-:Gsplit!*
@@ -50,6 +54,7 @@ fugitive-c_CTRL-R_CTRL-G	fugitive.txt	/*fugitive-c_CTRL-R_CTRL-G*
 fugitive-commands	fugitive.txt	/*fugitive-commands*
 fugitive-mappings	fugitive.txt	/*fugitive-mappings*
 fugitive-o	fugitive.txt	/*fugitive-o*
+fugitive-object	fugitive.txt	/*fugitive-object*
 fugitive-revision	fugitive.txt	/*fugitive-revision*
 fugitive-statusline	fugitive.txt	/*fugitive-statusline*
 fugitive-y_CTRL-G	fugitive.txt	/*fugitive-y_CTRL-G*
