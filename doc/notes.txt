@@ -3742,18 +3742,24 @@ The external findx utility may be invoked using any of the below commands: >
 ------------------------------------------------------------------------------
 :G 'search pattern'                                   *:G*   *notes_G*
 
-Depending on your environment, you may not have :Ag available, but if you have
-Perl installed, you will at least be able to use :Ack via the single-file
-implementation bundled with vimfiles.  Because :Ag and :Ack are so similar, in
-most cases you don't have to care which one gets called.  The custom command :G
-is provided to abstract this choice for you.  When the Silver Searcher is
-installed, :G is equivalent to :Ag!  (with the exclamation point to avoid
-jumping to the first match); when that tool is unavailable, :G falls back to
-:Ack! to use the portable 'ack' tool embedded within vimfiles.
+The :G command provides a convenient way to search through a tree of files.  It
+defaults to the first external search tool it can find from the following list:
 
-For all of these tools (:Ack, :Ag, and :G), the command line is passed directly
-to the shell, and the syntax you must use depends on the details of your
-environment.
+- ag (The Silver Searcher, https://github.com/ggreer/the_silver_searcher)
+- rg (RipGrep, https://github.com/BurntSushi/ripgrep)
+- ffg (From findx, https://github.com/drmikehenry/findx)
+- ack (https://beyondgrep.com/)
+
+The actual search is done via the grepper plugin |notes_grepper|.
+
+Depending on your environment, you may not have any of the external tools
+available on the PATH, but if you have Perl installed, you will at least be able
+to use :G via the single-file implementation of ack bundled with vimfiles.
+Because these tools are so similar, in most cases you don't have to care which
+one gets called.
+
+For all of these tools, the command line is passed directly to the shell, and
+the syntax you must use depends on the details of your environment.
 
 For Unix-like systems, it's best to use single-quotes around the entire regular
 expression.  Single-quotes within the regular expression should be handled by

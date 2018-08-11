@@ -17,6 +17,8 @@ require adjustment of per-user settings.
 
 - Update fugitive plugin to version 2018-08-11.
 
+- Update documentation on the :G command (see :help :G).
+
 2018-08-10
 ==========
 
