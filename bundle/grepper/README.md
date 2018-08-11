@@ -1,8 +1,12 @@
 [![Build Status](https://travis-ci.org/mhinz/vim-grepper.svg?branch=master)](https://travis-ci.org/mhinz/vim-grepper)
 
+<br />
+<br />
+
 ![vim-grepper](https://raw.githubusercontent.com/mhinz/vim-grepper/master/pictures/grepper-logo.png)
 
---
+<br />
+<br />
 
 Use your **favorite grep tool**
 ([ag](https://github.com/ggreer/the_silver_searcher),
@@ -14,9 +18,13 @@ Use your **favorite grep tool**
 grep) to start an **asynchronous search**. All matches will be put in a
 **quickfix or location list**.
 
-This plugin is written in pure VimL and works with Vim and Neovim.
+This plugin works with Vim and Neovim on Unix-like systems. It's mostly working
+on Windows as well.
 
---
+_Disclaimer: From my point of view it's feature-complete, so I won't add new
+features or put much time into reviewing complex PRs._
+
+---
 
 - [Prompt](https://github.com/mhinz/vim-grepper/wiki/using-the-prompt): Use
   `:Grepper` to open a prompt, enter your query, optionally cycle through the
@@ -31,15 +39,33 @@ This plugin is written in pure VimL and works with Vim and Neovim.
 - [Custom tools](https://github.com/mhinz/vim-grepper/wiki/Add-a-tool): Changing
   the behaviour of the default tools is very easy. And so is adding new tools.
 
-_The truth is out there. And in `:h grepper`. And in the
-[wiki](https://github.com/mhinz/vim-grepper/wiki)._
+---
+
+_If you like [ack.vim](https://github.com/mileszs/ack.vim) and
+[ag.vim](https://github.com/rking/ag.vim), you will love vim-grepper._
+
+## Documentation
+
+This README is only the tip of the iceberg. Make sure to read `:h grepper` and
+[the wiki](https://github.com/mhinz/vim-grepper/wiki) to learn about every
+feature.
+
+Example configurations be be found
+[here](https://github.com/mhinz/vim-grepper/wiki/example-configurations-and-mappings).
+
+_The truth is out there._
 
 ## Installation
 
-Use your favorite plugin manager. E.g.
+Use your [favorite plugin
+manager](https://github.com/mhinz/vim-galore#managing-plugins), e.g.
 [vim-plug](https://github.com/junegunn/vim-plug):
 
     Plug 'mhinz/vim-grepper'
+
+If you prefer lazy loading:
+
+    Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 
 ## Demo
 

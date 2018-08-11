@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Update airline plugin to version 2018-07-26 and airline-themes to version
   2018-07-30.
 
+- Update grepper plugin to version 2018-04-23.
+
 2018-08-10
 ==========
 

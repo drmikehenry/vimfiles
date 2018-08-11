@@ -1124,11 +1124,8 @@ http://www.vim.org/scripts/script.php?script_id=311
 GREPPER                                                 *notes_grepper*
   Extensible wrapper for grep-like tools                |grepper|
 
-Original version:
+Using version 2018-04-23 (04d659c) from:
 https://github.com/mhinz/vim-grepper
-
-Using version 2016-11-11 of branch "patched" from:
-https://github.com/drmikehenry/vim-grepper
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
