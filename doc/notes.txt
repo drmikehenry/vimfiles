@@ -1939,7 +1939,7 @@ Installation:
 QUICKFIX-REFLECTOR                                      *notes_quickfix-reflector*
   Edit QuickFix and save changes                        |quickfix-reflector.txt|
 
-Version 2015-11-21 (410e551) from:
+Version 2018-01-26 (135bc41) from:
 https://github.com/stefandtw/quickfix-reflector.vim.git
 
 Perform a search that populates the QuickFix list, then edit the contents of

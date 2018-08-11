@@ -64,8 +64,8 @@ function! s:OnWrite()
 		" the entry again after it has changed
 		" 
 		" Vim sometimes does not display the full line if it's very long
-		if strlen(entry.text) > 180
-			let qfDescription = strpart(entry.text, 0, 180)
+		if strchars(entry.text) > 180
+			let qfDescription = matchstr(entry.text, '\v.{180}')
 		else
 			let qfDescription = entry.text
 		endif
@@ -144,6 +144,7 @@ function! s:Replace(changes)
 	let &switchbuf = ''
 	let successfulChanges = 0
 	let bufferHasChanged = {}
+	let tabPageOriginal = tabpagenr()
 	for change in a:changes
 		let bufferWasListed = buflisted(change.qfEntry.bufnr)
 		execute 'tab sbuffer ' . change.qfEntry.bufnr
@@ -161,6 +162,7 @@ function! s:Replace(changes)
 			execute change.qfEntry.lnum . 'snomagic/\V' . commonInQfAndFile . '/' . commonInQfAndFile_replacement . '/'
 			if g:qf_write_changes == 1
 				write
+				silent doautocmd User QfReplacementBufWritePost
 			endif
 			let change.qfEntry.text = change.replacementFromQf
 			let successfulChanges += 1
@@ -172,6 +174,7 @@ function! s:Replace(changes)
 			set buflisted
 		endif
 		tabclose!
+		execute 'silent! tabn' . tabPageOriginal
 		if !bufferWasListed && g:qf_write_changes == 1
 			execute 'silent! bdelete ' . change.qfEntry.bufnr
 		endif

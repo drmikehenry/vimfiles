@@ -326,21 +326,28 @@ describe 'changing quickfix entries'
 		Expect expand('%:p') ==# tmpFile
 		Expect getline(1) ==# 'line 1'
 		call delete(tmpFile)
+		let g:qf_write_changes = 1
 	end
 
   it 'works for problematic lines'
-		vimgrep /^/ t/problematic-lines.txt
-		let originalLength = len(getline(1))
+		let tmpFile = CreateTmpFile('t/problematic-lines.txt')
+		execute 'vimgrep /^/ ' . tmpFile
+		let originalLength1 = strchars(getline(1))
+		let originalLength2 = strchars(getline(2))
 		copen
 		normal AHello
+		normal jAHello
 		write
 		execute "normal! \<CR>"
 		Expect getline(1) =~# '\v^.+Hello.+$'
-		Expect getline(1) =~# '\v^.{' . (originalLength + len('Hello')) . '}$'
+		Expect getline(1) =~# '\v^.{' . (originalLength1 + len('Hello')) . '}$'
+		Expect getline(2) =~# '\v^.+Hello$'
+		Expect getline(2) =~# '\v^.{' . (originalLength2 + len('Hello')) . '}$'
 	end 
 
   it 'does not remove space at the start of the line'
-		vimgrep /^/ t/lines-with-space.txt
+		let tmpFile = CreateTmpFile('t/lines-with-space.txt')
+		execute 'vimgrep /^/ ' . tmpFile
 		let original1 = getline(1)
 		let original2 = getline(2)
 		let original3 = getline(3)
@@ -354,6 +361,41 @@ describe 'changing quickfix entries'
 		Expect getline(2) == original2 . ':)'
 		Expect getline(3) == original3 . ':)'
 	end 
+
+
+  it 'triggers QfReplacementBufWritePost'
+		let tmpFile1 = CreateTmpFile('t/3-lines.txt')
+		let tmpFile2 = CreateTmpFile('t/3-lines.txt')
+		execute 'vimgrep /^line 1/ ' . tmpFile1 . ' ' . tmpFile2
+		let g:triggered = 0
+		autocmd User QfReplacementBufWritePost :let g:triggered += 1
+		copen
+		normal A:)
+		normal jA:)
+		write
+		Expect g:triggered == 2
+		call delete(tmpFile1)
+		call delete(tmpFile2)
+	end 
+
+	it 'does not mind open tabs'
+		tabnew
+		tabnew
+		tabprevious
+		let tmpFile = CreateTmpFile('t/3-lines.txt')
+		execute 'vimgrep /^/j ' . tmpFile
+		copen
+		1substitute/line 1/line 1 word/
+		write
+		Expect &modified == 0
+		execute "normal! \<CR>"
+		Expect expand('%:p') ==# tmpFile
+		Expect getline(1) ==# 'line 1 word'
+		Expect getline(2) ==# 'line 2'
+		Expect getline(3) ==# 'line 3'
+		Expect &modified == 0
+		call delete(tmpFile)
+	end
 
 	function! CreateTmpFile(source)
 		let tmpFile = tempname()

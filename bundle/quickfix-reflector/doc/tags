@@ -1,3 +1,4 @@
+QfReplacementBufWritePost	quickfix-reflector.txt	/*QfReplacementBufWritePost*
 g:qf_join_changes	quickfix-reflector.txt	/*g:qf_join_changes*
 g:qf_modifiable	quickfix-reflector.txt	/*g:qf_modifiable*
 g:qf_write_changes	quickfix-reflector.txt	/*g:qf_write_changes*
