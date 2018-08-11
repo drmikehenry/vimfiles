@@ -242,71 +242,30 @@ To see if Ruby is included, run the following from within Gvim: >
 Build Vim                                               *notes_build_vim*
 
 Prerequisites for Ubuntu: >
-    sudo apt-get install libgpmg1-dev libperl-dev ruby1.8-dev
-or, for more automation: >
     sudo apt-get build-dep vim-gnome
-
+    sudo apt-get install python python3 python-dev python3-dev
+<
 Prerequisites for Fedora: >
-    sudo yum install -y ruby ruby-devel perl-ExtUtils-Embed python-devel
-    sudo yum install -y gtk+-devel gtk2-devel gpm gpm-devel ncurses-devel
-or, for more automation: >
-    sudo yum-builddep -y vim-X11
-
-    # On Fedora 22+, use this instead (since ``yum`` has been retired):
     sudo dnf builddep -y vim-X11
-Also required on Fedora 23+ are RPM-related build tools now that libraries are
-hardened by default: >
-    sudo dnf install -y rpm-build redhat-rpm-config
-
-(Note: the below fix is obsolete in modern Vim.)
-On 64-bit Linux, Python libraries live in /usr/lib64/pythonx.y,
-and Vim's configuration script doesn't find the config directory.
-One fix appears to be the following symlink: >
-
-  ln -s /usr/lib64/python2.6/config /usr/lib/python2.6/config
-
-Inspiration taken from:
-  http://users.skynet.be/antoine.mechelynck/vim/compunix.htm
+    sudo dnf install -y rpm-build
+<
+(Note: the rpm-build package is required for Fedora 23+ now that libraries are
+hardened by default.  See comments in buildtool for details.)
 
 The detailed steps for download and building Vim are captured in
 the script ~/.vim/buildtool.  Run the script with no arguments for usage
 help, or read the script for more detailed information.
 
-Update the git directory (in the default download location) with the latest Vim
-source: >
+Optionally, update the git directory (in the default download location) with
+the latest Vim source: >
 
-  # From any directory; updates the newest Vim source clone in <download>/,
-  # probing for valid git clones containing Vim source:
   ~/.vim/buildtool update
-
-On Fedora 23+, use the below options to setup some environment variables for
-building "hardened" binaries.  This is needed (at least through vim-8.0.0133)
-when compiling with --enable-rubyinterp and using Fedora-supplied ruby
-libraries.  Vim's configure script asks the ruby interpreter what LDFLAGS to use
-without also asking about CFLAGS; this leads to mismatched values of certain
-"hardened" settings that are now the default in all RPM builds.  The
-%configure macro in RPM SPEC files sets up both CFLAGS and LDFLAGS to their
-%hardened values, which is why Vim's configure script works when building an
-%RPM, but these settings must be applied manually when not building an RPM: >
-
-  # Evaluate variable definitions found in the %configure macro definition:
-  eval $(rpmbuild --eval '%{configure}' | egrep '^\s*[A-Z]+=')
-
-  # You may optionally display these variables if you are curious via:
-  rpmbuild --eval '%{configure}' | egrep '^\s*[A-Z]+='
-
-  # These are sample variable definitions that will be set by the above
-  # $(eval) statement:
-  CFLAGS="${CFLAGS:--O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -m64 -mtune=generic}" ; export CFLAGS ;
-  CXXFLAGS="${CXXFLAGS:--O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -m64 -mtune=generic}" ; export CXXFLAGS ;
-  FFLAGS="${FFLAGS:--O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FFLAGS ;
-  FCFLAGS="${FCFLAGS:--O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FCFLAGS ;
-  LDFLAGS="${LDFLAGS:--Wl,-z,relro -specs=/usr/lib/rpm/redhat/redhat-hardened-ld}"; export LDFLAGS;
 
 Unpack, configure, build, and create binary and source tarballs: >
 
   # Source will be unpacked and built below the current directory:
   cd ~/build
+
   # Build the newest version available in download directories:
   ~/.vim/buildtool build
 
@@ -318,29 +277,15 @@ Unpack, configure, build, and create binary and source tarballs: >
 
 Installation of final tarball is done as follows (for example): >
     sudo tar -C / -zxf vim-x.y.z/vim-x.y.z.x86_64.tar.gz
-
-After installation on Linux, the distro-provided global vimrc file will not be
-used, so Vim will come up in VI-compatible mode for users (e.g. root) that
-don't have a ~/.vimrc file.  To use the distro's global vimrc file, create a
-symlink $VIM/vimrc (/usr/local/share/vim/vimrc) that points to the
-distro-provided global vimrc.
-
-On Fedora: >
-    ln -s /etc/vimrc /usr/local/share/vim/vimrc
-
-On Ubuntu: >
-    ln -s /etc/vim/vimrc /usr/local/share/vim/vimrc
-    cp /usr/share/vim/vim80/debian.vim /usr/local/share/vim/vim80/debian.vim
 <
-  Change the above source `vim80` directory to whatever you have on your system,
-  and change the destination `vim80` directory to match the version of Vim you
-  are installing.
+After installation on Linux, the distro-provided global vimrc file will not be
+used, but Vim now includes default settings for userse without .vimrc files,
+so it is no longer recommended to copy the distro's vimrc settings; if one
+was copied in the past, it's best to remove it: >
 
-  The debian.vim file is important on Ubuntu systems; without that, nothing sets
-  'nocompatible' before executing `syntax on` in /etc/vim/vimrc which can lead
-  to issues when ~/.vim/filetype.vim is read.
-
-To register as the system alternative: >
+  sudo rm -f /usr/local/share/vim/vimrc
+<
+To register the newly installed vim as the system alternative: >
 
   for i in gvim gview gvimdiff; do
     update-alternatives --install /usr/bin/$i $i /usr/local/bin/$i 500

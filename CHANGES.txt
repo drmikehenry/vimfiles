@@ -25,6 +25,18 @@ require adjustment of per-user settings.
 
 - Upgrade eunuch plugin to version 2018-08-10.
 
+- Update buildtool to automate setting up environment variables on Fedora, and
+  to ensure use of GTK3 for the GUI.
+
+- No longer recommend copying the distro's vimrc file when compiling Vim.
+  Distro-provided vim settings are no longer required because Vim now includes
+  reasonable defaults for users without .vimrc files.  Distro-provided defaults
+  can also supply bad settings (e.g., pointing Vim's runtime path to the old
+  distro-supplied runtime files); therefore, it's recommended to remove any
+  distro-supplied vimrc file via::
+
+    sudo rm -f /usr/local/share/vim/vimrc
+
 2018-08-09
 ==========
 

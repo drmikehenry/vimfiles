@@ -12,9 +12,11 @@ import shutil
 import subprocess
 import sys
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 prog_name = os.path.basename(sys.argv[0])
+
+extra_environ_vars = {}
 
 download_dirs = [
     '~/download/programming/vim',
@@ -24,8 +26,10 @@ download_dirs = [
 configure_options = """
     --quiet
     --with-features=huge
+    --enable-gui=gtk3
     --enable-perlinterp
     --enable-pythoninterp
+    --enable-python3interp
     --enable-tclinterp
     --enable-rubyinterp
     --enable-cscope
@@ -115,16 +119,28 @@ def path_join(*parts):
     return os.path.join(*(p for p in parts if p))
 
 
+def get_run_env():
+    env = os.environ.copy()
+    env.update(extra_environ_vars)
+    return env
+
+
 def run(args):
     logger.debug('  ' + ' '.join(args))
-    output_bytes = subprocess.check_output(args, stderr=subprocess.STDOUT)
+    output_bytes = subprocess.check_output(
+        args,
+        env=get_run_env(),
+        stderr=subprocess.STDOUT)
     return output_bytes.decode(errors='ignore')
 
 
 def run_pipe(args):
     logger.debug('  ' + ' '.join(args))
     process = subprocess.Popen(
-        args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        args,
+        env=get_run_env(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT)
     return process
 
 
@@ -458,6 +474,87 @@ def package(dest_dir=None):
         print('sudo tar -C / -xf %s' % tar_path)
 
 
+def setup_fedora_environment():
+    """
+    Setup environment variables needed on Fedora 23+.
+
+    On Fedora 23+, libraries are built with "hardened" settings.  They are
+    automatically applied when building an RPM, but not when compiling by hand.
+    These variables are needed (at least through vim-8.0.0133) when compiling
+    with --enable-rubyinterp and using Fedora-supplied ruby libraries.  Vim's
+    configure script asks the ruby interpreter what LDFLAGS to use without also
+    asking about CFLAGS; this leads to mismatched values of certain "hardened"
+    settings that are now the default in all RPM builds.  The %configure macro
+    in RPM SPEC files sets up both CFLAGS and LDFLAGS to their %hardened
+    values, which is why Vim's configure script works when building an %RPM,
+    but these settings must be applied manually when not building an RPM.
+
+    The variables may be extracted from ``rpmbuild`` via::
+
+      eval $(rpmbuild --eval '%{configure}' | egrep '^\s*[A-Z]+=')
+
+    Example variables are::
+
+      CFLAGS="${CFLAGS:--O2 -g -pipe -Wall -Werror=format-security
+        -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions
+        -fstack-protector-strong -grecord-gcc-switches
+        -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1
+        -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic
+        -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection}"
+
+      CXXFLAGS="${CXXFLAGS:--O2 -g -pipe -Wall -Werror=format-security
+        -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions
+        -fstack-protector-strong -grecord-gcc-switches
+        -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1
+        -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic
+        -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection}"
+
+      FFLAGS="${FFLAGS:--O2 -g -pipe -Wall -Werror=format-security
+        -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions
+        -fstack-protector-strong -grecord-gcc-switches
+        -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1
+        -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic
+        -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection
+        -I/usr/lib64/gfortran/modules}"
+
+      FCFLAGS="${FCFLAGS:--O2 -g -pipe -Wall -Werror=format-security
+        -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions
+        -fstack-protector-strong -grecord-gcc-switches
+        -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1
+        -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic
+        -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection
+        -I/usr/lib64/gfortran/modules}"
+
+      LDFLAGS="${LDFLAGS:--Wl,-z,relro  -Wl,-z,now
+        -specs=/usr/lib/rpm/redhat/redhat-hardened-ld}"
+
+    """
+    if not os.path.exists('/etc/redhat-release'):
+        return
+    try:
+        output = run('rpmbuild --eval %{configure}'.split())
+    except OSError:
+        print('## Warning: could not run rpmbuild; '
+              'not setting environment variables')
+        return
+
+    env_vars = re.findall(
+        r"""
+            ^\s*
+            ([A-Z]+)
+            =
+            " \$ \{ \w+ :-
+            ([^}"]+)
+            }"
+        """,
+        output,
+        re.MULTILINE | re.VERBOSE)
+    print('## Detected rpmbuild; adding environment variables')
+    for var, value in env_vars:
+        logger.debug('%s="%s"' % (var, value))
+        extra_environ_vars[var] = value
+
+
 def inner_main():
     parser = argparse.ArgumentParser(
         usage=usage,
@@ -537,6 +634,8 @@ def inner_main():
         logging.getLogger().setLevel(logging.INFO)
     else:
         logging.getLogger().setLevel(args.verbose)
+
+    setup_fedora_environment()
 
     if args.cmd == 'update':
         update()
