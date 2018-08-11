@@ -55,6 +55,9 @@ require adjustment of per-user settings.
 - Patch grepper plugin as a better work-around for its interaction problems
   with QuickFix Reflector.
 
+- Update buildtool to use ``build/`` instead of ``__TMP__/`` so that this
+  temporary directory will be ignored by default by many searching tools.
+
 2018-08-10
 ==========
 

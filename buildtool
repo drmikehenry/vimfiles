@@ -12,7 +12,7 @@ import shutil
 import subprocess
 import sys
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 prog_name = os.path.basename(sys.argv[0])
 
@@ -36,7 +36,7 @@ configure_options = """
     --with-compiledby=vim@drmikehenry.com
     """.split()
 
-tmp_dir = '__TMP__'
+tmp_dir = 'build'
 
 usage = """%(prog)s [-h] [--version] [-v] [-q] CMD
 For more detailed help: %(prog)s --help
@@ -360,8 +360,8 @@ def package_src(dest_dir=None):
         mkdir_p(src_dir)
         tmp_tar = path_join(tmp_dir, 'tmp.tar')
         # Create temporary tarfile with no enclosing parent directory, e.g.:
-        #   tar -cf __TMP__/tmp.tar \
-        #   --exclude .git --exclude *.gz --exclude *.bz2 --exclude __TMP__ .
+        #   tar -cf build/tmp.tar \
+        #   --exclude .git --exclude *.gz --exclude *.bz2 --exclude build .
         run([
             'tar',
             '-cf',
@@ -373,11 +373,11 @@ def package_src(dest_dir=None):
             '.'])
 
         # Extract back into src_dir, e.g.::
-        #   tar -C __TMP__/vim-8.1.0216 -xf __TMP__/tmp.tar
+        #   tar -C build/vim-8.1.0216 -xf build/tmp.tar
         run(['tar', '-C', src_dir, '-xf', tmp_tar])
 
         # Create final tarfile with proper parent directory, e.g.::
-        #   tar -C __TMP__ -cf vim-8.1.0216.tar.bz2 vim-8.1.0216
+        #   tar -C build -cf vim-8.1.0216.tar.bz2 vim-8.1.0216
         run(['tar', '-C', tmp_dir, '-cf', src_tar_name, src_dir_name])
         print('Created source archive %s' % path_join(dest_dir, src_tar_name))
 
