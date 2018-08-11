@@ -19,6 +19,8 @@ require adjustment of per-user settings.
 
 - Update documentation on the :G command (see :help :G).
 
+- Update ack plugin to version 2018-02-07 and ack to version 2.24.
+
 2018-08-10
 ==========
 

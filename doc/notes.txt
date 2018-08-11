@@ -497,12 +497,13 @@ quoted using the shell-specific rules of your environment.  See |:G|
 for more details.
 
 Local customizations:
-- The single-file implementation of "ack" is installed in $VIMFILES/tool/ack,
-  ensuring that it is available on all platforms with Perl installed.
+- Version 2.24 of the single-file implementation of "ack" is installed in
+  $VIMFILES/tool/ack, ensuring that it is available on all platforms with Perl
+  installed.
 
 For more information on "ack", see http://beyondgrep.com/.
 
-Version 2014-06-11 (303bcef) from:
+Version 2018-02-07 (36e40f9) from:
 https://github.com/mileszs/ack.vim.git
 
 Installation:
