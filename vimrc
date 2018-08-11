@@ -2152,7 +2152,7 @@ function! RunGrep(args)
     endif
 endfunction
 
-" Run first available of Ag! or Ack! against arguments.
+" Run "best" grep tool against arguments.
 command! -nargs=* -complete=customlist,FileCompleteList G
         \ call RunGrep(<q-args>)
 
@@ -3192,9 +3192,36 @@ let g:ack_apply_lmappings = 0
 
 let g:agprg="ag --column --smart-case"
 
-" Disable QuickFix/LocationList mappings.
-let g:ag_apply_qmappings = 0
-let g:ag_apply_lmappings = 0
+function! AgCall(ackFunc, cmd, argString)
+    try
+        let old_ackprg = g:ackprg
+        let g:ackprg = g:agprg
+        call {a:ackFunc}(a:cmd, a:argString)
+    finally
+        let g:ackprg = old_ackprg
+    endtry
+endfunction
+
+command! -bang -nargs=* -complete=file Ag
+        \ call AgCall('ack#Ack', 'grep<bang>', <q-args>)
+command! -bang -nargs=* -complete=file AgAdd
+        \ call AgCall('ack#Ack', 'grepadd<bang>', <q-args>)
+command! -bang -nargs=* -complete=file AgFromSearch
+        \ call AgCall('ack#AckFromSearch', 'grep<bang>', <q-args>)
+command! -bang -nargs=* -complete=file LAg
+        \ call AgCall('ack#Ack', 'lgrep<bang>', <q-args>)
+command! -bang -nargs=* -complete=file LAgAdd
+        \ call AgCall('ack#Ack', 'lgrepadd<bang>', <q-args>)
+command! -bang -nargs=* -complete=file AgFile
+        \ call AgCall('ack#Ack', 'grep<bang> -g', <q-args>)
+command! -bang -nargs=* -complete=help AgHelp
+        \ call AgCall('ack#AckHelp', 'grep<bang>', <q-args>)
+command! -bang -nargs=* -complete=help LAgHelp
+        \ call AgCall('ack#AckHelp', 'lgrep<bang>', <q-args>)
+command! -bang -nargs=*                AgWindow
+        \ call AgCall('ack#AckWindow', 'grep<bang>', <q-args>)
+command! -bang -nargs=*                LAgWindow
+        \ call AgCall('ack#AckWindow', 'lgrep<bang>', <q-args>)
 
 " -------------------------------------------------------------
 " Airline

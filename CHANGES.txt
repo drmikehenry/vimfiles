@@ -21,6 +21,9 @@ require adjustment of per-user settings.
 
 - Update ack plugin to version 2018-02-07 and ack to version 2.24.
 
+- Remove deprecated ag plugin; create commands that map onto the Ack plugin but
+  which use the "ag" utility (e.g., :Ag -> :Ack, but using "ag").
+
 2018-08-10
 ==========
 

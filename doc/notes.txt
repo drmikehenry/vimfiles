@@ -520,12 +520,9 @@ for more details.
 To use this plugin, ensure that the "Silver Searcher" ('ag') utility is
 installed.  See https://github.com/ggreer/the_silver_searcher for details.
 
-Version 2014-07-07 (d3a00f8) from:
-https://github.com/rking/ag.vim.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
+The commands provided for Ag are the same as those for the Ack plugin
+|notes_ack|.  See |ack.txt| for details, replacing "Ack" with "Ag" in the
+commands.  See vimrc for more information.
 
 ------------------------------------------------------------------------------
 AIRLINE                                                 *notes_airline*
