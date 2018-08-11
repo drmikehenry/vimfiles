@@ -46,6 +46,10 @@ require adjustment of per-user settings.
 
 - Tidy up setup.py formatting and verify it works with Python 2/3.
 
+- When pressing <F4>/<s-F4> to view the next/previous QuickFix/Location List
+  message, close the QuickFix/Location List window if we've run out of messages
+  in that direction as a convenience.
+
 2018-08-10
 ==========
 

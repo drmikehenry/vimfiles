@@ -1237,6 +1237,9 @@ function! GotoMessage(messageType, whichMessage)
         execute a:messageType . a:whichMessage
     catch /:E42:\|:E553:/
         try
+            " We've run out of messages in this direction, so close the
+            " QuickFix window for convenience.
+            execute a:messageType . 'close'
             execute a:messageType . a:messageType
         catch /:E42:\|:E553:/
             let typeName = (a:messageType == 'c') ? "QuickFix" : "Location List"
