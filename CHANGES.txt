@@ -26,6 +26,8 @@ require adjustment of per-user settings.
 
 - Update bufexplorer plugin to version 2018-01-25.
 
+- Update endwise plugin to version 2018-05-13.
+
 2018-08-10
 ==========
 
