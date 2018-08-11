@@ -44,6 +44,8 @@ require adjustment of per-user settings.
 
 - Update quickfix-reflector plugin to version 2018-01-26.
 
+- Tidy up setup.py formatting and verify it works with Python 2/3.
+
 2018-08-10
 ==========
 
