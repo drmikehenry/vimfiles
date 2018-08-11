@@ -1,7 +1,7 @@
-*bufexplorer.txt*              Buffer Explorer       Last Change: 01 Apr 2016
+*bufexplorer.txt*              Buffer Explorer       Last Change: 18 Jan 2018
 
 Buffer Explorer                                *buffer-explorer* *bufexplorer*
-                                Version 7.4.9
+                                Version 7.4.20
 
 Plugin for easily exploring (or browsing) Vim|:buffers|.
 
@@ -72,6 +72,8 @@ Commands to use once exploring:
  <leftmouse>   Opens the buffer that is under the cursor into the current
                window.
  <shift-enter> Opens the buffer that is under the cursor in another tab.
+ a             Toggles whether you are taken to the active window when
+               selecting a buffer or not.
  b             Fast buffer switching with b<any bufnum>.
  B             Works in association with the |ShowTabBuffer| option.  If
                |ShowTabBuffer| is set to 1, this toggles if BufExplorer is to
@@ -82,8 +84,8 @@ Commands to use once exploring:
  D             |:wipeout| the buffer under the cursor from the list.  When a
                buffer is wiped, it will not be shown when unlisted buffers are
                displayed.
- f             Toggles whether you are taken to the active window when
-               selecting a buffer or not.
+ F             Open selected buffer in another window above the current.
+ f             Open selected buffer in another window below the current.
  o             Opens the buffer that is under the cursor into the current
                window.
  p             Toggles the showing of a split filename/pathname.
@@ -99,6 +101,8 @@ Commands to use once exploring:
  t             Opens the buffer that is under the cursor in another tab.
  T             Toggles to show only buffers for this tab or not.
  u             Toggles the showing of "unlisted" buffers.
+ V             Open the selected buffer in another window on the left of the current.
+ v             Open the selected buffer in another window on the right of the current.
 
 Once invoked, Buffer Explorer displays a sorted list (MRU is the default
 sort method) of all the buffers that are currently opened. You are then
@@ -196,7 +200,7 @@ directory, use: >
 The default is to show absolute paths.
 
                                                    *g:bufExplorerShowTabBuffer*
-To control weither or not to show buffers on for the specific tab or not, use: >
+To control whether or not to show buffers on for the specific tab or not, use: >
   let g:bufExplorerShowTabBuffer=0        " No.
   let g:bufExplorerShowTabBuffer=1        " Yes.
 The default is not to show.
@@ -245,14 +249,61 @@ current window, use: >
 The default is to use the global &splitright.
 
                                                    *g:bufExplorerSplitVertSize*
-To control the size of the new vertical split window. use: >
+To control the size of the new vertical split window, use: >
   let g:bufExplorerVertSize=n          " New split window is n columns wide.
   let g:bufExplorerVertSize=0          " New split windows size set by Vim.
 The default is 0, so that the size is set by Vim.
 
+                                                   *g:bufExplorerVersionWarn*
+To control wether to warning about Vim version or not, use: >
+  let g:bufExplorerVersionWarn=1       " Warn if version conflict.
+  let g:bufExplorerVersionWarn=0       " Do not warn if version conflict.
+The default is 1.
+
 ===============================================================================
 CHANGE LOG                                              *bufexplorer-changelog*
 
+7.4.20   January 18, 2017
+    - Thanks to jpflouret for supplying code that can remove the warning
+      messages if you using this plugin on an older version of Vim.  The
+      global variable is g:bufExplorerVersionWarn.
+7.4.19   September 18, 2017
+    - Merged all changes from github back into this version and tried to sync
+      to the correct version number.
+7.4.18 - Github.
+7.4.17 - Github.
+7.4.16   August 14, 2017
+    - Thanks to Yubo Su for the patch that adds 'f, F, V, and v' commands.
+      With this change, the original 'f' command was remapped to 'a'.
+
+      The set of commands that can be used during exploring are:
+      F - Open selected buffer in another window above the current.
+      f - Open selected buffer in another window below the current.
+      V - Open the selected buffer in another window on the left of the
+          current.
+      v - Open the selected buffer in another window on the right of the
+          current.
+7.4.15   May 01, 2017
+    - Finally applied the patch submitted by justfalter.  This patch is a
+      backward-compatible fix for the "invalid tab range" bug.
+7.4.14   April 10, 2017
+    - As suggested by adelarsq way back on January 5th, 2016, a filetype has
+      been added.  There is now 'filetype=bufexplorer'.
+7.4.13   March 08, 2017
+    - Thanks to devakivamsi for pointing out that even though bufexplorer
+      turns off line numbers by default within its own window, this did not
+      work correctly when using WinManager.  This has now been corrected.
+7.4.12   September 30, 2016
+    - Thanks again to Martin Vuille for several more fixes related to making
+      bufexplorer more tab-friendly.
+7.4.11   September, 20, 2016
+    - Thanks to Martin Vuille for reworking the per-tab buffer listing code.
+      Fix for g:bufExplorerShowTabBuffer is not working correctly and other
+      "gliches" when the ShotTabBuffer option is enabled.  For example old
+      code would not correctly handle adding/deleting a tab that wasn't the
+      highest-numbered tab.
+7.4.10   August 26, 2016
+    - Thanks to buddylindsey for fixing a misspelling in the docs.
 7.4.9    April 01, 2016
     - Thanks to ivegotasthma for supplying a patch to fix a major issue with
       plugin performance when lots of buffers are open.
@@ -709,7 +760,7 @@ TODO                                                         *bufexplorer-todo*
 ===============================================================================
 CREDITS                                                   *bufexplorer-credits*
 
-Author: Jeff Lanzarotta <delux256-vim at yahoo dot com>
+Author: Jeff Lanzarotta <delux256-vim at outlook dot com>
 
 Credit must go out to Bram Moolenaar and all the Vim developers for
 making the world's best editor (IMHO). I also want to thank everyone who
@@ -719,7 +770,7 @@ won't list names.
 ===============================================================================
 COPYRIGHT                                               *bufexplorer-copyright*
 
-Copyright (c) 2001-2014, Jeff Lanzarotta
+Copyright (c) 2001-2017, Jeff Lanzarotta
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

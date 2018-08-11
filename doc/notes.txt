@@ -565,11 +565,8 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Version 2016-04-27 (937eb53) from:
+Version 2018-01-25 (101a3e3) from:
 https://github.com/jlanzarotta/bufexplorer
-
-Note: The releases at http://www.vim.org/scripts/script.php?script_id=42 don't
-appear to be kept as up-to-date as on Github.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

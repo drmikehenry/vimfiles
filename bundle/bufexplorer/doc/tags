@@ -27,3 +27,4 @@ g:bufExplorerSplitHorzSize	bufexplorer.txt	/*g:bufExplorerSplitHorzSize*
 g:bufExplorerSplitOutPathName	bufexplorer.txt	/*g:bufExplorerSplitOutPathName*
 g:bufExplorerSplitRight	bufexplorer.txt	/*g:bufExplorerSplitRight*
 g:bufExplorerSplitVertSize	bufexplorer.txt	/*g:bufExplorerSplitVertSize*
+g:bufExplorerVersionWarn	bufexplorer.txt	/*g:bufExplorerVersionWarn*

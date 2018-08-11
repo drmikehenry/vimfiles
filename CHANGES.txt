@@ -24,6 +24,8 @@ require adjustment of per-user settings.
 - Remove deprecated ag plugin; create commands that map onto the Ack plugin but
   which use the "ag" utility (e.g., :Ag -> :Ack, but using "ag").
 
+- Update bufexplorer plugin to version 2018-01-25.
+
 2018-08-10
 ==========
 
