@@ -40,6 +40,8 @@ require adjustment of per-user settings.
 - Update Lusty plugin (combining LustyExplorer and LustyJuggler) to version
   2018-07-24.
 
+- Update localvimrc plugin to version 2018-08-10.
+
 2018-08-10
 ==========
 

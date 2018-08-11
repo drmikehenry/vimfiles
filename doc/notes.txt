@@ -1384,7 +1384,7 @@ might contain: >
 To re-use a group of settings, create a function (say, in the global vimrc
 file), then call it from the .lvimrc files.
 
-Version 2015-10-02 (7ed3573a) from:
+Version 2018-08-10 (b46e6be) from:
 https://github.com/embear/vim-localvimrc.git
 
 Local customizations:

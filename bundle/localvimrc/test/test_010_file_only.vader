@@ -1,0 +1,66 @@
+# localvimrc test file directory only behavior
+
+Before (setup test):
+  " create test directory tree
+  exec "silent! !./setup.sh " . $LOCALVIMRC_TEST_DIR
+
+  " default setup localvimrc
+  source default.vim
+
+  " initialize test variables
+  let g:localvimrc_test_var = []
+
+################################################################################
+Execute (file directory only):
+  " change setup for this test
+  let g:localvimrc_file_directory_only = 1
+
+  " (re)load localvimrc plugin
+  if exists("g:loaded_localvimrc")
+    unlet g:loaded_localvimrc
+  endif
+  source ../plugin/localvimrc.vim
+
+  " delete buffer if it exists
+  if bufexists($LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo")
+    exec "bwipeout! " . $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo"
+  endif
+
+  " edit a file in the test tree
+  exec "edit " . $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo"
+
+Then (file directory only):
+  let expected = [ "lvimrc: ./a/b/c/d/e/f" ]
+  Assert expected == g:localvimrc_test_var
+
+  let expected = [ $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/.lvimrc" ]
+  Assert expected == b:localvimrc_sourced_files
+
+################################################################################
+Execute (file directory only empty):
+  " change setup for this test
+  let g:localvimrc_file_directory_only = 1
+
+  " (re)load localvimrc plugin
+  if exists("g:loaded_localvimrc")
+    unlet g:loaded_localvimrc
+  endif
+  source ../plugin/localvimrc.vim
+
+  " remove local vimrc file
+  call delete($LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/.lvimrc")
+
+  " delete buffer if it exists
+  if bufexists($LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo")
+    exec "bwipeout! " . $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo"
+  endif
+
+  " edit a file in the test tree
+  exec "edit " . $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo"
+
+Then (file directory only empty):
+  let expected = []
+  Assert expected == g:localvimrc_test_var
+
+  let expected = []
+  Assert expected == b:localvimrc_sourced_files

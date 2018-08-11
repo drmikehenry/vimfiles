@@ -189,6 +189,7 @@ notes_keepcase	notes.txt	/*notes_keepcase*
 notes_less	notes.txt	/*notes_less*
 notes_localvimrc	notes.txt	/*notes_localvimrc*
 notes_loremipsum	notes.txt	/*notes_loremipsum*
+notes_lusty	notes.txt	/*notes_lusty*
 notes_lustyexplorer	notes.txt	/*notes_lustyexplorer*
 notes_lustyjuggler	notes.txt	/*notes_lustyjuggler*
 notes_manpageview	notes.txt	/*notes_manpageview*

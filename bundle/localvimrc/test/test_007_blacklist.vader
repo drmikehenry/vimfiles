@@ -1,0 +1,63 @@
+# localvimrc test blacklist behavior
+
+Before (setup test):
+  " create test directory tree
+  exec "silent! !./setup.sh " . $LOCALVIMRC_TEST_DIR
+
+  " default setup localvimrc
+  source default.vim
+
+  " initialize test variables
+  let g:localvimrc_test_var = []
+
+################################################################################
+Execute (blacklist single):
+  " change setup for this test
+  let g:localvimrc_blacklist = '.*/a/b/c/\(d/\)\?.lvimrc'
+
+  " (re)load localvimrc plugin
+  if exists("g:loaded_localvimrc")
+    unlet g:loaded_localvimrc
+  endif
+  source ../plugin/localvimrc.vim
+
+  " delete buffer if it exists
+  if bufexists($LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo")
+    exec "bwipeout! " . $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo"
+  endif
+
+  " edit a file in the test tree
+  exec "edit " . $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo"
+
+Then (blacklist single):
+  let expected = [ "lvimrc: ./a", "lvimrc: ./a/b", "lvimrc: ./a/b/c/d/e", "lvimrc: ./a/b/c/d/e/f" ]
+  Assert expected == g:localvimrc_test_var
+
+  let expected = [ $LOCALVIMRC_TEST_DIR . "/a/.lvimrc", $LOCALVIMRC_TEST_DIR . "/a/b/.lvimrc", $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/.lvimrc", $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/.lvimrc" ]
+  Assert expected == b:localvimrc_sourced_files
+
+################################################################################
+Execute (blacklist multiple):
+  " change setup for this test
+  let g:localvimrc_blacklist = [ ".*/a/b/c/.lvimrc", ".*/a/b/c/d/.lvimrc" ]
+
+  " (re)load localvimrc plugin
+  if exists("g:loaded_localvimrc")
+    unlet g:loaded_localvimrc
+  endif
+  source ../plugin/localvimrc.vim
+
+  " delete buffer if it exists
+  if bufexists($LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo")
+    exec "bwipeout! " . $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo"
+  endif
+
+  " edit a file in the test tree
+  exec "edit " . $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/foo"
+
+Then (blacklist multiple):
+  let expected = [ "lvimrc: ./a", "lvimrc: ./a/b", "lvimrc: ./a/b/c/d/e", "lvimrc: ./a/b/c/d/e/f" ]
+  Assert expected == g:localvimrc_test_var
+
+  let expected = [ $LOCALVIMRC_TEST_DIR . "/a/.lvimrc", $LOCALVIMRC_TEST_DIR . "/a/b/.lvimrc", $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/.lvimrc", $LOCALVIMRC_TEST_DIR . "/a/b/c/d/e/f/.lvimrc" ]
+  Assert expected == b:localvimrc_sourced_files
