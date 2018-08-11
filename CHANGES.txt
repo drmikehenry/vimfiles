@@ -28,6 +28,8 @@ require adjustment of per-user settings.
 
 - Update endwise plugin to version 2018-05-13.
 
+- Update surround plugin to version 2018-07-23.
+
 2018-08-10
 ==========
 

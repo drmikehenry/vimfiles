@@ -2283,7 +2283,7 @@ Usage (An asterisk (*) is used to denote the cursor position):
 
 See |surround.txt| for more complete examples and documentation.
 
-Version 2014-07-26 (fa433e0) from:
+Version 2018-07-23 (5970688) from:
 https://github.com/tpope/vim-surround
 
 Installation:
