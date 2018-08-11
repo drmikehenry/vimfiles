@@ -50,6 +50,8 @@ require adjustment of per-user settings.
   message, close the QuickFix/Location List window if we've run out of messages
   in that direction as a convenience.
 
+- Fix IsGetQuickFixWin() function to properly use getwininfo() fields.
+
 2018-08-10
 ==========
 

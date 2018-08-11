@@ -1118,23 +1118,24 @@ function! IsQuickFixWin()
         " Unfortunately, the above technique broke with newer versions of Vim
         " as lopen was considered to be editing the buffer.  Instead, we'll use
         " the new win_getid() to grab the window id and then use that to check
-        " the window information to see if it's a quickfix window (it does
-        " distinguish between quickfix and loclist).
+        " the window information to see if it's a quickfix window.  The entry
+        " 'quickfix' is true for both QuickFix and Location List windows.  The
+        " entry 'loclist' is true only for Location List windows.  In addition,
+        " the earliest implementations of getwininfo() didn't have these fields,
+        " so check their existence before using them.
         if exists('*win_getid') && exists('*getwininfo')
-            let info = getwininfo(win_getid())
-            if info[0]['quickfix']
-                return 1
-            else
-                return 0
+            let info = getwininfo(win_getid())[0]
+            if has_key(info, 'quickfix') && has_key(info, 'loclist')
+                return info['loclist'] == 0
             endif
-        else
-            try
-                noautocmd lopen
-            catch /E776:/
-                " This was a QuickFix window.
-                return 1
-            endtry
         endif
+
+        try
+            noautocmd lopen
+        catch /E776:/
+            " This was a QuickFix window.
+            return 1
+        endtry
     endif
     return 0
 endfunction
