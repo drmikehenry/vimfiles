@@ -809,8 +809,10 @@ function! s:finish_up(flags)
           \ ? cmdline
           \ : {'title': cmdline, 'context': {'query': @/}}
     if qf
+      call setqflist(list)
       call setqflist(list, a:flags.append ? 'a' : 'r', attrs)
     else
+      call setloclist(0, list)
       call setloclist(0, list, a:flags.append ? 'a' : 'r', attrs)
     endif
   catch /E118/

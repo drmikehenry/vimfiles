@@ -3639,12 +3639,6 @@ let g:grepper.findx = {}
 let g:grepper.findx.grepprg = 'findx'
 let g:grepper.findx.grepformat = '%f'
 
-augroup local_grepper
-    autocmd!
-    " When a Grepper operation completes, notify QuickFix Reflector.
-    autocmd User Grepper call NotifyQuickfixReflector()
-augroup END
-
 " -------------------------------------------------------------
 " Gundo
 " -------------------------------------------------------------
@@ -4060,12 +4054,6 @@ nmap <silent> <Space>qp   <Plug>ToggleProject
 
 " Join changes within each buffer for easier :undo.
 let g:qf_join_changes = 1
-
-" Re-issue the BufReadPost command for all QuickFix buffers so that
-" QuickFix Reflector is notified of any changes in the QuickFix list.
-function! NotifyQuickfixReflector()
-    Windo if &ft ==# "qf" | doautocmd <nomodeline> BufReadPost quickfix | endif
-endfunction
 
 " -------------------------------------------------------------
 " Rainbow Parentheses

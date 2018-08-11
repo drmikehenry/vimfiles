@@ -52,6 +52,9 @@ require adjustment of per-user settings.
 
 - Fix IsGetQuickFixWin() function to properly use getwininfo() fields.
 
+- Patch grepper plugin as a better work-around for its interaction problems
+  with QuickFix Reflector.
+
 2018-08-10
 ==========
 
