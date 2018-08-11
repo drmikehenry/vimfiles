@@ -50,8 +50,7 @@
     Less - Syntax highlighting for LessCSS              |notes_less|
     Localvimrc - Override settings via local files      |notes_localvimrc|
     LoremIpsum - Generate dummy text                    |notes_loremipsum|
-    LustyExplorer - File/buffer switcher w/incr. search |notes_lustyexplorer|
-    LustyJuggler - Quick access to recent buffers       |notes_lustyjuggler|
+    Lusty Explorer/Juggler - File/buffer switcher       |notes_lusty|
     ManpageView                                         |notes_manpageview|
     Markdown - Markdown syntax support                  |notes_markdown|
     Matchit - Extended matching with '%'                |notes_matchit|
@@ -1423,10 +1422,13 @@ Installation:
     :q
 
 ------------------------------------------------------------------------------
-LUSTYEXPLORER                                           *notes_lustyexplorer*
-  LustyExplorer - File/buffer switcher w/incr. search
+LUSTY                                                   *notes_lusty*
+  Lusty Explorer/Juggler - File/buffer switcher
 
-Usage (taken from lusty-explorer.vim):
+Lusty combines a File/buffer explorer |notes_lustyexplorer| and a buffer
+"juggler" |notes_lustyjuggler| in the same plugin.
+
+Explorer usage (taken from lusty-explorer.vim):         *notes_lustyexplorer*
 
   <Leader>lf  - Opens the filesystem explorer.
   <Leader>lr  - Opens the filesystem explorer from the
@@ -1523,26 +1525,10 @@ Buffer Grep:
  - Matches from the previous grep are remembered upon relaunch;  clear with
    <C-u>.
 
-Development versions found at: http://github.com/sjbach/lusty
-
-Released versions appear here:
-Version 4.3 from:
-http://www.vim.org/scripts/script.php?script_id=1890
-
-Version 2014-11-15 (0e73d8d) from:
-https://github.com/sjbach/lusty.git
-
-Installation:
-- Install in ~/.vim/plugin and ~/.vim/autoload
-
-------------------------------------------------------------------------------
-LUSTYJUGGLER                                            *notes_lustyjuggler*
-  LustyJuggler - Quick access to recent buffers
-
-
-Usage (taken from lusty-juggler.vim):
+Juggler Usage (taken from lusty-juggler.vim):           *notes_lustyjuggler*
 
          <Leader>lj  - Opens the buffer juggler.
+         <M-s>       - Opens the buffer juggler (local customization)
 
        You can also use this command:
 
@@ -1609,18 +1595,14 @@ Bonus: This plugin also includes the following command, which will
        instead switch to the buffer used before that one (and on down
        the line if that buffer has been killed too).
 
+Local customizations:
+  <M-s>           - launch LustyJuggler
 
-Development versions found at: http://github.com/sjbach/lusty
-
-Released versions appear here:
-Version 1.5.1 from:
-http://www.vim.org/scripts/script.php?script_id=2050
-
-Version 2014-11-15 (0e73d8d) from:
+Version 2018-07-24 (a9b501e) from:
 https://github.com/sjbach/lusty.git
 
 Installation:
-- Install in ~/.vim/plugin and ~/.vim/autoload
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 MANPAGEVIEW                                             *notes_manpageview*

@@ -75,6 +75,8 @@ module VIM
     case var
     when String
       var == "0"
+    when Integer
+      var == 0
     when Fixnum
       var == 0
     else
@@ -220,6 +222,9 @@ module LustyE
   end
 
   def self.simplify_path(s)
+    if s.start_with?('scp://')
+      return s
+    end
     s = s.gsub(/\/+/, '/')  # Remove redundant '/' characters
     begin
       if s[0] == ?~
@@ -888,7 +893,9 @@ class FilesystemExplorer < Explorer
         path = VIM::getcwd()
       end
       if path.respond_to?(:force_encoding)
-        path = path.force_encoding(VIM::evaluate('&enc'))
+        encoding = VIM::evaluate('&enc')
+        encoding = 'ISO-8859-1' if encoding == 'latin1'
+        path = path.force_encoding(encoding)
       end
       @prompt.set!(path + File::SEPARATOR)
       run()
@@ -994,6 +1001,11 @@ class FilesystemExplorer < Explorer
 
       unless @memoized_dir_contents.has_key?(view)
 
+        view_str = view.to_s
+        if view_str.start_with?("scp://")
+          return all_remote_files(view)
+        end
+
         if not view.directory?
           return []
         elsif not view.readable?
@@ -1003,7 +1015,6 @@ class FilesystemExplorer < Explorer
 
         # Generate an array of the files
         entries = []
-        view_str = view.to_s
         unless LustyE::ends_with?(view_str, File::SEPARATOR)
           # Don't double-up on '/' -- makes Cygwin sad.
           view_str << File::SEPARATOR
@@ -1041,6 +1052,31 @@ class FilesystemExplorer < Explorer
       end
     end
 
+    def all_remote_files(view)
+      view_str = view.to_s
+      host, path = view_str['scp://'.length .. -1].split('/', 2)
+      option = if LustyE::option_set?("AlwaysShowDotFiles") or \
+         current_abbreviation()[0] == ?.
+                'a'
+               else
+                 ''
+               end
+
+      files = `ssh #{host} ls -1pL#{option} -- #{path}`.split("\n")
+
+      entries = []
+      files.each do |name|
+        next if name == "."   # Skip pwd
+        next if name == ".." and LustyE::option_set?("AlwaysShowDotFiles")
+
+        # Hide masked files.
+        next if FileMasks.masked?(name)
+        entries << FilesystemEntry.new(name)
+      end
+      @memoized_dir_contents[view] = entries
+      return entries
+    end
+
     def compute_sorted_matches
       abbrev = current_abbreviation()
 
@@ -1069,7 +1105,7 @@ class FilesystemExplorer < Explorer
     def open_entry(entry, open_mode)
       path = view_path() + entry.label
 
-      if File.directory?(path.to_s)
+      if File.directory?(path.to_s) or (path.to_s.start_with?("scp://") and entry.label.end_with?('/'))
         # Recurse into the directory instead of opening it.
         @prompt.set!(path.to_s)
         @selected_index = 0
@@ -2162,7 +2198,14 @@ class BufferStack
       basename_to_prefix = {}
       common_base.each do |k, names|
         if names.length > 1
-          basename_to_prefix[k] = LustyE::longest_common_prefix(names)
+          if names.any? { |name| !name.include?(File::SEPARATOR) }
+            # One of the files is in the working directory, i.e. its path is
+            # its basename, so we know we can't shorten any of the names in
+            # this group.
+            basename_to_prefix[k] = ''
+          else
+            basename_to_prefix[k] = LustyJ::longest_common_prefix(names)
+          end
         end
       end
 

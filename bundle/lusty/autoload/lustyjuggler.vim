@@ -26,6 +26,26 @@ augroup End
 " Used to work around a flaw in Vim's ruby bindings.
 let s:maparg_holder = 0
 let s:maparg_dict_holder = { }
+let s:map_redirect_hack_output = ''
+function! s:LustyJugglerMapRedirectHack(map_mode, key)
+  if a:map_mode == 'n'
+    redir => s:map_redirect_hack_output | nmap a:key | redir END
+  elseif a:map_mode == 's'
+    redir => s:map_redirect_hack_output | smap a:key | redir END
+  elseif a:map_mode == 'x'
+    redir => s:map_redirect_hack_output | xmap a:key | redir END
+  elseif a:map_mode == 'o'
+    redir => s:map_redirect_hack_output | omap a:key | redir END
+  elseif a:map_mode == 'i'
+    redir => s:map_redirect_hack_output | imap a:key | redir END
+  elseif a:map_mode == 'c'
+    redir => s:map_redirect_hack_output | cmap a:key | redir END
+  elseif a:map_mode == 'l'
+    redir => s:map_redirect_hack_output | lmap a:key | redir END
+  else
+    throw 'bad map mode'
+  endif
+endfunction
 
 ruby << EOF
 
@@ -51,6 +71,8 @@ module VIM
     case var
     when String
       var == "0"
+    when Integer
+      var == 0
     when Fixnum
       var == 0
     else
@@ -196,6 +218,9 @@ module LustyJ
   end
 
   def self.simplify_path(s)
+    if s.start_with?('scp://')
+      return s
+    end
     s = s.gsub(/\/+/, '/')  # Remove redundant '/' characters
     begin
       if s[0] == ?~
@@ -472,8 +497,10 @@ class BaseLustyJuggler
     end
 
     def needs_script?(mode, key)
-        VIM::command "redir => s:needs_script | #{mode}map #{key} | redir END"
-        mapping = VIM::evaluate("s:needs_script").split
+        LustyJ::assert(!key.include?("'"),
+                       "Unexpected attempt to remap single-quote character")
+        VIM::command "silent :call s:LustyJugglerMapRedirectHack('#{mode}', '#{key}')"
+        mapping = VIM::evaluate("s:map_redirect_hack_output").split
         return ((mapping.length > 2) and (mapping[2] == '&'))
     end
 
@@ -627,7 +654,25 @@ class BaseLustyJuggler
         "ù",
       ]
     end
+  end
+
+  class LustyJugglerNeo2 < LustyJuggler
+    private
+    def alpha_buffer_keys
+      [
+        "u",
+        "i",
+        "a",
+        "e",
+        "o",
+        "s",
+        "n",
+        "r",
+        "t",
+        "d",
+      ]
     end
+  end
 end
 
 # An item (delimiter/separator or buffer name) on the NameBar.
@@ -1019,7 +1064,14 @@ class BufferStack
       basename_to_prefix = {}
       common_base.each do |k, names|
         if names.length > 1
-          basename_to_prefix[k] = LustyJ::longest_common_prefix(names)
+          if names.any? { |name| !name.include?(File::SEPARATOR) }
+            # One of the files is in the working directory, i.e. its path is
+            # its basename, so we know we can't shorten any of the names in
+            # this group.
+            basename_to_prefix[k] = ''
+          else
+            basename_to_prefix[k] = LustyJ::longest_common_prefix(names)
+          end
         end
       end
 
@@ -1045,6 +1097,8 @@ elsif VIM::exists?('g:LustyJugglerKeyboardLayout') and VIM::evaluate_bool('g:Lus
 	$lusty_juggler = LustyJ::LustyJugglerBepo.new
 elsif VIM::exists?('g:LustyJugglerKeyboardLayout') and VIM::evaluate_bool('g:LustyJugglerKeyboardLayout == "azerty"')
 	$lusty_juggler = LustyJ::LustyJugglerAzerty.new
+elsif VIM::exists?('g:LustyJugglerKeyboardLayout') and VIM::evaluate_bool('g:LustyJugglerKeyboardLayout == "neo2"')
+	$lusty_juggler = LustyJ::LustyJugglerNeo2.new
 else 
   $lusty_juggler = LustyJ::LustyJuggler.new
 end

@@ -37,6 +37,9 @@ require adjustment of per-user settings.
 
 - Update easy-align plugin to version 2017-06-03.
 
+- Update Lusty plugin (combining LustyExplorer and LustyJuggler) to version
+  2018-07-24.
+
 2018-08-10
 ==========
 
