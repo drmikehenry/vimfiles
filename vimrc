@@ -370,7 +370,10 @@ endif
 let g:pathogen_disabled = []
 
 " Disable an experimental plugin for users in general.
-" call add(g:pathogen_disabled, "plugin_name")
+" call add(g:pathogen_disabled, 'plugin_name')
+
+" TODO: Disable ALE during experimental phase.
+call add(g:pathogen_disabled, 'ale')
 
 " Activate pathogen in case a user would need to activate a bundle in
 " |VIMRC_VARS| as part of setting up some variable.

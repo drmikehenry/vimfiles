@@ -11,6 +11,7 @@
     Ack - Search using 'ack' utility                    |notes_ack|
     Ag - Search using 'ag' utility                      |notes_ag|
     Airline - statusline utility in pure vimscript      |notes_airline|
+    ALE - Asynchronous Lint Engine                      |notes_ale|
     Badwolf colorscheme                                 |notes_badwolf|
     Base16 colorscheme collection                       |notes_base16|
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
@@ -536,6 +537,18 @@ https://github.com/vim-airline/vim-airline-themes
 Local Customizations:
 - Added an AirlineCustomizeSymbols command to customize separators and symbols
   based on whether g:FontFamily supports Powerline symbols or not.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+ALE                                                     *notes_ale*
+  Asynchronous Lint Engine                              |ale|
+
+NOTE: experimental support only for now; disabled by default.
+
+Version 2018-08-10 (6167f75) from:
+https://github.com/w0rp/ale.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

@@ -1,0 +1,56 @@
+Before:
+  Save &shell
+  Save &shellcmdflag
+
+After:
+  Restore
+
+Execute(sh should be used when the shell is fish):
+  if !has('win32')
+    " Set something else, so we will replace that too.
+    let &shellcmdflag = '-f'
+    let &shell = 'fish'
+
+    AssertEqual ['/bin/sh', '-c', 'foobar'], ale#job#PrepareCommand(bufnr(''), 'foobar')
+
+    let &shell = '/usr/bin/fish'
+
+    AssertEqual ['/bin/sh', '-c', 'foobar'], ale#job#PrepareCommand(bufnr(''), 'foobar')
+
+    let &shell = '/usr/local/bin/fish'
+
+    AssertEqual ['/bin/sh', '-c', 'foobar'], ale#job#PrepareCommand(bufnr(''), 'foobar')
+  endif
+
+Execute(sh should be used when the shell is powershell):
+  if !has('win32')
+    " Set something else, so we will replace that too.
+    let &shellcmdflag = '-f'
+    let &shell = 'pwsh'
+
+    AssertEqual ['/bin/sh', '-c', 'foobar'], ale#job#PrepareCommand(bufnr(''), 'foobar')
+
+    let &shell = '/usr/bin/pwsh'
+
+    AssertEqual ['/bin/sh', '-c', 'foobar'], ale#job#PrepareCommand(bufnr(''), 'foobar')
+
+    let &shell = '/usr/local/bin/pwsh'
+
+    AssertEqual ['/bin/sh', '-c', 'foobar'], ale#job#PrepareCommand(bufnr(''), 'foobar')
+  endif
+
+Execute(Other shells should be used when set):
+  if !has('win32')
+    let &shell = '/bin/bash'
+    let &shellcmdflag = '-c'
+
+    AssertEqual ['/bin/bash', '-c', 'foobar'], ale#job#PrepareCommand(bufnr(''), 'foobar')
+  endif
+
+Execute(cmd /s/c as a string should be used on Windows):
+  if has('win32')
+    let &shell = 'who cares'
+    let &shellcmdflag = 'whatever'
+
+    AssertEqual 'cmd /s/c "foobar"', ale#job#PrepareCommand(bufnr(''), 'foobar')
+  endif

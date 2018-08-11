@@ -1,0 +1,49 @@
+Before:
+  Save g:ale_python_isort_executable
+  Save g:ale_python_isort_options
+
+  " Use an invalid global executable, so we don't match it.
+  let g:ale_python_isort_executable = 'xxxinvalid'
+
+  call ale#test#SetDirectory('/testplugin/test/fixers')
+  silent cd ..
+  silent cd command_callback
+  let g:dir = getcwd()
+
+  let b:bin_dir = has('win32') ? 'Scripts' : 'bin'
+
+After:
+  Restore
+
+  unlet! b:bin_dir
+
+  call ale#test#RestoreDirectory()
+
+Execute(The isort callback should return the correct default values):
+  AssertEqual
+  \ 0,
+  \ ale#fixers#isort#Fix(bufnr(''))
+
+  silent execute 'file ' . fnameescape(g:dir . '/python_paths/with_virtualenv/subdir/foo/bar.py')
+  AssertEqual
+  \ {
+  \   'command': 'cd ' . ale#Escape(ale#path#Simplify(g:dir . '/python_paths/with_virtualenv/subdir/foo')) .  ' && '
+  \     . ale#Escape(ale#path#Simplify(g:dir . '/python_paths/with_virtualenv/env/' . b:bin_dir . '/isort')) . ' -',
+  \ },
+  \ ale#fixers#isort#Fix(bufnr(''))
+
+Execute(The isort callback should respect custom options):
+  let g:ale_python_isort_options = '--multi-line=3 --trailing-comma'
+
+  AssertEqual
+  \ 0,
+  \ ale#fixers#isort#Fix(bufnr(''))
+
+  silent execute 'file ' . fnameescape(g:dir . '/python_paths/with_virtualenv/subdir/foo/bar.py')
+  AssertEqual
+  \ {
+  \   'command': 'cd ' . ale#Escape(ale#path#Simplify(g:dir . '/python_paths/with_virtualenv/subdir/foo')) .  ' && '
+  \     . ale#Escape(ale#path#Simplify(g:dir . '/python_paths/with_virtualenv/env/' . b:bin_dir . '/isort'))
+  \     . ' --multi-line=3 --trailing-comma -',
+  \ },
+  \ ale#fixers#isort#Fix(bufnr(''))
