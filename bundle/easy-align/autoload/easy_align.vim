@@ -1,4 +1,4 @@
-" Copyright (c) 2013 Junegunn Choi
+" Copyright (c) 2014 Junegunn Choi
 "
 " MIT License
 "
@@ -31,13 +31,14 @@ set cpo&vim
 
 let s:easy_align_delimiters_default = {
 \  ' ': { 'pattern': ' ',  'left_margin': 0, 'right_margin': 0, 'stick_to_left': 0 },
-\  '=': { 'pattern': '===\|<=>\|\(&&\|||\|<<\|>>\)=\|=\~[#?]\?\|=>\|[:+/*!%^=><&|.-]\?=[#?]\?',
+\  '=': { 'pattern': '===\|<=>\|\(&&\|||\|<<\|>>\)=\|=\~[#?]\?\|=>\|[:+/*!%^=><&|.?-]\?=[#?]\?',
 \                          'left_margin': 1, 'right_margin': 1, 'stick_to_left': 0 },
 \  ':': { 'pattern': ':',  'left_margin': 0, 'right_margin': 1, 'stick_to_left': 1 },
 \  ',': { 'pattern': ',',  'left_margin': 0, 'right_margin': 1, 'stick_to_left': 1 },
 \  '|': { 'pattern': '|',  'left_margin': 1, 'right_margin': 1, 'stick_to_left': 0 },
 \  '.': { 'pattern': '\.', 'left_margin': 0, 'right_margin': 0, 'stick_to_left': 0 },
 \  '#': { 'pattern': '#\+', 'delimiter_align': 'l', 'ignore_groups': ['!Comment']  },
+\  '"': { 'pattern': '"\+', 'delimiter_align': 'l', 'ignore_groups': ['!Comment']  },
 \  '&': { 'pattern': '\\\@<!&\|\\\\',
 \                          'left_margin': 1, 'right_margin': 1, 'stick_to_left': 0 },
 \  '{': { 'pattern': '(\@<!{',
@@ -146,7 +147,7 @@ endfunction
 
 function! s:echon(l, n, r, d, o, warn)
   let tokens = [
-  \ ['Function', ':EasyAlign'],
+  \ ['Function', s:live ? ':LiveEasyAlign' : ':EasyAlign'],
   \ ['ModeMsg', get(s:mode_labels, a:l, a:l)],
   \ ['None', ' ']]
 
@@ -264,11 +265,8 @@ function! s:split_line(line, nth, modes, cycle, fc, lc, pattern, stick_to_left, 
     \ strpart(getline(a:line), a:fc - 1, a:lc - a:fc + 1) :
     \ strpart(getline(a:line), a:fc - 1)
   let idx     = 0
-  " Do not allow \zs
-  " 1: whole match
-  " 2: token
-  " 3: delimiter
-  let pattern = '^\(\(.\{-}\s*\)\(' .a:pattern. '\)\s' . (a:stick_to_left ? '*' : '\{-}') . '\)'
+  let nomagic = match(a:pattern, '\\v') > match(a:pattern, '\C\\[mMV]')
+  let pattern = '^.\{-}\s*\zs\('.a:pattern.(nomagic ? ')' : '\)')
   let tokens  = []
   let delims  = []
 
@@ -277,18 +275,22 @@ function! s:split_line(line, nth, modes, cycle, fc, lc, pattern, stick_to_left, 
   let token = ''
   let phantom = 0
   while 1
-    let matches = matchlist(string, pattern, idx)
+    let matchidx = match(string, pattern, idx)
     " No match
-    if empty(matches) | break | endif
+    if matchidx < 0 | break | endif
+    let matchend = matchend(string, pattern, idx)
+    let spaces = matchstr(string, '\s'.(a:stick_to_left ? '*' : '\{-}'), matchend + (matchidx == matchend))
 
-    " Match, but empty delimiter
-    if empty(matches[1])
+    " Match, but empty
+    if len(spaces) + matchend - idx == 0
       let char = strpart(string, idx, 1)
       if empty(char) | break | endif
       let [match, part, delim] = [char, char, '']
     " Match
     else
-      let [match, part, delim] = matches[1 : 3]
+      let match = strpart(string, idx, matchend - idx + len(spaces))
+      let part  = strpart(string, idx, matchidx - idx)
+      let delim = strpart(string, matchidx, matchend - matchidx)
     endif
 
     let ignorable = s:highlighted_as(a:line, idx + len(part) + a:fc, a:ignore_groups)
@@ -358,9 +360,10 @@ function! s:do_align(todo, modes, all_tokens, all_delims, fl, ll, fc, lc, nth, r
 
   " Phase 1
   for line in range(a:fl, a:ll)
-    if f == 1 && getline(line) !~ fx
+    let snip = a:lc > 0 ? getline(line)[a:fc-1 : a:lc-1] : getline(line)
+    if f == 1 && snip !~ fx
       continue
-    elseif f == -1 && getline(line) =~ fx
+    elseif f == -1 && snip =~ fx
       continue
     endif
 
@@ -617,7 +620,7 @@ function! s:shift_opts(opts, key, vals)
   endif
 endfunction
 
-function! s:interactive(range, modes, n, d, opts, rules, vis, live, bvis)
+function! s:interactive(range, modes, n, d, opts, rules, vis, bvis)
   let mode = s:shift(a:modes, 1)
   let n    = a:n
   let d    = a:d
@@ -636,7 +639,7 @@ function! s:interactive(range, modes, n, d, opts, rules, vis, live, bvis)
       let undo = 0
       let rdrw = 1
     endif
-    if a:live && !empty(d)
+    if s:live && !empty(d)
       let output = s:process(a:range, mode, n, d, s:normalize_options(opts), regx, a:rules, a:bvis)
       let &undolevels = &undolevels " Break undo block
       call s:update_lines(output.todo)
@@ -655,7 +658,11 @@ function! s:interactive(range, modes, n, d, opts, rules, vis, live, bvis)
     let check = 0
     let warn = ''
 
-    let c  = getchar()
+    try
+      let c = getchar()
+    catch /^Vim:Interrupt$/
+      let c = 27
+    endtry
     let ch = nr2char(c)
     if c == 3 || c == 27 " CTRL-C / ESC
       if undo
@@ -672,7 +679,7 @@ function! s:interactive(range, modes, n, d, opts, rules, vis, live, bvis)
     elseif c == 13 " Enter key
       let mode = s:shift(a:modes, 1)
       if has_key(opts, 'a')
-        let opts.m = mode . strpart(opts.m, 1)
+        let opts.a = mode . strpart(opts.a, 1)
       endif
     elseif ch == '-'
       if empty(n)      | let n = '-'
@@ -713,6 +720,17 @@ function! s:interactive(range, modes, n, d, opts, rules, vis, live, bvis)
       call s:shift_opts(opts, 'iu', vals['ignore_unmatched'])
     elseif ch == "\<C-G>"
       call s:shift_opts(opts, 'ig', vals['ignore_groups'])
+    elseif ch == "\<C-P>"
+      if s:live
+        if !empty(d)
+          let ch = d
+          break
+        else
+          let s:live = 0
+        endif
+      else
+        let s:live = 1
+      endif
     elseif c == "\<Left>"
       let opts['stl'] = 1
       let opts['lm']  = 0
@@ -737,7 +755,7 @@ function! s:interactive(range, modes, n, d, opts, rules, vis, live, bvis)
         silent! call remove(opts, 'a')
       endif
     elseif ch == "\<C-_>" || ch == "\<C-X>"
-      if a:live && regx && !empty(d)
+      if s:live && regx && !empty(d)
         break
       endif
 
@@ -746,7 +764,7 @@ function! s:interactive(range, modes, n, d, opts, rules, vis, live, bvis)
       if !empty(ch) && s:valid_regexp(ch)
         let regx = 1
         let d = ch
-        if !a:live | break | endif
+        if !s:live | break | endif
       else
         let warn = 'Invalid regular expression: '.ch
       endif
@@ -770,7 +788,10 @@ function! s:interactive(range, modes, n, d, opts, rules, vis, live, bvis)
       if empty(d)
         if has_key(a:rules, ch)
           let d = ch
-          if !a:live
+          if !s:live
+            if a:vis
+              execute "normal! gv\<esc>"
+            endif
             break
           endif
         else
@@ -789,9 +810,11 @@ function! s:interactive(range, modes, n, d, opts, rules, vis, live, bvis)
       endif
     endif
   endwhile
-  if a:live
+  if s:live
     let copts = call('s:summarize', output.summarize)
+    let s:live = 0
     let g:easy_align_last_command = s:echon('', n, regx, d, copts, '')
+    let s:live = 1
   end
   return [mode, n, ch, opts, regx]
 endfunction
@@ -806,10 +829,11 @@ function! s:valid_regexp(regexp)
 endfunction
 
 function! s:test_regexp(regexp)
-  if !s:valid_regexp(a:regexp)
-    call s:exit('Invalid regular expression: '. a:regexp)
+  let regexp = empty(a:regexp) ? @/ : a:regexp
+  if !s:valid_regexp(regexp)
+    call s:exit('Invalid regular expression: '. regexp)
   endif
-  return a:regexp
+  return regexp
 endfunction
 
 let s:shorthand_regex =
@@ -829,7 +853,6 @@ function! s:parse_shorthand_opts(expr)
     call s:exit("Invalid expression: ". a:expr)
   else
     let match = matchlist(expr, regex)
-    if empty(match) | break | endif
     for m in filter(match[ 1 : -1 ], '!empty(v:val)')
       for key in ['lm', 'rm', 'l', 'r', 'stl', 's', '<', '>', 'iu', 'da', 'd', 'ms', 'm', 'ig', 'i', 'g', 'v', 'a']
         if stridx(tolower(m), key) == 0
@@ -960,9 +983,9 @@ function! s:alternating_modes(mode)
 endfunction
 
 function! s:update_lines(todo)
-    for [line, content] in items(a:todo)
-      call setline(line, s:rtrim(content))
-    endfor
+  for [line, content] in items(a:todo)
+    call setline(line, s:rtrim(content))
+  endfor
 endfunction
 
 function! s:parse_nth(n)
@@ -1027,18 +1050,21 @@ function! s:build_mode_sequence(expr, recur)
 endfunction
 
 function! s:process(range, mode, n, ch, opts, regexp, rules, bvis)
-  let [nth, recur] = s:parse_nth(a:n)
+  let [nth, recur] = s:parse_nth((empty(a:n) && exists('g:easy_align_nth')) ? g:easy_align_nth : a:n)
   let dict = s:build_dict(a:rules, a:ch, a:regexp, a:opts)
   let [mode_sequence, recur] = s:build_mode_sequence(
     \ get(dict, 'align', recur == 2 ? s:alternating_modes(a:mode) : a:mode),
     \ recur)
 
+  let ve = &virtualedit
+  set ve=all
   let args = [
     \ {}, split(mode_sequence, '\zs'),
     \ {}, {}, a:range[0], a:range[1],
-    \ a:bvis             ? min([col("'<"), col("'>")]) : 1,
-    \ (!recur && a:bvis) ? max([col("'<"), col("'>")]) : 0,
+    \ a:bvis             ? min([virtcol("'<"), virtcol("'>")]) : 1,
+    \ (!recur && a:bvis) ? max([virtcol("'<"), virtcol("'>")]) : 0,
     \ nth, recur, dict ]
+  let &ve = ve
   while len(args) > 1
     let args = call('s:do_align', args)
   endwhile
@@ -1062,10 +1088,12 @@ endfunction
 
 function! s:align(bang, live, visualmode, first_line, last_line, expr)
   " Heuristically determine if the user was in visual mode
-  if empty(a:visualmode)
+  if a:visualmode == 'command'
     let vis  = a:first_line == line("'<") && a:last_line == line("'>")
     let bvis = vis && visualmode() == "\<C-V>"
-  " Visual-mode explicitly given
+  elseif empty(a:visualmode)
+    let vis  = 0
+    let bvis = 0
   else
     let vis  = 1
     let bvis = a:visualmode == "\<C-V>"
@@ -1073,6 +1101,7 @@ function! s:align(bang, live, visualmode, first_line, last_line, expr)
   let range = [a:first_line, a:last_line]
   let modes = s:interactive_modes(a:bang)
   let mode  = modes[0]
+  let s:live = a:live
 
   let rules = s:easy_align_delimiters_default
   if exists('g:easy_align_delimiters')
@@ -1086,11 +1115,11 @@ function! s:align(bang, live, visualmode, first_line, last_line, expr)
   try
     if bypass_fold | let &l:foldmethod = 'manual' | endif
 
-    if empty(n) && empty(ch) || a:live
-      let [mode, n, ch, opts, regexp] = s:interactive(range, copy(modes), n, ch, opts, rules, vis, a:live, bvis)
+    if empty(n) && empty(ch) || s:live
+      let [mode, n, ch, opts, regexp] = s:interactive(range, copy(modes), n, ch, opts, rules, vis, bvis)
     endif
 
-    if !a:live
+    if !s:live
       let output = s:process(range, mode, n, ch, s:normalize_options(opts), regexp, rules, bvis)
       call s:update_lines(output.todo)
       let copts = call('s:summarize', output.summarize)
@@ -1104,7 +1133,13 @@ endfunction
 function! easy_align#align(bang, live, visualmode, expr) range
   try
     call s:align(a:bang, a:live, a:visualmode, a:firstline, a:lastline, a:expr)
-  catch 'exit'
+  catch /^\%(Vim:Interrupt\|exit\)$/
+    if empty(a:visualmode)
+      echon "\r"
+      echon "\r"
+    else
+      normal! gv
+    endif
   endtry
 endfunction
 

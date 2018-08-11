@@ -35,6 +35,8 @@ require adjustment of per-user settings.
 - Update ultisnips plugin to version 2018-05-01 and sample snippets plugin to
   version 2018-07-16.
 
+- Update easy-align plugin to version 2017-06-03.
+
 2018-08-10
 ==========
 

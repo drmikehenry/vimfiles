@@ -19,6 +19,17 @@ Expect:
   111  22    333  444 55555 6666 7   88888
   1111 2     33   444 555   66   777 8
 
+Do (left-align / cursor position retained):
+  vGww
+  \<Enter>
+  *\<Space>D
+
+Expect:
+  1    22222 33   444 555   6666 7   888
+  11   222   3333 4   55    6666 77  888
+  111  22    333  444 55555 6666 7   88888
+  1111 2 
+
 Do (left-align using operator map):
   \<Space>Aip*\<Space>
 
@@ -485,6 +496,56 @@ Expect:
   |)batch_size(|) Fixnum(|)nil    (|)number of maximum items to be assigned at once(|
   |)logger    (|) Logger(|)nil    (|)                logger instance for debug logs(|
 
+Do (Switching to live interactive mode):
+  vip\<Enter>
+* Switch to live interactive mode
+  \<C-P>
+  |
+  \<C-L><\<Enter>
+  \<C-R>>\<Enter>
+  ***
+  **
+  \<BS>\<BS>\<BS>
+  **|\<Enter>|
+
+Expect:
+  |>Option    <|>   Type<|>Default<|>                                   Description<|
+  |>--        <|>     --<|>--     <|>                                            --<|
+  |>threads   <|> Fixnum<|>1      <|>          number of threads in the thread pool<|
+  |>queues    <|> Fixnum<|>1      <|>                   number of concurrent queues<|
+  |>queue_size<|> Fixnum<|>1000   <|>                            size of each queue<|
+  |>interval  <|>Numeric<|>0      <|>      dispatcher interval for batch processing<|
+  |>batch     <|>Boolean<|>false  <|>                 enables batch processing mode<|
+  |>batch_size<|> Fixnum<|>nil    <|>number of maximum items to be assigned at once<|
+  |>logger    <|> Logger<|>nil    <|>                logger instance for debug logs<|
+
+Do (Toggling live interactive mode (delimiter entered)):
+  vip\<Enter>
+* Enable live mode
+  \<C-P>
+  |*
+* Disable live mode
+  \<C-P>
+  gg2jdG
+
+Expect:
+  | Option     | Type    | Default | Description                                    |
+  | --         | --      | --      | --                                             |
+
+Do (Toggling live interactive mode (delimiter not entered)):
+  vip\<Enter>
+* Enable live mode
+  \<C-P>
+  \<Enter>
+* Disable live mode
+  \<C-P>
+  *|
+  gg2jdG
+
+Expect:
+  |     Option |    Type | Default |                                    Description |
+  |         -- |      -- |      -- |                                             -- |
+
 Do (live interactive mode!):
   vip\<Space>r\<Enter>
   |
@@ -519,6 +580,120 @@ Do:
 
 Execute (g:easy_align_last_command should not be set if interrupted):
   Assert !exists('g:easy_align_last_command')
+
+Do (g:easy_align_nth is not set (work with default value 1)):
+  vip\<Enter>|
+
+Expect:
+  | Option| Type | Default | Description |
+  | --|--|--|--|
+  | threads | Fixnum | 1 | number of threads in the thread pool |
+  | queues |Fixnum | 1 | number of concurrent queues |
+  | queue_size | Fixnum | 1000 | size of each queue |
+  | interval | Numeric | 0 | dispatcher interval for batch processing |
+  | batch | Boolean | false | enables batch processing mode |
+  | batch_size | Fixnum | nil | number of maximum items to be assigned at once |
+  | logger | Logger | nil | logger instance for debug logs |
+
+Execute (set g:easy_align_nth):
+  let g:easy_align_nth = '2'
+
+Do (g:easy_align_nth is set as 2):
+  vip\<Enter>|
+
+Expect:
+  | Option     | Type | Default | Description |
+  |--          | --|--|--|
+  | threads    | Fixnum | 1 | number of threads in the thread pool |
+  |queues      | Fixnum | 1 | number of concurrent queues |
+  |queue_size  | Fixnum | 1000 | size of each queue |
+  |   interval | Numeric | 0 | dispatcher interval for batch processing |
+  |batch       | Boolean | false | enables batch processing mode |
+   |batch_size | Fixnum | nil | number of maximum items to be assigned at once |
+   |logger     | Logger | nil | logger instance for debug logs |
+
+Execute (unset g:easy_align_nth):
+  unlet g:easy_align_nth
+
+Execute (set g:easy_align_nth):
+  let g:easy_align_nth = '*'
+
+Do (g:easy_align_nth is set as *):
+  vip\<Enter>|
+
+Expect:
+  | Option     | Type    | Default | Description                                    |
+  | --         | --      | --      | --                                             |
+  | threads    | Fixnum  | 1       | number of threads in the thread pool           |
+  | queues     | Fixnum  | 1       | number of concurrent queues                    |
+  | queue_size | Fixnum  | 1000    | size of each queue                             |
+  | interval   | Numeric | 0       | dispatcher interval for batch processing       |
+  | batch      | Boolean | false   | enables batch processing mode                  |
+  | batch_size | Fixnum  | nil     | number of maximum items to be assigned at once |
+  | logger     | Logger  | nil     | logger instance for debug logs                 |
+
+Execute (unset g:easy_align_nth):
+  unlet g:easy_align_nth
+
+Execute (set g:easy_align_nth):
+  let g:easy_align_nth = '**'
+
+Do (g:easy_align_nth is set as **):
+  vip\<Enter>|
+
+Expect:
+  |     Option | Type    | Default | Description                                    |
+  |         -- | --      |      -- | --                                             |
+  |    threads | Fixnum  |       1 | number of threads in the thread pool           |
+  |     queues | Fixnum  |       1 | number of concurrent queues                    |
+  | queue_size | Fixnum  |    1000 | size of each queue                             |
+  |   interval | Numeric |       0 | dispatcher interval for batch processing       |
+  |      batch | Boolean |   false | enables batch processing mode                  |
+  | batch_size | Fixnum  |     nil | number of maximum items to be assigned at once |
+  |     logger | Logger  |     nil | logger instance for debug logs                 |
+
+Execute (unset g:easy_align_nth):
+  unlet g:easy_align_nth
+
+Execute (set g:easy_align_nth):
+  let g:easy_align_nth = '-'
+
+Do (g:easy_align_nth is set as -):
+  vip\<Enter>|
+
+Expect:
+  | Option| Type | Default | Description                                       |
+  |--|--|--|--                                                                 |
+  | threads | Fixnum | 1 | number of threads in the thread pool                |
+  |queues |Fixnum | 1 | number of concurrent queues                            |
+  |queue_size | Fixnum | 1000 | size of each queue                             |
+  |   interval | Numeric | 0 | dispatcher interval for batch processing        |
+  |batch | Boolean | false | enables batch processing mode                     |
+   |batch_size | Fixnum | nil | number of maximum items to be assigned at once |
+   |logger | Logger | nil | logger instance for debug logs                     |
+
+Execute (unset g:easy_align_nth):
+  unlet g:easy_align_nth
+
+Execute (set g:easy_align_nth):
+  let g:easy_align_nth = '-2'
+
+Do (g:easy_align_nth is set as -2):
+  vip\<Enter>|
+
+Expect:
+  | Option| Type | Default    | Description |
+  |--|--|--                   | --|
+  | threads | Fixnum | 1      | number of threads in the thread pool |
+  |queues |Fixnum | 1         | number of concurrent queues |
+  |queue_size | Fixnum | 1000 | size of each queue |
+  |   interval | Numeric | 0  | dispatcher interval for batch processing |
+  |batch | Boolean | false    | enables batch processing mode |
+   |batch_size | Fixnum | nil | number of maximum items to be assigned at once |
+   |logger | Logger | nil     | logger instance for debug logs |
+
+Execute (unset g:easy_align_nth):
+  unlet g:easy_align_nth
 
 ###########################################################
 
@@ -1474,6 +1649,67 @@ Expect:
   bbbbb=bbbbb=bbbbb
   aaa   = aaa   = aaa
 
+Given clojure (filter with blockwise-visual mode):
+  (let [a 1
+        bbb 2
+        ccccc (range
+                10 20)]
+    (prn [a bbb ccccc]))
+
+Do (filter with blockwise-visual mode):
+  f[
+  vi[
+  \<C-V>
+  \<Enter>
+  \<C-F>g/^\S\<Enter>
+  \<Space>
+
+Expect clojure:
+  (let [a     1
+        bbb   2
+        ccccc (range
+                10 20)]
+    (prn [a bbb ccccc]))
+
+Given clojure:
+  {:user {:plugins [[cider/cider-nrepl "0.9.1"]
+                    [lein-kibit "0.0.8"]
+                    [lein-licenses "0.1.1"]
+                    [lein-marginalia "0.8.0"] ; lein marg
+                    [codox "0.8.13"] ; lein doc
+                    [com.jakemccrary/lein-test-refresh "0.10.0"] ; lein test-refresh
+                    [lein-pprint "1.1.2"]
+                    [lein-exec "0.3.5"]
+                    [jonase/eastwood "0.2.1"]]
+          :dependencies [[slamhound "1.5.5"]]
+          :aliases {"slamhound" ["run" "-m" "slam.hound"]}
+          :signing {:gpg-key "FEF9C627"}}}
+
+Do (Virtual column should be used in blockwise-visual mode):
+  :set ve=block\<Enter>
+  f[
+  vi[
+  \<C-V>
+  $20l
+  \<Enter>\<Space>
+
+Expect clojure:
+  {:user {:plugins [[cider/cider-nrepl                 "0.9.1"]
+                    [lein-kibit                        "0.0.8"]
+                    [lein-licenses                     "0.1.1"]
+                    [lein-marginalia                   "0.8.0"] ; lein marg
+                    [codox                             "0.8.13"] ; lein doc
+                    [com.jakemccrary/lein-test-refresh "0.10.0"] ; lein test-refresh
+                    [lein-pprint                       "1.1.2"]
+                    [lein-exec                         "0.3.5"]
+                    [jonase/eastwood                   "0.2.1"]]
+          :dependencies [[slamhound "1.5.5"]]
+          :aliases {"slamhound" ["run" "-m" "slam.hound"]}
+          :signing {:gpg-key "FEF9C627"}}}
+
+Then:
+  set ve=
+
 ###########################################################
 
 Given (hard-tab indentation (#19)):
@@ -1627,7 +1863,7 @@ Do (Blockwise-visual-operator is also repeatable):
   f1
   4j
   \<Enter>:
-  7G
+  7G0
   fa
   .
 

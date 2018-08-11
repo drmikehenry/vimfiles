@@ -825,7 +825,7 @@ Local Customizations:
   Delimiter   Purpose
       \       Align on backslash (such as for C/C++ line continuations).
 
-Version 2014-11-22 (44216b0) from:
+Version 2017-06-03 (1cd724d) from:
 https://github.com/junegunn/vim-easy-align
 
 Installation:

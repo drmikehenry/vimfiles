@@ -174,4 +174,90 @@ Expect c:
   PRINTF("foo = %f\n", foo);
   printf("foobar = %f\n", foobar);
 
+* #50 Error when using delimiter alignment option
+Given:
+  a|bbb|c
+  aa|bb|cc
+
+Do (#50 EasyAlign command with 'a' option):
+  :%EasyAlign {'a': 'l'}\<cr>
+  \<cr>
+  *|
+
+Expect (Some text):
+   a | bbb |  c
+  aa |  bb | cc
+
+* #51 Repeat of visual <Plug>(LiveEasyAlign) broken
+Do (#51/#52 <Plug>(EasyAlignRepeat) in visual mode):
+  V\<space>\<enter>\<enter>*||
+  G
+  V\<space>.
+
+Expect:
+  a | bbb | c
+  aa | bb | cc
+
+* #65 ?=
+Given:
+  a?=b
+  aa-=bb
+  aaa?=bbb
+
+Do (#65 Alignment around ?=):
+  \<space>Aip=
+
+Expect:
+  a   ?= b
+  aa  -= bb
+  aaa ?= bbb
+
+* #67 \v
+Given c:
+  bzero(&servaddr, sizeof(servaddr));
+  servaddr.sin_family = AF_INET;
+  servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+  servaddr.sin_port = htons(SERV_PORT);
+
+Execute (#67 \v breaks surrounding regex):
+  %EasyAlign/\v(\=\s)@<=</
+
+Expect:
+  bzero(&servaddr, sizeof(servaddr));
+  servaddr.sin_family =       AF_INET;
+  servaddr.sin_addr.s_addr =  htonl(INADDR_ANY);
+  servaddr.sin_port =         htons(SERV_PORT);
+
+Execute (#67 \V followed by \v shouldn't matter):
+  %EasyAlign/\v(\=\s)@<=<\V/
+
+Expect:
+  bzero(&servaddr, sizeof(servaddr));
+  servaddr.sin_family =       AF_INET;
+  servaddr.sin_addr.s_addr =  htonl(INADDR_ANY);
+  servaddr.sin_port =         htons(SERV_PORT);
+
+Execute (#67 \zs is now allowed):
+  %EasyAlign/=\zs/
+
+Expect:
+  bzero(&servaddr, sizeof(servaddr));
+  servaddr.sin_family =       AF_INET;
+  servaddr.sin_addr.s_addr =  htonl(INADDR_ANY);
+  servaddr.sin_port =         htons(SERV_PORT);
+
 Include: include/teardown.vader
+
+Given:
+  hello = world bye all
+  hello world = bye all
+  hello world = foo all
+
+Do (#105: Incorrectly detection of blockwise visual mode):
+  \<c-v>jj\<esc>
+  \<Space>Aip=
+
+Expect:
+  hello       = world bye all
+  hello world = bye all
+  hello world = foo all
