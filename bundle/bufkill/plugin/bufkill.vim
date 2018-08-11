@@ -24,6 +24,8 @@
 "   and then restore the globals to window variables with another function.
 "
 " Changelog:
+" 1.13 - Improve error message behaviour thanks to louwers@github.
+"        Fix error when debug enabled thanks to nkgm@github and pavoljuhas@github.
 " 1.12 - Convert to bundle format prior to uploading to github
 " 1.11 - Major bug fixes by David Emett, especially relating to
 "        the creation of new buffers when the last buffer is killed.
@@ -100,7 +102,7 @@ function! s:Debug(level, ...) "{{{1
       endif                                                                        " (Debug)
     endif                                                                          " (Debug)
     " Now print the value itself                                                     (Debug)
-    let s = s . VarToString(DebugArg)                                              " (Debug)
+    let s = s . string(DebugArg)                                                   " (Debug)
     if i < a:0                                                                     " (Debug)
       let s = s . ', '                                                             " (Debug)
     endif                                                                          " (Debug)
@@ -203,7 +205,7 @@ call s:Debug(2, 'g:BufKillCommandPrefix')
 "
 function! <SID>CreateUniqueCommand(lhs, rhs)
   let command = g:BufKillCommandPrefix.a:lhs
-  if !exists(':'.command)
+  if exists(':'.command) < 2
     exe 'command -bang '.command.' '.a:rhs
   endif
 endfunction
@@ -297,7 +299,9 @@ function! <SID>BufKill(cmd, bang) "{{{1
       endif
     endif
     if s:BufKillActionWhenModifiedFileToBeKilled =~ '[Ff][Aa][Ii][Ll]'
-      echoe "No write since last change for buffer '" . bufname(s:BufKillBufferToKill) . "' (add ! to override)"
+      echohl ErrorMsg
+      echo "No write since last change for buffer '" . bufname(s:BufKillBufferToKill) . "' (add ! to override)"
+      echohl None
       return
     elseif s:BufKillActionWhenModifiedFileToBeKilled =~ '[Cc][Oo][Nn][Ff][Ii][Rr][Mm]'
       let options = "&Yes\n&No\n&Cancel"
@@ -541,7 +545,7 @@ function! <SID>GotoBuffer(cmd, bang) "{{{1
         endif
         let w:BufKillIndex += 1
       else
-        let w:BuffKillIndex -= 1
+        let w:BufKillIndex -= 1
       endif
     endif
 
@@ -732,6 +736,7 @@ augroup BufKill
 autocmd!
 autocmd BufKill WinEnter * call <SID>UpdateList('WinEnter')
 autocmd BufKill BufEnter * call <SID>UpdateList('BufEnter')
+autocmd BufKill BufAdd * call <SID>UpdateList('BufAdd')
 autocmd BufKill WinLeave * call <SID>UpdateLastColumn('WinLeave')
 autocmd BufKill BufLeave * call <SID>UpdateLastColumn('BufLeave')
 augroup END

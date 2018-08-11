@@ -30,6 +30,8 @@ require adjustment of per-user settings.
 
 - Update surround plugin to version 2018-07-23.
 
+- Update bufkill plugin to version 2018-03-20.
+
 2018-08-10
 ==========
 
