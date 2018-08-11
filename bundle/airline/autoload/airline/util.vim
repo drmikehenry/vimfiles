@@ -1,6 +1,9 @@
-" MIT License. Copyright (c) 2013-2016 Bailey Ling.
+" MIT License. Copyright (c) 2013-2018 Bailey Ling et al.
 " vim: et ts=2 sts=2 sw=2
 
+" TODO: Try to cache winwidth(0) function
+" e.g. store winwidth per window and access that, only update it, if the size
+" actually changed.
 scriptencoding utf-8
 
 call airline#init#bootstrap()
@@ -84,30 +87,35 @@ else
   endfunction
 endif
 
-" Define a wrapper over system() that uses nvim's async job control if
-" available. This way we avoid overwriting v:shell_error, which might
-" potentially disrupt other plugins.
-if has('nvim')
-  function! s:system_job_handler(job_id, data, event) dict
-    if a:event == 'stdout'
-      let self.buf .=  join(a:data)
-    endif
-  endfunction
+" Compatibility wrapper for strchars, in case this vim version does not
+" have it natively
+function! airline#util#strchars(str)
+  if exists('*strchars')
+    return strchars(a:str)
+  else
+    return strlen(substitute(a:str, '.', 'a', 'g'))
+  endif
+endfunction
 
-  function! airline#util#system(cmd)
-    let l:config = {
-    \ 'buf': '',
-    \ 'on_stdout': function('s:system_job_handler'),
-    \ }
-    let l:id = jobstart(a:cmd, l:config)
-    if l:id < 1
-      return system(a:cmd)
-    endif
-    call jobwait([l:id])
-    return l:config.buf
-  endfunction
-else
-  function! airline#util#system(cmd)
-    return system(a:cmd)
-  endfunction
-endif
+function! airline#util#ignore_buf(name)
+  let pat = '\c\v'. get(g:, 'airline#ignore_bufadd_pat', '').
+        \ get(g:, 'airline#extensions#tabline#ignore_bufadd_pat', 
+        \ 'gundo|undotree|vimfiler|tagbar|nerd_tree|startify')
+  return match(a:name, pat) > -1
+endfunction
+
+function! airline#util#has_fugitive()
+  return exists('*fugitive#head') || exists('*FugitiveHead')
+endfunction
+
+function! airline#util#has_lawrencium()
+  return exists('*lawrencium#statusline')
+endfunction
+
+function! airline#util#has_vcscommand()
+  return get(g:, 'airline#extensions#branch#use_vcscommand', 0) && exists('*VCSCommandGetStatusLine')
+endfunction
+
+function! airline#util#has_custom_scm()
+  return !empty(get(g:, 'airline#extensions#branch#custom_head', ''))
+endfunction

@@ -3210,7 +3210,7 @@ if g:EnableAirline
 "   g:airline_section_y       (fileencoding, fileformat)
 "   g:airline_section_z       (percentage, line number, column number)
 "   g:airline_section_error   (ycm_error_count, syntastic, eclim)
-"   g:airline_section_warning (ycm_warning_count, whitespace)
+"   g:airline_section_warning (ycm_warning_count, syntastic-warn, whitespace)
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}

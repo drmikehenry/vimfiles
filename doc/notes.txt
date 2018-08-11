@@ -530,10 +530,10 @@ Installation:
 AIRLINE                                                 *notes_airline*
   Statusline utility in pure vimscript                  |airline.txt|
 
-Version 2017-05-08 (466198a) from:
+Version 2018-07-26 (c7fb175) from:
 https://github.com/vim-airline/vim-airline
 
-Themes version 2017-05-24 (43fe392) from:
+Themes version 2018-07-30 (6e798f9) from:
 https://github.com/vim-airline/vim-airline-themes
 
 Local Customizations:

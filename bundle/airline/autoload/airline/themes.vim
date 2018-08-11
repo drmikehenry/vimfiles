@@ -1,4 +1,4 @@
-" MIT License. Copyright (c) 2013-2016 Bailey Ling.
+" MIT License. Copyright (c) 2013-2018 Bailey Ling et al.
 " vim: et ts=2 sts=2 sw=2
 
 scriptencoding utf-8
@@ -44,6 +44,9 @@ function! airline#themes#patch(palette)
     if !has_key(a:palette[mode], 'airline_error')
       let a:palette[mode]['airline_error'] = [ '#000000', '#990000', 232, 160 ]
     endif
+    if !has_key(a:palette[mode], 'airline_term')
+      let a:palette[mode]['airline_term'] = [ '#9cffd3', '#202020', 85, 232]
+    endif
   endfor
 
   let a:palette.accents = get(a:palette, 'accents', {})
@@ -70,4 +73,3 @@ function! airline#themes#patch(palette)
     let a:palette.accents.purple = [ '#af00df' , '' , 128 , '' ]
   endif
 endfunction
-
