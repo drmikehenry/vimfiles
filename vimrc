@@ -3255,14 +3255,26 @@ function! AirlineInit()
     " Remove parts that are redundant or which don't change often enough to
     " warrant perpetual space taken in the status line.
 
+    " Default sections: ['tagbar', 'gutentags', 'grepper', 'filetype']
     " Remove 'filetype'.
-    let g:airline_section_x = airline#section#create(['tagbar'])
+    let g:airline_section_x = airline#section#create(
+            \['tagbar', 'gutentags', 'grepper'])
 
-    " Remove 'fileencoding'.
+    " Default sections: ['ffenc']
+    " Remove 'ffenc'.
     let g:airline_section_y = ''
 
-    " Use smaller margins for percentage, line/column numbers.
-    " Left-justify column number.
+    " Default sections are a function of initial window width:
+    " >  80:  ['windowswap', 'obsession', '%3p%%'.spc,
+    "          'linenr', 'maxlinenr', spc.':%3v']
+    " <= 80:  ['%3p%%'.spc, 'linenr',  ':%3v']
+    " To save space:
+    " - Use 2-character percentage ('%2p%%')
+    " - Use fancy "LN" symbol for line number
+    " - Skip display of maximum line number
+    " - Use 2-character left-justified virtual column number ('%-2v')
+    " - Skip Obsession and Windowswap fields (unless/until these
+    "   plugins are used)
     let g:airline_section_z = airline#section#create([
         \ 'windowswap', '%2p%% ',
         \ '%{g:airline_symbols.linenr} %#__accent_bold#%3l%#__restore__#',

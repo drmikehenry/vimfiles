@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-08-12
+==========
+
+- Adjust airline sections for updated airline plugin capabilities.
+
 2018-08-11
 ==========
 
