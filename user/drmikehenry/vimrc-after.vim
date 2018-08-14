@@ -14,8 +14,7 @@ command! -bar SetupMake call CustomSetupMake()
 nnoremap <Space>bb          :<C-u>CtrlPBuffer<CR>
 nnoremap <Space>bd          :BW<CR>
 
-nnoremap <Space>wc          <C-w>c
-nnoremap <Space>ww          <C-w>w
+nmap     <Space>w           <C-w>
 
 nnoremap <Space>ff          :<C-u>CtrlPCurFile<CR>
 nnoremap <Space>pf          :<C-u>CtrlPRoot<CR>
