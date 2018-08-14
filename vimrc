@@ -3334,6 +3334,20 @@ endif
 
 
 " -------------------------------------------------------------
+" ALE
+" -------------------------------------------------------------
+
+let g:ale_sign_column_always = 1
+
+" Pylint is too picky to be on by default.
+let g:ale_linters_ignore = { 'python': ['pylint'] }
+
+" Experiment with disabling the extra-picky info messages out of rstcheck.
+let g:ale_rst_rstcheck_options =
+        \ '--ignore-messages ' . ale#Escape(
+        \ 'Duplicate implicit target name:')
+
+" -------------------------------------------------------------
 " BufExplorer
 " -------------------------------------------------------------
 
