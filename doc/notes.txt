@@ -553,6 +553,34 @@ https://github.com/w0rp/ale.git
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
+Apply the following patch to provide g:ale_rst_rstcheck_options support.
+This is hopefully temporary.
+
+diff --git a/bundle/ale/ale_linters/rst/rstcheck.vim b/bundle/ale/ale_linters/rst/rstcheck.vim
+index b660627..c09c3ad 100644
+--- a/bundle/ale/ale_linters/rst/rstcheck.vim
++++ b/bundle/ale/ale_linters/rst/rstcheck.vim
+@@ -2,6 +2,9 @@
+ " Description: Rstcheck for reStructuredText files
+ "
+
++call ale#Set('rst_rstcheck_options', '')
++
++
+ function! ale_linters#rst#rstcheck#Handle(buffer, lines) abort
+     " matches: 'bad_rst.rst:1: (SEVERE/4) Title overline & underline
+     " mismatch.'
+@@ -22,8 +25,10 @@ function! ale_linters#rst#rstcheck#Handle(buffer, lines) abort
+ endfunction
+
+ function! ale_linters#rst#rstcheck#GetCommand(buffer) abort
++    let l:options = ale#Var(a:buffer, 'rst_rstcheck_options')
+     return ale#path#BufferCdString(a:buffer)
+     \   . 'rstcheck'
++    \   . (!empty(l:options) ? ' ' . l:options : '')
+     \   . ' %t'
+ endfunction
+
 ------------------------------------------------------------------------------
 BADWOLF                                                 *notes_badwolf*
   A dark colorscheme
