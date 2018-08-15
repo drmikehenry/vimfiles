@@ -3145,6 +3145,20 @@ command! -bar -nargs=? Diff  call Diff(<q-args>)
 " For example, to disable the UltiSnips plugin, use the following:
 "   let g:EnableUltiSnips = 0
 
+if !exists('g:EnableAle')
+    " See if ALE is enabled by invoking an autoloaded function.  Unfortunately,
+    " it's not possible to check for the existence of an autoloaded function
+    " without first trying to call it; ``exists('*ale#Pad')`` will always
+    " return zero until after the function is autloaded.
+    try
+        " If we can invoke an ALE function, it's loaded.
+        call ale#Pad('')
+        let g:EnableAle = 1
+    catch
+        let g:EnableAle = 0
+    endtry
+endif
+
 " Don't use Powerline or Airline on 8-color terminals; they don't look good.
 if !has("gui_running") && &t_Co == 8
     let g:EnableAirline = 0
@@ -3337,7 +3351,7 @@ endif
 " ALE
 " -------------------------------------------------------------
 
-if exists('g:loaded_ale') && g:loaded_ale
+if g:EnableAle
     let g:ale_sign_column_always = 1
 
     " Pylint is too picky to be on by default.
