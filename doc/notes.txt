@@ -1179,19 +1179,20 @@ https://github.com/mhinz/vim-grepper
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
-Apply the below patch to set the QuickFix/Location list at the completion of the
-search.  This triggers the BufReadPost autocommand that the QuickFix Reflector
-plugin relies on.  Appending to a QuickFix/Location list does not send the
-BufReadPost, but setting the list does (even if the new value is the same as the
-current value).
+Apply the below patch to set the QuickFix/Location list at the completion of
+the search.  This triggers the BufReadPost autocommand that the QuickFix
+Reflector plugin relies on.  Appending to a QuickFix/Location list does not
+send the BufReadPost, but setting the list does (even if the new value is the
+same as the current value).
 
-diff --git a/bundle/grepper/plugin/grepper.vim b/bundle/grepper/plugin/grepper.vim
-index ed3e20d..a96bfd3 100644
---- a/bundle/grepper/plugin/grepper.vim
-+++ b/bundle/grepper/plugin/grepper.vim
-@@ -809,8 +809,10 @@ function! s:finish_up(flags)
+diff -aur /home/mike/contrib/vim-grepper/plugin/grepper.vim grepper/plugin/grepper.vim
+--- /home/mike/contrib/vim-grepper/plugin/grepper.vim	2018-08-16 07:47:49.978628466 -0400
++++ grepper/plugin/grepper.vim	2018-08-16 07:49:02.668794884 -0400
+@@ -808,11 +808,15 @@
+     let attrs = has('nvim') && !has('nvim-0.2.0')
            \ ? cmdline
            \ : {'title': cmdline, 'context': {'query': @/}}
++    let qfWinView = winsaveview()
      if qf
 +      call setqflist(list)
        call setqflist(list, a:flags.append ? 'a' : 'r', attrs)
@@ -1199,7 +1200,10 @@ index ed3e20d..a96bfd3 100644
 +      call setloclist(0, list)
        call setloclist(0, list, a:flags.append ? 'a' : 'r', attrs)
      endif
++    call winrestview(qfWinView)
    catch /E118/
+   endtry
+
 ------------------------------------------------------------------------------
 GRUVBOX                                                 *notes_gruvbox*
   A dark colorscheme
