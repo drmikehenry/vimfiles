@@ -581,6 +581,20 @@ index b660627..c09c3ad 100644
      \   . ' %t'
  endfunction
 
+Apply this patch to defer execution of ALE for a bit when entering a buffer:
+diff --git a/bundle/ale/autoload/ale/events.vim b/bundle/ale/autoload/ale/events.vim
+index 300aefc..e523a6a 100644
+--- a/bundle/ale/autoload/ale/events.vim
++++ b/bundle/ale/autoload/ale/events.vim
+@@ -44,7 +44,7 @@ function! ale#events#LintOnEnter(buffer) abort
+     call setbufvar(a:buffer, 'ale_file_changed', 0)
+
+     if ale#Var(a:buffer, 'enabled') && g:ale_lint_on_enter
+-        call ale#Queue(0, 'lint_file', a:buffer)
++        call ale#Queue(300, 'lint_file', a:buffer)
+     endif
+ endfunction
+
 ------------------------------------------------------------------------------
 BADWOLF                                                 *notes_badwolf*
   A dark colorscheme
