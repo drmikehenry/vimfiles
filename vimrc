@@ -3075,17 +3075,24 @@ endfunction
 
 " Turn off diff mode for current window.
 " Understands Fugitive diff restoration.
-function! DiffOff()
+function! DiffOff(...)
     if exists('w:fugitive_diff_restore')
         execute w:fugitive_diff_restore
         unlet w:fugitive_diff_restore
     else
-        diffoff
+        if a:0 > 1
+            throw 'Wrong number of arguments'
+        elseif a:0 == 1
+            let bang = a:000[0]
+        else
+            let bang = ''
+        endif
+        execute 'diffoff' . bang
         setlocal noscrollbind
         setlocal nocursorbind
     endif
 endfunction
-command! -bar DiffOff call DiffOff()
+command! -bar -bang DiffOff call DiffOff('<bang>')
 
 " Restore all diff windows and close them all except current window.
 " Since folding is enabled for certain kinds of diffs, folds are

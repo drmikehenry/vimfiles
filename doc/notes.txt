@@ -3521,6 +3521,11 @@ New diff commands:
     Note: this is invoked as part of :OneWindow to ensure that the remaining
     window won't be left in diff mode when <C-w>o is invoked.
 
+  :DiffOff[!]
+    Turn off diff mode for current window (or all windows with '!').
+    This command understands fugitive how to restore Fugitive diff windows,
+    and it forces 'scrollbind' and 'cursorbind' off for the current window.
+
 Built-in commands for more manual control:
 
   :diffthis
