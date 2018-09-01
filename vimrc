@@ -3384,6 +3384,15 @@ let g:bufExplorerShowNoName = 1
 " Don't define the slew of extra mappings built into this plugin.
 let g:BufKillCreateMappings = 0
 
+" If the buffer you are attempting to kill in one window is also displayed
+" in another, you may not want to kill it afterall.  This option lets you
+" decide how this situation should be handled, and can take one of the following
+" values:
+"   'kill' - kill the buffer regardless, always
+"   'confirm' - ask for confirmation before removing it
+"   'cancel' - don't kill it
+let g:BufKillActionWhenBufferDisplayedInAnotherWindow = 'kill'
+
 " -------------------------------------------------------------
 " bufmru
 " -------------------------------------------------------------

@@ -12,6 +12,9 @@ require adjustment of per-user settings.
 
 - Add ``!`` option to ``:DiffOff`` command to turn off diff for all windows.
 
+- Stop asking for confirmation from ``:BW`` when the buffer is in multiple
+  windows, as the option for confirmation adds no safety, just inconvenience.
+
 2018-08-12
 ==========
 
