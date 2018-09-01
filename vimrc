@@ -3368,6 +3368,14 @@ if g:EnableAle
     let g:ale_rst_rstcheck_options =
             \ '--ignore-messages ' . ale#Escape(
             \ 'Duplicate implicit target name:')
+
+    " Setup shfmt for shell scripting.
+    " Invoke via:  ALEFix shfmt
+    " -p        - posix-compatible source
+    " -i UINT   - setup for indentation with UNIT spaces.
+    " -sr       - redirect operators will be followed by a space.
+    " TODO: After shfmt can detect dialect, remove ``-p``.
+    let g:ale_sh_shfmt_options = '-p -sr -i 4'
 endif
 
 " -------------------------------------------------------------
