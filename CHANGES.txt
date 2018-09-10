@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-09-10
+==========
+
+- Update Grepper plugin to 2018-09-08, fixing quadratic slowdown for searches
+  with many hits when running with Vim 8+ (implying asynchronous searching).
+
 2018-09-01
 ==========
 
