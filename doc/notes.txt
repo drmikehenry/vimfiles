@@ -285,6 +285,13 @@ was copied in the past, it's best to remove it: >
 
   sudo rm -f /usr/local/share/vim/vimrc
 <
+
+Removing this distro-supplied file fixes errors in `~/.vim/filetype.vim` of the
+form: >
+
+    E10: \ should be followed by /, ? or &
+<
+
 To register the newly installed vim as the system alternative: >
 
   for i in gvim gview gvimdiff; do
