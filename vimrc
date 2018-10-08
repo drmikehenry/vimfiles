@@ -4774,12 +4774,12 @@ endif
 let g:local_tagbar_type_rst = {
         \ 'ctagstype': 'rst',
         \ 'ctagsbin' : g:rst2ctags,
-        \ 'ctagsargs' : '-f - --sort=yes',
+        \ 'ctagsargs' : '-f - --sort=yes --sro=»',
         \ 'kinds' : [
         \ 's:sections',
         \ 'i:images'
         \ ],
-        \ 'sro' : '|',
+        \ 'sro' : '»',
         \ 'kind2scope' : {
         \ 's' : 'section',
         \ },
@@ -4803,12 +4803,12 @@ endif
 let g:local_tagbar_type_markdown = {
         \ 'ctagstype': 'markdown',
         \ 'ctagsbin' : g:markdown2ctags,
-        \ 'ctagsargs' : '-f - --sort=yes',
+        \ 'ctagsargs' : '-f - --sort=yes --sro=»',
         \ 'kinds' : [
         \ 's:sections',
         \ 'i:images'
         \ ],
-        \ 'sro' : '|',
+        \ 'sro' : '»',
         \ 'kind2scope' : {
         \ 's' : 'section',
         \ },
