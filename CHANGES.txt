@@ -109,6 +109,10 @@ require adjustment of per-user settings.
 
     sudo rm -f /usr/local/share/vim/vimrc
 
+  This fixes errors in ``~/.vim/filetype.vim`` of the form::
+
+    E10: \ should be followed by /, ? or &
+
 2018-08-09
 ==========
 
