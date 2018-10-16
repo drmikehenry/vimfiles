@@ -164,7 +164,6 @@ notes_endwise	notes.txt	/*notes_endwise*
 notes_eunuch	notes.txt	/*notes_eunuch*
 notes_extensions	notes.txt	/*notes_extensions*
 notes_extline	notes.txt	/*notes_extline*
-notes_fireplace	notes.txt	/*notes_fireplace*
 notes_fixkey	notes.txt	/*notes_fixkey*
 notes_fontdetect	notes.txt	/*notes_fontdetect*
 notes_fontsize	notes.txt	/*notes_fontsize*
@@ -213,7 +212,6 @@ notes_pythoncomplete	notes.txt	/*notes_pythoncomplete*
 notes_quickfix-reflector	notes.txt	/*notes_quickfix-reflector*
 notes_quickfix_keys	notes.txt	/*notes_quickfix_keys*
 notes_rainbow-parens	notes.txt	/*notes_rainbow-parens*
-notes_redl	notes.txt	/*notes_redl*
 notes_repeat	notes.txt	/*notes_repeat*
 notes_runview	notes.txt	/*notes_runview*
 notes_rust	notes.txt	/*notes_rust*
