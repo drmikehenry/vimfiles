@@ -3210,7 +3210,7 @@ if g:EnablePowerline
 endif
 
 if !exists("g:EnableUltiSnips")
-    let g:EnableUltiSnips = has("python") || has("python3")
+    let g:EnableUltiSnips = g:Python != ''
 endif
 
 " -------------------------------------------------------------
@@ -3943,12 +3943,12 @@ function! s:GetSelectedText()
   return join(lines, "\n")
 endfunction
 
-if has("python") || has("python3")
+if g:Python != ''
     " Turn off netrw's gx.
     let g:netrw_nogx = 1
 
     function! ExtractUrl(text)
-    python << endpython
+    execute g:Python . ' << endpython'
 import re
 text = vim.eval("a:text")
 vim.command("let l:result = ''")
@@ -3958,13 +3958,15 @@ vim.command("let l:result = ''")
 # Updated version:
 #   <https://gist.github.com/gruber/249502/>
 urlRe = re.compile(
-    ur"(?i)\b("
-    ur"(?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|"
-        ur"[a-z0-9.\-]+[.][a-z]{2,4}/)"
-    ur"(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+"
-    ur"(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|"
-        ur"""[^\s`!()\[\]{};:'".,<>?\u00AB\u00BB\u201C\u201D\u2018\u2019])"""
-    ur")")
+    r"(?i)\b("
+    r"(?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|"
+        r"[a-z0-9.\-]+[.][a-z]{2,4}/)"
+    r"(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+"
+    r"(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|"
+        r"""[^\s`!()\[\]{};:'".,<>?"""
+             u"\u00AB\u00BB\u201C\u201D\u2018\u2019]"
+        r""")"""
+    r")")
 
 m = urlRe.search(text)
 if m:
