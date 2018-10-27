@@ -18,6 +18,13 @@ require adjustment of per-user settings.
 
 - Update python-pep8-indent plugin to version 2018-09-17.
 
+- Remove Python syntax highlighting plugin.  At one time, this plugin was
+  an improvement over Vim's built-in support, but the plugin is no longer
+  maintained and Vim's built-in support is now better.
+
+  This removes the :Python2Syntax and :Python3Syntax commands.  The built-in
+  support tries to support highlighting for Python 2 and 3 simultaneously.
+
 2018-10-17
 ==========
 
