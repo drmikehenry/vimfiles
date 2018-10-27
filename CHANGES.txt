@@ -16,6 +16,8 @@ require adjustment of per-user settings.
 - Update localvimrc plugin to version 2018-09-24, allowing graceful failure when
   Python is not available.
 
+- Update python-pep8-indent plugin to version 2018-09-17.
+
 2018-10-17
 ==========
 

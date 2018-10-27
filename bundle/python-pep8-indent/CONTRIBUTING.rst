@@ -7,7 +7,6 @@ I’ve collected a few tips to get you started.
 Please:
 
 - *Always* add tests for your code.
-- Add yourself to the AUTHORS.rst file in an alphabetical fashion by first name – no matter how big or small your changes are.
 - Write `good commit messages`_.
 
 
@@ -20,6 +19,14 @@ Running Tests
 - Run the tests with the command::
 
    $ rspec spec
+- Alternatively you can use Docker::
+
+   $ make test_docker
+
+- You can select tests based on line numbers, e.g.::
+
+   $ rspec ./spec/indent/indent_spec.rb:385
+   $ make test_docker RSPEC_ARGS=./spec/indent/indent_spec.rb:385
 
 Thank you for considering to contribute!
 
