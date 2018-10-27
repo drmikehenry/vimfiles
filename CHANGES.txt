@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-10-27
+==========
+
+- Update fontdetect plugin to 0.3.0, supporting Python 3 on OS X (thanks to Mike
+  Haig).
+
 2018-10-17
 ==========
 

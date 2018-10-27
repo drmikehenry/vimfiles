@@ -1,5 +1,5 @@
 *fontdetect.txt*  Plugin to detect installed fonts
-*fontdetect*      Version 0.2.2
+*fontdetect*      Version 0.3.0
 
 ==============================================================================
 1.  Introduction                                    |fontdetect-intro|
@@ -19,7 +19,7 @@ cannot be called until the GUI has started (i.e., until the |GUIEnter| event
 occurs), which means that it can't be used from .vimrc (or .gvimrc).  This
 makes it hard to define other settings that depend on the font (e.g., the
 Powerline plugin's g:Powerline_symbols setting must be defined before
-|GUIEnter| occurs). 
+|GUIEnter| occurs).
 
 In addition, the GTK2 GUI seems unable to determine whether a given font is
 installed, so |getfontname()| always simply returns the input argument,
@@ -48,12 +48,24 @@ Then, re-generate your help tags with Vim's |:helptags| command, e.g.: >
 
   :helptags ~/.vim/doc
 
-You may also install fontdetect using a tool like pathogen[1] by unpacking
+You may also install |fontdetect| using a tool like pathogen[1] by unpacking
 the downloaded archive into a bundle directory, e.g.: >
 
   ~/.vim/bundle/fontdetect
 
 [1]: https://github.com/tpope/vim-pathogen
+
+-------------------------------------------------------------------------------
+2.1   Mac OS X                                      *fontdetect-macosx*
+
+On Mac OS X |fontdetect| utilizes the Cocoa library in Python.  If not using the
+system-supplied Python 2.7 you must install pyobjc-framework-cocoa via pip: >
+
+  pip2 install pyobjc-framework-cocoa
+
+or: >
+
+  pip3 install pyobjc-framework-cocoa
 
 ===============================================================================
 3.  Usage                                           *fontdetect-usage*
@@ -67,8 +79,8 @@ fontdetect#hasFontFamily({fontFamily})          |fontdetect#hasFontFamily|
   Determines if the font family given by the string {fontFamily} exists.
   For example (using GTK2 GUI): >
 
-    if fontdetect#hasFontFamily("DejaVu Sans Mono")
-        let &guifont = "DejaVu Sans Mono 14"
+    if fontdetect#hasFontFamily('DejaVu Sans Mono')
+        let &guifont = 'DejaVu Sans Mono 14'
     endif
 
 fontdetect#firstFontFamily([{fontFamilies}])    |fontdetect#firstFontFamily|
@@ -78,11 +90,15 @@ fontdetect#firstFontFamily([{fontFamilies}])    |fontdetect#firstFontFamily|
   For example (using Windows GUI): >
 
     let &guifont = fontdetect#firstFontFamily([
-        \ "DejaVu Sans Mono", 
-        \ "Consolas"]) . ":h14"
+        \ 'DejaVu Sans Mono',
+        \ 'Consolas']) . ':h14'
 
 ===============================================================================
 4.  ChangeLog                                       |fontdetect-changelog|
+
+Version 0.3.0    Date    2018-10-27                 *fontdetect-changelog-0.3.0*
+
+  - Support for Python 3 in addition to Python 2 (thanks to Mike Haig).
 
 Version 0.2.2    Date    2013-10-03                 *fontdetect-changelog-0.2.2*
 
@@ -110,6 +126,10 @@ Developed by Michael Henry (vim at drmikehenry.com).
 Distributed under Vim's |license|.
 
 Git repository:       https://github.com/drmikehenry/vim-fontdetect
+
+Contributors (in chronological order):
+
+- Mike Haig
 
 ===============================================================================
 vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:

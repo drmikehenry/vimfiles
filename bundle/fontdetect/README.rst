@@ -13,9 +13,9 @@ For example (using GTK2 GUI)::
 
 At present, the following platforms are supported:
 
-- Linux (using GTK2 GUI)
+- Linux (using GTK2 or GTK3 GUI)
 - Windows
-- Mac OS X
+- Mac OS X (requires Python integration)
 
 See documentation in doc/fontdetect.txt for installation instructions.
 
