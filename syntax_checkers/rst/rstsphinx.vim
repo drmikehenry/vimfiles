@@ -11,11 +11,12 @@ set cpo&vim
 let s:temp_dir = tempname()
 lockvar s:temp_dir
 
-if has("python")
+if g:Python != ''
     function! s:compute_hash(s)
-python << endpython
+execute g:Python . ' << endpython'
 import hashlib
-vim.command("let l:hash = '%s'" % (hashlib.md5(vim.eval("a:s"),).hexdigest()))
+vim.command("let l:hash = '%s'" %
+    (hashlib.md5(vim.eval("a:s").encode("utf8")).hexdigest()))
 endpython
 
         return l:hash
@@ -59,7 +60,7 @@ function! SyntaxCheckers_rst_rstsphinx_GetLocList() dict
     return []
 endfunction
 
-if has("python")
+if g:Python != ''
     call g:SyntasticRegistry.CreateAndRegisterChecker({
         \ 'filetype': 'rst',
         \ 'name': 'rstsphinx',

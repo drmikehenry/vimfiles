@@ -5809,7 +5809,7 @@ function! SetupRst()
     " every time.
     setlocal foldlevel=99
 
-    if has("python") && findfile('conf.py', '.;') != ''
+    if g:Python != '' && findfile('conf.py', '.;') != ''
         let b:syntastic_checkers = ['rstsphinx']
     endif
 endfunction
