@@ -1,5 +1,5 @@
 " Name:    localvimrc.vim
-" Version: 2.7.0
+" Version: 3.0.1
 " Author:  Markus Braun <markus.braun@krawel.de>
 " Summary: Vim plugin to search local vimrc files and load them.
 " Licence: This program is free software: you can redistribute it and/or modify
@@ -444,7 +444,8 @@ function! s:LocalVimRC()
             exec "sandbox " . l:command
             call s:LocalVimRCDebug(1, "sourced " . l:rcfile)
           catch ^Vim\%((\a\+)\)\=:E48
-            call s:LocalVimRCDebug(1, "unable to use sandbox on '" . l:rcfile . "'")
+            let l:message = printf("unable to use sandbox on '%s': %s (%s)", l:rcfile, v:exception, v:throwpoint)
+            call s:LocalVimRCDebug(1, l:message)
 
             if (s:localvimrc_ask == 1)
               if (l:sandbox_answer !~? "^a$")
@@ -456,11 +457,11 @@ function! s:LocalVimRC()
                   let l:sandbox_answer = ""
                   while (l:sandbox_answer !~? '^[ynaq]$')
                     if (s:localvimrc_persistent == 0)
-                      let l:message = "localvimrc: unable to use 'sandbox' for " . l:rcfile . ".\nlocalvimrc: Source it anyway? ([y]es/[n]o/[a]ll/[q]uit) "
+                      let l:message .= ".\nlocalvimrc: Source it anyway? ([y]es/[n]o/[a]ll/[q]uit) "
                     elseif (s:localvimrc_persistent == 1)
-                      let l:message = "localvimrc: unable to use 'sandbox' for " . l:rcfile . ".\nlocalvimrc: Source it anyway? ([y]es/[n]o/[a]ll/[q]uit ; persistent [Y]es/[N]o/[A]ll) "
+                      let l:message .= ".\nlocalvimrc: Source it anyway? ([y]es/[n]o/[a]ll/[q]uit ; persistent [Y]es/[N]o/[A]ll) "
                     else
-                      let l:message = "localvimrc: unable to use 'sandbox' for " . l:rcfile . ".\nlocalvimrc: Source it anyway? ([y]es/[n]o/[a]ll/[q]uit) "
+                      let l:message .= ".\nlocalvimrc: Source it anyway? ([y]es/[n]o/[a]ll/[q]uit) "
                     endif
 
                     " turn off possible previous :silent command to force this
@@ -617,15 +618,9 @@ endfunction
 " calculate sha256 checksum using python hashlib
 "
 function! s:LocalVimRcCalcSHA256(text)
-  " run correct python version
-  exec s:localvimrc_python_start
-import vim
-import hashlib
-
-text = vim.eval("a:text")
-checksum = hashlib.sha256(text.encode('utf-8'))
-vim.command("return \"%s\"" % checksum.hexdigest())
-EOF
+  exec s:localvimrc_python_command . " text = vim.eval('a:text')"
+  exec s:localvimrc_python_command . " checksum = hashlib.sha256(text.encode('utf-8'))"
+  exec s:localvimrc_python_command . " vim.command('return \"%s\"' % checksum.hexdigest())"
 endfunction
 
 " Function: s:LocalVimRCCalcChecksum(filename) {{{2
@@ -984,22 +979,48 @@ let s:localvimrc_finish = 0
 " initialize debug message buffer {{{2
 let s:localvimrc_debug_message = []
 
+" determine python version {{{2
+" for each available python version try to load the required modules and use
+" this version only if loading worked
+let s:localvimrc_python_available = 0
+let s:localvimrc_python_command = "no working python available"
+if s:localvimrc_python_available == 0 && has("pythonx")
+  try
+    pythonx import hashlib, vim
+    let s:localvimrc_python_available = 1
+    let s:localvimrc_python_command = "pythonx"
+  catch
+    call s:LocalVimRCDebug(1, "pythonx is available but not working")
+  endtry
+endif
+
+if s:localvimrc_python_available == 0 && has("python")
+  try
+    python import hashlib, vim
+    let s:localvimrc_python_available = 1
+    let s:localvimrc_python_command = "python"
+  catch
+    call s:LocalVimRCDebug(1, "python is available but not working")
+  endtry
+endif
+
+if s:localvimrc_python_available == 0 && has("python3")
+  try
+    python3 import hashlib, vim
+    let s:localvimrc_python_available = 1
+    let s:localvimrc_python_command = "python3"
+  catch
+    call s:LocalVimRCDebug(1, "python3 is available but not working")
+  endtry
+endif
+
 " determine which function shall be used to calculate checksums {{{2
 if exists("*sha256")
   let s:localvimrc_checksum_func = function("sha256")
-elseif has("python") || has("python3")
+elseif s:localvimrc_python_available == 1
   let s:localvimrc_checksum_func = function("s:LocalVimRcCalcSHA256")
 else
   let s:localvimrc_checksum_func = function("s:LocalVimRCCalcFNV")
-endif
-
-" determine python version {{{2
-if has("pythonx")
-  let s:localvimrc_python_start = "pythonx << EOF"
-elseif has("python")
-  let s:localvimrc_python_start = "python << EOF"
-elseif has("python3")
-  let s:localvimrc_python_start = "python3 << EOF"
 endif
 
 " Section: Report settings {{{1
@@ -1022,7 +1043,7 @@ call s:LocalVimRCDebug(1, "localvimrc_autocmd = \"" . string(s:localvimrc_autocm
 call s:LocalVimRCDebug(1, "localvimrc_debug = \"" . string(g:localvimrc_debug) . "\"")
 call s:LocalVimRCDebug(1, "localvimrc_debug_lines = \"" . string(s:localvimrc_debug_lines) . "\"")
 call s:LocalVimRCDebug(1, "localvimrc_checksum_func = \"" . string(s:localvimrc_checksum_func) . "\"")
-call s:LocalVimRCDebug(1, "localvimrc_python_start = \"" . string(s:localvimrc_python_start) . "\"")
+call s:LocalVimRCDebug(1, "localvimrc_python_command = \"" . string(s:localvimrc_python_command) . "\"")
 call s:LocalVimRCDebug(1, "== END settings ==================================")
 
 " Section: Commands {{{1

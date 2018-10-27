@@ -13,6 +13,9 @@ require adjustment of per-user settings.
 - Update fontdetect plugin to 0.3.0, supporting Python 3 on OS X (thanks to Mike
   Haig).
 
+- Update localvimrc plugin to version 2018-09-24, allowing graceful failure when
+  Python is not available.
+
 2018-10-17
 ==========
 
