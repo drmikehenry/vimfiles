@@ -488,6 +488,15 @@ else
     let g:Python = ''
 endif
 
+" Determine best system Python executable.
+if executable('python3') == 1
+    let g:PythonExecutable = 'python3'
+elseif executable('python') == 1
+    let g:PythonExecutable = 'python'
+else
+    let g:PythonExecutable = ''
+endif
+
 " Setup Python's sys.path to include any "pylib" directories found
 " as immediate children of paths in Vim's 'runtimepath'.  This allows
 " for more easily sharing Python modules.
@@ -2106,7 +2115,7 @@ command! -nargs=+ -complete=customlist,FileCompleteList FFG
 " up-to-date as any system-provided "ack" executable.  This will avoid picking
 " up old 1.x versions of "ack" that might be found on the system.
 if !exists('g:UseSystemAck')
-    if executable('perl') == 1 && executable('python') == 1
+    if executable('perl') == 1 && g:PythonExecutable != ''
         " We've got enough to reliably use the "ack" in vimfiles.
         let g:UseSystemAck = 0
     else
@@ -2134,8 +2143,9 @@ if !exists('g:AckExecutable')
         " fails to match this line::
         "   x = "hello";
         " With the Python work-around, the invocation works.
-        if executable('python')
-            let g:AckExecutable = 'python ' . $VIMFILES . '/tool/execargs.py '
+        if g:PythonExecutable != ''
+            let g:AckExecutable = g:PythonExecutable . ' '
+                    \ . $VIMFILES . '/tool/execargs.py '
         else
             let g:AckExecutable = ''
         endif
