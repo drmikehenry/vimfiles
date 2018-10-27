@@ -5056,7 +5056,7 @@ function! SetupUltiSnipsMapping()
     inoremap <silent> <M-u><M-l> <C-r>=UltiSnips#ListSnippets()<CR>
 endfunction
 
-if has("python")
+if g:Python != ''
     function! EditSnippets()
         if exists("b:UltiSnipsSnippetDirectories")
             let l:snippetDirs = b:UltiSnipsSnippetDirectories
@@ -5066,7 +5066,7 @@ if has("python")
             let l:snippetDirs = ["UltiSnips"]
         endif
 
-python << endpython
+execute g:Python . ' << endpython'
 import os.path
 
 primary_filetype = vim.eval("&ft")
