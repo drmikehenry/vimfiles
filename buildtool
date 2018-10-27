@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Works with either Python 2 or Python 3.
 
 from __future__ import print_function
 
@@ -245,7 +246,7 @@ def versioned_sources(root):
 def sorted_versioned_sources(ver_sources):
     return sorted(
         ver_sources,
-        key=lambda version_path: map(int, version_path[0].split('.')),
+        key=lambda version_path: list(map(int, version_path[0].split('.'))),
         reverse=True)
 
 

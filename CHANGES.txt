@@ -25,6 +25,8 @@ require adjustment of per-user settings.
   This removes the :Python2Syntax and :Python3Syntax commands.  The built-in
   support tries to support highlighting for Python 2 and 3 simultaneously.
 
+- Support Python 3 with buildtool.
+
 2018-10-17
 ==========
 
