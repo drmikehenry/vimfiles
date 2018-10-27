@@ -473,13 +473,28 @@ endfunction
 " Python path management
 " -------------------------------------------------------------
 
+" Temporary hack to bias toward Python 2 for now.
+if has('python')
+    " Nothing to do, just need the side effects from the has() call.
+endif
+
+if has('pythonx')
+    let g:Python = 'pythonx'
+elseif has('python3')
+    let g:Python = 'python3'
+elseif has('python')
+    let g:Python = 'python'
+else
+    let g:Python = ''
+endif
+
 " Setup Python's sys.path to include any "pylib" directories found
 " as immediate children of paths in Vim's 'runtimepath'.  This allows
 " for more easily sharing Python modules.
 
-if has('python')
+if g:Python != ''
 function! AugmentPythonPath()
-python << endpython
+    execute g:Python . ' << endpython'
 import vim
 import os
 for p in vim.eval("PathSplit(&runtimepath)"):
