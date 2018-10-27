@@ -72,7 +72,6 @@
     Rust - Language support for Rust                    |notes_rust|
     Scriptease - Debugging tools for Vimscripts         |notes_scriptease|
     ScrollColor - Scroll through color schemes          |notes_scrollcolor|
-    Selfdot - Changes "." to "self." in Python          |notes_selfdot|
     Session - Provides better session management        |notes_session|
     Signature - Signs and helpers for bookmarks         |notes_signature|
     Sneak - Motion based on two-character searching     |notes_sneak|
@@ -2166,22 +2165,6 @@ Installation:
     map \n
     map \p
     map \c
-
-------------------------------------------------------------------------------
-SELFDOT                                                 *notes_selfdot*
-  Changes "." to "self." in Python                      |notes_selfdot|
-
-(Temporarily removed, as it's not Python-specific and is impossible
-to work around.)
-
-Pressing "." in insert mode will cause "self." to be inserted
-in cases where "." would be a syntax error in Python.
-
-Version 1.0.2 from:
-http://www.vim.org/scripts/script.php?script_id=2911
-
-Installation:
-- Copy to ~/.vim/plugin
 
 ------------------------------------------------------------------------------
 SESSION                                                 *notes_session*
