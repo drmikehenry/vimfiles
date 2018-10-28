@@ -207,7 +207,6 @@ notes_plugins	notes.txt	/*notes_plugins*
 notes_powerline	notes.txt	/*notes_powerline*
 notes_project	notes.txt	/*notes_project*
 notes_python_indent	notes.txt	/*notes_python_indent*
-notes_pythoncomplete	notes.txt	/*notes_pythoncomplete*
 notes_quickfix-reflector	notes.txt	/*notes_quickfix-reflector*
 notes_quickfix_keys	notes.txt	/*notes_quickfix_keys*
 notes_rainbow-parens	notes.txt	/*notes_rainbow-parens*

@@ -63,7 +63,6 @@
     Pathogen - Runtime path management for bundles      |notes_pathogen|
     Powerline - The ultimate vim statusline utility     |notes_powerline|
     Project - Managing "projects" of files              |notes_project|
-    PythonComplete - Python Omnicompletion              |notes_pythoncomplete|
     Quickfix-reflector - edit QuickFix and save changes |notes_quickfix-reflector|
     Rainbow Parentheses - Highlight nested parens       |notes_rainbow-parens|
     Repeat - Repeat operations for supported plugins    |notes_repeat|
@@ -1963,19 +1962,6 @@ http://www.vim.org/scripts/script.php?script_id=69
 Installation:
 - Unzip in ~/.vim/
 - :helptags ~/.vim/doc
-
-------------------------------------------------------------------------------
-PYTHONCOMPLETE                                          *notes_pythoncomplete*
-  Python Omnicompletion
-
-Although this is distributed with Vim, it lags behind in the official
-distribution.
-
-Version 0.9 from:
-http://www.vim.org/scripts/script.php?script_id=1542
-
-Installation:
-- Install as ~/.vim/autoload/pythoncomplete.vim
 
 ------------------------------------------------------------------------------
 QUICKFIX-REFLECTOR                                      *notes_quickfix-reflector*
