@@ -7,6 +7,31 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2018-12-16
+==========
+
+- BREAKING CHANGE:  Move "pylib" directory and contents to "pythonx" and adjust
+  the Python path augmentation to follow the pattern described in
+  ``python-special-path``, introduced in Vim 7.3.1163.  Vim version 7.3.1163 and
+  newer, compiled with Python support, automatically attempt to load modules in
+  "python2", "python3", and "pythonx" directories.  Continue to augment the
+  Python path with all "python2", "python3", and "pythonx" directories in Vim
+  runtimepath for Vim versions older than 7.3.1163 compiled with Python 2 and/or
+  Python 3 support.
+
+  With this change, Python scripts need to be located in a "python2", "python3",
+  or "pythonx" based on language support.  See ``:help python-special-path`` for
+  more information.
+
+  Future uses of Python in vimfiles should support Python 3.
+
+- Force Python 2 if compiled with both Python 2 and Python 3 support and both
+  interpreters are available.  To disable forcing and allow the selection
+  pattern of ``pythonx`` then ``python3`` then ``python`` place the following
+  in your ``VIMRC_BEFORE`` file::
+
+    let g:ForcePython2 = 0
+
 2018-10-28
 ==========
 

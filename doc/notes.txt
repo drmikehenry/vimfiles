@@ -101,8 +101,55 @@
     Python indentation support                          |notes_python_indent|
     Tmux syntax - Syntax definitions for tmux.conf      |notes_tmux_syntax|
 5.  Customizations                                      |notes_customizations|
-    Quickfix keys                                       |notes_quickfix_keys|
+    Overrides                                           |notes_overrides|
+    Python Path                                         |notes_python_path|
+    GUI options                                         |notes_guioptions|
+    Colorschemes                                        |notes_colorschemes|
+    Fonts                                               |notes_fonts|
+    Spell checking                                      |notes_spell_checking|
+    Buffer switchers and filesystem navigators          |notes_buffer_switchers|
+    Building and Running                                |notes_building_running|
+    Tab page support                                    |notes_tab_page|
+    QuickFix keys                                       |notes_quickfix_keys|
+    QuickFix window, diff mode                          |notes_quickfix_win|
+    Dragging text in four directions                    |notes_dragging_text|
+    Deleting "Rubbish" Whitespace                       |notes_deleting_rubbish|
+    Deleting Trailing Whitespace                        |notes_deleting_trailing|
+    Re-formatting text                                  |notes_reformatting|
+    Moving "out" hierarchically                         |notes_moving_out|
+    Additional CTRL-o mappings                          |notes_ctrl_o|
+    Pressing <Enter> removes trailing whitespace        |notes_enter|
+    Movement by screen lines                            |notes_movement|
+    Emacs-style command-line editing                    |notes_emac_commandline|
+    Clipboard support                                   |notes_clipboard|
+    Putting most-recently-yanked text                   |notes_putting_yanked|
+    Yank-related mappings                               |notes_yank|
+    Search-related customizations                       |notes_search|
+    findx-related commands                              |notes_findx|
+    :G 'search pattern'                                 |notes_G|
+    Pasting lines into Vim                              |notes_pasting|
+    Tag files                                           |notes_tag_files|
+    Cscope                                              |notes_cscope|
+    Window Layout                                       |notes_window_layout|
+    QuickFix and Location Window                        |notes_quickfix_location|
+    Alternatives to :bufdo, :windo, :tabdo              |notes_alternatives|
+    Highlight command                                   |notes_highlight|
+    colorcolumn                                         |notes_colorcolumn|
+    Help-related mappings                               |notes_help_mappings|
+    Folding by regular expression                       |notes_folding_regex|
+    QuickFix entry folding                              |notes_quickfix_folding|
+    Converting Unicode symbols to ASCII                 |notes_unicode|
+    Converting identifer case                           |notes_identifier_case|
+    Conflict marker navigation                          |notes_conflict_marker|
+    Embedded language support                           |notes_embedded_lang|
+    Source control integration                          |notes_source_control|
+
 6.  Tips                                                |notes_tips|
+    Command-line window                                 |notes_tips_commandline|
+    Debugging Vim problems                              |notes_tips_debugging|
+    Quitting with non-zero return code                  |notes_tips_quitting|
+    Redirecting Vim command-line output                 |notes_tips_redirecting|
+    Using <C-q> and <C-s> in console Vim                |notes_tips_xon_xoff|
 
 
 ==============================================================================
@@ -3193,18 +3240,26 @@ vimrc-before.vim, vimrc-after.vim             *VIMRC_BEFORE*   *VIMRC_AFTER*
   in the opposite order, giving them the last word on setting the variables.
 
 ------------------------------------------------------------------------------
-Python Path
+Python Path                                             *notes_python_path*
 
 Python's sys.path is used to locate Python modules when import commands are
 issued.  Especially for use with UltiSnips, it can be useful for Vim's
 embedded Python interpreter to have an augmented sys.path so that helper
 modules may be used from multiple places conveniently.
 
-For this reason, the function AugmentPythonPath() is called from vimrc to
-scan all paths in Vim's 'runtimepath' for child directories named "pylib" and
-adds them to Python's sys.path (unless they are already present).  If a module
-lives in such a "pylib" path, it may be imported from any Python code executed
+Starting in Vim 7.3.1163, Vim will automatically look in 'python2', 'python3',
+and 'pythonx' child directories of all paths located in 'runtimepath'.  If a
+module lives in such a path, it may be imported from any Python code executed
 within Vim.
+
+See |python-special-path| for more information.
+
+To maintain backwards compatibility with older versions of Vim, the function
+AugmentPythonPath() is called from vimrc to scan all paths in Vim's
+'runtimepath' for child directories named "python2", "python3", or "pythonx" and
+adds them to Python's sys.path (unless they are already present).  If a module
+lives in such a path, it may be imported from any Python code executed within
+Vim.
 
 ------------------------------------------------------------------------------
 GUI options                                    *notes_guioptions*
@@ -3226,7 +3281,7 @@ below lines in your |VIMRC_AFTER| script to bring back these GUI features. >
   set guioptions+=T
 
 ------------------------------------------------------------------------------
-Colorschemes
+Colorschemes                                            *notes_colorschemes*
 
 By default, vimfiles chooses a default colorscheme.  To override this, setup
 your preferred colorscheme in |VIMRC_BEFORE|.  For example, for user
@@ -3269,7 +3324,7 @@ Then adjust the client settings by adding these lines to either ~/.ssh/config
       SendEnv COLORFGBG
 
 ------------------------------------------------------------------------------
-Fonts
+Fonts                                                   *notes_fonts*
 
 By default, vimfiles chooses a font.  To override this, setup your preferred
 font using a |VIMRC_BEFORE| file.
@@ -3299,7 +3354,7 @@ size if your preferred fonts aren't available).  For example:
   endif
 
 ------------------------------------------------------------------------------
-Spell checking
+Spell checking                                          *notes_spell_checking*
 
 In order to allow per-user overriding of spell-check settings, there are two
 variables for configuring spell-checking.  Adjust these variables in per-user
@@ -3324,7 +3379,7 @@ Add "perl" filetype to the "<source>" group: >
 See g:SpellMap documentation in vimrc for more detail.
 
 ------------------------------------------------------------------------------
-Buffer switchers and filesystem navigators
+Buffer switchers and filesystem navigators              *notes_buffer_switchers*
 
 Lusty Juggler - rapidly switch among buffers
 
@@ -3347,7 +3402,7 @@ Buf Explorer - display all buffers in a list, switch or delete buffers, etc.
   \be    Invoke BufExplorer.
 
 ------------------------------------------------------------------------------
-Building and Running
+Building and Running                                    *notes_building_running*
 
 Press <F9> to save all buffers and execute :make in current directory.
 
@@ -3377,7 +3432,7 @@ they are executable, e.g.: >
 Note: At present, fifosignal and fifowait are Unix-only.
 
 ------------------------------------------------------------------------------
-Tab page support
+Tab page support                                        *notes_tab_page*
 
 Use <C-S-PageUp>/<C-S-PageDown> in Gvim to move the current tab page left or
 right.  This unfortunately doesn't work in console Vim because those key
@@ -3400,7 +3455,7 @@ The above mappings are active in QuickFix and Location List windows.
 Note: "O + unshifted" is the same as "O + shifted" (so "Oh" = "OH", etc.).
 
 ------------------------------------------------------------------------------
-QuickFix window, diff mode
+QuickFix window, diff mode                              *notes_quickfix_win*
 
 Use <F4> and <S-F4> to navigate forward and backward.  When diff mode is
 active, browses through diff hunks; otherwise, when a Location List window is
@@ -3441,7 +3496,7 @@ Built-in commands for more manual control:
     Remove diff mode for all windows.
 
 ------------------------------------------------------------------------------
-Dragging text in four directions
+Dragging text in four directions                        *notes_dragging_text*
 
 Text may be "dragged" in any of the four directions (Up, Down, Left, or
 Right).  In normal and insert modes, the current line will be dragged; in
@@ -3475,14 +3530,14 @@ Dragging right:
   <Space>       (visual mode)
 
 ------------------------------------------------------------------------------
-Deleting "Rubbish" Whitespace
+Deleting "Rubbish" Whitespace                           *notes_deleting_rubbish*
 
 The normal-mode mapping "drw" deletes "rubbish" whitespace, bringing a
 run of spaces down to a single space character, or a group of consecutive
 blank lines down to a single blank line.
 
 ------------------------------------------------------------------------------
-Deleting Trailing Whitespace
+Deleting Trailing Whitespace                            *notes_deleting_trailing*
 
 The normal-mode command :StripTrailingWhitespace will remove all trailing
 whitepsace from the current buffer.  It accepts a line range as well, such
@@ -3492,7 +3547,7 @@ that selecting a visual range first followed by typing
 <Leader><Leader>$ is mapped to :StripTrailingWhitespace for convenience.
 
 ------------------------------------------------------------------------------
-Re-formatting text
+Re-formatting text                                      *notes_reformatting*
 
 The useless key "Q" is mapped to the "gq" reformatting operator.  Pressing
 "QQ" on a line reformats that line.  Pressing "Q" in visual mode reformats the
@@ -3507,7 +3562,7 @@ single long line.
 For normal and visual modes, <Leader>q does the same as <M-q>.
 
 ------------------------------------------------------------------------------
-Moving "out" hierarchically
+Moving "out" hierarchically                             *notes_moving_out*
 
 Press <C-o><C-o> in insert or visual modes to exit "out" to the containing
 context.  For example, if your cursor is between parentheses, pressing
@@ -3522,7 +3577,7 @@ The following may be "exited": >
   break;
 
 ------------------------------------------------------------------------------
-Additional CTRL-o mappings
+Additional CTRL-o mappings                              *notes_ctrl_o*
 
 <C-o>o      - Open a line below this one
 <C-o>;      - Append ";" to the current line
@@ -3534,7 +3589,7 @@ Additional CTRL-o mappings
 <C-o><C-l>  - Exit visual modes at end of selected text
 
 ------------------------------------------------------------------------------
-Pressing <Enter> removes trailing whitespace
+Pressing <Enter> removes trailing whitespace            *notes_enter*
 
 To help avoid cluttering the file with trailing whitespace, pressing <Enter> in
 insert mode will strip trailing whitespace from the previous line.  This is
@@ -3556,7 +3611,7 @@ desirable in the course of normal editing that pressing <Enter> in the middle
 of a line should preserve whitespace.
 
 ------------------------------------------------------------------------------
-Movement by screen lines
+Movement by screen lines                                *notes_movement*
 
 The standard movement keys have been remapped to move by screen lines instead
 of logical lines.  For "short" lines, there is no difference, but for wrapped
@@ -3564,7 +3619,7 @@ lines, this reverses the default behavior of using logical lines.  Use "g" and
 the original key to move by logical lines.
 
 ------------------------------------------------------------------------------
-Emacs-style command-line editing
+Emacs-style command-line editing                        *notes_emac_commandline*
 
 The standard Emacs-style command-line editing keys as used in Bash have been
 mapped for command-line mode.  These include:
@@ -3594,7 +3649,7 @@ Original meanings:
 <C-p>   Prev. match after wildchar, or recall prev. command-line history
 
 ------------------------------------------------------------------------------
-Clipboard support
+Clipboard support                                       *notes_clipboard*
 
 Because the Windows standard keys for clipboard support are already taken in
 Vim, they have been mapped to the same keys using Alt:
@@ -3633,7 +3688,7 @@ the primary selection, use: >
   let @*=@+
 
 ------------------------------------------------------------------------------
-Putting most-recently-yanked text
+Putting most-recently-yanked text                       *notes_putting_yanked*
 
 By default, yanking (e.g, "yy") copies your text into the unnamed register,
 and putting (e.g., "p") puts text from the unnamed register into your
@@ -3652,7 +3707,7 @@ To make this easier, a visual mode mapping of capital P performs a put from
 register 0.  This allows a yank followed by repeated selections and puts.
 
 ------------------------------------------------------------------------------
-Yank-related mappings
+Yank-related mappings                                   *notes_yank*
 
 Normal-mode "Y" has been remapped to mean "yank to end of line" (equivalent to
 "y$"), for consistency with most other uppercase variants (e.g., "D", "C", ...).
@@ -3665,7 +3720,7 @@ registers "+ and "*).  This is convenient when yanking shell commands to be
 pasted into a terminal.
 
 ------------------------------------------------------------------------------
-Search-related customizations
+Search-related customizations                           *notes_search*
 
 Vim's standard "*" operator (which searches for the word under the cursor) has
 been modified to leave the cursor unmoved.  In visual mode, the selection
@@ -3695,7 +3750,7 @@ mode) or the current selection (in Visual mode) using :Ag! (when available) or
 Use the mapping \z after a search to fold all but the matching lines.
 
 ------------------------------------------------------------------------------
-findx-related commands
+findx-related commands                                  *notes_findx*
 
 The external findx utility may be invoked using any of the below commands: >
 
@@ -3747,7 +3802,7 @@ Use the following:
   "I said ""That's painful"" in my loudest voice."
 
 ------------------------------------------------------------------------------
-Pasting lines into Vim
+Pasting lines into Vim                                  *notes_pasting*
 
 When pasting lines copied from outside Vim, the content is subject to
 auto-indentation at each <CR>.  The |'paste'| variable may be set to
@@ -3762,7 +3817,7 @@ mappings are disabled, so <S-INSERT> won't be interpreted as the paste
 operation.
 
 ------------------------------------------------------------------------------
-Tag files
+Tag files                                               *notes_tag_files*
 
 Tag files (named "tags") will now be searched starting in the current working
 directory and all parent directories toward the root.
@@ -3774,7 +3829,7 @@ The custom :Ctags command will launch "ctags-std" in the current directory to
 update the tags.
 
 ------------------------------------------------------------------------------
-Cscope
+Cscope                                                  *notes_cscope*
 
 Key bindings have been setup for cscope (:help cscope):
 
@@ -3788,7 +3843,7 @@ Key bindings have been setup for cscope (:help cscope):
 <C-\>t     :cs find t on current word under cursor
 
 ------------------------------------------------------------------------------
-Window Layout
+Window Layout                                           *notes_window_layout*
 
 Usage:
 
@@ -3845,7 +3900,7 @@ controlled by the following global variables: >
   let g:QuickFixWinHeight = 10
 
 ------------------------------------------------------------------------------
-QuickFix and Location Window
+QuickFix and Location Window                            *notes_quickfix_location*
 
 <C-q><C-l>  Toggle the Location window on or off
 <Space>ql   Toggle the Location window on or off
@@ -3855,7 +3910,7 @@ QuickFix and Location Window
 NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
 
 ------------------------------------------------------------------------------
-Alternatives to :bufdo, :windo, :tabdo
+Alternatives to :bufdo, :windo, :tabdo                  *notes_alternatives*
 
 These behave as their built-in counterparts but restore the current
 window, buffer, or tab when they complete.
@@ -3867,7 +3922,7 @@ Usage:
 :Tabdo command
 
 ------------------------------------------------------------------------------
-Highlight command
+Highlight command                                       *notes_highlight*
 
 The custom command :Highlight provides highlighting of non-conforming coding
 styles to make it easier to locate problems during editing.
@@ -3910,7 +3965,7 @@ set of highlight items.  For this reason, it's not recommended to have
 ":Highlight no*" in your configuration.
 
 ------------------------------------------------------------------------------
-colorcolumn (highlighting first column in right margin)
+colorcolumn (highlighting first column in right margin) *notes_colorcolumn*
 
 Where supported, Vim's 'colorcolumn' feature will be enabled and set to create
 an indicator of the right margin.  A vertical line indicates the first column
@@ -3920,7 +3975,7 @@ place the following in |VIMRC_AFTER|: >
   :set colorcolumn=
 
 ------------------------------------------------------------------------------
-Help-related mappings
+Help-related mappings                                   *notes_help_mappings*
 
 The following normal-mode mappings toggle the help window on and off:
 
@@ -3937,7 +3992,7 @@ If the help window is already open, it will be closed; otherwise, the most
 recent help file will be re-opened.
 
 ------------------------------------------------------------------------------
-Folding by regular expression
+Folding by regular expression                           *notes_folding_regex*
 
 To fold away lines that match a regex, use the custom command :Fold: >
     :Fold regex         ; lines matching regex are hidden
@@ -3955,7 +4010,7 @@ To fold away comments and blank lines, use this custom command: >
     :FoldComments
 
 ------------------------------------------------------------------------------
-QuickFix entry folding
+QuickFix entry folding                                  *notes_quickfix_folding*
 
 To group lines of QuickFix output together by files or by directories, use one
 of the following commands when a QuickFix or Location List window is focused:
@@ -3984,7 +4039,7 @@ In Gvim, you may also click on the symbols in the left margin of the QuickFix
 or Location List window to toggle individual folds.
 
 ------------------------------------------------------------------------------
-Converting Unicode symbols to ASCII
+Converting Unicode symbols to ASCII                     *notes_unicode*
 
 Use :ToAscii to convert a range of lines (defaulting to the entire buffer)
 into ASCII.  Mainly this converts several kinds of quotes into ASCII quotes
@@ -4121,7 +4176,7 @@ file will show the diffs against the most recent comment in source control (see
 may be converted back via <M-r>il.
 
 ------------------------------------------------------------------------------
-Conflict marker navigation
+Conflict marker navigation                              *notes_conflict_marker*
 
 Inspired by vim-unimpaired, keybindings have been setup for move between
 conflict markers:
@@ -4132,7 +4187,7 @@ conflict markers:
 [N    Go to the end of the previous conflict marker.
 
 ------------------------------------------------------------------------------
-Embedded language support
+Embedded language support                               *notes_embedded_lang*
 
 The reStructuredText and Markdown support has been extended to support color
 syntax highlighting for a subset of languages.  "g:rstEmbeddedLangs" controls
@@ -4142,7 +4197,7 @@ as reStructuredText by default.  You can set "g:markdownEmbeddedLangs" to a
 different list, if you desire.
 
 ------------------------------------------------------------------------------
-Source control integration
+Source control integration                              *notes_source_control*
 
 During a Git rebase operation, the following additional mappings are available:
 
@@ -4180,7 +4235,7 @@ If your syntax highlighting gets out of sync, try the command: >
     :syntax sync fromstart
 
 ------------------------------------------------------------------------------
-Command-line window
+Command-line window                                     *notes_tips_commandline*
 
 Special window for editing current and historical command and searches.
 
@@ -4196,7 +4251,7 @@ CTRL-c to exit.
 Press <CR> on a line in the window to execute it.
 
 ------------------------------------------------------------------------------
-Debugging Vim problems
+Debugging Vim problems                                  *notes_tips_debugging*
 
 - To disable plugins, ~/.vimrc, and ~/.gvimrc, use ``-u NONE``.
 - Use -N to set nocompatible.
@@ -4210,7 +4265,7 @@ Displaying characters under cursor: >
     g8  - bytes in UTF-8 character
 
 ------------------------------------------------------------------------------
-Quitting with non-zero return code
+Quitting with non-zero return code                      *notes_tips_quitting*
 
 When using Vim as the "fix command" editor in Bash (via the ``fc`` command
 or via ``Ctrl-x Ctrl-e`` - "man bash" for details on fc), a successful
@@ -4225,7 +4280,7 @@ This command is the same as :qa! but returns failure so Bash will ignore
 the edited command.
 
 ------------------------------------------------------------------------------
-Redirecting Vim command-line output
+Redirecting Vim command-line output                     *notes_tips_redirecting*
 
 To capture the output generated by a Vim Ex command (e.g., |:map|), the
 built-in |:redir| command is useful.  For example: >

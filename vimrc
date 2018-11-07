@@ -473,9 +473,17 @@ endfunction
 " Python path management
 " -------------------------------------------------------------
 
-" Temporary hack to bias toward Python 2 for now.
+" Temporary hack to bias toward Python 2 for now.  Can be disabled by using:
+"   let g:ForcePython2 = 0
+" in the per-user VIMRC_BEFORE file.
+if !exists("g:ForcePython2")
+    let g:ForcePython2 = 1
+endif
+
+if g:ForcePython2
 if has('python')
     " Nothing to do, just need the side effects from the has() call.
+endif
 endif
 
 if has('pythonx')
@@ -497,22 +505,34 @@ else
     let g:PythonExecutable = ''
 endif
 
-" Setup Python's sys.path to include any "pylib" directories found
-" as immediate children of paths in Vim's 'runtimepath'.  This allows
-" for more easily sharing Python modules.
+" Setup Python's sys.path to include any "python2", "python3", or "pythonx"
+" directories found as immediate children of paths in Vim's 'runtimepath'.  This
+" allows for more easily sharing Python modules.
 
+" Only need to run if Vim is not at least 7.3.1163.
+" See :help python-special-path (>=7.3.1163) for more information.
 if g:Python != ''
+if v:version <# 703 || (v:version is 703 && !has('patch1163'))
 function! AugmentPythonPath()
+    let l:pythonFolders = ['pythonx']
+    if has('python3')
+        let l:pythonFolders += ['python3']
+    endif
+    if has('python')
+        let l:pythonFolders += ['python2']
+    endif
     execute g:Python . ' << endpython'
 import vim
 import os
 for p in vim.eval("PathSplit(&runtimepath)"):
-    libPath = os.path.join(p, "pylib")
-    if os.path.isdir(libPath) and libPath not in sys.path:
-        sys.path.append(libPath)
+    for f in vim.eval("l:pythonFolders"):
+        libPath = os.path.join(p, f)
+        if os.path.isdir(libPath) and libPath not in sys.path:
+            sys.path.append(libPath)
 endpython
 endfunction
 call AugmentPythonPath()
+endif
 endif
 
 " =============================================================
