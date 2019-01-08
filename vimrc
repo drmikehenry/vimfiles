@@ -511,27 +511,25 @@ endif
 
 " Only need to run if Vim is not at least 7.3.1163.
 " See :help python-special-path (>=7.3.1163) for more information.
-if g:Python != ''
-if v:version <# 703 || (v:version is 703 && !has('patch1163'))
-function! AugmentPythonPath()
-    let l:pythonFolders = ['pythonx']
-    if has('python3')
-        let l:pythonFolders += ['python3']
-    endif
-    if has('python')
-        let l:pythonFolders += ['python2']
-    endif
-    execute g:Python . ' << endpython'
+if has('python3') || has('python')
+if v:version < 703 || (v:version is 703 && !has('patch1163'))
+function! AugmentPythonPath(python, folders)
+    execute a:python . ' << endpython'
 import vim
 import os
 for p in vim.eval("PathSplit(&runtimepath)"):
-    for f in vim.eval("l:pythonFolders"):
+    for f in vim.eval("a:folders"):
         libPath = os.path.join(p, f)
         if os.path.isdir(libPath) and libPath not in sys.path:
             sys.path.append(libPath)
 endpython
 endfunction
-call AugmentPythonPath()
+if has('python3')
+    call AugmentPythonPath('python3', ['pythonx', 'python3'])
+endif
+if has('python')
+    call AugmentPythonPath('python', ['pythonx', 'python2'])
+endif
 endif
 endif
 
