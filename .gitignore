@@ -6,3 +6,5 @@ spell
 .undo
 tags
 .netrwhist
+*.swp
+*.swo

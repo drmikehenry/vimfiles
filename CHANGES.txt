@@ -15,6 +15,31 @@ require adjustment of per-user settings.
   - E203: whitespace before ':'
   - W503: line break before binary operator
 
+- BREAKING CHANGE:  Move "pylib" directory and contents to "pythonx" and adjust
+  the Python path augmentation to follow the pattern described in ``:help
+  python-special-path``, introduced in Vim 7.3.1163.  Vim versions 7.3.1163 and
+  newer, compiled with Python support, automatically attempt to load modules in
+  subdirectories of 'runtimepath' named "python2" (for Python 2), "python3" (for
+  Python 3), and "pythonx" (for both Python 2 and 3).  For older versions of
+  Vim, we continue augment the Python path manually with the appropriate
+  "python2", "python3", and "pythonx" directories found in the Vim runtimepath
+  at startup.
+
+  With this change, Python scripts need to be located in a "python2", "python3",
+  or "pythonx" based on language support.  See ``:help python-special-path`` for
+  more information.
+
+  Future uses of Python throughout vimfiles should support Python 3.
+
+  Force Python 2 if compiled with both Python 2 and Python 3 support and both
+  interpreters are available.  To disable forcing and allow the selection
+  pattern of ``pythonx`` then ``python3`` then ``python`` place the following
+  in your ``VIMRC_BEFORE`` file::
+
+    let g:ForcePython2 = 0
+
+  Thanks to Mike Haig for this support.
+
 2018-10-28
 ==========
 
