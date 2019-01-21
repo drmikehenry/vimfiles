@@ -512,7 +512,7 @@ endif
 " Only need to run if Vim is not at least 7.3.1163.
 " See :help python-special-path (>=7.3.1163) for more information.
 if has('python3') || has('python')
-if v:version < 703 || (v:version is 703 && !has('patch1163'))
+if v:version < 703 || (v:version == 703 && !has('patch1163'))
 function! AugmentPythonPath(python, folders)
     execute a:python . ' << endpython'
 import vim
@@ -3795,7 +3795,7 @@ nmap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
 
 " Requires at least Vim 7.3.032:
 " https://github.com/haya14busa/incsearch.vim/issues/61
-if v:version ># 703 || (v:version is 703 && has('patch32'))
+if v:version > 703 || (v:version == 703 && has('patch32'))
     nmap /      <Plug>(incsearch-forward)
     nmap ?      <Plug>(incsearch-backward)
     " Keep g/ as alias for unmodified search.
@@ -3822,7 +3822,7 @@ endif
 " -------------------------------------------------------------
 
 " Requires at least Vim 7.3.032 (probably; assuming like incsearch)
-if v:version ># 703 || (v:version is 703 && has('patch32'))
+if v:version > 703 || (v:version == 703 && has('patch32'))
     nmap z/     <Plug>(incsearch-fuzzy-/)
     nmap z?     <Plug>(incsearch-fuzzy-?)
     nmap zg/    <Plug>(incsearch-fuzzy-stay)
