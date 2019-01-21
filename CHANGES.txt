@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-01-21
+==========
+
+- Squelch Python flake8 warnings that go against recent PEP8 guidance:
+
+  - E203: whitespace before ':'
+  - W503: line break before binary operator
+
 2018-10-28
 ==========
 

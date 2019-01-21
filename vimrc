@@ -3389,6 +3389,23 @@ if g:EnableAle
     " Pylint is too picky to be on by default.
     let g:ale_linters_ignore = { 'python': ['pylint'] }
 
+    if !exists('g:AleFlake8Ignores')
+        " "E203 whitespace before ':'" goes against PEP8.
+        " "W503" enforces breaking after operator, which goes against PEP8's
+        " current (weak) recommendation to break before operators.
+        let g:AleFlake8Ignores = ['E203', 'W503']
+
+    endif
+
+    if !exists('g:ale_python_flake8_options')
+        let g:ale_python_flake8_options = ''
+    endif
+
+    if len(g:AleFlake8Ignores) > 0
+        let g:ale_python_flake8_options .= '--ignore='
+                \ . join(g:AleFlake8Ignores, ',')
+    endif
+
     " Experiment with disabling the extra-picky info messages out of rstcheck.
     let g:ale_rst_rstcheck_options =
             \ '--ignore-messages ' . ale#Escape(
@@ -4642,6 +4659,13 @@ function! SyntasticBufferSetup(style)
     elseif &filetype == "python"
         setlocal tw=79
         let regex = Flake8IgnoredImportsRegex(g:Flake8IgnoredImports)
+        " "E203 whitespace before ':'" goes against PEP8.
+        " "W503" enforces breaking after operator, which goes against PEP8's
+        " current (weak) recommendation to break before operators.
+        if regex != ''
+            let regex .= '\|'
+        endif
+        let regex .= '\[\(E203\|W503\)\]'
         if a:style == "very_strict"
             SyntasticBufferIgnoreLevel nothing
             execute 'SyntasticBufferIgnoreRegex ' . regex
