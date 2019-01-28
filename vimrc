@@ -3436,12 +3436,6 @@ if g:EnableAle
     " -sr       - redirect operators will be followed by a space.
     " TODO: After shfmt can detect dialect, remove ``-p``.
     let g:ale_sh_shfmt_options = '-p -sr -i 4'
-
-    " Trying these settings to combat this Gvim bug:
-    " https://github.com/vim/vim/issues/3417
-    let g:ale_lint_on_text_changed = 'normal'
-    let g:ale_lint_on_insert_leave = 1
-    let g:ale_lint_delay = 500
 endif
 
 " -------------------------------------------------------------

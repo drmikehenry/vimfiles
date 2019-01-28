@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-01-27
+==========
+
+- Gvim bug https://github.com/vim/vim/issues/3417 is fixed in Gvim 8.1.0834, so
+  the ALE work-around for this bug is no longer needed.  Eventually, if/when ALE
+  graduates from experimental status, it will be activated only for Gvim version
+  8.1.0834 and beyond.
+
 2019-01-21
 ==========
 
