@@ -2118,7 +2118,7 @@ Local customizations: >
 RUST SUPPORT                                            *notes_rust*
   Language support for Rust                             |rust|
 
-Version 2016-09-30 (2030019) from:
+Version 2019-01-10 (12f549f) from:
 https://github.com/rust-lang/rust.vim.git
 
 Installation:

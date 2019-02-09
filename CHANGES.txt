@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-02-09
+==========
+
+- Update Rust language support files to 2019-01-10.
+
 2019-01-27
 ==========
 
