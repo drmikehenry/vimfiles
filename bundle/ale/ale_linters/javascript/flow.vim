@@ -54,7 +54,8 @@ function! ale_linters#javascript#flow#GetCommand(buffer, version_lines) abort
     return ale#Escape(l:executable)
     \   . ' check-contents'
     \   . (l:use_respect_pragma ? ' --respect-pragma': '')
-    \   . ' --json --from ale %s'
+    \   . ' --json --from ale %s < %t'
+    \   . (!has('win32') ? '; echo' : '')
 endfunction
 
 " Filter lines of flow output until we find the first line where the JSON
@@ -91,7 +92,6 @@ function! s:GetDetails(error) abort
     let l:detail = ''
 
     for l:extra_error in a:error.extra
-
         if has_key(l:extra_error, 'message')
             for l:extra_message in l:extra_error.message
                 let l:detail = s:ExtraErrorMsg(l:detail, l:extra_message.descr)
@@ -105,7 +105,6 @@ function! s:GetDetails(error) abort
                 endfor
             endfor
         endif
-
     endfor
 
     return l:detail
@@ -157,11 +156,11 @@ function! ale_linters#javascript#flow#Handle(buffer, lines) abort
         \}
 
         if has_key(l:error, 'extra')
-            let l:errorToAdd.detail = s:GetDetails(l:error)
+            let l:errorToAdd.detail = l:errorToAdd.text
+            \   . "\n" . s:GetDetails(l:error)
         endif
 
         call add(l:output, l:errorToAdd)
-
     endfor
 
     return l:output
@@ -175,5 +174,5 @@ call ale#linter#Define('javascript', {
 \       {'callback': 'ale_linters#javascript#flow#GetCommand'},
 \   ],
 \   'callback': 'ale_linters#javascript#flow#Handle',
-\   'add_newline': !has('win32'),
+\   'read_buffer': 0,
 \})

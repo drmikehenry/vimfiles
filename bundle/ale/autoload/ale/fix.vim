@@ -1,13 +1,3 @@
-if !has_key(s:, 'job_info_map')
-    let s:job_info_map = {}
-endif
-
-function! s:GatherOutput(job_id, line) abort
-    if has_key(s:job_info_map, a:job_id)
-        call add(s:job_info_map[a:job_id].output, a:line)
-    endif
-endfunction
-
 " Apply fixes queued up for buffers which may be hidden.
 " Vim doesn't let you modify hidden buffers.
 function! ale#fix#ApplyQueuedFixes() abort
@@ -30,7 +20,14 @@ function! ale#fix#ApplyQueuedFixes() abort
             call winrestview(l:save)
         endif
 
-        call setline(1, l:data.output)
+        " If the file is in DOS mode, we have to remove carriage returns from
+        " the ends of lines before calling setline(), or we will see them
+        " twice.
+        let l:lines_to_set = getbufvar(l:buffer, '&fileformat') is# 'dos'
+        \   ? map(copy(l:data.output), 'substitute(v:val, ''\r\+$'', '''', '''')')
+        \   : l:data.output
+
+        call setline(1, l:lines_to_set)
 
         if l:data.should_save
             if empty(&buftype)
@@ -59,11 +56,17 @@ function! ale#fix#ApplyQueuedFixes() abort
 endfunction
 
 function! ale#fix#ApplyFixes(buffer, output) abort
-    call ale#fix#RemoveManagedFiles(a:buffer)
-
     let l:data = g:ale_fix_buffer_data[a:buffer]
     let l:data.output = a:output
     let l:data.changes_made = l:data.lines_before != l:data.output
+    let l:data.done = 1
+
+    call ale#command#RemoveManagedFiles(a:buffer)
+
+    if !bufexists(a:buffer)
+        " Remove the buffer data when it doesn't exist.
+        call remove(g:ale_fix_buffer_data, a:buffer)
+    endif
 
     if l:data.changes_made && bufexists(a:buffer)
         let l:lines = getbufline(a:buffer, 1, '$')
@@ -71,130 +74,74 @@ function! ale#fix#ApplyFixes(buffer, output) abort
         if l:data.lines_before != l:lines
             call remove(g:ale_fix_buffer_data, a:buffer)
             execute 'echoerr ''The file was changed before fixing finished'''
+
             return
         endif
     endif
-
-    if !bufexists(a:buffer)
-        " Remove the buffer data when it doesn't exist.
-        call remove(g:ale_fix_buffer_data, a:buffer)
-    endif
-
-    let l:data.done = 1
 
     " We can only change the lines of a buffer which is currently open,
     " so try and apply the fixes to the current buffer.
     call ale#fix#ApplyQueuedFixes()
 endfunction
 
-function! s:HandleExit(job_id, exit_code) abort
-    if !has_key(s:job_info_map, a:job_id)
+function! s:HandleExit(job_info, buffer, job_output, data) abort
+    let l:buffer_info = get(g:ale_fix_buffer_data, a:buffer, {})
+
+    if empty(l:buffer_info)
         return
     endif
 
-    let l:job_info = remove(s:job_info_map, a:job_id)
-    let l:buffer = l:job_info.buffer
-
-    if g:ale_history_enabled
-        call ale#history#SetExitCode(l:buffer, a:job_id, a:exit_code)
+    if a:job_info.read_temporary_file
+        let l:output = !empty(a:data.temporary_file)
+        \   ?  readfile(a:data.temporary_file)
+        \   : []
+    else
+        let l:output = a:job_output
     endif
 
-    if has_key(l:job_info, 'file_to_read')
-        let l:job_info.output = readfile(l:job_info.file_to_read)
-    endif
-
-    let l:ChainCallback = get(l:job_info, 'chain_with', v:null)
-    let l:ProcessWith = get(l:job_info, 'process_with', v:null)
+    let l:ChainCallback = get(a:job_info, 'chain_with', v:null)
+    let l:ProcessWith = get(a:job_info, 'process_with', v:null)
 
     " Post-process the output with a function if we have one.
     if l:ProcessWith isnot v:null
-        let l:job_info.output = call(
-        \   ale#util#GetFunction(l:ProcessWith),
-        \   [l:buffer, l:job_info.output]
-        \)
+        let l:output = call(l:ProcessWith, [a:buffer, l:output])
     endif
 
     " Use the output of the job for changing the file if it isn't empty,
     " otherwise skip this job and use the input from before.
     "
     " We'll use the input from before for chained commands.
-    if l:ChainCallback is v:null && !empty(split(join(l:job_info.output)))
-        let l:input = l:job_info.output
+    if l:ChainCallback is v:null && !empty(split(join(l:output)))
+        let l:input = l:output
     else
-        let l:input = l:job_info.input
+        let l:input = a:job_info.input
     endif
 
     let l:next_index = l:ChainCallback is v:null
-    \   ? l:job_info.callback_index + 1
-    \   : l:job_info.callback_index
+    \   ? a:job_info.callback_index + 1
+    \   : a:job_info.callback_index
 
     call s:RunFixer({
-    \   'buffer': l:buffer,
+    \   'buffer': a:buffer,
     \   'input': l:input,
-    \   'output': l:job_info.output,
-    \   'callback_list': l:job_info.callback_list,
+    \   'output': l:output,
+    \   'callback_list': a:job_info.callback_list,
     \   'callback_index': l:next_index,
     \   'chain_callback': l:ChainCallback,
     \})
-endfunction
-
-function! ale#fix#ManageDirectory(buffer, directory) abort
-    call add(g:ale_fix_buffer_data[a:buffer].temporary_directory_list, a:directory)
-endfunction
-
-function! ale#fix#RemoveManagedFiles(buffer) abort
-    if !has_key(g:ale_fix_buffer_data, a:buffer)
-        return
-    endif
-
-    " We can't delete anything in a sandbox, so wait until we escape from
-    " it to delete temporary files and directories.
-    if ale#util#InSandbox()
-        return
-    endif
-
-    " Delete directories like `rm -rf`.
-    " Directories are handled differently from files, so paths that are
-    " intended to be single files can be set up for automatic deletion without
-    " accidentally deleting entire directories.
-    for l:directory in g:ale_fix_buffer_data[a:buffer].temporary_directory_list
-        call delete(l:directory, 'rf')
-    endfor
-
-    let g:ale_fix_buffer_data[a:buffer].temporary_directory_list = []
-endfunction
-
-function! s:CreateTemporaryFileForJob(buffer, temporary_file, input) abort
-    if empty(a:temporary_file)
-        " There is no file, so we didn't create anything.
-        return 0
-    endif
-
-    let l:temporary_directory = fnamemodify(a:temporary_file, ':h')
-    " Create the temporary directory for the file, unreadable by 'other'
-    " users.
-    call mkdir(l:temporary_directory, '', 0750)
-    " Automatically delete the directory later.
-    call ale#fix#ManageDirectory(a:buffer, l:temporary_directory)
-    " Write the buffer out to a file.
-    call ale#util#Writefile(a:buffer, a:input, a:temporary_file)
-
-    return 1
 endfunction
 
 function! s:RunJob(options) abort
     let l:buffer = a:options.buffer
     let l:command = a:options.command
     let l:input = a:options.input
-    let l:output_stream = a:options.output_stream
-    let l:read_temporary_file = a:options.read_temporary_file
     let l:ChainWith = a:options.chain_with
     let l:read_buffer = a:options.read_buffer
 
     if empty(l:command)
         " If there's nothing further to chain the command with, stop here.
         if l:ChainWith is v:null
-            return 0
+            return v:false
         endif
 
         " If there's another chained callback to run, then run that.
@@ -207,87 +154,32 @@ function! s:RunJob(options) abort
         \   'output': [],
         \})
 
-        return 1
+        return v:true
     endif
 
-    let [l:temporary_file, l:command] = ale#command#FormatCommand(
-    \   l:buffer,
-    \   '',
-    \   l:command,
-    \   l:read_buffer,
-    \)
-    call s:CreateTemporaryFileForJob(l:buffer, l:temporary_file, l:input)
+    let l:output_stream = a:options.output_stream
 
-    let l:command = ale#job#PrepareCommand(l:buffer, l:command)
-    let l:job_options = {
-    \   'mode': 'nl',
-    \   'exit_cb': function('s:HandleExit'),
-    \}
+    if a:options.read_temporary_file
+        let l:output_stream = 'none'
+    endif
 
-    let l:job_info = {
-    \   'buffer': l:buffer,
+    let l:Callback = function('s:HandleExit', [{
     \   'input': l:input,
-    \   'output': [],
     \   'chain_with': l:ChainWith,
     \   'callback_index': a:options.callback_index,
     \   'callback_list': a:options.callback_list,
     \   'process_with': a:options.process_with,
-    \}
+    \   'read_temporary_file': a:options.read_temporary_file,
+    \}])
+    let l:result = ale#command#Run(l:buffer, l:command, l:Callback, {
+    \   'output_stream': l:output_stream,
+    \   'executable': '',
+    \   'read_buffer': l:read_buffer,
+    \   'input': l:input,
+    \   'log_output': 0,
+    \})
 
-    if l:read_temporary_file
-        " TODO: Check that a temporary file is set here.
-        let l:job_info.file_to_read = l:temporary_file
-    elseif l:output_stream is# 'stderr'
-        let l:job_options.err_cb = function('s:GatherOutput')
-    elseif l:output_stream is# 'both'
-        let l:job_options.out_cb = function('s:GatherOutput')
-        let l:job_options.err_cb = function('s:GatherOutput')
-    else
-        let l:job_options.out_cb = function('s:GatherOutput')
-    endif
-
-    if get(g:, 'ale_emulate_job_failure') == 1
-        let l:job_id = 0
-    elseif get(g:, 'ale_run_synchronously') == 1
-        " Find a unique Job value to use, which will be the same as the ID for
-        " running commands synchronously. This is only for test code.
-        let l:job_id = len(s:job_info_map) + 1
-
-        while has_key(s:job_info_map, l:job_id)
-            let l:job_id += 1
-        endwhile
-    else
-        let l:job_id = ale#job#Start(l:command, l:job_options)
-    endif
-
-    let l:status = l:job_id ? 'started' : 'failed'
-
-    if g:ale_history_enabled
-        call ale#history#Add(l:buffer, l:status, l:job_id, l:command)
-    endif
-
-    if l:job_id == 0
-        return 0
-    endif
-
-    let s:job_info_map[l:job_id] = l:job_info
-
-    if get(g:, 'ale_run_synchronously') == 1
-        " Run a command synchronously if this test option is set.
-        let l:output = systemlist(
-        \   type(l:command) is v:t_list
-        \   ?  join(l:command[0:1]) . ' ' . ale#Escape(l:command[2])
-        \   : l:command
-        \)
-
-        if !l:read_temporary_file
-            let s:job_info_map[l:job_id].output = l:output
-        endif
-
-        call l:job_options.exit_cb(l:job_id, v:shell_error)
-    endif
-
-    return 1
+    return l:result._deferred_job_id != 0
 endfunction
 
 function! s:RunFixer(options) abort
@@ -295,6 +187,9 @@ function! s:RunFixer(options) abort
     let l:input = a:options.input
     let l:index = a:options.callback_index
     let l:ChainCallback = get(a:options, 'chain_callback', v:null)
+
+    " Record new jobs started as fixer jobs.
+    call setbufvar(l:buffer, 'ale_job_type', 'fixer')
 
     while len(a:options.callback_list) > l:index
         let l:Function = l:ChainCallback isnot v:null
@@ -307,10 +202,10 @@ function! s:RunFixer(options) abort
             \   ? call(l:Function, [l:buffer, a:options.output])
             \   : call(l:Function, [l:buffer, a:options.output, copy(l:input)])
         else
-            " Chained commands accept (buffer, [input])
+            " Chained commands accept (buffer, [done, input])
             let l:result = ale#util#FunctionArgCount(l:Function) == 1
             \   ? call(l:Function, [l:buffer])
-            \   : call(l:Function, [l:buffer, copy(l:input)])
+            \   : call(l:Function, [l:buffer, v:null, copy(l:input)])
         endif
 
         if type(l:result) is v:t_number && l:result == 0
@@ -456,13 +351,9 @@ function! ale#fix#Fix(buffer, fixing_flag, ...) abort
         return 0
     endif
 
-    for l:job_id in keys(s:job_info_map)
-        call remove(s:job_info_map, l:job_id)
-        call ale#job#Stop(l:job_id)
-    endfor
-
+    call ale#command#StopJobs(a:buffer, 'fixer')
     " Clean up any files we might have left behind from a previous run.
-    call ale#fix#RemoveManagedFiles(a:buffer)
+    call ale#command#RemoveManagedFiles(a:buffer)
     call ale#fix#InitBufferData(a:buffer, a:fixing_flag)
 
     silent doautocmd <nomodeline> User ALEFixPre

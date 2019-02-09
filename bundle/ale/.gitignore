@@ -1,7 +1,0 @@
-!.editorconfig
-*.obj
-.*
-/doc/tags
-/init.vim
-/test/ale-info-test-file
-tags

@@ -12,7 +12,7 @@ endfunction
 
 function! ale_linters#idris#idris#Handle(buffer, lines) abort
     " This was copied almost verbatim from ale#handlers#haskell#HandleGHCFormat
-
+    "
     " Look for lines like the following:
     " foo.idr:2:6:When checking right hand side of main with expected type
     " bar.idr:11:11-13:
@@ -30,6 +30,7 @@ function! ale_linters#idris#idris#Handle(buffer, lines) abort
             else
                 let l:corrected_lines[-1] .= l:line
             endif
+
             let l:corrected_lines[-1] = substitute(l:corrected_lines[-1], '\s\+', ' ', 'g')
         endif
     endfor
@@ -48,11 +49,11 @@ function! ale_linters#idris#idris#Handle(buffer, lines) abort
         let l:errors = matchlist(l:match[5], '\v([wW]arning|[eE]rror) - ?(.*)')
 
         if len(l:errors) > 0
-          let l:ghc_type = l:errors[1]
-          let l:text = l:errors[2]
+            let l:ghc_type = l:errors[1]
+            let l:text = l:errors[2]
         else
-          let l:ghc_type = ''
-          let l:text = l:match[5][:0] is# ' ' ? l:match[5][1:] : l:match[5]
+            let l:ghc_type = ''
+            let l:text = l:match[5][:0] is# ' ' ? l:match[5][1:] : l:match[5]
         endif
 
         if l:ghc_type is? 'Warning'

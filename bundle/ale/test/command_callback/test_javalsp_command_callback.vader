@@ -1,0 +1,14 @@
+
+Before:
+  call ale#assert#SetUpLinterTest('java', 'javalsp')
+
+After:
+  call ale#assert#TearDownLinterTest()
+
+Execute(The javalsp callback should return the correct default value):
+  AssertLinter 'java', ale#Escape('java') . ' -Xverify:none -m javacs/org.javacs.Main'
+
+Execute(The javalsp java executable should be configurable):
+  let b:ale_java_javalsp_executable = '/bin/foobar'
+
+  AssertLinter '/bin/foobar', ale#Escape('/bin/foobar') . ' -Xverify:none -m javacs/org.javacs.Main'

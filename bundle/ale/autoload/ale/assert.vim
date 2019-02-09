@@ -85,6 +85,14 @@ function! ale#assert#LSPOptions(expected_options) abort
     AssertEqual a:expected_options, l:initialization_options
 endfunction
 
+function! ale#assert#LSPConfig(expected_config) abort
+    let l:buffer = bufnr('')
+    let l:linter = s:GetLinter()
+    let l:config = ale#lsp_linter#GetConfig(l:buffer, l:linter)
+
+    AssertEqual a:expected_config, l:config
+endfunction
+
 function! ale#assert#LSPLanguage(expected_language) abort
     let l:buffer = bufnr('')
     let l:linter = s:GetLinter()
@@ -99,6 +107,22 @@ function! ale#assert#LSPProject(expected_root) abort
     let l:root = ale#util#GetFunction(l:linter.project_root_callback)(l:buffer)
 
     AssertEqual a:expected_root, l:root
+endfunction
+
+function! ale#assert#LSPProjectFull(expected_root) abort
+    let l:buffer = bufnr('')
+    let l:linter = s:GetLinter()
+    let l:root = ale#lsp_linter#FindProjectRoot(l:buffer, l:linter)
+
+    AssertEqual a:expected_root, l:root
+endfunction
+
+function! ale#assert#LSPAddress(expected_address) abort
+    let l:buffer = bufnr('')
+    let l:linter = s:GetLinter()
+    let l:address = ale#util#GetFunction(l:linter.address_callback)(l:buffer)
+
+    AssertEqual a:expected_address, l:address
 endfunction
 
 " A dummy function for making sure this module is loaded.
@@ -139,8 +163,11 @@ function! ale#assert#SetUpLinterTest(filetype, name) abort
     command! -nargs=+ AssertLinter :call ale#assert#Linter(<args>)
     command! -nargs=0 AssertLinterNotExecuted :call ale#assert#LinterNotExecuted()
     command! -nargs=+ AssertLSPOptions :call ale#assert#LSPOptions(<args>)
+    command! -nargs=+ AssertLSPConfig :call ale#assert#LSPConfig(<args>)
     command! -nargs=+ AssertLSPLanguage :call ale#assert#LSPLanguage(<args>)
     command! -nargs=+ AssertLSPProject :call ale#assert#LSPProject(<args>)
+    command! -nargs=+ AssertLSPProjectFull :call ale#assert#LSPProjectFull(<args>)
+    command! -nargs=+ AssertLSPAddress :call ale#assert#LSPAddress(<args>)
 endfunction
 
 function! ale#assert#TearDownLinterTest() abort
@@ -163,12 +190,24 @@ function! ale#assert#TearDownLinterTest() abort
         delcommand AssertLSPOptions
     endif
 
+    if exists(':AssertLSPConfig')
+        delcommand AssertLSPConfig
+    endif
+
     if exists(':AssertLSPLanguage')
         delcommand AssertLSPLanguage
     endif
 
     if exists(':AssertLSPProject')
         delcommand AssertLSPProject
+    endif
+
+    if exists(':AssertLSPProjectFull')
+        delcommand AssertLSPProjectFull
+    endif
+
+    if exists(':AssertLSPAddress')
+        delcommand AssertLSPAddress
     endif
 
     if exists('g:dir')

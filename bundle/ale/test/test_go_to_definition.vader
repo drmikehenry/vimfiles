@@ -7,6 +7,7 @@ Before:
   let g:message_list = []
   let g:expr_list = []
   let g:capability_checked = ''
+  let g:conn_id = v:null
   let g:WaitCallback = v:null
 
   runtime autoload/ale/linter.vim
@@ -14,19 +15,18 @@ Before:
   runtime autoload/ale/util.vim
 
   function! ale#lsp_linter#StartLSP(buffer, linter) abort
-    let l:conn = ale#lsp#NewConnection({})
-    let l:conn.id = 347
-    let l:conn.open_documents = {a:buffer : -1}
+    let g:conn_id = ale#lsp#Register('executable', '/foo/bar', {})
+    call ale#lsp#MarkDocumentAsOpen(g:conn_id, a:buffer)
 
     return {
     \ 'buffer': a:buffer,
-    \ 'connection_id': 347,
+    \ 'connection_id': g:conn_id,
     \ 'project_root': '/foo/bar',
     \ 'language_id': 'python',
     \}
   endfunction
 
-  function! ale#lsp#WaitForCapability(conn_id, project_root, capability, callback) abort
+  function! ale#lsp#WaitForCapability(conn_id, capability, callback) abort
     let g:capability_checked = a:capability
     let g:WaitCallback = a:callback
   endfunction
@@ -35,7 +35,7 @@ Before:
     let g:Callback = a:callback
   endfunction
 
-  function! ale#lsp#Send(conn_id, message, root) abort
+  function! ale#lsp#Send(conn_id, message) abort
     call add(g:message_list, a:message)
 
     return 42
@@ -46,7 +46,10 @@ Before:
   endfunction
 
 After:
-  call ale#lsp#RemoveConnectionWithID(347)
+  if g:conn_id isnot v:null
+    call ale#lsp#RemoveConnectionWithID(g:conn_id)
+  endif
+
   call ale#definition#SetMap({})
   call ale#test#RestoreDirectory()
   call ale#linter#Reset()
@@ -54,6 +57,7 @@ After:
   unlet! g:capability_checked
   unlet! g:WaitCallback
   unlet! g:old_filename
+  unlet! g:conn_id
   unlet! g:Callback
   unlet! g:message_list
   unlet! g:expr_list
@@ -67,7 +71,7 @@ Execute(Other messages for the tsserver handler should be ignored):
   call ale#definition#HandleTSServerResponse(1, {'command': 'foo'})
 
 Execute(Failed definition responses should be handled correctly):
-  call ale#definition#SetMap({3: {'open_in_tab': 0}})
+  call ale#definition#SetMap({3: {'open_in': 'current-buffer'}})
   call ale#definition#HandleTSServerResponse(
   \ 1,
   \ {'command': 'definition', 'request_seq': 3}
@@ -75,7 +79,7 @@ Execute(Failed definition responses should be handled correctly):
   AssertEqual {}, ale#definition#GetMap()
 
 Execute(Failed definition responses with no files should be handled correctly):
-  call ale#definition#SetMap({3: {'open_in_tab': 0}})
+  call ale#definition#SetMap({3: {'open_in': 'current-buffer'}})
   call ale#definition#HandleTSServerResponse(
   \ 1,
   \ {
@@ -93,7 +97,7 @@ Given typescript(Some typescript file):
   bazxyzxyzxyz
 
 Execute(Other files should be jumped to for definition responses):
-  call ale#definition#SetMap({3: {'open_in_tab': 0}})
+  call ale#definition#SetMap({3: {'open_in': 'current-buffer'}})
   call ale#definition#HandleTSServerResponse(
   \ 1,
   \ {
@@ -118,7 +122,7 @@ Execute(Other files should be jumped to for definition responses):
   AssertEqual {}, ale#definition#GetMap()
 
 Execute(Other files should be jumped to for definition responses in tabs too):
-  call ale#definition#SetMap({3: {'open_in_tab': 1}})
+  call ale#definition#SetMap({3: {'open_in': 'tab'}})
   call ale#definition#HandleTSServerResponse(
   \ 1,
   \ {
@@ -142,7 +146,57 @@ Execute(Other files should be jumped to for definition responses in tabs too):
   AssertEqual [3, 7], getpos('.')[1:2]
   AssertEqual {}, ale#definition#GetMap()
 
-Execute(tsserver completion requests should be sent):
+Execute(Other files should be jumped to for definition responses in splits too):
+  call ale#definition#SetMap({3: {'open_in': 'horizontal-split'}})
+  call ale#definition#HandleTSServerResponse(
+  \ 1,
+  \ {
+  \   'command': 'definition',
+  \   'request_seq': 3,
+  \   'success': v:true,
+  \   'body': [
+  \     {
+  \       'file': ale#path#Simplify(g:dir . '/completion_dummy_file'),
+  \       'start': {'line': 3, 'offset': 7},
+  \     },
+  \   ],
+  \ }
+  \)
+
+  AssertEqual
+  \ [
+  \   'split +3 ' . fnameescape(ale#path#Simplify(g:dir . '/completion_dummy_file')),
+  \ ],
+  \ g:expr_list
+  AssertEqual [3, 7], getpos('.')[1:2]
+  AssertEqual {}, ale#definition#GetMap()
+
+Execute(Other files should be jumped to for definition responses in vsplits too):
+  call ale#definition#SetMap({3: {'open_in': 'vertical-split'}})
+  call ale#definition#HandleTSServerResponse(
+  \ 1,
+  \ {
+  \   'command': 'definition',
+  \   'request_seq': 3,
+  \   'success': v:true,
+  \   'body': [
+  \     {
+  \       'file': ale#path#Simplify(g:dir . '/completion_dummy_file'),
+  \       'start': {'line': 3, 'offset': 7},
+  \     },
+  \   ],
+  \ }
+  \)
+
+  AssertEqual
+  \ [
+  \   'vsplit +3 ' . fnameescape(ale#path#Simplify(g:dir . '/completion_dummy_file')),
+  \ ],
+  \ g:expr_list
+  AssertEqual [3, 7], getpos('.')[1:2]
+  AssertEqual {}, ale#definition#GetMap()
+
+Execute(tsserver definition requests should be sent):
   runtime ale_linters/typescript/tsserver.vim
   call setpos('.', [bufnr(''), 2, 5, 0])
 
@@ -153,7 +207,7 @@ Execute(tsserver completion requests should be sent):
 
   AssertEqual type(function('type')), type(g:WaitCallback)
   AssertEqual 'definition', g:capability_checked
-  call call(g:WaitCallback, [347, '/foo/bar'])
+  call call(g:WaitCallback, [g:conn_id, '/foo/bar'])
 
   AssertEqual
   \ 'function(''ale#definition#HandleTSServerResponse'')',
@@ -161,9 +215,9 @@ Execute(tsserver completion requests should be sent):
   AssertEqual
   \ [[0, 'ts@definition', {'file': expand('%:p'), 'line': 2, 'offset': 5}]],
   \ g:message_list
-  AssertEqual {'42': {'open_in_tab': 0}}, ale#definition#GetMap()
+  AssertEqual {'42': {'open_in': 'current-buffer'}}, ale#definition#GetMap()
 
-Execute(tsserver tab completion requests should be sent):
+Execute(tsserver tab definition requests should be sent):
   runtime ale_linters/typescript/tsserver.vim
   call setpos('.', [bufnr(''), 2, 5, 0])
 
@@ -174,7 +228,7 @@ Execute(tsserver tab completion requests should be sent):
 
   AssertEqual type(function('type')), type(g:WaitCallback)
   AssertEqual 'definition', g:capability_checked
-  call call(g:WaitCallback, [347, '/foo/bar'])
+  call call(g:WaitCallback, [g:conn_id, '/foo/bar'])
 
   AssertEqual
   \ 'function(''ale#definition#HandleTSServerResponse'')',
@@ -182,7 +236,7 @@ Execute(tsserver tab completion requests should be sent):
   AssertEqual
   \ [[0, 'ts@definition', {'file': expand('%:p'), 'line': 2, 'offset': 5}]],
   \ g:message_list
-  AssertEqual {'42': {'open_in_tab': 1}}, ale#definition#GetMap()
+  AssertEqual {'42': {'open_in': 'tab'}}, ale#definition#GetMap()
 
 Given python(Some Python file):
   foo
@@ -190,7 +244,7 @@ Given python(Some Python file):
   bazxyzxyzxyz
 
 Execute(Other files should be jumped to for LSP definition responses):
-  call ale#definition#SetMap({3: {'open_in_tab': 0}})
+  call ale#definition#SetMap({3: {'open_in': 'current-buffer'}})
   call ale#definition#HandleLSPResponse(
   \ 1,
   \ {
@@ -209,11 +263,11 @@ Execute(Other files should be jumped to for LSP definition responses):
   \   'edit +3 ' . fnameescape(ale#path#Simplify(g:dir . '/completion_dummy_file')),
   \ ],
   \ g:expr_list
-  AssertEqual [3, 7], getpos('.')[1:2]
+  AssertEqual [3, 8], getpos('.')[1:2]
   AssertEqual {}, ale#definition#GetMap()
 
 Execute(Locations inside the same file should be jumped to without using :edit):
-  call ale#definition#SetMap({3: {'open_in_tab': 0}})
+  call ale#definition#SetMap({3: {'open_in': 'current-buffer'}})
   call ale#definition#HandleLSPResponse(
   \ 1,
   \ {
@@ -231,11 +285,11 @@ Execute(Locations inside the same file should be jumped to without using :edit):
   \ [
   \ ],
   \ g:expr_list
-  AssertEqual [3, 7], getpos('.')[1:2]
+  AssertEqual [3, 8], getpos('.')[1:2]
   AssertEqual {}, ale#definition#GetMap()
 
 Execute(Other files should be jumped to in tabs for LSP definition responses):
-  call ale#definition#SetMap({3: {'open_in_tab': 1}})
+  call ale#definition#SetMap({3: {'open_in': 'tab'}})
   call ale#definition#HandleLSPResponse(
   \ 1,
   \ {
@@ -254,11 +308,11 @@ Execute(Other files should be jumped to in tabs for LSP definition responses):
   \   'tabedit +3 ' . fnameescape(ale#path#Simplify(g:dir . '/completion_dummy_file')),
   \ ],
   \ g:expr_list
-  AssertEqual [3, 7], getpos('.')[1:2]
+  AssertEqual [3, 8], getpos('.')[1:2]
   AssertEqual {}, ale#definition#GetMap()
 
 Execute(Definition responses with lists should be handled):
-  call ale#definition#SetMap({3: {'open_in_tab': 0}})
+  call ale#definition#SetMap({3: {'open_in': 'current-buffer'}})
   call ale#definition#HandleLSPResponse(
   \ 1,
   \ {
@@ -285,16 +339,16 @@ Execute(Definition responses with lists should be handled):
   \   'edit +3 ' . fnameescape(ale#path#Simplify(g:dir . '/completion_dummy_file')),
   \ ],
   \ g:expr_list
-  AssertEqual [3, 7], getpos('.')[1:2]
+  AssertEqual [3, 8], getpos('.')[1:2]
   AssertEqual {}, ale#definition#GetMap()
 
 Execute(Definition responses with null response should be handled):
-  call ale#definition#SetMap({3: {'open_in_tab': 0}})
+  call ale#definition#SetMap({3: {'open_in': 'current-buffer'}})
   call ale#definition#HandleLSPResponse(1, {'id': 3, 'result': v:null})
 
   AssertEqual [], g:expr_list
 
-Execute(LSP completion requests should be sent):
+Execute(LSP definition requests should be sent):
   runtime ale_linters/python/pyls.vim
   let b:ale_linters = ['pyls']
   call setpos('.', [bufnr(''), 1, 5, 0])
@@ -306,7 +360,7 @@ Execute(LSP completion requests should be sent):
 
   AssertEqual type(function('type')), type(g:WaitCallback)
   AssertEqual 'definition', g:capability_checked
-  call call(g:WaitCallback, [347, '/foo/bar'])
+  call call(g:WaitCallback, [g:conn_id, '/foo/bar'])
 
   AssertEqual
   \ 'function(''ale#definition#HandleLSPResponse'')',
@@ -323,14 +377,50 @@ Execute(LSP completion requests should be sent):
   \   }],
   \   [0, 'textDocument/definition', {
   \   'textDocument': {'uri': ale#path#ToURI(expand('%:p'))},
-  \   'position': {'line': 0, 'character': 3},
+  \   'position': {'line': 0, 'character': 2},
   \   }],
   \ ],
   \ g:message_list
 
-  AssertEqual {'42': {'open_in_tab': 0}}, ale#definition#GetMap()
+  AssertEqual {'42': {'open_in': 'current-buffer'}}, ale#definition#GetMap()
 
-Execute(LSP tab completion requests should be sent):
+Execute(LSP type definition requests should be sent):
+  runtime ale_linters/python/pyls.vim
+  let b:ale_linters = ['pyls']
+  call setpos('.', [bufnr(''), 1, 5, 0])
+
+  ALEGoToTypeDefinition
+
+  " We shouldn't register the callback yet.
+  AssertEqual '''''', string(g:Callback)
+
+  AssertEqual type(function('type')), type(g:WaitCallback)
+  AssertEqual 'typeDefinition', g:capability_checked
+  call call(g:WaitCallback, [g:conn_id, '/foo/bar'])
+
+  AssertEqual
+  \ 'function(''ale#definition#HandleLSPResponse'')',
+  \ string(g:Callback)
+
+  AssertEqual
+  \ [
+  \   [1, 'textDocument/didChange', {
+  \     'textDocument': {
+  \         'uri': ale#path#ToURI(expand('%:p')),
+  \         'version': g:ale_lsp_next_version_id - 1,
+  \     },
+  \     'contentChanges': [{'text': join(getline(1, '$'), "\n") . "\n"}]
+  \   }],
+  \   [0, 'textDocument/typeDefinition', {
+  \   'textDocument': {'uri': ale#path#ToURI(expand('%:p'))},
+  \   'position': {'line': 0, 'character': 2},
+  \   }],
+  \ ],
+  \ g:message_list
+
+  AssertEqual {'42': {'open_in': 'current-buffer'}}, ale#definition#GetMap()
+
+Execute(LSP tab definition requests should be sent):
   runtime ale_linters/python/pyls.vim
   let b:ale_linters = ['pyls']
   call setpos('.', [bufnr(''), 1, 5, 0])
@@ -342,7 +432,7 @@ Execute(LSP tab completion requests should be sent):
 
   AssertEqual type(function('type')), type(g:WaitCallback)
   AssertEqual 'definition', g:capability_checked
-  call call(g:WaitCallback, [347, '/foo/bar'])
+  call call(g:WaitCallback, [g:conn_id, '/foo/bar'])
 
   AssertEqual
   \ 'function(''ale#definition#HandleLSPResponse'')',
@@ -359,9 +449,45 @@ Execute(LSP tab completion requests should be sent):
   \   }],
   \   [0, 'textDocument/definition', {
   \   'textDocument': {'uri': ale#path#ToURI(expand('%:p'))},
-  \   'position': {'line': 0, 'character': 3},
+  \   'position': {'line': 0, 'character': 2},
   \   }],
   \ ],
   \ g:message_list
 
-  AssertEqual {'42': {'open_in_tab': 1}}, ale#definition#GetMap()
+  AssertEqual {'42': {'open_in': 'tab'}}, ale#definition#GetMap()
+
+Execute(LSP tab type definition requests should be sent):
+  runtime ale_linters/python/pyls.vim
+  let b:ale_linters = ['pyls']
+  call setpos('.', [bufnr(''), 1, 5, 0])
+
+  ALEGoToTypeDefinitionInTab
+
+  " We shouldn't register the callback yet.
+  AssertEqual '''''', string(g:Callback)
+
+  AssertEqual type(function('type')), type(g:WaitCallback)
+  AssertEqual 'typeDefinition', g:capability_checked
+  call call(g:WaitCallback, [g:conn_id, '/foo/bar'])
+
+  AssertEqual
+  \ 'function(''ale#definition#HandleLSPResponse'')',
+  \ string(g:Callback)
+
+  AssertEqual
+  \ [
+  \   [1, 'textDocument/didChange', {
+  \     'textDocument': {
+  \         'uri': ale#path#ToURI(expand('%:p')),
+  \         'version': g:ale_lsp_next_version_id - 1,
+  \     },
+  \     'contentChanges': [{'text': join(getline(1, '$'), "\n") . "\n"}]
+  \   }],
+  \   [0, 'textDocument/typeDefinition', {
+  \   'textDocument': {'uri': ale#path#ToURI(expand('%:p'))},
+  \   'position': {'line': 0, 'character': 2},
+  \   }],
+  \ ],
+  \ g:message_list
+
+  AssertEqual {'42': {'open_in': 'tab'}}, ale#definition#GetMap()

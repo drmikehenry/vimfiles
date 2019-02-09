@@ -47,7 +47,6 @@ Execute(ALE shouldn't blow up when run from a sandbox):
 
   sandbox call ale#Queue(0)
   sandbox call ale#Queue(1)
-  sandbox call ale#Lint()
 
 Execute(ALE shouldn't blow up if file cleanup happens in a sandbox):
   " Make a call to an engine function first, so the function will be defined
@@ -60,7 +59,7 @@ Execute(ALE shouldn't blow up if file cleanup happens in a sandbox):
   \ 'temporary_file_list': ['/tmp/foo'],
   \ 'temporary_directory_list': ['/tmp/bar'],
   \}
-  sandbox call ale#engine#RemoveManagedFiles(3)
+  sandbox call ale#command#RemoveManagedFiles(3)
 
   AssertEqual ['/tmp/foo'], g:ale_buffer_info[3].temporary_file_list
   AssertEqual ['/tmp/bar'], g:ale_buffer_info[3].temporary_directory_list

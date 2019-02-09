@@ -39,10 +39,14 @@ let s:LSP_COMPLETION_COLOR_KIND = 16
 let s:LSP_COMPLETION_FILE_KIND = 17
 let s:LSP_COMPLETION_REFERENCE_KIND = 18
 
+let s:lisp_regex = '\v[a-zA-Z_\-][a-zA-Z_\-0-9]*$'
+
 " Regular expressions for checking the characters in the line before where
 " the insert cursor is. If one of these matches, we'll check for completions.
 let s:should_complete_map = {
 \   '<default>': '\v[a-zA-Z$_][a-zA-Z$_0-9]*$|\.$',
+\   'clojure': s:lisp_regex,
+\   'lisp': s:lisp_regex,
 \   'typescript': '\v[a-zA-Z$_][a-zA-Z$_0-9]*$|\.$|''$|"$',
 \   'rust': '\v[a-zA-Z$_][a-zA-Z$_0-9]*$|\.$|::$',
 \}
@@ -75,6 +79,7 @@ endfunction
 " Check if we should look for completions for a language.
 function! ale#completion#GetPrefix(filetype, line, column) abort
     let l:regex = s:GetFiletypeValue(s:should_complete_map, a:filetype)
+
     " The column we're using completions for is where we are inserting text,
     " like so:
     "   abc
@@ -84,6 +89,10 @@ function! ale#completion#GetPrefix(filetype, line, column) abort
 endfunction
 
 function! ale#completion#GetTriggerCharacter(filetype, prefix) abort
+    if empty(a:prefix)
+        return ''
+    endif
+
     let l:char_list = s:GetFiletypeValue(s:trigger_character_map, a:filetype)
 
     if index(l:char_list, a:prefix) >= 0
@@ -93,34 +102,40 @@ function! ale#completion#GetTriggerCharacter(filetype, prefix) abort
     return ''
 endfunction
 
-function! ale#completion#Filter(buffer, suggestions, prefix) abort
+function! ale#completion#Filter(buffer, filetype, suggestions, prefix) abort
     let l:excluded_words = ale#Var(a:buffer, 'completion_excluded_words')
 
-    " For completing...
-    "   foo.
-    "       ^
-    " We need to include all of the given suggestions.
-    if a:prefix is# '.'
+    if empty(a:prefix)
         let l:filtered_suggestions = a:suggestions
     else
-        let l:filtered_suggestions = []
+        let l:triggers = s:GetFiletypeValue(s:trigger_character_map, a:filetype)
 
-        " Filter suggestions down to those starting with the prefix we used for
-        " finding suggestions in the first place.
-        "
-        " Some completion tools will include suggestions which don't even start
-        " with the characters we have already typed.
-        for l:item in a:suggestions
-            " A List of String values or a List of completion item Dictionaries
-            " is accepted here.
-            let l:word = type(l:item) is v:t_string ? l:item : l:item.word
+        " For completing...
+        "   foo.
+        "       ^
+        " We need to include all of the given suggestions.
+        if index(l:triggers, a:prefix) >= 0 || empty(a:prefix)
+            let l:filtered_suggestions = a:suggestions
+        else
+            let l:filtered_suggestions = []
 
-            " Add suggestions if the suggestion starts with a case-insensitive
-            " match for the prefix.
-            if l:word[: len(a:prefix) - 1] is? a:prefix
-                call add(l:filtered_suggestions, l:item)
-            endif
-        endfor
+            " Filter suggestions down to those starting with the prefix we
+            " used for finding suggestions in the first place.
+            "
+            " Some completion tools will include suggestions which don't even
+            " start with the characters we have already typed.
+            for l:item in a:suggestions
+                " A List of String values or a List of completion item
+                " Dictionaries is accepted here.
+                let l:word = type(l:item) is v:t_string ? l:item : l:item.word
+
+                " Add suggestions if the suggestion starts with a
+                " case-insensitive match for the prefix.
+                if l:word[: len(a:prefix) - 1] is? a:prefix
+                    call add(l:filtered_suggestions, l:item)
+                endif
+            endfor
+        endif
     endif
 
     if !empty(l:excluded_words)
@@ -259,7 +274,7 @@ function! ale#completion#ParseTSServerCompletionEntryDetails(response) abort
             call add(l:documentationParts, l:part.text)
         endfor
 
-        if l:suggestion.kind is# 'clasName'
+        if l:suggestion.kind is# 'className'
             let l:kind = 'f'
         elseif l:suggestion.kind is# 'parameterName'
             let l:kind = 'f'
@@ -301,7 +316,7 @@ function! ale#completion#ParseTSServerCompletionEntryDetails(response) abort
 endfunction
 
 function! ale#completion#NullFilter(buffer, item) abort
-   return 1
+    return 1
 endfunction
 
 function! ale#completion#ParseLSPCompletions(response) abort
@@ -354,17 +369,23 @@ function! ale#completion#ParseLSPCompletions(response) abort
             let l:kind = 'v'
         endif
 
+        let l:doc = get(l:item, 'documentation', '')
+
+        if type(l:doc) is v:t_dict && has_key(l:doc, 'value')
+            let l:doc = l:doc.value
+        endif
+
         call add(l:results, {
         \   'word': l:word,
         \   'kind': l:kind,
         \   'icase': 1,
         \   'menu': get(l:item, 'detail', ''),
-        \   'info': get(l:item, 'documentation', ''),
+        \   'info': (type(l:doc) is v:t_string ? l:doc : ''),
         \})
     endfor
 
     if has_key(l:info, 'prefix')
-        return ale#completion#Filter(l:buffer, l:results, l:info.prefix)
+        return ale#completion#Filter(l:buffer, &filetype, l:results, l:info.prefix)
     endif
 
     return l:results
@@ -385,6 +406,7 @@ function! ale#completion#HandleTSServerResponse(conn_id, response) abort
     if l:command is# 'completions'
         let l:names = ale#completion#Filter(
         \   l:buffer,
+        \   &filetype,
         \   ale#completion#ParseTSServerCompletions(a:response),
         \   b:ale_completion_info.prefix,
         \)[: g:ale_completion_max_suggestions - 1]
@@ -424,6 +446,58 @@ function! ale#completion#HandleLSPResponse(conn_id, response) abort
     \)
 endfunction
 
+function! s:OnReady(linter, lsp_details, ...) abort
+    let l:buffer = a:lsp_details.buffer
+    let l:id = a:lsp_details.connection_id
+
+    " If we have sent a completion request already, don't send another.
+    if b:ale_completion_info.request_id
+        return
+    endif
+
+    let l:Callback = a:linter.lsp is# 'tsserver'
+    \   ? function('ale#completion#HandleTSServerResponse')
+    \   : function('ale#completion#HandleLSPResponse')
+    call ale#lsp#RegisterCallback(l:id, l:Callback)
+
+    if a:linter.lsp is# 'tsserver'
+        let l:message = ale#lsp#tsserver_message#Completions(
+        \   l:buffer,
+        \   b:ale_completion_info.line,
+        \   b:ale_completion_info.column,
+        \   b:ale_completion_info.prefix,
+        \)
+    else
+        " Send a message saying the buffer has changed first, otherwise
+        " completions won't know what text is nearby.
+        call ale#lsp#NotifyForChanges(l:id, l:buffer)
+
+        " For LSP completions, we need to clamp the column to the length of
+        " the line. python-language-server and perhaps others do not implement
+        " this correctly.
+        let l:message = ale#lsp#message#Completion(
+        \   l:buffer,
+        \   b:ale_completion_info.line,
+        \   min([
+        \       b:ale_completion_info.line_length,
+        \       b:ale_completion_info.column,
+        \   ]) + 1,
+        \   ale#completion#GetTriggerCharacter(&filetype, b:ale_completion_info.prefix),
+        \)
+    endif
+
+    let l:request_id = ale#lsp#Send(l:id, l:message)
+
+    if l:request_id
+        let b:ale_completion_info.conn_id = l:id
+        let b:ale_completion_info.request_id = l:request_id
+
+        if has_key(a:linter, 'completion_filter')
+            let b:ale_completion_info.completion_filter = a:linter.completion_filter
+        endif
+    endif
+endfunction
+
 function! s:GetLSPCompletions(linter) abort
     let l:buffer = bufnr('')
     let l:lsp_details = ale#lsp_linter#StartLSP(l:buffer, a:linter)
@@ -433,58 +507,10 @@ function! s:GetLSPCompletions(linter) abort
     endif
 
     let l:id = l:lsp_details.connection_id
-    let l:root = l:lsp_details.project_root
 
-    function! OnReady(...) abort closure
-        " If we have sent a completion request already, don't send another.
-        if b:ale_completion_info.request_id
-            return
-        endif
+    let l:OnReady = function('s:OnReady', [a:linter, l:lsp_details])
 
-        let l:Callback = a:linter.lsp is# 'tsserver'
-        \   ? function('ale#completion#HandleTSServerResponse')
-        \   : function('ale#completion#HandleLSPResponse')
-        call ale#lsp#RegisterCallback(l:id, l:Callback)
-
-        if a:linter.lsp is# 'tsserver'
-            let l:message = ale#lsp#tsserver_message#Completions(
-            \   l:buffer,
-            \   b:ale_completion_info.line,
-            \   b:ale_completion_info.column,
-            \   b:ale_completion_info.prefix,
-            \)
-        else
-            " Send a message saying the buffer has changed first, otherwise
-            " completions won't know what text is nearby.
-            call ale#lsp#NotifyForChanges(l:id, l:root, l:buffer)
-
-            " For LSP completions, we need to clamp the column to the length of
-            " the line. python-language-server and perhaps others do not implement
-            " this correctly.
-            let l:message = ale#lsp#message#Completion(
-            \   l:buffer,
-            \   b:ale_completion_info.line,
-            \   min([
-            \       b:ale_completion_info.line_length,
-            \       b:ale_completion_info.column,
-            \   ]),
-            \   ale#completion#GetTriggerCharacter(&filetype, b:ale_completion_info.prefix),
-            \)
-        endif
-
-        let l:request_id = ale#lsp#Send(l:id, l:message, l:lsp_details.project_root)
-
-        if l:request_id
-            let b:ale_completion_info.conn_id = l:id
-            let b:ale_completion_info.request_id = l:request_id
-
-            if has_key(a:linter, 'completion_filter')
-                let b:ale_completion_info.completion_filter = a:linter.completion_filter
-            endif
-        endif
-    endfunction
-
-    call ale#lsp#WaitForCapability(l:id, l:root, 'completion', function('OnReady'))
+    call ale#lsp#WaitForCapability(l:id, 'completion', l:OnReady)
 endfunction
 
 function! ale#completion#GetCompletions() abort
@@ -492,11 +518,17 @@ function! ale#completion#GetCompletions() abort
         return
     endif
 
+    call ale#completion#AlwaysGetCompletions(1)
+endfunction
+
+" This function can be used to manually trigger autocomplete, even when
+" g:ale_completion_enabled is set to false
+function! ale#completion#AlwaysGetCompletions(need_prefix) abort
     let [l:line, l:column] = getcurpos()[1:2]
 
     let l:prefix = ale#completion#GetPrefix(&filetype, l:line, l:column)
 
-    if empty(l:prefix)
+    if a:need_prefix && empty(l:prefix)
         return
     endif
 

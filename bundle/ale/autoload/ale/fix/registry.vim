@@ -17,6 +17,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['python'],
 \       'description': 'Fix PEP8 issues with autopep8.',
 \   },
+\   'bibclean': {
+\       'function': 'ale#fixers#bibclean#Fix',
+\       'suggested_filetypes': ['bib'],
+\       'description': 'Format bib files using bibclean.',
+\   },
 \   'black': {
 \       'function': 'ale#fixers#black#Fix',
 \       'suggested_filetypes': ['python'],
@@ -56,7 +61,7 @@ let s:default_registry = {
 \   },
 \   'prettier': {
 \       'function': 'ale#fixers#prettier#Fix',
-\       'suggested_filetypes': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'json5', 'graphql', 'markdown', 'vue'],
+\       'suggested_filetypes': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'json5', 'graphql', 'markdown', 'vue', 'html', 'yaml'],
 \       'description': 'Apply prettier to a file.',
 \   },
 \   'prettier_eslint': {
@@ -110,9 +115,14 @@ let s:default_registry = {
 \       'suggested_filetypes': ['javascript'],
 \       'description': 'Fix JavaScript files using standard --fix',
 \   },
+\   'standardrb': {
+\       'function': 'ale#fixers#standardrb#Fix',
+\       'suggested_filetypes': ['ruby'],
+\       'description': 'Fix ruby files with standardrb --fix',
+\   },
 \   'stylelint': {
 \       'function': 'ale#fixers#stylelint#Fix',
-\       'suggested_filetypes': ['css', 'sass', 'scss', 'stylus'],
+\       'suggested_filetypes': ['css', 'sass', 'scss', 'sugarss', 'stylus'],
 \       'description': 'Fix stylesheet files using stylelint --fix.',
 \   },
 \   'swiftformat': {
@@ -135,6 +145,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['c', 'cpp'],
 \       'description': 'Fix C/C++ files with clang-format.',
 \   },
+\   'cmakeformat': {
+\       'function': 'ale#fixers#cmakeformat#Fix',
+\       'suggested_filetypes': ['cmake'],
+\       'description': 'Fix CMake files with cmake-format.',
+\   },
 \   'gofmt': {
 \       'function': 'ale#fixers#gofmt#Fix',
 \       'suggested_filetypes': ['go'],
@@ -145,6 +160,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['go'],
 \       'description': 'Fix Go files imports with goimports.',
 \   },
+\   'gomod': {
+\       'function': 'ale#fixers#gomod#Fix',
+\       'suggested_filetypes': ['gomod'],
+\       'description': 'Fix Go module files with go mod edit -fmt.',
+\   },
 \   'tslint': {
 \       'function': 'ale#fixers#tslint#Fix',
 \       'suggested_filetypes': ['typescript'],
@@ -154,6 +174,11 @@ let s:default_registry = {
 \       'function': 'ale#fixers#rustfmt#Fix',
 \       'suggested_filetypes': ['rust'],
 \       'description': 'Fix Rust files with Rustfmt.',
+\   },
+\   'textlint': {
+\       'function': 'ale#fixers#textlint#Fix',
+\       'suggested_filetypes': ['text','markdown','asciidoc','tex'],
+\       'description': 'Fix text files with textlint --fix',
 \   },
 \   'hackfmt': {
 \       'function': 'ale#fixers#hackfmt#Fix',
@@ -170,6 +195,21 @@ let s:default_registry = {
 \       'suggested_filetypes': ['haskell'],
 \       'description': 'Fix Haskell files with brittany.',
 \   },
+\   'hlint': {
+\       'function': 'ale#fixers#hlint#Fix',
+\       'suggested_filetypes': ['haskell'],
+\       'description': 'Refactor Haskell files with hlint.',
+\   },
+\   'stylish-haskell': {
+\       'function': 'ale#fixers#stylish_haskell#Fix',
+\       'suggested_filetypes': ['haskell'],
+\       'description': 'Refactor Haskell files with stylish-haskell.',
+\   },
+\   'ocamlformat': {
+\       'function': 'ale#fixers#ocamlformat#Fix',
+\       'suggested_filetypes': ['ocaml'],
+\       'description': 'Fix OCaml files with ocamlformat.',
+\   },
 \   'refmt': {
 \       'function': 'ale#fixers#refmt#Fix',
 \       'suggested_filetypes': ['reason'],
@@ -179,6 +219,11 @@ let s:default_registry = {
 \       'function': 'ale#fixers#shfmt#Fix',
 \       'suggested_filetypes': ['sh'],
 \       'description': 'Fix sh files with shfmt.',
+\   },
+\   'sqlfmt': {
+\       'function': 'ale#fixers#sqlfmt#Fix',
+\       'suggested_filetypes': ['sql'],
+\       'description': 'Fix SQL files with sqlfmt.',
 \   },
 \   'google_java_format': {
 \       'function': 'ale#fixers#google_java_format#Fix',
@@ -215,6 +260,26 @@ let s:default_registry = {
 \       'suggested_filetypes': ['dart'],
 \       'description': 'Fix Dart files with dartfmt.',
 \   },
+\   'xmllint': {
+\       'function': 'ale#fixers#xmllint#Fix',
+\       'suggested_filetypes': ['xml'],
+\       'description': 'Fix XML files with xmllint.',
+\   },
+\   'uncrustify': {
+\       'function': 'ale#fixers#uncrustify#Fix',
+\       'suggested_filetypes': ['c', 'cpp', 'cs', 'objc', 'objcpp', 'd', 'java', 'p', 'vala' ],
+\       'description': 'Fix C, C++, C#, ObjectiveC, ObjectiveC++, D, Java, Pawn, and VALA files with uncrustify.',
+\   },
+\   'terraform': {
+\       'function': 'ale#fixers#terraform#Fix',
+\       'suggested_filetypes': ['hcl', 'terraform'],
+\       'description': 'Fix tf and hcl files with terraform fmt.',
+\   },
+\   'ktlint': {
+\       'function': 'ale#fixers#ktlint#Fix',
+\       'suggested_filetypes': ['kt'],
+\       'description': 'Fix Kotlin files with ktlint.',
+\   },
 \}
 
 " Reset the function registry to the default entries.
@@ -243,7 +308,7 @@ endfunction
 " (name, func, filetypes, desc, aliases)
 function! ale#fix#registry#Add(name, func, filetypes, desc, ...) abort
     " This command will throw from the sandbox.
-    let &equalprg=&equalprg
+    let &l:equalprg=&l:equalprg
 
     if type(a:name) isnot v:t_string
         throw '''name'' must be a String'

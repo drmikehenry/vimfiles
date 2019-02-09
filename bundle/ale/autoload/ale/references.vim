@@ -17,7 +17,7 @@ endfunction
 function! ale#references#HandleTSServerResponse(conn_id, response) abort
     if get(a:response, 'command', '') is# 'references'
     \&& has_key(s:references_map, a:response.request_seq)
-        call remove(s:references_map, a:response.request_seq)
+        let l:options = remove(s:references_map, a:response.request_seq)
 
         if get(a:response, 'success', v:false) is v:true
             let l:item_list = []
@@ -27,13 +27,14 @@ function! ale#references#HandleTSServerResponse(conn_id, response) abort
                 \ 'filename': l:response_item.file,
                 \ 'line': l:response_item.start.line,
                 \ 'column': l:response_item.start.offset,
+                \ 'match': substitute(l:response_item.lineText, '^\s*\(.\{-}\)\s*$', '\1', ''),
                 \})
             endfor
 
             if empty(l:item_list)
                 call ale#util#Execute('echom ''No references found.''')
             else
-                call ale#preview#ShowSelection(l:item_list)
+                call ale#preview#ShowSelection(l:item_list, l:options)
             endif
         endif
     endif
@@ -42,7 +43,7 @@ endfunction
 function! ale#references#HandleLSPResponse(conn_id, response) abort
     if has_key(a:response, 'id')
     \&& has_key(s:references_map, a:response.id)
-        call remove(s:references_map, a:response.id)
+        let l:options = remove(s:references_map, a:response.id)
 
         " The result can be a Dictionary item, a List of the same, or null.
         let l:result = get(a:response, 'result', [])
@@ -59,12 +60,43 @@ function! ale#references#HandleLSPResponse(conn_id, response) abort
         if empty(l:item_list)
             call ale#util#Execute('echom ''No references found.''')
         else
-            call ale#preview#ShowSelection(l:item_list)
+            call ale#preview#ShowSelection(l:item_list, l:options)
         endif
     endif
 endfunction
 
-function! s:FindReferences(linter) abort
+function! s:OnReady(linter, lsp_details, line, column, options, ...) abort
+    let l:buffer = a:lsp_details.buffer
+    let l:id = a:lsp_details.connection_id
+
+    let l:Callback = a:linter.lsp is# 'tsserver'
+    \   ? function('ale#references#HandleTSServerResponse')
+    \   : function('ale#references#HandleLSPResponse')
+
+    call ale#lsp#RegisterCallback(l:id, l:Callback)
+
+    if a:linter.lsp is# 'tsserver'
+        let l:message = ale#lsp#tsserver_message#References(
+        \   l:buffer,
+        \   a:line,
+        \   a:column
+        \)
+    else
+        " Send a message saying the buffer has changed first, or the
+        " references position probably won't make sense.
+        call ale#lsp#NotifyForChanges(l:id, l:buffer)
+
+        let l:message = ale#lsp#message#References(l:buffer, a:line, a:column)
+    endif
+
+    let l:request_id = ale#lsp#Send(l:id, l:message)
+
+    let s:references_map[l:request_id] = {
+    \ 'use_relative_paths': has_key(a:options, 'use_relative_paths') ? a:options.use_relative_paths : 0
+    \}
+endfunction
+
+function! s:FindReferences(linter, options) abort
     let l:buffer = bufnr('')
     let [l:line, l:column] = getcurpos()[1:2]
 
@@ -79,41 +111,26 @@ function! s:FindReferences(linter) abort
     endif
 
     let l:id = l:lsp_details.connection_id
-    let l:root = l:lsp_details.project_root
 
-    function! OnReady(...) abort closure
-        let l:Callback = a:linter.lsp is# 'tsserver'
-        \   ? function('ale#references#HandleTSServerResponse')
-        \   : function('ale#references#HandleLSPResponse')
-
-        call ale#lsp#RegisterCallback(l:id, l:Callback)
-
-        if a:linter.lsp is# 'tsserver'
-            let l:message = ale#lsp#tsserver_message#References(
-            \   l:buffer,
-            \   l:line,
-            \   l:column
-            \)
-        else
-            " Send a message saying the buffer has changed first, or the
-            " references position probably won't make sense.
-            call ale#lsp#NotifyForChanges(l:id, l:root, l:buffer)
-
-            let l:message = ale#lsp#message#References(l:buffer, l:line, l:column)
-        endif
-
-        let l:request_id = ale#lsp#Send(l:id, l:message, l:lsp_details.project_root)
-
-        let s:references_map[l:request_id] = {}
-    endfunction
-
-    call ale#lsp#WaitForCapability(l:id, l:root, 'references', function('OnReady'))
+    call ale#lsp#WaitForCapability(l:id, 'references', function('s:OnReady', [
+    \   a:linter, l:lsp_details, l:line, l:column, a:options
+    \]))
 endfunction
 
-function! ale#references#Find() abort
+function! ale#references#Find(...) abort
+    let l:options = {}
+
+    if len(a:000) > 0
+        for l:option in a:000
+            if l:option is? '-relative'
+                let l:options.use_relative_paths = 1
+            endif
+        endfor
+    endif
+
     for l:linter in ale#linter#Get(&filetype)
         if !empty(l:linter.lsp)
-            call s:FindReferences(l:linter)
+            call s:FindReferences(l:linter, l:options)
         endif
     endfor
 endfunction
