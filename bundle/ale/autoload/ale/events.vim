@@ -44,7 +44,7 @@ function! ale#events#LintOnEnter(buffer) abort
     call setbufvar(a:buffer, 'ale_file_changed', 0)
 
     if ale#Var(a:buffer, 'enabled') && g:ale_lint_on_enter
-        call ale#Queue(0, 'lint_file', a:buffer)
+        call ale#Queue(300, 'lint_file', a:buffer)
     endif
 endfunction
 

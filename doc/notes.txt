@@ -596,7 +596,7 @@ ALE                                                     *notes_ale*
 
 NOTE: experimental support only for now; disabled by default.
 
-Version 2018-08-10 (6167f75) from:
+Version 2019-02-08 (a24f0b4) from:
 https://github.com/w0rp/ale.git
 
 Installation:
@@ -606,7 +606,7 @@ Apply the following patch to provide g:ale_rst_rstcheck_options support.
 This is hopefully temporary.
 
 diff --git a/bundle/ale/ale_linters/rst/rstcheck.vim b/bundle/ale/ale_linters/rst/rstcheck.vim
-index b660627..c09c3ad 100644
+index 8504738..521b3a0 100644
 --- a/bundle/ale/ale_linters/rst/rstcheck.vim
 +++ b/bundle/ale/ale_linters/rst/rstcheck.vim
 @@ -2,6 +2,9 @@
@@ -619,7 +619,7 @@ index b660627..c09c3ad 100644
  function! ale_linters#rst#rstcheck#Handle(buffer, lines) abort
      " matches: 'bad_rst.rst:1: (SEVERE/4) Title overline & underline
      " mismatch.'
-@@ -22,8 +25,10 @@ function! ale_linters#rst#rstcheck#Handle(buffer, lines) abort
+@@ -23,8 +26,10 @@ function! ale_linters#rst#rstcheck#Handle(buffer, lines) abort
  endfunction
 
  function! ale_linters#rst#rstcheck#GetCommand(buffer) abort
@@ -632,7 +632,7 @@ index b660627..c09c3ad 100644
 
 Apply this patch to defer execution of ALE for a bit when entering a buffer:
 diff --git a/bundle/ale/autoload/ale/events.vim b/bundle/ale/autoload/ale/events.vim
-index 300aefc..e523a6a 100644
+index c3dbd37..16c9f71 100644
 --- a/bundle/ale/autoload/ale/events.vim
 +++ b/bundle/ale/autoload/ale/events.vim
 @@ -44,7 +44,7 @@ function! ale#events#LintOnEnter(buffer) abort
