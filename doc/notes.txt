@@ -1489,14 +1489,25 @@ changed via g:localvimrc_sandbox).  At present, Vim restricts the use of
 |:setlocal| in a sandbox, so to change buffer-local properties, use |:set|
 instead.
 
-For example, to use 8-character tabs in "C" source files, create a .lvimrc
-file in a parent directory containing the source files.  The .lvimrc file
-might contain: >
+For example, to use 8-character tabs in "C" source files and disable
+highlighting of tab characters, create a .lvimrc file in a parent directory
+containing the source files.  The .lvimrc file might contain: >
 
   if &filetype == 'c'
-      set tabstop=8 noexpandtab
+      setlocal noexpandtab tabstop=8 softtabstop=8 shiftwidth=8
+      Highlight notabs
   endif
+<
+Or to make localized changes based on the current filename: >
 
+  " Change *.asm and *.inc to mean Z80 assembly instead of x86.
+  " Get the extension of the current filename:
+  let s:ext = expand('%:e')
+  if s:ext == 'asm' || s:ext == 'inc'
+      SetupSource
+      setfiletype z80
+  endif
+<
 To re-use a group of settings, create a function (say, in the global vimrc
 file), then call it from the .lvimrc files.
 
