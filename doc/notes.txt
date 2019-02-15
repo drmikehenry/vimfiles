@@ -79,6 +79,7 @@
     SwapIt - Cycle through related words                |notes_swapit|
     Syntastic - Syntax checking hacks for Vim           |notes_syntastic|
     Tagbar - Source code browser                        |notes_tagbar|
+    Toml - Support for TOML files                       |notes_toml|
     TagSignature - Balloon signatures for tags          |notes_tagsignature|
     Tcomment - Comment lines in a program               |notes_tcomment|
     TextObj-Diff - Diff-based text objects              |notes_textobj-diff|
@@ -2124,6 +2125,22 @@ https://github.com/rust-lang/rust.vim.git
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
+Requires the following small patch to allow Cargo.toml files to be treated as
+toml files instead of generic config files:
+
+diff --git a/bundle/rust/ftdetect/rust.vim b/bundle/rust/ftdetect/rust.vim
+index 77e28e7..ec331ec 100644
+--- a/bundle/rust/ftdetect/rust.vim
++++ b/bundle/rust/ftdetect/rust.vim
+@@ -1,6 +1,6 @@
+ " vint: -ProhibitAutocmdWithNoGroup
+
+ autocmd BufRead,BufNewFile *.rs setf rust
+-autocmd BufRead,BufNewFile Cargo.toml if &filetype == "" | set filetype=cfg | endif
++" autocmd BufRead,BufNewFile Cargo.toml if &filetype == "" | set filetype=cfg | endif
+
+ " vim: set et sw=4 sts=4 ts=8:
+
 ------------------------------------------------------------------------------
 SCRIPTEASE                                              *notes_scriptease*
   Debugging tools for Vimscripts                        |scriptease|
@@ -2572,6 +2589,16 @@ embedded in $VIMFILES/tool/rst2ctags.
 Also added support for markdown using markdown2ctags v0.2.5.  markdown2ctags
 can be found at https://github.com/jszakmeister/markdown2ctags, and a copy has
 been embedded in $VIMFILES/tool/markdown2ctags.
+
+------------------------------------------------------------------------------
+TOML                                                    *notes_toml*
+  Support for TOML files
+
+Version 2019-02-13 (5dede56) from:
+https://github.com/cespare/vim-toml
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 TAGSIGNATURE                                            *notes_tagsignature*
