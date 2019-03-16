@@ -12,6 +12,9 @@ require adjustment of per-user settings.
 
 - Add Rust's ``target/`` directory to ``wildignore``.
 
+- Add ``Inc()`` function for generating incrementing sequences of numbers (say,
+  to number some lines); see ``:help notes_list_of_numbers``.
+
 2019-02-15
 ==========
 

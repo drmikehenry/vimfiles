@@ -2685,6 +2685,23 @@ nnoremap <M-r>iu :ToUnderscore<CR>
 nnoremap <M-r>iU :ToUmc<CR>
 nnoremap <M-r>il :ToLmc<CR>
 
+" Inc() function to provide incrementation of the global variable ``i``.
+" Add an argument (can be negative, default 1) to global variable i.
+" Return value of i before the change.
+" E.g.::
+"   let i = 1
+"   Inc() -> 1
+"   Inc() -> 2
+"   Inc(3) -> 5
+"   Inc(3) -> 8
+" To change all ``abc`` strings into ``xyz_#`` where ``#`` increments:
+"   :let i = 1 | %s/abc/\='xyz_' . Inc()/g
+function Inc(...)
+  let result = g:i
+  let g:i += a:0 > 0 ? a:1 : 1
+  return result
+endfunction
+
 " -------------------------------------------------------------
 " Buffer manipulation
 " -------------------------------------------------------------

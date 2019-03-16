@@ -144,6 +144,7 @@
     Conflict marker navigation                          |notes_conflict_marker|
     Embedded language support                           |notes_embedded_lang|
     Source control integration                          |notes_source_control|
+    List of numbers                                     |notes_list_of_numbers|
 
 6.  Tips                                                |notes_tips|
     Command-line window                                 |notes_tips_commandline|
@@ -4244,6 +4245,50 @@ During a Git rebase operation, the following additional mappings are available:
 <Leader><Leader>p Change rebase action to "pick"
 <Leader><Leader>r Change rebase action to "reword"
 <Leader><Leader>s Change rebase action to "squash"
+
+------------------------------------------------------------------------------
+List of numbers                                         *notes_list_of_numbers*
+
+The function Inc() provides a way to generate an incrementing sequence of
+numbers during a substitute operation.  It comes in two forms: >
+
+  Inc()     " Increment by one.
+  Inc(n)    " Increment by n.
+<
+Consider this list: >
+
+  abc
+  abc
+  abc
+<
+Use `Inc()` to replace each `abc` with `xyz_#` where `#` increments: >
+
+  :let i = 1 | %s/abc/\='xyz_' . Inc()/g
+>
+Yielding this new list: >
+  xyz_1
+  xyz_2
+  xyz_3
+<
+To prefix each of these lines with a number: >
+
+  one
+  two
+  three
+<
+First, initialize the variable: >
+  :let i = 1
+<
+Then select the lines visually and use: >
+
+  :'<,'>s/^/\=Inc() . '. '/g
+<
+to get these numbered lines: >
+  1. one
+  2. two
+  3. three
+<
+See https://vim.fandom.com/wiki/Making_a_list_of_numbers for more ideas.
 
 ==============================================================================
 6.  Tips                                                *notes_tips*

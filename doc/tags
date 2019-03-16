@@ -207,6 +207,7 @@ notes_intro	notes.txt	/*notes_intro*
 notes_javacomplete	notes.txt	/*notes_javacomplete*
 notes_keepcase	notes.txt	/*notes_keepcase*
 notes_less	notes.txt	/*notes_less*
+notes_list_of_numbers	notes.txt	/*notes_list_of_numbers*
 notes_localvimrc	notes.txt	/*notes_localvimrc*
 notes_loremipsum	notes.txt	/*notes_loremipsum*
 notes_lusty	notes.txt	/*notes_lusty*
@@ -274,6 +275,7 @@ notes_tips_redirecting	notes.txt	/*notes_tips_redirecting*
 notes_tips_xon_xoff	notes.txt	/*notes_tips_xon_xoff*
 notes_tmux_syntax	notes.txt	/*notes_tmux_syntax*
 notes_togglecursor	notes.txt	/*notes_togglecursor*
+notes_toml	notes.txt	/*notes_toml*
 notes_ultisnips	notes.txt	/*notes_ultisnips*
 notes_unicode	notes.txt	/*notes_unicode*
 notes_vader	notes.txt	/*notes_vader*
