@@ -1918,6 +1918,9 @@ set wildignore+=*.class,classes,*.jar,.lein-*
 " Ignore debug symbols on Mac OS X.
 set wildignore+=*.dSYM
 
+" Ignore Rust target/ directory.
+set wildignore+=target
+
 " Want sessionoptions to contain:
 "   blank - save unnamed buffers.
 "   buffers - save buffers.
