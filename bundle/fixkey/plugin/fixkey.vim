@@ -57,13 +57,29 @@ function! Fixkey_setNewKey(key, keyCode)
     let g:Fixkey_spareKeysUsed += 1
 endfunction
 
+function! Fixkey_setMetaNumbers()
+    let c = '0'
+    while c <= '9'
+        call Fixkey_setKey("<M-" .  c . ">", "\e" . c)
+        let c = nr2char(char2nr(c) + 1)
+    endwhile
+endfunction
+
+function! Fixkey_resetMetaNumbers()
+    let c = '0'
+    while c <= '9'
+        call Fixkey_setKey("<M-" .  c . ">", nr2char(char2nr(c)  + 0x80))
+        let c = nr2char(char2nr(c) + 1)
+    endwhile
+endfunction
+
 function! Fixkey_setMetaLetters()
     let c = 'a'
     while c <= 'z'
         let uc = toupper(c)
         call Fixkey_setKey("<M-" .  c . ">", "\e" . c)
         " Since many keycodes have "\eO" in them, we can't use "\eO" for <M-O>.
-        if uc != "O"
+        if uc != 'O'
             call Fixkey_setKey("<M-" . uc . ">", "\e" . uc)
         endif
         let c = nr2char(char2nr(c) + 1)
@@ -75,7 +91,9 @@ function! Fixkey_resetMetaLetters()
     while c <= 'z'
         let uc = toupper(c)
         call Fixkey_setKey("<M-" .  c . ">", nr2char(char2nr(c)  + 0x80))
-        call Fixkey_setKey("<M-" . uc . ">", nr2char(char2nr(uc) + 0x80))
+        if uc != 'O'
+            call Fixkey_setKey("<M-" . uc . ">", nr2char(char2nr(uc) + 0x80))
+        endif
         let c = nr2char(char2nr(c) + 1)
     endwhile
 endfunction
@@ -167,6 +185,7 @@ endfunction
 
 function! Fixkey_setXtermKeys()
     let g:Fixkey_termType = "xterm"
+    call Fixkey_setMetaNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setXtermFunctionKeys()
     call Fixkey_setXtermNavigationKeys()
@@ -179,6 +198,7 @@ endfunction
 
 function! Fixkey_setGnomeTerminalKeys()
     let g:Fixkey_termType = "gnome"
+    call Fixkey_setMetaNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setXtermFunctionKeys()
     call Fixkey_setXtermNavigationKeys()
@@ -188,6 +208,7 @@ endfunction
 
 function! Fixkey_setKonsoleKeys()
     let g:Fixkey_termType = "konsole"
+    call Fixkey_setMetaNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setXtermFunctionKeys()
     call Fixkey_setXtermNavigationKeys()
@@ -197,6 +218,7 @@ endfunction
 
 function! Fixkey_setLinuxKeys()
     let g:Fixkey_termType = "linux"
+    call Fixkey_setMetaNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setKey("<F1>",  "\e[[A")
     call Fixkey_setKey("<F2>",  "\e[[B")
@@ -302,6 +324,7 @@ endfunction
 function! Fixkey_setPuttyKeys()
     let g:Fixkey_termType = "putty"
     call Fixkey_unsetFunctionKeys()
+    call Fixkey_setMetaNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setPuttyF1toF12()
     call Fixkey_setPuttyShiftF3toF10()
@@ -397,6 +420,7 @@ endfunction
 function! Fixkey_setPuttyScoKeys()
     let g:Fixkey_termType = "putty-sco"
     call Fixkey_unsetFunctionKeys()
+    call Fixkey_setMetaNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setPuttyScoF1toF12()
     call Fixkey_setPuttyScoShiftF1toF12()
@@ -525,6 +549,7 @@ function! Fixkey_setRxvtKeys()
     set <Undo>=
     " <Help> is \e28~, which aliases <S-F5>.  Undefine it to avoid conflict.
     set <Help>=
+    call Fixkey_setMetaNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setRxvtShiftF3toF12()
     call Fixkey_setRxvtCtrlF1toF12()
@@ -551,6 +576,7 @@ function! Fixkey_setScreenExtraHomeEnd()
 endfunction
 
 function! Fixkey_setScreenCompatibleKeys()
+    call Fixkey_setMetaNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setXtermFunctionKeys()
     call Fixkey_setXtermHomeEnd()
@@ -597,7 +623,7 @@ elseif $TERM =~# '^putty\(-\d*color\)\?$'
 elseif $TERM =~# '^rxvt\(-unicode\)\?\(-\d*color\)\?$'
     call Fixkey_setRxvtKeys()
 
-elseif $TERM =~# '\v^screen(-\d*color|-bce|-it|-s)*$'
+elseif $TERM =~# '\v^screen([-.].*)?$'
     call Fixkey_setScreenKeys()
 
 elseif $TERM =~# '\v^tmux(-\d*color|-bce|-it|-s)*$'
