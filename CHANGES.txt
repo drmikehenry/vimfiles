@@ -12,6 +12,9 @@ require adjustment of per-user settings.
 
 - Update fixkey plugin to v0.3.10 to support mapping Alt-numbers.
 
+- Add "rust" to the list of languages embeddable in reStructuredText code
+  blocks.
+
 2019-03-16
 ==========
 

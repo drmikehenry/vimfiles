@@ -5811,7 +5811,7 @@ call DisableRstSyntaxCodeList()
 
 " NOTE: Embedding java causes spell checking to be disabled, because
 " the syntax file for java monkeys with the spell checking settings.
-let g:rstEmbeddedLangs = ["c", "cpp", "html", "python", "sh", "vim"]
+let g:rstEmbeddedLangs = ["c", "cpp", "html", "python", "rust", "sh", "vim"]
 
 " -------------------------------------------------------------
 " Setup for reStructuredText.
