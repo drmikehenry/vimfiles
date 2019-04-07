@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-04-07
+==========
+
+- Extend the ``gf`` (goto file) mapping to first try the built-in ``gf``
+  functionality before falling back to tags (thanks to Enno Konfekt).  Forcing
+  the use of tags may be done by visually selecting the filename and pressing
+  ``ctrl-]`` to follow the selected tag.
+
 2019-03-23
 ==========
 

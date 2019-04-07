@@ -2791,10 +2791,33 @@ set tags=./tags;$HOME,tags;$HOME
 " Use the following settings in a .ctags file.  With the
 " --extra=+f, filenames are tags, too, so the following
 " mappings will work when a file isn't in the path.
-nnoremap <expr> gf empty(taglist(expand('<cfile>'))) ?
-        \ "gf" : ":ta <C-r><C-f><CR>"
-nnoremap <expr> <C-w>f empty(taglist(expand('<cfile>'))) ?
-        \ "\<C-w>f" : ":stj <C-r><C-f><CR>"
+
+nnoremap <silent> gf         :<c-u>call <sid>gf("gf")<cr>
+nnoremap <silent> <c-w>f     :<c-u>call <sid>gf("\<lt>c-w>f")<cr>
+nnoremap <silent> <c-w>gf    :<c-u>call <sid>gf("\<lt>c-w>gf")<cr>
+nmap     <silent> <C-w><C-f> <C-w>f
+
+nnoremap <silent> gF         :<c-u>call <sid>gf("gF")<cr>
+nnoremap <silent> <c-w>F     :<c-u>call <sid>gf("\<lt>c-w>F")<cr>
+nnoremap <silent> <c-w>gF    :<c-u>call <sid>gf("\<lt>c-w>gF")<cr>
+
+function s:gf(map)
+    try
+        execute 'normal! ' . a:map
+    catch /^Vim\%((\a\+)\)\=:E447/
+        try
+            if a:map ==# "gf" || a:map ==# "gF"
+                execute 'tjump ' . expand('<cfile>:t')
+            elseif a:map ==# "\<c-w>f" || a:map ==# "\<c-w>F"
+                execute 'ptjump ' . expand('<cfile>:t')
+            elseif a:map ==# "\<c-w>gf" || a:map ==# "\<c-w>gF"
+                execute 'ptjump ' . expand('<cfile>:t')
+            endif
+        catch /^Vim\%((\a\+)\)\=:E\%(426\|433\)/
+            echo 'Error: neither path nor tag for this file name found!'
+        endtry
+    endtry
+endfunction
 
 " Convenience for building tag files in current directory.
 command! -bar Ctags :wall|silent! !gentags
