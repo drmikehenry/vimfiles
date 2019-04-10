@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-04-10
+==========
+
+- Fix Rust syntax highlighting so that it embeds properly in .rst files.
+  Previous to the patch, highlighting would continue on beyond the
+  ``code-block``.
+
 2019-04-07
 ==========
 

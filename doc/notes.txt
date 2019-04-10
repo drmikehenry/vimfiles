@@ -2140,6 +2140,36 @@ index 77e28e7..ec331ec 100644
 -autocmd BufRead,BufNewFile Cargo.toml if &filetype == "" | set filetype=cfg | endif
 +" autocmd BufRead,BufNewFile Cargo.toml if &filetype == "" | set filetype=cfg | endif
 
+Requires the following patch to fix syntax highlighting when embedded into .rst
+files.  Without this patch, the Rust-specific syntax highlighting doesn't turn
+off after the embedded code-block:
+
+diff --git a/bundle/rust/syntax/rust.vim b/bundle/rust/syntax/rust.vim
+index 4a419f4..dc838d7 100644
+--- a/bundle/rust/syntax/rust.vim
++++ b/bundle/rust/syntax/rust.vim
+@@ -63,8 +63,8 @@ syn region    rustBoxPlacement matchgroup=rustBoxPlacementParens start="(" end="
+ " Ideally we'd have syntax rules set up to match arbitrary expressions. Since
+ " we don't, we'll just define temporary contained rules to handle balancing
+ " delimiters.
+-syn region    rustBoxPlacementBalance start="(" end=")" containedin=rustBoxPlacement transparent
+-syn region    rustBoxPlacementBalance start="\[" end="\]" containedin=rustBoxPlacement transparent
++syn region    rustBoxPlacementBalance start="("ms=s+1 end=")"me=e-1 containedin=rustBoxPlacement transparent
++syn region    rustBoxPlacementBalance start="\["ms=s+1 end="\]"me=e-1 containedin=rustBoxPlacement transparent
+ " {} are handled by rustFoldBraces
+
+ syn region rustMacroRepeat matchgroup=rustMacroRepeatDelimiters start="$(" end=")" contains=TOP nextgroup=rustMacroRepeatCount
+@@ -224,7 +224,7 @@ syn keyword rustTodo contained TODO FIXME XXX NB NOTE
+ " Folding rules {{{2
+ " Trivial folding rules to begin with.
+ " FIXME: use the AST to make really good folding
+-syn region rustFoldBraces start="{" end="}" transparent fold
++syn region rustFoldBraces start="{"ms=s+1 end="}"me=e-1 transparent fold
+
+ if !exists("b:current_syntax_embed")
+     let b:current_syntax_embed = 1
+
+
  " vim: set et sw=4 sts=4 ts=8:
 
 ------------------------------------------------------------------------------
