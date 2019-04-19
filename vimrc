@@ -2179,10 +2179,10 @@ endif
 " =============================================================
 
 if !exists('g:DefaultGrepTool')
-    if executable('ag') == 1
-        let g:DefaultGrepTool = 'ag'
-    elseif executable('rg') == 1
+    if executable('rg') == 1
         let g:DefaultGrepTool = 'rg'
+    elseif executable('ag') == 1
+        let g:DefaultGrepTool = 'ag'
     elseif executable('ffg') == 1
         let g:DefaultGrepTool = 'ffg'
     elseif g:AckExecutable != ''
@@ -3810,6 +3810,10 @@ let g:grepper.tools += ['findx']
 let g:grepper.findx = {}
 let g:grepper.findx.grepprg = 'findx'
 let g:grepper.findx.grepformat = '%f'
+
+" Ripgrep (rg).
+let g:grepper.rg = {}
+let g:grepper.rg.grepprg = 'rg -H --no-heading --vimgrep --smart-case'
 
 " -------------------------------------------------------------
 " Gundo

@@ -3833,8 +3833,8 @@ The external findx utility may be invoked using any of the below commands: >
 The :G command provides a convenient way to search through a tree of files.  It
 defaults to the first external search tool it can find from the following list:
 
-- ag (The Silver Searcher, https://github.com/ggreer/the_silver_searcher)
 - rg (RipGrep, https://github.com/BurntSushi/ripgrep)
+- ag (The Silver Searcher, https://github.com/ggreer/the_silver_searcher)
 - ffg (From findx, https://github.com/drmikehenry/findx)
 - ack (https://beyondgrep.com/)
 
