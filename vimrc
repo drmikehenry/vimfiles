@@ -5838,7 +5838,8 @@ call DisableRstSyntaxCodeList()
 
 " NOTE: Embedding java causes spell checking to be disabled, because
 " the syntax file for java monkeys with the spell checking settings.
-let g:rstEmbeddedLangs = ["c", "cpp", "html", "python", "rust", "sh", "vim"]
+let g:rstEmbeddedLangs = ["c", "cpp", "dosini", "html", "ini", "python",
+        \ "ruby", "rust", "sh", "vim"]
 
 " -------------------------------------------------------------
 " Setup for reStructuredText.
@@ -5886,6 +5887,9 @@ function! SetupRstSyntax()
             " have both C and CPP active at the same time.  Map C highlighting
             " to CPP to avoid this problem.
             let synLang = "cpp"
+        elseif lang == "ini"
+            " The Vim filetype for .ini files is 'dosini'.
+            let synLang = "dosini"
         endif
         let synGroup = "rst" . synLang
         if !has_key(includedLangs, synLang)
