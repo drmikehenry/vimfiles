@@ -7,6 +7,20 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-05-27
+==========
+
+- Detect additional form of Bash temporary files.  Bash temporary files (used
+  for the ``fc`` command) may be one of two forms, depending on whether Bash is
+  compiled to use mkstemp()::
+
+    /tmp/bash-fc.XXXXXX     ; for mkstemp()
+    /tmp/bash-fc-dddddd     ; without mkstemp()
+
+  There doesn't appear to be any particular reason Bash should use a period in
+  one case and a hyphen in the other; it's probably just an unfortunate
+  oversight.
+
 2019-05-04
 ==========
 

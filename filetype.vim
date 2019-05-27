@@ -21,7 +21,7 @@ augroup filetypedetect
     au BufNewFile,BufRead *.wiki setfiletype Wikipedia
     au BufNewFile,BufRead *.rest setfiletype rst
     au BufNewFile,BufRead *.td setfiletype tablegen
-    au BufNewFile,BufRead bash-fc-* SetupBashFixcommand
+    au BufNewFile,BufRead bash-fc[-.]* SetupBashFixcommand
     au BufNewFile,BufRead leinrc setfiletype sh
     au BufNewFile,BufRead .pypirc setfiletype cfg
     au BufNewFile,BufRead .coveragerc setfiletype cfg
