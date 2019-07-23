@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Support ``.ini`` syntax within Markdown files (thanks to John Szakmeister).
 
+- Sort the results from ``ripgrep`` by path to keep related matches together.
+
 2019-05-27
 ==========
 

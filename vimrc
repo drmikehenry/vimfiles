@@ -3813,7 +3813,8 @@ let g:grepper.findx.grepformat = '%f'
 
 " Ripgrep (rg).
 let g:grepper.rg = {}
-let g:grepper.rg.grepprg = 'rg -H --no-heading --vimgrep --smart-case'
+let g:grepper.rg.grepprg =
+        \ 'rg -H --no-heading --vimgrep --smart-case --sort path'
 
 " -------------------------------------------------------------
 " Gundo
