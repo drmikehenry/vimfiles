@@ -5779,6 +5779,9 @@ function! SetupMarkdownSyntax()
             " have both C and CPP active at the same time.  Map C highlighting
             " to CPP to avoid this problem.
             let synLang = "cpp"
+        elseif lang == "ini"
+            " The Vim filetype for .ini files is 'dosini'.
+            let synLang = "dosini"
         endif
 
         let synGroup = "markdownHighlight" . synLang
