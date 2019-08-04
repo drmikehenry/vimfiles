@@ -2120,35 +2120,23 @@ Local customizations: >
 RUST SUPPORT                                            *notes_rust*
   Language support for Rust                             |rust|
 
-Version 2019-01-10 (12f549f) from:
+Version 2019-08-01 (772eaa6) from:
 https://github.com/rust-lang/rust.vim.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
-Requires the following small patch to allow Cargo.toml files to be treated as
-toml files instead of generic config files:
-
-diff --git a/bundle/rust/ftdetect/rust.vim b/bundle/rust/ftdetect/rust.vim
-index 77e28e7..ec331ec 100644
---- a/bundle/rust/ftdetect/rust.vim
-+++ b/bundle/rust/ftdetect/rust.vim
-@@ -1,6 +1,6 @@
- " vint: -ProhibitAutocmdWithNoGroup
-
- autocmd BufRead,BufNewFile *.rs setf rust
--autocmd BufRead,BufNewFile Cargo.toml if &filetype == "" | set filetype=cfg | endif
-+" autocmd BufRead,BufNewFile Cargo.toml if &filetype == "" | set filetype=cfg | endif
+Patches below are tracked in local projects/rust.vim repo, vimfiles branch.
 
 Requires the following patch to fix syntax highlighting when embedded into .rst
 files.  Without this patch, the Rust-specific syntax highlighting doesn't turn
 off after the embedded code-block:
 
-diff --git a/bundle/rust/syntax/rust.vim b/bundle/rust/syntax/rust.vim
-index 4a419f4..dc838d7 100644
---- a/bundle/rust/syntax/rust.vim
-+++ b/bundle/rust/syntax/rust.vim
-@@ -63,8 +63,8 @@ syn region    rustBoxPlacement matchgroup=rustBoxPlacementParens start="(" end="
+diff --git a/syntax/rust.vim b/syntax/rust.vim
+index 644741c..e901627 100644
+--- a/syntax/rust.vim
++++ b/syntax/rust.vim
+@@ -64,8 +64,8 @@ syn region    rustBoxPlacement matchgroup=rustBoxPlacementParens start="(" end="
  " Ideally we'd have syntax rules set up to match arbitrary expressions. Since
  " we don't, we'll just define temporary contained rules to handle balancing
  " delimiters.
@@ -2157,20 +2145,17 @@ index 4a419f4..dc838d7 100644
 +syn region    rustBoxPlacementBalance start="("ms=s+1 end=")"me=e-1 containedin=rustBoxPlacement transparent
 +syn region    rustBoxPlacementBalance start="\["ms=s+1 end="\]"me=e-1 containedin=rustBoxPlacement transparent
  " {} are handled by rustFoldBraces
-
+ 
  syn region rustMacroRepeat matchgroup=rustMacroRepeatDelimiters start="$(" end=")" contains=TOP nextgroup=rustMacroRepeatCount
-@@ -224,7 +224,7 @@ syn keyword rustTodo contained TODO FIXME XXX NB NOTE
+@@ -234,7 +234,7 @@ syn keyword rustTodo contained TODO FIXME XXX NB NOTE
  " Folding rules {{{2
  " Trivial folding rules to begin with.
  " FIXME: use the AST to make really good folding
 -syn region rustFoldBraces start="{" end="}" transparent fold
 +syn region rustFoldBraces start="{"ms=s+1 end="}"me=e-1 transparent fold
-
+ 
  if !exists("b:current_syntax_embed")
      let b:current_syntax_embed = 1
-
-
- " vim: set et sw=4 sts=4 ts=8:
 
 ------------------------------------------------------------------------------
 SCRIPTEASE                                              *notes_scriptease*
