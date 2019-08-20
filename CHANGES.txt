@@ -7,6 +7,25 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-08-20
+==========
+
+- Remove obsolete incsearch and incsearch-fuzzy plugins.  The primary feature
+  (highlighting matches while typing a search pattern) has been incorporated
+  into Vim itself, and as a result the plugins aren't being maintained.
+
+  After starting a search with ``/`` or ``?``, Vim will highlight the matches
+  incrementally as you type in a search pattern.  Before pressing Enter, you can
+  press CTRL-t or CTRL-g to move to the previous or next match.
+
+  Note also that Vimfiles remaps some keys in command-line mode (which applies
+  during searching as well) in order to provide familiar EMACS-style editing (as
+  found in the Bash shell, for example).  To invoke the previous functionality
+  for a given key, precede it by CTRL-o.  For example, to access the search
+  history which is normally available by pressing CTRL-f, use CTRL-o CTRL-f.
+
+  See ``:help cmdline.txt`` for more about Vim's command-line-mode keys.
+
 2019-08-04
 ==========
 

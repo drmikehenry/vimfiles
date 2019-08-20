@@ -1769,19 +1769,15 @@ cnoremap <M-f>      <S-Right>
 cnoremap <C-o><C-a> <C-a>
 cnoremap <C-o><C-b> <C-b>
 cnoremap <C-o><C-d> <C-d>
-cnoremap <C-o><C-f> <C-g>
+cnoremap <C-o><C-f> <C-f>
 cnoremap <C-o><C-n> <C-n>
 cnoremap <C-o><C-p> <C-p>
-
-" Use CTRL-g to bring up the command-line window.
-let &cedit = "<C-g>"
 
 " Original meanings:
 " <C-a>   Insert all matching filenames.
 " <C-b>   <Home>.
 " <C-d>   List matching names
 " <C-f>   Edit command-line history.
-" <C-g>   Nothing.
 " <C-n>   Next match after wildchar, or recall next command-line history.
 " <C-o>   Nothing.
 " <C-p>   Prev. match after wildchar, or recall prev. command-line history.
@@ -3830,45 +3826,6 @@ let g:gundo_close_on_revert = 1
 " Disable default mappings by having a pre-existing (but useless)
 " mapping to <Plug>HiLinkTrace.
 nmap <SID>DisableHiLinkTrace <Plug>HiLinkTrace
-
-" -------------------------------------------------------------
-" incsearch
-" -------------------------------------------------------------
-
-" Requires at least Vim 7.3.032:
-" https://github.com/haya14busa/incsearch.vim/issues/61
-if v:version > 703 || (v:version == 703 && has('patch32'))
-    nmap /      <Plug>(incsearch-forward)
-    nmap ?      <Plug>(incsearch-backward)
-    " Keep g/ as alias for unmodified search.
-    nnoremap g/ /
-
-    augroup incsearch-keymap
-        autocmd!
-        autocmd VimEnter * call s:incsearch_keymap()
-    augroup END
-    function! s:incsearch_keymap()
-        " The default mappings <C-j>/<C-k> are problematic for scrolling.
-        " C-k is useful for digraph mapping, so we restore that functionality
-        " by mapping it back to the built-in meaning.
-        " C-j is used by tmux, so it's inconvenient to use.
-        IncSearchNoreMap <C-k>  <C-k>
-        IncSearchNoreMap <C-j>  <C-j>
-        IncSearchNoreMap <M-p>  <Over>(incsearch-scroll-b)
-        IncSearchNoreMap <M-n>  <Over>(incsearch-scroll-f)
-    endfunction
-endif
-
-" -------------------------------------------------------------
-" incsearch-fuzzy
-" -------------------------------------------------------------
-
-" Requires at least Vim 7.3.032 (probably; assuming like incsearch)
-if v:version > 703 || (v:version == 703 && has('patch32'))
-    nmap z/     <Plug>(incsearch-fuzzy-/)
-    nmap z?     <Plug>(incsearch-fuzzy-?)
-    nmap zg/    <Plug>(incsearch-fuzzy-stay)
-endif
 
 " -------------------------------------------------------------
 " indent-guides

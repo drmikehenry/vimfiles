@@ -43,8 +43,6 @@
     HiLinkTrace - Display syntax highlighting stack     |notes_hilinktrace|
     Hybrid - A dark colorscheme                         |notes_hybrid|
     Indent-guides - Adds indent guides                  |notes_indent-guides|
-    Incsearch - Incrementally highlight pattern matches |notes_incsearch|
-    Incsearch-fuzzy - incsearch with fuzzy patterns     |notes_incsearch-fuzzy|
     JavaComplete - Java Omnicompletion                  |notes_javacomplete|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
     Less - Syntax highlighting for LessCSS              |notes_less|
@@ -1323,44 +1321,6 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-INCSEARCH                                                *notes_incsearch*
-  Incrementally highlight pattern matches                |incsearch.txt|
-
-Version 2017-11-23 (25e2547) from:
-https://github.com/haya14busa/incsearch.vim.git
-
-Local Customizations:
-- The recommended mappings for "/" and "?" were made; see |incsearch| for more
-  details.
-
-- The mapping "g/" is bound to "/" to invoke the standard Vim search behavior
-  for cases where the incsearch behavior is too slow.
-
-Useful keys during "/" operation:
-
-  <Tab>/<S-Tab>   move to next/previous match on screen
-  <M-n>/<M-p>     move to next/previous page of matches on screen
-  <C-l>           start buffer text completion; use <Right>/<Left> to
-                  scroll through options while completing
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-INCSEARCH-FUZZY                                          *notes_incsearch-fuzzy*
-  Incsearch with fuzzy patterns
-
-Version 2016-02-15 (b08fa8f) from:
-https://github.com/haya14busa/incsearch-fuzzy.vim.git
-
-Local Customizations:
-- The recommended mappings for "z/", "z?", and "zg/" were made; see
-  incsearch-fuzzy's README for more details.
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
 INDENT-GUIDES                                            *notes_indent-guides*
   Adds indent guides.                                    |indent-guides|
 
@@ -2145,7 +2105,7 @@ index 644741c..e901627 100644
 +syn region    rustBoxPlacementBalance start="("ms=s+1 end=")"me=e-1 containedin=rustBoxPlacement transparent
 +syn region    rustBoxPlacementBalance start="\["ms=s+1 end="\]"me=e-1 containedin=rustBoxPlacement transparent
  " {} are handled by rustFoldBraces
- 
+
  syn region rustMacroRepeat matchgroup=rustMacroRepeatDelimiters start="$(" end=")" contains=TOP nextgroup=rustMacroRepeatCount
 @@ -234,7 +234,7 @@ syn keyword rustTodo contained TODO FIXME XXX NB NOTE
  " Folding rules {{{2
@@ -2153,7 +2113,7 @@ index 644741c..e901627 100644
  " FIXME: use the AST to make really good folding
 -syn region rustFoldBraces start="{" end="}" transparent fold
 +syn region rustFoldBraces start="{"ms=s+1 end="}"me=e-1 transparent fold
- 
+
  if !exists("b:current_syntax_embed")
      let b:current_syntax_embed = 1
 
