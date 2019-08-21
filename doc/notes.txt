@@ -123,6 +123,7 @@
     Clipboard support                                   |notes_clipboard|
     Putting most-recently-yanked text                   |notes_putting_yanked|
     Yank-related mappings                               |notes_yank|
+    Window-related customizations                       |notes_window_related|
     Search-related customizations                       |notes_search|
     findx-related commands                              |notes_findx|
     :G 'search pattern'                                 |notes_G|
@@ -756,9 +757,17 @@ BUFKILL                                                 *notes_bufkill*
 Usage:
 
 :BUN      - unload a buffer, keeping window
+:BUN!     - unload a buffer, keeping window (even if buffer is modified)
 :BD       - delete a buffer, keeping window
+:BD!      - delete a buffer, keeping window (even if buffer is modified)
 :BW       - wipe a buffer, keeping window
+:BW!      - wipe a buffer, keeping window (even if buffer is modified)
 :BUNDO    - undo a previous :BUN, :BD, or :BW
+
+Mappings:
+
+  <Space>bd     :BW
+  <Space>bD     :BW!
 
 See also:
 :bun      - unload a buffer, closing window (vim built-in)    |:bunload|
@@ -875,7 +884,7 @@ Local customizations:
     CTRL-p c             CtrlPChange
     CTRL-p C             CtrlPChangeAll
     CTRL-p CTRL-d        CtrlPDir
-    CTRL-p CTRL-f        CtrlP %:h
+    CTRL-p CTRL-f        CtrlPCurFile   ; Relative to current file.
     CTRL-p CTRL-l        CtrlPLine
     CTRL-p CTRL-m        CtrlPMRU
     CTRL-p m             CtrlPMixed
@@ -888,6 +897,10 @@ Local customizations:
     CTRL-p t             CtrlPBufTag
     CTRL-p T             CtrlPBufTagAll
     CTRL-p CTRL-u        CtrlPUndo
+
+    <Space> bb           CtrlPBuffer    ; Open buffers.
+    <Space> ff           CtrlPCurFile   ; Relative to current file.
+    <Space> pf           CtrlPRoot      ; From nearest enclosing project root.
 
 - When CtrlP is active, the pair CTRL-n/CTRL-p moves the cursor vertically to
   make a selection, and ALT-n/ALT-p move through the command prompt history.
@@ -3558,7 +3571,10 @@ whitepsace from the current buffer.  It accepts a line range as well, such
 that selecting a visual range first followed by typing
 :StripTrailingWhitespace will strip only the selected lines.
 
-<Leader><Leader>$ is mapped to :StripTrailingWhitespace for convenience.
+For convenience, the following mappings are available:
+
+  <Leader><Leader>$     :StripTrailingWhitespace
+  <Space>xdw            :StripTrailingWhitespace
 
 ------------------------------------------------------------------------------
 Re-formatting text                                      *notes_reformatting*
@@ -3732,6 +3748,12 @@ the largest common whitespace prefix is removed from all lines.  For now, the
 destination register is hard-coded to be "0 (along with both clipboard-related
 registers "+ and "*).  This is convenient when yanking shell commands to be
 pasted into a terminal.
+
+------------------------------------------------------------------------------
+Window-related customizations                           *notes_window_related*
+
+Vim provides many window-related operations beginning with <C-w>.  To make these
+easier to type, <Space>w has been mapped to <C-w>.
 
 ------------------------------------------------------------------------------
 Search-related customizations                           *notes_search*

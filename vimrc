@@ -1574,6 +1574,8 @@ endfunction
 command! -bar StripTrailingWhitespace  call StripTrailingWhitespace()
 
 nnoremap <Leader><Leader>$  :StripTrailingWhitespace<CR>
+Noxmap   <Space>xdw         :StripTrailingWhitespace<CR>
+
 
 " Remap Q from useless "Ex" mode to "gq" re-formatting command.
 nnoremap Q gq
@@ -2055,6 +2057,15 @@ endif
 " -------------------------------------------------------------
 " End "inspired by mswin.vim"
 " -------------------------------------------------------------
+
+" -------------------------------------------------------------
+" Windows-related mappings
+" -------------------------------------------------------------
+
+" Map window-related operations that start with CTRL-w onto equivalents
+" starting with <Space>w.
+nmap     <Space>w           <C-w>
+
 
 " Break undo for some insert-mode deletion operations otherwise, an undo will
 " just remove all text from the current insert operation instead of bringing
@@ -3500,6 +3511,12 @@ let g:BufKillCreateMappings = 0
 "   'cancel' - don't kill it
 let g:BufKillActionWhenBufferDisplayedInAnotherWindow = 'kill'
 
+" Wipeout the current buffer.
+nnoremap <Space>bd          :BW<CR>
+
+" Wipeout the current buffer, even if there are changes.
+nnoremap <Space>bD          :BW!<CR>
+
 " -------------------------------------------------------------
 " bufmru
 " -------------------------------------------------------------
@@ -3601,6 +3618,16 @@ nnoremap <SNR>CtrlP.....<C-t> :<C-u>CtrlPTag<CR>
 nnoremap <SNR>CtrlP.....t     :<C-u>CtrlPBufTag<CR>
 nnoremap <SNR>CtrlP.....T     :<C-u>CtrlPBufTagAll<CR>
 nnoremap <SNR>CtrlP.....<C-u> :<C-u>CtrlPUndo<CR>
+
+" Select from open buffers.
+nnoremap <Space>bb          :<C-u>CtrlPBuffer<CR>
+
+" Select files relative to the current file.
+nnoremap <Space>ff          :<C-u>CtrlPCurFile<CR>
+
+" Select files relative to the project root directory.
+nnoremap <Space>pf          :<C-u>CtrlPRoot<CR>
+
 
 " Adjust move and history binding pairs:
 " - For consistency with other plugins that use <C-n>/<C-p> for moving around.

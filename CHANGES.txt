@@ -43,6 +43,16 @@ require adjustment of per-user settings.
     by <Tab>, ``h1``, and <Tab> again.  In this case, the original visually
     selected text will be used as the title.
 
+- Add some mappings:
+
+  - ``<Space>bd``   ``:BW``             ; Wipe out buffer
+  - ``<Space>bD``   ``:BW!``            ; Wipe out buffer (even if modified)
+  - ``<Space>bb``   ``:CtrlPBuffer``    ; Select from open buffers
+  - ``<Space>ff``   ``:CtrlPCurFile``   ; Select files relative to current file
+  - ``<Space>pf``   ``:CtrlPRoot``      ; Select files relative to project root
+  - ``<Space>w``    ``<C-w>``           ; Make window operations easier to type
+  - ``<Space>xdw``  ``:StripTrailingWhitespace``
+
 2019-08-20
 ==========
 
