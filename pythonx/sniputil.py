@@ -58,10 +58,10 @@ def wabbr(trigger, value, flags="", aliases=[]):
 ##############################################################################
 # Helpers for use in snippets themselves.
 
-def betterVisual(snip, contIndentLevel=1):
+def betterVisual(snip, contIndentLevel=1, default=''):
     import textwrap
 
-    text = textwrap.dedent(snip.v.text)
+    text = textwrap.dedent(snip.v.text or default)
     for i, line in enumerate(text.splitlines()):
         if i == 0:
             snip.rv = snip.mkline(line)

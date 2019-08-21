@@ -7,6 +7,42 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-08-21
+==========
+
+- Update reStructuredText snippets:
+
+  - Remove over-indentation of some block snippets.
+
+  - Add snippets for several new ``code-block`` types (``sh``, ``python``,
+    ``ruby``, ``rust``, ``text``).
+
+  - Add snippets for some directives (``.. math:``, ``.. [footnote]``, ``..
+    image:``, centered ``.. image:``.
+
+  - Bring in several markup snippets from John Szakmeister:
+    literal syntax via `lit``, inline math via ``m``, superscript and subscript
+    via ``sup``/``sub``, hyperlink markup via ``link``, title role via
+    ``title``, and today's date via ``date``.
+
+  - Supply visual-mode support for many of the snippets.  Normally, snippets are
+    expanded by typing the trigger followed by the <Tab> key; for example, to
+    make a level-one heading, type ``h1`` followed by <Tab>, which will generate
+    the following::
+
+      Section
+      =======
+
+    Typing ``New Title`` will cause the highlighted ``Section`` to be replaced,
+    yielding::
+
+      New Title
+      =========
+
+    Alternatively, the new title may be typed in and visually selected, followed
+    by <Tab>, ``h1``, and <Tab> again.  In this case, the original visually
+    selected text will be used as the title.
+
 2019-08-20
 ==========
 
