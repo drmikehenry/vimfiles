@@ -53,6 +53,8 @@ require adjustment of per-user settings.
   - ``<Space>w``    ``<C-w>``           ; Make window operations easier to type
   - ``<Space>xdw``  ``:StripTrailingWhitespace``
 
+- More experimental configuration for ALE.
+
 2019-08-20
 ==========
 

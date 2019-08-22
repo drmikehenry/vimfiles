@@ -281,6 +281,44 @@ To see if Ruby is included, run the following from within Gvim: >
 
   :echo has("ruby")
 
+Linters/formatters
+------------------
+
+Install desired lint and formatting tools for Syntastic, ALE, etc.:
+
+- Python:
+
+  - Install linters: >
+
+      pip install flake8 flake8-quotes pep8-naming
+      pip install mypy pyannotate monkeytype pytype
+<
+  - Install black formatter: >
+
+      pip install black
+<
+- Rust:
+
+  - Install rustfmt formatter: >
+
+      rustup component add rustfmt
+<
+- Shell:
+
+  - Install shellcheck linter: >
+
+      sudo apt-get install shellcheck
+<
+  - Install shfmt formatter: >
+
+      sudo apt-get install golang
+
+      # Add these lines to ~/.bashrc:
+      export GOPATH=$HOME/go
+      export PATH="$PATH:$GOPATH/bin"
+
+      go get -u mvdan.cc/sh/cmd/shfmt
+<
 ------------------------------------------------------------------------------
 Build Vim                                               *notes_build_vim*
 
@@ -644,6 +682,10 @@ index c3dbd37..16c9f71 100644
 +        call ale#Queue(300, 'lint_file', a:buffer)
      endif
  endfunction
+
+Mappings:
+
+  <Space>=    Run ALEFix on current buffer
 
 ------------------------------------------------------------------------------
 BADWOLF                                                 *notes_badwolf*
