@@ -14,3 +14,6 @@ command! -bar SetupMake call CustomSetupMake()
 " Use cpsm matcher for CtrlP.
 let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
 let g:cpsm_query_inverting_delimiter = ' '
+
+" Experiment with 'splitright'.
+set splitright
