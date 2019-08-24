@@ -5310,27 +5310,17 @@ endfunction
 function! HighlightDefineGroups()
     if !HighlightGroupExists("HG_Subtle")
         if &background == "dark"
-            highlight HG_Subtle  ctermfg=brown  ctermbg=darkgray
-                    \ guibg=red       guifg=white
+            " Same as ColorColumn.
+            highlight HG_Subtle  ctermbg=234 guibg=#1c1c1c
         else
-            highlight HG_Subtle  ctermfg=yellow ctermbg=lightgray
-                    \ guibg=#efeff7
+            highlight HG_Subtle  ctermbg=lightgrey guibg=#f0f0f0
         endif
     endif
     if !HighlightGroupExists("HG_Warning")
         if &background == "dark"
-            highlight HG_Warning ctermfg=lightred  ctermbg=darkgray
-                    \ guibg=#505000   guifg=lightgray
+            highlight HG_Warning ctermfg=red  guifg=#ff0000
         else
-            highlight HG_Warning ctermfg=yellow ctermbg=lightgray guibg=#ffffdd
-        endif
-    endif
-    if !HighlightGroupExists("HG_Error")
-        if &background == "dark"
-            highlight HG_Error   ctermfg=white  ctermbg=darkred
-                    \ guibg=red       guifg=white
-        else
-            highlight HG_Error   ctermfg=red    ctermbg=lightgray guibg=#ffe0e0
+            highlight HG_Warning ctermbg=lightgrey  guibg=#ffd0d0
         endif
     endif
 endfunction
@@ -5342,10 +5332,16 @@ call HighlightDefineGroups()
 let g:HighlightEnabled = 1
 
 let g:HighlightItems = split("commas keywordspace longlines tabs trailingspace")
-let g:HighlightRegex_longlines1 = '\%>61v.*\%<82v\(.*\%>80v.\)\@='
-let g:HighlightRegex_longlines2 = '\%>80v.\+'
+
+function! HighlightRegex_longlines()
+    if &textwidth == 0
+        return ''
+    endif
+    return '\%>' . &textwidth . 'v.\+'
+endfunction
+
 let g:HighlightRegex_tabs = '\t'
-let g:HighlightRegex_commas = ',\S'
+let g:HighlightRegex_commas = ',\ze\S'
 let g:HighlightRegex_keywordspace = '\(\<' . join(
         \ split('for if while switch'), '\|\<') . '\)\@<=('
 let g:HighlightRegex_trailingspace = '\s\+\%#\@<!$'
@@ -5358,29 +5354,38 @@ let g:HighlightRegex_trailingspace = '\s\+\%#\@<!$'
 "   ErrorMsg    less intrusive, red foreground (invisible for whitespace).
 "   NonText     non-intrusive, fairly subtle.
 function! HighlightNamedRegex(regexName, linkedGroup, enable)
-    exe "silent! syntax clear Highlight_" . a:regexName
+    let groupName = 'Highlight_' . a:regexName
+    let patternName = 'HighlightRegex_' . a:regexName
+    execute 'silent! syntax clear ' . groupName
     if a:enable
-        exe "syntax match Highlight_" . a:regexName .
-                \ " /" . g:HighlightRegex_{a:regexName} . "/"
-        exe "highlight link Highlight_" . a:regexName . " " . a:linkedGroup
+        if exists('*' . patternName)
+            " Named regex is a function; call it to get the pattern.
+            let pattern = eval(patternName . '()')
+        else
+            " Named regex is a regular variable; use it as the pattern.
+            let pattern = {'g:' . patternName}
+        endif
+        if pattern != ''
+            execute 'syntax match ' . groupName . ' /' . pattern . '/'
+            execute 'highlight link ' . groupName . ' ' . a:linkedGroup
+        endif
     endif
 endfunction
 
 function! Highlight_commas(enable)
-    call HighlightNamedRegex('commas', 'HG_Error', a:enable)
+    call HighlightNamedRegex('commas', 'HG_Warning', a:enable)
 endfunction
 
 function! Highlight_keywordspace(enable)
-    call HighlightNamedRegex('keywordspace', 'HG_Error', a:enable)
+    call HighlightNamedRegex('keywordspace', 'HG_Warning', a:enable)
 endfunction
 
 function! Highlight_longlines(enable)
-    call HighlightNamedRegex('longlines1', 'HG_Warning', a:enable)
-    call HighlightNamedRegex('longlines2', 'HG_Error', a:enable)
+    call HighlightNamedRegex('longlines', 'HG_Subtle', a:enable)
 endfunction
 
 function! Highlight_tabs(enable)
-    call HighlightNamedRegex('tabs', 'HG_Error', a:enable)
+    call HighlightNamedRegex('tabs', 'HG_Subtle', a:enable)
 endfunction
 
 function! Highlight_trailingspace(enable)
@@ -6986,6 +6991,10 @@ augroup local_HighlightApply
     " so this autocmd (which comes after "syntax on") will run afterward
     " to apply those groups again.
     autocmd Syntax * call HighlightApply()
+
+    if exists('##OptionSet')
+        autocmd OptionSet * call HighlightApply()
+    endif
 augroup END
 
 " =============================================================

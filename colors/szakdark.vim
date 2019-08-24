@@ -60,16 +60,6 @@ if &t_Co > 255
     hi SpellCap   ctermbg=17
 endif
 
-if &t_Co > 255 || has("gui_running")
-    " The highlighting for going past the rightmost column is also
-    " hard to read (or to harsh to read) in a black terminal.  Tweak
-    " them too.
-    hi HG_Subtle        ctermfg=white   ctermbg=52  guibg=red       guifg=white
-    hi HG_Warning       ctermfg=white   ctermbg=136 guibg=#505000   guifg=lightgray
-    hi HG_Error         ctermfg=white   ctermbg=160 guibg=red       guifg=white
-    hi Highlight_tabs                   ctermbg=236 guibg=#303030   guifg=white
-endif
-
 if version >= 700 " Vim 7.x specific colors
   hi CursorLine     guifg=NONE        guibg=#232323     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=BOLD
   hi CursorColumn   guifg=NONE        guibg=#232323     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=BOLD
