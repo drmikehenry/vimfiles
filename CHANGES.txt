@@ -10,6 +10,12 @@ require adjustment of per-user settings.
 2019-08-24
 ==========
 
+- Update Fixkey plugin to version 0.3.11.  This works around issues with newer
+  Xterm.
+
+2019-08-24
+==========
+
 - Improve ``:Highlight`` feature:
 
   - Long lines are now defined dynamically by the 'textwidth'.

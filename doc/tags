@@ -284,6 +284,7 @@ notes_visincr	notes.txt	/*notes_visincr*
 notes_vissort	notes.txt	/*notes_vissort*
 notes_visswap	notes.txt	/*notes_visswap*
 notes_window_layout	notes.txt	/*notes_window_layout*
+notes_window_related	notes.txt	/*notes_window_related*
 notes_wombat256i	notes.txt	/*notes_wombat256i*
 notes_yank	notes.txt	/*notes_yank*
 notes_z80	notes.txt	/*notes_z80*
