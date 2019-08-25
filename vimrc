@@ -5552,6 +5552,59 @@ function! SetSpell()
 endfunction
 
 " -------------------------------------------------------------
+" Syntax embedding
+" -------------------------------------------------------------
+
+" Embed a syntax highlighting group into the current syntax.
+function! SyntaxInclude(group, syntaxType)
+    " Executes the following commands:
+    "   syntax include @<group> syntax/<syntaxType>.vim
+    "   syntax include @<group> after/syntax/<syntaxType>.vim
+    " Preserves existing b:current_syntax.
+
+    if exists('b:current_syntax')
+        let savedSyntax = b:current_syntax
+        unlet b:current_syntax
+    endif
+
+    let cmd = 'syntax include @' . a:group
+    let syntaxName = a:syntaxType . '.vim'
+
+    execute cmd . ' syntax/' . syntaxName
+    try
+        execute cmd . ' after/syntax/' . syntaxName
+    catch
+    endtry
+    if exists('savedSyntax')
+        let b:current_syntax = savedSyntax
+    else
+        unlet b:current_syntax
+    endif
+endfunction
+
+" Map language a:lang into Vim's syntax name.
+function! SyntaxMap(lang)
+    if a:lang == 'c'
+        " Special-case C because Vim's syntax highlighting for cpp
+        " is based on the C highlighting, and it doesn't like to
+        " have both C and CPP active at the same time.  Map C highlighting
+        " to CPP to avoid this problem.
+        return 'cpp'
+    elseif a:lang == 'ini'
+        " The Vim filetype for .ini files is 'dosini'.
+        return 'dosini'
+    endif
+    return a:lang
+endfunction
+
+if !exists('g:commonEmbeddedLangs')
+    " NOTE: Embedding java causes spell checking to be disabled, because
+    " the syntax file for java monkeys with the spell checking settings.
+    let g:commonEmbeddedLangs = ['c', 'cpp', 'dosini', 'html', 'ini', 'python',
+            \ 'ruby', 'rust', 'sh', 'vim', 'toml']
+endif
+
+" -------------------------------------------------------------
 " Settings common to all filetypes.
 " -------------------------------------------------------------
 function! SetupCommon()
@@ -5769,36 +5822,20 @@ call DisableMarkdownSyntaxCodeList()
 function! SetupMarkdownSyntax()
     call DisableMarkdownSyntaxCodeList()
 
-    " We default to g:rstEmbeddedLangs.
+    " We default to g:commonEmbeddedLangs.
     if !exists("g:markdownEmbeddedLangs")
-        let g:markdownEmbeddedLangs = g:rstEmbeddedLangs
+        let g:markdownEmbeddedLangs = g:commonEmbeddedLangs
     endif
-
-    let includedLangs = {}
 
     " The group naming convention is the same as vim-markdown's, but the logic
     " is a little different here.  Namely, we don't deal with dotted names, and
     " we have special handling for the c language.
     for lang in g:markdownEmbeddedLangs
-        let synLang = lang
-        if lang == "c"
-            " Special-case C because Vim's syntax highlighting for cpp
-            " is based on the C highlighting, and it doesn't like to
-            " have both C and CPP active at the same time.  Map C highlighting
-            " to CPP to avoid this problem.
-            let synLang = "cpp"
-        elseif lang == "ini"
-            " The Vim filetype for .ini files is 'dosini'.
-            let synLang = "dosini"
-        endif
+        let synLang = SyntaxMap(lang)
+        let synGroup = 'markdown_embed_' . synLang
+        call SyntaxInclude(synGroup, synLang)
 
-        let synGroup = "markdownHighlight" . synLang
-        if !has_key(includedLangs, synLang)
-            call SyntaxInclude(synGroup, synLang)
-            let includedLangs[synLang] = 1
-        endif
-
-        exe 'syntax region ' . synGroup .
+        execute 'syntax region ' . synGroup .
                 \ ' matchgroup=markdownCodeDelimiter start="^\s*```\s*' .
                 \ lang . '\>.*$" end="^\s*```\ze\s*$" keepend ' .
                 \ 'contains=@' . synGroup
@@ -5847,25 +5884,25 @@ endfunction
 
 call DisableRstSyntaxCodeList()
 
-" NOTE: Embedding java causes spell checking to be disabled, because
-" the syntax file for java monkeys with the spell checking settings.
-let g:rstEmbeddedLangs = ["c", "cpp", "dosini", "html", "ini", "python",
-        \ "ruby", "rust", "sh", "vim"]
-
 " -------------------------------------------------------------
 " Setup for reStructuredText.
 " -------------------------------------------------------------
 function! SetupRstSyntax()
+    " We default to g:commonEmbeddedLangs.
+    if !exists('g:rstEmbeddedLangs')
+        let g:rstEmbeddedLangs = g:commonEmbeddedLangs
+    endif
+
     " Layout embedded source as follows:
     " .. code-block:: lang
     "     lang-specific source code here.
     " ..
     function! s:EmbedCodeBlock(lang, synGroup)
-        if a:lang == ""
-            let region = "rstCodeBlock"
-            let regex = ".*"
+        if a:lang == ''
+            let region = 'rstCodeBlock'
+            let regex = '.*'
         else
-            let region = "rstDirective" . a:lang
+            let region = 'rstDirective' . a:lang
             let regex = a:lang
         endif
         silent! syntax clear region
@@ -5879,7 +5916,7 @@ function! SetupRstSyntax()
         let cmd .= ' skip="\n\z1\s\|\n\s*\n"'
         let cmd .= ' end="$"'
         if a:synGroup != ""
-            let cmd .= " contains=@" . a:synGroup
+            let cmd .= ' contains=@' . a:synGroup
         endif
         execute cmd
         execute 'syntax cluster rstDirectives add=' . region
@@ -5889,24 +5926,10 @@ function! SetupRstSyntax()
     call DisableRstSyntaxCodeList()
     " Handle unspecified languages first.
     call s:EmbedCodeBlock("", "")
-    let includedLangs = {}
     for lang in g:rstEmbeddedLangs
-        let synLang = lang
-        if lang == "c"
-            " Special-case C because Vim's syntax highlighting for cpp
-            " is based on the C highlighting, and it doesn't like to
-            " have both C and CPP active at the same time.  Map C highlighting
-            " to CPP to avoid this problem.
-            let synLang = "cpp"
-        elseif lang == "ini"
-            " The Vim filetype for .ini files is 'dosini'.
-            let synLang = "dosini"
-        endif
-        let synGroup = "rst" . synLang
-        if !has_key(includedLangs, synLang)
-            call SyntaxInclude(synGroup, synLang)
-            let includedLangs[synLang] = 1
-        endif
+        let synLang = SyntaxMap(lang)
+        let synGroup = 'rst_embed_' . synLang
+        call SyntaxInclude(synGroup, synLang)
         call s:EmbedCodeBlock(lang, synGroup)
     endfor
     let &iskeyword = old_iskeyword
