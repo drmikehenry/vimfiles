@@ -52,6 +52,7 @@
     ManpageView                                         |notes_manpageview|
     Markdown - Markdown syntax support                  |notes_markdown|
     Matchit - Extended matching with '%'                |notes_matchit|
+    Matchup - Enhanced extended matching with '%'       |notes_matchup|
     Misc - Contains many useful Vimscript functions     |notes_misc|
     Monokai - A dark colorscheme                        |notes_monokai|
     Moonscript - support for a dialect of Lua           |notes_moonscript|
@@ -1820,6 +1821,22 @@ http://www.vim.org/scripts/script.php?script_id=39
 Installation:
 - Unzip in ~/.vim/
 - :helptags ~/.vim/doc
+
+------------------------------------------------------------------------------
+MATCHUP                                                 *notes_matchup*
+  Enhanced extended matching with '%'                   |matchup|
+
+Press '%' to match:
+  - Bracket pairs:  () [] {}
+  - C-language #if / #else / #endif
+  - HTML tags <start> / </end>
+  - etc.
+
+Version 2019-08-02 (ba33a5c) from:
+https://github.com/andymass/vim-matchup
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 MISC                                                    *notes_misc*

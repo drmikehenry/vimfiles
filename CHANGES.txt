@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-08-27
+==========
+
+- Add experimental support for Matchup plugin (disabled by default).
+
 2019-08-25
 ==========
 
