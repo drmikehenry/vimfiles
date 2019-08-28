@@ -71,7 +71,7 @@ if version >= 700 " Vim 7.x specific colors
   if g:szakdark_subtle_search != 0
     hi Search       guifg=NONE        guibg=#404000     gui=NONE      ctermfg=NONE        ctermbg=58          cterm=NONE
   else
-    hi Search       guifg=#c8c800     guibg=NONE        gui=reverse   ctermfg=3           ctermbg=NONE        cterm=reverse
+    hi Search       guifg=#808000     guibg=#c0c0c0     gui=reverse   ctermfg=3           ctermbg=7          cterm=reverse
   endif
 endif
 

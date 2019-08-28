@@ -12,6 +12,9 @@ require adjustment of per-user settings.
 
 - Add experimental support for Matchup plugin (disabled by default).
 
+- Adjust default ``Search`` highlighting for more readable contrast (especially
+  in Console Vim).
+
 2019-08-25
 ==========
 
