@@ -1,7 +1,10 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " xTabline - Reduced version for vim-airline
-" Copyright (C) 2018 Gianmaria Bajo <mg1979.git@gmail.com>
-" License: MIT License
+" MIT License Copyright (C) 2018-2019 Gianmaria Bajo <mg1979.git@gmail.com>
+" tabpagecd:
+" expanded version by mg979
+" MIT License Copyright (C) 2012-2013 Kana Natsuno <http://whileimautomaton.net/>
+" MIT License Copyright (C) 2018-2019 Gianmaria Bajo <mg1979.git@gmail.com>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -100,11 +103,11 @@ function! airline#extensions#tabline#xtabline#maps()
         map <unique> <leader>cd2 <Plug>XTablineCdDown2
         map <unique> <leader>cd3 <Plug>XTablineCdDown3
         map <unique> <leader>cdh <Plug>XTablineCdHome
-        nnoremap <unique> <script> <Plug>XTablineCdCurrent :cd %:p:h<cr>:doautocmd BufAdd<cr>:pwd<cr>
-        nnoremap <unique> <script> <Plug>XTablineCdDown1   :cd %:p:h:h<cr>:doautocmd BufAdd<cr>:pwd<cr>
-        nnoremap <unique> <script> <Plug>XTablineCdDown2   :cd %:p:h:h:h<cr>:doautocmd BufAdd<cr>:pwd<cr>
-        nnoremap <unique> <script> <Plug>XTablineCdDown3   :cd %:p:h:h:h:h<cr>:doautocmd BufAdd<cr>:pwd<cr>
-        nnoremap <unique> <script> <Plug>XTablineCdHome    :cd ~<cr>:doautocmd BufAdd<cr>:pwd<cr>
+        nnoremap <unique> <script> <Plug>XTablineCdCurrent :cd %:p:h<cr>:call airline#util#doautocmd('BufAdd')<cr>:pwd<cr>
+        nnoremap <unique> <script> <Plug>XTablineCdDown1   :cd %:p:h:h<cr>:call airline#util#doautocmd('BufAdd')<cr>:pwd<cr>
+        nnoremap <unique> <script> <Plug>XTablineCdDown2   :cd %:p:h:h:h<cr>:call airline#util#doautocmd('BufAdd')<cr>:pwd<cr>
+        nnoremap <unique> <script> <Plug>XTablineCdDown3   :cd %:p:h:h:h:h<cr>:call airline#util#doautocmd('BufAdd')<cr>:pwd<cr>
+        nnoremap <unique> <script> <Plug>XTablineCdHome    :cd ~<cr>:call airline#util#doautocmd('BufAdd')<cr>:pwd<cr>
     endif
 endfunction
 
@@ -116,14 +119,14 @@ endfunction
 function! airline#extensions#tabline#xtabline#toggle_tabs()
     """Toggle between tabs/buffers tabline."""
 
-    if tabpagenr("$") == 1 | echo "There is only one tab." | return | endif
+    if tabpagenr("$") == 1 | call airline#util#warning("There is only one tab.") | return | endif
 
     if g:airline#extensions#tabline#show_tabs
         let g:airline#extensions#tabline#show_tabs = 0
-        echo "Showing buffers"
+        call airline#util#warning("Showing buffers")
     else
         let g:airline#extensions#tabline#show_tabs = 1
-        echo "Showing tabs"
+        call airline#util#warning("Showing tabs")
     endif
 
     doautocmd BufAdd
@@ -137,12 +140,12 @@ function! airline#extensions#tabline#xtabline#toggle_buffers()
     if s:xtabline_filtering
         let s:xtabline_filtering = 0
         let g:airline#extensions#tabline#exclude_buffers = []
-        echo "Buffer filtering turned off"
+        call airline#util#warning("Buffer filtering turned off")
         doautocmd BufAdd
     else
         let s:xtabline_filtering = 1
         call airline#extensions#tabline#xtabline#filter_buffers()
-        echo "Buffer filtering turned on"
+        call airline#util#warning("Buffer filtering turned on")
         doautocmd BufAdd
     endif
 endfunction
@@ -153,7 +156,9 @@ function! airline#extensions#tabline#xtabline#reopen_last_tab()
     """Reopen the last closed tab."""
 
     if !exists('s:most_recently_closed_tab')
-        echo "No recent tabs." | return | endif
+        call airline#util#warning("No recent tabs.")
+        return
+    endif
 
     let tab = s:most_recently_closed_tab
     tabnew
@@ -298,9 +303,9 @@ function! s:NotEnoughBuffers()
         if index(t:xtl_accepted, bufnr("%")) == -1
             return
         elseif !len(t:xtl_accepted)
-            echo "No available buffers for this tab."
+            call airline#util#warning("No available buffers for this tab.")
         else
-            echo "No other available buffers for this tab."
+            call airline#util#warning("No other available buffers for this tab.")
         endif
         return 1
     endif
@@ -316,11 +321,6 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " tabpagecd - Turn :cd into :tabpagecd, to use one tab page per project
-" expanded version by mg979
-" Copyright (C) 2012-2013 Kana Natsuno <http://whileimautomaton.net/>
-" Copyright (C) 2018 Gianmaria Bajo <mg1979.git@gmail.com>
-" License: MIT License
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! s:InitCwds()

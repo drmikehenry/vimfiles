@@ -617,10 +617,10 @@ commands.  See vimrc for more information.
 AIRLINE                                                 *notes_airline*
   Statusline utility in pure vimscript                  |airline.txt|
 
-Version 2018-07-26 (c7fb175) from:
+Version 2019-08-26 (6409c7b) from:
 https://github.com/vim-airline/vim-airline
 
-Themes version 2018-07-30 (6e798f9) from:
+Themes version 2019-07-23 (b851658) from:
 https://github.com/vim-airline/vim-airline-themes
 
 Local Customizations:

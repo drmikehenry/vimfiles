@@ -1,17 +1,22 @@
+:AirlineExtensions	airline.txt	/*:AirlineExtensions*
 :AirlineRefresh	airline.txt	/*:AirlineRefresh*
 :AirlineTheme	airline.txt	/*:AirlineTheme*
 :AirlineToggle	airline.txt	/*:AirlineToggle*
 :AirlineToggleWhitespace	airline.txt	/*:AirlineToggleWhitespace*
+add_inactive_statusline_func	airline.txt	/*add_inactive_statusline_func*
 add_statusline_func	airline.txt	/*add_statusline_func*
 airline	airline.txt	/*airline*
+airline#extensions#tabline#exclude_buffers	airline.txt	/*airline#extensions#tabline#exclude_buffers*
 airline#ignore_bufadd_pat	airline.txt	/*airline#ignore_bufadd_pat*
 airline-accents	airline.txt	/*airline-accents*
 airline-advanced-customization	airline.txt	/*airline-advanced-customization*
 airline-ale	airline.txt	/*airline-ale*
 airline-autocommands	airline.txt	/*airline-autocommands*
+airline-bookmark	airline.txt	/*airline-bookmark*
 airline-branch	airline.txt	/*airline-branch*
 airline-bufferline	airline.txt	/*airline-bufferline*
 airline-capslock	airline.txt	/*airline-capslock*
+airline-coc	airline.txt	/*airline-coc*
 airline-commands	airline.txt	/*airline-commands*
 airline-configuration	airline.txt	/*airline-configuration*
 airline-contents	airline.txt	/*airline-contents*
@@ -32,6 +37,7 @@ airline-gutentags	airline.txt	/*airline-gutentags*
 airline-hunks	airline.txt	/*airline-hunks*
 airline-intro	airline.txt	/*airline-intro*
 airline-keymap	airline.txt	/*airline-keymap*
+airline-languageclient	airline.txt	/*airline-languageclient*
 airline-license	airline.txt	/*airline-license*
 airline-localsearch	airline.txt	/*airline-localsearch*
 airline-name	airline.txt	/*airline-name*
@@ -50,6 +56,7 @@ airline-sections	airline.txt	/*airline-sections*
 airline-syntastic	airline.txt	/*airline-syntastic*
 airline-tabline	airline.txt	/*airline-tabline*
 airline-taboo	airline.txt	/*airline-taboo*
+airline-tabws	airline.txt	/*airline-tabws*
 airline-tagbar	airline.txt	/*airline-tagbar*
 airline-themes	airline.txt	/*airline-themes*
 airline-tmuxline	airline.txt	/*airline-tmuxline*
@@ -57,6 +64,7 @@ airline-troubleshooting	airline.txt	/*airline-troubleshooting*
 airline-vimagit	airline.txt	/*airline-vimagit*
 airline-vimtex	airline.txt	/*airline-vimtex*
 airline-virtualenv	airline.txt	/*airline-virtualenv*
+airline-vista	airline.txt	/*airline-vista*
 airline-whitespace	airline.txt	/*airline-whitespace*
 airline-windowswap	airline.txt	/*airline-windowswap*
 airline-wordcount	airline.txt	/*airline-wordcount*

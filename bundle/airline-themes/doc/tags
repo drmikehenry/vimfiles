@@ -1,8 +1,7 @@
 airline#themes#base16#constant	airline-themes.txt	/*airline#themes#base16#constant*
 airline-theme-base16	airline-themes.txt	/*airline-theme-base16*
-airline-theme-base16-oceanicnext	airline-themes.txt	/*airline-theme-base16-oceanicnext*
-airline-theme-base16-shell	airline-themes.txt	/*airline-theme-base16-shell*
-airline-theme-base16-tomorrow	airline-themes.txt	/*airline-theme-base16-tomorrow*
+airline-theme-base16_shell	airline-themes.txt	/*airline-theme-base16_shell*
+airline-theme-base16_vim	airline-themes.txt	/*airline-theme-base16_vim*
 airline-theme-contents	airline-themes.txt	/*airline-theme-contents*
 airline-theme-dark_minimal	airline-themes.txt	/*airline-theme-dark_minimal*
 airline-theme-deus	airline-themes.txt	/*airline-theme-deus*
@@ -18,6 +17,7 @@ airline-themes-license	airline-themes.txt	/*airline-themes-license*
 airline-themes-list	airline-themes.txt	/*airline-themes-list*
 airline-themes.txt	airline-themes.txt	/*airline-themes.txt*
 g:airline_base16_improved_contrast	airline-themes.txt	/*g:airline_base16_improved_contrast*
+g:airline_base16_monotone	airline-themes.txt	/*g:airline_base16_monotone*
 g:airline_base16_solarized	airline-themes.txt	/*g:airline_base16_solarized*
 g:airline_minimalist_showmod	airline-themes.txt	/*g:airline_minimalist_showmod*
 g:airline_solarized_dark_inactive_border	airline-themes.txt	/*g:airline_solarized_dark_inactive_border*

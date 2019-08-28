@@ -1,4 +1,4 @@
-" MIT License. Copyright (c) 2013-2018 Bailey Ling et al.
+" MIT License. Copyright (c) 2013-2019 Bailey Ling et al.
 " vim: et ts=2 sts=2 sw=2
 
 scriptencoding utf-8
@@ -36,21 +36,28 @@ function! airline#init#bootstrap()
   call s:check_defined('g:airline_mode_map', {})
   call extend(g:airline_mode_map, {
         \ '__' : '------',
-        \ 'n'  : 'NORMAL',
-        \ 'i'  : 'INSERT',
-        \ 'R'  : 'REPLACE',
-        \ 'v'  : 'VISUAL',
-        \ 'V'  : 'V-LINE',
         \ 'c'  : 'COMMAND',
-        \ '' : 'V-BLOCK',
+        \ 'i'  : 'INSERT',
+        \ 'ic' : 'INSERT COMPL',
+        \ 'ix' : 'INSERT COMPL',
+        \ 'multi' : 'MULTI',
+        \ 'n'  : 'NORMAL',
+        \ 'ni' : '(INSERT)',
+        \ 'no' : 'OP PENDING',
+        \ 'R'  : 'REPLACE',
+        \ 'Rv' : 'V REPLACE',
         \ 's'  : 'SELECT',
         \ 'S'  : 'S-LINE',
         \ '' : 'S-BLOCK',
         \ 't'  : 'TERMINAL',
+        \ 'v'  : 'VISUAL',
+        \ 'V'  : 'V-LINE',
+        \ '' : 'V-BLOCK',
         \ }, 'keep')
 
   call s:check_defined('g:airline_theme_map', {})
   call extend(g:airline_theme_map, {
+        \ 'default': 'dark',
         \ '\CTomorrow': 'tomorrow',
         \ 'base16': 'base16',
         \ 'mo[l|n]okai': 'molokai',
@@ -80,7 +87,7 @@ function! airline#init#bootstrap()
     call s:check_defined('g:airline_left_alt_sep', "\ue0b1")  " 
     call s:check_defined('g:airline_right_sep', "\ue0b2")     " 
     call s:check_defined('g:airline_right_alt_sep', "\ue0b3") " 
-    " ro=, ws=☲, lnr=☰, mlnr=, br=, nx=Ɇ, crypt=🔒
+    " ro=, ws=☲, lnr=☰, mlnr=, br=, nx=Ɇ, crypt=🔒, dirty=⚡
     call extend(g:airline_symbols, {
           \ 'readonly': "\ue0a2",
           \ 'whitespace': "\u2632",
@@ -88,6 +95,7 @@ function! airline#init#bootstrap()
           \ 'maxlinenr': " \ue0a1",
           \ 'branch': "\ue0a0",
           \ 'notexists': "\u0246",
+          \ 'dirty': "\u26a1",
           \ 'crypt': nr2char(0x1F512),
           \ }, 'keep')
   elseif &encoding==?'utf-8' && !get(g:, "airline_symbols_ascii", 0)
@@ -105,6 +113,7 @@ function! airline#init#bootstrap()
           \ 'branch': "\u16A0",
           \ 'notexists': "\u0246",
           \ 'crypt': nr2char(0x1F512),
+          \ 'dirty': '!',
           \ }, 'keep')
   else
     " Symbols for ASCII terminals
@@ -120,6 +129,7 @@ function! airline#init#bootstrap()
           \ 'branch': '',
           \ 'notexists': '?',
           \ 'crypt': 'cr',
+          \ 'dirty': '!',
           \ }, 'keep')
   endif
 
@@ -145,10 +155,19 @@ function! airline#init#bootstrap()
         \ 'raw': '/%L%{g:airline_symbols.maxlinenr}',
         \ 'accent': 'bold'})
   call airline#parts#define_function('ffenc', 'airline#parts#ffenc')
-  call airline#parts#define_empty(['hunks', 'branch', 'obsession', 'tagbar',
-        \ 'syntastic-warn', 'syntastic-err', 'eclim', 'whitespace','windowswap',
+  call airline#parts#define('hunks', {
+        \ 'raw': '',
+        \ 'minwidth': 100})
+  call airline#parts#define('branch', {
+        \ 'raw': '',
+        \ 'minwidth': 80})
+  call airline#parts#define_empty(['obsession', 'tagbar', 'syntastic-warn',
+        \ 'syntastic-err', 'eclim', 'whitespace','windowswap',
         \ 'ycm_error_count', 'ycm_warning_count', 'neomake_error_count',
-        \ 'neomake_warning_count', 'ale_error_count', 'ale_warning_count'])
+        \ 'neomake_warning_count', 'ale_error_count', 'ale_warning_count',
+        \ 'languageclient_error_count', 'languageclient_warning_count',
+        \ 'coc_warning_count', 'coc_error_count', 'vista'])
+  call airline#parts#define_text('bookmark', '')
   call airline#parts#define_text('capslock', '')
   call airline#parts#define_text('gutentags', '')
   call airline#parts#define_text('grepper', '')
@@ -181,22 +200,22 @@ function! airline#init#sections()
     let g:airline_section_gutter = airline#section#create(['%='])
   endif
   if !exists('g:airline_section_x')
-    let g:airline_section_x = airline#section#create_right(['tagbar', 'gutentags', 'grepper', 'filetype'])
+    let g:airline_section_x = airline#section#create_right(['bookmark', 'tagbar', 'vista', 'gutentags', 'grepper', 'filetype'])
   endif
   if !exists('g:airline_section_y')
     let g:airline_section_y = airline#section#create_right(['ffenc'])
   endif
   if !exists('g:airline_section_z')
-    if winwidth(0) > 80
+    if airline#util#winwidth() > 79
       let g:airline_section_z = airline#section#create(['windowswap', 'obsession', '%3p%%'.spc, 'linenr', 'maxlinenr', spc.':%3v'])
     else
       let g:airline_section_z = airline#section#create(['%3p%%'.spc, 'linenr',  ':%3v'])
     endif
   endif
   if !exists('g:airline_section_error')
-    let g:airline_section_error = airline#section#create(['ycm_error_count', 'syntastic-err', 'eclim', 'neomake_error_count', 'ale_error_count'])
+    let g:airline_section_error = airline#section#create(['ycm_error_count', 'syntastic-err', 'eclim', 'neomake_error_count', 'ale_error_count', 'languageclient_error_count', 'coc_error_count'])
   endif
   if !exists('g:airline_section_warning')
-    let g:airline_section_warning = airline#section#create(['ycm_warning_count',  'syntastic-warn', 'neomake_warning_count', 'ale_warning_count', 'whitespace'])
+    let g:airline_section_warning = airline#section#create(['ycm_warning_count',  'syntastic-warn', 'neomake_warning_count', 'ale_warning_count', 'languageclient_warning_count', 'whitespace', 'coc_warning_count'])
   endif
 endfunction

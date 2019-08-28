@@ -1,4 +1,4 @@
-" MIT License. Copyright (c) 2013-2018 Bailey Ling et al.
+" MIT License. Copyright (c) 2013-2019 Bailey Ling et al.
 " vim: et ts=2 sts=2 sw=2
 
 scriptencoding utf-8
@@ -38,6 +38,9 @@ endfunction
 
 function! airline#themes#patch(palette)
   for mode in keys(a:palette)
+    if mode == 'accents'
+      continue
+    endif
     if !has_key(a:palette[mode], 'airline_warning')
       let a:palette[mode]['airline_warning'] = [ '#000000', '#df5f00', 232, 166 ]
     endif

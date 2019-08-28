@@ -1,4 +1,4 @@
-# vim-airline [![Build Status](https://travis-ci.org/vim-airline/vim-airline.png)](https://travis-ci.org/vim-airline/vim-airline)
+# vim-airline [![Build Status](https://travis-ci.org/vim-airline/vim-airline.png)](https://travis-ci.org/vim-airline/vim-airline)[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/chrisbra)
 
 Lean &amp; mean status/tabline for vim that's light as air.
 
@@ -185,12 +185,22 @@ vim-airline integrates with a variety of plugins out of the box.  These extensio
 #### [localsearch][54]
 ![image](https://raw.githubusercontent.com/mox-mox/vim-localsearch/master/vim-airline-localsearch-indicator.png)
 
+#### [LanguageClient][57]
+![image](https://user-images.githubusercontent.com/9622/45275524-52f45c00-b48b-11e8-8b83-a66240b10747.gif)
+
 ## Extras
 
 vim-airline also supplies some supplementary stand-alone extensions.  In addition to the tabline extension mentioned earlier, there is also:
 
 #### whitespace
 ![image](https://f.cloud.github.com/assets/306502/962401/2a75385e-04ef-11e3-935c-e3b9f0e954cc.png)
+
+### statusline on top
+The statusline can alternatively by drawn on top, making room for other plugins to use the statusline:
+The example shows a custom statusline setting, that imitates Vims default statusline, while allowing
+to call custom functions.  Use `:let g:airline_statusline_ontop=1` to enable it.
+
+![image](https://i.imgur.com/tW1lMRU.png)
 
 ## Configurable and extensible
 
@@ -282,7 +292,7 @@ If you are interested in becoming a maintainer (we always welcome more maintaine
 
 # License
 
-MIT License. Copyright (c) 2013-2017 Bailey Ling & Contributors.
+[MIT License][58]. Copyright (c) 2013-2019 Bailey Ling & Contributors.
 
 [1]: https://github.com/Lokaltog/vim-powerline
 [2]: https://github.com/Lokaltog/powerline
@@ -321,7 +331,7 @@ MIT License. Copyright (c) 2013-2017 Bailey Ling & Contributors.
 [35]: https://github.com/edkolev/tmuxline.vim
 [36]: https://github.com/edkolev/promptline.vim
 [37]: https://github.com/gcmt/taboo.vim
-[38]: https://github.com/szw/vim-ctrlspace
+[38]: https://github.com/vim-ctrlspace/vim-ctrlspace
 [39]: https://github.com/tomtom/quickfixsigns_vim
 [40]: https://github.com/junegunn/vim-plug
 [41]: https://github.com/bling
@@ -340,3 +350,5 @@ MIT License. Copyright (c) 2013-2017 Bailey Ling & Contributors.
 [54]: https://github.com/mox-mox/vim-localsearch
 [55]: https://github.com/k-takata/minpac/
 [56]: https://github.com/vim-airline/vim-airline-themes/blob/master/autoload/airline/themes/dark_minimal.vim
+[57]: https://github.com/autozimu/LanguageClient-neovim
+[58]: https://github.com/vim-airline/vim-airline/blob/master/LICENSE
