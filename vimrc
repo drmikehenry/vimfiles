@@ -5349,6 +5349,24 @@ let g:HighlightRegex_keywordspace = '\(\<' . join(
         \ split('for if while switch'), '\|\<') . '\)\@<=('
 let g:HighlightRegex_trailingspace = '\s\+\%#\@<!$'
 
+" Setup groupName as a syntax match with the given pattern.
+" Because this is expensive for large files with many syntax groups,
+" track the previously set patterns in buffer-local variables and make
+" the changes only if necessary.
+function! HighlightSyntaxMatch(groupName, pattern)
+    let varName = 'b:' . a:groupName . '_pattern'
+    if exists(varName) && {varName} == a:pattern
+        " The pattern has already been set.
+        return
+    endif
+    if a:pattern == ''
+        execute 'silent! syntax clear ' . a:groupName
+    else
+        execute 'syntax match ' . a:groupName . ' /' . a:pattern . '/'
+    endif
+    let {varName} = a:pattern
+endfunction
+
 " Invoke as: HighlightNamedRegex('longlines1', 'HG_Warning', 1)
 " The linkedGroup comes from the highlight groups (:help highlight-groups),
 " or from HighlightDefineGroups() above.
@@ -5359,7 +5377,7 @@ let g:HighlightRegex_trailingspace = '\s\+\%#\@<!$'
 function! HighlightNamedRegex(regexName, linkedGroup, enable)
     let groupName = 'Highlight_' . a:regexName
     let patternName = 'HighlightRegex_' . a:regexName
-    execute 'silent! syntax clear ' . groupName
+    let pattern = ''
     if a:enable
         if exists('*' . patternName)
             " Named regex is a function; call it to get the pattern.
@@ -5368,11 +5386,9 @@ function! HighlightNamedRegex(regexName, linkedGroup, enable)
             " Named regex is a regular variable; use it as the pattern.
             let pattern = {'g:' . patternName}
         endif
-        if pattern != ''
-            execute 'syntax match ' . groupName . ' /' . pattern . '/'
-            execute 'highlight link ' . groupName . ' ' . a:linkedGroup
-        endif
     endif
+    call HighlightSyntaxMatch(groupName, pattern)
+    execute 'highlight link ' . groupName . ' ' . a:linkedGroup
 endfunction
 
 function! Highlight_commas(enable)
@@ -7019,7 +7035,7 @@ augroup local_HighlightApply
     autocmd Syntax * call HighlightApply()
 
     if exists('##OptionSet')
-        autocmd OptionSet * call HighlightApply()
+        autocmd OptionSet textwidth call HighlightApply()
     endif
 augroup END
 

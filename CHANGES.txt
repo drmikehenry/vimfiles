@@ -14,6 +14,9 @@ require adjustment of per-user settings.
 
 - Upgrade fugitive plugin to version 2019-08-21.
 
+- Fix speed regression caused by dynamic :Highlight command, wherein navigation
+  in large reStructuredText files was too slow.
+
 2019-08-27
 ==========
 
