@@ -1171,13 +1171,18 @@ more useful ones are:
 
   :Gdiff    Perform a diff of the working file with HEAD
   :Gblame   To see what commits modified a set of lines
-  :Glog     To get a log of commits that affect the current file
+  :Gclog    To get a log of commits that affect the current file
   :Gstatus  To view the current state, stage changes, and many other things.
             See |fugitive-:Gstatus| for more information
   :Git      Run an arbitrary git command from within Vim
 
-Version 2018-08-11 (e9ce313) from:
+Version 2019-08-21 (b97a9ab) from:
 https://github.com/tpope/vim-fugitive.git
+
+with the following modifications found in branch `vimfiles` at:
+https://github.com/drmikehenry/vim-fugitive.git
+
+- Remove `:G` command that collides with the `:G` command in vimfiles.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

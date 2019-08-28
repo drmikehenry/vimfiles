@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Upgrade airline and airline-themes plugins.
 
+- Upgrade fugitive plugin to version 2019-08-21.
+
 2019-08-27
 ==========
 
