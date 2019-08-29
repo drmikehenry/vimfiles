@@ -19,6 +19,8 @@ require adjustment of per-user settings.
 
 - Upgrade experimental ale plugin to version 2019-08-18 (disabled by default).
 
+- Ignore "Possible incomplete section title" warning for ale rstcheck.
+
 2019-08-27
 ==========
 
