@@ -636,39 +636,19 @@ ALE                                                     *notes_ale*
 
 NOTE: experimental support only for now; disabled by default.
 
-Version 2019-02-08 (a24f0b4) from:
-https://github.com/w0rp/ale.git
+Version 2019-08-18 (73812c3) from:
+https://github.com/dense-analysis/ale
+
+with the following modifications found in branch `vimfiles` at:
+https://github.com/drmikehenry/ale.git
+
+- (branch rst_check): Add `g:ale_rst_rstcheck_options` configuration
+  variable.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
-Apply the following patch to provide g:ale_rst_rstcheck_options support.
-This is hopefully temporary.
-
-diff --git a/bundle/ale/ale_linters/rst/rstcheck.vim b/bundle/ale/ale_linters/rst/rstcheck.vim
-index 8504738..521b3a0 100644
---- a/bundle/ale/ale_linters/rst/rstcheck.vim
-+++ b/bundle/ale/ale_linters/rst/rstcheck.vim
-@@ -2,6 +2,9 @@
- " Description: Rstcheck for reStructuredText files
- "
-
-+call ale#Set('rst_rstcheck_options', '')
-+
-+
- function! ale_linters#rst#rstcheck#Handle(buffer, lines) abort
-     " matches: 'bad_rst.rst:1: (SEVERE/4) Title overline & underline
-     " mismatch.'
-@@ -23,8 +26,10 @@ function! ale_linters#rst#rstcheck#Handle(buffer, lines) abort
- endfunction
-
- function! ale_linters#rst#rstcheck#GetCommand(buffer) abort
-+    let l:options = ale#Var(a:buffer, 'rst_rstcheck_options')
-     return ale#path#BufferCdString(a:buffer)
-     \   . 'rstcheck'
-+    \   . (!empty(l:options) ? ' ' . l:options : '')
-     \   . ' %t'
- endfunction
+Note: currently testing without the below patch.
 
 Apply this patch to defer execution of ALE for a bit when entering a buffer:
 diff --git a/bundle/ale/autoload/ale/events.vim b/bundle/ale/autoload/ale/events.vim

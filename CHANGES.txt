@@ -17,6 +17,8 @@ require adjustment of per-user settings.
 - Fix speed regression caused by dynamic :Highlight command, wherein navigation
   in large reStructuredText files was too slow.
 
+- Upgrade experimental ale plugin to version 2019-08-18 (disabled by default).
+
 2019-08-27
 ==========
 

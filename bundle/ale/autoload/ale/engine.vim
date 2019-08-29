@@ -24,6 +24,25 @@ function! ale#engine#CleanupEveryBuffer() abort
     endfor
 endfunction
 
+function! ale#engine#MarkLinterActive(info, linter) abort
+    let l:found = 0
+
+    for l:other_linter in a:info.active_linter_list
+        if l:other_linter.name is# a:linter.name
+            let l:found = 1
+            break
+        endif
+    endfor
+
+    if !l:found
+        call add(a:info.active_linter_list, a:linter)
+    endif
+endfunction
+
+function! ale#engine#MarkLinterInactive(info, linter_name) abort
+    call filter(a:info.active_linter_list, 'v:val.name isnot# a:linter_name')
+endfunction
+
 function! ale#engine#ResetExecutableCache() abort
     let s:executable_cache_map = {}
 endfunction
@@ -88,24 +107,36 @@ endfunction
 " Register a temporary file to be managed with the ALE engine for
 " a current job run.
 function! ale#engine#ManageFile(buffer, filename) abort
-    " TODO: Emit deprecation warning here later.
+    if !get(g:, 'ale_ignore_2_4_warnings')
+        execute 'echom ''ale#engine#ManageFile is deprecated. Use `let g:ale_ignore_2_4_warnings = 1` to disable this message.'''
+    endif
+
     call ale#command#ManageFile(a:buffer, a:filename)
 endfunction
 
 " Same as the above, but manage an entire directory.
 function! ale#engine#ManageDirectory(buffer, directory) abort
-    " TODO: Emit deprecation warning here later.
+    if !get(g:, 'ale_ignore_2_4_warnings')
+        execute 'echom ''ale#engine#ManageDirectory is deprecated. Use `let g:ale_ignore_2_4_warnings = 1` to disable this message.'''
+    endif
+
     call ale#command#ManageDirectory(a:buffer, a:directory)
 endfunction
 
 function! ale#engine#CreateFile(buffer) abort
-    " TODO: Emit deprecation warning here later.
+    if !get(g:, 'ale_ignore_2_4_warnings')
+        execute 'echom ''ale#engine#CreateFile is deprecated. Use `let g:ale_ignore_2_4_warnings = 1` to disable this message.'''
+    endif
+
     return ale#command#CreateFile(a:buffer)
 endfunction
 
 " Create a new temporary directory and manage it in one go.
 function! ale#engine#CreateDirectory(buffer) abort
-    " TODO: Emit deprecation warning here later.
+    if !get(g:, 'ale_ignore_2_4_warnings')
+        execute 'echom ''ale#engine#CreateDirectory is deprecated. Use `let g:ale_ignore_2_4_warnings = 1` to disable this message.'''
+    endif
+
     return ale#command#CreateDirectory(a:buffer)
 endfunction
 
@@ -164,7 +195,7 @@ function! s:HandleExit(job_info, buffer, output, data) abort
     let l:next_chain_index = a:job_info.next_chain_index
 
     " Remove this job from the list.
-    call filter(l:buffer_info.active_linter_list, 'v:val.name isnot# l:linter.name')
+    call ale#engine#MarkLinterInactive(l:buffer_info, l:linter.name)
 
     " Stop here if we land in the handle for a job completing if we're in
     " a sandbox.
@@ -177,7 +208,15 @@ function! s:HandleExit(job_info, buffer, output, data) abort
     endif
 
     if l:next_chain_index < len(get(l:linter, 'command_chain', []))
-        call s:InvokeChain(a:buffer, l:executable, l:linter, l:next_chain_index, a:output)
+        let [l:command, l:options] = ale#engine#ProcessChain(
+        \   a:buffer,
+        \   l:executable,
+        \   l:linter,
+        \   l:next_chain_index,
+        \   a:output,
+        \)
+
+        call s:RunJob(l:command, l:options)
 
         return
     endif
@@ -395,12 +434,20 @@ endfunction
 
 " Run a job.
 "
-" Returns 1 when the job was started successfully.
-function! s:RunJob(options) abort
-    let l:command = a:options.command
+" Returns 1 when a job was started successfully.
+function! s:RunJob(command, options) abort
+    if ale#command#IsDeferred(a:command)
+        let a:command.result_callback = {
+        \   command -> s:RunJob(command, a:options)
+        \}
+
+        return 1
+    endif
+
+    let l:command = a:command
 
     if empty(l:command)
-        return v:false
+        return 0
     endif
 
     let l:executable = a:options.executable
@@ -423,23 +470,12 @@ function! s:RunJob(options) abort
     \   'log_output': l:next_chain_index >= len(get(l:linter, 'command_chain', [])),
     \})
 
-    if !l:result._deferred_job_id
+    " Only proceed if the job is being run.
+    if empty(l:result)
         return 0
     endif
 
-    " Only proceed if the job is being run.
-    let l:found = 0
-
-    for l:other_linter in l:info.active_linter_list
-        if l:other_linter.name is# l:linter.name
-            let l:found = 1
-            break
-        endif
-    endfor
-
-    if !l:found
-        call add(l:info.active_linter_list, l:linter)
-    endif
+    call ale#engine#MarkLinterActive(l:info, l:linter)
 
     silent doautocmd <nomodeline> User ALEJobStarted
 
@@ -448,96 +484,78 @@ endfunction
 
 " Determine which commands to run for a link in a command chain, or
 " just a regular command.
-function! ale#engine#ProcessChain(buffer, linter, chain_index, input) abort
+function! ale#engine#ProcessChain(buffer, executable, linter, chain_index, input) abort
     let l:output_stream = get(a:linter, 'output_stream', 'stdout')
     let l:read_buffer = a:linter.read_buffer
     let l:chain_index = a:chain_index
     let l:input = a:input
 
-    if has_key(a:linter, 'command_chain')
-        while l:chain_index < len(a:linter.command_chain)
-            " Run a chain of commands, one asynchronous command after the other,
-            " so that many programs can be run in a sequence.
-            let l:chain_item = a:linter.command_chain[l:chain_index]
+    while l:chain_index < len(a:linter.command_chain)
+        " Run a chain of commands, one asynchronous command after the other,
+        " so that many programs can be run in a sequence.
+        let l:chain_item = a:linter.command_chain[l:chain_index]
 
-            if l:chain_index == 0
-                " The first callback in the chain takes only a buffer number.
-                let l:command = ale#util#GetFunction(l:chain_item.callback)(
-                \   a:buffer
-                \)
-            else
-                " The second callback in the chain takes some input too.
-                let l:command = ale#util#GetFunction(l:chain_item.callback)(
-                \   a:buffer,
-                \   l:input
-                \)
+        if l:chain_index == 0
+            " The first callback in the chain takes only a buffer number.
+            let l:command = ale#util#GetFunction(l:chain_item.callback)(
+            \   a:buffer
+            \)
+        else
+            " The second callback in the chain takes some input too.
+            let l:command = ale#util#GetFunction(l:chain_item.callback)(
+            \   a:buffer,
+            \   l:input
+            \)
+        endif
+
+        " If we have a command to run, execute that.
+        if !empty(l:command)
+            " The chain item can override the output_stream option.
+            if has_key(l:chain_item, 'output_stream')
+                let l:output_stream = l:chain_item.output_stream
             endif
 
-            " If we have a command to run, execute that.
-            if !empty(l:command)
-                " The chain item can override the output_stream option.
-                if has_key(l:chain_item, 'output_stream')
-                    let l:output_stream = l:chain_item.output_stream
-                endif
-
-                " The chain item can override the read_buffer option.
-                if has_key(l:chain_item, 'read_buffer')
-                    let l:read_buffer = l:chain_item.read_buffer
-                elseif l:chain_index != len(a:linter.command_chain) - 1
-                    " Don't read the buffer for commands besides the last one
-                    " in the chain by default.
-                    let l:read_buffer = 0
-                endif
-
-                break
+            " The chain item can override the read_buffer option.
+            if has_key(l:chain_item, 'read_buffer')
+                let l:read_buffer = l:chain_item.read_buffer
+            elseif l:chain_index != len(a:linter.command_chain) - 1
+                " Don't read the buffer for commands besides the last one
+                " in the chain by default.
+                let l:read_buffer = 0
             endif
 
-            " Command chain items can return an empty string to indicate that
-            " a command should be skipped, so we should try the next item
-            " with no input.
-            let l:input = []
-            let l:chain_index += 1
-        endwhile
-    else
-        let l:command = ale#linter#GetCommand(a:buffer, a:linter)
-    endif
+            break
+        endif
 
-    return {
-    \   'command': l:command,
+        " Command chain items can return an empty string to indicate that
+        " a command should be skipped, so we should try the next item
+        " with no input.
+        let l:input = []
+        let l:chain_index += 1
+    endwhile
+
+    return [l:command, {
+    \   'executable': a:executable,
     \   'buffer': a:buffer,
     \   'linter': a:linter,
     \   'output_stream': l:output_stream,
     \   'next_chain_index': l:chain_index + 1,
     \   'read_buffer': l:read_buffer,
-    \}
+    \}]
 endfunction
 
-function! s:InvokeChain(buffer, executable, linter, chain_index, input) abort
-    let l:options = ale#engine#ProcessChain(a:buffer, a:linter, a:chain_index, a:input)
-    let l:options.executable = a:executable
-
-    return s:RunJob(l:options)
-endfunction
-
-function! s:StopCurrentJobs(buffer, include_lint_file_jobs) abort
+function! s:StopCurrentJobs(buffer, clear_lint_file_jobs) abort
+    let l:info = get(g:ale_buffer_info, a:buffer, {})
     call ale#command#StopJobs(a:buffer, 'linter')
 
-    if a:include_lint_file_jobs
-        call ale#command#StopJobs(a:buffer, 'file_linter')
-    endif
-
-    let l:info = get(g:ale_buffer_info, a:buffer, {})
-    let l:new_active_linter_list = []
-
-    for l:linter in get(l:info, 'active_linter_list', [])
-        " Keep jobs for linting files when we're only linting buffers.
-        if !a:include_lint_file_jobs && get(l:linter, 'lint_file')
-            call add(l:new_active_linter_list, l:linter)
-        endif
-    endfor
-
     " Update the active linter list, clearing out anything not running.
-    let l:info.active_linter_list = l:new_active_linter_list
+    if a:clear_lint_file_jobs
+        call ale#command#StopJobs(a:buffer, 'file_linter')
+        let l:info.active_linter_list = []
+    else
+        " Keep jobs for linting files when we're only linting buffers.
+        call filter(l:info.active_linter_list, 'get(v:val, ''lint_file'')')
+    endif
 endfunction
 
 function! s:RemoveProblemsForDisabledLinters(buffer, linters) abort
@@ -590,6 +608,48 @@ function! s:AddProblemsFromOtherBuffers(buffer, linters) abort
     endif
 endfunction
 
+function! s:RunIfExecutable(buffer, linter, executable) abort
+    if ale#command#IsDeferred(a:executable)
+        let a:executable.result_callback = {
+        \   executable -> s:RunIfExecutable(a:buffer, a:linter, executable)
+        \}
+
+        return 1
+    endif
+
+    if ale#engine#IsExecutable(a:buffer, a:executable)
+        " Use different job types for file or linter jobs.
+        let l:job_type = a:linter.lint_file ? 'file_linter' : 'linter'
+        call setbufvar(a:buffer, 'ale_job_type', l:job_type)
+
+        if has_key(a:linter, 'command_chain')
+            let [l:command, l:options] = ale#engine#ProcessChain(
+            \   a:buffer,
+            \   a:executable,
+            \   a:linter,
+            \   0,
+            \   []
+            \)
+
+            return s:RunJob(l:command, l:options)
+        endif
+
+        let l:command = ale#linter#GetCommand(a:buffer, a:linter)
+        let l:options = {
+        \   'executable': a:executable,
+        \   'buffer': a:buffer,
+        \   'linter': a:linter,
+        \   'output_stream': get(a:linter, 'output_stream', 'stdout'),
+        \   'next_chain_index': 1,
+        \   'read_buffer': a:linter.read_buffer,
+        \}
+
+        return s:RunJob(l:command, l:options)
+    endif
+
+    return 0
+endfunction
+
 " Run a linter for a buffer.
 "
 " Returns 1 if the linter was successfully run.
@@ -599,13 +659,7 @@ function! s:RunLinter(buffer, linter) abort
     else
         let l:executable = ale#linter#GetExecutable(a:buffer, a:linter)
 
-        " Use different job types for file or linter jobs.
-        let l:job_type = a:linter.lint_file ? 'file_linter' : 'linter'
-        call setbufvar(a:buffer, 'ale_job_type', l:job_type)
-
-        if ale#engine#IsExecutable(a:buffer, l:executable)
-            return s:InvokeChain(a:buffer, l:executable, a:linter, 0, [])
-        endif
+        return s:RunIfExecutable(a:buffer, a:linter, l:executable)
     endif
 
     return 0
@@ -654,6 +708,10 @@ function! ale#engine#Cleanup(buffer) abort
     " Don't bother with cleanup code when newer NeoVim versions are exiting.
     if get(v:, 'exiting', v:null) isnot v:null
         return
+    endif
+
+    if exists('*ale#lsp#CloseDocument')
+        call ale#lsp#CloseDocument(a:buffer)
     endif
 
     if !has_key(g:ale_buffer_info, a:buffer)
