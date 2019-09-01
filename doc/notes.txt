@@ -634,7 +634,33 @@ Installation:
 ALE                                                     *notes_ale*
   Asynchronous Lint Engine                              |ale|
 
-NOTE: experimental support only for now; disabled by default.
+ALE provides automatic linting in an asynchronous fashion, providing feedback
+as you type.  External linting tools are required for most languages; see
+|notes_setup_vimfiles| for details on installing these prerequisites.
+
+To disable ALE, place the following in your |VIMRC_VARS| file: >
+
+  let g:EnableAle = 0
+<
+Local customizations:
+
+- Mappings:
+
+    <Space>=    Run ALEFix on current buffer
+
+Usage notes:
+
+- ALE results are stored in a Location List |location-list|; see
+  |notes_quickfix_location| and |notes_quickfix_win| for more information.
+
+- Use :ALE<Tab> to see a list of ALE commands, including:
+
+  - :ALEDisable to stop linting globally; :ALEEnable to re-enable.
+  - :ALEDisableBuffer to stop linting a given buffer.
+  - :ALELint to force a lint operation.
+  - :ALEInfo to see ALE settings, linter output, etc.
+
+See |ALE| documentation for more details.
 
 Version 2019-08-18 (73812c3) from:
 https://github.com/dense-analysis/ale
@@ -647,26 +673,6 @@ https://github.com/drmikehenry/ale.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
-
-Note: currently testing without the below patch.
-
-Apply this patch to defer execution of ALE for a bit when entering a buffer:
-diff --git a/bundle/ale/autoload/ale/events.vim b/bundle/ale/autoload/ale/events.vim
-index c3dbd37..16c9f71 100644
---- a/bundle/ale/autoload/ale/events.vim
-+++ b/bundle/ale/autoload/ale/events.vim
-@@ -44,7 +44,7 @@ function! ale#events#LintOnEnter(buffer) abort
-     call setbufvar(a:buffer, 'ale_file_changed', 0)
-
-     if ale#Var(a:buffer, 'enabled') && g:ale_lint_on_enter
--        call ale#Queue(0, 'lint_file', a:buffer)
-+        call ale#Queue(300, 'lint_file', a:buffer)
-     endif
- endfunction
-
-Mappings:
-
-  <Space>=    Run ALEFix on current buffer
 
 ------------------------------------------------------------------------------
 BADWOLF                                                 *notes_badwolf*
