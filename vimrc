@@ -372,10 +372,7 @@ let g:pathogen_disabled = []
 " Disable an experimental plugin for users in general.
 " call add(g:pathogen_disabled, 'plugin_name')
 
-" TODO: Disable ALE during experimental phase.
-call add(g:pathogen_disabled, 'ale')
-
-" TODO: Disable ALE during experimental phase.
+" TODO: Disable matchup during experimental phase.
 call add(g:pathogen_disabled, 'matchup')
 
 " Activate pathogen in case a user would need to activate a bundle in
@@ -408,69 +405,6 @@ if $VIM_CACHE_DIR == ""
         endif
     endif
 endif
-
-" -------------------------------------------------------------
-" Pathogen bundle management
-" -------------------------------------------------------------
-
-" Infect all bundles.
-call pathogen#infect()
-
-" Bundles in the "pre-bundle" directories will come earlier in the path
-" than those in "bundle" directories.
-call pathogen#infect('pre-bundle/{}')
-
-" -------------------------------------------------------------
-" "vimrc-before" overrides
-" -------------------------------------------------------------
-
-" Execute in highest-to-lowest priority order, so that high-priority
-" gets the first word (and also the last word via vimrc-after).
-call Source('$VIMUSERLOCALFILES/vimrc-before.vim')
-call Source('$VIMUSERFILES/vimrc-before.vim')
-call Source('$VIMLOCALFILES/vimrc-before.vim')
-
-" Determine if Vim's auto-detected 'background' option is trustworthy.
-function! BackgroundIsTrustworthy()
-    if has('gui_running')
-        " Without a terminal, there is no background context to detect.
-        return 0
-    endif
-
-    if $COLORFGBG != ''
-        " COLORFBBG is a good indicator of the terminal background color.
-        return 1
-    endif
-
-    " In Vim 7.4.757 (2015-06-25), support was added to probe for the terminal's
-    " background color.  This is a feature of xterm that some other terminals
-    " have added (notably, and sadly, not tmux (yet)).  However, there is no
-    " easy way for us to tell whether the terminal responded to the request for
-    " background color with this early support.  Later, Vim 8.0.1016
-    " (2017-08-30) brought in the variable v:termrgbresp (mis-spelled) to hold
-    " the terminal's response to the background color query.  The spelling was
-    " corrected to v:termrbgresp in Vim 8.0.1194 (2017-10-14) (though the
-    " runtime documentation wasn't corrected until 2017-11-02).  If either of
-    " these variables exists and is non-empty, then Vim successfully learned the
-    " true background color from the terminal and 'background' is trustworthy.
-
-    " Well, bummer.  The above paragraph sounds nice, but the reality is that
-    " v:termrbgresp isn't set yet while the .vimrc is being processed.  Other
-    " than setting a timer and probing for it, there isn't a way to use the
-    " automatically probed values.  The question has come up on the list:
-    " https://groups.google.com/forum/#!topic/vim_use/zV2sO-m3fD0
-    " Sounds like there may someday be an autocommand for reporting back
-    " the background color, but it's not clear how that can help us determine
-    " which colorscheme to choose since it will come later than we'd like.
-    "
-    " TODO: Revisit this if Vim ever gets better support for v:termrbgresp:
-    " if (exists('v:termrgbresp') && v:termrgbresp != '') ||
-    "         \ (exists('v:termrbgresp') && v:termrbgresp != '')
-    "    return 1
-    " endif
-
-    return 0
-endfunction
 
 " -------------------------------------------------------------
 " Python path management
@@ -535,6 +469,126 @@ if has('python')
 endif
 endif
 endif
+
+" -------------------------------------------------------------
+" Plugin enables
+" -------------------------------------------------------------
+
+" These must be handled before pathogen#infect() below.
+
+" To disable one of the specified plugins below, define the corresponding
+" g:EnableXxx variables below to be 0 (typically, this would be done in
+" the per-user VIMRC_BEFORE file; see top of this file).
+" For example, to disable the UltiSnips plugin, use the following:
+"   let g:EnableUltiSnips = 0
+
+if !exists('g:EnableAle')
+    " Default to ALE instead of Syntastic.
+    let g:EnableAle = 1
+endif
+
+" Gvim bug https://github.com/vim/vim/issues/3417 is fixed in Gvim 8.1.0834.
+" Without this patch, Gvim support for timers is buggy, so ALE should not be
+" enabled.
+if v:version < 801 || (v:version == 801 && !has('patch0834'))
+    let g:EnableAle = 0
+endif
+
+if g:EnableAle
+    " With ALE running, should disable Syntastic.
+    call add(g:pathogen_disabled, 'syntastic')
+
+    " Define :SyntasticReset so other Syntastic wrapper functions will not fail.
+    command! SyntasticReset let b:syntastic_enabled = 0
+else
+    " Disable ALE.
+    call add(g:pathogen_disabled, 'ale')
+endif
+
+" Don't use Powerline or Airline on 8-color terminals; they don't look good.
+if !has("gui_running") && &t_Co == 8
+    let g:EnableAirline = 0
+    let g:EnablePowerline = 0
+endif
+
+if !exists("g:EnableAirline")
+    let g:EnableAirline = 1
+endif
+
+if !exists("g:EnablePowerline")
+    let g:EnablePowerline = 0
+endif
+
+if g:EnablePowerline
+    let g:EnableAirline = 0
+endif
+
+if !exists("g:EnableUltiSnips")
+    let g:EnableUltiSnips = g:Python != ''
+endif
+
+" -------------------------------------------------------------
+" Pathogen bundle management
+" -------------------------------------------------------------
+
+" Infect all bundles.
+call pathogen#infect()
+
+" Bundles in the "pre-bundle" directories will come earlier in the path
+" than those in "bundle" directories.
+call pathogen#infect('pre-bundle/{}')
+
+" -------------------------------------------------------------
+" "vimrc-before" overrides
+" -------------------------------------------------------------
+
+" Execute in highest-to-lowest priority order, so that high-priority
+" gets the first word (and also the last word via vimrc-after).
+call Source('$VIMUSERLOCALFILES/vimrc-before.vim')
+call Source('$VIMUSERFILES/vimrc-before.vim')
+call Source('$VIMLOCALFILES/vimrc-before.vim')
+
+" Determine if Vim's auto-detected 'background' option is trustworthy.
+function! BackgroundIsTrustworthy()
+    if has('gui_running')
+        " Without a terminal, there is no background context to detect.
+        return 0
+    endif
+
+    if $COLORFGBG != ''
+        " COLORFBBG is a good indicator of the terminal background color.
+        return 1
+    endif
+
+    " In Vim 7.4.757 (2015-06-25), support was added to probe for the terminal's
+    " background color.  This is a feature of xterm that some other terminals
+    " have added (notably, and sadly, not tmux (yet)).  However, there is no
+    " easy way for us to tell whether the terminal responded to the request for
+    " background color with this early support.  Later, Vim 8.0.1016
+    " (2017-08-30) brought in the variable v:termrgbresp (mis-spelled) to hold
+    " the terminal's response to the background color query.  The spelling was
+    " corrected to v:termrbgresp in Vim 8.0.1194 (2017-10-14) (though the
+    " runtime documentation wasn't corrected until 2017-11-02).  If either of
+    " these variables exists and is non-empty, then Vim successfully learned the
+    " true background color from the terminal and 'background' is trustworthy.
+
+    " Well, bummer.  The above paragraph sounds nice, but the reality is that
+    " v:termrbgresp isn't set yet while the .vimrc is being processed.  Other
+    " than setting a timer and probing for it, there isn't a way to use the
+    " automatically probed values.  The question has come up on the list:
+    " https://groups.google.com/forum/#!topic/vim_use/zV2sO-m3fD0
+    " Sounds like there may someday be an autocommand for reporting back
+    " the background color, but it's not clear how that can help us determine
+    " which colorscheme to choose since it will come later than we'd like.
+    "
+    " TODO: Revisit this if Vim ever gets better support for v:termrbgresp:
+    " if (exists('v:termrgbresp') && v:termrgbresp != '') ||
+    "         \ (exists('v:termrbgresp') && v:termrbgresp != '')
+    "    return 1
+    " endif
+
+    return 0
+endfunction
 
 " =============================================================
 " Color schemes
@@ -3237,52 +3291,6 @@ command! -bar -nargs=? Diff  call Diff(<q-args>)
 " =============================================================
 " Plugins
 " =============================================================
-
-" -------------------------------------------------------------
-" Plugin enables
-" -------------------------------------------------------------
-
-" To disable one of the specified plugins below, define the corresponding
-" g:EnableXxx variables below to be 0 (typically, this would be done in
-" the per-user VIMRC_BEFORE file; see top of this file).
-" For example, to disable the UltiSnips plugin, use the following:
-"   let g:EnableUltiSnips = 0
-
-if !exists('g:EnableAle')
-    " See if ALE is enabled by invoking an autoloaded function.  Unfortunately,
-    " it's not possible to check for the existence of an autoloaded function
-    " without first trying to call it; ``exists('*ale#Pad')`` will always
-    " return zero until after the function is autloaded.
-    try
-        " If we can invoke an ALE function, it's loaded.
-        call ale#Pad('')
-        let g:EnableAle = 1
-    catch
-        let g:EnableAle = 0
-    endtry
-endif
-
-" Don't use Powerline or Airline on 8-color terminals; they don't look good.
-if !has("gui_running") && &t_Co == 8
-    let g:EnableAirline = 0
-    let g:EnablePowerline = 0
-endif
-
-if !exists("g:EnableAirline")
-    let g:EnableAirline = 1
-endif
-
-if !exists("g:EnablePowerline")
-    let g:EnablePowerline = 0
-endif
-
-if g:EnablePowerline
-    let g:EnableAirline = 0
-endif
-
-if !exists("g:EnableUltiSnips")
-    let g:EnableUltiSnips = g:Python != ''
-endif
 
 " -------------------------------------------------------------
 " Ack

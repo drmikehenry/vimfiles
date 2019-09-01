@@ -7,6 +7,19 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-09-01
+==========
+
+- Default to ALE (Asynchronous Lint Engine) instead of Syntastic where possible.
+  ALE provides a better experience than Syntastic, giving immediate feedback as
+  you type.  ALE requires Vim 8.1.0834 or newer; for older Vim, Syntastic will
+  be used instead of ALE.  To force the use of Syntastic instead of ALE, place
+  the following in your vimrc-vars.vim file::
+
+    let g:EnableAle = 0
+
+  For more details about ALE, see ``:help notes_ale`` and ``:help ale``.
+
 2019-08-28
 ==========
 
