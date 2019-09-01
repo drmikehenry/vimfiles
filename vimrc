@@ -410,19 +410,6 @@ endif
 " Python path management
 " -------------------------------------------------------------
 
-" Temporary hack to bias toward Python 2 for now.  Can be disabled by using:
-"   let g:ForcePython2 = 0
-" in the per-user VIMRC_BEFORE file.
-if !exists("g:ForcePython2")
-    let g:ForcePython2 = 1
-endif
-
-if g:ForcePython2
-if has('python')
-    " Nothing to do, just need the side effects from the has() call.
-endif
-endif
-
 if has('pythonx')
     let g:Python = 'pythonx'
 elseif has('python3')

@@ -28,6 +28,12 @@ require adjustment of per-user settings.
 
     syntax sync fromstart
 
+- Stop forcing the use of Python 2 when both Python 2 and Python 3 are
+  available.  Python 2 support terminates by January 1, 2020.  The variable
+  `g:ForcePython2` has been removed; the Python version is now chosen solely by
+  detecting Vim's compiled-in interpreter support by probing in the order
+  ``pythonx`` then ``python3`` then ``python``.
+
 2019-08-28
 ==========
 
