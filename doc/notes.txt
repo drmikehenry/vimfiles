@@ -2605,21 +2605,15 @@ Installation:
 TAGBAR                                                  *notes_tagbar*
   Source code browser                                   |tagbar.txt|
 
+Requires ctags.exe to be in the path.  Generally this comes with Linux
+distributions.  Compiled binaries may be found at
+http://ctags.sourceforge.net/
+
 Local customizations:
   <S-F8>        - toggle the tagbar (:TagbarToggle)
   CTRL-q CTRL-t - toggle the tagbar (:TagbarToggle)
   CTRL-q T      - toggle the tagbar (:TagbarToggle)
   <Space> q t   - toggle the tagbar (:TagbarToggle)
-
-Version 2017-10-18 (dc155af2) from:
-https://github.com/majutsushi/tagbar
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-Requires ctags.exe to be in the path.  Generally this comes with Linux
-distributions.  Compiled binaries may be found at
-http://ctags.sourceforge.net/
 
 Added support for reStructuredText using rst2ctags v0.2.2.  rst2ctags can be
 found at https://github.com/jszakmeister/rst2ctags, and a copy has been
@@ -2628,6 +2622,15 @@ embedded in $VIMFILES/tool/rst2ctags.
 Also added support for markdown using markdown2ctags v0.2.5.  markdown2ctags
 can be found at https://github.com/jszakmeister/markdown2ctags, and a copy has
 been embedded in $VIMFILES/tool/markdown2ctags.
+
+The Tagbar wiki has more information:
+https://github.com/majutsushi/tagbar/wiki
+
+Version 2017-10-18 (dc155af2) from:
+https://github.com/majutsushi/tagbar
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 TOML                                                    *notes_toml*
@@ -3911,8 +3914,14 @@ directory and all parent directories toward the root.
 The "gf" command ("goto file") will use any filename tags to augment the
 search path (:help 'path').
 
-The custom :Ctags command will launch "ctags-std" in the current directory to
+The custom :Ctags command will launch "gentags" in the current directory to
 update the tags.
+
+An example implementation of "gentags' is found in $VIMFILES/tool/gentags; use
+this as an example, or else copy or symlink this into a directory in your PATH
+to use this implementation as-is, e.g. >
+
+  ln -s ~/.vim/tool/gentags ~/bin
 
 ------------------------------------------------------------------------------
 Cscope                                                  *notes_cscope*

@@ -34,6 +34,9 @@ require adjustment of per-user settings.
   detecting Vim's compiled-in interpreter support by probing in the order
   ``pythonx`` then ``python3`` then ``python``.
 
+- Ship an example ``gentags`` script in ``~/.vim/tool/gentags``.  See ``:help
+  notes_tag_files`` for details.  Add some notes about the Tagbar plugin.
+
 2019-08-28
 ==========
 

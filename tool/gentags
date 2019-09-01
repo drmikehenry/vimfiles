@@ -1,0 +1,11 @@
+#!/bin/sh
+
+ctags                               \
+    --recurse                       \
+    --c-kinds=+px                   \
+    --c++-kinds=+px                 \
+    --fields=+iaS                   \
+    --extra=+qf                     \
+    --exclude=export                \
+    --exclude=build                 \
+    --exclude=target
