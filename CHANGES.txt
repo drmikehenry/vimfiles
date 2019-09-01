@@ -20,6 +20,14 @@ require adjustment of per-user settings.
 
   For more details about ALE, see ``:help notes_ale`` and ``:help ale``.
 
+- For better syntax highlighting speed, choose a synchronization point 1000
+  lines before the top of the current window instead of always choosing the top
+  of the file.  This makes a large improvement in speed for large files (e.g., a
+  10,000 lines reStructuredText file).  In the rare event that 1000 lines is not
+  enough to synchronize the syntax highlighting, issue the following command::
+
+    syntax sync fromstart
+
 2019-08-28
 ==========
 

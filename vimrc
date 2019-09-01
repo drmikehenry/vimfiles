@@ -5734,8 +5734,8 @@ function! SetupMarkup()
     runtime scripts/xml.vim
     let b:SpellType = "<markup>"
 
-    " Re-synchronize syntax highlighting from start of file.
-    syntax sync fromstart
+    " Re-synchronize syntax highlighting minlines before top of window.
+    syntax sync minlines=1000
 endfunction
 command! -bar SetupMarkup call SetupMarkup()
 let g:SpellMap["<markup>"] = "<on>"
@@ -5826,8 +5826,8 @@ function! SetupMail()
     highlight default link gitDiffStatAdd diffAdded
     highlight default link gitDiffStatDelete diffRemoved
 
-    " Re-synchronize syntax highlighting from start of file.
-    syntax sync fromstart
+    " Re-synchronize syntax highlighting minlines before top of window.
+    syntax sync minlines=1000
 endfunction
 command! -bar SetupMail call SetupMail()
 let g:SpellMap["mail"] = "<on>"
@@ -5962,8 +5962,8 @@ function! SetupRstSyntax()
     endfor
     let &iskeyword = old_iskeyword
 
-    " Re-synchronize syntax highlighting from start of file.
-    syntax sync fromstart
+    " Re-synchronize syntax highlighting minlines before top of window.
+    syntax sync minlines=1000
 endfunction
 command! -bar SetupRstSyntax call SetupRstSyntax()
 
@@ -6129,8 +6129,8 @@ function! SetupCmake()
     SetupSource
     setlocal commentstring=#\ %s
 
-    " Re-synchronize syntax highlighting from start of file.
-    syntax sync fromstart
+    " Re-synchronize syntax highlighting minlines before top of window.
+    syntax sync minlines=1000
 endfunction
 command! -bar SetupCmake call SetupCmake()
 
@@ -6266,8 +6266,8 @@ function! SetupPython()
     inoremap <buffer> <C-o><CR> <C-\><C-n>A:<CR>
     vnoremap <buffer> <C-o><CR> <C-\><C-n>A:<CR>
 
-    " Re-synchronize syntax highlighting from start of file.
-    syntax sync fromstart
+    " Re-synchronize syntax highlighting minlines before top of window.
+    syntax sync minlines=1000
 
     SyntasticBufferSetup strict
 endfunction
@@ -6476,8 +6476,8 @@ let g:sh_noisk = 1
 function! SetupShell()
     SetupSource
 
-    " Re-synchronize syntax highlighting from start of file.
-    syntax sync fromstart
+    " Re-synchronize syntax highlighting minlines before top of window.
+    syntax sync minlines=1000
 endfunction
 command! -bar SetupShell call SetupShell()
 
