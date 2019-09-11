@@ -2340,7 +2340,7 @@ the following to your user vimrc configuration: >
 
    call pathogen#surround(expand('$VIMFILES/optional-bundle/snippets'))
 <
-Version 2018-07-16 (1143432) from:
+Version 2019-09-03 (55b29ff) from:
 https://github.com/honza/vim-snippets.git
 
 Installation:
