@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Update vim-snippets plugin to version 2019-09-03.  Note that these snippets
   are not active by default; see ``:help notes_snippets`` for details.
 
+- Add some snippets for the Rust language.
+
 2019-09-01
 ==========
 
