@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-09-12
+==========
+
+- Add ``rubocop`` into ``g:ale_fixers`` for the Ruby language.  Use ``<Space>=``
+  to auto-format the current file (for Ruby or any other supported language).
+
 2019-09-11
 ==========
 

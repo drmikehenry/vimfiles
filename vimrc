@@ -3488,6 +3488,7 @@ if g:EnableAle
 
     let g:ale_fixers = {
         \ 'python': ['black'],
+        \ 'ruby': ['rubocop'],
         \ 'rust': ['rustfmt'],
         \ 'sh': ['shfmt'],
         \ }
