@@ -37,6 +37,12 @@ configure_options = """
     --with-compiledby=vim@drmikehenry.com
     """.split()
 
+ruby_command = '/usr/bin/ruby'
+if os.path.exists(ruby_command):
+    configure_options.extend(
+        ['--with-ruby-command=' + ruby_command]
+    )
+
 tmp_dir = 'build'
 
 usage = """%(prog)s [-h] [--version] [-v] [-q] CMD
