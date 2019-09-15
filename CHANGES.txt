@@ -18,6 +18,7 @@ require adjustment of per-user settings.
   - rust.
   - OmniCppComplete.
   - Powerline.
+  - z80.
 
 - Update Vimball plugin to version 33.
 

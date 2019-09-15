@@ -2986,35 +2986,14 @@ Z80                                                     *notes_z80*
 Version 2017-05-31 (487a6a0) from:
 https://github.com/samsaga2/vim-z80
 
+with the following modifications found in branch `vimfiles` at:
+https://github.com/drmikehenry/vim-z80
+
+- (branch remove-mapping) Removing misbehaving mapping.
+- (branch hash-comment) Handle #comment/#endcomment syntax.
+
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
-
-Apply the below patch to remove the misbehaving "inoremap" and to handle
-#comment/#endcomment syntax highlighting.
-
-diff --git a/ftplugin/z80.vim b/ftplugin/z80.vim
-index 7eda420..6839947 100644
---- a/ftplugin/z80.vim
-+++ b/ftplugin/z80.vim
-@@ -21,4 +21,4 @@ function! s:IndentLabel()
-     let @@ = saved_unnamed_register
- endfunction
-
--inoremap <buffer> :normal! all s:IndentLabel()
-+" inoremap <buffer> :normal! all s:IndentLabel()
-diff --git a/syntax/z80.vim b/syntax/z80.vim
-index e7bf26e..86c2128 100644
---- a/syntax/z80.vim
-+++ b/syntax/z80.vim
-@@ -92,6 +92,8 @@ syn keyword	cTodo		contained TODO FIXME XXX
- syn match z80Comment ";.*$" contains=cTodo
- syn match z80Comment "^\*$"
- syn region z80Comment2 start="\<\.endasm\>" skip="\n" end="\<\.asm\>" keepend contains=z80Comment,z80Comment2
-+syn region z80Comment3 start="^#comment\>" skip="\n" end="^#endcomment\>" keepend
-+syn region z80Comment start="\/\*" end="\*\/" contains=cTodo
- syn region z80Comment start="\/\*" end="\*\/" contains=cTodo
-
- hi def link cTodo		Todo
 
 ==============================================================================
 4.  Extensions                                          *notes_extensions*
