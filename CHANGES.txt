@@ -17,6 +17,7 @@ require adjustment of per-user settings.
   - manpageview.
   - rust.
   - OmniCppComplete.
+  - Powerline.
 
 - Update Vimball plugin to version 33.
 
