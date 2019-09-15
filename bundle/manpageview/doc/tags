@@ -42,8 +42,10 @@ manpageview-pageup	manpageview.txt	/*manpageview-pageup*
 manpageview-perl	manpageview.txt	/*manpageview-perl*
 manpageview-php	manpageview.txt	/*manpageview-php*
 manpageview-python	manpageview.txt	/*manpageview-python*
+manpageview-s-leftmouse	manpageview.txt	/*manpageview-s-leftmouse*
 manpageview-search	manpageview.txt	/*manpageview-search*
 manpageview-shell	manpageview.txt	/*manpageview-shell*
+manpageview-specialhandler	manpageview.txt	/*manpageview-specialhandler*
 manpageview-suggest	manpageview.txt	/*manpageview-suggest*
 manpageview-updates	manpageview.txt	/*manpageview-updates*
 manpageview-usage	manpageview.txt	/*manpageview-usage*

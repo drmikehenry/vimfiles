@@ -1,8 +1,8 @@
-*manpageview.txt*	Man Page Viewer			Apr 05, 2013
+*manpageview.txt*	Man Page Viewer			Jan 12, 2016
 
 Author:  Charles E. Campbell  <NdrchipO@ScampbellPfamily.AbizM>
 	 (remove NOSPAM from Campbell's email first)
-Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
+Copyright: (c) 2004-2015 by Charles E. Campbell		*manpageview-copyright*
 	 The VIM LICENSE applies to ManPageView.vim and ManPageView.txt
 	 (see |copyright|) except use "ManPageView" instead of "Vim"
 	 no warranty, express or implied.  use at-your-own-risk.
@@ -105,14 +105,33 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 	the program given in |g:manpageview_K_http|  on the url in
 	an attempt to show the site in a new tab.
 
+					*manpageview-s-leftmouse*
+	The <s-leftmouse> button also does a manpageview using the
+	word under the mouse.
+
 
 	MAN					*manpageview-.man*
 
 	When in a file supporting special manpage handling such
 	as perl or python files, but one wants a regular manpage
-	anyway, use the ".man" extension. Example: >
+	anyway, use the ".man" suffix Example: >
 
 		:Man syslog.man
+<
+				*manpageview-specialhandler*
+	In general, one can force special handling by appending a
+	special handler's associated suffix to the desired topic: >
+
+		Suffix	  Special Handler
+		------    ---------------
+		.man	: normal manpages
+		.i	: special info handler
+		.php	: special php handler
+		.pl	: special perl handler
+		.py	: special python handler
+		.tex	: special tex handler
+		.vim	: special vim handler
+		
 <
 	PERL		*manpageview-perl* 	 *manpageview-.pl* {{{2
 
@@ -190,11 +209,21 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
         With >
 		man -a topic
 <	one may get multiple man pages in a single buffer.  Manpageview
-	provides two maps to facilitate moving amongst these pages: >
+	provides two maps to facilitate moving amongst these pages in a
+	single buffer: >
 
 		PageUp  : move to preceding  manpage
 		PageDown: move to succeeding manpage
-<
+
+<	Not all systems, however, put multiple manual pages in a single buffer;
+	Scientific Linux, for example, has one quit each page before showing
+	the next manual page.  PageUp/PageDown in such cases will then utilize
+	the same behavior discussed in |manpageview-search| for the
+	PageUp/PageDown keys; ie. display the previous/next manpage.
+
+	Try  "man -a printf"  to see a typical example of multiple manpage
+	behavior.
+
 	MANPAGEVIEW SUGGESTION		*manpageview-suggest*
 
 	As an example, for C: put in .vim/ftplugin/c/c.vim: >
@@ -246,6 +275,7 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 		<s-right>	in larger book numbers
 
 <	These maps are only available when in a manpageview generated buffer.
+	One may precede these maps by a count; ie. 2<s-left>, for example.
 
 
 ==============================================================================
@@ -396,6 +426,13 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 		Apr 05, 2013	* found why manpageview's |mpv-search| was
 				  noisy (had to do with |g:manpageview_iconv|).
 				  Fixed.
+		Mar 04, 2014	* man glob was failing; manpageview was
+				  identifying the extension as gl.  Fixed.
+		Jan 12, 2016	* man -a printf causes multiple manpage
+				  handling for /usr/bin/man; sometimes
+				  a merged buffer results, sometimes a
+				  quit-to-goto-next page behavior results.
+				  See |manpageview-pageup|.
 	v24:	Jan 03, 2011	* some extra protection against trying to use
 				  a program that is not executable
 		Mar 30, 2012	* TMan command included
@@ -414,6 +451,12 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 				  PageUp/PageDown map directions.  He also
 				  pointed out that the K map didn't work on
 				  some info pages properly.  Fixed.
+		Jul 23, 2014	* changed www.php.net to php.net (php support)
+		Jun 01, 2015	* leftmouse used in a manpage was doing the
+				  same as K (|manpageview-K|).  This interfered
+				  with being able to click and drag to pick
+				  up text.  So the map has been moved to
+				  <s-leftmouse> instead.
 	v23:	May 18, 2009	* on the third attempt to get a manpage, if
 				  the user provided no explicit
 				  |g:manpageview_iconv| setting, then the

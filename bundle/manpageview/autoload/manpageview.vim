@@ -1,7 +1,7 @@
 " manpagevim : extra commands for manual-handling
 " Author:	Charles E. Campbell
-" Date:		Apr 08, 2013
-" Version:	25l	 ASTRO-ONLY
+" Date:		May 03, 2016
+" Version:	25u	 ASTRO-ONLY
 "
 " Please read :help manpageview for usage, options, etc
 "
@@ -14,7 +14,7 @@
 if &cp || exists("g:loaded_manpageview")
  finish
 endif
-let g:loaded_manpageview = "v25l"
+let g:loaded_manpageview = "v25u"
 if v:version < 702
  echohl WarningMsg
  echo "***warning*** this version of manpageview needs vim 7.2 or later"
@@ -23,7 +23,7 @@ if v:version < 702
 endif
 let s:keepcpo= &cpo
 set cpo&vim
-"DechoTabOn
+"DechoRemOn
 
 " ---------------------------------------------------------------------
 " Set up default manual-window opening option: {{{1
@@ -46,12 +46,13 @@ endif
 
 " ---------------------------------------------------------------------
 " Default Variable Values: {{{1
-"DechoWF "Set up default variable values:"
+"Decho "Set up default variable values:"
 if has("unix") || has("win32unix")
- let s:nostderr= " 2>/dev/null"
+ let s:nostderr= ' 2>/dev/null'
 else
  let s:nostderr= ""
 endif
+"call Decho('..s:nostderr='.s:nostderr)
 if !exists("g:manpageview_iconv")
  if executable("iconv")
   let s:iconv= "iconv -c"
@@ -64,17 +65,21 @@ endif
 if s:iconv != ""
  let s:iconv= s:nostderr."| ".s:iconv
 endif
+"call Decho('..s:iconv='.s:iconv)
 if !exists("g:manpageview_pgm") && executable("man")
  let g:manpageview_pgm= "man"
 endif
+"call Decho('..g:manpageview_pgm='.g:manpageview_pgm)
 if !exists("g:manpageview_multimanpage")
  let g:manpageview_multimanpage= 1
 endif
+"call Decho('..g:manpageview_multimanpage='.g:manpageview_multimanpage)
 if !exists("g:manpageview_options")
  let g:manpageview_options= ""
 endif
+"call Decho('..g:manpageview_options='.g:manpageview_options)
 if !exists("g:manpageview_pgm_i") && executable("info")
-" DechoWF "installed info help support via manpageview"
+" Decho "installed info help support via manpageview"
  let g:manpageview_pgm_i     = "info"
  let g:manpageview_options_i = "--output=-"
  let g:manpageview_syntax_i  = "info"
@@ -87,20 +92,20 @@ if !exists("g:manpageview_pgm_i") && executable("info")
  let s:linkpat4 = '^\* [^:]*:\s*\([^.]*\)\.$'      " index
 endif
 if !exists("g:manpageview_pgm_pl") && executable("perldoc")
-" DechoWF "installed perl help support via manpageview"
+" Decho "installed perl help support via manpageview"
  let g:manpageview_pgm_pl     = "perldoc"
  let g:manpageview_options_pl = "-f"
 endif
 if !exists("g:manpageview_pgm_pm") && executable("perldoc")
-" DechoWF "installed perl help support via manpageview"
+" Decho "installed perl help support via manpageview"
  let g:manpageview_pgm_pm     = "perldoc"
  let g:manpageview_options_pm = "-f"
 endif
 if !exists("g:manpageview_php_url")
- let g:manpageview_php_url     = "http://www.php.net/"
+ let g:manpageview_php_url     = "http://php.net/"
 endif
 if !exists("g:manpageview_pgm_php") && (executable("links") || executable("elinks"))
-"  DechoWF "installed php help support via manpageview"
+"  Decho "installed php help support via manpageview"
  let g:manpageview_pgm_php     = (executable("links")? "links" : "elinks")." -dump ".g:manpageview_php_url
  let g:manpageview_syntax_php  = "manphp"
  let g:manpageview_nospace_php = 1
@@ -117,18 +122,18 @@ if !exists("g:manpageview_pgm_gl") && (executable("links") || executable("elinks
  let g:manpageview_sfx_gl     = ".xml"
 endif
 if !exists("g:manpageview_pgm_py") && executable("pydoc")
-" DechoWF "installed python help support via manpageview"
+" Decho "installed python help support via manpageview"
  let g:manpageview_pgm_py     = "pydoc"
  let g:manpageview_K_py       = "manpageview#ManPagePython()"
 endif
 if exists("g:manpageview_hypertext_tex") && !exists("g:manpageview_pgm_tex") && (executable("links") || executable("elinks"))
-" DechoWF "installed tex help support via manpageview"
+" Decho "installed tex help support via manpageview"
  let g:manpageview_pgm_tex    = (executable("links")? "links" : "elinks")." ".g:manpageview_hypertext_tex
  let g:manpageview_lookup_tex = "manpageview#ManPageTexLookup"
  let g:manpageview_K_tex      = "manpageview#ManPageTex()"
 endif
 if has("win32") && !exists("g:manpageview_rsh")
-" DechoWF "installed rsh help support via manpageview"
+" Decho "installed rsh help support via manpageview"
  let g:manpageview_rsh= "rsh"
 endif
 if !exists("g:manpageview_K_http")
@@ -160,17 +165,20 @@ endif
 "            -1 : manpage does not exist
 fun! manpageview#ManPageView(...) range
 "  call Dfunc("manpageview#ManPageView(...) a:0=".a:0. " version=".g:loaded_manpageview)
-"  DechoWF "(ManPageView) a:1<".((a:0 >= 1)? a:1 : 'n/a').">"
-"  DechoWF "(ManPageView) a:2<".((a:0 >= 2)? a:2 : 'n/a').">"
-"  DechoWF "(ManPageView) a:3<".((a:0 >= 3)? a:3 : 'n/a').">"
+"  Decho "(ManPageView) a:1<".((a:0 >= 1)? a:1 : 'n/a').">"
+"  Decho "(ManPageView) a:2<".((a:0 >= 2)? a:2 : 'n/a').">"
+"  Decho "(ManPageView) a:3<".((a:0 >= 3)? a:3 : 'n/a').">"
   set lz
   let manpageview_fname = expand("%")
   call s:MPVSaveSettings()
+  if exists("s:specialhandler")
+   unlet s:specialhandler
+  endif
 
   " ---------------------------------------------------------------------
   " parse arguments for topic and booknumber {{{3
   "   merge quoted arguments :  ie.  handle  :Man "some topic here"
-"  DechoWF "(ManPageView) parse input arguments for topic and booknumber"
+"  Decho "(ManPageView) parse input arguments for topic and booknumber"
   let i= 1
   while i <= a:0
    if a:{i} =~ '^"' 
@@ -188,7 +196,7 @@ fun! manpageview#ManPageView(...) range
 	   let topic= substitute(topic,'"$','','')
 	   break
 	  endif
-"	  DechoWF '(ManPageView) ‣‣a:{i='.i.'}<'.a:{i}.'>: topic<'.(exists("topic")? topic : 'n/a').'> bknum<'.(exists("bknum")? bknum : 'n/a').">"
+"	  Decho '(ManPageView) ‣‣a:{i='.i.'}<'.a:{i}.'>: topic<'.(exists("topic")? topic : 'n/a').'> bknum<'.(exists("bknum")? bknum : 'n/a').">"
 	  let i= i + 1
 	 endwhile
 	endif
@@ -211,9 +219,10 @@ fun! manpageview#ManPageView(...) range
     " Handling :call manpageview#ManPageView("topic")
 	let topic= a:{i}
    endif
-"   DechoWF '(ManPageView) ‣a:{i='.i.'}<'.a:{i}.'>: topic<'.(exists("topic")? topic : 'n/a').'> bknum#'.(exists("bknum")? bknum : 'n/a')
+"   Decho '(ManPageView) ‣a:{i='.i.'}<'.a:{i}.'>: topic<'.(exists("topic")? topic : 'n/a').'> bknum#'.(exists("bknum")? bknum : 'n/a')
    let i= i + 1
   endwhile
+"  Decho "(ManPageView) done parsing input arguments for topic and booknumber"
 
   " sanity check
   if !exists("topic") || topic == ""
@@ -226,10 +235,11 @@ fun! manpageview#ManPageView(...) range
   endif
 
   " default book number
+"  Decho "(ManPageView) set up default book number"
   if !exists("bknum")
    let bknum= 0
   endif
-"  DechoWF "(ManPageView) after parsing: topic<".topic."> bknum#".bknum
+"  Decho "(ManPageView) after parsing: topic<".topic."> bknum#".bknum
 
   " ---------------------------------------------------------------------
   " for the benefit of associated routines (such as InfoIndexLink()) {{{3
@@ -248,63 +258,71 @@ fun! manpageview#ManPageView(...) range
   if topic =~ '\.'
    let ext = substitute(topic,'^.*\.','','e')
   endif
-  if exists("g:manpageview_pgm_gl") && topic =~ '^gl'
+  if exists("g:manpageview_pgm_gl") && topic =~ '^gl\>'
    let ext = "gl"
   endif
 
   " ---------------------------------------------------------------------
   " infer the appropriate extension based on the filetype {{{3
   if ext == ""
-"   DechoWF "(ManPageView) attempt to infer on filetype<".&ft.">"
+"   Decho "(ManPageView) attempt to infer on filetype<".&ft.">"
 
    " filetype: vim
    if &ft == "vim"
-"	DechoWF "(ManPageView) special vim handler"
-	let retval= manpageview#ManPageVim(topic)
+"	Decho "(ManPageView) special vim handler"
+    let s:specialhandler = "vim"
+    let retval           = manpageview#ManPageVim(topic)
 "	call Dret("manpageview#ManPageView ".retval)
 	return retval
 
    " filetype: perl
    elseif &ft == "perl" || &ft == "perldoc"
-"	DechoWF "(ManPageView) special perl handler"
-   	let ext = "pl"
+"	Decho "(ManPageView) special perl handler"
+    let s:specialhandler = "perl"
+    let ext              = "pl"
 
    " filetype:  php
    elseif &ft == "php" || &ft == "manphp"
-"	DechoWF "(ManPageView) special php handler"
-   	let ext = "php"
+"	Decho "(ManPageView) special php handler"
+    let s:specialhandler = "php"
+    let ext              = "php"
 
 	" filetype:  python
    elseif &ft == "python" || &ft == "pydoc"
-"	DechoWF "(ManPageView) special python handler"
-   	let ext = "py"
+"	Decho "(ManPageView) special python handler"
+    let s:specialhandler = "python"
+    let ext              = "py"
 
    " filetype: info
    elseif &ft == "info"
-"	DechoWF "(ManPageView) special info handler"
-	let ext= "i"
+"	Decho "(ManPageView) special info handler"
+    let s:specialhandler = "info"
+    let ext              = "i"
 
    " filetype: tex
    elseif &ft == "tex"
-"	DechoWF "(ManPageView) special tex handler"
-    let ext= "tex"
-    let retval= manpageview#ManPageTexLookup(0,topic)
+"	Decho "(ManPageView) special tex handler"
+    let s:specialhandler = "tex"
+    let ext              = "tex"
+    let retval = manpageview#ManPageTexLookup(0,topic)
 "    call Dret("manpageview#ManPageView ".retval)
     return retval
    endif
 
   elseif ext == "vim"
-"   DechoWF "(ManPageView) special vim handler"
-   let retval= manpageview#ManPageVim(substitute(topic,'\.vim$','',''))
+"   Decho "(ManPageView) special vim handler"
+   let s:specialhandler = "vim"
+   let retval           = manpageview#ManPageVim(substitute(topic,'\.vim$','',''))
 "   call Dret("manpageview#ManPageView ".retval)
    return retval
 
   elseif ext == "tex"
-   let retval= manpageview#ManPageTexLookup(0,substitute(topic,'\.tex$',"",""))
+   let s:specialhandler = "tex"
+   let retval           = manpageview#ManPageTexLookup(0,substitute(topic,'\.tex$',"",""))
 "   call Dret("manpageview#ManPageView ".retval)
    return retval
   endif
-"  DechoWF "(ManPageView) ext<".ext.">"
+"  Decho "(ManPageView) ext<".ext.">"
 
   " ---------------------------------------------------------------------
   " elide extension from topic {{{3
@@ -315,7 +333,7 @@ fun! manpageview#ManPageView(...) range
    let ext   = 'man'
   endif
   let nospace= exists("g:manpageview_nospace_{ext}")? g:manpageview_nospace_{ext} : 0
-"  DechoWF "(ManPageView) pgm<".pgm."> topic<".topic."> bknum#".bknum."  (after elision of extension)"
+"  Decho "(ManPageView) pgm<".pgm."> topic<".topic."> bknum#".bknum."  (after elision of extension)"
 
   " ---------------------------------------------------------------------
   " special extension-based exceptions: {{{3
@@ -328,7 +346,7 @@ fun! manpageview#ManPageView(...) range
 	let bknum = ""
 	let mpb   = ""
    endif
-"   DechoWF "(ManPageView) special exception for .man: pgm<".pgm."> topic<".topic."> ext<".ext.">"
+"   Decho "(ManPageView) special exception for .man: pgm<".pgm."> topic<".topic."> ext<".ext.">"
 
   elseif ext == "i"
   " special exception for info
@@ -336,7 +354,7 @@ fun! manpageview#ManPageView(...) range
     unlet s:manpageview_pfx_i
    endif
    let bknum = ""
-"   DechoWF "(ManPageView) special exception for .i: pgm<".(exists("pgm")? pgm : 'n/a')."> topic<".(exists("topic")? topic : 'n/a')."> ext<".(exists("ext")? ext : 'n/a').">"
+"   Decho "(ManPageView) special exception for .i: pgm<".(exists("pgm")? pgm : 'n/a')."> topic<".(exists("topic")? topic : 'n/a')."> ext<".(exists("ext")? ext : 'n/a').">"
    if topic == "Top"
 	let g:mpvcmd = ""
    endif
@@ -344,26 +362,26 @@ fun! manpageview#ManPageView(...) range
   elseif bknum == 0
    let bknum = ""
   endif
-"  DechoWF "(ManPageView) topic<".topic."> bknum#".bknum
+"  Decho "(ManPageView) topic<".topic."> bknum#".bknum
 
   if exists("s:manpageview_pfx_{ext}") && s:manpageview_pfx_{ext} != ""
    let topic= s:manpageview_pfx_{ext}.topic
-"   DechoWF "(ManPageView) modified topic<".topic."> #1"
+"   Decho "(ManPageView) modified topic<".topic."> #1"
   elseif exists("g:manpageview_pfx_{ext}") && g:manpageview_pfx_{ext} != ""
    " prepend any extension-specified prefix to topic
    let topic= g:manpageview_pfx_{ext}.topic
-"   DechoWF "(ManPageView) modified topic<".topic."> #2"
+"   Decho "(ManPageView) modified topic<".topic."> #2"
   endif
 
   if exists("g:manpageview_sfx_{ext}") && g:manpageview_sfx_{ext} != ""
    " append any extension-specified suffix to topic
    let topic= topic.g:manpageview_sfx_{ext}
-"   DechoWF "(ManPageView) modified topic<".topic."> #3"
+"   Decho "(ManPageView) modified topic<".topic."> #3"
   endif
 
   if exists("g:manpageview_K_{ext}") && g:manpageview_K_{ext} != ""
    " override usual K map
-"   DechoWF "(ManPageView) change K map to call ".g:manpageview_K_{ext}
+"   Decho "(ManPageView) change K map to call ".g:manpageview_K_{ext}
    exe "nmap <silent> K :\<c-u>call ".g:manpageview_K_{ext}."\<cr>"
   endif
 
@@ -373,7 +391,7 @@ fun! manpageview#ManPageView(...) range
   else
    let manpageview_syntax= "man"
   endif
-"  DechoWF "(ManPageView) manpageview_syntax<".manpageview_syntax."> topic<".topic."> bknum#".bknum
+"  Decho "(ManPageView) manpageview_syntax<".manpageview_syntax."> topic<".topic."> bknum#".bknum
 
   " ---------------------------------------------------------------------
   " support for searching for options from conf pages {{{3
@@ -381,7 +399,7 @@ fun! manpageview#ManPageView(...) range
    let manpagesrch = '^\s\+'.topic
    let topic       = manpageview_fname
   endif
-"  DechoWF "(ManPageView) topic<".topic."> bknum#".bknum
+"  Decho "(ManPageView) topic<".topic."> bknum#".bknum
 
   " ---------------------------------------------------------------------
   " it was reported to me that some systems change display sizes when a {{{3
@@ -391,12 +409,12 @@ fun! manpageview#ManPageView(...) range
   " into your <.vimrc>
   let dwidth  = &cwh
   let dheight = &co
-"  DechoWF "(ManPageView) dwidth=".dwidth." dheight=".dheight
+"  Decho "(ManPageView) dwidth=".dwidth." dheight=".dheight
 
   " ---------------------------------------------------------------------
   " Set up the window for the manpage display (only hsplit split etc) {{{3
-"  DechoWF "(ManPageView) set up window for manpage display (g:manpageview_winopen<".g:manpageview_winopen."> ft<".&ft."> manpageview_syntax<".manpageview_syntax.">)"
-"  DechoWF "(ManPageView) winnr($)=".winnr("$")." ft=".&ft
+"  Decho "(ManPageView) set up window for manpage display (g:manpageview_winopen<".g:manpageview_winopen."> ft<".&ft."> manpageview_syntax<".manpageview_syntax.">)"
+"  Decho "(ManPageView) winnr($)=".winnr("$")." ft=".&ft
   if     g:manpageview_winopen == "only"
    " OMan
    sil! noautocmd windo w
@@ -406,7 +424,7 @@ fun! manpageview#ManPageView(...) range
    " Record current file/position/screen-position
    if &ft != manpageview_syntax
     sil! only!
-"	let mesg= "(ManPageView) [only]".s:WinReport() | DechoWF mesg
+"	let mesg= "(ManPageView) [only]".s:WinReport() | Decho mesg
    endif
    sil! enew!
 
@@ -416,11 +434,10 @@ fun! manpageview#ManPageView(...) range
     wincmd s
 	sil! enew!
     wincmd _
-    3wincmd -
    else
 	sil! enew!
    endif
-"   let mesg= "(ManPageView) [hsplit]".s:WinReport() | DechoWF mesg
+"   let mesg= "(ManPageView) [hsplit]".s:WinReport() | Decho mesg
 
   elseif g:manpageview_winopen == "hsplit="
    " HEMan
@@ -428,7 +445,7 @@ fun! manpageview#ManPageView(...) range
     wincmd s
    endif
    sil! enew!
-"   let mesg= "(ManPageView) [hsplit=]".s:WinReport() | DechoWF mesg
+"   let mesg= "(ManPageView) [hsplit=]".s:WinReport() | Decho mesg
 
   elseif g:manpageview_winopen == "vsplit"
    " VMan
@@ -440,7 +457,7 @@ fun! manpageview#ManPageView(...) range
    else
 	sil! enew!
    endif
-"   let mesg= "(ManPageView) [vsplit]".s:WinReport() | DechoWF mesg
+"   let mesg= "(ManPageView) [vsplit]".s:WinReport() | Decho mesg
 
   elseif g:manpageview_winopen == "vsplit="
    " VEMan
@@ -448,14 +465,14 @@ fun! manpageview#ManPageView(...) range
     wincmd v
    endif
    enew!
-"   let mesg="(ManPageView) [vsplit=]".s:WinReport() | DechoWF mesg
+"   let mesg="(ManPageView) [vsplit=]".s:WinReport() | Decho mesg
 
   elseif g:manpageview_winopen == "tab"
    " TMan
    if &ft != "man"
     tabnew
    endif
-"   let mesg= "(ManPageView) [tab]".s:WinReport() | DechoWF mesg
+"   let mesg= "(ManPageView) [tab]".s:WinReport() | Decho mesg
 
   elseif g:manpageview_winopen == "reuse"
    " RMan
@@ -468,26 +485,26 @@ fun! manpageview#ManPageView(...) range
    endif
    if g:manpageview_manwin != -1
     " found a pre-existing Manpageview window, re-using it
-"	DechoWF "(ManPageView) found pre-existing manpageview window (win#".g:manpageview_manwin."), re-using it"
+"	Decho "(ManPageView) found pre-existing manpageview window (win#".g:manpageview_manwin."), re-using it"
     exe g:manpageview_manwin."wincmd w"
 	sil! enew!
-"	DechoWF "(ManPageView) re-using win#".g:manpageview_manwin." (note that win($)=".winnr("$").")"
+"	Decho "(ManPageView) re-using win#".g:manpageview_manwin." (note that win($)=".winnr("$").")"
    elseif &l:mod == 1
     " file has been modified, would be lost if we re-used window.  Use hsplit instead.
-"    DechoWF "file<".expand("%")."> has been modified, would be lost if re-used.  Using hsplit instead"
+"    Decho "file<".expand("%")."> has been modified, would be lost if re-used.  Using hsplit instead"
     wincmd s
 	sil! enew!
     wincmd _
     3wincmd -
    elseif &ft != manpageview_syntax
     " re-using current window (but hiding it first)
-"    DechoWF "re-using current window#".winnr()." (hiding it first)"
+"    Decho "re-using current window#".winnr()." (hiding it first)"
     setlocal bh=hide
 	sil! enew!
    else
 	sil! enew!
    endif
-"   let mesg= "(ManPageView) [reuse]".s:WinReport() | DechoWF mesg
+"   let mesg= "(ManPageView) [reuse]".s:WinReport() | Decho mesg
 
   else
    echohl ErrorMsg
@@ -509,24 +526,26 @@ fun! manpageview#ManPageView(...) range
   " ---------------------------------------------------------------------
   " add some maps for multiple manpage handling {{{3
   " (some manpages on some systems have multiple NAME... topics provided on a single manpage)
-  " The code here has PageUp/Down typically do a ctrl-f, ctrl-b; however, if there are multiple
-  " topics on the manpage, then PageUp/Down will go to the previous/succeeding topic, instead.
+  " PageUp/PageDown: If there are multiple manpages in the current buffer, then these keys
+  "                  will cause manpageview to search forward/backward for the next topic.
+  "                : Otherwise, these keys will invoke the same behavior as <s-up> and <s-down>
+  "                  (ie. go to next/previous manpage)
   if g:manpageview_multimanpage
    let swp       = SaveWinPosn(0)
    let nameline1 = search("^NAME$",'Ww')
    let nameline2 = search("^NAME$",'Ww')
    sil! call RestoreWinPosn(swp)
    if nameline1 != nameline2 && nameline1 >= 1 && nameline2 >= 1
-"	DechoWF "(ManPageView) multimanpage: mapping PageUp/Down to go to preceding/succeeding topic"
+"	Decho "(ManPageView) multimanpage: mapping PageUp/Down to go to preceding/succeeding topic"
 	nno <silent> <script> <buffer> <PageUp>			:call search("^NAME$",'bW')<cr>z<cr>5<c-y>
 	nno <silent> <script> <buffer> <PageDown>		:call search("^NAME$",'W')<cr>z<cr>5<c-y>
    else
-"	DechoWF "(ManPageView) multimanpage: mapping PageUp/Down to go to ctrl-f, ctrl-b"
-    nno <silent> <script> <buffer> <PageDown>	<c-f>
-	nno <silent> <script> <buffer> <PageUp>		<c-b>
+"	Decho "(ManPageView) multimanpage: mapping PageUp/Down to go to do same as <s-left>, <s-right>"
+    nmap <silent> <script> <buffer> <PageDown>	:call manpageview#BookSearch( 1)<cr>
+	nmap <silent> <script> <buffer> <PageUp>	:call manpageview#BookSearch(-1)<cr>
    endif
   else
-"   DechoWF "(ManPageView) not-multimanpage: mapping PageUp/Down to do ctrl-f, ctrl-b"
+"   Decho "(ManPageView) not-multimanpage: mapping PageUp/Down to do ctrl-f, ctrl-b"
    nno <silent> <script> <buffer> <PageDown>	<c-f>
    nno <silent> <script> <buffer> <PageUp>		<c-b>
   endif
@@ -534,7 +553,8 @@ fun! manpageview#ManPageView(...) range
   " ---------------------------------------------------------------------
   " allow K to use <cWORD> when in man pages {{{3
   if manpageview_syntax == "man"
-   nmap <silent> <script> <buffer>	K   :<c-u>call manpageview#KMap(1)<cr>
+   nmap <silent> <script> <buffer>	K				:<c-u>call manpageview#KMap(1)<cr>
+   nno  <silent> <script> <buffer> <s-leftmouse>	<leftmouse>:call manpageview#KMap(1)<cr>
   endif
 
   " ---------------------------------------------------------------------
@@ -573,14 +593,14 @@ fun! manpageview#ManPageView(...) range
   " extension-based initialization (expected: buffer-specific maps) {{{4
   if exists("g:manpageview_init_{ext}")
    if !exists("b:manpageview_init_{ext}")
-"	DechoWF "(ManPageView) exe manpageview_init_".ext."<".g:manpageview_init_{ext}.">"
+"	Decho "(ManPageView) exe manpageview_init_".ext."<".g:manpageview_init_{ext}.">"
 	exe g:manpageview_init_{ext}
 	let b:manpageview_init_{ext}= 1
    endif
   elseif ext == ""
-"   DechoWF "(ManPageView) change K map to support empty extension"
+"   Decho "(ManPageView) change K map to support empty extension"
    sil! unmap K
-"   DechoWF "(ManPageView) nmap <silent> <unique> K manpageview#KMap(0)"
+"   Decho "(ManPageView) nmap <silent> <unique> K manpageview#KMap(0)"
    nmap <silent> <unique> K :<c-u>call manpageview#KMap(0)<cr>
   endif
 
@@ -594,11 +614,11 @@ fun! manpageview#ManPageView(...) range
 
   let cnt= 0
   while cnt < 3 && (strlen(opt) > 0 || cnt == 0)
-"   DechoWF "(ManPageView) ‣while [cnt=".cnt."]<3 AND (strlen(opt<".opt.">) > 0 || cnt==0)"
+"   Decho "(ManPageView) ‣while [cnt=".cnt."]<3 AND (strlen(opt<".opt.">) > 0 || cnt==0)"
    let cnt   = cnt + 1
    let iopt  = substitute(opt,';.*$','','e')
    let opt   = substitute(opt,'^.\{-};\(.*\)$','\1','e')
-"   DechoWF "(ManPageView) ‣cnt=".cnt." iopt<".iopt."> opt<".opt."> s:iconv<".(exists("s:iconv")? s:iconv : "").">"
+"   Decho "(ManPageView) ‣cnt=".cnt." iopt<".iopt."> opt<".opt."> s:iconv<".(exists("s:iconv")? s:iconv : "").">"
    if exists("dokeysrch")
 	let iopt= iopt." -k"
    endif
@@ -612,14 +632,14 @@ fun! manpageview#ManPageView(...) range
 	" use manpage_lookup function {{{4
 	" ---------------------------
    	if exists("g:manpageview_lookup_{ext}")
-"	 DechoWF "(ManPageView) ‣lookup: exe call ".g:manpageview_lookup_{ext}."('".bknum."','".topic."')"
-"	 DechoWF "(ManPageView) ‣lookup: g:manpageview_lookup_".ext."<".g:manpageview_lookup_{ext}.">"
-"	 DechoWF "(ManPageView) ‣lookup: bknum<".bknum.">"
-"	 DechoWF "(ManPageView) ‣lookup: topic<".topic.">"
+"	 Decho "(ManPageView) ‣lookup: exe call ".g:manpageview_lookup_{ext}."('".bknum."','".topic."')"
+"	 Decho "(ManPageView) ‣lookup: g:manpageview_lookup_".ext."<".g:manpageview_lookup_{ext}.">"
+"	 Decho "(ManPageView) ‣lookup: bknum<".bknum.">"
+"	 Decho "(ManPageView) ‣lookup: topic<".topic.">"
 	 exe "call ".g:manpageview_lookup_{ext}."('".bknum."','".topic."')"
 
     elseif has("win32") && exists("g:manpageview_server") && exists("g:manpageview_user")
-"	 DechoWF "(ManPageView) ‣win32: bknum<".bknum."> topic<".topic.">"
+"	 Decho "(ManPageView) ‣win32: bknum<".bknum."> topic<".topic.">"
      exe cmdmod."r!".g:manpageview_rsh." ".g:manpageview_server." -l ".g:manpageview_user." ".pgm." ".iopt." ".shellescape(bknum,1)." ".shellescape(topic,1)
      exe cmdmod.'sil!  %s/.\b//ge'
 
@@ -632,21 +652,21 @@ fun! manpageview#ManPageView(...) range
 	 else
 	  let mpb= ""
 	 endif
-"	 DechoWF "(ManPageView) ‣pgm    <".(exists("pgm")?     pgm     : 'n/a').">"
-"	 DechoWF "(ManPageView) ‣iopt   <".(exists("iopt")?    iopt    : 'n/a').">"
-"	 DechoWF "(ManPageView) ‣mpb    <".(exists("mpb")?     mpb     : 'n/a').">"
-"	 DechoWF "(ManPageView) ‣topic  <".(exists("topic")?   topic   : 'n/a').">"
-"	 DechoWF "(ManPageView) ‣s:iconv<".(exists("s:iconv")? s:iconv : 'n/a').">"
+"	 Decho "(ManPageView) ‣pgm    <".(exists("pgm")?     pgm     : 'n/a').">"
+"	 Decho "(ManPageView) ‣iopt   <".(exists("iopt")?    iopt    : 'n/a').">"
+"	 Decho "(ManPageView) ‣mpb    <".(exists("mpb")?     mpb     : 'n/a').">"
+"	 Decho "(ManPageView) ‣topic  <".(exists("topic")?   topic   : 'n/a').">"
+"	 call Decho("(ManPageView) ‣s:iconv<".(exists("s:iconv")? s:iconv : 'n/a').">")
 "	 call Decho('(ManPageView) ‣s:nostderr="'.s:nostderr.'"')
 	 if exists("g:mpvcmd")
-"	  DechoWF "(ManPageView) ‣mpvcmd: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd.s:nostderr
+"	  call Decho("(ManPageView) ‣mpvcmd: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd.s:nostderr)
       exe cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd.s:nostderr
 	  unlet g:mpvcmd
 	 elseif nospace
-"	  DechoWF "(ManPageView) ‣nospace=".nospace.":  exe sil! ".cmdmod."r!".pgm.iopt.mpb.topic.(exists("s:iconv")? s:iconv : "").s:nostderr
+"	  call Decho("(ManPageView) ‣nospace=".nospace.":  exe sil! ".cmdmod."r!".pgm.iopt.mpb.topic.(exists("s:iconv")? s:iconv : "").s:nostderr)
 	  exe cmdmod."r!".pgm.iopt.mpb.shellescape(topic,1).(exists("s:iconv")? s:iconv : "").s:nostderr
      elseif has("win32")
-"	  DechoWF "(ManPageView) ‣win32: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." \"".topic."\" ".(exists("s:iconv")? s:iconv : "").s:nostderr
+"	  call Decho("(ManPageView) ‣win32: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." \"".topic."\" ".(exists("s:iconv")? s:iconv : "").s:nostderr)
 	  exe cmdmod."r!".pgm." ".iopt." ".mpb." ".shellescape(topic,1).(exists("s:iconv")? " ".s:iconv : "").s:nostderr
 	 else
 "	  call Decho("(ManPageView) ‣normal: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." '".topic."' ".(exists("s:iconv")? s:iconv : "").s:nostderr)
@@ -660,13 +680,13 @@ fun! manpageview#ManPageView(...) range
   " ---------------------------------------------------------------------
    " check if manpage actually found {{{3
    if line("$") != 1 || col("$") != 1
-"	DechoWF "(ManPageView) ‣manpage found"
+"	Decho "(ManPageView) ‣manpage found"
     break
    endif
-"   DechoWF "(ManPageView) ‣cnt=".cnt.": manpage not found"
+"   Decho "(ManPageView) ‣cnt=".cnt.": manpage not found"
    if cnt == 3 && !exists("g:manpageview_iconv") && s:iconv != ""
 	let s:iconv= ""
-"	DechoWF "(ManPageView) ‣trying with no iconv"
+"	Decho "(ManPageView) ‣trying with no iconv"
    elseif cnt == 1
 	break
    endif
@@ -676,7 +696,7 @@ fun! manpageview#ManPageView(...) range
   " here comes the vim display size restoration {{{3
   if exists("g:manpageview_dispresize")
    if g:manpageview_dispresize == 1
-"	DechoWF "(ManPageView) restore display size to ".dheight."x".dwidth
+"	Decho "(ManPageView) restore display size to ".dheight."x".dwidth
     exe "let &co=".dwidth
     exe "let &cwh=".dheight
    endif
@@ -685,7 +705,7 @@ fun! manpageview#ManPageView(...) range
   " ---------------------------------------------------------------------
   " clean up (ie. remove) any ansi escape sequences {{{3
   if line("$") != 1 || col("$") != 1
-"   DechoWF "(ManPageView) remove any ansi escape sequences"
+"   Decho "(ManPageView) remove any ansi escape sequences"
    sil! %s/\e\[[0-9;]\{-}m//ge
    sil! %s/\%xe2\%x80\%x90/-/ge
    sil! %s/\%xe2\%x88\%x92/-/ge
@@ -694,7 +714,7 @@ fun! manpageview#ManPageView(...) range
 
   " ---------------------------------------------------------------------
   " set up options and put cursor at top-left of manpage {{{3
-"  DechoWF "(ManPageView) set up options and put cursor at top-left of manpage"
+"  Decho "(ManPageView) set up options and put cursor at top-left of manpage"
    if bknum == "-k"
     setlocal ft=mankey
    else
@@ -716,31 +736,31 @@ fun! manpageview#ManPageView(...) range
   " ---------------------------------------------------------------------
   "  check if help was not found  {{{3
   if line("$") == 1 && col("$") == 1
-"   DechoWF "(ManPageView) no help found: ft=".&ft." manpageview_syntax<".(exists("manpageview_syntax")? manpageview_syntax : 'n/a').">"
+"   Decho "(ManPageView) no help found: ft=".&ft." manpageview_syntax<".(exists("manpageview_syntax")? manpageview_syntax : 'n/a').">"
 
    if &ft == manpageview_syntax
 	if exists("s:manpageview_curtopic")
-"	 DechoWF "(ManPageView) no help found: s:manpageview_curtopic<".s:manpageview_curtopic.">"
+"	 Decho "(ManPageView) no help found: s:manpageview_curtopic<".s:manpageview_curtopic.">"
 	 call manpageview#ManPageView(v:count,s:manpageview_curtopic)
 	endif
    elseif winnr("$") > 1 && !exists("s:booksearching")
-"    DechoWF "(ManPageView) no help found, quitting help window"
+"    Decho "(ManPageView) no help found, quitting help window"
     sil! q!
    endif
 
-"   DechoWF "(ManPageView) save winposn"
+"   Decho "(ManPageView) save winposn"
    call SaveWinPosn()
-"   DechoWF "***warning*** no manpage exists for <".topic."> book<".bknum.">"
+"   Decho "***warning*** no manpage exists for <".topic."> book<".bknum.">"
    if !exists("s:mpv_booksearch")
     echohl ErrorMsg
     echo "***warning*** sorry, no manpage exists for <".topic.">"
     echohl None
     sleep 250m
    endif
-"   DechoWF "(ManPageView) winnr($)=".winnr("$")." ft=".&ft
+"   Decho "(ManPageView) winnr($)=".winnr("$")." ft=".&ft
 
    if exists("s:mpv_before_k_posn")
-"	DechoWF "(ManPageView) restoring winposn"
+"	Decho "(ManPageView) restoring winposn"
 	sil! call RestoreWinPosn(s:mpv_before_k_posn)
 	unlet s:mpv_before_k_posn
    endif
@@ -752,18 +772,18 @@ fun! manpageview#ManPageView(...) range
 	unlet s:onerr_bknum s:onerr_topic s:onerr_winpos
    endif
 
-"   DechoWF "(ManPageView) restoring settings"
+"   Decho "(ManPageView) restoring settings"
    call s:MPVRestoreSettings()
 "   call Dret("manpageview#ManPageView -1 : no manpage exists for <".topic.">")
    return -1
 
   elseif bknum == ""
-"   DechoWF '(ManPageView) exe file '.fnameescape('Manpageview['.topic.']')
+"   Decho '(ManPageView) exe file '.fnameescape('Manpageview['.topic.']')
    exe 'sil! file '.fnameescape('Manpageview['.topic.']')
    let s:manpageview_curtopic= topic
 
   else
-"   DechoWF '(ManPageView) exe file '.fnameescape('Manpageview['.topic.'('.fnameescape(bknum).')]')
+"   Decho '(ManPageView) exe file '.fnameescape('Manpageview['.topic.'('.fnameescape(bknum).')]')
    exe 'sil! file '.fnameescape('Manpageview['.topic.'('.fnameescape(bknum).')]')
    let s:manpageview_curtopic= topic."(".bknum.")"
   endif
@@ -771,14 +791,14 @@ fun! manpageview#ManPageView(...) range
   " ---------------------------------------------------------------------
   " Enter booknumber and topic into history
   if !exists("s:history") || s:ihist == len(s:history)-1
-"   DechoWF "(ManPageView) Saving history: bknum#".bknum." topic<".topic.">"
+"   Decho "(ManPageView) Saving history: bknum#".bknum." topic<".topic.">"
    call manpageview#History(0,bknum,topic)
   endif
 
   " ---------------------------------------------------------------------
   " Install search book maps
-  nno <silent> <buffer> <s-left>	:call manpageview#BookSearch(-v:count1)<cr>
-  nno <silent> <buffer> <s-right>	:call manpageview#BookSearch( v:count1)<cr>
+  nno <silent> <buffer> <s-left>	:call manpageview#BookSearch(-1)<cr>
+  nno <silent> <buffer> <s-right>	:call manpageview#BookSearch( 1)<cr>
 
   " ---------------------------------------------------------------------
   " if there's a search pattern, use it {{{3
@@ -837,7 +857,7 @@ fun! manpageview#KMap(usecWORD)
     let topic               = expand("<cword>")
    endif
    let s:mpv_before_k_posn = SaveWinPosn(0)
-"   DechoWF "(KMap) book#".(exists("book")? book : 'n/a')."  topic<".(exists("topic")? topic : 'n/a').">"
+"   Decho "(KMap) book#".(exists("book")? book : 'n/a')."  topic<".(exists("topic")? topic : 'n/a').">"
    call manpageview#ManPageView(book,topic)
   endif
 "  call Dret("manpageview#KMap")
@@ -869,7 +889,7 @@ fun! s:MPVRestorePosn()
 "  call Dfunc("s:MPVRestorePosn()")
 
   if exists("g:ManCurPosn")
-"   DechoWF "g:ManCurPosn<".g:ManCurPosn.">"
+"   Decho "g:ManCurPosn<".g:ManCurPosn.">"
    if v:version >= 603
 	exe 'keepj sil! source '.fnameescape(g:ManCurPosn)
    else
@@ -944,7 +964,7 @@ fun! s:MPVInfo(type)
 
   if &ft != "info"
    " restore K and do a manpage lookup for word under cursor
-"   DechoWF "ft<".&ft."> ≠ info: restore K and do a manpage lookup of word under cursor"
+"   Decho "ft<".&ft."> ≠ info: restore K and do a manpage lookup of word under cursor"
    setlocal kp=manpageview#ManPageView
    if exists("s:manpageview_pfx_i")
     unlet s:manpageview_pfx_i
@@ -964,11 +984,11 @@ fun! s:MPVInfo(type)
   if a:type == 0
    " extract link
    let curline  = getline(".")
-"   DechoWF "type==0: curline<".curline.">"
+"   Decho "type==0: curline<".curline.">"
    let ipat     = 1
    while ipat <= 4
     let link= matchstr(curline,s:linkpat{ipat})
-"	DechoWF '..attempting s:linkpat'.ipat.":<".s:linkpat{ipat}.">"
+"	Decho '..attempting s:linkpat'.ipat.":<".s:linkpat{ipat}.">"
     if link != ""
      if ipat == 2
       let s:manpageview_pfx_i = substitute(link,s:linkpat{ipat},'\1','')
@@ -976,7 +996,7 @@ fun! s:MPVInfo(type)
      else
       let node                = substitute(link,s:linkpat{ipat},'\1','')
  	 endif
-"   	 DechoWF "ipat=".ipat."link<".link."> node<".node."> pfx<".s:manpageview_pfx_i.">"
+"   	 Decho "ipat=".ipat."link<".link."> node<".node."> pfx<".s:manpageview_pfx_i.">"
  	 break
     endif
     let ipat= ipat + 1
@@ -990,7 +1010,7 @@ fun! s:MPVInfo(type)
    let nxtnode  = matchstr(getline(2),'Next: \zs[^,]\+\ze,')
    let node     = ""
    let g:mpvcmd = ' --node="'.nxtnode.'" -f "'.infofile.'"'
-"   DechoWF "type==1: goto next node<".node."> with infofile<".infofile.">"
+"   Decho "type==1: goto next node<".node."> with infofile<".infofile.">"
 
   " -----------------------
   " Go to previous node "["
@@ -1000,7 +1020,7 @@ fun! s:MPVInfo(type)
    let prvnode  = matchstr(getline(2),'Prev: \zs[^,]\+\ze,')
    let node     = ""
    let g:mpvcmd = ' --node="'.prvnode.'" -f "'.infofile.'"'
-"   DechoWF "type==2: goto previous node<".node."> with infofile<".infofile.">"
+"   Decho "type==2: goto previous node<".node."> with infofile<".infofile.">"
 
   " --------------
   " Go up node "u"
@@ -1010,7 +1030,7 @@ fun! s:MPVInfo(type)
    let upnode   = matchstr(getline(2),'Up: \zs.\+$')
    let node     = ""
    let g:mpvcmd = ' --node="'.upnode.'" -f "'.infofile.'"'
-"   DechoWF "type==3: go up one node<".upnode."> with infofile<".infofile.">"
+"   Decho "type==3: go up one node<".upnode."> with infofile<".infofile.">"
    if node == "(dir)"
 	echo "***sorry*** can't go up from this node"
 "    call Dret("s:MPVInfo : can't go up a node")
@@ -1021,7 +1041,7 @@ fun! s:MPVInfo(type)
   " Go to top node "t"
   " ------------------
   elseif a:type == 4
-"   DechoWF "type==4: go to top node"
+"   Decho "type==4: go to top node"
    let node= ""
 
   " -----------------------
@@ -1033,22 +1053,22 @@ fun! s:MPVInfo(type)
    let selnode  = matchstr(getline("."),'^\s*\*\s*\zs[^:]\+\ze:')
    let infofile2= matchstr(getline("."),'^\s*\*\s*[^:]\+:\s*(\zs[^)]\+\ze)')
    let node2    = matchstr(getline("."),'^\s*\*\s*[^:]\+:\s*([^)]\+)\zs[^.]*\ze\.')
-"   DechoWF "type==5:  infofile<".infofile.">"
-"   DechoWF "type==5: infofile2<".infofile2.">"
-"   DechoWF "type==5:   selnode<".selnode.">"
-"   DechoWF "type==5:      node<".node.">"
-"   DechoWF "type==5:      node2<".node2.">"
+"   Decho "type==5:  infofile<".infofile.">"
+"   Decho "type==5: infofile2<".infofile2.">"
+"   Decho "type==5:   selnode<".selnode.">"
+"   Decho "type==5:      node<".node.">"
+"   Decho "type==5:      node2<".node2.">"
    if infofile2 != "" && node2 != ""
 	let infofile= infofile2
-"	DechoWF "type==5: infofile <".infofile."> (overridden with infofile2)"
+"	Decho "type==5: infofile <".infofile."> (overridden with infofile2)"
    endif
    if node2 != ""
 	let srchpat= selnode
 	let selnode= node2
-"	DechoWF "type==5: selnode <".selnode."> (overridden with node2)"
+"	Decho "type==5: selnode <".selnode."> (overridden with node2)"
    endif
    if line('.') == 2
-"    DechoWF "cword<".expand("<cword>").">"
+"    Decho "cword<".expand("<cword>").">"
 	if     expand("<cword>") == "Next"
 	 call s:MPVInfo(1)
 "     call Dret("s:MPVInfo")
@@ -1071,7 +1091,7 @@ fun! s:MPVInfo(type)
 	 call RestoreMark("a")
 	 let @a       = keepa
      let g:mpvcmd = ' --node="'.selnode.'" -f "'.infofile.'"'
-"	 DechoWF "type==5: selnode<".selnode.">"
+"	 Decho "type==5: selnode<".selnode.">"
 	endif
    elseif selnode == "Menu" || selnode == ""
 "	call Dret("s:MPVInfo : skip Menu")
@@ -1079,15 +1099,15 @@ fun! s:MPVInfo(type)
    elseif node == "Top" && infofile == "dir"
 	let g:mpvcmd = ' -f '.selnode
 	let node     = ""
-"	DechoWF "type==5: goto selected node<".selnode."> (special: infofile is dir)"
+"	Decho "type==5: goto selected node<".selnode."> (special: infofile is dir)"
    else
 	let node     = ""
     let g:mpvcmd = ' --node="'.selnode.'" -f "'.infofile.'"'
-"    DechoWF "type==5: goto selected node<".selnode."> with infofile<".infofile.">"
+"    Decho "type==5: goto selected node<".selnode."> with infofile<".infofile.">"
    endif
-"   DechoWF "type==5: g:mpvcmd<".(exists("g:mpvcmd")? g:mpvcmd : 'n/a').">"
+"   Decho "type==5: g:mpvcmd<".(exists("g:mpvcmd")? g:mpvcmd : 'n/a').">"
   endif
-"  DechoWF "node<".(exists("node")? node : '--n/a--').">"
+"  Decho "node<".(exists("node")? node : '--n/a--').">"
 
   " use ManPageView() to view selected node
   if !exists("node")
@@ -1098,7 +1118,7 @@ fun! s:MPVInfo(type)
   else
    call manpageview#ManPageView(0,node.".i")
    if exists("srchpat")
-"	DechoWF "applying srchpat<".srchpat.">"
+"	Decho "applying srchpat<".srchpat.">"
 	call search('\<'.srchpat.'\>')
    endif
   endif
@@ -1157,7 +1177,7 @@ fun! s:InfoIndexLink(cmd)
    call inputsave()
    let g:mpv_infolink= input("Index entry: ","","shellcmd")
    call inputrestore()
-"   DechoWF "(InfoIndexLink) g:mpv_infolink<".g:mpv_infolink.">"
+"   Decho "(InfoIndexLink) g:mpv_infolink<".g:mpv_infolink.">"
    call manpageview#ManPageView(0,g:mpv_infolink.".i")
    call search('\<'.g:mpv_infolink.'\>','W')
 "   call Dret("s:InfoIndexLink")
@@ -1184,7 +1204,9 @@ endfun
 " manpageview#:ManPagePhp: {{{2
 fun! manpageview#ManPagePhp()
   let s:before_K_posn = SaveWinPosn(0)
-  let topic           = substitute(expand("<cWORD>"),'()\=.*$','.php','')
+  let smtopic         = expand("<cword>")
+  let topic           = substitute(expand("<cWORD>"),'^.*\ze'.smtopic,'','')
+  let topic           = substitute(topic,'()\=.*$','.php','')
 "  call Dfunc("manpageview#ManPagePhp() topic<".topic.">")
   call manpageview#ManPageView(0,topic)
 "  call Dret("manpageview#ManPagePhp")
@@ -1204,6 +1226,7 @@ endfun
 " manpageview#ManPageVim: {{{2
 fun! manpageview#ManPageVim(topic)
 "  call Dfunc("manpageview#ManPageVim(topic<".a:topic.">)")
+"  Decho "(ManPageVim) g:manpageview_winopen<".(exists("g:manpageview_winopen")? g:manpageview_winopen : 'n/a').">"
   if g:manpageview_winopen == "only"
    " OMan
    exe "help ".fnameescape(a:topic)
@@ -1230,7 +1253,7 @@ fun! manpageview#ManPageVim(topic)
    exe "noautocmd windo if &ft == 'help'|let g:manpageview_manwin= winnr()|endif"
    if g:manpageview_manwin != -1
 	" found a pre-existing help window, re-using it
-"	DechoWF "found pre-exiting help window, re-using it"
+"	Decho "found pre-exiting help window, re-using it"
 	exe g:manpageview_manwin."wincmd w"
     exe "help ".fnameescape(a:topic)
    elseif &l:mod == 1
@@ -1243,12 +1266,12 @@ fun! manpageview#ManPageVim(topic)
 	 wincmd j
 	 q
 	else
-"	 DechoWF "file<".expand("%")."> has been modified and would be lost if re-used.  Using regular help"
+"	 Decho "file<".expand("%")."> has been modified and would be lost if re-used.  Using regular help"
      exe "help ".fnameescape(a:topic)
 	endif
    elseif &ft != "help"
 	" re-using current window (but hiding it first)
-"	DechoWF "re-using current window#".winnr()." (hiding it first)"
+"	Decho "re-using current window#".winnr()." (hiding it first)"
    	setlocal bh=hide
     exe "help ".fnameescape(a:topic)
 	wincmd j
@@ -1258,8 +1281,20 @@ fun! manpageview#ManPageVim(topic)
     exe "help ".fnameescape(a:topic)
    endif
   else
-   " Man
-   exe "help ".fnameescape(a:topic)
+
+   " Man   or  hsplit
+"   call Decho("try..catch..endtry#1: a:topic<".a:topic.">")
+   try
+    exe "help ".fnameescape(a:topic)
+   catch /^Vim\%((\a\+)\)\=:E/
+    echohl WarningMsg
+    echomsg "***warning*** unable to find man page on <".a:topic.">"
+     \ ((exists("s:specialhandler"))? "using special handler for ".s:specialhandler : "")
+    echohl None
+    sleep 250m
+   endtry
+"   call Decho("try..catch..endtry#2")
+
   endif
 
 "  call Dret("manpageview#ManPageVim")
@@ -1314,19 +1349,19 @@ fun! manpageview#KMan(ext)
   else
    let ext= a:ext
   endif
-"  DechoWF "ext<".ext.">"
+"  Decho "ext<".ext.">"
 
   " change the K map
-"  DechoWF "change the K map"
+"  Decho "change the K map"
   sil! nummap K
   sil! nunmap <buffer> K
   if exists("g:manpageview_K_{ext}") && g:manpageview_K_{ext} != ""
    exe "nmap <silent> <buffer> K :call ".g:manpageview_K_{ext}."\<cr>"
-"   DechoWF "nmap <silent> K :call ".g:manpageview_K_{ext}
+"   Decho "nmap <silent> K :call ".g:manpageview_K_{ext}
   else
-"   DechoWF "change K map (KMan)"
+"   Decho "change K map (KMan)"
    nmap <unique> K <Plug>ManPageView
-"   DechoWF "nmap <unique> K <Plug>ManPageView"
+"   Decho "nmap <unique> K <Plug>ManPageView"
   endif
 
 "  call Dret("manpageview#KMan ")
@@ -1350,7 +1385,7 @@ endfun
 fun! manpageview#History(mode,...)
 "  call Dfunc("manpageview#History(mode=".a:mode.") a:0=".a:0)
   if !exists("s:history")
-"   DechoWF "initializing history"
+"   Decho "initializing history"
    let s:history= []
    let s:ihist  = 0
   endif
@@ -1455,6 +1490,7 @@ fun! manpageview#BookSearch(direction)
   unlet s:mpv_booksearch
   let &lz= keeplz
   if retval < 0
+   " restore man page to the one prior to the search
    call manpageview#ManPageView(curbknum,curtopic)
    echohl WarningMsg
    echomsg "***warning*** unable to find man page on <".topic."> with a ".((a:direction > 0)? "larger" : "smaller")." book number"

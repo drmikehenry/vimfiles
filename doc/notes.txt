@@ -1694,35 +1694,14 @@ Installation:
 MANPAGEVIEW                                             *notes_manpageview*
   File reading and writing across networks              |manpageview|
 
-Version 25l from:
-http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
+Version 25u (73812c3) from:
+https://github.com/dkasak/manpageview
 
-Version 25l requires patching of "sleep 2" to become "sleep 250m" to avoid
-freezing Vim for two tiresome seconds while ManPageView displays an error
-message:
+with the following modifications found in branch `vimfiles` at:
+https://github.com/drmikehenry/manpageview
 
-diff --git a/bundle/manpageview/autoload/manpageview.vim b/bundle/manpageview/autoload/manpageview.vim
-index 87680dc..a276407 100644
---- a/bundle/manpageview/autoload/manpageview.vim
-+++ b/bundle/manpageview/autoload/manpageview.vim
-@@ -223 +223 @@ fun! manpageview#ManPageView(...) range
--   sleep 2
-+   sleep 250m
-@@ -496 +496 @@ fun! manpageview#ManPageView(...) range
--   sleep 2
-+   sleep 250m
-@@ -738 +738 @@ fun! manpageview#ManPageView(...) range
--    sleep 2
-+    sleep 250m
-@@ -1097 +1097 @@ fun! s:MPVInfo(type)
--   sleep 2
-+   sleep 250m
-@@ -1145 +1145 @@ fun! s:NextInfoLink()
--               sleep 2
-+               sleep 250m
-@@ -1462 +1462 @@ fun! manpageview#BookSearch(direction)
--   sleep 2
-+   sleep 250m
+- (branch sleep-less) Sleep only 250 ms to avoid freezing Vim for two or three
+  tiresome seconds while an error message is displayed.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
