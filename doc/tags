@@ -14,15 +14,11 @@
 :Loremipsum	loremipsum.txt	/*:Loremipsum*
 :Loreplace	loremipsum.txt	/*:Loreplace*
 :MatchDebug	matchit.txt	/*:MatchDebug*
-:MkVimball	pi_vimball.txt	/*:MkVimball*
 :RI	visincr.txt	/*:RI*
 :RID	visincr.txt	/*:RID*
 :RIDMY	visincr.txt	/*:RIDMY*
 :RIPOW	visincr.txt	/*:RIPOW*
 :RM	visincr.txt	/*:RM*
-:RmVimball	pi_vimball.txt	/*:RmVimball*
-:UseVimball	pi_vimball.txt	/*:UseVimball*
-:VimballList	pi_vimball.txt	/*:VimballList*
 FoldQuickFixDirs	notes.txt	/*FoldQuickFixDirs*
 FoldQuickFixFiles	notes.txt	/*FoldQuickFixFiles*
 GrepLmc	notes.txt	/*GrepLmc*
@@ -66,7 +62,6 @@ Underscore	notes.txt	/*Underscore*
 VIMRC_AFTER	notes.txt	/*VIMRC_AFTER*
 VIMRC_BEFORE	notes.txt	/*VIMRC_BEFORE*
 VIMRC_VARS	notes.txt	/*VIMRC_VARS*
-Vimball-copyright	pi_vimball.txt	/*Vimball-copyright*
 [%	matchit.txt	/*[%*
 ]%	matchit.txt	/*]%*
 b:loremipsum_file	loremipsum.txt	/*b:loremipsum_file*
@@ -99,9 +94,6 @@ g:loremipsum_files	loremipsum.txt	/*g:loremipsum_files*
 g:loremipsum_marker	loremipsum.txt	/*g:loremipsum_marker*
 g:loremipsum_paragraph_template	loremipsum.txt	/*g:loremipsum_paragraph_template*
 g:loremipsum_words	loremipsum.txt	/*g:loremipsum_words*
-g:vimball_home	pi_vimball.txt	/*g:vimball_home*
-g:vimball_mkdir	pi_vimball.txt	/*g:vimball_mkdir*
-g:vimball_path_escape	pi_vimball.txt	/*g:vimball_path_escape*
 g:visincr_datedivset	visincr.txt	/*g:visincr_datedivset*
 loremipsum#Generate()	loremipsum.txt	/*loremipsum#Generate()*
 loremipsum#GenerateInline()	loremipsum.txt	/*loremipsum#GenerateInline()*
@@ -305,7 +297,6 @@ omnicpp-popup	omnicppcomplete.txt	/*omnicpp-popup*
 omnicpp-thanks	omnicppcomplete.txt	/*omnicpp-thanks*
 omnicppcomplete	omnicppcomplete.txt	/*omnicppcomplete*
 omnicppcomplete.txt	omnicppcomplete.txt	/*omnicppcomplete.txt*
-pi_vimball.txt	pi_vimball.txt	/*pi_vimball.txt*
 project	project.txt	/*project*
 project-adding-mappings	project.txt	/*project-adding-mappings*
 project-example	project.txt	/*project-example*
@@ -334,13 +325,6 @@ v_c-x	visswap.txt	/*v_c-x*
 v_c-y	visswap.txt	/*v_c-y*
 v_g%	matchit.txt	/*v_g%*
 v_vr	visswap.txt	/*v_vr*
-vba	pi_vimball.txt	/*vba*
-vimball	pi_vimball.txt	/*vimball*
-vimball-contents	pi_vimball.txt	/*vimball-contents*
-vimball-extract	pi_vimball.txt	/*vimball-extract*
-vimball-history	pi_vimball.txt	/*vimball-history*
-vimball-intro	pi_vimball.txt	/*vimball-intro*
-vimball-manual	pi_vimball.txt	/*vimball-manual*
 vis	vis.txt	/*vis*
 vis-S	vis.txt	/*vis-S*
 vis-contents	vis.txt	/*vis-contents*

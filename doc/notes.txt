@@ -2882,11 +2882,11 @@ Installation:
 VIMBALL                                                 *notes_vimball*
   "Package manager" for supporting .vba VimBalls        |vimball|
 
-Version 26 from:
-http://vim.sourceforge.net/scripts/script.php?script_id=1502
+Version 33 (4ba9a9e) from:
+https://github.com/vim-scripts/Vimball
 
 Installation:
-- Untar in ~/.vim/
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 VIS                                                     *notes_vis*

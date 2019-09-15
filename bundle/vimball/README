@@ -1,0 +1,39 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1502
+
+                                            [VIM VERSION 7.1 or 7.2 REQUIRED]
+
+The vimball plugin facilitates creating, extracting , and listing the contents of "vimball" archives (*.vba).  Vimball also records the files extracted with it and can remove them.
+
+CREATING A VIMBALL
+
+Vimball can create a "vimball" archive (*.vba) with the following command:
+
+   :[range]MkVimball[!] filename
+
+As an example:
+
+    plugin/something.vim
+    doc/something.txt
+    :%MkVimball something
+
+will create a "vimball.vba" archive.  Each line in the range processed by the MkVimball command simply describes where in the usual vim directory tree various files are.  I am now also providing a C source program that creates vimballs; see http://mysite.verizon.net/astronaut/src/index.html#MKVIMBALL .
+ 
+EXTRACTING FROM A VIMBALL
+
+Users of a vimball archive simply need to
+
+    :vim something.vba
+    :so %
+
+and the contents of the vimball will be extracted and placed into the proper directories, no matter where the user opened up the vimball.  Furthermore, the helptags command will be automatically and transparently used to make any doc/*.txt files' contents available by the Vim help system.
+
+PREVIEWING A VIMBALL
+
+Instead of immediately sourcing a vimball to extract its contents, one may use
+
+    :VimballList
+
+to preview the contents of the vimball archive.
+
+(alpha/beta version available at http://mysite.verizon.net/astronaut/vim/index.html#VIMBALL)
+
