@@ -15,10 +15,13 @@ require adjustment of per-user settings.
   - BufMRU.
   - Grepper.
   - manpageview.
+  - rust.
 
 - Update Vimball plugin to version 33.
 
 - Update manpageview plugin to version 25u.
+
+- Update rust plugin to version 2019-08-30.
 
 2019-09-14
 ==========

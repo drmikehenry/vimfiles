@@ -2072,42 +2072,17 @@ Local customizations: >
 RUST SUPPORT                                            *notes_rust*
   Language support for Rust                             |rust|
 
-Version 2019-08-01 (772eaa6) from:
-https://github.com/rust-lang/rust.vim.git
+Version 2019-08-30 (e99f3f5) from:
+https://github.com/rust-lang/rust.vim
+
+with the following modifications found in branch `vimfiles` at:
+https://github.com/drmikehenry/rust.vim
+
+- (branch embedded-syntax) Turn off Rust-specific syntax highlighting when
+  embedded into other syntax context (e.g., within a reStructuredText file).
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
-
-Patches below are tracked in local projects/rust.vim repo, vimfiles branch.
-
-Requires the following patch to fix syntax highlighting when embedded into .rst
-files.  Without this patch, the Rust-specific syntax highlighting doesn't turn
-off after the embedded code-block:
-
-diff --git a/syntax/rust.vim b/syntax/rust.vim
-index 644741c..e901627 100644
---- a/syntax/rust.vim
-+++ b/syntax/rust.vim
-@@ -64,8 +64,8 @@ syn region    rustBoxPlacement matchgroup=rustBoxPlacementParens start="(" end="
- " Ideally we'd have syntax rules set up to match arbitrary expressions. Since
- " we don't, we'll just define temporary contained rules to handle balancing
- " delimiters.
--syn region    rustBoxPlacementBalance start="(" end=")" containedin=rustBoxPlacement transparent
--syn region    rustBoxPlacementBalance start="\[" end="\]" containedin=rustBoxPlacement transparent
-+syn region    rustBoxPlacementBalance start="("ms=s+1 end=")"me=e-1 containedin=rustBoxPlacement transparent
-+syn region    rustBoxPlacementBalance start="\["ms=s+1 end="\]"me=e-1 containedin=rustBoxPlacement transparent
- " {} are handled by rustFoldBraces
-
- syn region rustMacroRepeat matchgroup=rustMacroRepeatDelimiters start="$(" end=")" contains=TOP nextgroup=rustMacroRepeatCount
-@@ -234,7 +234,7 @@ syn keyword rustTodo contained TODO FIXME XXX NB NOTE
- " Folding rules {{{2
- " Trivial folding rules to begin with.
- " FIXME: use the AST to make really good folding
--syn region rustFoldBraces start="{" end="}" transparent fold
-+syn region rustFoldBraces start="{"ms=s+1 end="}"me=e-1 transparent fold
-
- if !exists("b:current_syntax_embed")
-     let b:current_syntax_embed = 1
 
 ------------------------------------------------------------------------------
 SCRIPTEASE                                              *notes_scriptease*
