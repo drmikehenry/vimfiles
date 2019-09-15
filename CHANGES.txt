@@ -13,6 +13,7 @@ require adjustment of per-user settings.
 - Organize plugin patches into separate Git repositories:
 
   - BufMRU.
+  - Grepper.
 
 2019-09-14
 ==========
