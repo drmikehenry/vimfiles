@@ -2169,7 +2169,7 @@ endfunction
 
 function! GrepperWrapper(tool, query)
     Copen
-    execute 'Grepper -noopen -tool ' . a:tool . ' -query ' . a:query
+    execute 'Grepper -noprompt -noopen -tool ' . a:tool . ' -query ' . a:query
 endfunction
 
 command! -nargs=* -complete=customlist,FileCompleteList Findx
@@ -2249,7 +2249,7 @@ function! RunGrep(args)
     " "endif" below gets skipped when an exception occurs.
     if g:DefaultGrepTool != ''
         Copen
-        execute 'Grepper -noopen -tool ' . g:DefaultGrepTool
+        execute 'Grepper -noprompt -noopen -tool ' . g:DefaultGrepTool
                 \ . ' -query ' . a:args
     else
         throw 'Grep Tool unavailable'
@@ -3818,6 +3818,9 @@ let Grep_Skip_Files = '*.bak *~ .*.swp tags *.opt *.ncb *.plg ' .
 " -------------------------------------------------------------
 
 let g:grepper = {}
+
+" Grepper will stop after this many results.  The default (5000) is too small.
+let g:grepper.stop = 20000
 
 " These are the default tools.  It's a shame there's not a smoother way to
 " extend the list without pasting it here.

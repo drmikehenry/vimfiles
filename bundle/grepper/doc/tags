@@ -1,6 +1,7 @@
 :Grepper-append	grepper.txt	/*:Grepper-append*
 :Grepper-buffer	grepper.txt	/*:Grepper-buffer*
 :Grepper-buffers	grepper.txt	/*:Grepper-buffers*
+:Grepper-cd	grepper.txt	/*:Grepper-cd*
 :Grepper-cword	grepper.txt	/*:Grepper-cword*
 :Grepper-dir	grepper.txt	/*:Grepper-dir*
 :Grepper-grepprg	grepper.txt	/*:Grepper-grepprg*
@@ -22,12 +23,16 @@ g:grepper.buffers	grepper.txt	/*g:grepper.buffers*
 g:grepper.dir	grepper.txt	/*g:grepper.dir*
 g:grepper.highlight	grepper.txt	/*g:grepper.highlight*
 g:grepper.jump	grepper.txt	/*g:grepper.jump*
-g:grepper.next_tool	grepper.txt	/*g:grepper.next_tool*
 g:grepper.open	grepper.txt	/*g:grepper.open*
 g:grepper.prompt	grepper.txt	/*g:grepper.prompt*
+g:grepper.prompt_mapping_dir	grepper.txt	/*g:grepper.prompt_mapping_dir*
+g:grepper.prompt_mapping_side	grepper.txt	/*g:grepper.prompt_mapping_side*
+g:grepper.prompt_mapping_tool	grepper.txt	/*g:grepper.prompt_mapping_tool*
 g:grepper.prompt_quote	grepper.txt	/*g:grepper.prompt_quote*
+g:grepper.prompt_text	grepper.txt	/*g:grepper.prompt_text*
 g:grepper.quickfix	grepper.txt	/*g:grepper.quickfix*
 g:grepper.repo	grepper.txt	/*g:grepper.repo*
+g:grepper.searchreg	grepper.txt	/*g:grepper.searchreg*
 g:grepper.side	grepper.txt	/*g:grepper.side*
 g:grepper.side_cmd	grepper.txt	/*g:grepper.side_cmd*
 g:grepper.simple_prompt	grepper.txt	/*g:grepper.simple_prompt*
@@ -45,6 +50,7 @@ grepper-faq-01	grepper.txt	/*grepper-faq-01*
 grepper-faq-02	grepper.txt	/*grepper-faq-02*
 grepper-faq-03	grepper.txt	/*grepper-faq-03*
 grepper-faq-04	grepper.txt	/*grepper-faq-04*
+grepper-faq-05	grepper.txt	/*grepper-faq-05*
 grepper-intro	grepper.txt	/*grepper-intro*
 grepper-mappings	grepper.txt	/*grepper-mappings*
 grepper-operator	grepper.txt	/*grepper-operator*

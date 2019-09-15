@@ -26,6 +26,11 @@ require adjustment of per-user settings.
 
 - Update rust plugin to version 2019-08-30.
 
+- Update Grepper plugin to version 2019-09-04.
+
+  Also increase ``g:grepper.stop`` (the maximum number of matches before
+  stopping) from 5000 to 20000.
+
 2019-09-14
 ==========
 
