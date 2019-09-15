@@ -1,0 +1,65 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=2346
+
+Switch between MRU buffers from the current session. Like CTRL-^, but reach
+more buffers (and maintain only one global list, not one list per window).
+
+Usage:
+
+  Press  <Space>  to show the most recently used buffer and enter Bufmru mode.
+
+  In Bufmru mode:
+  Press  f  or  b  (forward/backward) to reach more MRU buffers.
+  Press  e  or  <Enter>  to accept the current choice.
+  Press  q  or  <Esc>  to quit the mode and to go back to the start buffer
+  Press  y  to copy a file name
+
+Configuration:
+  :let g:bufmru_switchkey = "<Space>"
+      (checked once) Key to enter Bufmru mode.
+
+  :let g:bufmru_confclose = 0
+      (always) Use :confirm (1) when abandoning a modified buffer.
+      Otherwise (0, default) you'll get an error message, unless 'hidden'
+      is set.
+
+  :let g:bufmru_bnrs = []
+      (always) The internal stack of buffer numbers.  Normally, you'll
+      leave this alone, but you can manually add or remove buffer numbers
+      or initialize the list.  Don't worry about wrong numbers.
+
+  :let g:bufmru_read_nummarks = 0
+      (once) Put the number mark '0 ... '9 buffers in g:bufmru_bnrs.  This adds
+      buffers to the buffer list!
+
+wildmenu version only:
+
+  g:bufmru_wildmenu   (dictionary, initially not defined)
+      (always) Instance of autoload/wildmenu.vim to show buffer names in a
+      wildmenu-like list.  If not defined, bufmru tries to load the autoload
+      script.  If that fails the value becomes empty ({}) -- and bufmru
+      quite unusable.
+
+  :let g:bufmru_wilditems = "bufnr,shortpath"
+      (always) How to display entries in the "wildmenu":
+      "bufnr"         with prepended buffer number
+      "shortpath"     with pathshorten() applied to the bufname()
+      There is no error message for wrong items.
+
+splashbufs version only:
+
+  :let g:bufmru_lazy_filetype = 0
+      (checked always) If 1, do lazy filetype detection when going through
+      the buffers with f and b.  Not used if 'hidden' is set.
+
+
+special buffer: 'buftype' not empty or 'previewwindow' set
+
+Related:
+http://vim.wikia.com/wiki/Easier_buffer_switching
+http://groups.google.com/group/vim_use/msg/adb4f35772ecbcbe
+
+Another MRU buffers script!  But it requires Ruby (that I haven't installed):
+LustyJuggler Vimscript #2050
+
+Created after a mailing list request from a Visual Studio user ;-)
+
