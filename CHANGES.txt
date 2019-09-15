@@ -16,6 +16,7 @@ require adjustment of per-user settings.
   - Grepper.
   - manpageview.
   - rust.
+  - OmniCppComplete.
 
 - Update Vimball plugin to version 33.
 
