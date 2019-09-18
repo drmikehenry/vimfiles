@@ -6843,13 +6843,17 @@ filetype plugin indent on
 " filetype.vim
 
 function! AutoRestoreLastCursorPosition()
+    " Restore the position only for regular buffers.
+    if &buftype != ''
+        return
+    endif
     " If b:startAtTop exists, jump to the top of the file; otherwise,
     " if possible, jump to last known cursor position for this file.
     " Avoid jumping if the position would be invalid for this file.
     if exists("b:startAtTop")
-        normal gg
+        silent! normal! gg
     elseif line("'\"") > 0 && line("'\"") <= line("$")
-        exe "normal g`\""
+        silent! execute "normal! g`\""
     endif
 endfunction
 
