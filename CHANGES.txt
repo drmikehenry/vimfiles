@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-09-18
+==========
+
+- Merge correct branch of the rust plugin (was using master instead of the
+  vimfiles branch).
+
 2019-09-15
 ==========
 

@@ -64,8 +64,8 @@ syn region    rustBoxPlacement matchgroup=rustBoxPlacementParens start="(" end="
 " Ideally we'd have syntax rules set up to match arbitrary expressions. Since
 " we don't, we'll just define temporary contained rules to handle balancing
 " delimiters.
-syn region    rustBoxPlacementBalance start="(" end=")" containedin=rustBoxPlacement transparent
-syn region    rustBoxPlacementBalance start="\[" end="\]" containedin=rustBoxPlacement transparent
+syn region    rustBoxPlacementBalance start="("ms=s+1 end=")"me=e-1 containedin=rustBoxPlacement transparent
+syn region    rustBoxPlacementBalance start="\["ms=s+1 end="\]"me=e-1 containedin=rustBoxPlacement transparent
 " {} are handled by rustFoldBraces
 
 syn region rustMacroRepeat matchgroup=rustMacroRepeatDelimiters start="$(" end=")" contains=TOP nextgroup=rustMacroRepeatCount
@@ -234,7 +234,7 @@ syn keyword rustTodo contained TODO FIXME XXX NB NOTE
 " Folding rules {{{2
 " Trivial folding rules to begin with.
 " FIXME: use the AST to make really good folding
-syn region rustFoldBraces start="{" end="}" transparent fold
+syn region rustFoldBraces start="{"ms=s+1 end="}"me=e-1 transparent fold
 
 if !exists("b:current_syntax_embed")
     let b:current_syntax_embed = 1
