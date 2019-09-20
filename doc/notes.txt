@@ -50,7 +50,6 @@
     Lusty Explorer/Juggler - File/buffer switcher       |notes_lusty|
     ManpageView                                         |notes_manpageview|
     Markdown - Markdown syntax support                  |notes_markdown|
-    Matchit - Extended matching with '%'                |notes_matchit|
     Matchup - Enhanced extended matching with '%'       |notes_matchup|
     Misc - Contains many useful Vimscript functions     |notes_misc|
     Monokai - A dark colorscheme                        |notes_monokai|
@@ -1712,23 +1711,6 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-MATCHIT                                                 *notes_matchit*
-  Extended matching with '%'                            |matchit|
-
-Press '%' to match:
-  - Bracket pairs:  () [] {}
-  - C-language #if / #else / #endif
-  - HTML tags <start> / </end>
-  - etc.
-
-Version 1.13.2 from:
-http://www.vim.org/scripts/script.php?script_id=39
-
-Installation:
-- Unzip in ~/.vim/
-- :helptags ~/.vim/doc
-
-------------------------------------------------------------------------------
 MATCHUP                                                 *notes_matchup*
   Enhanced extended matching with '%'                   |matchup|
 
@@ -1737,6 +1719,9 @@ Press '%' to match:
   - C-language #if / #else / #endif
   - HTML tags <start> / </end>
   - etc.
+
+Matchup disables and supersedes the functionality of both the matchparen
+plugin distributed with Vim as well as the matchit plugin (if found).
 
 Version 2019-08-02 (ba33a5c) from:
 https://github.com/andymass/vim-matchup

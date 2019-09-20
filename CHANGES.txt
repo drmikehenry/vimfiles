@@ -14,6 +14,18 @@ require adjustment of per-user settings.
   support and other new features).  Change mapping for toggling the undo window
   to ``<Space>uu``.  See ``:help notes_mundo`` for details.
 
+- Enable matchup plugin by default, and remove the obsolete matchit plugin it
+  replaces.  The matchup plugin provides enhanced support for matching related
+  items.
+
+  Press ``%`` to match:
+  - Bracket pairs:  () [] {}
+  - C-language #if / #else / #endif
+  - HTML tags <start> / </end>
+  - etc.
+
+  See ``:help notes_matchup`` and ``:help matchup`` for more details.
+
 2019-09-19
 ==========
 

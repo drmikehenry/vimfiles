@@ -372,9 +372,6 @@ let g:pathogen_disabled = []
 " Disable an experimental plugin for users in general.
 " call add(g:pathogen_disabled, 'plugin_name')
 
-" TODO: Disable matchup during experimental phase.
-call add(g:pathogen_disabled, 'matchup')
-
 " Activate pathogen in case a user would need to activate a bundle in
 " |VIMRC_VARS| as part of setting up some variable.
 
@@ -3994,6 +3991,16 @@ augroup local_manpageview
 
     autocmd FileType man,info call CheckManpageview()
 augroup END
+
+" -------------------------------------------------------------
+" Matchup
+" -------------------------------------------------------------
+
+" Some plugins detect the presence of matchit by checking if `loaded_matchit` is
+" true; if detected, they setup some matchit-related variables that matchup can
+" automatically use.  Therefore, define this variable so these plugins will work
+" with matchup.
+let g:loaded_matchit = 1
 
 " -------------------------------------------------------------
 " Mundo
