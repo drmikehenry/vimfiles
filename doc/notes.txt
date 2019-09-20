@@ -37,7 +37,6 @@
     Grep - Wrapper for grep/xargs                       |notes_grep|
     Grepper - Extensible wrapper for grep-like tools    |notes_grepper|
     Gruvbox - a dark colorscheme                        |notes_gruvbox|
-    Gundo - Visualize your undo tree                    |notes_gundo|
     Headerguard - Add guards for header files           |notes_headerguard|
     Hemisu - A dark colorscheme                         |notes_hemisu|
     HiLinkTrace - Display syntax highlighting stack     |notes_hilinktrace|
@@ -56,6 +55,7 @@
     Misc - Contains many useful Vimscript functions     |notes_misc|
     Monokai - A dark colorscheme                        |notes_monokai|
     Moonscript - support for a dialect of Lua           |notes_moonscript|
+    Mundo - Visualize your undo tree                    |notes_mundo|
     Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
     Paredit - Structured editing of Lisp S-expressions  |notes_paredit|
@@ -1248,20 +1248,6 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-GUNDO                                                   *notes_gundo*
-  Visualize your undo tree                              |gundo|
-
-Gundo is a Vim plugin for visualizing your undo tree to make it usable.
-
-To toggle the undo view, use :GundoToggle.
-
-Version 2.4.0 from:
-http://www.vim.org/scripts/script.php?script_id=3304
-
-- Unzipped into ~/.vim/bundle.
-- :Helptags
-
-------------------------------------------------------------------------------
 HEADERGUARD                                             *notes_headerguard*
   Add guards for header files                           |headerguard|
 
@@ -1786,6 +1772,23 @@ MOONSCRIPT - support for a dialect of Lua               *notes_moonscript*
 
 Version 77cf9ef0 (December 4, 2013) from:
 https://github.com/leafo/moonscript-vim
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+MUNDO                                                   *notes_mundo*
+  Visualize your undo tree                              |mundo|
+
+Mundo is a Vim plugin for visualizing your undo tree to make it usable.
+
+To toggle the undo view, use :MundoToggle.
+
+Mappings:
+  <Space>uu     :MundoToggle
+
+Version 2019-09-09 (fb86692) from:
+https://github.com/simnalamburt/vim-mundo
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

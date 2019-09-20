@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-09-20
+==========
+
+- Replace unmaintained Gundo plugin with Mundo (a fork that brings Python 3
+  support and other new features).  Change mapping for toggling the undo window
+  to ``<Space>uu``.  See ``:help notes_mundo`` for details.
+
 2019-09-19
 ==========
 

@@ -3861,13 +3861,6 @@ let g:grepper.rg.grepprg =
         \ 'rg -H --no-heading --vimgrep --smart-case --sort path'
 
 " -------------------------------------------------------------
-" Gundo
-" -------------------------------------------------------------
-
-nnoremap <Leader><Leader>u  :GundoToggle<CR>
-let g:gundo_close_on_revert = 1
-
-" -------------------------------------------------------------
 " HiLinkTrace
 " -------------------------------------------------------------
 
@@ -4001,6 +3994,16 @@ augroup local_manpageview
 
     autocmd FileType man,info call CheckManpageview()
 augroup END
+
+" -------------------------------------------------------------
+" Mundo
+" -------------------------------------------------------------
+
+nnoremap <Space>uu  :MundoToggle<CR>
+let g:mundo_close_on_revert = 1
+
+" There is more horizontal viewing room with the preview at the bottom.
+let g:mundo_preview_bottom = 1
 
 " -------------------------------------------------------------
 " netrw

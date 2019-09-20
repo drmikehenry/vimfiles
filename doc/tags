@@ -171,7 +171,6 @@ notes_grep	notes.txt	/*notes_grep*
 notes_grepper	notes.txt	/*notes_grepper*
 notes_gruvbox	notes.txt	/*notes_gruvbox*
 notes_guioptions	notes.txt	/*notes_guioptions*
-notes_gundo	notes.txt	/*notes_gundo*
 notes_headerguard	notes.txt	/*notes_headerguard*
 notes_help_mappings	notes.txt	/*notes_help_mappings*
 notes_hemisu	notes.txt	/*notes_hemisu*
@@ -200,6 +199,7 @@ notes_monokai	notes.txt	/*notes_monokai*
 notes_moonscript	notes.txt	/*notes_moonscript*
 notes_movement	notes.txt	/*notes_movement*
 notes_moving_out	notes.txt	/*notes_moving_out*
+notes_mundo	notes.txt	/*notes_mundo*
 notes_netrw	notes.txt	/*notes_netrw*
 notes_omnicppcomplete	notes.txt	/*notes_omnicppcomplete*
 notes_overrides	notes.txt	/*notes_overrides*
