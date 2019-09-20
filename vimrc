@@ -6436,8 +6436,21 @@ command! -bar SetupRuby call SetupRuby()
 " -------------------------------------------------------------
 function! SetupRust()
     SetupSource
+
+    " Original definition from bundle/rust/ftplugin/rust.vim:
+    " setlocal comments=s0:/*!,ex:*/,s1:/*,mb:*,ex:*/,:///,://!,://
+    setlocal comments=s0:/*!,mb:\ ,e-4:*/,s0:/*,mb:\ ,ex-4:*/,:///,://!,://
 endfunction
 command! -bar SetupRust call SetupRust()
+
+function! SetupRustIndent()
+    " Re-indent when ending a block comment.
+    setlocal indentkeys+=/
+
+    " Comment bodies indented one shiftwidth.
+    setlocal cinoptions+=c1s,C1s
+endfunction
+command! -bar SetupRustIndent call SetupRustIndent()
 
 " -------------------------------------------------------------
 " Setup for Scheme code.
