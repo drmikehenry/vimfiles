@@ -16,6 +16,9 @@ require adjustment of per-user settings.
 
 - Setup ALE auto-completion with Rust Language Server for Rust.
 
+- Change mapping for toggling Mundo window to be ``<Space>qu`` (to match the
+  theme that ``<Space>q`` is the toggle window prefix.
+
 2019-09-20
 ==========
 

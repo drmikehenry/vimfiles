@@ -4014,7 +4014,7 @@ let g:loaded_matchit = 1
 " Mundo
 " -------------------------------------------------------------
 
-nnoremap <Space>uu  :MundoToggle<CR>
+nnoremap <Space>qu  :MundoToggle<CR>
 let g:mundo_close_on_revert = 1
 
 " There is more horizontal viewing room with the preview at the bottom.
