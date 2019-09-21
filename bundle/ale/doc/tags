@@ -46,8 +46,10 @@ ALELintPre	ale.txt	/*ALELintPre*
 ALELintPre-autocmd	ale.txt	/*ALELintPre-autocmd*
 ALENext	ale.txt	/*ALENext*
 ALENextWrap	ale.txt	/*ALENextWrap*
+ALEOrganizeImports	ale.txt	/*ALEOrganizeImports*
 ALEPrevious	ale.txt	/*ALEPrevious*
 ALEPreviousWrap	ale.txt	/*ALEPreviousWrap*
+ALERename	ale.txt	/*ALERename*
 ALEReset	ale.txt	/*ALEReset*
 ALEResetBuffer	ale.txt	/*ALEResetBuffer*
 ALEStopAllLSPs	ale.txt	/*ALEStopAllLSPs*
@@ -167,6 +169,7 @@ ale-css-stylelint	ale-css.txt	/*ale-css-stylelint*
 ale-cuda-clangformat	ale-cuda.txt	/*ale-cuda-clangformat*
 ale-cuda-nvcc	ale-cuda.txt	/*ale-cuda-nvcc*
 ale-cuda-options	ale-cuda.txt	/*ale-cuda-options*
+ale-d-dfmt	ale-d.txt	/*ale-d-dfmt*
 ale-d-dls	ale-d.txt	/*ale-d-dls*
 ale-d-options	ale-d.txt	/*ale-d-options*
 ale-d-uncrustify	ale-d.txt	/*ale-d-uncrustify*
@@ -322,6 +325,7 @@ ale-less-stylelint	ale-less.txt	/*ale-less-stylelint*
 ale-lint	ale.txt	/*ale-lint*
 ale-lint-file	ale.txt	/*ale-lint-file*
 ale-lint-file-linters	ale.txt	/*ale-lint-file-linters*
+ale-lint-language-servers	ale.txt	/*ale-lint-language-servers*
 ale-lint-other-sources	ale.txt	/*ale-lint-other-sources*
 ale-lint-settings-on-startup	ale.txt	/*ale-lint-settings-on-startup*
 ale-linter-loading-behavior	ale.txt	/*ale-linter-loading-behavior*
@@ -472,6 +476,7 @@ ale-sml-options	ale-sml.txt	/*ale-sml-options*
 ale-sml-smlnj	ale-sml.txt	/*ale-sml-smlnj*
 ale-sml-smlnj-cm	ale-sml.txt	/*ale-sml-smlnj-cm*
 ale-solidity-options	ale-solidity.txt	/*ale-solidity-options*
+ale-solidity-solc	ale-solidity.txt	/*ale-solidity-solc*
 ale-solidity-solhint	ale-solidity.txt	/*ale-solidity-solhint*
 ale-solidity-solium	ale-solidity.txt	/*ale-solidity-solium*
 ale-spec-options	ale-spec.txt	/*ale-spec-options*
@@ -480,6 +485,7 @@ ale-special-thanks	ale.txt	/*ale-special-thanks*
 ale-sql-options	ale-sql.txt	/*ale-sql-options*
 ale-sql-pgformatter	ale-sql.txt	/*ale-sql-pgformatter*
 ale-sql-sqlfmt	ale-sql.txt	/*ale-sql-sqlfmt*
+ale-sql-sqlformat	ale-sql.txt	/*ale-sql-sqlformat*
 ale-stylus-options	ale-stylus.txt	/*ale-stylus-options*
 ale-stylus-stylelint	ale-stylus.txt	/*ale-stylus-stylelint*
 ale-sugarss-options	ale-sugarss.txt	/*ale-sugarss-options*
@@ -635,6 +641,7 @@ b:ale_css_stylelint_options	ale-css.txt	/*b:ale_css_stylelint_options*
 b:ale_css_stylelint_use_global	ale-css.txt	/*b:ale_css_stylelint_use_global*
 b:ale_cuda_nvcc_executable	ale-cuda.txt	/*b:ale_cuda_nvcc_executable*
 b:ale_cuda_nvcc_options	ale-cuda.txt	/*b:ale_cuda_nvcc_options*
+b:ale_d_dfmt_options	ale-d.txt	/*b:ale_d_dfmt_options*
 b:ale_d_dls_executable	ale-d.txt	/*b:ale_d_dls_executable*
 b:ale_dart_dartanalyzer_executable	ale-dart.txt	/*b:ale_dart_dartanalyzer_executable*
 b:ale_dart_dartfmt_executable	ale-dart.txt	/*b:ale_dart_dartfmt_executable*
@@ -794,6 +801,7 @@ b:ale_julia_executable	ale-julia.txt	/*b:ale_julia_executable*
 b:ale_keep_list_window_open	ale.txt	/*b:ale_keep_list_window_open*
 b:ale_lacheck_executable	ale-tex.txt	/*b:ale_lacheck_executable*
 b:ale_languagetool_executable	ale.txt	/*b:ale_languagetool_executable*
+b:ale_languagetool_options	ale.txt	/*b:ale_languagetool_options*
 b:ale_less_lessc_executable	ale-less.txt	/*b:ale_less_lessc_executable*
 b:ale_less_lessc_options	ale-less.txt	/*b:ale_less_lessc_options*
 b:ale_less_lessc_use_global	ale-less.txt	/*b:ale_less_lessc_use_global*
@@ -1028,6 +1036,7 @@ b:ale_sh_shellcheck_executable	ale-sh.txt	/*b:ale_sh_shellcheck_executable*
 b:ale_sh_shellcheck_options	ale-sh.txt	/*b:ale_sh_shellcheck_options*
 b:ale_sh_shfmt_options	ale-sh.txt	/*b:ale_sh_shfmt_options*
 b:ale_sml_smlnj_cm_file	ale-sml.txt	/*b:ale_sml_smlnj_cm_file*
+b:ale_solidity_solc_options	ale-solidity.txt	/*b:ale_solidity_solc_options*
 b:ale_sourcekit_lsp_executable	ale-swift.txt	/*b:ale_sourcekit_lsp_executable*
 b:ale_spec_rpmlint_executable	ale-spec.txt	/*b:ale_spec_rpmlint_executable*
 b:ale_spec_rpmlint_options	ale-spec.txt	/*b:ale_spec_rpmlint_options*
@@ -1035,6 +1044,8 @@ b:ale_sql_pgformatter_executable	ale-sql.txt	/*b:ale_sql_pgformatter_executable*
 b:ale_sql_pgformatter_options	ale-sql.txt	/*b:ale_sql_pgformatter_options*
 b:ale_sql_sqlfmt_executable	ale-sql.txt	/*b:ale_sql_sqlfmt_executable*
 b:ale_sql_sqlfmt_options	ale-sql.txt	/*b:ale_sql_sqlfmt_options*
+b:ale_sql_sqlformat_executable	ale-sql.txt	/*b:ale_sql_sqlformat_executable*
+b:ale_sql_sqlformat_options	ale-sql.txt	/*b:ale_sql_sqlformat_options*
 b:ale_stylus_stylelint_executable	ale-stylus.txt	/*b:ale_stylus_stylelint_executable*
 b:ale_stylus_stylelint_options	ale-stylus.txt	/*b:ale_stylus_stylelint_options*
 b:ale_stylus_stylelint_use_global	ale-stylus.txt	/*b:ale_stylus_stylelint_use_global*
@@ -1161,6 +1172,7 @@ g:ale_completion_delay	ale.txt	/*g:ale_completion_delay*
 g:ale_completion_enabled	ale.txt	/*g:ale_completion_enabled*
 g:ale_completion_excluded_words	ale.txt	/*g:ale_completion_excluded_words*
 g:ale_completion_max_suggestions	ale.txt	/*g:ale_completion_max_suggestions*
+g:ale_completion_tsserver_autoimport	ale.txt	/*g:ale_completion_tsserver_autoimport*
 g:ale_cpp_ccls_executable	ale-cpp.txt	/*g:ale_cpp_ccls_executable*
 g:ale_cpp_ccls_init_options	ale-cpp.txt	/*g:ale_cpp_ccls_init_options*
 g:ale_cpp_clang_executable	ale-cpp.txt	/*g:ale_cpp_clang_executable*
@@ -1202,6 +1214,7 @@ g:ale_css_stylelint_use_global	ale-css.txt	/*g:ale_css_stylelint_use_global*
 g:ale_cuda_nvcc_executable	ale-cuda.txt	/*g:ale_cuda_nvcc_executable*
 g:ale_cuda_nvcc_options	ale-cuda.txt	/*g:ale_cuda_nvcc_options*
 g:ale_cursor_detail	ale.txt	/*g:ale_cursor_detail*
+g:ale_d_dfmt_options	ale-d.txt	/*g:ale_d_dfmt_options*
 g:ale_d_dls_executable	ale-d.txt	/*g:ale_d_dls_executable*
 g:ale_dart_dartanalyzer_executable	ale-dart.txt	/*g:ale_dart_dartanalyzer_executable*
 g:ale_dart_dartfmt_executable	ale-dart.txt	/*g:ale_dart_dartfmt_executable*
@@ -1379,6 +1392,7 @@ g:ale_kotlin_ktlint_rulesets	ale-kotlin.txt	/*g:ale_kotlin_ktlint_rulesets*
 g:ale_kotlin_languageserver_executable	ale-kotlin.txt	/*g:ale_kotlin_languageserver_executable*
 g:ale_lacheck_executable	ale-tex.txt	/*g:ale_lacheck_executable*
 g:ale_languagetool_executable	ale.txt	/*g:ale_languagetool_executable*
+g:ale_languagetool_options	ale.txt	/*g:ale_languagetool_options*
 g:ale_less_lessc_executable	ale-less.txt	/*g:ale_less_lessc_executable*
 g:ale_less_lessc_options	ale-less.txt	/*g:ale_less_lessc_options*
 g:ale_less_lessc_use_global	ale-less.txt	/*g:ale_less_lessc_use_global*
@@ -1564,6 +1578,8 @@ g:ale_reason_ols_executable	ale-reasonml.txt	/*g:ale_reason_ols_executable*
 g:ale_reason_ols_use_global	ale-reasonml.txt	/*g:ale_reason_ols_use_global*
 g:ale_reasonml_refmt_executable	ale-reasonml.txt	/*g:ale_reasonml_refmt_executable*
 g:ale_reasonml_refmt_options	ale-reasonml.txt	/*g:ale_reasonml_refmt_options*
+g:ale_rename_tsserver_find_in_comments	ale.txt	/*g:ale_rename_tsserver_find_in_comments*
+g:ale_rename_tsserver_find_in_strings	ale.txt	/*g:ale_rename_tsserver_find_in_strings*
 g:ale_ruby_brakeman_executable	ale-ruby.txt	/*g:ale_ruby_brakeman_executable*
 g:ale_ruby_brakeman_options	ale-ruby.txt	/*g:ale_ruby_brakeman_options*
 g:ale_ruby_rails_best_practices_executable	ale-ruby.txt	/*g:ale_ruby_rails_best_practices_executable*
@@ -1630,12 +1646,14 @@ g:ale_shell	ale.txt	/*g:ale_shell*
 g:ale_shell_arguments	ale.txt	/*g:ale_shell_arguments*
 g:ale_sign_column_always	ale.txt	/*g:ale_sign_column_always*
 g:ale_sign_error	ale.txt	/*g:ale_sign_error*
+g:ale_sign_highlight_linenrs	ale.txt	/*g:ale_sign_highlight_linenrs*
 g:ale_sign_info	ale.txt	/*g:ale_sign_info*
 g:ale_sign_offset	ale.txt	/*g:ale_sign_offset*
 g:ale_sign_style_error	ale.txt	/*g:ale_sign_style_error*
 g:ale_sign_style_warning	ale.txt	/*g:ale_sign_style_warning*
 g:ale_sign_warning	ale.txt	/*g:ale_sign_warning*
 g:ale_sml_smlnj_cm_file	ale-sml.txt	/*g:ale_sml_smlnj_cm_file*
+g:ale_solidity_solc_options	ale-solidity.txt	/*g:ale_solidity_solc_options*
 g:ale_sourcekit_lsp_executable	ale-swift.txt	/*g:ale_sourcekit_lsp_executable*
 g:ale_spec_rpmlint_executable	ale-spec.txt	/*g:ale_spec_rpmlint_executable*
 g:ale_spec_rpmlint_options	ale-spec.txt	/*g:ale_spec_rpmlint_options*
@@ -1643,6 +1661,8 @@ g:ale_sql_pgformatter_executable	ale-sql.txt	/*g:ale_sql_pgformatter_executable*
 g:ale_sql_pgformatter_options	ale-sql.txt	/*g:ale_sql_pgformatter_options*
 g:ale_sql_sqlfmt_executable	ale-sql.txt	/*g:ale_sql_sqlfmt_executable*
 g:ale_sql_sqlfmt_options	ale-sql.txt	/*g:ale_sql_sqlfmt_options*
+g:ale_sql_sqlformat_executable	ale-sql.txt	/*g:ale_sql_sqlformat_executable*
+g:ale_sql_sqlformat_options	ale-sql.txt	/*g:ale_sql_sqlformat_options*
 g:ale_stylus_stylelint_executable	ale-stylus.txt	/*g:ale_stylus_stylelint_executable*
 g:ale_stylus_stylelint_options	ale-stylus.txt	/*g:ale_stylus_stylelint_options*
 g:ale_stylus_stylelint_use_global	ale-stylus.txt	/*g:ale_stylus_stylelint_use_global*

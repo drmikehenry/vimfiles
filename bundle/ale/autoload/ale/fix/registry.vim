@@ -27,6 +27,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['python'],
 \       'description': 'Fix PEP8 issues with black.',
 \   },
+\   'dfmt': {
+\       'function': 'ale#fixers#dfmt#Fix',
+\       'suggested_filetypes': ['d'],
+\       'description': 'Fix D files with dfmt.',
+\   },
 \   'fecs': {
 \       'function': 'ale#fixers#fecs#Fix',
 \       'suggested_filetypes': ['javascript', 'css', 'html'],
@@ -255,6 +260,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['sql'],
 \       'description': 'Fix SQL files with sqlfmt.',
 \   },
+\   'sqlformat': {
+\       'function': 'ale#fixers#sqlformat#Fix',
+\       'suggested_filetypes': ['sql'],
+\       'description': 'Fix SQL files with sqlformat.',
+\   },
 \   'google_java_format': {
 \       'function': 'ale#fixers#google_java_format#Fix',
 \       'suggested_filetypes': ['java'],
@@ -312,7 +322,7 @@ let s:default_registry = {
 \   },
 \   'styler': {
 \       'function': 'ale#fixers#styler#Fix',
-\       'suggested_filetypes': ['r', 'rmarkdown'],
+\       'suggested_filetypes': ['r', 'rmarkdown', 'rmd'],
 \       'description': 'Fix R files with styler.',
 \   },
 \   'latexindent': {

@@ -661,7 +661,7 @@ Usage notes:
 
 See |ALE| documentation for more details.
 
-Version 2019-08-18 (73812c3) from:
+Version 2019-09-20 (ab8e043) from:
 https://github.com/dense-analysis/ale
 
 with the following modifications found in branch `vimfiles` at:

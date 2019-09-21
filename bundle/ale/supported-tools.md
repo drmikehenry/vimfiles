@@ -112,6 +112,7 @@ formatting.
 * Cython (pyrex filetype)
   * [cython](http://cython.org/)
 * D
+  * [dfmt](https://github.com/dlang-community/dfmt)
   * [dls](https://github.com/d-language-server/dls)
   * [dmd](https://dlang.org/dmd-linux.html)
   * [uncrustify](https://github.com/uncrustify/uncrustify)
@@ -223,7 +224,7 @@ formatting.
   * [eslint](http://eslint.org/)
   * [fecs](http://fecs.baidu.com/)
   * [flow](https://flowtype.org/)
-  * [jscs](http://jscs.info/)
+  * [jscs](https://jscs-dev.github.io/)
   * [jshint](http://jshint.com/)
   * [prettier](https://github.com/prettier/prettier)
   * [prettier-eslint](https://github.com/prettier/prettier-eslint-cli)
@@ -429,11 +430,13 @@ formatting.
 * SML
   * [smlnj](http://www.smlnj.org/)
 * Solidity
+  * [solc](https://solidity.readthedocs.io/)
   * [solhint](https://github.com/protofire/solhint)
   * [solium](https://github.com/duaraghav8/Solium)
 * SQL
   * [pgformatter](https://github.com/darold/pgFormatter)
   * [sqlfmt](https://github.com/jackc/sqlfmt)
+  * [sqlformat](https://github.com/andialbrecht/sqlparse)
   * [sqlint](https://github.com/purcell/sqlint)
 * Stylus
   * [stylelint](https://github.com/stylelint/stylelint)

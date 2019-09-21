@@ -103,6 +103,7 @@ Notes:
 * Cython (pyrex filetype)
   * `cython`
 * D
+  * `dfmt`
   * `dls`
   * `dmd`
   * `uncrustify`
@@ -420,11 +421,13 @@ Notes:
 * SML
   * `smlnj`
 * Solidity
+  * `solc`
   * `solhint`
   * `solium`
 * SQL
   * `pgformatter`
   * `sqlfmt`
+  * `sqlformat`
   * `sqlint`
 * Stylus
   * `stylelint`
