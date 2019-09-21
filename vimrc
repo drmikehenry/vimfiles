@@ -3449,7 +3449,13 @@ endif
 " -------------------------------------------------------------
 
 if g:EnableAle
+    " Allow ALE to provide autocompletion suggestions.
+    let g:ale_completion_enabled = 1
+
     let g:ale_sign_column_always = 1
+
+    " 'rls' - Rust Language Server.
+    let g:ale_linters = { 'rust': ['rls', 'cargo'] }
 
     " Pylint is too picky to be on by default.
     let g:ale_linters_ignore = { 'python': ['pylint'] }
@@ -6452,6 +6458,8 @@ function! SetupRust()
     " Original definition from bundle/rust/ftplugin/rust.vim:
     " setlocal comments=s0:/*!,ex:*/,s1:/*,mb:*,ex:*/,:///,://!,://
     setlocal comments=s0:/*!,mb:\ ,e-4:*/,s0:/*,mb:\ ,ex-4:*/,:///,://!,://
+
+    setlocal omnifunc=ale#completion#OmniFunc
 endfunction
 command! -bar SetupRust call SetupRust()
 

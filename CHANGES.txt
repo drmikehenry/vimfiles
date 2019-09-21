@@ -14,6 +14,8 @@ require adjustment of per-user settings.
 
 - Setup completeopt to require menu selection (for better ALE support).
 
+- Setup ALE auto-completion with Rust Language Server for Rust.
+
 2019-09-20
 ==========
 
