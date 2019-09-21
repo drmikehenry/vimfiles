@@ -3455,7 +3455,9 @@ if g:EnableAle
     let g:ale_sign_column_always = 1
 
     " 'rls' - Rust Language Server.
-    let g:ale_linters = { 'rust': ['rls', 'cargo'] }
+    let g:ale_linters = {}
+    let g:ale_linters['rust'] = ['rls', 'cargo']
+    let g:ale_linters['python'] = ['pyls', 'flake8', 'mypy']
 
     " Pylint is too picky to be on by default.
     let g:ale_linters_ignore = { 'python': ['pylint'] }
@@ -6279,6 +6281,9 @@ function! SetupPython()
     syntax sync minlines=1000
 
     SyntasticBufferSetup strict
+    if g:EnableAle
+        setlocal omnifunc=ale#completion#OmniFunc
+    endif
 endfunction
 command! -bar SetupPython call SetupPython()
 let g:IndentGuidesMap["python"] = "<on>"
@@ -6459,7 +6464,9 @@ function! SetupRust()
     " setlocal comments=s0:/*!,ex:*/,s1:/*,mb:*,ex:*/,:///,://!,://
     setlocal comments=s0:/*!,mb:\ ,e-4:*/,s0:/*,mb:\ ,ex-4:*/,:///,://!,://
 
-    setlocal omnifunc=ale#completion#OmniFunc
+    if g:EnableAle
+        setlocal omnifunc=ale#completion#OmniFunc
+    endif
 endfunction
 command! -bar SetupRust call SetupRust()
 

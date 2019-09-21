@@ -21,6 +21,9 @@ require adjustment of per-user settings.
 
 - Upgrade EasyMotion plugin to version 2019-03-23.
 
+- Add Python Language Server (pls) support for ALE.
+  See ``:help notes_setup_vimfiles`` for information on installing pls.
+
 2019-09-20
 ==========
 
