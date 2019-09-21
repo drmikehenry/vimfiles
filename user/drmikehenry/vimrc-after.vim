@@ -17,3 +17,14 @@ let g:cpsm_query_inverting_delimiter = ' '
 
 " Experiment with 'splitright'.
 set splitright
+
+" Probably going to remove Sneak.
+unmap <Space>s
+unmap <Space>S
+
+nmap <Space>gd <Plug>(ale_go_to_definition)
+
+" Symbol edit (rename).
+nnoremap <Space>se :ALERename<CR>
+" Show symbol information.
+nmap <Space>si <Plug>(ale_hover)
