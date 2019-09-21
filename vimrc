@@ -1999,13 +1999,15 @@ endif
 " Completion
 " -------------------------------------------------------------
 
-" Complete longest unambigous match, show menu even if only one match.
+" Complete longest unambiguous match, show menu even if only one match.
 " Include extra "preview" information in menu.
 " menu - use a popup menu to show completions.
 " menuone - use menu even when only one match.
 " longest - only insert longest common text of matches.
 " preview - use preview window to show extra information.
-set completeopt=longest,menuone
+" noinsert - do not insert text until the user selects from menu.
+" noselect - force the user to select from the menu.
+set completeopt=menu,menuone,noselect,noinsert
 
 " 'complete' controls which types of completion may be initiated by
 " pressing CTRL-n and CTRL-p.

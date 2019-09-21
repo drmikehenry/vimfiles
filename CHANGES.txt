@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Upgrade ALE plugin to version 2019-09-20.
 
+- Setup completeopt to require menu selection (for better ALE support).
+
 2019-09-20
 ==========
 
