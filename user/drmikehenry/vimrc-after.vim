@@ -28,3 +28,13 @@ nmap <Space>gd <Plug>(ale_go_to_definition)
 nnoremap <Space>se :ALERename<CR>
 " Show symbol information.
 nmap <Space>si <Plug>(ale_hover)
+
+
+" Experimental overwin-based mappings.
+nmap     <Space>jj          <Plug>(easymotion-overwin-f)
+nmap     <Space>jJ          <Plug>(easymotion-overwin-f2)
+nmap     <Space>jl          <Plug>(easymotion-overwin-line)
+
+" Replicate <Space>jJ onto <Space>jk (easier to type).
+Noxmap   <Space>jk          <Plug>(easymotion-s2)
+nmap     <Space>jk          <Plug>(easymotion-overwin-f2)
