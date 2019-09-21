@@ -19,6 +19,8 @@ require adjustment of per-user settings.
 - Change mapping for toggling Mundo window to be ``<Space>qu`` (to match the
   theme that ``<Space>q`` is the toggle window prefix.
 
+- Upgrade EasyMotion plugin to version 2019-03-23.
+
 2019-09-20
 ==========
 

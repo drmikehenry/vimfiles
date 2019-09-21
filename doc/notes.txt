@@ -960,7 +960,7 @@ Local Customizations:
 
 - Setup regular expressions for "anywhere" operations.
 
-Version 2016-02-15 (649120e) from:
+Version 2019-03-23 (85e90c9) from:
 https://github.com/Lokaltog/vim-easymotion.git
 
 Installation:
