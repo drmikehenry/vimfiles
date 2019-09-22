@@ -31,6 +31,8 @@ require adjustment of per-user settings.
   any black options.  In addition, the flake8 installation instructions have
   been updated to include a section on creating a flake8 configuration file.
 
+- Upgrade endwise plugin to version 2018-12-26.
+
 2019-09-20
 ==========
 

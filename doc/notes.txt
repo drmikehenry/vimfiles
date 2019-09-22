@@ -1009,7 +1009,7 @@ support.
 This plugin does remap <CR> in insert mode.  It also adds a <C-x><CR> mapping
 to force inserting an end.  However, the forced version isn't always correct.
 
-Version 2018-05-13 (21db2f8) from:
+Version 2018-12-26 (f67d022) from:
 https://github.com/tpope/vim-endwise
 
 Installation:
