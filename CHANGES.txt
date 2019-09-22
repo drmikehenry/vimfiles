@@ -24,6 +24,13 @@ require adjustment of per-user settings.
 - Add Python Language Server (pls) support for ALE.
   See ``:help notes_setup_vimfiles`` for information on installing pls.
 
+- Fade to black: adopt the black formatter's quote-character style (using double
+  quotes instead of single).  Formatting with ``<Space>=`` will now reformat
+  quotes in a Python source file.  See ``:help notes_setup_vimfiles`` for
+  information on configuring a given project via ``pyproject.toml`` to change
+  any black options.  In addition, the flake8 installation instructions have
+  been updated to include a section on creating a flake8 configuration file.
+
 2019-09-20
 ==========
 

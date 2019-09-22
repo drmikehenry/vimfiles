@@ -3500,14 +3500,6 @@ if g:EnableAle
         \ 'sh': ['shfmt'],
         \ }
     let g:ale_python_black_options = '-l 79'
-    if executable('blacktop') == 1
-        " blacktop is a wrapper around black that changes quote normalization
-        " to prefer single quotes.
-        let g:ale_python_black_executable = 'blacktop'
-    else
-        " Without blacktop, tell black not to normalize string quotes.
-        let g:ale_python_black_options .= ' --skip-string-normalization'
-    endif
 
     " Use ALE fixer on the current buffer.
     nmap <Space>=  <Plug>(ale_fix)

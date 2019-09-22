@@ -293,9 +293,26 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
       pip install flake8 flake8-quotes pep8-naming
       pip install mypy pyannotate monkeytype pytype
 <
+    Note: by default, flake8-quotes assumes single-quotes.  To match the style
+    enforced by black, create `~/.config/flake8` with contents: >
+
+      [flake8]
+      inline-quotes = double
+<
+    For per-project configuration of flake8, put the same content in a `.flake8`
+    file in the project's root directory.
+
   - Install black formatter: >
 
       pip install black
+<
+    Note: For the few configurable things black supports (e.g., line length, or
+    to avoid reformatting quotes), you can create a per-project `pyproject.toml`
+    file with a section to configure black.  For example: >
+
+      [tool.black]
+      line-length = 79
+      skip-string-normalization = true
 <
   - Install language server: >
 
