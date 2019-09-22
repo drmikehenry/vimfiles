@@ -38,3 +38,9 @@ nmap     <Space>jl          <Plug>(easymotion-overwin-line)
 " Replicate <Space>jJ onto <Space>jk (easier to type).
 Noxmap   <Space>jk          <Plug>(easymotion-s2)
 nmap     <Space>jk          <Plug>(easymotion-overwin-f2)
+
+" Add ``preview`` into ``completeopt``.  Now when selecting an completion
+" candidate from the menu, a preview window will temporarily open showing any
+" documentation for the selected option.  The window automatically closes when
+" the next character is typed.
+set completeopt+=preview
