@@ -16,6 +16,11 @@ require adjustment of per-user settings.
 - Upgrade BufExplorer plugin to version 2019-02-13, with patches that allow
   deletion of the final buffer.
 
+- Replace manpageview plugin with Vim's built-in support for Manpages.
+  The interface is similar: press ``K`` to get help for the word under the
+  cursor.  Use ``:Man topic`` to get help on ``topic``.  The in-built support
+  works properly with PageUp/PageDown, unlike the old manpageview plugin.
+
 2019-09-21
 ==========
 

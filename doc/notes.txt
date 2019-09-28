@@ -48,7 +48,7 @@
     Localvimrc - Override settings via local files      |notes_localvimrc|
     LoremIpsum - Generate dummy text                    |notes_loremipsum|
     Lusty Explorer/Juggler - File/buffer switcher       |notes_lusty|
-    ManpageView                                         |notes_manpageview|
+    Man - Vim's built-in support for man pages          |notes_man|
     Markdown - Markdown syntax support                  |notes_markdown|
     Matchup - Enhanced extended matching with '%'       |notes_matchup|
     Misc - Contains many useful Vimscript functions     |notes_misc|
@@ -1710,20 +1710,14 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-MANPAGEVIEW                                             *notes_manpageview*
-  File reading and writing across networks              |manpageview|
+MAN                                                     *notes_man*
+  Vim's built-in support for man pages                  |man|
 
-Version 25u (73812c3) from:
-https://github.com/dkasak/manpageview
+See |man| for details on Vim's support for Manpages.
 
-with the following modifications found in branch `vimfiles` at:
-https://github.com/drmikehenry/manpageview
+Press `K` to get help on the word under the cursor.
 
-- (branch sleep-less) Sleep only 250 ms to avoid freezing Vim for two or three
-  tiresome seconds while an error message is displayed.
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
+Use `:Man topic` to get help on `topic`.
 
 ------------------------------------------------------------------------------
 MARKDOWN                                                 *notes_markdown*

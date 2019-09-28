@@ -3966,33 +3966,14 @@ let g:LustyJugglerAltTabMode = 1
 nnoremap <silent> <M-s> :LustyJuggler<CR>
 
 " -------------------------------------------------------------
-" manpageview
+" Man support
 " -------------------------------------------------------------
 
-" Default is "hsplit" for opening a horizontal split.
-" The "reuse" option is irritating when accidentally pressing "K" in the
-" window, since it forcibly closes that window after displaying the error.
-"let g:manpageview_winopen = "reuse"
+" Source Vim's ftplugin to define the :Man command:
+runtime ftplugin/man.vim
 
-function! CheckManpageview()
-    let isMan = maparg("\<Space>", "n") ==? "<C-f>"
-    let isInfo = maparg("H", "n") =~? "manpageview"
-    if isMan
-        nnoremap <silent> <buffer> b           <C-b>
-        nnoremap <silent> <buffer> f           <C-f>
-        nnoremap <silent> <buffer> <           gg
-        nnoremap <silent> <buffer> >           G
-    endif
-    if isMan || isInfo
-        nnoremap <silent> <buffer> q           :q<CR>
-    endif
-endfunction
-
-augroup local_manpageview
-    autocmd!
-
-    autocmd FileType man,info call CheckManpageview()
-augroup END
+" Use ``:Man`` when ``K`` is pressed:
+set keywordprg=:Man
 
 " -------------------------------------------------------------
 " Matchup
