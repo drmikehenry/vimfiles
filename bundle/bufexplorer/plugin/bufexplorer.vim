@@ -36,7 +36,7 @@
 " Name Of File: bufexplorer.vim
 "  Description: Buffer Explorer Vim Plugin
 "   Maintainer: Jeff Lanzarotta (delux256-vim at outlook dot com)
-" Last Changed: Thursday, 19 January 2018
+" Last Changed: Saturday, 08 December 2018
 "      Version: See g:bufexplorer_version for version number.
 "        Usage: This file should reside in the plugin directory and be
 "               automatically sourced.
@@ -74,7 +74,7 @@ endif
 "1}}}
 
 " Version number
-let g:bufexplorer_version = "7.4.20"
+let g:bufexplorer_version = "7.4.21"
 
 " Plugin Code {{{1
 " Check for Vim version {{{2
@@ -751,6 +751,11 @@ function! s:BuildBufferList()
 
         let line = buf.attributes." "
 
+        if exists("g:loaded_webdevicons")
+            let line .= WebDevIconsGetFileTypeSymbol(buf.shortname)
+            let line .= " "
+        endif
+
         " Are we to split the path and file name?
         if g:bufExplorerSplitOutPathName
             let type = (g:bufExplorerShowRelativePath) ? "relativepath" : "path"
@@ -950,11 +955,7 @@ function! s:RemoveBuffer(mode)
         return
     endif
 
-    " Do not allow this buffer to be deleted if it is the last one.
-    if len(s:MRUList) == 1
-        call s:Error("Sorry, you are not allowed to delete the last buffer")
-        return
-    endif
+    let mode = a:mode
 
     " These commands are to temporarily suspend the activity of winmanager.
     if exists("b:displayMode") && b:displayMode == "winmanager"
@@ -964,12 +965,26 @@ function! s:RemoveBuffer(mode)
     let _bufNbr = str2nr(getline('.'))
 
     if getbufvar(_bufNbr, '&modified') == 1
-        call s:Error("Sorry, no write since last change for buffer "._bufNbr.", unable to delete")
-        return
-    else
-        " Okay, everything is good, delete or wipe the buffer.
-        call s:DeleteBuffer(_bufNbr, a:mode)
+        " Calling confirm() requires Vim built with dialog option
+        if !has("dialog_con") && !has("dialog_gui")
+            call s:Error("Sorry, no write since last change for buffer "._bufNbr.", unable to delete")
+            return
+        endif
+
+        let answer = confirm('No write since last change for buffer '._bufNbr.'. Delete anyway?', "&Yes\n&No", 2)
+
+        if a:mode == "delete" && answer == 1
+            let mode = "force_delete"
+        elseif a:mode == "wipe" && answer == 1
+            let mode = "force_wipe"
+        else
+            return
+        endif
+
     endif
+
+    " Okay, everything is good, delete or wipe the buffer.
+    call s:DeleteBuffer(_bufNbr, mode)
 
     " Reactivate winmanager autocommand activity.
     if exists("b:displayMode") && b:displayMode == "winmanager"
@@ -985,6 +1000,10 @@ function! s:DeleteBuffer(buf, mode)
         " Wipe/Delete buffer from Vim.
         if a:mode == "wipe"
             execute "silent bwipe" a:buf
+        elseif a:mode == "force_wipe"
+            execute "silent bwipe!" a:buf
+        elseif a:mode == "force_delete"
+            execute "silent bdelete!" a:buf
         else
             execute "silent bdelete" a:buf
         endif

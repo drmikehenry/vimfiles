@@ -13,6 +13,9 @@ require adjustment of per-user settings.
 - Remove sneak plugin; similar functionality is already present in the
   EasyMotion plugin.  See ``:help notes_easymotion`` for details.
 
+- Upgrade BufExplorer plugin to version 2019-02-13, with patches that allow
+  deletion of the final buffer.
+
 2019-09-21
 ==========
 
