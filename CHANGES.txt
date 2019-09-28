@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-09-28
+==========
+
+- Remove sneak plugin; similar functionality is already present in the
+  EasyMotion plugin.  See ``:help notes_easymotion`` for details.
+
 2019-09-21
 ==========
 

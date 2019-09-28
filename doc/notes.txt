@@ -70,7 +70,6 @@
     ScrollColor - Scroll through color schemes          |notes_scrollcolor|
     Session - Provides better session management        |notes_session|
     Signature - Signs and helpers for bookmarks         |notes_signature|
-    Sneak - Motion based on two-character searching     |notes_sneak|
     Snippets - Default snippets for UltiSnips           |notes_snippets|
     Surround - Manipulating "surroundings"              |notes_surround|
     Svn - View Subversion diffs while writing log       |notes_svn|
@@ -2179,41 +2178,6 @@ Local Customizations:
 
   This is done via assignment to g:SignatureMap in vimrc.  To restore this
   functionality, unlet g:SignatureMap in your vimrc-after.vim file.
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-SNEAK                                                    *notes_sneak*
-  Motion based on two-character searching                |sneak|
-
-Local Customizations:
-- The set of label characters has been reduced to make it less likely to
-  hit one using a subsequent Vim edit command.
-
-" Reduce label characters to set least likely to be pressed after landing
-" at desired location (see issue #88 above; suggested set with "g" removed).
-let g:sneak#target_labels = "sfjktunbqz/SFKGHLTUNBRMQZ?"
-
-" Enable "streak" mode.
-let g:sneak#streak = 1
-
-" 0 : Always case-sensitive.
-" 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
-let g:sneak#use_ic_scs = 1
-
-" Avoid default {operator}z mapping.
-let g:sneak#textobject_z = 0
-
-" Use <Space>s and <Space>S for forward and backward sneak, and use streak mode
-" for operators.
-Nxmap   <Space>s        <Plug>Sneak_s
-Nxmap   <Space>S        <Plug>Sneak_S
-omap    <Space>s        <Plug>(SneakStreak)
-omap    <Space>S        <Plug>(SneakStreakBackward)
-
-Version 2015-04-28 (0f033073) from:
-https://github.com/justinmk/vim-sneak.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

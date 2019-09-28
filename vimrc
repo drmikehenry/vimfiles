@@ -4421,34 +4421,6 @@ let g:SignatureMap = {
         \ }
 
 " -------------------------------------------------------------
-" Sneak
-" -------------------------------------------------------------
-
-" Future ideas on sneak are found here:
-" https://github.com/justinmk/vim-sneak/issues/88
-
-" Reduce label characters to set least likely to be pressed after landing
-" at desired location (see issue #88 above; suggested set with "g" removed).
-let g:sneak#target_labels = "sfjktunbqz/SFKGHLTUNBRMQZ?"
-
-" Enable "streak" mode.
-let g:sneak#streak = 1
-
-" 0 : Always case-sensitive.
-" 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
-let g:sneak#use_ic_scs = 1
-
-" Avoid default {operator}z mapping.
-let g:sneak#textobject_z = 0
-
-" Use <Space>s and <Space>S for forward and backward sneak, and use streak mode
-" for operators.
-Nxmap   <Space>s        <Plug>Sneak_s
-Nxmap   <Space>S        <Plug>Sneak_S
-omap    <Space>s        <Plug>(SneakStreak)
-omap    <Space>S        <Plug>(SneakStreakBackward)
-
-" -------------------------------------------------------------
 " Syntastic
 " -------------------------------------------------------------
 
