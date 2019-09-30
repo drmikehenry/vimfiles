@@ -3235,6 +3235,12 @@ Then adjust the client settings by adding these lines to either ~/.ssh/config
   Host *
       SendEnv COLORFGBG
 
+Similarly, when the `COLORTERM` environment variable contains the value
+`truecolor`, vimfiles will set 'termguicolors' which will cause Vim to assume
+24-bit color support in the terminal and to use the GUI colors for the current
+colorscheme (which are typically nicer).  It's useful to configure ssh to pass
+`COLORTERM` in addition to `COLORFGBG` as above.
+
 ------------------------------------------------------------------------------
 Fonts                                                   *notes_fonts*
 

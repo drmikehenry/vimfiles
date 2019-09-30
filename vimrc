@@ -522,6 +522,16 @@ call pathogen#infect()
 " than those in "bundle" directories.
 call pathogen#infect('pre-bundle/{}')
 
+" Enable 24-bit color for terminals that support it.
+" To countermand this, put ``set notermguicolors`` in your vimrc-before file.
+if $COLORTERM == 'truecolor'
+    set termguicolors
+    if $TERM =~ 'screen'
+        let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+        let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    endif
+endif
+
 " -------------------------------------------------------------
 " "vimrc-before" overrides
 " -------------------------------------------------------------
