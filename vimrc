@@ -3500,8 +3500,8 @@ if g:EnableAle
     " -p        - posix-compatible source
     " -i UINT   - setup for indentation with UNIT spaces.
     " -sr       - redirect operators will be followed by a space.
-    " TODO: After shfmt can detect dialect, remove ``-p``.
-    let g:ale_sh_shfmt_options = '-p -sr -i 4'
+    " (The `-p` option will be added based on filetype detection.)
+    let g:ale_sh_shfmt_options = '-sr -i 4'
 
     let g:ale_fixers = {
         \ 'c': ['clang-format'],
@@ -6466,6 +6466,18 @@ function! SetupShell()
 
     " Re-synchronize syntax highlighting minlines before top of window.
     syntax sync minlines=1000
+
+    if exists('g:ale_sh_shfmt_options')
+        let options = g:ale_sh_shfmt_options . ' '
+    else
+        let options = ''
+    endif
+
+    " Setup ALE shfmt options based on dialect.
+    if exists('b:is_kornshell')
+        " kornshell means POSIX.
+        let b:ale_sh_shfmt_options = options . '-p'
+    endif
 endfunction
 command! -bar SetupShell call SetupShell()
 

@@ -14,6 +14,8 @@ require adjustment of per-user settings.
   ``<Space>=`` to auto-format the current file (for C/C++ or any other supported
   language).
 
+- Detect POSIX shell vs. Bash for ALE ``shfmt`` (the default ALE fixer).
+
 2019-09-30
 ==========
 
