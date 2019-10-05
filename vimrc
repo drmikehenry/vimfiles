@@ -3504,6 +3504,8 @@ if g:EnableAle
     let g:ale_sh_shfmt_options = '-p -sr -i 4'
 
     let g:ale_fixers = {
+        \ 'c': ['clang-format'],
+        \ 'cpp': ['clang-format'],
         \ 'python': ['black'],
         \ 'ruby': ['rubocop'],
         \ 'rust': ['rustfmt'],
