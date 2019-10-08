@@ -418,12 +418,14 @@ else
 endif
 
 " Determine best system Python executable.
-if executable('python3') == 1
-    let g:PythonExecutable = 'python3'
-elseif executable('python') == 1
-    let g:PythonExecutable = 'python'
-else
-    let g:PythonExecutable = ''
+if !exists('g:PythonExecutable')
+    if executable('python3') == 1
+        let g:PythonExecutable = 'python3'
+    elseif executable('python') == 1
+        let g:PythonExecutable = 'python'
+    else
+        let g:PythonExecutable = ''
+    endif
 endif
 
 " Setup Python's sys.path to include any "python2", "python3", or "pythonx"

@@ -18,6 +18,8 @@ require adjustment of per-user settings.
 
     let g:EnablePowerline = 1
 
+- Allow override of g:PythonExecutable in ``VIMRC_VARS``.
+
 2019-10-05
 ==========
 
