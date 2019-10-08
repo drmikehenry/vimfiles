@@ -1924,7 +1924,7 @@ font and use it: >
 <
 
 If you don't want to use Powerline, you can add the following to your
-|VIMRC_BEFORE| file: >
+|VIMRC_VARS| file: >
 
     let g:EnablePowerline = 0
 <

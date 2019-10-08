@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-10-08
+==========
+
+- Fix CHANGES.txt note that erroneously suggested using the ``VIMRC_BEFORE``
+  file (typically ~/.vimuser/vimrc-before.vim) to force use of Powerline; this
+  should have said ``VIMRC_VARS`` (typically ~/.vimuser/vimrc-vars.vim).  If you
+  have the line below (or similar ``g:EnableXxx`` lines) in your
+  vimrc-before.vim file, move them to vimrc-after.vim::
+
+    let g:EnablePowerline = 1
+
 2019-10-05
 ==========
 
@@ -406,7 +417,7 @@ require adjustment of per-user settings.
   Force Python 2 if compiled with both Python 2 and Python 3 support and both
   interpreters are available.  To disable forcing and allow the selection
   pattern of ``pythonx`` then ``python3`` then ``python`` place the following
-  in your ``VIMRC_BEFORE`` file::
+  in your ``VIMRC_VARS`` file::
 
     let g:ForcePython2 = 0
 
@@ -620,7 +631,7 @@ require adjustment of per-user settings.
 - Change default from Powerline to Airline.  This change of default fell through
   the cracks (support for Airline was added to Vimfiles over two years ago!).
   To use Powerline instead of Airline, place the following line in your
-  ``VIMRC_BEFORE`` file::
+  ``VIMRC_VARS`` file::
 
     let g:EnablePowerline = 1
 

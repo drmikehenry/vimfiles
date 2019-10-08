@@ -462,7 +462,8 @@ endif
 
 " To disable one of the specified plugins below, define the corresponding
 " g:EnableXxx variables below to be 0 (typically, this would be done in
-" the per-user VIMRC_BEFORE file; see top of this file).
+" the per-user VIMRC_VARS file, as plugin enable/disable adjustments must be
+" done early).
 " For example, to disable the UltiSnips plugin, use the following:
 "   let g:EnableUltiSnips = 0
 
