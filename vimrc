@@ -510,6 +510,16 @@ if g:EnablePowerline
     let g:EnableAirline = 0
 endif
 
+" Disable Powerline and/or Airline.
+if !g:EnablePowerline
+    call add(g:pathogen_disabled, 'powerline')
+endif
+if !g:EnableAirline
+    call add(g:pathogen_disabled, 'airline')
+    call add(g:pathogen_disabled, 'airline-themes')
+endif
+
+
 if !exists("g:EnableUltiSnips")
     let g:EnableUltiSnips = g:Python != ''
 endif
