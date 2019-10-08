@@ -20,6 +20,11 @@ require adjustment of per-user settings.
 
 - Allow override of g:PythonExecutable in ``VIMRC_VARS``.
 
+- Add ``g:EnableSyntastic`` to allow disabling both ALE and Syntastic.
+
+- For internal function ReplacePowerlineSyntastic(), return early if Syntastic
+  is disabled (only matters is Powerline is being used).
+
 2019-10-05
 ==========
 

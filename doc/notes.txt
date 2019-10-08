@@ -2448,6 +2448,11 @@ content:
       SyntasticBufferSetup strict
   endif
 
+If you don't want to use Syntastic you can add the following to your
+|VIMRC_VARS| file: >
+
+    let g:EnableSyntastic = 0
+<
 Version 2015-03-19 (ebadf9af) from:
 https://github.com/scrooloose/syntastic.git
 

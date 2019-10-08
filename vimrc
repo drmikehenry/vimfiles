@@ -470,8 +470,11 @@ endif
 "   let g:EnableUltiSnips = 0
 
 if !exists('g:EnableAle')
-    " Default to ALE instead of Syntastic.
     let g:EnableAle = 1
+endif
+
+if !exists('g:EnableSyntastic')
+    let g:EnableSyntastic = 1
 endif
 
 " Gvim bug https://github.com/vim/vim/issues/3417 is fixed in Gvim 8.1.0834.
@@ -481,14 +484,19 @@ if v:version < 801 || (v:version == 801 && !has('patch0834'))
     let g:EnableAle = 0
 endif
 
+" Prefer Ale to Syntastic.
 if g:EnableAle
-    " With ALE running, should disable Syntastic.
+    let g:EnableSyntastic = 0
+endif
+
+if !g:EnableSyntastic
     call add(g:pathogen_disabled, 'syntastic')
 
     " Define :SyntasticReset so other Syntastic wrapper functions will not fail.
     command! SyntasticReset let b:syntastic_enabled = 0
-else
-    " Disable ALE.
+endif
+
+if !g:EnableAle
     call add(g:pathogen_disabled, 'ale')
 endif
 
@@ -4802,7 +4810,7 @@ let g:syntastic_rst_rstsphinx_quiet_messages = { 'level': [] }
 let g:syntastic_rst_rstsphinx_args_before = '-j ' . NumCpus()
 
 function! ReplacePowerlineSyntastic()
-    if !g:EnablePowerline
+    if !g:EnablePowerline || !g:EnableSyntastic
         return
     endif
     function! Powerline#Functions#syntastic#GetErrors(line_symbol) " {{{
