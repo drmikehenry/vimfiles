@@ -3122,7 +3122,8 @@ vimrc-vars.vim                                *VIMRC_VARS*
   chicken-and-egg problem with a |VIMRC_BEFORE| script:
 
   - The user wants to do ":colorscheme SomeColorScheme" in his |VIMRC_BEFORE|;
-  - Support for SomeColorScheme lives in an arbitrary bundle;
+  - Support for SomeColorScheme lives in an arbitrary bundle, making it
+    desirable to activate all bundles in advance of |VIMRC_BEFORE|;
   - Activating all bundles in advance of |VIMRC_BEFORE| makes it hard for the
     user to disable a particular bundle.
 
@@ -3132,7 +3133,7 @@ vimrc-vars.vim                                *VIMRC_VARS*
   to disable the "fixkey" bundle, place the following line in
   $VIMUSERFILES/vimrc-vars.vim: >
 
-    let g:pathogen_disabled = ["fixkey"]
+    call add(g:pathogen_disabled, 'fixkey')
 
 vimrc-before.vim, vimrc-after.vim             *VIMRC_BEFORE*   *VIMRC_AFTER*
   If these files exist, they will be sourced before or after the majority of the
@@ -3143,8 +3144,8 @@ vimrc-before.vim, vimrc-after.vim             *VIMRC_BEFORE*   *VIMRC_AFTER*
   manipulations are finished (such as activating bundles).  They are useful for
   the relatively rare things that must happen early, such as setting <Leader> so
   that it will be used by subsequent mappings in the main "vimrc".  Most other
-  settings are best overridden in |VIMRC_AFTER|scripts, which will be sourced at
-  end of the main "vimrc" file.
+  settings are best overridden in |VIMRC_AFTER| scripts, which will be sourced
+  at end of the main "vimrc" file.
 
   |VIMRC_BEFORE| scripts within the override directories are sourced in
   highest-to-lowest priority order, so that the highest-priority script has the
