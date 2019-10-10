@@ -14,7 +14,7 @@ require adjustment of per-user settings.
   file (typically ~/.vimuser/vimrc-before.vim) to force use of Powerline; this
   should have said ``VIMRC_VARS`` (typically ~/.vimuser/vimrc-vars.vim).  If you
   have the line below (or similar ``g:EnableXxx`` lines) in your
-  vimrc-before.vim file, move them to vimrc-after.vim::
+  vimrc-before.vim file, move them to vimrc-vars.vim::
 
     let g:EnablePowerline = 1
 
