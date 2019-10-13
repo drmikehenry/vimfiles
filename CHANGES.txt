@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-10-13
+==========
+
+- Use the ``q`` register to mark and restore the cursor position when rewrapping
+  paragraphs using ``<M-q>``.  This works in normal, visual, and insert modes.
+  See ``:help notes_reformatting`` for details.
+
 2019-10-08
 ==========
 

@@ -3484,7 +3484,8 @@ selection.
 "inner paragraph" (as defined by Vim's paragraph operator, |ip|).  When the
 'textwidth' option is non-zero (which is typical), the paragraph will be
 re-wrapped to that width; otherwise, the paragraph will be joined into a
-single long line.
+single long line.  In addition, the `q` register is used to mark and restore the
+cursor position.
 
 For normal and visual modes, <Leader>q does the same as <M-q>.
 

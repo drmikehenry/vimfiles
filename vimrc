@@ -1656,7 +1656,7 @@ onoremap Q gq
 
 " Paragraph re-wrapping, similar to Emacs's Meta-Q and TextMate's Ctrl-Q.
 function! RewrapParagraphExpr()
-    return (&tw > 0 ? "gqip" : "vip:join\<CR>") . "$"
+    return "mq" . (&tw > 0 ? "gqip" : "vip:join\<CR>") . "`q"
 endfunction
 
 function! RewrapParagraphExprVisual()
@@ -1665,7 +1665,7 @@ endfunction
 
 function! RewrapParagraphExprInsert()
     " Include undo point via CTRL-g u.
-    return "\<C-g>u\<Esc>" . RewrapParagraphExpr() . "A"
+    return "\<C-g>u\<Esc>" . RewrapParagraphExpr() . "a"
 endfunction
 
 nnoremap <expr> <M-q>      RewrapParagraphExpr()
