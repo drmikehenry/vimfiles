@@ -884,6 +884,15 @@ set nrformats-=octal
 " Perform vertically split diffs by default.
 set diffopt+=vertical
 
+if v:version > 801 || (v:version == 801 && has('patch-8.1.0360'))
+    " Use the new internal diff feature with options:
+    " - indent-heuristic: uses indentation to improve diffs.
+    " - algorithm:histogram: an improved patience algorithm as used in Git.
+    set diffopt+=internal
+    set diffopt+=indent-heuristic
+    set diffopt+=algorithm:histogram
+endif
+
 " Unfortunately, do to some redirection that Vim uses underneath the hood, it
 " can hide an error status of a command.  This helps to preserve the error
 " status so v:shell_error and the command can be tested for the success.

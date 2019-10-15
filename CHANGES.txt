@@ -16,6 +16,13 @@ require adjustment of per-user settings.
   In addition, adjust the mappings for ``*``, ``g*``, ``n``, and ``N`` to ensure
   the message is visible.
 
+- For Vim 8.1.0360 and onward, enable the new internal diff engine (via the
+  ``diffopt`` option) with two new features:
+
+  - ``indent-heuristic``: uses indentation to perform smarter diffing.
+  - ``algorithm:histogram``: uses the "histogram" algorithm (a derivative of the
+    "patience" algorithm) as use in Git.
+
 2019-10-13
 ==========
 
