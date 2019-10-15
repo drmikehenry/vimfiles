@@ -12,6 +12,10 @@ require adjustment of per-user settings.
 
 - Add mapping ``gV`` to visually select the text that was last edited/pasted.
 
+- Enable the [n/m] message for searching (by removing ``S`` from 'shortmess').
+  In addition, adjust the mappings for ``*``, ``g*``, ``n``, and ``N`` to ensure
+  the message is visible.
+
 2019-10-13
 ==========
 

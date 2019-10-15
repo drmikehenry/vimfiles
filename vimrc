@@ -842,6 +842,9 @@ set autoread
 " Setup print options for hardcopy command.
 set printoptions=paper:letter,duplex:off
 
+" Enable the [n/m] message for searching.
+set shortmess-=S
+
 " Configure mapping timeout in milliseconds (default 1000).
 " Controls how long Vim waits for partially complete mapping
 " before timing out and using prefix directly.
@@ -1416,8 +1419,11 @@ command! -bar Qf2Args call s:Qf2Args()
 
 " Setup n and N for browsing to next or previous search match with automatic
 " scrolling to the center of the window.
-nnoremap n      nzz
-nnoremap N      Nzz
+" Unfortunately, the ``zz`` cancels the message ``[n/m]`` that gets echoed when
+" 'shortmess' does not contain ``S``.  To restore that, move back (or
+" forward) one character and repeat the ``n`` (or ``N``) operation.
+nnoremap n      nzz<BS>n
+nnoremap N      Nzz<Space>N
 
 " Move current line up one line (called from normal mode)
 function! NMoveUp()
@@ -2479,9 +2485,21 @@ command! -bar MatchScratchWord call SetSearch('\<' . SearchLiteralPattern(@") . 
 
 " Map normal-mode '*' to just highlight, not search for next.
 " Note: Yank into @a to avoid clobbering register 0.
-nnoremap <silent> * :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
-nnoremap <silent> g* :call PushA()<CR>"ayiw:MatchScratch<CR>:call PopA()<CR>
-xnoremap <silent> * <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
+" The extra <Space>N at the end moves forward one space and then searches
+" backward again for the word, allowing the [n/m] search message to be
+" displayed (assuming 'shortmess' does not contain ``S``).
+" This has one low-probability edge case when highlighting a single-character
+" word at the end of the file.  When this happens, the <Space> can't move
+" forward, so Vim aborts the mapping with an error.  Most of the work is done
+" correctly, but in this rare case the [n/m] message won't be displayed.
+nnoremap <silent>
+        \* :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR><Space>N
+
+nnoremap <silent>
+        \g* :call PushA()<CR>"ayiw:MatchScratch<CR>:call PopA()<CR><Space>N
+
+xnoremap <silent>
+        \* <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR><Space>N
 
 " :Regrep of word under cursor.
 nnoremap <F3> :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
