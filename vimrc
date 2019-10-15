@@ -2847,18 +2847,6 @@ if has('unnamedplus')
     set clipboard^=unnamedplus
 endif
 
-" taken from tip #330 - setup sometime...
-" map <F11> :call InvertPasteAndMouse()<CR>
-function! InvertPasteAndMouse()
-    if &mouse == ''
-        set mouse=a | set nopaste
-        echo "mouse mode on, paste mode off"
-    else
-        set mouse= | set paste
-        echo "mouse mode off, paste mode on"
-    endif
-endfunction
-
 " -------------------------------------------------------------
 " :redir helpers
 " -------------------------------------------------------------
