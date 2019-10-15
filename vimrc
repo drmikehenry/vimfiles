@@ -2133,13 +2133,19 @@ endif
 " -------------------------------------------------------------
 
 " -------------------------------------------------------------
-" Windows-related mappings
+" Window-related mappings
 " -------------------------------------------------------------
 
 " Map window-related operations that start with CTRL-w onto equivalents
 " starting with <Space>w.
 nmap     <Space>w           <C-w>
 
+" -------------------------------------------------------------
+" Miscellaneous mappings
+" -------------------------------------------------------------
+
+" Visually select the text that was last edited/pasted.
+nnoremap gV `[v`]
 
 " Break undo for some insert-mode deletion operations otherwise, an undo will
 " just remove all text from the current insert operation instead of bringing

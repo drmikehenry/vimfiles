@@ -123,6 +123,7 @@
     Putting most-recently-yanked text                   |notes_putting_yanked|
     Yank-related mappings                               |notes_yank|
     Window-related customizations                       |notes_window_related|
+    Miscellanous mappings                               |notes_misc_mappings|
     Search-related customizations                       |notes_search|
     findx-related commands                              |notes_findx|
     :G 'search pattern'                                 |notes_G|
@@ -3652,6 +3653,16 @@ Window-related customizations                           *notes_window_related*
 
 Vim provides many window-related operations beginning with <C-w>.  To make these
 easier to type, <Space>w has been mapped to <C-w>.
+
+------------------------------------------------------------------------------
+Miscellanous mappings                                   *notes_misc_mappings*
+
+  gV      Visually select the text that was last edited/pasted.
+
+  CTRL-w  (insert-mode) Break undo, then CTRL-w (delete word).
+  CTRL-u  (insert-mode) Break undo, then CTRL-y (delete to line start).
+
+  P       (visual-mode) Put from most recent yank instead of scratch register.
 
 ------------------------------------------------------------------------------
 Search-related customizations                           *notes_search*
