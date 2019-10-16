@@ -1799,7 +1799,7 @@ Mundo is a Vim plugin for visualizing your undo tree to make it usable.
 To toggle the undo view, use :MundoToggle.
 
 Mappings:
-  <Space>uu     :MundoToggle
+  <Space>qu     :MundoToggle
 
 Version 2019-09-09 (fb86692) from:
 https://github.com/simnalamburt/vim-mundo
