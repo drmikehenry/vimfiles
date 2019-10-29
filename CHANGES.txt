@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-10-28
+==========
+
+- Fix Quickfix-reflector problem triggered by modifying QuickFix results without
+  saving them, followed by generating new results.  This had been causing
+  exceptions that are now avoided by setting ``nomodified`` when new QuickFix
+  results are read.
+
 2019-10-16
 ==========
 

@@ -4285,6 +4285,22 @@ nmap <silent> <Space>qp   <Plug>ToggleProject
 
 " Join changes within each buffer for easier :undo.
 let g:qf_join_changes = 1
+augroup local_quickfix_reflector
+    "First, remove all autocmds in this group.
+    autocmd!
+
+    " New QuickFix results have arrived.  By definition, the user has not yet
+    " edited the contents of the QuickFix buffer, but because Vim tries to reuse
+    " QuickFix buffers, any pre-existing "modified" status will be carried over
+    " for these new results.  Quickfix-reflector's BufReadPost autocmd invokes
+    " its OnWrite() function in an attempt to set the buffer's filename.  When
+    " the buffer's status is "nomodified", this function does nothing;
+    " unfortunately, if "modified" is carried over from a previous buffer,
+    " exceptions are thrown and bad things happen; therefore, we clear
+    " "modified" to avoid problems.
+    " (Ideally, Quickfix-reflector would ":set nomodified" itself.)
+    autocmd BufReadPost quickfix set nomodified
+augroup END
 
 " -------------------------------------------------------------
 " Rainbow Parentheses
