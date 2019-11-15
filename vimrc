@@ -1671,7 +1671,20 @@ onoremap Q gq
 
 " Paragraph re-wrapping, similar to Emacs's Meta-Q and TextMate's Ctrl-Q.
 function! RewrapParagraphExpr()
-    return "mq" . (&tw > 0 ? "gqip" : "vip:join\<CR>") . "`q"
+    if &tw == 0
+        " Mark position, join lines, return to marked position.
+        return "m`vip:join\<CR>``"
+    elseif &formatexpr == '' && &formatprg == ''
+        " Using internal algorithm.  Use ``gwip`` which correctly leaves the
+        " cursor unmoved.
+        return 'gwip'
+    else
+        " Not using internal algorithm.  Preserving the cursor position is
+        " too hard (marks can disappear, and even when they don't the marked
+        " position isn't very correct).  Since external algorithm use isn't very
+        " common, we don't bother trying to preserve the cursor position.
+        return 'gqip'
+    endif
 endfunction
 
 function! RewrapParagraphExprVisual()
