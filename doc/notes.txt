@@ -208,6 +208,16 @@ Next, choose one of these methods:
 To setup for Windows
 ====================
 
+NOTE: On some Windows environments, the GUI for changing the per-user
+environment variables has been administratively locked out; nevertheless, you
+can still configure your per-user environment variables in a couple of ways.
+The most straightforward way is to run the following command: >
+
+  rundll32.exe sysdm.cpl,EditEnvironmentVariables
+<
+You can run the above command by pressing WinKey-R and pasting the command into
+the dialog box.
+
 Vim will look for your ``vimfiles`` in your ``USERPROFILE`` directory, which
 will typically be ``C:\Documents and Settings\USERNAME`` or
 ``C:\Users\USERNAME``, but may be different when on a network.
