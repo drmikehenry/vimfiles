@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-11-21
+==========
+
+- Use ``completeopt+=noselect,noinsert`` only for Vim 7.4.775+ (thanks to John
+  Szakmeister).
+
 2019-11-14
 ==========
 
