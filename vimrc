@@ -2066,7 +2066,11 @@ endif
 " preview - use preview window to show extra information.
 " noinsert - do not insert text until the user selects from menu.
 " noselect - force the user to select from the menu.
-set completeopt=menu,menuone,noselect,noinsert
+set completeopt=menu,menuone
+
+if (v:version == 704 && has('patch775')) || v:version > 704
+    set completeopt+=noselect,noinsert
+endif
 
 " 'complete' controls which types of completion may be initiated by
 " pressing CTRL-n and CTRL-p.
