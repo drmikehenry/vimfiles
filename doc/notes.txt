@@ -2530,28 +2530,50 @@ TCOMMENT                                                *notes_tcomment*
 
 An extensible & universal comment plugin that also handles embedded filetypes.
 
-As operator (the prefix can be customized via |g:tcommentMapLeaderOp1|
-and |g:tcommentMapLeaderOp2|):
-
     gc{motion}          - Toggle comments (for small comments within one line
                           the &filetype_inline style will be used, if
                           defined)
     gc<Count>c{motion}  - Toggle comment text with count argument
                           (see |tcomment#Comment()|)
     gcc                 - Toggle comment for the current line
-    gC{motion}          - Comment region
-    gCc                 - Comment the current line
 
 In visual mode:
 
     gc           - Toggle comments
-    gC           - Comment selected text
 
 Local customizations:
 
 Blank lines are not commented, and the <c-_> and <Leader>_ mappings are turned
 off.  'gc' will do what you want most of the time.
 
+For the language C, comments default to C++-style comments (as found in C99 and
+beyond): >
+  // C++-style comment.
+<
+This is controlled globally via `g:UseCppComments`, an integer defaulting to 1.
+Comments may be configured to default to C-style comments: >
+  /* C-style comment. */
+<
+To default to C-style comments, add the following in |VIMRC_BEFORE|: >
+    let g:UseCppComments = 0
+<
+In addition, C-style comments by default will not use a leading asterisk; they
+will appear as follows: >
+  /*
+      A C-style comment
+      without leading asterisks.
+  */
+<
+With a leading column of asterisks, a C-style comments will appear as follows: >
+  /*
+   * A C-style comment
+   * with leading asterisks.
+   */
+<
+To default to using leading asterisks for C-style comments, add the following in
+|VIMRC_BEFORE|: >
+    let g:UseLeadingAsterisks = 1
+<
 Version 2018-08-01 (1acf5b9) from: https://github.com/tomtom/tcomment_vim.git
 
 Installation:

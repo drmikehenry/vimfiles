@@ -7,6 +7,16 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-11-26
+==========
+
+- Add configurability for Vim's 'comments' setting and the TComment plugin's
+  comment definitions for C and C++.  By default, TComment's ``gcc`` command
+  will now use ``// C++-style comments`` for both C and C++.  As before, Vim's
+  'comments' setting defaults to avoiding the use of leading asterisks in
+  C-style comments.  Now both of these defaults may be changed as explained in
+  ``:help notes_tcomment``.
+
 2019-11-21
 ==========
 

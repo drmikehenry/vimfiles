@@ -5973,7 +5973,12 @@ function! SetupRstSyntax()
             let region = 'rstCodeBlock'
             let regex = '.*'
         else
-            let region = 'rstDirective' . a:lang
+            " Put a:lang first so that plugins like TComment can detect embedded
+            " languages using a heuristic based on the common convention that
+            " syntax files use, namely putting the language's name first in a
+            " lowerMixedCase identifier.  For example, in the "C" language there
+            " are `cStatement`, `cLabel`, `cConditional`, etc.
+            let region = a:lang . 'RstDirective'
             let regex = a:lang
         endif
         silent! syntax clear region
@@ -6097,6 +6102,67 @@ function! IndentC()
     endif
 endfunction
 
+if !exists('g:UseCppComments')
+    let g:UseCppComments = 1
+endif
+
+if !exists('g:UseLeadingAsterisks')
+    let g:UseLeadingAsterisks = 0
+endif
+
+if !exists('g:tcomment_def_c')
+    let g:tcomment_def_c = {
+            \ 'rxmid': '',
+            \ 'rxend': '',
+            \ 'commentstring': '/* %s */',
+            \ 'commentstring_rx': '\%%(// %s\|/* %s */\)',
+            \ 'replacements': {
+            \   '*/': '|)}>#',
+            \   '/*': '#<{(|'
+            \  },
+            \ 'rxbeg': '\*\+'
+            \ }
+endif
+
+if !exists('g:tcomment_def_cpp')
+    let g:tcomment_def_cpp = {
+            \ 'rxmid': '',
+            \ 'rxend': '',
+            \ 'commentstring': '// %s',
+            \ 'commentstring_rx': '\%%(// %s\|/* %s */\)',
+            \ 'replacements': {},
+            \ 'rxbeg': '\*\+'
+            \ }
+endif
+
+if g:UseCppComments
+    call tcomment#type#Define('c', g:tcomment_def_cpp)
+else
+    call tcomment#type#Define('c', g:tcomment_def_c)
+endif
+call tcomment#type#Define('cpp', g:tcomment_def_cpp)
+
+function! SetupCommentStyleC()
+    let b:UseCppComments = GetVar('b:UseCppComments', g:UseCppComments)
+    let b:UseLeadingAsterisks =
+            \ GetVar('b:UseLeadingAsterisks', g:UseLeadingAsterisks)
+
+    if b:UseLeadingAsterisks
+        " Has leading asterisks (Vim default).
+        setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
+    else
+        " No leading asterisks.
+        setlocal comments=s:/*,mb:\ ,e-4:*/,://
+    endif
+
+    if b:UseCppComments
+        let b:tcomment_def_c = deepcopy(g:tcomment_def_cpp)
+    else
+        let b:tcomment_def_c = deepcopy(g:tcomment_def_c)
+    endif
+endfunction
+command! -bar SetupCommentStyleC call SetupCommentStyleC()
+
 function! SetupC()
     SetupSource
     Highlight commas keywordspace longlines tabs trailingspace
@@ -6104,8 +6170,6 @@ function! SetupC()
 
     " Re-indent when ending a C-style comment.
     setlocal indentkeys+=/
-
-    setlocal comments=s:/*,mb:\ ,e-4:*/,://
 
     " cinoptions shift amounts ending in 's' are in units of shiftwidth.
 
@@ -6140,6 +6204,8 @@ function! SetupC()
     " Map CTRL-o_CR to append ';' to the end of line, then do CR.
     inoremap <buffer> <C-o><CR> <C-\><C-n>A;<CR>
     vnoremap <buffer> <C-o><CR> <C-\><C-n>A;<CR>
+
+    SetupCommentStyleC
 endfunction
 command! -bar SetupC call SetupC()
 
@@ -6147,6 +6213,7 @@ command! -bar SetupC call SetupC()
 " Setup for C++ code.
 " -------------------------------------------------------------
 function! SetupCpp()
+    let b:UseCppComments = 1
     SetupC
 endfunction
 command! -bar SetupCpp call SetupCpp()
@@ -6269,6 +6336,10 @@ function! SetupLlvm()
     " Aligns the curly for a case statement with the case label, rather than the
     " last statement.
     setlocal cinoptions+=l1
+
+    let b:UseCppComments = 1
+    let b:UseLeadingAsterisks = 0
+    SetupCommentStyleC
 endfunction
 command! -bar SetupLlvm call SetupLlvm()
 
@@ -6605,11 +6676,12 @@ function! SetupVimC()
     " Enable automatic C program indenting.
     setlocal cindent
 
-    " Use default C-style comments with leading "*" characters.
-    setlocal comments&
-
     " Use default indentation options.
     setlocal cinoptions&
+
+    let b:UseCppComments = 0
+    let b:UseLeadingAsterisks = 1
+    SetupCommentStyleC
 endfunction
 command! -bar SetupVimC call SetupVimC()
 
@@ -6643,6 +6715,10 @@ function! SetupKernelSource()
 
     " Line up function args.
     setlocal cinoptions+=(0
+
+    let b:UseCppComments = 0
+    let b:UseLeadingAsterisks = 1
+    SetupCommentStyleC
 endfunction
 command! -bar SetupKernelSource call SetupKernelSource()
 
