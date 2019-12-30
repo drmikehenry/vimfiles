@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-12-30
+==========
+
+- Disable ALE's python-language-server (pyls) pycodestyle plugin, allowing
+  the flake8 plugin to be used instead.  This allows the global ~/.config/flake8
+  configuration file to be honored when checking Python source files.
+
 2019-11-26
 ==========
 

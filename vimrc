@@ -3548,6 +3548,21 @@ if g:EnableAle
                 \ . join(g:AleFlake8Ignores, ',')
     endif
 
+    if !exists('g:ale_python_pyls_config')
+        " Disable pycodestyle plugin for pyls, falling back to the flake8
+        " plugin instead.  The flake8 plugin will then correctly honor
+        " the global ~/.config/flake8 configuration.
+        let g:ale_python_pyls_config = {
+                \       'pyls': {
+                \           'plugins': {
+                \               'pycodestyle': {
+                \                   'enabled': v:false
+                \               },
+                \           }
+                \       }
+                \   }
+    endif
+
     " Experiment with disabling the extra-picky info messages out of rstcheck.
     let g:ale_rst_rstcheck_options =
             \ '--ignore-messages ' . ale#Escape(
