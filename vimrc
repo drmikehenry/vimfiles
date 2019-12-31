@@ -3518,8 +3518,11 @@ endif
 " -------------------------------------------------------------
 
 if g:EnableAle
-    " Allow ALE to provide autocompletion suggestions.
-    let g:ale_completion_enabled = 1
+    " Setting this to 1 causes ALE to automatically pop up a completion
+    " menu.  Unfortunately, this causes some keystrokes to be swallowed
+    " (especially Enter), impeding text entry.  Use CTRL-X CTRL-O to manually
+    " invoke the omnicompletion menu instead.
+    " let g:ale_completion_enabled = 1
 
     let g:ale_sign_column_always = 1
 

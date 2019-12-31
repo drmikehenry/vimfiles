@@ -7,6 +7,31 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2019-12-31
+==========
+
+- Disable ALE auto-completion.  The completion menu pops up too often and steals
+  keystrokes (especially Enter), impeding text entry.  Especially bad is the
+  case where an identifier has been manually typed and is followed by Enter; in
+  this case, the popup menu steals the Enter key.  Consider this Python
+  snippet::
+
+    if condition:
+        return variable
+    something()
+
+  When typing ``return variable<Enter>something()`` without attempting to use
+  the popup menu, ALE notices that ``variable`` can be completed and it pops
+  up the completion menu.  Even though the user has typed the entire name
+  ``variable``, the menu stays up.  Vim then swallows the Enter key to close
+  the menu, injecting an error into the typed text::
+
+    if condition:
+        return variablesomething()
+
+  Therefore, ALE's automatic completion menu feature has been disabled.  To
+  manually invoke the completion menu, press CTRL-X CTRL-O.
+
 2019-12-30
 ==========
 
