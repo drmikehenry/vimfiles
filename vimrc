@@ -3568,9 +3568,11 @@ if g:EnableAle
 
     " Experiment with disabling the extra-picky info messages out of rstcheck.
     let g:ale_rst_rstcheck_options =
-            \ '--ignore-messages ' . ale#Escape(
-            \ 'Duplicate implicit target name:' . '|' .
-            \ 'Possible incomplete section title')
+            \ '--ignore-messages ' . ale#Escape(join([
+            \   'Duplicate implicit target name:',
+            \   'Possible incomplete section title',
+            \   'Enumerated list start value not ordinal-1',
+            \ ], '|'))
 
     " Setup shfmt for shell scripting.
     " Invoke via:  ALEFix shfmt

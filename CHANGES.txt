@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2020-01-17
+==========
+
+- Ignore rstcheck warning regarding 'Enumerated list start value not ordinal-1'.
+
 2019-12-31
 ==========
 
