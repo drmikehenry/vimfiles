@@ -3574,6 +3574,12 @@ if g:EnableAle
             \   'Enumerated list start value not ordinal-1',
             \ ], '|'))
 
+    " Setup shellcheck for shell scripting.
+    " Warnings:
+    "   SC1090: Can't follow non-constant source.
+    " Join warnings to ignore with commas (e.g., 'SC2034,SC2154').
+    let g:ale_sh_shellcheck_exclusions = 'SC1090'
+
     " Setup shfmt for shell scripting.
     " Invoke via:  ALEFix shfmt
     " -p        - posix-compatible source
