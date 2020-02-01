@@ -3535,11 +3535,15 @@ if g:EnableAle
     let g:ale_linters_ignore = { 'python': ['pylint'] }
 
     if !exists('g:AleFlake8Ignores')
+        " Flake8 warnings:
         " "E203 whitespace before ':'" goes against PEP8.
+        " "N811 constant imported as non constant"
+        " "N812 lowercase imported as non lowercase"
+        " "N813 camelcase imported as lowercase"
+        " "N814 camelcase imported as constant"
         " "W503" enforces breaking after operator, which goes against PEP8's
         " current (weak) recommendation to break before operators.
-        let g:AleFlake8Ignores = ['E203', 'W503']
-
+        let g:AleFlake8Ignores = split('E203 N811 N812 N813 N814 W503')
     endif
 
     if !exists('g:ale_python_flake8_options')

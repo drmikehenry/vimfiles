@@ -7,6 +7,18 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2020-02-01
+==========
+
+- Ignore flake8 (pep8-naming) warnings:
+
+  - "N811 constant imported as non constant"
+  - "N812 lowercase imported as non lowercase"
+  - "N813 camelcase imported as lowercase"
+  - "N814 camelcase imported as constant"
+
+  Such renamings are almost certainly intentional.
+
 2020-01-30
 ==========
 
