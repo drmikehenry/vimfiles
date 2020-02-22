@@ -4104,8 +4104,15 @@ let g:mundo_preview_bottom = 1
 " This makes using 'gx' a little more sane environments outside of Gnome and
 " KDE.
 function! SetupBrowseX()
-    if !exists("g:netrw_browsex_viewer") && executable("xdg-open")
-        let g:netrw_browsex_viewer = "xdg-open"
+    if !exists("g:netrw_browsex_viewer")
+        if executable("xdg-open")
+            let g:netrw_browsex_viewer = "xdg-open"
+        elseif executable("rundll32")
+            " This is what netrw wants to use natively for Windows, but setting
+            " it explicitly here will bypass the annoying message:
+            "   ``Press <cr> to continue``
+            let g:netrw_browsex_viewer = "rundll32 url.dll,FileProtocolHandler"
+        endif
     endif
 endfunction
 
