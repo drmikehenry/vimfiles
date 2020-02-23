@@ -737,13 +737,8 @@ Installation:
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
-Version 2019-02-13 (162f603) from:
+Version 2020-02-17 (29258f5) from:
 https://github.com/jlanzarotta/bufexplorer
-
-with the following modifications found in branch `vimfiles` at:
-https://github.com/drmikehenry/bufexplorer
-
-- (branch allow-delete-last) Allow deletion of the last buffer.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
