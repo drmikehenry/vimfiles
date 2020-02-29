@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2020-02-29
+==========
+
+- If ripgrep (``rg``) is available, use ``g:ctrlp_user_command`` to configure
+  CtrlP to use ripgrep within Git repositories.  This has the benefit of
+  automatically taking into account ``.gitignore`` files.
+
 2020-02-23
 ==========
 

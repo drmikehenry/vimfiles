@@ -3678,6 +3678,19 @@ augroup END
 " No default mappings.
 let g:ctrlp_map = ''
 
+" If available, use ripgrep to list files within a Git repository.
+" Ripgrep honors .gitignore automatically.  With ``--hidden``, ripgrep
+" will display files starting with ``.``.  Undesired files will typically
+" either be binary (which ripgrep ignores by default), or will be ignored
+" by the .gitignore file.
+if executable('rg')
+    let g:ctrlp_user_command = {
+        \ 'types': {
+                \ 1: ['.git', 'cd %s && rg --files --hidden'],
+                \ },
+        \ }
+endif
+
 " Directory mode for launching ':CtrlP' with no directory argument:
 "   0 - Don't manage the working directory (Vim's CWD will be used).
 "       Same as ':CtrlP $PWD'.
