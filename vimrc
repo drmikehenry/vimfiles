@@ -6303,6 +6303,15 @@ endfunction
 command! -bar SetupD call SetupD()
 
 " -------------------------------------------------------------
+" Setup for Dockerfile
+" -------------------------------------------------------------
+function! SetupDockerfile()
+    SetupCommon
+    setlocal tw=80 ts=8 sts=2 sw=2 et ai
+endfunction
+command! -bar SetupDockerfile call SetupDockerfile()
+
+" -------------------------------------------------------------
 " Setup for GDB.
 " -------------------------------------------------------------
 function! SetupGdb()
