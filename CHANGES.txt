@@ -7,6 +7,21 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2020-03-22
+==========
+
+- Update Python indentation support to version 2020-03-20.  This fixes the
+  over-indentation for functions with long arguments.  Previously, Vim would
+  cause 8-character indentation when typing this function::
+
+    def some_function(
+            some_long_argument, another_long_argument, third_long_argument,
+
+  Now it's properly indented as::
+
+    def some_function(
+        some_long_argument, another_long_argument, third_long_argument,
+
 2020-03-14
 ==========
 

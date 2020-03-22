@@ -3027,7 +3027,7 @@ Installation:
 PYTHON INDENTATION SUPPORT                              *notes_python_indent*
   Improved Python indentation support
 
-Version 2018-09-17 (f196c5b) from:
+Version 2020-03-20 (60ba5e1) from:
 https://github.com/hynek/vim-python-pep8-indent.git
 
 Installation:
