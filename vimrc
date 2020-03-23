@@ -7038,9 +7038,6 @@ endfunction
 command! -bar SetupZ80 call SetupZ80()
 let g:SpellMap["<z80>"] = "<off>"
 
-" Source support for :Man command.
-runtime ftplugin/man.vim
-
 " =============================================================
 " Autocmds
 " =============================================================
