@@ -59,12 +59,14 @@ g:matchup_transmute_enabled	matchup.txt	/*g:matchup_transmute_enabled*
 i%	matchup.txt	/*i%*
 match-up	matchup.txt	/*match-up*
 matchup	matchup.txt	/*matchup*
+matchup#util#append_match_words	matchup.txt	/*matchup#util#append_match_words*
 matchup#util#patch_match_words	matchup.txt	/*matchup#util#patch_match_words*
 matchup-%	matchup.txt	/*matchup-%*
 matchup-:DoMatchParen	matchup.txt	/*matchup-:DoMatchParen*
 matchup-:NoMatchParen	matchup.txt	/*matchup-:NoMatchParen*
 matchup-N%	matchup.txt	/*matchup-N%*
 matchup-acknowledgments	matchup.txt	/*matchup-acknowledgments*
+matchup-append	matchup.txt	/*matchup-append*
 matchup-commands	matchup.txt	/*matchup-commands*
 matchup-contents	matchup.txt	/*matchup-contents*
 matchup-custom-mappings	matchup.txt	/*matchup-custom-mappings*

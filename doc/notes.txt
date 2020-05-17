@@ -1757,7 +1757,7 @@ Press '%' to match:
 Matchup disables and supersedes the functionality of both the matchparen
 plugin distributed with Vim as well as the matchit plugin (if found).
 
-Version 2019-08-02 (ba33a5c) from:
+Version 5.0 2020-05-07 (6836995) from:
 https://github.com/andymass/vim-matchup
 
 Installation:

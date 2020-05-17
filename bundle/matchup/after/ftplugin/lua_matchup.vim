@@ -11,10 +11,10 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-if matchup#util#matchpref('tagnameonly', 0)
-  call matchup#util#patch_match_words('\)\%(', '\)\g{hlend}\%(')
-  call matchup#util#patch_match_words('\)\%(', '\)\g{hlend}\%(')
-endif
+let b:match_midmap = [
+      \ ['luaFunction', 'return'],
+      \]
+let b:undo_ftplugin .= '| unlet! b:match_midmap'
 
 let &cpo = s:save_cpo
 

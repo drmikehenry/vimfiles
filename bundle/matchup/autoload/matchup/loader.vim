@@ -1,4 +1,4 @@
-" vim match-up - matchit replacement and more
+" vim match-up - even better matching
 "
 " Maintainer: Andy Massimino
 " Email:      a@normed.space
@@ -84,7 +84,13 @@ let s:match_word_cache = {}
 " }}}1
 
 function! s:init_delim_lists(...) abort " {{{1
-  let l:lists = { 'delim_tex': { 'regex': [], 'regex_backref': [] } }
+  let l:lists = {
+        \ 'delim_tex': {
+        \   'regex': [],
+        \   'regex_capture': [],
+        \   'midmap': {},
+        \ },
+        \}
 
   " very tricky examples:
   " good: let b:match_words = '\(\(foo\)\(bar\)\):\3\2:end\1'
@@ -158,7 +164,10 @@ function! s:init_delim_lists(...) abort " {{{1
     let l:extra_list = map(range(len(l:words)), '{}')
 
     " pre-process various \g{special} instructions
-    let l:replacement = { 'hlend': '\%(hlend\)\{0}' }
+    let l:replacement = {
+          \ 'hlend': '\%(hlend\)\{0}',
+          \ 'syn': ''
+          \}
     for l:i in range(len(l:words))
       let l:special_flags = []
       let l:words[l:i] = substitute(l:words[l:i],
@@ -248,7 +257,7 @@ function! s:init_delim_lists(...) abort " {{{1
           let l:all_needed_groups[l:ng] = 1
         else
           echohl WarningMsg
-          echom 'match-up: backref \' l:ng 'requested but no '
+          echom 'match-up: backref \' . l:ng 'requested but no '
                 \ . 'matching capture group provided'
           echohl None
         endif
@@ -421,7 +430,7 @@ function! s:init_delim_lists(...) abort " {{{1
     " this list has \(groups\) and we also stuff recapture data
     " TODO this should probably be renamed
     " (also called regextwo)
-    call add(l:lists.delim_tex.regex_backref, {
+    call add(l:lists.delim_tex.regex_capture, {
       \ 'open'     : l:words_backref[0],
       \ 'close'    : l:words_backref[-1],
       \ 'mid'      : join(l:words_backref[1:-2], '\|'),
@@ -434,10 +443,20 @@ function! s:init_delim_lists(...) abort " {{{1
       \})
   endfor
 
+  " load info for advanced mid-mapper
+  if exists('b:match_midmap') && type(b:match_midmap) == type([])
+    let l:elems = deepcopy(b:match_midmap)
+    let l:lists.delim_tex.midmap = {
+          \ 'elements': l:elems,
+          \ 'strike': '\%(' . join(map(range(len(l:elems)),
+          \   '"\\(".l:elems[v:val][1]."\\)"'), '\|') . '\)'
+          \}
+  endif
+
   " generate combined lists
   let l:lists.delim_all = {}
   let l:lists.all = {}
-  for l:k in ['regex', 'regex_backref']
+  for l:k in ['regex', 'regex_capture', 'midmap']
     let l:lists.delim_all[l:k] = l:lists.delim_tex[l:k]
     let l:lists.all[l:k] = l:lists.delim_all[l:k]
   endfor
@@ -447,7 +466,7 @@ endfunction
 
 " }}}1
 function! s:init_delim_lists_fast(mps) abort " {{{1
-  let l:lists = { 'delim_tex': { 'regex': [], 'regex_backref': [] } }
+  let l:lists = { 'delim_tex': { 'regex': [], 'regex_capture': [] } }
 
   let l:sets = split(a:mps, ',')
   let l:seen = {}
@@ -472,7 +491,7 @@ function! s:init_delim_lists_fast(mps) abort " {{{1
       \ 'mid_list' : [],
       \ 'augments' : {},
       \})
-    call add(l:lists.delim_tex.regex_backref, {
+    call add(l:lists.delim_tex.regex_capture, {
       \ 'open'     : l:words[0],
       \ 'close'    : l:words[-1],
       \ 'mid'      : '',
@@ -491,7 +510,7 @@ function! s:init_delim_lists_fast(mps) abort " {{{1
   " generate combined lists
   let l:lists.delim_all = {}
   let l:lists.all = {}
-  for l:k in ['regex', 'regex_backref']
+  for l:k in ['regex', 'regex_capture']
     let l:lists.delim_all[l:k] = l:lists.delim_tex[l:k]
     let l:lists.all[l:k] = l:lists.delim_all[l:k]
   endfor
@@ -540,7 +559,7 @@ endfunction
 
 " }}}1
 function! s:init_delim_regexes_generator(list_name) abort " {{{1
-  let l:list = b:matchup_delim_lists[a:list_name].regex_backref
+  let l:list = b:matchup_delim_lists[a:list_name].regex_capture
 
   " build the full regex strings: order matters here
   let l:regexes = {}

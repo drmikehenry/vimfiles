@@ -11,9 +11,12 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-if matchup#util#matchpref('tagnameonly', 0)
-  call matchup#util#patch_match_words('\)\%(', '\)\g{hlend}\%(')
-  call matchup#util#patch_match_words('\)\%(', '\)\g{hlend}\%(')
+if matchup#util#matchpref('template', 0)
+  call matchup#util#append_match_words(
+        \ '\%(\s\@<!<\|<\s\@!\)=\@!:\%(\s\@<!>\|>\s\@!\)=\@!')
+  if stridx(&matchpairs, '<:>')
+    setlocal matchpairs-=<:>
+  endif
 endif
 
 let &cpo = s:save_cpo

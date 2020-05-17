@@ -1,9 +1,16 @@
+" vim match-up - even better matching
+"
+" Maintainer: Andy Massimino
+" Email:      a@normed.space
+"
 
-function! s:c_comments()
-  if matchup#util#check_match_words('bb2bcbee')
-    let b:match_words .= ',/\*:\*/'
-  endif
-endfunction
+if !exists('g:loaded_matchup') || !exists('b:did_ftplugin')
+  finish
+endif
 
-let b:matchup_hotfix = function('s:c_comments')
+if matchup#util#check_match_words('bb2bcbee')
+  call matchup#util#append_match_words('/\*:\*/')
+endif
+
+" vim: fdm=marker sw=2
 

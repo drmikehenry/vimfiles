@@ -1,4 +1,4 @@
-" vim match-up - matchit replacement and more
+" vim match-up - even better matching
 "
 " Maintainer: Andy Massimino
 " Email:      a@normed.space
@@ -45,7 +45,7 @@ function! matchup#matchparen#enable() " {{{1
     endif
     autocmd BufReadPost * call s:matchparen.transmute_reset()
     autocmd WinLeave,BufLeave * call s:matchparen.clear()
-    autocmd InsertEnter,Insertchange * call s:matchparen.highlight(1, 1)
+    autocmd InsertEnter,InsertChange * call s:matchparen.highlight(1, 1)
     autocmd InsertLeave * call s:matchparen.highlight(1)
   augroup END
 
@@ -134,6 +134,13 @@ function! s:matchparen.clear() abort dict " {{{1
       silent! call matchdelete(l:id)
     endfor
     unlet! w:matchup_match_id_list
+  endif
+
+  if exists('t:match_popup') && (exists('*win_gettype')
+        \ ? win_gettype() !=# 'popup' : &buftype !=# 'terminal')
+    call popup_hide(t:match_popup)
+  elseif has('nvim')
+    call s:close_floating_win()
   endif
 
   if exists('w:matchup_oldstatus')
@@ -365,6 +372,11 @@ function! s:matchparen.highlight(...) abort dict " {{{1
     return
   endif
 
+  " prevent problems in visual block mode at the end of a line
+  if get(matchup#pos#get_cursor(), 4, 0) == 2147483647
+    return
+  endif
+
   " don't get matches when inside a closed fold
   if foldclosed(line('.')) > -1
     return
@@ -464,6 +476,7 @@ function! s:matchparen.highlight(...) abort dict " {{{1
   let l:method = get(g:matchup_matchparen_offscreen, 'method', '')
   if !empty(l:method) && l:method !=# 'none'
         \ && !l:current.skip && !l:scrolling
+        \ && winheight(0) > 0
     call s:do_offscreen(l:current, l:method)
   endif
 
@@ -508,6 +521,13 @@ function! s:do_offscreen(current, method) " {{{1
     call s:do_offscreen_statusline(l:offscreen, 0)
   elseif a:method ==# 'status_manual'
     call s:do_offscreen_statusline(l:offscreen, 1)
+  elseif a:method ==# 'popup' && winheight(0) > 1
+    if has('nvim')
+      call s:do_offscreen_popup_nvim(l:offscreen)
+    elseif exists('*popup_create')
+      call s:ensure_match_popup()
+      call s:do_offscreen_popup(l:offscreen)
+    endif
   endif
 endfunction
 
@@ -533,6 +553,136 @@ function! s:do_offscreen_statusline(offscreen, manual) " {{{1
   if exists('#User#MatchupOffscreenEnter')
     doautocmd <nomodeline> User MatchupOffscreenEnter
   endif
+endfunction
+
+" }}}1
+function! s:ensure_match_popup() abort " {{{1
+  if !exists('*popup_create') || exists('t:match_popup')
+    return
+  endif
+
+  " create a popup and store its winid
+  let l:opts = {'hidden': v:true}
+  if has_key(g:matchup_matchparen_offscreen, 'highlight')
+    let l:opts.highlight = g:matchup_matchparen_offscreen.highlight
+  endif
+  let t:match_popup = popup_create('', l:opts)
+
+  if !has('patch-8.1.1406')
+    " in case 'hidden' in popup_create-usage is unimplemented
+    call popup_hide(t:match_popup)
+  endif
+endfunction
+
+" }}}1
+function! s:do_offscreen_popup(offscreen) " {{{1
+  " screen position of top-left corner of current window
+  let [l:row, l:col] = win_screenpos(winnr())
+  let l:height = winheight(0) " height of current window
+  let l:adjust = matchup#quirks#status_adjust(a:offscreen)
+  let l:lnum = a:offscreen.lnum + l:adjust
+  let l:line = l:lnum < line('.') ? l:row : l:row + l:height - 1
+
+  " if popup would overlap with cursor
+  if l:line == winline() | return | endif
+
+  call popup_move(t:match_popup, {
+        \ 'line': l:line,
+        \ 'col': l:col,
+        \ 'maxheight': 1,
+        \})
+
+  " set popup text
+  let l:text = ''
+  if &number || &relativenumber
+    let l:text = printf('%*S ', wincol()-virtcol('.')-1, l:lnum)
+  endif
+
+  " replace tab indent with spaces
+  " (popup window doesn't follow tabstop option of current buffer)
+  let l:linestr = getline(l:lnum)
+  let l:indent = repeat(' ', strdisplaywidth(matchstr(l:linestr, '^\s\+')))
+  let l:linestr = substitute(l:linestr, '^\s\+', l:indent, '')
+
+  let l:text .= l:linestr . ' '
+  if l:adjust
+    let l:text .= '… ' . a:offscreen.match . ' '
+  endif
+  call setbufline(winbufnr(t:match_popup), 1, l:text)
+  call popup_show(t:match_popup)
+endfunction
+
+" }}}1
+function! s:do_offscreen_popup_nvim(offscreen) " {{{1
+  if exists('*nvim_open_win')
+    " neovim floating window
+    call s:close_floating_win()
+
+    let l:lnum = a:offscreen.lnum
+    let [l:row, l:anchor] = l:lnum < line('.')
+          \ ? [0, 'NW'] : [winheight(0), 'SW']
+    if l:row == winline() | return | endif
+
+    " Set default width and height for now.
+    let s:float_id = nvim_open_win(bufnr('%'), v:false, {
+          \ 'relative': 'win',
+          \ 'anchor': l:anchor,
+          \ 'row': l:row,
+          \ 'col': 0,
+          \ 'width': 42,
+          \ 'height': &previewheight,
+          \ 'focusable': v:false,
+          \})
+
+    if has_key(g:matchup_matchparen_offscreen, 'highlight')
+      call nvim_win_set_option(s:float_id, 'winhighlight',
+            \ 'Normal:' . g:matchup_matchparen_offscreen.highlight)
+    endif
+
+    if &relativenumber
+      call nvim_win_set_option(s:float_id, 'number', v:true)
+      call nvim_win_set_option(s:float_id, 'relativenumber', v:false)
+    endif
+
+    call s:populate_floating_win(a:offscreen)
+  endif
+endfunction
+
+" }}}1
+function! s:populate_floating_win(offscreen) " {{{1
+  let l:adjust = matchup#quirks#status_adjust(a:offscreen)
+  let l:lnum = a:offscreen.lnum + l:adjust
+  let l:body = getline(l:lnum, a:offscreen.lnum)
+  let l:body_length = len(l:body)
+  let l:height = min([l:body_length, &previewheight])
+
+  if exists('*nvim_open_win')
+    " neovim floating win
+    let width = max(map(copy(l:body), 'strdisplaywidth(v:val)'))
+    let l:width += wincol()-virtcol('.')
+    call nvim_win_set_width(s:float_id, l:width + 1)
+    if &winminheight != 1
+      let l:save_wmh = &winminheight
+      let &winminheight = 1
+      call nvim_win_set_height(s:float_id, l:height)
+      let &winminheight = l:save_wmh
+    else
+      call nvim_win_set_height(s:float_id, l:height)
+    endif
+    call nvim_win_set_cursor(s:float_id, [l:lnum, 0])
+    call nvim_win_set_option(s:float_id, 'wrap', v:false)
+  endif
+endfunction
+
+" }}}1
+function! s:close_floating_win() " {{{1
+  if !exists('s:float_id')
+    return
+  endif
+  if win_id2win(s:float_id) > 0
+    call nvim_win_close(s:float_id, 0)
+  endif
+  let s:float_id = 0
 endfunction
 
 " }}}1
@@ -612,7 +762,7 @@ function! s:format_gutter(lnum, ...) " {{{1
     if l:direction && !get(l:opts, 'noshowdir', 0)
       let l:sl = '%#Search#' . l:sl . '∆%#Normal#'
     else
-      let l:sl = '%#LineNr#' . l:sl . ' %#Normal#'
+      let l:sl = '%#CursorLineNr#' . l:sl . ' %#Normal#'
     endif
     let l:padding -= l:nw + 1
   endif
