@@ -24,6 +24,8 @@ g:localvimrc_file_directory_only	localvimrc.txt	/*g:localvimrc_file_directory_on
 g:localvimrc_name	localvimrc.txt	/*g:localvimrc_name*
 g:localvimrc_persistence_file	localvimrc.txt	/*g:localvimrc_persistence_file*
 g:localvimrc_persistent	localvimrc.txt	/*g:localvimrc_persistent*
+g:localvimrc_python2_enable	localvimrc.txt	/*g:localvimrc_python2_enable*
+g:localvimrc_python3_enable	localvimrc.txt	/*g:localvimrc_python3_enable*
 g:localvimrc_reverse	localvimrc.txt	/*g:localvimrc_reverse*
 g:localvimrc_sandbox	localvimrc.txt	/*g:localvimrc_sandbox*
 g:localvimrc_script	localvimrc.txt	/*g:localvimrc_script*
@@ -39,8 +41,10 @@ localvimrc-changelog	localvimrc.txt	/*localvimrc-changelog*
 localvimrc-commands	localvimrc.txt	/*localvimrc-commands*
 localvimrc-contribute	localvimrc.txt	/*localvimrc-contribute*
 localvimrc-credits	localvimrc.txt	/*localvimrc-credits*
+localvimrc-frequently-asked-questions	localvimrc.txt	/*localvimrc-frequently-asked-questions*
 localvimrc-functions	localvimrc.txt	/*localvimrc-functions*
 localvimrc-introduction	localvimrc.txt	/*localvimrc-introduction*
+localvimrc-modeline-settings-are-overwritten-by-local-vimrc	localvimrc.txt	/*localvimrc-modeline-settings-are-overwritten-by-local-vimrc*
 localvimrc-references	localvimrc.txt	/*localvimrc-references*
 localvimrc-settings	localvimrc.txt	/*localvimrc-settings*
 localvimrc-variables	localvimrc.txt	/*localvimrc-variables*

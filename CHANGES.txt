@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2020-07-12
+==========
+
+- Upgrade localvimrc plugin to 2020-06-30, fixing the below error that's exposed
+  via newer Vim 8.3 (thanks to @unimpossible)::
+
+    E654: missing delimiter after search pattern: Vim\%((\a\+)\)\=:E48
+
 2020-05-17
 ==========
 

@@ -342,6 +342,20 @@ every local vimrc file.
 
   - Default: `1`
 
+### The `g:localvimrc_python2_enable` setting
+
+Enable probing whether python 2 is available and usable for calculating local
+vimrc file checksums, in case |sha256()| is not available.
+
+- Default: `1`
+
+### The `g:localvimrc_python3_enable` setting
+
+Enable probing whether python 3 is available and usable for calculating local
+vimrc file checksums, in case |sha256()| is not available.
+
+- Default: `1`
+
 ### The `g:localvimrc_debug` setting
 
 Debug level for this script. The messages can be shown with
@@ -375,6 +389,31 @@ This autocommand is emitted right before sourcing each local vimrc file.
 
 This autocommands is emitted right after sourcing each local vimrc file.
 
+## Frequently Asked Questions
+
+### modeline settings are overwritten by local vimrc
+
+Depending on the |g:localvimrc_event| that is used to trigger loading local
+vimrc files it is possible that |modeline| already had been parsed. This might
+be cause problems. If for example there is `set ts=8 sts=4 sw=4 et` in the
+local vimrc and a Makefile contains `# vim: ts=4 sts=0 sw=4 noet` this modeline
+will not get applied with default settings of localvimrc. There are two
+possibilities to solve this.
+
+The first solution is to use |BufRead| as value for |g:localvimrc_event|. This
+event is emitted by Vim before modelines are processed.
+
+The second solution is to move all those settings to the local vimrc file and
+use different settings depending on the |filetype|:
+
+``` {.vim}
+if &ft == "make"
+  setl ts=4 sts=0 sw=4 noet
+else
+  setl ts=8 sts=4 sw=4 et
+endif
+```
+
 ## Contribute
 
 To contact the author (Markus Braun), please send an email to <markus.braun@krawel.de>
@@ -399,8 +438,15 @@ vim --cmd "let g:localvimrc_debug=99" -c "redir! > localvimrc_debug.txt" -c "Loc
 - Justin M. Keyes for ideas to improve this plugin
 - Lars Winderling for whitelist/blacklist patch
 - Michon van Dooren for autocommands patch
+- Benoit de Chezell for fix with nested execution
 
 ## Changelog
+
+v3.1.0 : 2020-05-20
+
+  - add option to disable probing of Python versions
+  - prevent recursive sourcing of local vimrc files
+  - better handling of syntax errors in sourced local vimrc files
 
 v3.0.1 : 2018-08-21
 

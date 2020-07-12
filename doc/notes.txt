@@ -1495,7 +1495,7 @@ Or to make localized changes based on the current filename: >
 To re-use a group of settings, create a function (say, in the global vimrc
 file), then call it from the .lvimrc files.
 
-Version 2018-09-24 (e0ce126) from:
+Version 2020-06-30 (ac6444a) from:
 https://github.com/embear/vim-localvimrc.git
 
 Local customizations:
