@@ -3639,6 +3639,10 @@ nnoremap <Space>bD          :BW!<CR>
 " bufmru
 " -------------------------------------------------------------
 
+" TODO: Temporary work-around for bug introduced in Vim 8.2.0851:
+" https://github.com/vim/vim/issues/6457
+nmap <c-6> <c-^>
+
 " Set key to enter BufMRU mode (override this in vimrc-before.vim).
 if !exists("g:bufmru_switchkey")
     " NOTE: <C-^> (CTRL-^) also works without shift (just pressing CTRL-6).

@@ -26,6 +26,11 @@ require adjustment of per-user settings.
     key1: value1
     key2: value2
 
+- Map CTRL-6 to CTRL-^ to work around bug introduced in Gvim 8.2.0851:
+  https://github.com/vim/vim/issues/6457
+  The bug impacts Gvim on Linux, making both CTRL-6 and CTRL-^ no longer work
+  with the BufMRU plugin.  The work-around fixes CTRL-6 (but not CTRL-^).
+
 2020-07-12
 ==========
 
