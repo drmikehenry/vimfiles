@@ -7,6 +7,25 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2020-07-15
+==========
+
+- Leave ``indentkeys`` at the default value for YAML files.  Previously several
+  keys were removed from ``indentkeys`` for a better editing experience, but
+  recent changes to Vim's YAML indentation logic has made it important to leave
+  ``indentkeys`` unmodified.  The new logic indents a new line after a key:value
+  pair until a subsequent key:value pair is typed (signified by pressing `:`).
+  For example, typing the text ``key1: value1<CR>key2`` yields::
+
+    key1: value1
+      key2
+
+  But typing the additional text ``: value2`` causes re-indentation (due to the
+  ``:`` key), yielding the expected::
+
+    key1: value1
+    key2: value2
+
 2020-07-12
 ==========
 

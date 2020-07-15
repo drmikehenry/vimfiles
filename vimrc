@@ -6999,12 +6999,20 @@ command! -bar SetupYaml call SetupYaml()
 let g:SpellMap["<yaml>"] = "<off>"
 
 function! SetupYamlIndent()
-    " Turn off re-indenting feature for the following keys:
-    setlocal indentkeys-=0{
-    setlocal indentkeys-=0}
-    setlocal indentkeys-=0)
-    setlocal indentkeys-=<:>
-    setlocal indentkeys-=0#
+    " This function used to remove some keys from `indentkeys`, but use of
+    " `indentkeys` has become an important feature for editing YAML because
+    " indentation logic in recent Vim indents after a key:value pair until a
+    " subsequent key:value pair is typed (signified by pressing `:`).  For
+    " example, typing the text "key1: value1<CR>key2" yields:
+    "   key1: value1
+    "     key2
+    "
+    " But typing the additional text ": value2" causes re-indentation (due to
+    " the `:` key), yielding the expected:
+    "   key1: value1
+    "   key2: value2
+    "
+    " This function is being kept as a placeholder for the future.
 endfunction
 command! -bar SetupYamlIndent call SetupYamlIndent()
 
