@@ -1263,7 +1263,7 @@ http://www.vim.org/scripts/script.php?script_id=311
 GREPPER                                                 *notes_grepper*
   Extensible wrapper for grep-like tools                |grepper|
 
-Using version 2019-09-04 (ebe6d1f) from:
+Using version 2020-07-06 (e9004ce) from:
 https://github.com/mhinz/vim-grepper
 
 with the following modifications found in branch `vimfiles` at:
