@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2020-09-17
+==========
+
+- Avoid changing ``termguicolors`` when unsupported on older Vim (thanks to John
+  Szakmeister).
+
 2020-08-16
 ==========
 
