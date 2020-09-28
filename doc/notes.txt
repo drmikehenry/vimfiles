@@ -1169,7 +1169,7 @@ more useful ones are:
             See |fugitive-:Gstatus| for more information
   :Git      Run an arbitrary git command from within Vim
 
-Version 2019-08-21 (b97a9ab) from:
+Version 2020-09-27 (e12236b) from:
 https://github.com/tpope/vim-fugitive.git
 
 with the following modifications found in branch `vimfiles` at:
