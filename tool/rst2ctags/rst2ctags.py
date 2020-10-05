@@ -10,7 +10,9 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import codecs
+import errno
 import io
+import locale
 import pkg_resources
 import sys
 import re
@@ -33,7 +35,7 @@ class ScriptError(Exception):
 
 def detect_encoding(filename):
     with open(filename, 'rb') as f:
-        raw = f.read(32)
+        raw = f.read(4096)
 
     potential_bom = raw[:4]
     bom_encodings = [('utf-8-sig', codecs.BOM_UTF8),
@@ -64,7 +66,7 @@ def detect_encoding(filename):
 
     if encoding is None:
         try:
-            raw.decode('utf-8')
+            raw.rsplit(b' ')[0].decode('utf-8')
             encoding = 'utf-8'
         except UnicodeDecodeError:
             pass
@@ -78,54 +80,56 @@ def open_autoenc(filename, encoding=None):
     return io.open(filename, encoding=encoding, newline='')
 
 
-def ctagNameEscape(str):
+def ctag_name_escape(str):
     str = re.sub('[\t\r\n]+', ' ', str)
     str = re.sub(r'^\s*\\\((.)\)', r'(\1)', str)
     return str
 
 
-def ctagSearchEscape(str):
+def ctag_search_escape(str):
+    str = str.replace('\\', r'\\')
     str = str.replace('\t', r'\t')
     str = str.replace('\r', r'\r')
     str = str.replace('\n', r'\n')
-    str = str.replace('\\', r'\\')
+    for c in '[]*$.^':
+        str = str.replace(c, '\\' + c)
     return str
 
 
 class Tag(object):
-    def __init__(self, tagName, tagFile, tagAddress):
-        self.tagName = tagName
-        self.tagFile = tagFile
-        self.tagAddress = tagAddress
+    def __init__(self, tag_name, tag_file, tag_address):
+        self.tag_name = tag_name
+        self.tag_file = tag_file
+        self.tag_address = tag_address
         self.fields = []
 
-    def addField(self, type, value=None):
+    def add_field(self, type, value=None):
         if type == 'kind':
             type = None
         self.fields.append((type, value or ""))
 
-    def _formatFields(self):
-        formattedFields = []
+    def _format_fields(self):
+        formatted_fields = []
         for name, value in self.fields:
             if name:
                 s = '%s:%s' % (name, value or "")
             else:
                 s = str(value)
-            formattedFields.append(s)
-        return '\t'.join(formattedFields)
+            formatted_fields.append(s)
+        return '\t'.join(formatted_fields)
 
     def render(self):
         return '%s\t%s\t%s;"\t%s' % (
-            self.tagName, self.tagFile, self.tagAddress, self._formatFields())
+            self.tag_name, self.tag_file, self.tag_address, self._format_fields())
 
     def __repr__(self):
-        return "<Tag name:%r file:%r: addr:%r %r>" % (
-            self.tagName, self.tagFile, self.tagAddress,
-            self._formatFields().replace('\t', ' '))
+        return "<Tag name:%s file:%s: addr:%s %s>" % (
+            self.tag_name, self.tag_file, self.tag_address,
+            self._format_fields().replace('\t', ' '))
 
     def _tuple(self):
-        return (self.tagName, self.tagFile, self.tagAddress,
-                self._formatFields())
+        return (self.tag_name, self.tag_file, self.tag_address,
+                self._format_fields())
 
     def __eq__(self, other):
         return self._tuple() == other._tuple()
@@ -147,39 +151,39 @@ class Tag(object):
 
     @staticmethod
     def section(section, sro):
-        tagName = ctagNameEscape(section.name)
-        tagAddress = '/^%s$/' % ctagSearchEscape(section.line)
-        t = Tag(tagName, section.filename, tagAddress)
-        t.addField('kind', 's')
-        t.addField('line', section.lineNumber)
+        tag_name = ctag_name_escape(section.name)
+        tag_address = '/^%s$/' % ctag_search_escape(section.line)
+        t = Tag(tag_name, section.filename, tag_address)
+        t.add_field('kind', 's')
+        t.add_field('line', section.line_number)
 
         parents = []
         p = section.parent
         while p is not None:
-            parents.append(ctagNameEscape(p.name))
+            parents.append(ctag_name_escape(p.name))
             p = p.parent
         parents.reverse()
 
         if parents:
-            t.addField('section', sro.join(parents))
+            t.add_field('section', sro.join(parents))
 
         return t
 
 
 class Section(object):
-    def __init__(self, level, name, line, lineNumber, filename, parent=None):
+    def __init__(self, level, name, line, line_number, filename, parent=None):
         self.level = level
         self.name = name
         self.line = line
-        self.lineNumber = lineNumber
+        self.line_number = line_number
         self.filename = filename
         self.parent = parent
 
     def __repr__(self):
-        return '<Section %s %d %d>' % (self.name, self.level, self.lineNumber)
+        return '<Section %s %d %d>' % (self.name, self.level, self.line_number)
 
 
-def popSections(sections, level):
+def pop_sections(sections, level):
     while sections:
         s = sections.pop()
         if s and s.level < level:
@@ -187,14 +191,14 @@ def popSections(sections, level):
             return
 
 
-headingRe = re.compile(r'''^([-=~:^"#*._+`'])\1+$''')
-subjectRe = re.compile(r'^[^\s]+.*$')
+heading_re = re.compile(r'''^([-=~:^"#*._+`'])\1+$''')
+subject_re = re.compile(r'^[^\s]+.*$')
 
 
-def findSections(filename, lines):
+def find_sections(filename, lines):
     sections = []
 
-    previousSections = []
+    previous_sections = []
     level_values = {}
     level = 0
 
@@ -202,11 +206,11 @@ def findSections(filename, lines):
         if i == 0:
             continue
 
-        if headingRe.match(line) and subjectRe.match(lines[i - 1]):
+        if heading_re.match(line) and subject_re.match(lines[i - 1]):
             if i >= 2:
-                topLine = lines[i-2]
+                top_line = lines[i-2]
             else:
-                topLine = ''
+                top_line = ''
 
             # If the heading line is to short, then docutils doesn't consider
             # it a heading.
@@ -216,9 +220,9 @@ def findSections(filename, lines):
             name = lines[i-1].strip()
             key = line[0]
 
-            if headingRe.match(topLine):
+            if heading_re.match(top_line):
                 # If there is an overline, it must match the bottom line.
-                if topLine != line:
+                if top_line != line:
                     # Not a heading.
                     continue
                 # We have an overline, so double up.
@@ -229,16 +233,16 @@ def findSections(filename, lines):
 
             level = level_values[key]
 
-            popSections(previousSections, level)
-            if previousSections:
-                parent = previousSections[-1]
+            pop_sections(previous_sections, level)
+            if previous_sections:
+                parent = previous_sections[-1]
             else:
                 parent = None
-            lineNumber = i
+            line_number = i
 
-            s = Section(level, name, lines[i-1], lineNumber,
+            s = Section(level, name, lines[i-1], line_number,
                         filename, parent)
-            previousSections.append(s)
+            previous_sections.append(s)
             sections.append(s)
 
             # Blank lines to help correctly detect:
@@ -249,13 +253,13 @@ def findSections(filename, lines):
             #
             # as two underline style headings.
             lines[i] = lines[i-1] = ''
-            if topLine:
+            if top_line:
                 lines[i-2] = ''
 
     return sections
 
 
-def sectionsToTags(sections, sro):
+def sections_to_tags(sections, sro):
     tags = []
 
     for section in sections:
@@ -264,19 +268,24 @@ def sectionsToTags(sections, sro):
     return tags
 
 
-def genTagsFile(output, tags, sort):
+def gen_tags_header(output, sort):
+    if sort == "yes":
+        sorted_line = b'!_TAG_FILE_SORTED\t1\t//\n'
+    elif sort == "foldcase":
+        sorted_line = b'!_TAG_FILE_SORTED\t2\t//\n'
+    else:
+        sorted_line = b'!_TAG_FILE_SORTED\t0\t//\n'
+
+    output.write(b'!_TAG_FILE_ENCODING\tutf-8\t//\n')
+    output.write(b'!_TAG_FILE_FORMAT\t2\t//\n')
+    output.write(sorted_line)
+
+
+def gen_tags_content(output, sort, tags):
     if sort == "yes":
         tags = sorted(tags)
-        sortedLine = b'!_TAG_FILE_SORTED\t1\n'
     elif sort == "foldcase":
         tags = sorted(tags, key=lambda x: str(x).lower())
-        sortedLine = b'!_TAG_FILE_SORTED\t2\n'
-    else:
-        sortedLine = b'!_TAG_FILE_SORTED\t0\n'
-
-    output.write(b'!_TAG_FILE_ENCODING\tutf-8\n')
-    output.write(b'!_TAG_FILE_FORMAT\t2\n')
-    output.write(sortedLine)
 
     for t in tags:
         output.write(t.render().encode('utf-8'))
@@ -315,12 +324,12 @@ def main():
 
     options, args = parser.parse_args()
 
+    if not args:
+        raise ScriptError("No input files specified.")
+
     if sys.version_info[0] == 2:
-        if sys.stdin.encoding:
-            options.sro = options.sro.decode(sys.stdin.encoding)
-        else:
-            import locale
-            options.sro = options.sro.decode(locale.getpreferredencoding())
+        encoding = sys.stdin.encoding or locale.getpreferredencoding() or 'utf-8'
+        options.sro = options.sro.decode(encoding)
 
     if options.tagfile == '-':
         if sys.version_info[0] == 2:
@@ -330,37 +339,59 @@ def main():
     else:
         output = open(options.tagfile, 'wb')
 
-    for filename in args:
-        if sys.version_info[0] == 2:
-            filename = filename.decode(sys.getfilesystemencoding())
+    gen_tags_header(output, options.sort)
 
-        with open_autoenc(filename, encoding=options.encoding) as f:
-            buf = f.read()
+    all_sections = []
 
-        lines = buf.splitlines()
-        del buf
+    try:
+        for filename in args:
+            if sys.version_info[0] == 2:
+                filename = filename.decode(sys.getfilesystemencoding())
 
-        sections = findSections(filename, lines)
+            try:
+                with open_autoenc(filename, encoding=options.encoding) as f:
+                    buf = f.read()
+            except IOError as e:
+                if e.errno == errno.EPIPE:
+                    raise
+                print_warning(e)
+                continue
 
-        genTagsFile(output,
-                    sectionsToTags(sections, options.sro),
-                    sort=options.sort)
+            lines = buf.splitlines()
+            del buf
+
+            sections = find_sections(filename, lines)
+            all_sections.extend(sections)
+    finally:
+        # We do this to match ctags behavior... even when a file is missing,
+        # it'll write out the tags it has.
+        gen_tags_content(output,
+                         options.sort,
+                         sections_to_tags(all_sections, options.sro))
 
     output.flush()
     output.close()
+
+
+def print_warning(e):
+    print("WARNING: %s" % str(e), file=sys.stderr)
+
+
+def print_error(e):
+    print("ERROR: %s" % str(e), file=sys.stderr)
 
 
 def cli_main():
     try:
         main()
     except IOError as e:
-        import errno
         if e.errno == errno.EPIPE:
             # Exit saying we got SIGPIPE.
             sys.exit(141)
-        raise
+        print_error(e)
+        sys.exit(1)
     except ScriptError as e:
-        print("ERROR: %s" % str(e), file=sys.stderr)
+        print_error(e)
         sys.exit(1)
 
 
