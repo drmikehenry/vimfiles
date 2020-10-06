@@ -14,6 +14,10 @@ require adjustment of per-user settings.
   Szakmeister).  This fixes issues some users were having with the chevron
   character with the tagbar plugin.
 
+- Update rst2ctags to v0.2.3 and markdown2ctags to v0.2.6 (thanks to John
+  Szakmeister).  These come with 100 ms startup time savings which should
+  improve tagbar responsiveness.
+
 2020-09-28
 ==========
 
