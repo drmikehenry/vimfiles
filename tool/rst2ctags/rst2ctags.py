@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (C) 2013-2018 John Szakmeister <john@szakmeister.net>
+# Copyright (C) 2013-2020 John Szakmeister <john@szakmeister.net>
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
@@ -13,20 +13,11 @@ import codecs
 import errno
 import io
 import locale
-import pkg_resources
 import sys
 import re
 
 
-def _version():
-    '''Get version.'''
-    try:
-        return pkg_resources.get_distribution('rst2ctags').version
-    except pkg_resources.DistributionNotFound:
-        return 'dev'
-
-
-__version__ = _version()
+__version__ = "0.2.6"
 
 
 class ScriptError(Exception):
