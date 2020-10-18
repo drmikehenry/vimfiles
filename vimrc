@@ -3803,7 +3803,7 @@ nmap <Leader>a <Plug>(EasyAlign)
 let g:easy_align_delimiters = {
         \ '\':
         \   {
-        \       'pattern':         '\\',
+        \       'pattern':         '\\$',
         \   },
         \ }
 

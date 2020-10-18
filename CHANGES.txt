@@ -7,6 +7,28 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2020-10-18
+==========
+
+- Fix EasyAlign pattern for C macro line continuations, ensuring the backslashes
+  are found only at end-of-line.  For example, given this C code::
+
+    #define SOME_MACRO() \
+        printf("Hello\n"); \
+        someFunction(with, many, args); \
+        printf("Bye\n");
+
+  Visually select the above lines and type::
+
+    \a\
+
+  This will align the final backslashes as::
+
+    #define SOME_MACRO()                \
+        printf("Hello\n");              \
+        someFunction(with, many, args); \
+        printf("Bye\n");
+
 2020-10-06
 ==========
 
