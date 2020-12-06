@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2020-12-06
+==========
+
+- Upgrade cpsm to version 2020-08-01.  This fixes some build issues on Ubuntu
+  20.04.
+
 2020-10-18
 ==========
 

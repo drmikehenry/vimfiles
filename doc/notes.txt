@@ -896,8 +896,8 @@ Setting up cpsm                                         *notes_cpsm_setup*
 
 See cpsm/README.md for additional optional settings.
 
-Version 2018-02-01 (8a4a0a0) from:
-https://github.com/ctrlpvim/ctrlp.vim.git
+Version 2020-08-01 (42cfb0f) from:
+https://github.com/nixprime/cpsm
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
