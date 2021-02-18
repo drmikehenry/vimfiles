@@ -70,6 +70,29 @@ function! Fixkey_resetMetaNumbers()
     endwhile
 endfunction
 
+function! Fixkey_setMetaShiftNumbers()
+    for c in split('!@#$%^&*()', '\zs')
+        if c == '@'
+            " For some reason, M-@ is special in console Vim.
+            " See https://github.com/vim/vim/issues/5759 for some details.
+            call Fixkey_setNewKey("<M-" . c . ">", "\e" . c)
+        else
+            call Fixkey_setKey("<M-" . c . ">", "\e" . c)
+        endif
+        " On XTerm with modifyOtherKeys in use, keys like <M-!> are recognized
+        " as <M-S-!> (with a redundant shift modifier).  Map these back to
+        " their canonical form.
+        execute 'map <m-s-' . c . '> <m-' . c . '>'
+        execute 'map! <m-s-' . c . '> <m-' . c . '>'
+    endfor
+endfunction
+
+function! Fixkey_resetMetaShiftNumbers()
+    for c in split('!@#$%^&*()', '\zs')
+        call Fixkey_setKey("<M-" . c . ">", nr2char(char2nr(c)  + 0x80))
+    endfor
+endfunction
+
 function! Fixkey_setMetaLetters()
     let c = 'a'
     while c <= 'z'
@@ -181,8 +204,8 @@ function! Fixkey_setXtermNavigationKeys()
 endfunction
 
 function! Fixkey_setXtermKeys()
-    let g:Fixkey_termType = "xterm"
     call Fixkey_setMetaNumbers()
+    call Fixkey_setMetaShiftNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setXtermFunctionKeys()
     call Fixkey_setXtermNavigationKeys()
@@ -194,8 +217,8 @@ function! Fixkey_setXtermKeys()
 endfunction
 
 function! Fixkey_setGnomeTerminalKeys()
-    let g:Fixkey_termType = "gnome"
     call Fixkey_setMetaNumbers()
+    call Fixkey_setMetaShiftNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setXtermFunctionKeys()
     call Fixkey_setXtermNavigationKeys()
@@ -204,8 +227,8 @@ function! Fixkey_setGnomeTerminalKeys()
 endfunction
 
 function! Fixkey_setKonsoleKeys()
-    let g:Fixkey_termType = "konsole"
     call Fixkey_setMetaNumbers()
+    call Fixkey_setMetaShiftNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setXtermFunctionKeys()
     call Fixkey_setXtermNavigationKeys()
@@ -214,8 +237,8 @@ function! Fixkey_setKonsoleKeys()
 endfunction
 
 function! Fixkey_setLinuxKeys()
-    let g:Fixkey_termType = "linux"
     call Fixkey_setMetaNumbers()
+    call Fixkey_setMetaShiftNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setKey("<F1>",  "\e[[A")
     call Fixkey_setKey("<F2>",  "\e[[B")
@@ -319,9 +342,9 @@ function! Fixkey_setPuttyMetaHomeEnd()
 endfunction
 
 function! Fixkey_setPuttyKeys()
-    let g:Fixkey_termType = "putty"
     call Fixkey_unsetFunctionKeys()
     call Fixkey_setMetaNumbers()
+    call Fixkey_setMetaShiftNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setPuttyF1toF12()
     call Fixkey_setPuttyShiftF3toF10()
@@ -415,9 +438,9 @@ function! Fixkey_setPuttyScoMetaHomeEnd()
 endfunction
 
 function! Fixkey_setPuttyScoKeys()
-    let g:Fixkey_termType = "putty-sco"
     call Fixkey_unsetFunctionKeys()
     call Fixkey_setMetaNumbers()
+    call Fixkey_setMetaShiftNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setPuttyScoF1toF12()
     call Fixkey_setPuttyScoShiftF1toF12()
@@ -541,12 +564,12 @@ function! Fixkey_setRxvtMetaCtrlShiftHomeEnd()
 endfunction
 
 function! Fixkey_setRxvtKeys()
-    let g:Fixkey_termType = "rxvt"
     " <Undo> is \e[26~, which aliases <S-F4>.  Undefine it to avoid conflict.
     set <Undo>=
     " <Help> is \e28~, which aliases <S-F5>.  Undefine it to avoid conflict.
     set <Help>=
     call Fixkey_setMetaNumbers()
+    call Fixkey_setMetaShiftNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setRxvtShiftF3toF12()
     call Fixkey_setRxvtCtrlF1toF12()
@@ -574,6 +597,7 @@ endfunction
 
 function! Fixkey_setScreenCompatibleKeys()
     call Fixkey_setMetaNumbers()
+    call Fixkey_setMetaShiftNumbers()
     call Fixkey_setMetaLetters()
     call Fixkey_setXtermFunctionKeys()
     call Fixkey_setXtermHomeEnd()
@@ -586,60 +610,91 @@ function! Fixkey_setScreenCompatibleKeys()
 endfunction
 
 function! Fixkey_setScreenKeys()
-    let g:Fixkey_termType = "screen"
     call Fixkey_setScreenCompatibleKeys()
 endfunction
 
 function! Fixkey_setTmuxKeys()
-    let g:Fixkey_termType = "tmux"
     call Fixkey_setScreenCompatibleKeys()
 endfunction
 
+function! Fixkey_detect()
+    if $TERM =~# '^xterm\(-\d*color\)\?$'
+        if $COLORTERM == "gnome-terminal"
+            let termType = "gnome"
+        else
+            let termType = "xterm"
+        endif
+
+    elseif $TERM =~# '^gnome\(-\d*color\)\?$'
+        let termType = "gnome"
+
+    elseif $TERM =~# '^konsole\(-\d*color\)\?$'
+        let termType = "konsole"
+
+    elseif $TERM =~# 'linux\(-\d*color\)\?$'
+        let termType = "linux"
+
+    elseif $TERM == 'putty-sco'
+        let termType = "putty-sco"
+
+    elseif $TERM =~# '^putty\(-\d*color\)\?$'
+        let termType = "putty"
+
+    elseif $TERM =~# '^rxvt\(-unicode\)\?\(-\d*color\)\?$'
+        let termType = "rxvt"
+
+    elseif $TERM =~# '\v^screen([-.].*)?$'
+        let termType = "screen"
+
+    elseif $TERM =~# '\v^tmux(-\d*color|-bce|-it|-s)*$'
+        let termType = "tmux"
+    else
+        let termType = "unknown"
+    endif
+    return termType
+endfunction
+
 function! Fixkey_setup()
+    if !exists('g:Fixkey_termType')
+        let g:Fixkey_termType = Fixkey_detect()
+    endif
+    if g:Fixkey_termType == '' || g:Fixkey_termType == 'unknown'
+        return
+    endif
+
     " Ensure keycode timeouts are enabled.
     if &ttimeoutlen < 0
         set ttimeoutlen=5
     endif
 
-    if $TERM =~# '^xterm\(-\d*color\)\?$'
-        if $COLORTERM == "gnome-terminal"
-            call Fixkey_setGnomeTerminalKeys()
-        else
-            call Fixkey_setXtermKeys()
-        endif
-
-    elseif $TERM =~# '^gnome\(-\d*color\)\?$'
-         call Fixkey_setGnomeTerminalKeys()
-
-    elseif $TERM =~# '^konsole\(-\d*color\)\?$'
+    if g:Fixkey_termType == 'xterm'
+        call Fixkey_setXtermKeys()
+    elseif g:Fixkey_termType == 'gnome'
+        call Fixkey_setGnomeTerminalKeys()
+    elseif g:Fixkey_termType == 'konsole'
         call Fixkey_setKonsoleKeys()
-
-    elseif $TERM =~# 'linux\(-\d*color\)\?$'
+    elseif g:Fixkey_termType == 'linux'
         call Fixkey_setLinuxKeys()
-
-    elseif $TERM == 'putty-sco'
+    elseif g:Fixkey_termType == 'putty-sco'
         call Fixkey_setPuttyScoKeys()
-
-    elseif $TERM =~# '^putty\(-\d*color\)\?$'
+    elseif g:Fixkey_termType == 'putty'
         call Fixkey_setPuttyKeys()
-
-    elseif $TERM =~# '^rxvt\(-unicode\)\?\(-\d*color\)\?$'
+    elseif g:Fixkey_termType == 'rxvt'
         call Fixkey_setRxvtKeys()
-
-    elseif $TERM =~# '\v^screen([-.].*)?$'
+    elseif g:Fixkey_termType == 'screen'
         call Fixkey_setScreenKeys()
-
-    elseif $TERM =~# '\v^tmux(-\d*color|-bce|-it|-s)*$'
+    elseif g:Fixkey_termType == 'tmux'
         call Fixkey_setTmuxKeys()
-
         " When TERM begins with "screen", Vim helpfully sets 'ttymouse' to
         " "xterm".  This same logic is required for tmux to work correctly, but
-        " Vim currently lacks support for it.  As a work-around for this
-        " problem, we ensure 'ttymouse' is set correctly below.
-        set ttymouse=xterm
-
+        " Vim lacks support for it before v8.0.0030.  As a work-around for this
+        " problem, we ensure 'ttymouse' is set to Vim's default if it's
+        " currently empty (otherwise, we leave it alone).
+        if &ttymouse == ''
+            set ttymouse=xterm
+        endif
     else
-        let g:Fixkey_termType = "unknown"
+        echoerr "Unsupported terminal: g:Fixkey_termType=" . g:Fixkey_termType
     endif
 endfunction
 
