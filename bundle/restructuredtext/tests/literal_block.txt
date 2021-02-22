@@ -1,0 +1,137 @@
+Literal block test cases
+------------------------
+
+This is a paragraph with a literal block.
+
+::
+
+   This is a valid literal block.
+   
+This is a new paragraph.
+
+----
+
+I am a block of text
+
+   I am a subblock of text
+
+   ::
+
+      I am a literal subblock
+
+   I am still inside the subblock but outside the literal block.
+
+----
+
+Staggered block::
+
+   abc
+      def
+
+End of block
+
+----
+
+Reverse staggered block::
+
+      abc
+   def
+
+End of block
+
+----
+
+This example does not have an additional blank line, and should not render.
+
+::
+   This is not a valid literal block.
+
+----
+
+This example does not end with a blank line, and will usually raise an error.
+
+::
+
+   This is not a valid literal block.
+This paragraph invalidates the block.
+
+(Currently we do not indicate this error)
+
+----
+
+This paragraph has an inline literal block::
+
+   This is a valid literal block.
+
+----
+
+Whitespace before :: changes the substitution but is otherwise valid. ::
+
+   This is a valid literal block.
+
+----
+
+An *inline* literal should not break the parsing. ::
+
+   This is a valid literal block.
+
+This appears to be working now.
+
+----
+
+This is effectively an inline literal block with prior whitespace (``\n``),
+since the next line is considered part of the paragraph.
+::
+
+   This is a valid literal block.
+
+----
+
+The prepended blank line is optional.
+::
+
+   This is a valid literal block.
+
+----
+
+Here's one with some whitespace in its blank line.  It should work.
+
+::
+   
+   This is a valid literal block.
+
+----
+
+And here is multiple empty lines.
+
+::
+
+
+
+   This is a valid literal block.
+
+----
+
+And here is multiple empty lines with lots of random whitespace.
+
+::
+   
+
+   
+
+   This is a valid literal block.
+
+----
+
+This is the same except the final line also has whitespace.
+
+::
+
+   
+
+   
+   This is a valid literal block.
+
+----
+
+and now I'm done.

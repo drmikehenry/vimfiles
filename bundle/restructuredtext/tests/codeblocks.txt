@@ -1,0 +1,65 @@
+Generic code block
+
+.. code::
+
+   int main(void) {
+      return 0;
+   }
+
+A recognized code block (rst_syntax_code_list)
+
+.. code:: cpp 
+
+   int main(void) {
+      return 0;
+   }
+
+Code block of language off list
+
+.. code:: fortran
+
+   program main
+      implicit none
+   end program main
+
+Trailing whitespace
+
+.. code::    
+
+   int main(void) {
+      return 0;
+   }
+
+Ignoring inline literals inside a code block
+
+.. code::
+
+   ls *.{c,h}
+
+Fields
+
+.. code::
+   :name: main
+   :number-lines:
+
+   int main(void) {
+      return 0;
+   }
+
+Fields with a named language (not currently working)
+
+.. code:: cpp
+   :name: main
+   :number-lines:
+
+   int main(void) {
+      return 0;
+   }
+
+Code blocks require a blank line after the directive, so this should not
+highlight.  (Note: currently fails)
+
+.. code::
+   int main(void) {
+      return 0;
+   }

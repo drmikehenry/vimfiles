@@ -64,6 +64,7 @@
     Quickfix-reflector - edit QuickFix and save changes |notes_quickfix-reflector|
     Rainbow Parentheses - Highlight nested parens       |notes_rainbow-parens|
     Repeat - Repeat operations for supported plugins    |notes_repeat|
+    ReStructuredText - updated support for rst          |notes_rst|
     RunView - Run lines through filter into buffer      |notes_runview|
     Rust - Language support for Rust                    |notes_rust|
     Scriptease - Debugging tools for Vimscripts         |notes_scriptease|
@@ -2036,6 +2037,22 @@ surround plugin).
 
 Version 1.2 (8106e14) from:
 https://github.com/tpope/vim-repeat
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+RESTRUCTUREDTEXT SUPPORT                                *notes_rst*
+  Language support for reStructuredText
+
+Version 2021-02-12 (8284ec3) from:
+https://github.com/marshallward/vim-restructuredtext
+
+with the following modifications found in branch `vimfiles` at:
+https://github.com/drmikehenry/vim-restructuredtext
+
+- (branch rst-literal-block) Fix #56: Literal block continues too far after
+  bullet.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

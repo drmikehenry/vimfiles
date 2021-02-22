@@ -177,6 +177,7 @@ notes_quickfix_win	notes.txt	/*notes_quickfix_win*
 notes_rainbow-parens	notes.txt	/*notes_rainbow-parens*
 notes_reformatting	notes.txt	/*notes_reformatting*
 notes_repeat	notes.txt	/*notes_repeat*
+notes_rst	notes.txt	/*notes_rst*
 notes_runview	notes.txt	/*notes_runview*
 notes_rust	notes.txt	/*notes_rust*
 notes_scriptease	notes.txt	/*notes_scriptease*

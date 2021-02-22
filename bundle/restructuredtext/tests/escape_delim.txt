@@ -1,0 +1,72 @@
+Inline delimiters:
+
+   start *Testing delimiters* end
+
+Escape character inside delimiter:
+
+   start *This has\\a slash* end
+
+Escape the delimiter:
+
+   start *This has\*a delimiter* end
+
+Delimiters with leading spaces do not act as delimiters:
+[space][delim][non-space]...[non-space][delim][space]
+
+   start *This token * is not a delim*
+
+   start *This token *is also not a delim*
+
+Double delimiters must also be supported:
+
+   start **This is a double delim** end
+
+Double delimiter spaced inside of a double delimiter?
+
+   start **This token ** is not a delim** end
+
+   start **This token **is also not a delim** end
+
+Single delimiters are escaped inside of double delimiters
+
+   start **This is \** a double delimiters inside a double delimiter** end
+
+   start **This one is \*\* escaped twice** end
+
+Escape slashes inside delimiters.
+
+   This should render a single slash.
+
+      start *C:\\* end
+
+   This should raise an error due to an unclosed delimiter.
+
+      start *C:\* end
+
+   (Putting a delimiter here* to balance the syntax highlighting error.)
+
+But there is an exception for the end of `` tokens:
+
+   Inline literal without escape characters:
+
+      start ``Text is highlighted`` end
+
+      start ``This slash\is unescaped`` end
+
+      start ``This has\\two slashes and is not escaped`` end
+
+      start ``This slash\`is also not escaped`` end
+
+   This renders a single slash and should not be escaped:
+
+      start ``C:\`` end
+
+   Space-separated inline literal tokens do not terminate the region:
+
+      start ``C:\ `` C:\`` end
+
+   This renders two slashes:
+
+      start ``C:\\`` end
+
+The end
