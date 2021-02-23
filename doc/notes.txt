@@ -2898,15 +2898,16 @@ The "S" command in visual mode:
     command will move the cursor to the next instance of the
     pattern, restricted to the visually selected block.
 
+Version v22 (Jan 7, 2020) from:
+http://www.drchip.org/astronaut/vim/index.html#VIS
+
+Depends on DrC's Utilities: |notes_cecutils|
+
 Installation:
-- Distributed as a |vimball|  >
+- Follow bundle installation instructions (|bundle_installation|),
+  but MUST ALSO delete this file, since cecutil is installed separately: >
 
-    vim vis.vba.gz
-    :so %
-    :q
-
-Version 20a from section "Visual Block Commands" at:
-http://mysite.verizon.net/astronaut/vim/index.html
+    bundle/vis/plugin/cecutil.vim
 
 ------------------------------------------------------------------------------
 VISINCR                                                 *notes_visincr*

@@ -21,6 +21,9 @@ require adjustment of per-user settings.
 
     Correctly unhighlighted.
 
+- Update Vis plugin to version v22 (Jan 7, 2020).  This fixes problems with
+  ``:B``; see ``:help notes_vis`` for usage.
+
 2021-02-18
 ==========
 

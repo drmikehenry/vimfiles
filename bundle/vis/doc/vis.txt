@@ -1,8 +1,8 @@
-*vis.txt*	The Visual Block Tool				May 20, 2009
+*vis.txt*	The Visual Block Tool				Sep 07, 2016
 
-Author:  Charles E. Campbell, Jr.  <NdrchipO@ScampbellPfamily.AbizM>
+Author:  Charles E. Campbell  <NdrchipO@ScampbellPfamily.AbizM>
 	  (remove NOSPAM from Campbell's email first)
-Copyright: (c) 2004-2009 by Charles E. Campbell, Jr.	*vis-copyright*
+Copyright: (c) 2004-2016 by Charles E. Campbell	*vis-copyright*
            The VIM LICENSE applies to vis.vim and vis.txt
            (see |copyright|) except use "vis" instead of "Vim"
 	   No warranty, express or implied.  Use At-Your-Own-Risk.
@@ -38,10 +38,6 @@ Copyright: (c) 2004-2009 by Charles E. Campbell, Jr.	*vis-copyright*
 	There must be a space before the '!' when invoking external shell
 	commands, eg. ':B !sort'. Otherwise an error is reported.
 
-	Doesn't work as one might expect with Vim's ve option.  That's
-	because ve=all ended up leaving unwanted blank columns, so the
-	solution chosen was to have the vis function turn ve off temporarily.
-
 	The script works by deleting the selected region into register "a.
 	The register "a itself is first saved and later restored.  The text is
 	then put at the end-of-file, modified by the user command, and then
@@ -64,6 +60,12 @@ Copyright: (c) 2004-2009 by Charles E. Campbell, Jr.	*vis-copyright*
 	and methods used internally have completely changed since Roemer's
 	version.
 
+	*g:vis_empty_character* : this character should not appear in your
+	text.  By default: users of euc-jp will get a 0x01, otherwise
+	it wil be a 0xff.  Used to prevent an empty result in the
+	moving back the modified text operation, which otherwise results
+	in an unwanted extra blank space being inserted.
+
 
 ==============================================================================
 3. Visual Block Search				*vis-search* *vis-srch* *vis-S*
@@ -71,7 +73,7 @@ Copyright: (c) 2004-2009 by Charles E. Campbell, Jr.	*vis-copyright*
 	Visual block search provides two ways to get visual-selection
 	based searches.  Both these methods work well with :set hls
 	and searching may be repeated with the n or N commands.
-	
+
 	Using // and ?? after a visual selection (the // is only available
 	if you have g:vis_WantSlashSlash=1 in your <.vimrc> file):
 >
@@ -87,7 +89,7 @@ Copyright: (c) 2004-2009 by Charles E. Campbell, Jr.	*vis-copyright*
 <
 	You may enter whatever pattern you want after the \&, and the
 	pattern search will be restricted to the requested region.
-	
+
 	The "S" command in visual mode:
 >
 		ex. select region via V, v, or ctrl-v
@@ -96,7 +98,7 @@ Copyright: (c) 2004-2009 by Charles E. Campbell, Jr.	*vis-copyright*
 	    The ":S pattern" will appear as ":'<,'>S pattern".  This
 	    command will move the cursor to the next instance of the
 	    pattern, restricted to the visually selected block.
-	
+
 	An "R" command was contemplated, but I currently see no way to
 	get it to continue to search backwards with n and N commands.
 
@@ -104,15 +106,15 @@ Copyright: (c) 2004-2009 by Charles E. Campbell, Jr.	*vis-copyright*
 ==============================================================================
 4. Required							*vis-required*
 
-	Since the <vis.vim> function is a plugin, it uses several 6.0 (or
-	later) features.  Please use a 6.0 or later version of vim.
+	The latest <vis.vim> (v20f or later) now requires vim 7.0 (or later),
+	as it has been split into plugin/ and an autoload/ sections for
+	on-demand loading.
 
 	Starting with version 11, <vis.vim> required <cecutil.vim>.  It uses
 	the SaveWinPosn() and RestoreWinPosn() functions therein.  You may get
 	<cecutil.vim> from
 
-		http://mysite.verizon.net/astronaut/vim/index.html#VimFuncs
-		as "DrC's Utilities".
+		http://www.drchip.org/astronaut/vim/index.html#CECUTIL
 
 
 ==============================================================================
@@ -167,27 +169,54 @@ Copyright: (c) 2004-2009 by Charles E. Campbell, Jr.	*vis-copyright*
 ==============================================================================
 6. History						*vis-history* {{{1
 
-    v20 : May 20, 2009  - cecutil bugfix
-    v19 : Jan 06, 2006  - small modification included to allow AlignMaps
-                          maps to work (visual select, :B norm \somemap)
+    v21 : Apr 01, 2013	- visual block and ragged right detection; there was
+			  a conflict between using ve= and ve=all
+			  (internally); one was good for ragged right and
+			  the other for smooth right visual block selections.
+			  I found a way to detect ragged right vs smooth right
+			  and so vis.vim now works properly in both
+			  situations.
+	  Apr 02, 2013	- The detection method above hung when on line 1.
+			  Fixed.
+	  Jan 15, 2015	- Small adjustment to prevent a leading space from
+	  		  being inserted.
+	  Feb 10, 2016  - (Stefan Siegal) provided a patch making
+			  visPlugin.vim restore cpo
+	  Sep 07, 2016	- addressed an empty-string bug : if the block
+	  		  command causes an empty string to appear in the
+			  modified text, vim would insert a blank rather than
+			  do nothing.  Fixed by prepending an
+			  "empty-character" and then removing it
+    v20 : May 20, 2009	- cecutil bugfix
+	  May 19, 2010	- split into plugin/ and autoload/ for faster
+			  loading and on-demand loading.
+	  Mar 18, 2013	- (Gary Johnson) pointed out that changing
+			  cedit to <Esc> caused problems with visincr;
+			  the cedit setting is now bypassed in vis, too.
+	  Mar 29, 2013	- Fixed a problem with vis#VisBlockCmd() where it
+	  		  missed substitutes due to a short last line.
+			  s:SaveUserSettings() now makes ve=all instead of
+			  ve=  (see |'ve'|)
+    v19 : Jan 06, 2006	- small modification included to allow AlignMaps
+			  maps to work (visual select, :B norm \somemap)
 			- cecutil updated to use keepjumps
-	  Jan 24, 2006  - works around formatoption setting
-	  Jan 25, 2006  - uses SaveWinPosn(0) to avoid SWP stack use
-    v18 : Jul 11, 2005  - vis.vim now works around a virtcol() behavior
-                          difference between ve=all vs ve=block
-    v17 : Apr 25, 2005  - vis.vim now uses cecutil (SaveWinPosn, etc) so the
-                          tarball now includes a copy of cecutil.vim
-    v16 : Feb 02, 2005  - fixed a bug with visual-block + S ; the first line
+	  Jan 24, 2006	- works around formatoption setting
+	  Jan 25, 2006	- uses SaveWinPosn(0) to avoid SWP stack use
+    v18 : Jul 11, 2005	- vis.vim now works around a virtcol() behavior
+			  difference between ve=all vs ve=block
+    v17 : Apr 25, 2005	- vis.vim now uses cecutil (SaveWinPosn, etc) so the
+			  tarball now includes a copy of cecutil.vim
+    v16 : Feb 02, 2005	- fixed a bug with visual-block + S ; the first line
 			  was being omitted in the search
-	  Mar 01, 2005  - <q-args> used instead of '<args>'
-	  Apr 13, 2005  - :'<,'>S plus v had a bug with one or two line
-	                  selections (tnx to Vigil for pointing this out)
-	  Apr 14, 2005  - set ignorecase caused visual-block searching
-	                  to confuse visual modes "v" and "V"
-    v15 : Feb 01, 2005  - includes some additions to the help
+	  Mar 01, 2005	- <q-args> used instead of '<args>'
+	  Apr 13, 2005	- :'<,'>S plus v had a bug with one or two line
+			  selections (tnx to Vigil for pointing this out)
+	  Apr 14, 2005	- set ignorecase caused visual-block searching
+			  to confuse visual modes "v" and "V"
+    v15 : Feb 01, 2005	- includes some additions to the help
     v14 : Sep 28, 2004	- visual-block based searching now supported.  One
 			  do this either with :'<,'>S pattern or with a / or ?
-	  Jan 31, 2005  - fixed help file
+	  Jan 31, 2005	- fixed help file
     v13 : Jul 16, 2004	- folding commands added to source
 			- GetLatestVimScript hook added for automatic updating
     v12 : Jun 14, 2004	- bugfix (folding interfered)
@@ -207,7 +236,7 @@ Copyright: (c) 2004-2009 by Charles E. Campbell, Jr.	*vis-copyright*
 			- Fixed double-loading (was commented
 			  out for debugging purposes)
      v3 : Jun 20, 2002	- saves ve, unsets ve, restores ve
-     v2 : Jun 19, 2002	- Charles Campbell's <vis.vim>
+     v2 : June 19, 2002	- Charles Campbell's <vis.vim>
      v?   June 19, 2002	  Complete rewrite - <vis.vim> is now immune to
 			  the presence of tabs and is considerably faster.
      v1 Epoch		- Stefan Roemer <roemer@informatik.tu-muenchen.de>
