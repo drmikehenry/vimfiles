@@ -17,6 +17,7 @@
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
     BufMRU - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
+    Calutil - Calendar utilities                        |notes_calutil|
     Cecutil - Utilities for Dr. Chip's plugins          |notes_cecutil|
     Characterize - A better 'ga'                        |notes_characterize|
     Clojure-static - Edit Clojure without runtime       |notes_clojure-static|
@@ -814,6 +815,16 @@ See also:
 
 Version 2018-03-20 (795dd38) from:
 https://github.com/qpkorr/vim-bufkill.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+CALUTIL                                                  *notes_calutil*
+  Calendar utilities
+
+Version v3c (Nov 11, 2014) from:
+http://www.drchip.org/astronaut/vim/index.html#CALUTIL
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

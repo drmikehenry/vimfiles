@@ -1,0 +1,66 @@
+*calutil.txt*	DrChip's Calendar Utilities			Oct 17, 2007
+
+Author:  Charles E. Campbell  <NdrchipO@ScampbellPfamily.AbizM>
+Copyright:    Copyright (C) 2007 Charles E. Campbell
+              Permission is hereby granted to use and distribute this code,
+              with or without modifications, provided that this copyright
+              notice is copied with it. Like anything else that's free,
+              calutil.vim is provided *as is* and comes with no warranty
+              of any kind, either expressed or implied. By using this
+              plugin, you agree that in no event will the copyright
+              holder be liable for any damages resulting from the use
+              of this software.
+
+
+==============================================================================
+1. Contents				*calutil* *calutil-contents* {{{1
+
+   1. Contents.............................: |calutil-contents|
+   2. Calutil Manual.......................: |calutil-manual|
+   3. History..............................: |calutil-history|
+
+==============================================================================
+2. Calutil Manual					*calutil-manual* {{{1
+
+	DAY OF WEEK~
+	Usage  : call calutil#DayOfWeek(y,m,d [,style])
+	Purpose: to determine the day of the week given a calendrical date
+	Returns: g:CalUtilDayOfWeek saves the style
+					0-> integer (default)
+					1-> 3-letter English abbreviation for
+					    name of day
+					2-> English name of day
+
+	 STYLE : The function itself returns:
+	    0  :  0      1       2         3        4      5        6
+	    1  : Mon    Tue     Wed       Thu      Fri    Sat      Sun
+	    2  : Monday Tuesday Wednesday Thursday Friday Saturday Sunday
+
+	CONVERT DATE TO JULIAN DAY~
+	Usage  : call calutil#Cal2Jul(y,m,d) :
+	Purpose: converts a calendrical, numerical date into Julian day
+	         The input date is assumed to be Gregorian after 9/14/1752
+		 and a (proleptic) Julian date prior to that.
+	Returns: an integer; ie. the number of days since January 1, 4713BC.
+	         January 1, 4713BC corresponds to a Julian day of zero.
+
+	CONVERT JULIAN DAY TO CALENDRICAL DATE~
+	Usage  : call calutil#Jul2Cal(julday [,"ymd" -or- "mdy" -or- "dmy"])
+	Usage  : call calutil#Jul2Cal(julday [,  1   -or-   2   -or-   3  ])
+	Purpose: converts a Julian day into a date
+
+	    Default    year/month/day
+	    julday,1   julday,"ymd" year/month/day
+	    julday,2   julday,"mdy" month/day/year
+	    julday,3   julday,"dmy" day/month/year
+
+==============================================================================
+3. History						*calutil-history* {{{1
+
+   2  Jul 27, 2004 :
+      Oct 17, 2007 : it was pointed out to me that calutil.txt wasn't a help
+                     file; so it was written this day.
+   1               : the epoch
+
+ ---------------------------------------------------------------------
+vim:tw=78:ts=8:ft=help:fdm=marker
