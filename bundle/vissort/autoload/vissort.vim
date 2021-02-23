@@ -1,66 +1,47 @@
 " vissort.vim
-"  Author:	Charles E. Campbell, Jr.
-"			BISort() by Piet Delport
-"  Date:	Sep 27, 2006
-"  Version:	4c	ASTRO-ONLY
+"  Author:	Charles E. Campbell
+"  Date:	Apr 16, 2013
+"  Version:	4
+"               COMBAK: need to check on document.  I've removed the input() stuff, using defaults instead
 
 " ---------------------------------------------------------------------
 " Load Once: {{{1
 if &cp || exists("g:loaded_vissort")
  finish
 endif
-let g:loaded_vissort = "v4c"
+if v:version < 700
+ echohl WarningMsg
+ echo "***warning*** this version of vissort needs at least vim 7.0"
+ echohl Normal
+ finish
+endif
+let g:loaded_vissort = "v4"
 let s:keepcpo        = &cpo
 set cpo&vim
 
 " ---------------------------------------------------------------------
-"  Public Interface: {{{1
-com! -range -nargs=0		Bisort		silent <line1>,<line2>call s:BISort()
-com! -range -nargs=0 -bang	Vissort		silent <line1>,<line2>call s:VisSort(<bang>0)
-com! -range -nargs=*		BS			silent <line1>,<line2>call BlockSort(<f-args>)
-com! -range -nargs=*		CFuncSort	silent <line1>,<line2>call BlockSort('','^}','^[^/*]\&^[^ ][^*]\&^.*\h\w*\s*(','^.\{-}\(\h\w*\)\s*(.*$','')
+"  Options: {{{1
+if !exists("g:vissort_sort")
+ let g:vissort_sort= "sort"
+endif
+if !exists("g:vissort_option")
+ let g:vissort_option= ""
+endif
+
+" =====================================================================
+" Functions: {{{1
 
 " ---------------------------------------------------------------------
-" BISort: Piet Delport's BISort2() function, modified to take a range {{{1
-fun! s:BISort() range
-  let i = a:firstline + 1
-  while i <= a:lastline
-    " find insertion point via binary search
-    let i_val = getline(i)
-    let lo    = a:firstline
-    let hi    = i
-    while lo < hi
-      let mid     = (lo + hi) / 2
-      let mid_val = getline(mid)
-      if i_val < mid_val
-        let hi = mid
-      else
-        let lo = mid + 1
-        if i_val == mid_val | break | endif
-      endif
-    endwhile
-    " do insert
-    if lo < i
-      exec i.'d_'
-      call append(lo - 1, i_val)
-    endif
-    let i = i + 1
-  endwhile
-endfun
-
-" ---------------------------------------------------------------------
-" VisSort:  sorts lines based on visual-block selected portion of the lines {{{1
-" Author: Charles E. Campbell, Jr.
-fun! s:VisSort(isnmbr) range
-"  call Dfunc("VisSort(isnmbr=".a:isnmbr.")")
+" vissort#VisSort:  sorts lines based on visual-block selected portion of the lines {{{2
+" Author: Charles E. Campbell
+fun! vissort#VisSort(isnmbr) range
+"  call Dfunc("vissort#VisSort(isnmbr=".a:isnmbr.")")
+  let vissort_option= (exists("g:vissort_option") && g:vissort_option != "")? " ".g:vissort_option : ""
+"  call Decho("vissort_option<".vissort_option.">")
   if visualmode() != "\<c-v>"
    " no visual selection, just plain sort it
-   if v:version < 700
-    exe a:firstline.",".a:lastline."Bisort"
-   else
-    exe "silent ".a:firstline.",".a:lastline."sort"
-   endif
-"   call Dret("VisSort : no visual selection, just plain sort it")
+   exe "sil! ".a:firstline.",".a:lastline.g:vissort_sort.vissort_option
+"   call Dret("vissort#VisSort : no visual selection, just plain sort it")
    return
   endif
 
@@ -77,25 +58,49 @@ fun! s:VisSort(isnmbr) range
 
   " prep
   '<,'>s/^/@@@/
-  silent norm! '<0"aP
+  sil! keepj norm! '<0"aP
   if a:isnmbr
-   silent! '<,'>s/^\s\+/\=substitute(submatch(0),' ','0','g')/
+   sil! '<,'>s/^\s\+/\=substitute(submatch(0),' ','0','g')/
   endif
-  if v:version < 700
-   '<,'>Bisort
-  else
-   silent '<,'>sort
-  endif
+  exe "sil! keepj '<,'>".g:vissort_sort.vissort_option
 
   " cleanup
-  exe "silent ".firstline.",".lastline.'s/^.\{-}@@@//'
+  exe "sil! keepj ".firstline.",".lastline.'s/^.\{-}@@@//'
 
   let @a= keeprega
-"  call Dret("VisSort")
+"  call Dret("vissort#VisSort")
 endfun
 
 " ---------------------------------------------------------------------
-" BlockSort: Uses either vim-v7's built-in sort or, for vim-v6, Piet Delport's {{{1
+" vissort#Options: {{{2
+fun! vissort#Options(...)
+"  call Dfunc("vissort#Options() a:0=".a:0)
+  if a:0 > 0
+   if exists("g:vissort_option") && g:vissort_option == ""
+"	call Decho("unlet-ting g:vissort_option")
+    unlet g:vissort_option
+   endif
+   let g:vissort_option= a:1
+"   call Decho("setting g:vissort_option<".g:vissort_option.">")
+  elseif exists("g:vissort_option")
+"   call Decho("unlet-ting g:vissort_option")
+   unlet g:vissort_option
+  endif
+"  call Dret("vissort#Options")
+endfun
+
+" ---------------------------------------------------------------------
+" vissort#BlockSort: provides an autoload-style interface for BS and CFuncSort commands {{{2
+fun! vissort#BlockSort(...) range
+"  call Dfunc("vissort#BlockSort() range=".a:firstline.",".a:lastline." args=".string(a:000))
+"  call Decho('exe '.a:firstline.','.a:lastline.'call BlockSort('.string(a:000).')')
+  let arglist= a:000
+  exe a:firstline.','.a:lastline.'call BlockSort(arglist)'
+"  call Dret("vissort#BlockSort")
+endfun
+
+" ---------------------------------------------------------------------
+" BlockSort: Uses either vim-v7's built-in sort or, for vim-v6, Piet Delport's {{{2
 "            binary-insertion sort, to sort blocks of text based on tags
 "            contained within them.
 "              nextblock : text to search() to find the beginning of next block
@@ -104,9 +109,9 @@ endfun
 "                          "" means use just-before-the-nextblock
 "              findtag   : text to search() to find the tag in the current block.
 "                          "" means the nextblock began with the tag
-"              tagpat    : text to use in substitute() to specify tag pattern
+"              tagpat    : text to use in substitute() to specify tag pattern (extract tag from findtag)
 "              			   "" means to use "^.*$"
-"              tagsub    : text to use in substitute() to eliminate non-tag
+"              tagsub    : text to use in substitute() to eliminate non-tag portion
 "                          from tag pattern
 "                          "" means: if tagpat == "": use '&'
 "                                    else             use '\1'
@@ -119,28 +124,36 @@ endfun
 " With endblock specified, text is allowed in-between blocks;
 " such text will remain in-between the sorted blocks
 fun! BlockSort(...) range
+"  call Dfunc("BlockSort(".string(a:000).") a:0=".a:0." range=".a:firstline.",".a:lastline)
 
   " get input from argument list or query user
-  let vars="nextblock,endblock,findtag,tagpat,tagsub"
-  let ivar= 1
-  while ivar <= 5
-   let var = substitute(vars,'^\([^,]\+\),.*$','\1','e')
-   let vars= substitute(vars,'^[^,]\+,\(.*\)$','\1','e')
-"   call Decho("var<".var."> vars<".vars."> ivar=".ivar." a:0=".a:0)
-   if ivar <= a:0
-"	call Decho("(arglist) let ".var."='".a:{ivar}."'")
-	exe "let ".var."='".a:{ivar}."'"
+  if a:0 == 1 && type(a:1) == 3
+   let arglist= a:1
+  else
+   let arglist= a:000
+  endif
+"  call Decho(string(arglist)." (len=".len(arglist).")")
+  let vars      = ["nextblock","endblock","findtag","tagpat","tagsub"]
+  let ivar      = 0
+  let nextblock = '^.*$'
+  let endblock  = ''
+  let findtag   = '^.*$'
+  let tagpat    = ''
+  let tagsub    = '&'
+  for var in vars
+   if ivar <= len(arglist)
+"	call Decho("exe let ".vars[ivar]."='".arglist[ivar]."'")
+	exe "let ".vars[ivar]."='".arglist[ivar]."'"
    else
-   	let inp= input("Enter ".var.": ")
-"	call Decho("(input)   let ".var."='".inp."'")
-	exe "let ".var."='".inp."'"
+	break
    endif
    let ivar= ivar + 1
-  endwhile
+  endfor
 
   " sanity check
   if nextblock == "" && endblock == ""
    echoerr "BlockSort: both nextblock and endblock patterns are empty strings"
+"   call Dret("BlockSort")
    return
   endif
 
@@ -154,7 +167,11 @@ fun! BlockSort(...) range
   if tagsub == ""
    let tagsub= '\1'
   endif
-"  call Decho("nextblock<".nextblock."> endblock<".endblock."> findtag<".findtag."> tagpat<".tagpat."> tagsub<".tagsub.">")
+"  call Decho("nextblock<".nextblock.">")
+"  call Decho("endblock <".endblock.">")
+"  call Decho("findtag  <".findtag.">")
+"  call Decho("tagpat   <".tagpat.">")
+"  call Decho("tagsub   <".tagsub.">")
 
   " don't allow wrapping around the end-of-file during searches
   " I put an empty "guard line" at the end to take care of fencepost issues
@@ -164,7 +181,7 @@ fun! BlockSort(...) range
   set nows
   set lz
   let tagcnt = 0
-  $put =''
+  keepj $put =''
   call cursor(a:firstline,1)
 "  call Decho("block sorting range[".a:firstline.",".a:lastline."]")
 
@@ -177,12 +194,14 @@ fun! BlockSort(...) range
 
    " find tag
    if findtag != ""
-    let t= search(findtag)
+    let t= search(findtag,'c')
 	if t == 0
 	 echoerr "unable to find tag in block starting at line ".i
+"     call Dret("BlockSort")
 	 return
 	endif
    endif
+"   call Decho(printf("tag#%3d line#%3d: %s",tagcnt,line("."),getline(".")))
    let blocktag{tagcnt} = substitute(getline("."),tagpat,tagsub,"")." ".tagcnt
    let blockbgn{tagcnt} = i
 
@@ -204,10 +223,13 @@ fun! BlockSort(...) range
 	 else
       let inxt = search(nextblock)
     endif
+"	call Decho(printf("blockbgn%-3d at line#%3d",tagcnt,blockbgn{tagcnt}))
+"    call Decho(printf("blocktag%-3d='%s'"       ,tagcnt,blocktag{tagcnt}))
+"	call Decho(printf("blockend%-3d at line#%3d",tagcnt,blockend{tagcnt}))
    endif
 
    " save block text
-   exe "silent ".blockbgn{tagcnt}.",".blockend{tagcnt}."y a"
+   exe "sil! keepj ".blockbgn{tagcnt}.",".blockend{tagcnt}."y a"
    let blocktxt{tagcnt}= @a
    
 "   call Decho("tag<".blocktag{tagcnt}."> block[".blockbgn{tagcnt}.",".blockend{tagcnt}."] i=".i." inxt=".inxt)
@@ -219,14 +241,14 @@ fun! BlockSort(...) range
   set buftype=nofile
   let i= 1
   while i <= tagcnt
-   put =blocktag{i}
+   sil! keepj put =blocktag{i}
    let i= i + 1
   endwhile
-  1d
-  if v:version >= 700
-   %sort
+  sil! keepj 1d
+  if exists("vissort_option") && g:vissort_option != ""
+   exe "sil! keepj %".g:vissort_sort." ".g:vissort_option
   else
-   1,$call s:BISort()
+   exe "sil! keepj %".g:vissort_sort
   endif
   let i= 1
   while i <= tagcnt
@@ -238,8 +260,8 @@ fun! BlockSort(...) range
 
   " delete blocks and insert sorted blocks
   while tagcnt > 0
-   exe "silent ".blockbgn{tagcnt}.",".blockend{tagcnt}."d"
-   silent put! =blocktxt{blocksrt{tagcnt}}
+   exe "sil! ".blockbgn{tagcnt}.",".blockend{tagcnt}."d"
+   sil! keepj put! =blocktxt{blocksrt{tagcnt}}
    let tagcnt= tagcnt - 1
   endwhile
 
@@ -247,8 +269,9 @@ fun! BlockSort(...) range
   let &ws= wskeep
   let @a = akeep
   set nolz
-  $d
+  sil! keepj $d
   call cursor(a:firstline,1)
+"  call Dret("BlockSort")
 endfun
 
 " ---------------------------------------------------------------------

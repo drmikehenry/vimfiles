@@ -1,8 +1,7 @@
-*vissort.txt*	Visual-Mode Based Sorting		Aug 25, 2004
+*vissort.txt*	Visual-Mode Based Sorting		Sep 21, 2012
 
-Authors:  Charles E. Campbell, Jr.  <NdrOchip@ScampbellPfamilyA.Mbiz>
-	  Piet Delport (BISort())
-Copyright: (c) 2004-2005 by Charles E. Campbell, Jr.	*vissort-copyright*
+Author:  Charles E. Campbell  <NdrOchip@ScampbellPfamilyA.Mbiz>
+Copyright: (c) 2004-2012 by Charles E. Campbell		*vissort-copyright*
            The VIM LICENSE applies to vissort.vim and vissort.txt
            (see |copyright|) except use "vissort" instead of "Vim"
 	   No warranty, express or implied.  Use At-Your-Own-Risk.
@@ -13,46 +12,63 @@ Copyright: (c) 2004-2005 by Charles E. Campbell, Jr.	*vissort-copyright*
 1. Contents						*vissort-contents*
 
 	1. Contents.......................................: |vissort-contents|
-	2. Bisort.........................................: |bisort|
-	3. Vissort..(sorting lines based on a column).....: |vissort|
-	4. Sorting A Column Only..........................: |vissort-column|
-	5. BlockSort......................................: |blocksort|
+	2. Sorting a Column...............................: |vissort|
+	3. Sorting Lines Based Upon a Column..............: |vissort-lines|
+	4. BlockSort......................................: |vissort-blocksort|
+	5. Options........................................: |vissort-options|
+	6. History........................................: |vissort-history|
 
 ==============================================================================
-2. Bisort : binary search sort					*bisort*
+2. Sorting a Column				*vissort* *vissort-column*
 
-   :[range]Bisort
+   Sorting a column independently of the surrounding lines~
 
-   Applies an in-place binary-search sort.  Generally its faster than
-   quicksort with Vim since its using Vim's interpreter.
+   |vissort| provides the ability to sort lines based on a column; the
+   technique described here allows one to sort columns independently of any
+   line contents surrounding the column.
 
-   EXAMPLES
+   This topic is also covered on vim's wiki
+>
+	http://vim.wikia.com/wiki/index.php?search=vissort&fulltext=0
+<
+   Select the column using |blockwise-visual| mode (use ctrl-v, move).  Then,
+   assuming <vis.vim> has been installed as a plugin, type
+>
+	:B sort
+<
+   or you may often use an external sorting program; in such a case, the
+   typical command is:
+>
+	:B !sort
+<
+  Since these methods use blockwise-visual selection, the command will appear
+  as
+>
+	:'<,'>B sort
+<
+   Examples:~
 
-	Original Text:
+	Original Text: >
+
 	one      two      three   four
 	five     six      seven   eight
 	nine     ten      eleven  twelve
 	thirteen fourteen fifteen sixteen
+<
+	Use <vis.vim>'s B command with sort - sorts the column only: >
 
-	Use Visual-Line (V) mode to select text, then Bisort - sorts lines:
-		V to select lines
-		:Bisort
-	five     six      seven   eight
-	nine     ten      eleven  twelve
-	one      two      three   four
-	thirteen fourteen fifteen sixteen
-
-	Use <vis.vim>'s B command with Bissort - sorts the column only:
 	    ctrl-v to select column
 	    :'<,'>B Bisort
 	one      fourteen three   four
 	five     six      seven   eight
 	nine     ten      eleven  twelve
 	thirteen two      fifteen sixteen
-
+<
+	Note how only the column (two, six, ten, fourteen) is affected;
+	the rest of the lines are left as they were.
 
 ==============================================================================
-3. Vissort     							*vissort*
+3. Sorting Lines Based Upon a Column			 *vissort-lines*
 >
 	sorting lines based on selected column
 <
@@ -63,59 +79,25 @@ Copyright: (c) 2004-2005 by Charles E. Campbell, Jr.	*vissort-copyright*
    sort the block.  This function sorts the lines *based on the selected
    column*.
 
-   EXAMPLE
+   Example:~
 
-	Original Text:
+	Original Text: >
+
 	one      two      three   four
 	five     six      seven   eight
 	nine     ten      eleven  twelve
 	thirteen fourteen fifteen sixteen
-
+<
 	Use ctrl-v (Visual-Block) to select two..fourteen column,
-	then Vissort:
+	then Vissort: >
+
 	thirteen fourteen fifteen sixteen
 	five     six      seven   eight
 	nine     ten      eleven  twelve
 	one      two      three   four
-
-
+<
 ==============================================================================
-4. Sorting A Column Only				*vissort-column*
->
-	sorting a column independently of the surrounding lines
-<
-   |vissort| provides the ability to sort lines based on a column; the
-   technique described here allows one to sort columns independently of any
-   line contents surrounding the column.
-
-   To accomplish this you'll also need the <vis.vim> script; you may acquire
-   a copy at:
->
-	http://mysite.verizon.net/astronaut/vim/index.html#VimFuncs
-	as "Visual Block Commands"
-<
-   This topic is also covered by the tip:
->
-   http://vim.sourceforge.net/tips/tip.php?tip_id=588
-<
-   Select the column using |blockwise-visual| mode (use ctrl-v, move).  Then,
-   assuming <vis.vim> has been installed as a plugin, type
->
-	:B Bisort
-<
-   or you may often use an external sorting program; in such a case, the
-   typical command is:
->
-	:B !sort
-<
-  Since these methods use blockwise-visual selection, the command will appear
-  as
->
-	:'<,'>B Bisort
-
-
-==============================================================================
-5. BlockSort   							*blocksort*
+4. BlockSort					*vissort-blocksort*
 
    :'<,'>BS
    :'< '>BS nextblock endblock findtag tagpat tagsub
@@ -167,7 +149,7 @@ Copyright: (c) 2004-2005 by Charles E. Campbell, Jr.	*vissort-copyright*
       If the tagsub is "" but the tagpat wasn't "", then the tagsub will
       take on the default value of '\1'.
 
-   EXAMPLES
+   Examples:~
 
     1. :[range]call BlockSort('^[a-z]','---$','\u','^.*\(\u\).*$','\1')
 
@@ -199,7 +181,16 @@ Copyright: (c) 2004-2005 by Charles E. Campbell, Jr.	*vissort-copyright*
              	appears
              	---
 <
-    2. Sorting C functions (see warning above!)  [USE AT YOUR OWN RISK]
+     Explanation of Arguments for Example#1:~
+     [range]call BlockSort(
+     '^[a-z]',       | blocks begin lines with a character in the range [a-z]
+     '---$',         | blocks end with three dashes and end-of-line
+     '\u',           | blocks have at least one upper case character ([A-Z]) in them
+     '^.*\(\u\).*$', | lines  that have an upper case character (ie. are a tag) are
+     '\1')           |        transformed to contain only that upper case character
+
+    2. Sorting C functions (see warning above!)			*CFuncSort*
+			    [USE AT YOUR OWN RISK]~
 
 	:[range]CFuncSort
 	:[range]call BlockSort('','^}','^[^/*]\&^[^ ][^*]\&^.*\h\w*\s*(','^.\{-}\(\h\w*\)\s*(.*$','')
@@ -225,6 +216,45 @@ Copyright: (c) 2004-2005 by Charles E. Campbell, Jr.	*vissort-copyright*
 
 	Once such a line is found, the tagpat operates to identify the function name.
 	Since tagsub is '', its default value of '\1' is used.
+
+     Explanation of Arguments for Example#2:~
+     [range]call BlockSort(
+     '',                                | blocks begin after the next pattern
+     '^}',                              | blocks end with a closing curly
+                                        |     brace which begins the line
+     '^[^/*]\&^[^ ][^*]\&^.*\h\w*\s*(', | the block is tagged by an identifier
+                                        |     followed by optional spaces and
+					|     opening "(".  Some care is taken
+					|     to avoid comment lines.
+     '^.\{-}\(\h\w*\)\s*(.*$',          | the tag is extracted by using this
+                                        |     pattern
+     '')                                | the default value of '\1' is used to
+                                        |     extract only the tag
+
+==============================================================================
+5. Options					*vissort-options*
+
+	g:vissort_sort~
+		Default Value: "sort"
+		This string holds the command used to invoke sorting.
+		(see |:sort|)
+
+	g:vissort_option~
+		Default Value: ""
+		This string holds any options desired; ie. "n".
+		(see |:sort|)
+		One may set this option with the >
+			:VSO x
+<		command, where "x" is an option (such as n or i).
+		One may remove options with >
+			:VSO
+<
+==============================================================================
+6. History						 *vissort-history*
+	v4	Dec 19, 2011	* removed BISort function (which provided
+				  internal sorting for vim v6)
+				* updated document and text
+	v1-3	2005		* sorry, earlier versions didn't have history
 
 
 ==============================================================================

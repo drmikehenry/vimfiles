@@ -2988,15 +2988,11 @@ VISSORT                                                 *notes_vissort*
 
 More commands available at |vissort.txt|
 
+Version 4 (Apr 16, 2013) from:
+http://www.drchip.org/astronaut/vim/index.html#VISSORT
+
 Installation:
-- Distributed as a |vimball|  >
-
-    vim vissort.vba.gz
-    :so %
-    :q
-
-Version 4c from section "Visual Block Sorting" at:
-http://mysite.verizon.net/astronaut/vim/index.html
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 VISSWAP                                                 *notes_visswap*

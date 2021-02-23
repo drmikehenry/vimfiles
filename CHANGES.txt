@@ -28,6 +28,8 @@ require adjustment of per-user settings.
 
 - Update Visswap plugin to version v4g (Feb 18, 2016).
 
+- Update Vissort plugin to version v4 (Apr 16, 2013).
+
 2021-02-18
 ==========
 

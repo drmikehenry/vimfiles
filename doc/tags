@@ -29,8 +29,6 @@ VIMRC_AFTER	notes.txt	/*VIMRC_AFTER*
 VIMRC_BEFORE	notes.txt	/*VIMRC_BEFORE*
 VIMRC_VARS	notes.txt	/*VIMRC_VARS*
 b:loremipsum_file	loremipsum.txt	/*b:loremipsum_file*
-bisort	vissort.txt	/*bisort*
-blocksort	vissort.txt	/*blocksort*
 bundle_installation	notes.txt	/*bundle_installation*
 g:loremipsum_files	loremipsum.txt	/*g:loremipsum_files*
 g:loremipsum_marker	loremipsum.txt	/*g:loremipsum_marker*
@@ -219,8 +217,3 @@ runview-option	RunView.txt	/*runview-option*
 runview-options	RunView.txt	/*runview-options*
 runview-swapwin	RunView.txt	/*runview-swapwin*
 runview-usage	RunView.txt	/*runview-usage*
-vissort	vissort.txt	/*vissort*
-vissort-column	vissort.txt	/*vissort-column*
-vissort-contents	vissort.txt	/*vissort-contents*
-vissort-copyright	vissort.txt	/*vissort-copyright*
-vissort.txt	vissort.txt	/*vissort.txt*
