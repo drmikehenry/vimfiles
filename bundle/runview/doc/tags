@@ -1,0 +1,14 @@
+:RV	RunView.txt	/*:RV*
+:RunView	RunView.txt	/*:RunView*
+RunView.txt	RunView.txt	/*RunView.txt*
+\rh	RunView.txt	/*\\rh*
+\rv	RunView.txt	/*\\rv*
+b:runview_filtcmd	RunView.txt	/*b:runview_filtcmd*
+runview	RunView.txt	/*runview*
+runview-contents	RunView.txt	/*runview-contents*
+runview-filtcmd	RunView.txt	/*runview-filtcmd*
+runview-history	RunView.txt	/*runview-history*
+runview-option	RunView.txt	/*runview-option*
+runview-options	RunView.txt	/*runview-options*
+runview-swapwin	RunView.txt	/*runview-swapwin*
+runview-usage	RunView.txt	/*runview-usage*

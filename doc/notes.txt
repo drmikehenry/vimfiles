@@ -2083,19 +2083,19 @@ Installation:
 RUNVIEW                                                 *notes_runview*
   Run lines through filter into buffer                  |RunView|
 
-Version 1e from:
-http://mysite.verizon.net/astronaut/vim/#RUNVIEW
-
-Installation:
-- Distributed as a |vimball|  >
-
-    vim RunView.vba.gz
-    :so %
-    :q
+Version v4e (Jan 12, 2018) from:
+http://www.drchip.org/astronaut/vim/#RUNVIEW
 
 Local customizations: >
   " Setup Bash as default view to run.
   let g:runview_filtcmd="bash"
+
+Installation:
+- Depends on DrC's Utilities: |notes_cecutils|
+- Follow bundle installation instructions (|bundle_installation|),
+  but MUST ALSO delete this file, since cecutil is installed separately: >
+
+    bundle/runview/plugin/cecutil.vim
 
 ------------------------------------------------------------------------------
 RUST SUPPORT                                            *notes_rust*

@@ -1,5 +1,5 @@
-*RunView.txt*	RunView					Oct 26, 2005
-Copyright:    Copyright (C) 2005 Charles E. Campbell, Jr. {{{1
+*RunView.txt*	RunView					Jan 12, 2018
+Copyright:    Copyright (C) 2018 Charles E. Campbell {{{1
               Permission is hereby granted to use and distribute this code,
               with or without modifications, provided that this copyright
               notice is copied with it. Like anything else that's free,
@@ -22,10 +22,11 @@ Copyright:    Copyright (C) 2005 Charles E. Campbell, Jr. {{{1
 ==============================================================================
 2. Usage						*runview-usage*
 
-   COMMAND
+   COMMAND	*:RunView*  *:RV*
    	:[range]RunView[!] [filtercommand]
+   	:[range]RV[!] [filtercommand]
 
-   VISUAL MODE MAPS
+   VISUAL MODE MAPS	*\rh*	*\rv*
 	(visual-line-selection) \rh
 	(visual-line-selection) \rv
 
@@ -36,18 +37,21 @@ Copyright:    Copyright (C) 2005 Charles E. Campbell, Jr. {{{1
 	to override this.  The RunView command lets you specify the filter
 	on the command line, too.
 
-	The output is placed in a separate window; it is horizontally or
-	vertically separated.  Source code is left unchanged and visible.
+	However, if the filtercommand has a "%" in it, then the current file
+	name is substituted for the "%" and executed by  :r! filtercommand .
+
+	The output is placed in a separate window; it is horizontally (\rh) or
+	vertically (\rv) placed.  Source code is left unchanged and visible.
 
 	Without the !, the RunView command uses vertically stacked windows.
-	With the !, the RunView command uses horizontally separated windows.
+	With the !, the RunView command uses horizontally adjacent windows.
 
 	As an example, consider the file: >
 		echo "one"
 		echo "two"
 		echo "three"
 <	Using >
-		:%RunView ksh
+		:%RunView! ksh
 <	the source code window is left on top, but the results of filtering
 	the three lines is shown below it: >
 		echo "one"
@@ -80,6 +84,10 @@ Copyright:    Copyright (C) 2005 Charles E. Campbell, Jr. {{{1
 	The g:runview_filtcmd specifies the default application that will
 	be used to filter lines.
 
+	One may use *b:runview_filtcmd* , too (see |buffer-variable|).
+	This variant works well with |ftplugin|s; ie. one can have
+	the action that |:RV| takes depend on the filetype.
+
 	If g:runview_swapwin is true, then the source lines and output
 	window will be swapped (horizontal: top<>bottom, vertical:left<>right).
 
@@ -87,7 +95,16 @@ Copyright:    Copyright (C) 2005 Charles E. Campbell, Jr. {{{1
 ==============================================================================
 4. History						*runview-history*
 
-	v1  Oct 26, 2005 : Initial release
+	v3 	Nov 25, 2013 *	various bug fixes
+		Jul 02, 2015 *	changed %d to use blackhole register (%d _)
+		Jan 12, 2018 *	improved decision concerning when to append
+				vs when to create a new window for output
+	v2	Jan 07, 2009 *	Updated syntax highlighting.
+				Changed default to vertical split
+		Jul 20, 2010 *	runview buffer now a scratch buffer
+				(see |special-buffers|)
+		Nov 08, 2011 *	added "%" to let filtercommand take a filename
+	v1	Oct 26, 2005 *	Initial release
 
 
 ==============================================================================

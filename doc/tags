@@ -12,7 +12,6 @@ GrepUnderscorePattern()	notes.txt	/*GrepUnderscorePattern()*
 Lmc	notes.txt	/*Lmc*
 LmcToUnderscore	notes.txt	/*LmcToUnderscore*
 NOTE	notes.txt	/*NOTE*
-RunView.txt	RunView.txt	/*RunView.txt*
 SearchLmc	notes.txt	/*SearchLmc*
 SearchLmcPattern()	notes.txt	/*SearchLmcPattern()*
 SearchUmc	notes.txt	/*SearchUmc*
@@ -209,11 +208,3 @@ project-settings	project.txt	/*project-settings*
 project-syntax	project.txt	/*project-syntax*
 project-tips	project.txt	/*project-tips*
 project.txt	project.txt	/*project.txt*
-runview	RunView.txt	/*runview*
-runview-contents	RunView.txt	/*runview-contents*
-runview-filtcmd	RunView.txt	/*runview-filtcmd*
-runview-history	RunView.txt	/*runview-history*
-runview-option	RunView.txt	/*runview-option*
-runview-options	RunView.txt	/*runview-options*
-runview-swapwin	RunView.txt	/*runview-swapwin*
-runview-usage	RunView.txt	/*runview-usage*

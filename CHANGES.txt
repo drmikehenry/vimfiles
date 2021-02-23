@@ -30,6 +30,8 @@ require adjustment of per-user settings.
 
 - Update Vissort plugin to version v4 (Apr 16, 2013).
 
+- Update RunView plugin to version v4e (Jan 12, 2018).
+
 2021-02-18
 ==========
 
