@@ -1842,7 +1842,7 @@ NETRW                                                   *notes_netrw*
 Version 147e from:
 http://www.vim.org/scripts/script.php?script_id=1075
 
-(Also check Dr. Chip's site: http://mysite.verizon.net/astronaut/vim/#NETRW)
+(Also check Dr. Chip's site: http://www.drchip.org/astronaut/vim/#NETRW)
 
 Use <Leader>fe to invoke :Explore.  This will explore in the directory
 of the current file.
