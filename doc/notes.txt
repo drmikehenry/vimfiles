@@ -17,6 +17,7 @@
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
     BufMRU - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
+    Cecutil - Utilities for Dr. Chip's plugins          |notes_cecutil|
     Characterize - A better 'ga'                        |notes_characterize|
     Clojure-static - Edit Clojure without runtime       |notes_clojure-static|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
@@ -813,6 +814,16 @@ See also:
 
 Version 2018-03-20 (795dd38) from:
 https://github.com/qpkorr/vim-bufkill.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+CECUTIL                                                  *notes_cecutil*
+  Utilities for Dr. Chip's plugins
+
+Version v18k (Nov 22, 2017) from:
+http://www.drchip.org/astronaut/vim/index.html#CECUTIL
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
