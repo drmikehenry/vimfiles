@@ -3008,15 +3008,12 @@ the two regions.
 (The default is CTRL-x to "exchange" the regions, but this conflicts with the
 swapit plugin.)
 
+Version v4g (Feb 18, 2016) from:
+http://www.drchip.org/astronaut/vim/index.html#VISSWAP
+
 Installation:
-- Distributed as a |vimball|  >
-
-    vim visswap.vba.gz
-    :so %
-    :q
-
-Version 4e from section "Visual Mode Based Swap" at:
-http://mysite.verizon.net/astronaut/vim/index.html
+- Depends on DrC's Utilities: |notes_cecutils|
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 WOMBAT256I                                              *notes_wombat256i*

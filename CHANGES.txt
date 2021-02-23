@@ -26,6 +26,8 @@ require adjustment of per-user settings.
 
 - Update Visincr plugin to version 21h (Nov 22, 2017).
 
+- Update Visswap plugin to version v4g (Feb 18, 2016).
+
 2021-02-18
 ==========
 

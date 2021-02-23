@@ -1,7 +1,7 @@
 " visswap.vim   : Visual Mode Based Swapping
-"  Author:	Charles E. Campbell, Jr.
-"  Date:	Mar 07, 2006
-"  Version:	4e	ASTRO-ONLY
+"  Author:	Charles E. Campbell
+"  Date:	Feb 18, 2016
+"  Version:	4g	ASTRO-ONLY
 "  Usage:
 "		Visually select some text, then <ctrl-y>  (initialize)
 "       Visually select some text, then <ctrl-x>  (swap)
@@ -13,7 +13,7 @@ if &cp || exists("g:loaded_visswap")
  finish
 endif
 let s:keepcpo        = &cpo
-let g:loaded_visswap = "v4e"
+let g:loaded_visswap = "v4g"
 set cpo&vim
 
 " ---------------------------------------------------------------------
@@ -49,7 +49,7 @@ fun! s:VisualPreSwap()
   let s:startswapcol_y = virtcol("'<")
   let s:endswapline_y  = line("'>")
   let s:endswapcol_y   = virtcol("'>")
-  if s:vismode_y =~ "[vV]"
+  if s:vismode_y =~# "[vV]"
    echo "visual (".s:vismode_y.") mode swap initialized"
   else
    echo "visual (ctrl-v) mode swap initialized"
@@ -92,7 +92,7 @@ fun! s:VisualSwap()
   "         delete block y
   "         put block x in y's place
   " Case 2: opposite sequence         - chosen when y appears later in the file
-  if   ( s:vismode_y =~ "[vV]" && s:startswapline_y < s:startswapline_x ) ||
+  if   ( s:vismode_y =~# "[vV]" && s:startswapline_y < s:startswapline_x ) ||
    	 \ ( s:startswapline_y == s:startswapline_x && s:startswapcol_y < s:startswapcol_x ) ||
    	 \ ( s:startswapcol_y <= s:startswapcol_x )
 "   call Decho("case 1 : del x, put y, del y, put x")
@@ -118,8 +118,7 @@ fun! s:VisualReplace()
 
   let g:curposn = SaveWinPosn(0)
 "  call Decho("curposn=".g:curposn)
-  let keep_ve   = &ve
-  set ve
+  call s:SaveUserSettings()
 
   let repline1 = line("'<")
   let repline2 = line("'>")
@@ -135,7 +134,6 @@ fun! s:VisualReplace()
   endif
 "  call Decho("rep[".repline1.",".repcol1."] [".repline2.",".repcol2."]")
 
-  let keepa= @a
   norm! gv"ay
   call RestoreWinPosn(g:curposn)
   let linediff = repline2 - repline1
@@ -144,14 +142,34 @@ fun! s:VisualReplace()
   exe "keepjumps norm! \<c-v>".linediff."j".coldiff."lc\<c-o>".'"aP'."\<esc>"
 "  call Decho("@a=".@a)
 
-  " restore register @a, visual-block selection, and window positioning
-  let @a= keepa
 "  call Decho("exe norm! \<c-v>".linediff."j".coldiff."l\<esc>")
   exe "keepjumps norm! ".repline1."G".repcol1."\<bar>\<c-v>".linediff."j".coldiff."l\<esc>"
-  let &ve= keep_ve
+  call s:RestoreUserSettings()
   call RestoreWinPosn(g:curposn)
 
 "  call Dret("VisualReplace")
+endfun
+
+" ---------------------------------------------------------------------
+" s:SaveUserSettings: {{{2
+fun! s:SaveUserSettings()
+"  call Dfunc("s:SaveUserSettings()")
+  let s:keep_rega = @a
+  let s:keep_cedit= &cedit
+  let s:keep_ve   = &ve
+  set cedit& ve
+"  call Dret("s:SaveUserSettings")
+endfun
+
+" ---------------------------------------------------------------------
+" s:RestoreUserSettings: {{{2
+fun! s:RestoreUserSettings()
+"  call Dfunc("s:RestoreUserSettings()")
+  let &cedit= s:keep_cedit
+  let &ve   = s:keep_ve
+  let @a    = s:keep_rega
+  unlet s:keep_cedit s:keep_ve s:keep_rega
+"  call Dret("s:RestoreUserSettings")
 endfun
 
 " ---------------------------------------------------------------------

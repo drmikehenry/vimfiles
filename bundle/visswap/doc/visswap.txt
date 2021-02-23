@@ -1,8 +1,8 @@
-*visswap.txt*	Visual-Mode Based Text Swapping		Jun 16, 2006
+*visswap.txt*	Visual-Mode Based Text Swapping		Feb 18, 2016
 
-Author:  Charles E. Campbell, Jr.  <NdrchipO@ScampbellPfamily.AbizM>
+Author:  Charles E. Campbell  <NdrchipO@ScampbellPfamily.AbizM>
 	  (remove NOSPAM from Campbell's email first)
-Copyright: (c) 2004-2006 by Charles E. Campbell, Jr.	*visswap-copyright*
+Copyright: (c) 2004-2013 by Charles E. Campbell		*visswap-copyright*
            The VIM LICENSE applies to visswap.vim and visswap.txt
            (see |copyright|) except use "visswap" instead of "Vim"
 	   No warranty, express or implied.  Use At-Your-Own-Risk.
@@ -26,7 +26,7 @@ Copyright: (c) 2004-2006 by Charles E. Campbell, Jr.	*visswap-copyright*
 ==============================================================================
 2. Visual-Mode Based Replacement			*visswap-replace* *v_vr*
 
-	This mapping allows one to use a visually selected block of text 
+	This mapping allows one to use a visually selected block of text
 	to replace text at another location.
 
 	Use visual block mode to select the text block (ctrl-v).
@@ -88,8 +88,8 @@ Copyright: (c) 2004-2006 by Charles E. Campbell, Jr.	*visswap-copyright*
 	   The first selection is 1[...] and the second one is 2[...].
 	   The result after swapping:
 
-		one       two      three    six     
-		five      four     seven    ten     
+		one       two      three    six
+		five      four     seven    ten
 		nine      eight    eleven   fourteen
 		thirteen  twelve   fifteen  sixteen
 		seventeen eighteen nineteen twenty
@@ -97,11 +97,17 @@ Copyright: (c) 2004-2006 by Charles E. Campbell, Jr.	*visswap-copyright*
 ==============================================================================
 3. History						*visswap-history*
 
-	v4 Oct 25, 2004 : * \vr (VisualReplace) implemented
-	   Dec 02, 2005   * debugging inserted, chgd 1->y 2->x in variable
-	                    names to relate to the ctrl-y, ctrl-x actions
-	   Jan 25, 2006   * SaveWinPosn(0) used to prevent stores on stack
-	   Mar 07, 2006   * noremap setting now elicits a warning
-	v3 Oct 12, 2004 : * the epic (visual selection-based swapping)
+	v4	Oct 25, 2004	* \vr (VisualReplace) implemented
+		Dec 02, 2005	* debugging inserted, chgd 1->y 2->x in variable
+				  names to relate to the ctrl-y, ctrl-x actions
+		Jan 25, 2006	* SaveWinPosn(0) used to prevent stores on stack
+		Mar 07, 2006	* noremap setting now elicits a warning
+		Mar 18, 2013	* (Gary Johnson) pointed out that changing
+				  cedit to <Esc> caused problems with visincr;
+				  the cedit setting is now bypassed in visswap,
+				  too.
+		Feb 18, 2016	* Changed =~ to =~# matching
+	v3	Oct 12, 2004	* the epic (visual selection-based swapping)
 
+==============================================================================
 vim:tw=78:ts=8:ft=help
