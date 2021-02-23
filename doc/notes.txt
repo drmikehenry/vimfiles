@@ -2912,9 +2912,8 @@ The "S" command in visual mode:
 Version v22 (Jan 7, 2020) from:
 http://www.drchip.org/astronaut/vim/index.html#VIS
 
-Depends on DrC's Utilities: |notes_cecutils|
-
 Installation:
+- Depends on DrC's Utilities: |notes_cecutils|
 - Follow bundle installation instructions (|bundle_installation|),
   but MUST ALSO delete this file, since cecutil is installed separately: >
 
@@ -2954,16 +2953,12 @@ See the following:
   Restricted left-justified incrementing......|visincr-RI|
   Restricted right-justified incrementing.....|visincr-RII|
 
+Version 21h (Nov 22, 2017) from:
+http://www.drchip.org/astronaut/vim/index.html#VISINCR
 
 Installation:
-- Distributed as a |vimball|  >
-
-    vim visincr.vba.gz
-    :so %
-    :q
-
-Version 20b from section "Visual Incrementing" at:
-http://mysite.verizon.net/astronaut/vim/index.html
+- Depends on Calendar Utilities: |notes_calutils|
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 VISSORT                                                 *notes_vissort*

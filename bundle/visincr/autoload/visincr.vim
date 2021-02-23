@@ -1,7 +1,7 @@
 " visincr.vim: Visual-block incremented lists
-"  Author:      Charles E. Campbell, Jr.  Ph.D.
-"  Date:        Oct 07, 2008
-"  Version:     20b	ASTRO-ONLY
+"  Author:      Charles E. Campbell
+"  Date:        Nov 22, 2017
+"  Version:     21h	ASTRO-ONLY
 "
 "				Visincr assumes that a block of numbers selected by a
 "				ctrl-v (visual block) has been selected for incrementing.
@@ -25,7 +25,7 @@
 if &cp || exists("g:loaded_visincr")
   finish
 endif
-let g:loaded_visincr = "v20b"
+let g:loaded_visincr = "v21h"
 if v:version < 700
  echohl WarningMsg
  echo "***warning*** this version of visincr needs vim 7.0"
@@ -34,41 +34,50 @@ if v:version < 700
 endif
 let s:keepcpo= &cpo
 set cpo&vim
+"DechoTabOn
 
 " ---------------------------------------------------------------------
 "  Methods: {{{1
 let s:I      = 0 
 let s:II     = 1 
-let s:IMDY   = 2 
-let s:IYMD   = 3 
-let s:IDMY   = 4 
-let s:ID     = 5 
-let s:IM     = 6 
-let s:IA     = 7 
-let s:IX     = 8 
-let s:IIX    = 9 
-let s:IO     = 10
-let s:IIO    = 11
-let s:IR     = 12
-let s:IIR    = 13
-let s:IPOW   = 14
-let s:IIPOW  = 15
-let s:RI     = 16
-let s:RII    = 17
-let s:RIMDY  = 18
-let s:RIYMD  = 19
-let s:RIDMY  = 20
-let s:RID    = 21
-let s:RIM    = 22
-let s:RIA    = 23
-let s:RIX    = 24
-let s:RIIX   = 25
-let s:RIO    = 26
-let s:RIIO   = 27
-let s:RIR    = 28
-let s:RIIR   = 29
-let s:RIPOW  = 30
-let s:RIIPOW = 31
+let s:IMOD   = 2 
+let s:IREP   = 3 
+let s:IMDY   = 4 
+let s:IYMD   = 5 
+let s:IDMY   = 6 
+let s:ID     = 7 
+let s:IM     = 8 
+let s:IA     = 9 
+let s:IX     = 10
+let s:IIX    = 11
+let s:IB     = 12
+let s:IIB    = 13
+let s:IO     = 14
+let s:IIO    = 15
+let s:IR     = 16
+let s:IIR    = 17
+let s:IPOW   = 18
+let s:IIPOW  = 19
+let s:RI     = 20
+let s:RII    = 21
+let s:RIMOD  = 22
+let s:RIREP  = 23
+let s:RIMDY  = 24
+let s:RIYMD  = 25
+let s:RIDMY  = 26
+let s:RID    = 27
+let s:RIM    = 28
+let s:RIA    = 29
+let s:RIX    = 30
+let s:RIIX   = 31
+let s:RIB    = 32
+let s:RIIB   = 33
+let s:RIO    = 34
+let s:RIIO   = 35
+let s:RIR    = 36
+let s:RIIR   = 37
+let s:RIPOW  = 38
+let s:RIIPOW = 39
 
 " ------------------------------------------------------------------------------
 " Options: {{{1
@@ -91,7 +100,7 @@ fun! visincr#VisBlockIncr(method,...)
   " avoid problems with user options {{{3
   call s:SaveUserOptions()
 
-  " visblockincr only uses visual-block! {{{3
+  " visblockincr uses visual-block only! {{{3
 "  call Decho("visualmode<".visualmode().">")
   if visualmode() != "\<c-v>"
    echoerr "Please use visual-block mode (ctrl-v)!"
@@ -101,10 +110,12 @@ fun! visincr#VisBlockIncr(method,...)
   endif
 
   " save boundary line numbers and set up method {{{3
-  let y1      = line("'<")
-  let y2      = line("'>")
-  let method  = (a:method >= s:RI)? (a:method - s:RI) : a:method
-  let leaddate= g:visincr_leaddate
+  let y1        = line("'<")
+  let y2        = line("'>")
+  let method    = (a:method >= s:RI)? (a:method - s:RI) : a:method
+  let leaddate  = g:visincr_leaddate
+  let modulus   = 10
+  let modoffset = 0
 "  call Decho("a:method=".a:method." s:RI=".s:RI." method=".method." leaddeate<".leaddate.">")
 
   " get increment (default=1; except for power increments, that's default=2) {{{3
@@ -113,6 +124,8 @@ fun! visincr#VisBlockIncr(method,...)
 "   call Decho("incr<".incr.">")
    if method == s:IX || method == s:IIX
    	let incr= s:Hex2Dec(incr)
+   elseif method == s:IB || method == s:IIB
+	let incr= s:Bin2Dec(incr)
    elseif method == s:IO || method == s:IIO
    	let incr= s:Oct2Dec(incr)
    endif
@@ -121,7 +134,7 @@ fun! visincr#VisBlockIncr(method,...)
   else
    let incr= 1
   endif
-"  call Decho("incr=".incr)
+"  call Decho("get increment: incr=".incr)
 
   " set up restriction pattern {{{3
   let leftcol = virtcol("'<")
@@ -136,7 +149,7 @@ fun! visincr#VisBlockIncr(method,...)
   let width= rghtcol - leftcol + 1
 "  call Decho("width= [rghtcol=".rghtcol."]-[leftcol=".leftcol."]+1=".width)
 
-  if     a:method == s:RI
+  if     a:method == s:RI || a:method == s:RIMOD || a:method == s:RIREP
    let restrict= '\%'.col(".").'c\d'
 "   call Decho(":I restricted<".restrict.">")
 
@@ -166,7 +179,15 @@ fun! visincr#VisBlockIncr(method,...)
     let restrict= '\c\%'.col(".").'c\(mon\|tue\|wed\|thu\|fri\|sat\|sun\)'
    endif
 "   call Decho(":ID restricted<".restrict.">")
-
+  elseif a:method == s:RIA
+   let restrict= '\%'.col(".").'c\a'
+"   call Decho(":IA restricted<".restrict.">")
+  elseif a:method == s:RIB
+   let restrict= '\%'.col(".").'c[01]'
+"   call Decho(":IB restricted<".restrict.">")
+  elseif a:method == s:RIIB
+   let restrict= '\%'.col(".").'c\s\{,'.width.'}[01]'
+"   call Decho(":IIB restricted<".restrict.">")
   elseif a:method == s:RIM
    if exists("g:visincr_month")
    	let monlist = substitute(g:visincr_month,'\(\a\{1,3}\)[^,]*\%(,\|$\)','\1\\|','ge')
@@ -177,6 +198,18 @@ fun! visincr#VisBlockIncr(method,...)
     let restrict= '\c\%'.col(".").'c\(jan\|feb\|mar\|apr\|may\|jun\|jul\|aug\|sep\|oct\|nov\|dec\)'
    endif
 "   call Decho(":IM restricted<".restrict.">")
+  elseif a:method == s:RIO
+   let restrict= '\%'.col(".").'c\o'
+"   call Decho(":IO restricted<".restrict.">")
+  elseif a:method == s:RIIO
+   let restrict= '\%'.col(".").'c\s\{,'.width.'}\o'
+"   call Decho(":IIB restricted<".restrict.">")
+  elseif a:method == s:RIX
+   let restrict= '\%'.col(".").'c\x'
+"   call Decho(":IX restricted<".restrict.">")
+  elseif a:method == s:RIIX
+   let restrict= '\%'.col(".").'c\s\{,'.width.'}\x'
+"   call Decho(":IIX restricted<".restrict.">")
 
   elseif a:method == s:RIPOW
    let restrict= '\%'.col(".").'c\d'
@@ -187,17 +220,27 @@ fun! visincr#VisBlockIncr(method,...)
 "   call Decho(":RIIPOW restricted<".restrict.">")
   endif
 
-  " determine zfill {{{3
+  " determine zfill/leaddate/modulus/modoffset {{{3
 "  call Decho("a:0=".a:0." method=".method)
   if a:0 > 1 && ((s:IMDY <= method && method <= s:IDMY) || (s:RIMDY <= method && method <= s:RIDMY))
    let leaddate= a:2
 "   call Decho("set leaddate<".leaddate.">")
-  elseif a:0 > 1 && method
+  elseif a:0 > 1 && (method == s:II || method == s:IIX || method == s:IIB || method == s:IIO || method == s:IIR || method == s:IIPOW)
    let zfill= a:2
    if zfill == "''" || zfill == '""'
    	let zfill=""
    endif
 "   call Decho("set zfill<".zfill.">")
+  elseif a:0 > 1 && (method == s:IMOD || method == s:RIMOD || method == s:IREP || method == s:RIREP)
+   " :IMOD [incr [modulus [modoffset]]]
+   " :IREP [incr [modulus [modoffset]]]
+	let modulus= a:2
+   if a:0 > 2
+    let modoffset= a:3
+   endif
+   let zfill= ' '
+"   call Decho("set modulus=".modulus." modoffset=".modoffset)
+
   else
    " default zfill (a single space)
    let zfill= ' '
@@ -252,7 +295,7 @@ fun! visincr#VisBlockIncr(method,...)
 	let idow= 0
 	while idow < 7
 "	 call Decho("dow<".dow.">  dow_".idow."<".dow_{idow}.">")
-	 if dow =~ '\c\<'.strpart(dow_{idow},0,3)
+	 if dow =~? '\c\<'.strpart(dow_{idow},0,3)
 	  break
 	 endif
 	 let idow= idow + 1
@@ -322,7 +365,7 @@ fun! visincr#VisBlockIncr(method,...)
 	" identify month under cursor
 	let imon= 0
 	while imon < 12
-	 if mon =~ '\c\<'.strpart(mon_{imon},0,3)
+	 if mon =~? '\c\<'.strpart(mon_{imon},0,3)
 	  break
 	 endif
 	 let imon= imon + 1
@@ -373,7 +416,7 @@ fun! visincr#VisBlockIncr(method,...)
 	if letter !~ '\a'
 	 let letter= 'A'
 	endif
-	if letter =~ '[a-z]'
+	if letter =~# '[a-z]'
 	 let alphabet='abcdefghijklmnopqrstuvwxyz'
 	else
 	 let alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -383,6 +426,11 @@ fun! visincr#VisBlockIncr(method,...)
     norm! `<
     let l = y1
     while l <= y2
+	 if exists("restrict") && getline(".") !~ restrict
+	  silent! norm! j
+	  let l= l + 1
+	  continue
+	 endif
 "	 call Decho("letter<".letter."> l=".l." ilet=".ilet)
 	 exe 's/\%'.leftcol.'v.*\%'.rghtcol.'v/'.letter.'/e'
 	 let ilet   = (ilet + incr)%26
@@ -458,7 +506,7 @@ fun! visincr#VisBlockIncr(method,...)
    let l = y1
    while l <= y2
 	 if exists("restrict") && getline(".") !~ restrict
-	  norm! j
+	  silent! norm! j
 	  let l= l + 1
 	  continue
 	 endif
@@ -501,7 +549,7 @@ fun! visincr#VisBlockIncr(method,...)
    return
   endif " IMDY  IYMD  IDMY  ID  IM
 
-  " I II IX IIX IO IIO IR IIR IPOW IIPOW: {{{3
+  " I IMOD IREP II IX IIX IB IIB IO IIO IR IIR IPOW IIPOW: {{{3
   " construct a line from the first line that only has the number in it
   let rml   = rghtcol - leftcol
   let rmlp1 = rml  + 1
@@ -532,19 +580,21 @@ fun! visincr#VisBlockIncr(method,...)
    " region not beginning at far left
 "   call Decho("handle visblock not at far left")
    if method == s:IX || method == s:IIX
-    let pat = '^\(.\{-}\)\%'.leftcol.'v\([0-9a-fA-F \t]\{1,'.rmlp1.'}\).*$'
+    let pat = '^\(.\{-}\)\%'.leftcol.'v\([-0-9a-fA-F \t]\{1,'.rmlp1.'}\).*$'
+   elseif method == s:IB || method == s:IIB
+    let pat = '^\(.\{-}\)\%'.leftcol.'v\([01 \t]\{1,'.rmlp1.'}\).*$'
    elseif method == s:IO || method == s:IIO
     let pat = '^\(.\{-}\)\%'.leftcol.'v\([0-7 \t]\{1,'.rmlp1.'}\).*$'
    elseif method == s:IR || method == s:IIR
-"    call Decho('test: ^\(.\{-}\)\%'.leftcol.'v\([0-9 \t]\{1,'.rmlp1.'}\).*$')
-    if getline(".") =~ '^\(.\{-}\)\%'.leftcol.'v\([0-9 \t]\{1,'.rmlp1.'}\).*$'
+"    call Decho('test: ^\(.\{-}\)\%'.leftcol.'v\([-0-9 \t]\{1,'.rmlp1.'}\).*$')
+    if getline(".") =~ '^\(.\{-}\)\%'.leftcol.'v\([-0-9 \t]\{1,'.rmlp1.'}\).*$'
 	 " need to convert arabic notation to roman numeral
      let pat = '^\(.\{-}\)\%'.leftcol.'v\([0-9IVXCLM \t]\{1,'.rmlp1.'}\).*$'
 	else
      let pat = '^\(.\{-}\)\%'.leftcol.'v\([IVXCLM \t]\{1,'.rmlp1.'}\).*$'
 	endif
    else
-    let pat = '^\(.\{-}\)\%'.leftcol.'v\([0-9 \t]\{1,'.rmlp1.'}\).*$'
+    let pat = '^\(.\{-}\)\%'.leftcol.'v\([-0-9 \t]\{1,'.rmlp1.'}\).*$'
    endif
 "   call Decho("pat<".pat.">")
    let cnt = substitute(getline("'<"),pat,'\2',"")
@@ -553,11 +603,13 @@ fun! visincr#VisBlockIncr(method,...)
   let cntlen = strlen(cnt)
   let cnt    = substitute(cnt,'\s','',"ge")
   let ocnt   = cnt
-"  call Decho("cntlen=".cntlen." cnt=".cnt." ocnt=".ocnt." (before I*[XOR] subs)")
+"  call Decho("cntlen=".cntlen." cnt=".cnt." ocnt=".ocnt." (before I*[BXOR] subs)")
 
   " elide leading zeros
   if method == s:IX || method == s:IIX
    let cnt= substitute(cnt,'^0*\([1-9a-fA-F]\|0$\)','\1',"ge")
+  elseif method == s:IB || method == s:IIB
+   let cnt= substitute(cnt,'^0*\(1\|0$\)','\1',"ge")
   elseif method == s:IO || method == s:IIO
    let cnt= substitute(cnt,'^0*\([1-7]\|0$\)','\1',"ge")
   elseif method == s:IR || method == s:IIR
@@ -579,6 +631,8 @@ fun! visincr#VisBlockIncr(method,...)
   " determine how much incrementing is needed {{{3
   if method == s:IX || method == s:IIX
    let maxcnt= s:Dec2Hex(s:Hex2Dec(cnt) + incr*(y2 - y1))
+  elseif method == s:IB || method == s:IIB
+   let maxcnt= s:Dec2Bin(s:Bin2Dec(cnt) + incr*(y2 - y1))
   elseif method == s:IO || method == s:IIO
    let maxcnt= s:Dec2Oct(s:Oct2Dec(cnt) + incr*(y2 - y1))
   elseif method == s:IR || method == s:IIR
@@ -602,6 +656,7 @@ fun! visincr#VisBlockIncr(method,...)
     endwhile
    endif
   else
+   " s:I s:II s:IMOD s:IREP
    let maxcnt= printf("%d",cnt + incr*(y2 - y1))
   endif
   let maxcntlen= strlen(maxcnt)
@@ -626,7 +681,7 @@ fun! visincr#VisBlockIncr(method,...)
 "   call Decho("----- while [l=".l."] <= [y2=".y2."]: cnt=".cnt)
 	if exists("restrict") && getline(".") !~ restrict
 "	 call Decho("skipping <".getline(".")."> (restrict)")
-	 norm! j
+	 silent! norm! j
 	 let l= l + 1
 	 continue
 	endif
@@ -660,7 +715,7 @@ fun! visincr#VisBlockIncr(method,...)
 
 	" back up to left-of-block (plus optional left-hand-side modeling) (left-justification support) {{{3
 	norm! 0
-	if method == s:I || method == s:IO || method == s:IX || method == s:IR || method == s:IPOW
+	if method == s:I || method == s:IB || method == s:IO || method == s:IX || method == s:IR || method == s:IPOW || method == s:IMOD || method == s:IREP
 	 let bkup= leftcol
 "	 call Decho("bkup= [leftcol=".leftcol."]  (due to method)")
 	elseif maxcntlen > 0
@@ -680,7 +735,13 @@ fun! visincr#VisBlockIncr(method,...)
 
 	" replace with count {{{3
 "    call Decho("exe norm! R" . cnt . "\<Esc>")
-    exe "norm! R" . cnt . "\<Esc>"
+	if method == s:IMOD
+	 exe "norm! R" . (((cnt - modoffset)%modulus)+modoffset) . "\<Esc>"
+	elseif method == s:IREP
+	 exe "norm! R" . (((cnt - modoffset)/modulus)+modoffset) . "\<Esc>"
+	else
+     exe "norm! R" . cnt . "\<Esc>"
+	endif
 	if cntlen > 1
 	 let cntlenm1= cntlen - 1
 	 exe "norm! " . cntlenm1 . "h"
@@ -695,6 +756,8 @@ fun! visincr#VisBlockIncr(method,...)
 	endif
     if method == s:IX || method == s:IIX
      let cnt= s:Dec2Hex(s:Hex2Dec(cnt) + incr)
+	elseif method == s:IB || method == s:IIB
+     let cnt= s:Dec2Bin(s:Bin2Dec(cnt) + incr)
 	elseif method == s:IO || method == s:IIO
      let cnt= s:Dec2Oct(s:Oct2Dec(cnt) + incr)
 	elseif method == s:IR || method == s:IIR
@@ -737,7 +800,7 @@ fun! s:Hex2Dec(hex)
    if hexdigit =~ '\d'
    	let hexdigit= char2nr(hexdigit) - char2nr('0')
 "	call Decho("0-9: hexdigit=".hexdigit)
-   elseif hexdigit =~ '[a-f]'
+   elseif hexdigit =~# '[a-f]'
    	let hexdigit= char2nr(hexdigit) - char2nr('a') + 10
 "	call Decho("a-f: hexdigit=".hexdigit)
    else
@@ -845,6 +908,63 @@ fun! s:Dec2Oct(b10)
 endfun
 
 " ------------------------------------------------------------------------------
+" Bin2Dec: convert binary to decimal {{{2
+fun! s:Bin2Dec(bin)
+"  call Dfunc("Bin2Dec(bin=".a:bin.")")
+  if a:bin >= 0
+   let n  = a:bin
+   let neg= 0
+  else
+   let n   = strpart(a:bin,1)
+   let neg = 1
+  endif
+
+  let b10 = 0
+  while n != ""
+   let bindigit= strpart(n,0,1)
+   if bindigit =~ '[01]'
+   	let bindigit= char2nr(bindigit) - char2nr('0')
+"	call Decho("bindigit=".bindigit)
+   else
+   	break
+   endif
+   let b10= 2*b10 + bindigit
+   let n  = strpart(n,1)
+  endwhile
+
+  if neg
+   let b10= -b10
+  endif
+"  call Dret("Bin2Dec ".b10)
+  return b10
+endfun
+
+" ---------------------------------------------------------------------
+" Dec2Bin: convert decimal to binary {{{2
+fun! s:Dec2Bin(b10)
+"  call Dfunc("Dec2Bin(b10=".a:b10.")")
+  if a:b10 >= 0
+   let b10 = a:b10
+   let neg = 0
+  else
+   let b10 = -a:b10
+   let neg = 1
+  endif
+
+  let bin = ""
+  while b10
+   let bin = '01'[b10 % 2] . bin
+   let b10 = b10 / 2
+  endwhile
+
+  if neg
+   let bin= "-".bin
+  endif
+"  call Dret("Dec2Bin ".bin)
+  return bin
+endfun
+
+" ------------------------------------------------------------------------------
 "  Roman Numeral Support: {{{2
 let s:d2r= [ [ 1000000 , 'M)'   ],[900000 , 'CM)' ], [500000 , 'D)'  ], [400000 , 'CD)' ], [100000 , 'C)'  ], [90000 , 'XC)' ], [50000 , 'L)' ], [40000 , 'XL)' ], [10000 , 'X)' ], [9000  , 'IX)'], [5000 , 'V)'], [1000 , 'M'  ], [900  , 'CM'], [500 , 'D'], [400  , 'CD'], [100 , 'C'], [90   , 'XC'], [50  , 'L'], [40   , 'XL'], [10  , 'X'], [9    , 'IX'], [5   , 'V'], [4    , 'IV'], [1   , 'I'] ]
 
@@ -858,7 +978,7 @@ fun! s:Rom2Dec(roman)
   while roman != ''
    for item in s:d2r
    	let pat= '^'.item[1]
-	if roman =~ pat
+	if roman =~# pat
 	 let dec= dec + item[0]
 	 if strlen(item[1]) > 1
 	  let roman= strpart(roman,strlen(item[1])-1)
@@ -902,12 +1022,17 @@ endfun
 " SaveUserOptions: {{{2
 fun! s:SaveUserOptions()
 "  call Dfunc("SaveUserOptions()")
+  let s:ceditkeep = &cedit
+  let s:eikeep    = &ei
+  let s:fdmkeep   = &fdm
   let s:fokeep    = &fo
   let s:gdkeep    = &gd
   let s:ickeep    = &ic
+  let s:lzkeep    = &lz
   let s:magickeep = &magic
   let s:reportkeep= &report
-  set fo=tcq magic report=9999 noic nogd
+  let s:selkeep   = &sel
+  set fo=tcq magic report=9999 noic nogd lz ei=all fdm=manual cedit& sel&
 "  call Dret("SaveUserOptions")
 endfun
 
@@ -915,11 +1040,17 @@ endfun
 " RestoreUserOptions: {{{2
 fun! s:RestoreUserOptions()
 "  call Dfunc("RestoreUserOptions()")
+  let &cedit = s:ceditkeep
+  let &ei    = s:eikeep
+  let &fdm   = s:fdmkeep
   let &fo    = s:fokeep
   let &gd    = s:gdkeep
   let &ic    = s:ickeep
+  let &lz    = s:lzkeep
   let &magic = s:magickeep
   let &report= s:reportkeep
+  let &sel   = s:selkeep
+  sil! norm! zO
 "  call Dret("RestoreUserOptions")
 endfun
 

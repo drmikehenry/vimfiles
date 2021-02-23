@@ -24,6 +24,8 @@ require adjustment of per-user settings.
 - Update Vis plugin to version v22 (Jan 7, 2020).  This fixes problems with
   ``:B``; see ``:help notes_vis`` for usage.
 
+- Update Visincr plugin to version 21h (Nov 22, 2017).
+
 2021-02-18
 ==========
 
