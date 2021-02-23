@@ -1,5 +1,9 @@
 let did_install_default_menus = 1
 
+let g:FontSize = 13
+
+set relativenumber
+
 function! Drmikehenry_adjustSzakDark()
 "    if exists('+colorcolumn')
 "        if &t_Co > 255 || has("gui_running")
