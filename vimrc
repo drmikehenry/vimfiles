@@ -3946,10 +3946,10 @@ let g:grepper.stop = 20000
 " extend the list without pasting it here.
 let g:grepper.tools = ['rg', 'ag', 'ack', 'grep', 'findstr', 'pt', 'git']
 
-" ack.
-let g:grepper.ack = {}
-" ``--nofilter`` prevents ack from searching stdin.
-let g:grepper.ack.grepprg = g:AckExecutable . ' --nofilter --noheading --column'
+" The Silver Searcher (ag).
+let g:grepper.ag = {}
+let g:grepper.ag.grepprg =
+        \ 'ag --nogroup --filename --numbers --column'
 
 " prargs (just for debugging quoting issues).
 let g:grepper.tools += ['prargs']
@@ -3978,7 +3978,7 @@ let g:grepper.findx.grepformat = '%f'
 " Ripgrep (rg).
 let g:grepper.rg = {}
 let g:grepper.rg.grepprg =
-        \ 'rg -H --no-heading --vimgrep --smart-case --sort path'
+        \ 'rg -H --no-heading --line-number --column --smart-case --sort path'
 
 " -------------------------------------------------------------
 " HiLinkTrace

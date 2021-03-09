@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2021-03-09
+==========
+
+- Configure Grepper options for ripgrep and The Silver Searcher to remove
+  redundant copies of lines containing multiple matches of the pattern,
+  preventing errors in the Quickfix Reflector plugin (which sees duplicate lines
+  as editing conflicts).  Interestingly, ripgrep's ``--vimgrep`` option,
+  presumably named to reflect Vim's ``:vimgrep`` output format, goes to extra
+  trouble to duplicate matching lines even though Vim's own ``:vimgrep`` command
+  does not generate redundant lines.
+
 2021-02-22
 ==========
 
