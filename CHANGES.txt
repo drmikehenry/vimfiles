@@ -26,6 +26,11 @@ require adjustment of per-user settings.
 
   - ``date`` (to insert the date).
 
+- Use double-quotes for Python ``ifmain`` snippet, which generates::
+
+    if __name__ == "__main__":
+        main()
+
 2021-03-09
 ==========
 

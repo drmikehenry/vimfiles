@@ -43,8 +43,8 @@ elif $1:
 babbr("im", "import ")
 babbr("from", "from ${1:module} import $0")
 
-bsnip("ifmain", "if __name__ == '__main__':...", r"""
-if __name__ == '__main__':
+bsnip("ifmain", """if __name__ == __main__:...""", r"""
+if __name__ == "__main__":
     ${1:main()}
 """)
 
