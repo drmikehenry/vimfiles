@@ -31,6 +31,8 @@ require adjustment of per-user settings.
     if __name__ == "__main__":
         main()
 
+- Update Fugitive plugin to version 2021-05-02.
+
 2021-03-09
 ==========
 

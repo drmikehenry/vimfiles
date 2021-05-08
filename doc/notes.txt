@@ -1192,13 +1192,11 @@ more useful ones are:
             See |fugitive-:Gstatus| for more information
   :Git      Run an arbitrary git command from within Vim
 
-Version 2020-09-27 (e12236b) from:
+Note that :G is used in vimrc for recursive grepping (|notes_G|), which
+overrides the use of :G for the Fugitive plugin.
+
+Version 2021-05-02 (32b0d62) from:
 https://github.com/tpope/vim-fugitive.git
-
-with the following modifications found in branch `vimfiles` at:
-https://github.com/drmikehenry/vim-fugitive.git
-
-- Remove `:G` command that collides with the `:G` command in vimfiles.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

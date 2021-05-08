@@ -23,10 +23,8 @@
 :Git_-p	fugitive.txt	/*:Git_-p*
 :Git_blame	fugitive.txt	/*:Git_blame*
 :Git_difftool	fugitive.txt	/*:Git_difftool*
-:Git_fetch	fugitive.txt	/*:Git_fetch*
 :Git_grep	fugitive.txt	/*:Git_grep*
 :Git_mergetool	fugitive.txt	/*:Git_mergetool*
-:Git_push	fugitive.txt	/*:Git_push*
 :Glcd	fugitive.txt	/*:Glcd*
 :Glgrep	fugitive.txt	/*:Glgrep*
 :Gllog	fugitive.txt	/*:Gllog*
@@ -141,4 +139,5 @@ fugitive_star	fugitive.txt	/*fugitive_star*
 fugitive_u	fugitive.txt	/*fugitive_u*
 fugitive_y_CTRL-G	fugitive.txt	/*fugitive_y_CTRL-G*
 fugitive_~	fugitive.txt	/*fugitive_~*
+g:fugitive_dynamic_colors	fugitive.txt	/*g:fugitive_dynamic_colors*
 g:fugitive_no_maps	fugitive.txt	/*g:fugitive_no_maps*
