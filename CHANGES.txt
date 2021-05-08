@@ -12,6 +12,20 @@ require adjustment of per-user settings.
 
 - Update Markdown syntax support to version 2021-04-21.
 
+- Add a few snippets for Markdown:
+
+  - Triggers for code blocks of the form::
+
+      ```language
+      some language text here
+      ```
+
+    Languages::
+
+      code sh python ruby rust text
+
+  - ``date`` (to insert the date).
+
 2021-03-09
 ==========
 
