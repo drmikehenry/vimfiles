@@ -33,6 +33,8 @@ require adjustment of per-user settings.
 
 - Update Fugitive plugin to version 2021-05-02.
 
+- Add CMake syntax support.
+
 2021-03-09
 ==========
 

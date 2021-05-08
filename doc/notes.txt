@@ -22,6 +22,7 @@
     Characterize - A better 'ga'                        |notes_characterize|
     Clojure-static - Edit Clojure without runtime       |notes_clojure-static|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
+    CMake syntax support                                |notes_cmake|
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
     CPSM - CtrlP matcher in C++ for speed               |notes_cpsm|
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
@@ -877,6 +878,16 @@ Installation:
 - Install as ~/.vim/scripts/closetag.vim
 - In ~/.vim/scripts.vim, source the script as part of per-filetype setup: >
     runtime scripts/closetag.vim
+
+------------------------------------------------------------------------------
+CMAKE                                                   *notes_cmake*
+  Cmake syntax support
+
+Version 2020-10-28 (bcc3a97) from:
+https://github.com/pboettch/vim-cmake-syntax.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 COLORSAMPLERPACK                                        *notes_colorsamplerpack*
