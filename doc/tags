@@ -63,6 +63,7 @@ notes_characterize	notes.txt	/*notes_characterize*
 notes_clipboard	notes.txt	/*notes_clipboard*
 notes_clojure-static	notes.txt	/*notes_clojure-static*
 notes_closetag	notes.txt	/*notes_closetag*
+notes_cmake	notes.txt	/*notes_cmake*
 notes_colorcolumn	notes.txt	/*notes_colorcolumn*
 notes_colorsamplerpack	notes.txt	/*notes_colorsamplerpack*
 notes_colorschemes	notes.txt	/*notes_colorschemes*

@@ -883,11 +883,22 @@ Installation:
 CMAKE                                                   *notes_cmake*
   Cmake syntax support
 
-Version 2020-10-28 (bcc3a97) from:
+Version v3.20.2 2021-04-29 from:
+https://github.com/Kitware/CMake/releases
+
+The official CMake release seems to be the latest; code seems to be shared
+with this repository as well:
 https://github.com/pboettch/vim-cmake-syntax.git
 
+From that repo's README.md:
+
+  The code of this repository is integrated in and released with CMake and is
+  pulled into the official cmake-distribution "from time to time".
+
 Installation:
-- Follow bundle installation instructions (|bundle_installation|).
+- Extract release tarball (e.g., cmake-3.20.2.tar.gz) to temporary location.
+- Copy the contents of the Auxiliary/vim directory into bundles/cmake.
+- Generally follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 COLORSAMPLERPACK                                        *notes_colorsamplerpack*
