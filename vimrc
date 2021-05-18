@@ -6125,7 +6125,9 @@ function! SetupBashFixcommand()
     " command.  It won't be used for a long-running editing session
     " with multiple files, so it's OK to change the global shell defaults
     " (which is good, because this would be painful otherwise).
-    unlet g:is_kornshell
+
+    " Use ``unlet!`` to silence errors should ``g:is_kornshell`` be undefined.
+    unlet! g:is_kornshell
     let g:is_bash=1
     setfiletype sh
 

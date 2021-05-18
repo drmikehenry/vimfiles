@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2021-05-17
+==========
+
+- Fix ``E108: No such variable: "g:is_kornshell"`` with Bash ``fc`` in newer
+  Vim.  For some reason, in newer Vim the ``SetupBashFixcommand()`` function is
+  called twice by the autocmds in ``filetype.vim``, so now ``unlet!
+  g:is_kornshell`` is used to avoid this error.
+
 2021-05-09
 ==========
 
