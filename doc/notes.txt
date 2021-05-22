@@ -281,7 +281,7 @@ following methods for informing Vim:
 ctags support
 -------------
 
-For ctags support, ensure that Exuberant ctags.exe is in the PATH.  This will
+For ctags support, ensure that Exuberant ctags is in the PATH.  This will
 enable the TagList plugin.
 
 Ruby-based plugins
@@ -2534,7 +2534,7 @@ Installation:
 TAGBAR                                                  *notes_tagbar*
   Source code browser                                   |tagbar.txt|
 
-Requires ctags.exe to be in the path.  Generally this comes with Linux
+Requires ctags to be in the path.  Generally this comes with Linux
 distributions.  Compiled binaries may be found at
 http://ctags.sourceforge.net/
 
