@@ -1813,6 +1813,12 @@ MISC                                                    *notes_misc*
 Version 1.17.6 (2015-05-21) from:
 https://github.com/xolox/vim-misc
 
+with the following modifications found in branch `vimfiles` at:
+https://github.com/drmikehenry/vim-misc
+
+- (branch silent-system) Use `:silent` during `system()`, avoiding display of
+  junk escape sequences during startup.
+
 This plugin is also used by the session plugin.
 
 Installation:
