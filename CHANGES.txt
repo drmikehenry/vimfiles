@@ -22,6 +22,8 @@ require adjustment of per-user settings.
 
     ^[[2;2R^[[3;1R^[[>1;4000;20c^[]10;rgb:dddd/dddd/dddd^[\^[]11;rgb:0000/0000/0000^[\
 
+- Upgrade "swapit" plugin to version 2020-11-30.
+
 2021-05-17
 ==========
 

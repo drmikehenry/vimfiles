@@ -2319,8 +2319,8 @@ Works in Normal and Visual mode.
 
 E.g., with cursor on "true" pressing CTRL-a changes the word to "false".
 
-Version 0.3.2 from:
-http://www.vim.org/scripts/script.php?script_id=2294
+Version 2020-11-30 (0862d36) from:
+https://github.com/mjbrownie/swapit.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

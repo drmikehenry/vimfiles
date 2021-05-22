@@ -170,7 +170,7 @@ Contents                                                     *swapit-contents*
 
         ~/.vim/after/ftplugin/{filetype}_swapit.vim
 
-        let g:swap_lists = [
+        let b:swap_lists = [
         \ {'name':'hello_world', 'options':
         \ ['Hello World!','GoodBye Cruel World!' , 'See You Next Tuesday!']},
         ...

@@ -106,7 +106,7 @@ Author: Michael Brown <mjbrownie @ NOSPAMMY gmail.com>
 
        :SwapList <list_name> <member1> <member2> .. <membern>
 
-       eg. :SwapList roman I II III IV V VI VII VII IX X
+       eg. :SwapList roman I II III IV V VI VII VIII IX X
 
     3.3 xml/html swaps                                             *swapit-html*
 
