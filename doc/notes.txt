@@ -1773,7 +1773,7 @@ MARKDOWN                                                 *notes_markdown*
   Markdown syntax support
 
 Version 2021-04-21 (9d87cc1) from:
-https://github.com/tpope/vim-markdown.
+https://github.com/tpope/vim-markdown
 
 Local Customizations:
 - Disable built-in embedded language support and setup our own--mainly to
