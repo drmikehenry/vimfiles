@@ -1323,8 +1323,8 @@ Installation:
 GRUVBOX                                                 *notes_gruvbox*
   A dark colorscheme
 
-Version 2014-08-22 (d1a55f7) from:
-https://github.com/cmorhetz/gruvbox
+Version 2020-07-03 (bf2885a) from:
+https://github.com/morhetz/gruvbox
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

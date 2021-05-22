@@ -30,6 +30,15 @@ require adjustment of per-user settings.
   lists is being overwritten directly in g:default_swap_list.  See the
   ``swaplist.vim`` file for details.
 
+- Upgrade "gruvbox" colorscheme to version 2020-07-03.  This includes a fix for
+  the error::
+
+    Error detected while processing function signature#Input..signature#mark#Toggle..signature#mark#Place..signature#sign#Place..signature#sign#RefreshLine:
+    line   20:
+    E121: Undefined variable: SignatureMarkText
+
+  This was fixed in https://github.com/morhetz/gruvbox/issues/38.
+
 2021-05-17
 ==========
 
