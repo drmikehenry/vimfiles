@@ -1810,7 +1810,7 @@ Installation:
 MISC                                                    *notes_misc*
   Contains many useful Vimscript functions              |misc.txt|
 
-Version 1.16.1 from:
+Version 1.17.6 (2015-05-21) from:
 https://github.com/xolox/vim-misc
 
 This plugin is also used by the session plugin.
