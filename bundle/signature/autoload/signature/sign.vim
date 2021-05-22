@@ -1,7 +1,7 @@
 " vim: fdm=marker:et:ts=4:sw=2:sts=2
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-function! signature#sign#Place(sign, lnum)                                                                        " {{{1
+function! signature#sign#Place(sign, lnum)                                                                         "{{{1
   " Description: Place signs for marks/markers on the specified line number
   " Arguments:
   "   sign : The mark/marker whose sign is to be placed
@@ -22,10 +22,12 @@ function! signature#sign#Place(sign, lnum)                                      
   "  return
   "endif
 
-  if stridx( b:SignatureIncludeMarkers, a:sign ) >= 0
+  if signature#utils#IsValidMarker(a:sign)
     let b:sig_markers[a:lnum] = a:sign . get(b:sig_markers, a:lnum, "")
-  else
+  elseif signature#utils#IsValidMark(a:sign)
     let b:sig_marks[a:lnum] = a:sign . get(b:sig_marks, a:lnum, "")
+  else
+    echoerr "Unexpected sign found: " . a:sign
   endif
   "}}}3
 
@@ -33,12 +35,13 @@ function! signature#sign#Place(sign, lnum)                                      
 endfunction
 
 
-function! signature#sign#Remove(sign, lnum)                                                                       " {{{1
+function! signature#sign#Remove(sign, lnum)                                                                        "{{{1
   " Description: Remove signs for marks/markers from the specified line number
   " Arguments:
   "   sign : The mark/marker whose sign is to be placed/removed/toggled
   "   lnum : Line number from which the sign is to be removed
-  "          If line number is 0, the 'sign' will be removed from all lines
+  "          If sign is a marker and lnum is 0, the sign will be removed from all lines
+  "          If sign is a mark   and lnum is 0, the lnum will be found and the sign will be removed from that line
 
   "echom "DEBUG: sign = " . a:sign . ",  lnum = " . a:lnum
 
@@ -46,7 +49,7 @@ function! signature#sign#Remove(sign, lnum)                                     
   if !b:sig_enabled | return | endif
 
   " Remove sign for markers
-  if stridx( b:SignatureIncludeMarkers, a:sign ) >= 0
+  if signature#utils#IsValidMarker(a:sign)
     let b:sig_markers[a:lnum] = substitute(b:sig_markers[a:lnum], "\\C" . escape( a:sign, '$^' ), "", "")
 
     " If there are no markers on the line, delete signs on that line
@@ -57,12 +60,17 @@ function! signature#sign#Remove(sign, lnum)                                     
 
   " Remove sign for marks
   else
-    " If a:lnum == 0, remove from all lines
+    " For marks, if a:lnum == 0, find out the line where the mark was placed
     if a:lnum == 0
       let l:arr = keys(filter(copy(b:sig_marks), 'v:val =~# a:sign'))
       if empty(l:arr) | return | endif
     else
       let l:arr = [a:lnum]
+    endif
+    if (v:version >= 800)
+      call assert_true(len(l:arr) == 1, "Multiple marks found where one was expected")
+    elseif (len(l:arr) != 1)
+      echoerr "Multiple marks found where one was expected"
     endif
 
     for l:lnum in l:arr
@@ -80,24 +88,31 @@ function! signature#sign#Remove(sign, lnum)                                     
 endfunction
 
 
-function! s:EvaluateHL(expression, lnum)                                                                          " {{{1
-  if type(a:expression) == type("")
-    return eval(a:expression)
-  elseif type(a:expression) == type(function("tr"))
-    return a:expression(a:lnum)
-  else
-    return ""
+function! s:EvaluateHL(expr, lnum, ...)                                                                            "{{{1
+  " Description: If expr points to a function, call it and use its output as the highlight group.
+  "              If it is a string, use it directly.
+  "              If the optional argument is specified, use it as a fallback. If not, return an empty string
+
+  if type(a:expr) == type("")
+    return a:expr
+  elseif type(a:expr) == type(function("tr"))
+    let l:retval = a:expr(a:lnum)
+    if (l:retval != "")
+      return l:retval
+    endif
   endif
+
+  return (a:0 > 0 ? a:1 : "")
 endfunction
 
 
-function! s:RefreshLine(lnum)                                                                                     " {{{1
+function! s:RefreshLine(lnum)                                                                                      "{{{1
   " Description: Decides what the sign string should be based on if there are any marks or markers (using b:sig_marks
   "              and b:sig_markers) on the current line and the value of b:SignaturePrioritizeMarks.
   " Arguments:
   "   lnum : Line number for which the sign string is to be modified
 
-  let l:id  = a:lnum * 1000 + bufnr('%')
+  let l:id  = abs(a:lnum * 1000 + bufnr('%'))
   let l:str = ""
 
   " Place the sign
@@ -106,24 +121,25 @@ function! s:RefreshLine(lnum)                                                   
    \    || !has_key(b:sig_markers, a:lnum)
    \    )
    \ )
-    let l:str = substitute(b:SignatureMarkOrder, "\m", strpart( b:sig_marks[a:lnum], 0, 1 ), "")
-    let l:str = substitute(l:str,                "\p", strpart( b:sig_marks[a:lnum], 1, 1 ), "")
+    let l:SignatureMarkTextHL = s:EvaluateHL(g:SignatureMarkTextHL, a:lnum, "SignatureMarkText")
+    let l:SignatureMarkLineHL = s:EvaluateHL(g:SignatureMarkLineHL, a:lnum, "SignatureMarkLine")
+    let l:str = substitute(b:SignatureMarkOrder, "\m", signature#utils#GetChar(b:sig_marks[a:lnum], 0), '')
+    let l:str = substitute(l:str,                "\p", signature#utils#GetChar(b:sig_marks[a:lnum], 1), '')
 
-    " If g:SignatureMarkTextHL points to a function, call it and use its output as the highlight group.
-    " If it is a string, use it directly
-    let l:SignatureMarkLineHL = s:EvaluateHL(g:SignatureMarkLineHL, a:lnum)
-    let l:SignatureMarkTextHL = s:EvaluateHL(g:SignatureMarkTextHL, a:lnum)
     execute 'sign define Signature_' . l:str . ' text=' . l:str . ' texthl=' . l:SignatureMarkTextHL . ' linehl=' . l:SignatureMarkLineHL
 
   elseif has_key(b:sig_markers, a:lnum)
-    let l:str = strpart(b:sig_markers[a:lnum], 0, 1)
+    let l:SignatureMarkerTextHL = s:EvaluateHL(g:SignatureMarkerTextHL, a:lnum, "SignatureMarkerText")
+    let l:SignatureMarkerLineHL = s:EvaluateHL(g:SignatureMarkerLineHL, a:lnum, "SignatureMarkerLine")
 
-    " If g:SignatureMarkerTextHL points to a function, call it and use its output as the highlight group.
-    " If it is a string, use it directly
-    let l:SignatureMarkerLineHL = s:EvaluateHL(g:SignatureMarkerLineHL, a:lnum)
-    let l:SignatureMarkerTextHL = s:EvaluateHL(g:SignatureMarkerTextHL, a:lnum)
-    execute 'sign define Signature_' . l:str . ' text=' . l:str . ' texthl=' . l:SignatureMarkerTextHL . ' linehl=' . l:SignatureMarkerLineHL
+    " Since the same marker can be placed on multiple lines, we can't use the same sign for all of them.
+    " This is because if dynamic highlighting of markers is enabled then the sign placed on eg. a modified line should
+    " be highlighted differently than the one placed on an unchanged line.
+    " In order to support this, I append the name of the TextHL and LineHL group to the name of the sign.
+    let l:txt = signature#utils#GetChar(b:sig_markers[a:lnum], 0)
+    let l:str = l:txt . '_' . l:SignatureMarkerTextHL . '_' . l:SignatureMarkerLineHL
 
+    execute 'sign define Signature_' . l:str . ' text=' . l:txt . ' texthl=' . l:SignatureMarkerTextHL . ' linehl=' . l:SignatureMarkerLineHL
   else
     call signature#sign#Unplace(a:lnum)
   endif
@@ -138,11 +154,11 @@ function! s:RefreshLine(lnum)                                                   
 endfunction
 
 
-function! signature#sign#Refresh(...)                                                                             " {{{1
+function! signature#sign#Refresh(...)                                                                              "{{{1
   " Description: Add signs for new marks/markers and remove signs for deleted marks/markers
-  " Arguments: '1' to force a sign refresh
+  " Arguments:   Specify an argument to force a sign refresh
 
-  call s:InitializeVars()
+  call s:InitializeVars(a:0 && a:1)
   " If Signature is not enabled, return
   if !b:sig_enabled | return | endif
 
@@ -152,12 +168,15 @@ function! signature#sign#Refresh(...)                                           
   endfor
 
   " Add signs for marks ...
-  for j in signature#mark#GetList('used', 'buf_curr')
+  for [l:mark, l:lnum, _] in signature#mark#GetList('used', 'buf_curr')
     " ... if mark is not present in our b:sig_marks list or if it is present but at the wrong line,
     " remove the old sign and add a new one
-    if !has_key(b:sig_marks, j[1]) || b:sig_marks[j[1]] !~# j[0] || a:0
-      call signature#sign#Remove(j[0], 0   )
-      call signature#sign#Place (j[0], j[1])
+    if (  !has_key(b:sig_marks, l:lnum)
+     \ || (b:sig_marks[l:lnum] !~# l:mark)
+     \ || a:0
+     \ )
+      call signature#sign#Remove(l:mark, 0)
+      call signature#sign#Place (l:mark, l:lnum)
     endif
   endfor
 
@@ -168,20 +187,22 @@ function! signature#sign#Refresh(...)                                           
 endfunction
 
 
-function! signature#sign#Unplace(lnum)                                                                            " {{{1
+function! signature#sign#Unplace(lnum)                                                                             "{{{1
   " Description: Remove the sign from the specified line number
   " FIXME: Clean-up. Undefine the sign
-  let l:id = a:lnum * 1000 + bufnr('%')
+  let l:id = abs(a:lnum * 1000 + bufnr('%'))
   silent! execute 'sign unplace ' . l:id
 endfunction
 
 
-function! signature#sign#ToggleDummy()                                                                            " {{{1
+function! signature#sign#ToggleDummy(...)                                                                          "{{{1
   " Description: Places a dummy sign to prevent flickering of the gutter when the mark is moved or the line containing
   "              a mark/marker is deleted and then the delete is undone
+  " Arguments: (optional) 0 : force remove
+  "                       1 : force place
 
-  let l:place  = (len(b:sig_marks) + len(b:sig_markers) == 1) && !b:sig_DummyExists
-  let l:remove = (len(b:sig_marks) + len(b:sig_markers) == 0) &&  b:sig_DummyExists
+  let l:place  = a:0 ?  a:1 : (len(b:sig_marks) + len(b:sig_markers) == 1) && !b:sig_DummyExists
+  let l:remove = a:0 ? !a:1 : (len(b:sig_marks) + len(b:sig_markers) == 0) &&  b:sig_DummyExists
 
   if (l:place)
     sign define Signature_Dummy
@@ -194,7 +215,7 @@ function! signature#sign#ToggleDummy()                                          
 endfunction
 
 
-function! s:GetInfo(...)                                                                                          " {{{1
+function! s:GetInfo(...)                                                                                           "{{{1
   " Description: Returns a dic of filenames, each of which is a dic of line numbers on which signs are placed
   " Arguments: filename (optional).
   "            If filename is provided, the return value will contain signs only present in the given file
@@ -262,48 +283,66 @@ function! s:GetInfo(...)                                                        
 endfunction
 
 
-function! signature#sign#GetGitGutterHLGroup(lnum)
+function! signature#sign#GetGitGutterHLGroup(lnum)                                                                 "{{{1
   " Description: This returns the highlight group used by vim-gitgutter depending on how the line was edited
 
-  let l:line_state = filter(copy(gitgutter#diff#process_hunks(gitgutter#hunk#hunks())), 'v:val[0] == a:lnum')
+  let l:current_bufnr = bufnr('%')
+  let l:line_state = filter(copy(gitgutter#diff#process_hunks(l:current_bufnr, gitgutter#hunk#hunks(l:current_bufnr))), 'v:val[0] == a:lnum')
 
   if len(l:line_state) == 0
-    return 'Exception'
+    return ""
   endif
 
-  if l:line_state[0][1] =~ 'added'
-    return 'GitGutterAdd'
-  elseif l:line_state[0][1] =~ 'modified'
-    return 'GitGutterChange'
-  elseif l:line_state[0][1] =~ 'removed'
-    return 'GitGutterDelete'
+  if     (l:line_state[0][1]) =~ 'added'            | return 'GitGutterAdd'
+  elseif (l:line_state[0][1]) =~ 'modified_removed' | return 'GitGutterChangeDelete'
+  elseif (l:line_state[0][1]) =~ 'modified'         | return 'GitGutterChange'
+  elseif (l:line_state[0][1]) =~ 'removed'          | return 'GitGutterDelete'
   endif
 endfunction
 
 
-function! signature#sign#GetSignifyHLGroup(lnum)
+function! signature#sign#GetSignifyHLGroup(lnum)                                                                   "{{{1
   " Description: This returns the highlight group used by vim-signify depending on how the line was edited
   "              Thanks to @michaelmior
 
-  call sy#sign#get_current_signs()
+  if !exists('b:sy')
+    return ""
+  endif
+  call sy#sign#get_current_signs(b:sy)
 
   if has_key(b:sy.internal, a:lnum)
-    let type = b:sy.internal[a:lnum]['type']
-    if type =~ 'SignifyAdd'
-      return 'DiffAdd'
-    elseif type =~ 'SignifyChange'
-      return 'DiffChange'
-    elseif type =~ 'SignifyDelete'
-      return 'DiffDelete'
+    let l:line_state = b:sy.internal[a:lnum]['type']
+    if     l:line_state =~ 'SignifyAdd'    | return 'SignifySignAdd'
+    elseif l:line_state =~ 'SignifyChange' | return 'SignifySignChange'
+    elseif l:line_state =~ 'SignifyDelete' | return 'SignifySignDelete'
     end
-  else
-    return 'Exception'
   endif
+
+  return ""
 endfunction
 
 
-function! s:InitializeVars()                                                                                      " {{{1
+" function! signature#sign#GetMarkSignLine(mark)                                                                   "{{{1
+"   if !signature#utils#IsValidMark(a:mark)
+"     echoe "Signature: Invalid mark " . a:mark
+"     return
+"   endif
+
+"   let l:sign_info=filter(split(execute('sign place'), '\n'),
+"                        \ 'v:val =~ "\\vSignature_(.?' . a:mark . '|' . a:mark . '.?)$"')
+
+"   if (len(l:sign_info) != 1)
+"     echoe "Signature: Expected single match, found " . len(l:sign_info)
+"     return
+"   endif
+
+"   return matchstr(l:sign_info[0], '\v(line\=)@<=\d+')
+" endfunction
+
+
+function! s:InitializeVars(...)                                                                                    "{{{1
   " Description: Initialize variables
+  " Arguments:   Specify an argument to re-init
 
   if !exists('b:sig_marks')
     " b:sig_marks = { lnum => signs_str }
@@ -325,12 +364,12 @@ function! s:InitializeVars()                                                    
     call filter( b:sig_markers, 'v:key <= l:line_tot' )
   endif
 
-  call signature#utils#Set('b:sig_DummyExists'         , 0                          )
-  call signature#utils#Set('b:sig_enabled'             , g:SignatureEnabledAtStartup)
-  call signature#utils#Set('b:SignatureIncludeMarks'   , g:SignatureIncludeMarks    )
-  call signature#utils#Set('b:SignatureIncludeMarkers' , g:SignatureIncludeMarkers  )
-  call signature#utils#Set('b:SignatureMarkOrder'      , g:SignatureMarkOrder       )
-  call signature#utils#Set('b:SignaturePrioritizeMarks', g:SignaturePrioritizeMarks )
-  call signature#utils#Set('b:SignatureDeferPlacement' , g:SignatureDeferPlacement  )
-  call signature#utils#Set('b:SignatureWrapJumps'      , g:SignatureWrapJumps       )
+  call signature#utils#Set('b:sig_DummyExists'         , 0                          , a:0 && a:1)
+  call signature#utils#Set('b:sig_enabled'             , g:SignatureEnabledAtStartup, a:0 && a:1)
+  call signature#utils#Set('b:SignatureIncludeMarks'   , g:SignatureIncludeMarks    , a:0 && a:1)
+  call signature#utils#Set('b:SignatureIncludeMarkers' , g:SignatureIncludeMarkers  , a:0 && a:1)
+  call signature#utils#Set('b:SignatureMarkOrder'      , g:SignatureMarkOrder       , a:0 && a:1)
+  call signature#utils#Set('b:SignaturePrioritizeMarks', g:SignaturePrioritizeMarks , a:0 && a:1)
+  call signature#utils#Set('b:SignatureDeferPlacement' , g:SignatureDeferPlacement  , a:0 && a:1)
+  call signature#utils#Set('b:SignatureWrapJumps'      , g:SignatureWrapJumps       , a:0 && a:1)
 endfunction

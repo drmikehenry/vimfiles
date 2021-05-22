@@ -1,12 +1,14 @@
 " vim: fdm=marker:et:ts=4:sw=2:sts=2
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-function! signature#utils#Set(var, default)                                                                       " {{{1
-  if !exists(a:var)
-    if type(a:default)
-      execute 'let' a:var '=' string(a:default)
+function! signature#utils#Set(var, value, ...)                                                                    " {{{1
+  " Description: Assign value to var if var is unset or if an optional 3rd arg is provided to force
+
+  if (!exists(a:var) || a:0 && a:1)
+    if type(a:value)
+      execute 'let' a:var '=' string(a:value)
     else
-      execute 'let' a:var '=' a:default
+      execute 'let' a:var '=' a:value
     endif
   endif
   return a:var
@@ -34,16 +36,16 @@ function! signature#utils#Maps(mode)                                            
   " We create separate mappings for PlaceNextMark, mark#Purge('all') and PurgeMarkers instead of combining it with
   " Leader/Input as if the user chooses to use some weird key like <BS> or <CR> for any of these 3, we need to be able
   " to identify it. Eg. the nr2char(getchar()) will fail if the user presses a <BS>
-  let s:SignatureMapLeader = get(g:SignatureMap, 'Leader', 'm')
-  if (s:SignatureMapLeader == "")
+  let l:SignatureMapLeader = get(g:SignatureMap, 'Leader', 'm')
+  if (l:SignatureMapLeader == "")
     echoe "Signature: g:SignatureMap.Leader shouldn't be left blank"
   endif
-  call s:Map(a:mode, 'Leader'           , s:SignatureMapLeader            , 'utils#Input()'                       )
-  call s:Map(a:mode, 'PlaceNextMark'    , s:SignatureMapLeader . ","      , 'mark#Toggle("next")'                 )
-  call s:Map(a:mode, 'ToggleMarkAtLine' , s:SignatureMapLeader . "."      , 'mark#ToggleAtLine()'                 )
-  call s:Map(a:mode, 'PurgeMarksAtLine' , s:SignatureMapLeader . "-"      , 'mark#Purge("line")'                  )
-  call s:Map(a:mode, 'PurgeMarks'       , s:SignatureMapLeader . "<Space>", 'mark#Purge("all")'                   )
-  call s:Map(a:mode, 'PurgeMarkers'     , s:SignatureMapLeader . "<BS>"   , 'marker#Purge()'                      )
+  call s:Map(a:mode, 'Leader'           , l:SignatureMapLeader            , 'utils#Input()'                       )
+  call s:Map(a:mode, 'PlaceNextMark'    , l:SignatureMapLeader . ","      , 'mark#Toggle("next")'                 )
+  call s:Map(a:mode, 'ToggleMarkAtLine' , l:SignatureMapLeader . "."      , 'mark#ToggleAtLine()'                 )
+  call s:Map(a:mode, 'PurgeMarksAtLine' , l:SignatureMapLeader . "-"      , 'mark#Purge("line")'                  )
+  call s:Map(a:mode, 'PurgeMarks'       , l:SignatureMapLeader . "<Space>", 'mark#Purge("all")'                   )
+  call s:Map(a:mode, 'PurgeMarkers'     , l:SignatureMapLeader . "<BS>"   , 'marker#Purge()'                      )
   call s:Map(a:mode, 'DeleteMark'       , "dm"                            , 'utils#Remove(v:count)'               )
   call s:Map(a:mode, 'GotoNextLineAlpha', "']"                            , 'mark#Goto("next", "line", "alpha")'  )
   call s:Map(a:mode, 'GotoPrevLineAlpha', "'["                            , 'mark#Goto("prev", "line", "alpha")'  )
@@ -57,39 +59,46 @@ function! signature#utils#Maps(mode)                                            
   call s:Map(a:mode, 'GotoPrevMarker'   , "[-"                            , 'marker#Goto("prev", "same", v:count)')
   call s:Map(a:mode, 'GotoNextMarkerAny', "]="                            , 'marker#Goto("next", "any",  v:count)')
   call s:Map(a:mode, 'GotoPrevMarkerAny', "[="                            , 'marker#Goto("prev", "any",  v:count)')
-  call s:Map(a:mode, 'ListBufferMarks'  , 'm/'                            , 'mark#List("buf_curr", v:count)'      )
-  call s:Map(a:mode, 'ListBufferMarkers', 'm?'                            , 'marker#List()'                       )
+  call s:Map(a:mode, 'ListBufferMarks'  , 'm/'                            , 'mark#List(0, 0)'                     )
+  call s:Map(a:mode, 'ListBufferMarkers', 'm?'                            , 'marker#List(v:count, 0)'             )
 endfunction
 
 
-function! signature#utils#Input()                                                                                 " {{{2
+function! signature#utils#Input()                                                                                 " {{{1
   " Description: Grab input char
 
+  if &ft ==# "netrw"
+    " Workaround for #104
+    return
+  endif
+
   " Obtain input from user ...
-  let l:char = nr2char(getchar())
+  let l:in = nr2char(getchar())
 
   " ... if the input is not a number eg. '!' ==> Delete all '!' markers
-  if stridx(b:SignatureIncludeMarkers, l:char) >= 0
-    return signature#marker#Purge(l:char)
+  if signature#utils#IsValidMarker(l:in)
+    return signature#marker#Purge(l:in)
   endif
 
   " ... but if input is a number, convert it to corresponding marker before proceeding
-  if match( l:char, '\d' ) >= 0
-    let l:char = split(')!@#$%^&*(', '\zs')[l:char]
+  if match(l:in, '\d') >= 0
+    let l:char = signature#utils#GetChar(b:SignatureIncludeMarkers, l:in)
+  else
+    let l:char = l:in
   endif
 
-  if stridx(b:SignatureIncludeMarkers, l:char) >= 0
+  if signature#utils#IsValidMarker(l:char)
     return signature#marker#Toggle(l:char)
-  elseif stridx(b:SignatureIncludeMarks, l:char) >= 0
+  elseif signature#utils#IsValidMark(l:char)
     return signature#mark#Toggle(l:char)
   else
-    " l:char is probably one of `'[]<>
-    execute 'normal! m' . l:char
+    " l:char is probably one of `'[]<> or a space from the gap in b:SignatureIncludeMarkers
+    execute 'normal! m' . l:in
   endif
 endfunction
 
 
-function! signature#utils#Remove(lnum)                                                                            " {{{2
+function! signature#utils#Remove(lnum)                                                                            " {{{1
   " Description: Obtain mark or marker from the user and remove it.
   "              There can be multiple markers of the same type on different lines. If a line no. is provided
   "              (non-zero), delete the marker from the specified line else delete it from the current line
@@ -100,7 +109,7 @@ function! signature#utils#Remove(lnum)                                          
 
   if (l:char =~ '^\d$')
     let l:lnum = (a:lnum == 0 ? line('.') : a:lnum)
-    let l:char = split(')!@#$%^&*(', '\zs')[l:char]
+    let l:char = split(b:SignatureIncludeMarkers, '\zs')[l:char]
     call signature#marker#Remove(lnum, l:char)
   elseif (l:char =~? '^[a-z]$')
     call signature#mark#Remove(l:char)
@@ -108,7 +117,7 @@ function! signature#utils#Remove(lnum)                                          
 endfunction
 
 
-function! signature#utils#Toggle()                                                                                " {{{2
+function! signature#utils#Toggle()                                                                                " {{{1
   " Description: Toggles and refreshes sign display in the buffer.
 
   let b:sig_enabled = !b:sig_enabled
@@ -129,7 +138,58 @@ function! signature#utils#Toggle()                                              
     for l:lnum in keys(b:sig_marks)
       call signature#sign#Unplace(l:lnum)
     endfor
-    call signature#sign#ToggleDummy()
+    " Force removal. Simply toggling doesn't work as we check whether b:sig_markers and b:sig_marks are empty before
+    " removing the dummy and b:sig_markers won't be empty
+    call signature#sign#ToggleDummy(0)
     unlet b:sig_marks
   endif
 endfunction
+
+
+function! signature#utils#SetupHighlightGroups()                                                                  " {{{1
+  " Description: Sets up the highlight groups
+
+  function! CheckAndSetHL(curr_hl, prefix, attr, targ_color)
+    let l:curr_color = synIDattr(synIDtrans(hlID(a:curr_hl)), a:attr, a:prefix)
+
+    if (  (  (l:curr_color == "")
+     \    || (l:curr_color  < 0)
+     \    )
+     \ && (a:targ_color != "")
+     \ && (a:targ_color >= 0)
+     \ )
+      " echom "DEBUG: HL=" . a:curr_hl . " (" . a:prefix . a:attr . ") Curr=" . l:curr_color . ", To=" . a:targ_color
+      execute 'highlight ' . a:curr_hl . ' ' . a:prefix . a:attr . '=' . a:targ_color
+    endif
+  endfunction
+
+  let l:prefix = (has('gui_running') || (has('termguicolors') && &termguicolors) ? 'gui' : 'cterm')
+  let l:sign_col_color = synIDattr(synIDtrans(hlID('SignColumn')), 'bg', l:prefix)
+
+  call CheckAndSetHL('SignatureMarkText',   l:prefix, 'fg', 'Red')
+  call CheckAndSetHL('SignatureMarkText',   l:prefix, 'bg', l:sign_col_color)
+  call CheckAndSetHL('SignatureMarkerText', l:prefix, 'fg', 'Green')
+  call CheckAndSetHL('SignatureMarkerText', l:prefix, 'bg', l:sign_col_color)
+
+  delfunction CheckAndSetHL
+endfunction
+
+
+function! signature#utils#IsValidMark(mark)                                                                       " {{{1
+  return (b:SignatureIncludeMarks =~# a:mark)
+endfunction
+
+
+function! signature#utils#IsValidMarker(marker)                                                                   " {{{1
+  return (  (b:SignatureIncludeMarkers =~# a:marker)
+         \ && (a:marker != ' ')
+         \ )
+endfunction
+
+
+function! signature#utils#GetChar(string, pos)                                                                    " {{{1
+  if a:pos > strchars(a:string) - 1 | return "" | endif
+  let pattern = '.\{-' . a:pos . '}\(.\).*'
+  return substitute(a:string, pattern, '\1', '')
+endfunction
+
