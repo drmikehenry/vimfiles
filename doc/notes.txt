@@ -122,7 +122,7 @@
     Additional CTRL-o mappings                          |notes_ctrl_o|
     Pressing <Enter> removes trailing whitespace        |notes_enter|
     Movement by screen lines                            |notes_movement|
-    Emacs-style command-line editing                    |notes_emac_commandline|
+    Emacs-style command-line editing                    |notes_emacs_commandline|
     Clipboard support                                   |notes_clipboard|
     Putting most-recently-yanked text                   |notes_putting_yanked|
     Yank-related mappings                               |notes_yank|
@@ -3629,7 +3629,7 @@ lines, this reverses the default behavior of using logical lines.  Use "g" and
 the original key to move by logical lines.
 
 ------------------------------------------------------------------------------
-Emacs-style command-line editing                        *notes_emac_commandline*
+Emacs-style command-line editing                        *notes_emacs_commandline*
 
 The standard Emacs-style command-line editing keys as used in Bash have been
 mapped for command-line mode.  These include:
