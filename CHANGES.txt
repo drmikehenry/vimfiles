@@ -51,7 +51,9 @@ require adjustment of per-user settings.
 
     let g:SignatureMarkerTextHL='SignatureMarkerText'
     let g:SignatureMarkTextHL='SignatureMarkText'
- 
+
+- Upgrade "surround" plugin to version 2019-11-28.
+
 2021-05-17
 ==========
 
