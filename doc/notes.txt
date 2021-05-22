@@ -2194,7 +2194,7 @@ Installation:
 SESSION                                                 *notes_session*
   Provides better session management                    |session.txt|
 
-Version 2.13 from:
+Version 2.13.1 (2015-11-01) from:
 https://github.com/xolox/vim-session
 
 Note: this plugin requires the misc plugin.

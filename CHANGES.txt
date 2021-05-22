@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Upgrade "misc" plugin to version 1.17.6 (2015-05-21).  This is a dependency
   for the "session" plugin.
 
+- Upgrade "session" plugin to version 2.13.1 (2015-11-01).
+
 2021-05-17
 ==========
 

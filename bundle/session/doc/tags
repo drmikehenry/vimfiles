@@ -41,6 +41,8 @@ session-introduction	session.txt	/*session-introduction*
 session-license	session.txt	/*session-license*
 session-options	session.txt	/*session-options*
 session-references	session.txt	/*session-references*
+session-troubleshooting	session.txt	/*session-troubleshooting*
+session-using-multiple-platforms	session.txt	/*session-using-multiple-platforms*
 session.txt	session.txt	/*session.txt*
 sessionoptions	session.txt	/*sessionoptions*
 tab-scoped-sessions	session.txt	/*tab-scoped-sessions*
