@@ -24,6 +24,12 @@ require adjustment of per-user settings.
 
 - Upgrade "swapit" plugin to version 2020-11-30.
 
+- Fix the global list of "swapit" swap lists.  Previously, this was being done
+  incorrectly in ``$VIMFILES/after/plugin/swaplist.vim`` via ``:SwapList``
+  commands (which are supposed to be per-filetype, not global); now the global
+  lists is being overwritten directly in g:default_swap_list.  See the
+  ``swaplist.vim`` file for details.
+
 2021-05-17
 ==========
 
