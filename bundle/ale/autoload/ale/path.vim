@@ -24,6 +24,14 @@ function! ale#path#Simplify(path) abort
     return substitute(simplify(l:win_path), '^\\\+', '\', 'g') " no-custom-checks
 endfunction
 
+" Simplify a path without a Windows drive letter.
+" This function can be used for checking if paths are equal.
+function! ale#path#RemoveDriveLetter(path) abort
+    return has('win32') && a:path[1:2] is# ':\'
+    \   ? ale#path#Simplify(a:path[2:])
+    \   : ale#path#Simplify(a:path)
+endfunction
+
 " Given a buffer and a filename, find the nearest file by searching upwards
 " through the paths relative to the given buffer.
 function! ale#path#FindNearestFile(buffer, filename) abort
@@ -69,22 +77,6 @@ function! ale#path#ResolveLocalPath(buffer, search_string, global_fallback) abor
     return l:path
 endfunction
 
-" Output 'cd <directory> && '
-" This function can be used changing the directory for a linter command.
-function! ale#path#CdString(directory) abort
-    if has('win32')
-        return 'cd /d ' . ale#Escape(a:directory) . ' && '
-    else
-        return 'cd ' . ale#Escape(a:directory) . ' && '
-    endif
-endfunction
-
-" Output 'cd <buffer_filename_directory> && '
-" This function can be used changing the directory for a linter command.
-function! ale#path#BufferCdString(buffer) abort
-    return ale#path#CdString(fnamemodify(bufname(a:buffer), ':p:h'))
-endfunction
-
 " Return 1 if a path is an absolute path.
 function! ale#path#IsAbsolute(filename) abort
     if has('win32') && a:filename[:0] is# '\'
@@ -95,7 +87,7 @@ function! ale#path#IsAbsolute(filename) abort
     return a:filename[:0] is# '/' || a:filename[1:2] is# ':\'
 endfunction
 
-let s:temp_dir = ale#path#Simplify(fnamemodify(ale#util#Tempname(), ':h'))
+let s:temp_dir = ale#path#Simplify(fnamemodify(ale#util#Tempname(), ':h:h'))
 
 " Given a filename, return 1 if the file represents some temporary file
 " created by Vim.
@@ -124,7 +116,7 @@ function! ale#path#Dirname(path) abort
     endif
 
     " For /foo/bar/ we need :h:h to get /foo
-    if a:path[-1:] is# '/'
+    if a:path[-1:] is# '/' || (has('win32') && a:path[-1:] is# '\')
         return fnamemodify(a:path, ':h:h')
     endif
 

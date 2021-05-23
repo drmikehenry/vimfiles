@@ -1,17 +1,34 @@
 Before:
-  call ale#test#SetDirectory('/testplugin/test/fixers')
+  Save g:ale_stylelint_options
+
+  let g:ale_stylelint_options = ''
+
+  call ale#assert#SetUpFixerTest('css', 'stylelint')
 
 After:
-  call ale#test#RestoreDirectory()
+  call ale#assert#TearDownFixerTest()
 
-Execute(The executable path should be correct):
-  call ale#test#SetFilename('../eslint-test-files/react-app/subdir/testfile.css')
+Execute(The stylelint callback should return the correct default values):
+  call ale#test#SetFilename('../test-files/eslint/react-app/subdir/testfile.css')
 
-  AssertEqual
+  AssertFixer
   \ {
-  \   'read_temporary_file': 1,
+  \   'read_temporary_file': 0,
+  \   'cwd': '%s:h',
   \   'command': (has('win32') ? 'node.exe ' : '')
-  \     . ale#Escape(ale#path#Simplify(g:dir . '/../eslint-test-files/react-app/node_modules/stylelint/bin/stylelint.js'))
-  \     . ' --fix %t',
-  \ },
-  \ ale#fixers#stylelint#Fix(bufnr(''))
+  \     . ale#Escape(ale#path#Simplify(g:dir . '/../test-files/eslint/react-app/node_modules/stylelint/bin/stylelint.js'))
+  \     . ' --fix --stdin --stdin-filename %s',
+  \ }
+
+Execute(The stylelint callback should include custom stylelint options):
+  let g:ale_stylelint_options = '--cache'
+  call ale#test#SetFilename('../test-files/eslint/react-app/subdir/testfile.css')
+
+  AssertFixer
+  \ {
+  \   'read_temporary_file': 0,
+  \   'cwd': '%s:h',
+  \   'command': (has('win32') ? 'node.exe ' : '')
+  \     . ale#Escape(ale#path#Simplify(g:dir . '/../test-files/eslint/react-app/node_modules/stylelint/bin/stylelint.js'))
+  \     . ' --cache --fix --stdin --stdin-filename %s',
+  \ }

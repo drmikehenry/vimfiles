@@ -54,6 +54,8 @@ require adjustment of per-user settings.
 
 - Upgrade "surround" plugin to version 2019-11-28.
 
+- Upgrade "ale" plugin to version 2021-05-04.
+
 2021-05-17
 ==========
 
