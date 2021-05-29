@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2021-05-29
+==========
+
+- Convert the patch to the reStructuredText syntax highlighting file into
+  a command that allows selectively enabling/disabling the fix.  The fix will be
+  enabled by default, but it may be disabled via::
+
+    :RstLiteralBlockFix off
+
+  See ``:help notes_rst`` for more information.
+
 2021-05-22
 ==========
 

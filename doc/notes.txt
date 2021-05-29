@@ -2096,11 +2096,13 @@ RESTRUCTUREDTEXT SUPPORT                                *notes_rst*
 Version 2021-02-12 (8284ec3) from:
 https://github.com/marshallward/vim-restructuredtext
 
-with the following modifications found in branch `vimfiles` at:
-https://github.com/drmikehenry/vim-restructuredtext
-
-- (branch rst-literal-block) Fix #56: Literal block continues too far after
-  bullet.
+with scripts/rstliteralblockfix.vim supplying a command to toggle
+a fix for literal block syntax highlighting:
+>
+  :RstLiteralBlockFix on          " Enable fix.
+  :RstLiteralBlockFix off         " Disable fix.
+<
+The fix is enabled by default; see SetupRstSyntax() in vimrc.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

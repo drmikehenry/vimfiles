@@ -6015,6 +6015,10 @@ call DisableRstSyntaxCodeList()
 " -------------------------------------------------------------
 " Setup for reStructuredText.
 " -------------------------------------------------------------
+
+" Define function and command for fixing literal block syntax highlighting.
+runtime scripts/rstliteralblockfix.vim
+
 function! SetupRstSyntax()
     " We default to g:commonEmbeddedLangs.
     if !exists('g:rstEmbeddedLangs')
@@ -6069,6 +6073,8 @@ function! SetupRstSyntax()
 
     " Re-synchronize syntax highlighting minlines before top of window.
     syntax sync minlines=1000
+    " Enable fix for literal block highlighting.
+    RstLiteralBlockFix on
 endfunction
 command! -bar SetupRstSyntax call SetupRstSyntax()
 
