@@ -19,6 +19,9 @@ require adjustment of per-user settings.
 - Remove Characterize plugin; the ``ga`` functionality (identifying the Unicode
   character under the cursor) is now provided by the Unicode plugin.
 
+- Fix ``E16`` error when pressing ``<F4>`` before populating the QuickFix
+  window.
+
 2021-05-29
 ==========
 

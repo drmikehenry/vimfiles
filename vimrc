@@ -1373,7 +1373,10 @@ function! GotoMessage(messageType, whichMessage)
             " QuickFix window for convenience.
             execute a:messageType . 'close'
             execute a:messageType . a:messageType
-        catch /:E42:\|:E553:/
+        catch /:E16:\|:E42:\|:E553:/
+            " E16 is "Invalid range".  This surprising error is thrown when the
+            " command ``:cc`` is executed when the QuickFix list has never been
+            " populated.
             let typeName = (a:messageType == 'c') ? "QuickFix" : "Location List"
             echo "No " . a:whichMessage . " " . typeName . " message"
             return 0
