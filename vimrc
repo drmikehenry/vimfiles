@@ -5349,6 +5349,24 @@ else
 endif
 
 " -------------------------------------------------------------
+" Unicode
+" -------------------------------------------------------------
+
+let g:Unicode_data_directory = expand('$VIMFILES/bundle/unicode')
+
+" Avoid default mappings, then put in just the ones we support.
+let g:Unicode_no_default_mappings = v:true
+
+" nmap <F4> <Plug>(MakeDigraph)
+" vmap <F4> <Plug>(MakeDigraph)
+imap <C-X><C-G> <Plug>(DigraphComplete)
+imap <C-X><C-Z> <Plug>(UnicodeComplete)
+imap <C-X><C-B> <Plug>(HTMLEntityComplete)
+" imap <C-G><C-F> <Plug>(UnicodeFuzzy)
+nmap <leader>un <Plug>(UnicodeSwapCompleteName)
+nmap ga <Plug>(UnicodeGA)
+
+" -------------------------------------------------------------
 " vis
 " -------------------------------------------------------------
 

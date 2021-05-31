@@ -1,0 +1,15 @@
+vim_passfile
+# ignore undo-files
+.*.un~
+# ignore swap files
+.*.sw*
+.sw*
+# ignore vimball files
+*.vba
+*.vmb
+# ignore .orig files
+*.orig
+# unicode data
+autoload/unicode/UnicodeData.*
+autoload/unicode/UnicodeTable.txt
+doc/tags

@@ -7,6 +7,18 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2021-05-31
+==========
+
+- Add Unicode plugin.  See ``:help notes_unicode`` for details.  The main new
+  feature is insertion-mode completion of a Unicode character name.  For
+  example, to insert a ``ZERO WIDTH SPACE`` Unicode character, type ``zero`` and
+  press ``CTRL-x CTRL-z`` to get a list of possible completions; use cursors to
+  choose desired matching character.
+
+- Remove Characterize plugin; the ``ga`` functionality (identifying the Unicode
+  character under the cursor) is now provided by the Unicode plugin.
+
 2021-05-29
 ==========
 

@@ -59,7 +59,6 @@ notes_c_additions	notes.txt	/*notes_c_additions*
 notes_calutil	notes.txt	/*notes_calutil*
 notes_cecutil	notes.txt	/*notes_cecutil*
 notes_changes	notes.txt	/*notes_changes*
-notes_characterize	notes.txt	/*notes_characterize*
 notes_clipboard	notes.txt	/*notes_clipboard*
 notes_clojure-static	notes.txt	/*notes_clojure-static*
 notes_closetag	notes.txt	/*notes_closetag*
@@ -181,6 +180,7 @@ notes_tips_quitting	notes.txt	/*notes_tips_quitting*
 notes_tips_redirecting	notes.txt	/*notes_tips_redirecting*
 notes_tips_xon_xoff	notes.txt	/*notes_tips_xon_xoff*
 notes_tmux_syntax	notes.txt	/*notes_tmux_syntax*
+notes_toascii	notes.txt	/*notes_toascii*
 notes_togglecursor	notes.txt	/*notes_togglecursor*
 notes_toml	notes.txt	/*notes_toml*
 notes_ultisnips	notes.txt	/*notes_ultisnips*

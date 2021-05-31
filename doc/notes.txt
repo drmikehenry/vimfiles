@@ -19,7 +19,6 @@
     BufKill - Kill buffer without closing window        |notes_bufkill|
     Calutil - Calendar utilities                        |notes_calutil|
     Cecutil - Utilities for Dr. Chip's plugins          |notes_cecutil|
-    Characterize - A better 'ga'                        |notes_characterize|
     Clojure-static - Edit Clojure without runtime       |notes_clojure-static|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
     CMake syntax support                                |notes_cmake|
@@ -90,6 +89,7 @@
     TextObj-User - Supports user-defined text objects   |notes_textobj-user|
     ToggleCursor - Changes cursor shape in terminal     |notes_togglecursor|
     UltiSnips - Support for inserting snippets of text  |notes_ultisnips|
+    Unicode - handling unicode and digraphs characters  |notes_unicode|
     VCScommand - Version Control System integration     |notes_vcscommand|
     VimBall - Vim "package manager"                     |notes_vimball|
     Vis - The Visual Block Tool                         |notes_vis|
@@ -142,7 +142,7 @@
     Help-related mappings                               |notes_help_mappings|
     Folding by regular expression                       |notes_folding_regex|
     QuickFix entry folding                              |notes_quickfix_folding|
-    Converting Unicode symbols to ASCII                 |notes_unicode|
+    Converting Unicode symbols to ASCII                 |notes_toascii|
     Converting identifer case                           |notes_identifier_case|
     Conflict marker navigation                          |notes_conflict_marker|
     Embedded language support                           |notes_embedded_lang|
@@ -836,19 +836,6 @@ CECUTIL                                                  *notes_cecutil*
 
 Version v18k (Nov 22, 2017) from:
 http://www.drchip.org/astronaut/vim/index.html#CECUTIL
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-CHARACTERIZE                                             *notes_characterize*
-  A better 'ga'                                          |characterize|
-
-Replaces the builtin 'ga' with one that shows more information, including
-Unicode character name, Vim digraph, Emoji code, and HTML entity.
-
-Version 2013-03-13 (d5ba608) from:
-https://github.com/tpope/vim-characterize.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2838,6 +2825,37 @@ Installation:
 - See ~/.vim/vimrc for detailed configuration steps.
 
 ------------------------------------------------------------------------------
+UNICODE                                                 *notes_unicode*
+    Handling unicode and digraphs characters            |unicode.txt|
+
+Most common use: completing to a known Unicode name at insert-mode cursor.
+Press CTRL-x CTRL-z to complete.  For example, to find `ZERO WIDTH SPACE`,
+type `zero` and press CTRL-x CTRL-z to get list of possible completions; use
+cursors to choose desired matching character.
+
+Supports these insert-mode mappings to complete at cursor location:
+- CTRL-x CTRL-g   Complete digraph, e.g.: `>>` becomes `»`
+- CTRL-x CTRL-z   Complete unicode, e.g.: `zero` becomes char `ZERO WIDTH SPACE`
+- CTRL-x CTRL-b   Complete HTML entity, e.g.: `amp` becomes `&`
+
+Supports these normal-mode mappings:
+- ga              Identify Unicode character under the cursor
+- <leader>un      Switch to completing to unicode name instead of character
+
+Version 2021-05-24 (62f7a35) from:
+https://github.com/chrisbra/unicode.vim
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+- See ~/.vim/vimrc for detailed configuration steps.
+- Download `UnicodeData.txt` and add to source control (this requires setting
+  `g:Unicode_data_directory` to point into the Unicode bundle directory):
+>
+  cd ~/.vim/bundle/unicode
+  wget https://www.unicode.org/Public/UNIDATA/UnicodeData.txt
+  git add UnicodeData.txt
+<
+------------------------------------------------------------------------------
 VADER                                                   *notes_vader*
     Unit testing for vimscript                          |vader.txt|
 
@@ -4077,7 +4095,7 @@ In Gvim, you may also click on the symbols in the left margin of the QuickFix
 or Location List window to toggle individual folds.
 
 ------------------------------------------------------------------------------
-Converting Unicode symbols to ASCII                     *notes_unicode*
+Converting Unicode symbols to ASCII                     *notes_toascii*
 
 Use :ToAscii to convert a range of lines (defaulting to the entire buffer)
 into ASCII.  Mainly this converts several kinds of quotes into ASCII quotes
