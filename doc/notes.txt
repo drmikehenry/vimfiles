@@ -1204,7 +1204,7 @@ more useful ones are:
 Note that :G is used in vimrc for recursive grepping (|notes_G|), which
 overrides the use of :G for the Fugitive plugin.
 
-Version 2021-05-02 (32b0d62) from:
+Version 2021-07-30 (7a08772) from:
 https://github.com/tpope/vim-fugitive.git
 
 Installation:

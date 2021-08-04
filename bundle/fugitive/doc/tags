@@ -53,10 +53,15 @@
 :Gvsplit!	fugitive.txt	/*:Gvsplit!*
 :Gwq	fugitive.txt	/*:Gwq*
 :Gwrite	fugitive.txt	/*:Gwrite*
-FugitiveHead(...)	fugitive.txt	/*FugitiveHead(...)*
 FugitiveStatusline()	fugitive.txt	/*FugitiveStatusline()*
+User_Fugitive	fugitive.txt	/*User_Fugitive*
+User_FugitiveBlob	fugitive.txt	/*User_FugitiveBlob*
+User_FugitiveChanged	fugitive.txt	/*User_FugitiveChanged*
+User_FugitiveCommit	fugitive.txt	/*User_FugitiveCommit*
+User_FugitiveIndex	fugitive.txt	/*User_FugitiveIndex*
+User_FugitiveTag	fugitive.txt	/*User_FugitiveTag*
+User_FugitiveTree	fugitive.txt	/*User_FugitiveTree*
 fugitive	fugitive.txt	/*fugitive*
-fugitive#head(...)	fugitive.txt	/*fugitive#head(...)*
 fugitive#statusline()	fugitive.txt	/*fugitive#statusline()*
 fugitive-:G	fugitive.txt	/*fugitive-:G*
 fugitive-:Ge	fugitive.txt	/*fugitive-:Ge*
@@ -64,6 +69,8 @@ fugitive-:Gr	fugitive.txt	/*fugitive-:Gr*
 fugitive-:Gr!	fugitive.txt	/*fugitive-:Gr!*
 fugitive-:Gw	fugitive.txt	/*fugitive-:Gw*
 fugitive-about	fugitive.txt	/*fugitive-about*
+fugitive-api	fugitive.txt	/*fugitive-api*
+fugitive-autocommands	fugitive.txt	/*fugitive-autocommands*
 fugitive-commands	fugitive.txt	/*fugitive-commands*
 fugitive-deprecated	fugitive.txt	/*fugitive-deprecated*
 fugitive-global-maps	fugitive.txt	/*fugitive-global-maps*
