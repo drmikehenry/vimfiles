@@ -50,8 +50,8 @@ format!("$1"${1/[^{]*({)?.*/(?1:, :\);)/}$2${1/[^{]*({)?.*/(?1:\);:)/}
 """)
 
 # 'if' snippets.
-wsnip("if", "if (...) {...}", r"""
-if ($1) {
+wsnip("if", "if ... {...}", r"""
+if $1 {
     `!p betterVisual(snip)`$0
 }
 """)
@@ -62,8 +62,8 @@ else {
 }
 """, aliases=["el"])
 
-wsnip("elif", "else if (...) {...}", r"""
-else if ($1) {
+wsnip("elif", "else if ... {...}", r"""
+else if $1 {
     `!p betterVisual(snip)`$0
 }
 """, aliases = ["ei"])
@@ -82,8 +82,8 @@ for ${1:var} in ${2:iter} {
 }
 """, aliases=[])
 
-bsnip("while", "while (...) {...}", r"""
-while ($1) {
+bsnip("while", "while ... {...}", r"""
+while $1 {
     `!p betterVisual(snip)`$0
 }
 """, aliases=["wh"])
@@ -157,3 +157,16 @@ snip("{", "multi-line brace", r"""
     $0
 }
 """)
+
+wsnip("as", "assert!(...)", r"""
+assert!($1);
+""")
+
+wsnip("ase", "assert_eq!(..., ...)", r"""
+assert_eq!($1, $2);
+""")
+
+wsnip("asne", "assert_ne!(..., ...)", r"""
+assert_ne!($1, $2);
+""")
+

@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2021-08-09
+==========
+
+- Update rust snippets:
+
+  - Remove parentheses from ``if (pred)`` and ``while (pred)``.
+  - Add snippets for ``assert!()``, ``assert_eq!()``, and ``assert_ne!()``.
+
 2021-08-04
 ==========
 
