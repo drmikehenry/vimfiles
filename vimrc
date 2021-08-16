@@ -3696,7 +3696,7 @@ let g:ctrlp_map = ''
 if executable('rg')
     let g:ctrlp_user_command = {
         \ 'types': {
-                \ 1: ['.git', 'cd %s && rg --files --hidden'],
+                \ 1: ['.git', 'cd %s && rg -g "!.git/" --files --hidden'],
                 \ },
         \ }
 endif

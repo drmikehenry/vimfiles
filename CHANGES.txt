@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2021-08-16
+==========
+
+- When using cpsm and ripgrep for listing files in a Git repo, explicitly ignore
+  ``.git`` directories using ``rg -g "!.git/"``.
+
 2021-08-09
 ==========
 
