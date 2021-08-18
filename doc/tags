@@ -187,6 +187,8 @@ notes_ultisnips	notes.txt	/*notes_ultisnips*
 notes_unicode	notes.txt	/*notes_unicode*
 notes_vader	notes.txt	/*notes_vader*
 notes_vcscommand	notes.txt	/*notes_vcscommand*
+notes_vim-lsp	notes.txt	/*notes_vim-lsp*
+notes_vim-lsp-ale	notes.txt	/*notes_vim-lsp-ale*
 notes_vimball	notes.txt	/*notes_vimball*
 notes_vis	notes.txt	/*notes_vis*
 notes_visincr	notes.txt	/*notes_visincr*

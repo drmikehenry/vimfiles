@@ -18,14 +18,6 @@ let g:cpsm_query_inverting_delimiter = ' '
 " Experiment with 'splitright'.
 set splitright
 
-nmap <Space>gd <Plug>(ale_go_to_definition)
-
-" Symbol edit (rename).
-nnoremap <Space>se :ALERename<CR>
-" Show symbol information.
-nmap <Space>si <Plug>(ale_hover)
-
-
 " Experimental overwin-based mappings.
 nmap     <Space>jj          <Plug>(easymotion-overwin-f)
 nmap     <Space>jJ          <Plug>(easymotion-overwin-f2)

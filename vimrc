@@ -477,6 +477,15 @@ if !exists('g:EnableSyntastic')
     let g:EnableSyntastic = 1
 endif
 
+if !exists('g:EnableVimLsp')
+    let g:EnableVimLsp = 1
+endif
+
+" vim-lsp requires Vim 8.1.1035 or newer.
+if v:version < 801 || (v:version == 801 && !has('patch1035'))
+    let g:EnableVimLsp = 0
+endif
+
 " Gvim bug https://github.com/vim/vim/issues/3417 is fixed in Gvim 8.1.0834.
 " Without this patch, Gvim support for timers is buggy, so ALE should not be
 " enabled.
@@ -498,6 +507,11 @@ endif
 
 if !g:EnableAle
     call add(g:pathogen_disabled, 'ale')
+endif
+
+if !g:EnableVimLsp
+    call add(g:pathogen_disabled, 'vim-lsp')
+    call add(g:pathogen_disabled, 'vim-lsp-ale')
 endif
 
 " Don't use Powerline or Airline on 8-color terminals; they don't look good.
@@ -3531,10 +3545,14 @@ if g:EnableAle
 
     let g:ale_sign_column_always = 1
 
+    " NOTE: Also see configuration adjustments in vim-lsp section.
+
     " 'rls' - Rust Language Server.
     let g:ale_linters = {}
     let g:ale_linters['rust'] = ['rls', 'cargo']
     let g:ale_linters['python'] = ['pyls', 'flake8', 'mypy']
+    let g:ale_linters['c'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
+    let g:ale_linters['cpp'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
 
     " Pylint is too picky to be on by default.
     let g:ale_linters_ignore = { 'python': ['pylint'] }
@@ -5370,6 +5388,172 @@ nmap <leader>un <Plug>(UnicodeSwapCompleteName)
 nmap ga <Plug>(UnicodeGA)
 
 " -------------------------------------------------------------
+" vim-lsp
+" -------------------------------------------------------------
+
+" Python support:
+if !exists('g:EnableVimLsp_pyls')
+    let g:EnableVimLsp_pyls = 1
+endif
+if !g:EnableVimLsp || !executable('pyls')
+    let g:EnableVimLsp_pyls = 0
+endif
+" Any kind of Python support:
+let g:EnableVimLsp_python = g:EnableVimLsp_pyls
+
+
+" C/C++ support:
+if !exists('g:EnableVimLsp_clangd')
+    let g:EnableVimLsp_clangd = 1
+endif
+if !g:EnableVimLsp || !executable('clangd')
+    let g:EnableVimLsp_clangd = 0
+endif
+" Any kind of C/C++ support:
+let g:EnableVimLsp_c = g:EnableVimLsp_clangd
+
+" Rust support:
+if !exists('g:EnableVimLsp_rust_analyzer')
+    let g:EnableVimLsp_rust_analyzer = 1
+endif
+if !g:EnableVimLsp || !executable('rust_analyzer')
+    let g:EnableVimLsp_rust_analyzer = 0
+endif
+
+if !exists('g:EnableVimLsp_rls')
+    let g:EnableVimLsp_rls = 1
+endif
+" Prefer rust-analyzer to rls:
+if !g:EnableVimLsp || !executable('rls') || g:EnableVimLsp_rust_analyzer
+    let g:EnableVimLsp_rls = 0
+endif
+
+" Any kind of Rust support:
+let g:EnableVimLsp_rust = g:EnableVimLsp_rust_analyzer || g:EnableVimLsp_rls
+
+if g:EnableVimLsp
+    let g:lsp_document_code_action_signs_enabled = 0
+
+    " For any kind of python support:
+    if g:EnableVimLsp_python
+        " Python Language Server (pyls) support:
+        if g:EnableVimLsp_pyls
+            augroup local_lsp_pyls
+                autocmd!
+                autocmd User lsp_setup call lsp#register_server({
+                        \ 'name': 'pyls',
+                        \ 'cmd': ['pyls'],
+                        \ 'allowlist': ['python'],
+                        \ })
+            augroup END
+        endif
+
+        " Remove "pyls" (if present); prepend "vim-lsp":
+        call filter(g:ale_linters['python'], 'v:val != "pyls"')
+        call insert(g:ale_linters['python'], "vim-lsp")
+    endif
+
+    " For any kind of C support:
+    if g:EnableVimLsp_c
+        " Clangd (C/C++) support:
+        if g:EnableVimLsp_clangd
+            augroup local_lsp_clangd
+                autocmd!
+                autocmd User lsp_setup call lsp#register_server({
+                        \ 'name': 'clangd',
+                        \ 'cmd': ['clangd'],
+                        \ 'allowlist': ['c', 'cpp', 'objc', 'objcpp'],
+                        \ })
+            augroup END
+        endif
+        " Prepend "vim-lsp":
+        call insert(g:ale_linters['c'], "vim-lsp")
+        call insert(g:ale_linters['cpp'], "vim-lsp")
+    endif
+
+    " For any kind of rust support:
+    if g:EnableVimLsp_rust
+        " Rust-analyzer (preferred over rls when available):
+        if g:EnableVimLsp_rust_analyzer
+            augroup local_lsp_rls
+                autocmd!
+                autocmd User lsp_setup call lsp#register_server({
+                        \ 'name': 'rust-analyzer',
+                        \ 'cmd': {server_info->['rust-analyzer']},
+                        \ 'allowlist': ['rust'],
+                        \ })
+            augroup END
+        endif
+
+        " Rust Language Server (rls) support:
+        if g:EnableVimLsp_rls
+            augroup local_lsp_rls
+                autocmd!
+                autocmd User lsp_setup call lsp#register_server({
+                        \ 'name': 'rls',
+                        \ 'cmd': ['rls'],
+                        \ 'allowlist': ['rust'],
+                        \ })
+            augroup END
+        endif
+        " Remove "rls" (if present); prepend "vim-lsp":
+        call filter(g:ale_linters['rust'], 'v:val != "rls"')
+        call insert(g:ale_linters['rust'], "vim-lsp")
+    endif
+
+    " Experimental vim-lsp mappings:
+    " Use <nop> mappings so that (ideally) nothing happens if a mapping is
+    " mis-typed.  E.g., pressing <Space>lp0 doesn't have mapping, so it would
+    " normally turn into <Space> (moving the cursor), l (moving right), p
+    " (putting text), and 0 (move to start of line).  But after mapping
+    " <Space>lp to <nop>, the <Space>lp gets eaten and only 0 is left.
+    nmap <Space>l       <nop>
+    nmap <Space>lg      <nop>
+    nmap <Space>lgd     <plug>(lsp-definition)
+    nmap <Space>lgD     <plug>(lsp-declaration)
+    nmap <Space>lp      <nop>
+    nmap <Space>lpd     <plug>(lsp-peek-definition)
+    nmap <Space>lpD     <plug>(lsp-peek-declaration)
+    nmap <Space>lr      <plug>(lsp-references)
+    nmap <Space>lR      <plug>(lsp-rename)
+    nmap <Space>lh      <plug>(lsp-hover)
+    nmap <Space>l=      <plug>(lsp-document-format)
+    xmap <Space>l=      <plug>(lsp-document-range-format)
+    " nmap <Space>l       <plug>(lsp-document-format)
+    " vmap <Space>l       <plug>(lsp-document-format)
+    " nmap <Space>l       <plug>(lsp-code-action)
+    " nmap <Space>l       <plug>(lsp-code-lens)
+    " nmap <Space>l       <plug>(lsp-document-symbol)
+    " nmap <Space>l       <plug>(lsp-document-symbol-search)
+    " nmap <Space>l       <plug>(lsp-document-diagnostics)
+    " nmap <Space>l       <plug>(lsp-next-diagnostic)
+    " nmap <Space>l       <plug>(lsp-next-diagnostic-nowrap)
+    " nmap <Space>l       <plug>(lsp-next-error)
+    " nmap <Space>l       <plug>(lsp-next-error-nowrap)
+    " nmap <Space>l       <plug>(lsp-next-reference)
+    " nmap <Space>l       <plug>(lsp-next-warning)
+    " nmap <Space>l       <plug>(lsp-next-warning-nowrap)
+    " nmap <Space>l       <plug>(lsp-preview-close)
+    " nmap <Space>l       <plug>(lsp-preview-focus)
+    " nmap <Space>l       <plug>(lsp-previous-diagnostic)
+    " nmap <Space>l       <plug>(lsp-previous-diagnostic-nowrap)
+    " nmap <Space>l       <plug>(lsp-previous-error)
+    " nmap <Space>l       <plug>(lsp-previous-error-nowrap)
+    " nmap <Space>l       <plug>(lsp-previous-reference)
+    " nmap <Space>l       <plug>(lsp-previous-warning)
+    " nmap <Space>l       <plug>(lsp-previous-warning-nowrap)
+    " nmap <Space>l       <plug>(lsp-workspace-symbol)
+    " nmap <Space>l       <plug>(lsp-workspace-symbol-search)
+    " nmap <Space>l       <plug>(lsp-implementation)
+    " nmap <Space>l       <plug>(lsp-peek-implementation)
+    " nmap <Space>l       <plug>(lsp-type-definition)
+    " nmap <Space>l       <plug>(lsp-peek-type-definition)
+    " nmap <Space>l       <plug>(lsp-type-hierarchy)
+    " nmap <Space>l       <plug>(lsp-status)
+    " nmap <Space>l       <plug>(lsp-signature-help)
+endif
+
+" -------------------------------------------------------------
 " vis
 " -------------------------------------------------------------
 
@@ -6292,6 +6476,10 @@ function! SetupC()
     vnoremap <buffer> <C-o><CR> <C-\><C-n>A;<CR>
 
     SetupCommentStyleC
+
+    if g:EnableVimLsp_c
+        setlocal omnifunc=lsp#complete
+    endif
 endfunction
 command! -bar SetupC call SetupC()
 
@@ -6479,7 +6667,9 @@ function! SetupPython()
     syntax sync minlines=1000
 
     SyntasticBufferSetup strict
-    if g:EnableAle
+    if g:EnableVimLsp_python
+        setlocal omnifunc=lsp#complete
+    elseif g:EnableAle
         setlocal omnifunc=ale#completion#OmniFunc
     endif
 endfunction
@@ -6662,7 +6852,9 @@ function! SetupRust()
     " setlocal comments=s0:/*!,ex:*/,s1:/*,mb:*,ex:*/,:///,://!,://
     setlocal comments=s0:/*!,mb:\ ,e-4:*/,s0:/*,mb:\ ,ex-4:*/,:///,://!,://
 
-    if g:EnableAle
+    if g:EnableVimLsp_rust
+        setlocal omnifunc=lsp#complete
+    elseif g:EnableAle
         setlocal omnifunc=ale#completion#OmniFunc
     endif
 endfunction

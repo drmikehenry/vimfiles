@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2021-08-18
+==========
+
+- Add vim-lsp plugin for Language Server Protocol support.  This plugin has
+  better LSP support than ALE, and the vim-lsp-ale plugin eases the integration
+  of these two plugins.  ``:help notes_vim-lsp`` for more information, and
+  see the "Linters/formatters" section of ``:help notes_setup_vimfiles``
+  for installation instructions for various linters, LSP servers, etc.
+
 2021-08-16
 ==========
 

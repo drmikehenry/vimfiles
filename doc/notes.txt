@@ -92,6 +92,8 @@
     Unicode - handling unicode and digraphs characters  |notes_unicode|
     VCScommand - Version Control System integration     |notes_vcscommand|
     VimBall - Vim "package manager"                     |notes_vimball|
+    Vim-lsp - Language Server Protocol support          |notes_vim-lsp|
+    Vim-lsp-ale - Bridge between vim-lsp and ALE        |notes_vim-lsp-ale|
     Vis - The Visual Block Tool                         |notes_vis|
     VisIncr - Increment visually selected areas         |notes_visincr|
     VisSort - Sort visually selected areas              |notes_vissort|
@@ -183,7 +185,9 @@ following ex-mode command: >
 
   :e $VIMFILES/CHANGES.txt
 
-Alternatively, place cursor on $VIMFILES/CHANGES.txt and press gf.
+Alternatively, place cursor on the filename below and press gf:
+
+  $VIMFILES/CHANGES.txt
 
 ==============================================================================
 2.  Installation                                        *notes_installation*
@@ -278,6 +282,9 @@ following methods for informing Vim:
 
   - Now move the checkout of ``vimfiles`` to become ``C:\vimfiles``.
 
+For all platforms
+=================
+
 ctags support
 -------------
 
@@ -307,11 +314,21 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
       pip install flake8 flake8-quotes pep8-naming
       pip install mypy pyannotate monkeytype pytype
 <
-    Note: by default, flake8-quotes assumes single-quotes.  To match the style
-    enforced by black, create `~/.config/flake8` with contents: >
+    Create `~/.config/flake8` with the following contents: >
 
       [flake8]
+      # Black uses double-quotes:
       inline-quotes = double
+
+      # Black puts space around colons for slice expressions with operators,
+      # e.g.:
+      #   array[x:y]            # No spaces because ``x`` and ``y`` are simple.
+      #   array[x + 1 : y]      # Spaces because of ``x + 1``.
+      # Ignore flake8's E203 error, since black will fix things properly.
+      ignore = E203
+
+      # Match python-language-server default McCabe complexity.
+      max-complexity = 15
 <
     For per-project configuration of flake8, put the same content in a `.flake8`
     file in the project's root directory.
@@ -320,13 +337,12 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
       pip install black
 <
-    Note: For the few configurable things black supports (e.g., line length, or
-    to avoid reformatting quotes), you can create a per-project `pyproject.toml`
-    file with a section to configure black.  For example: >
+    Note: For the few configurable things black supports (e.g., line length),
+    you can create a per-project `pyproject.toml` file with a section to
+    configure black.  For example: >
 
       [tool.black]
       line-length = 79
-      skip-string-normalization = true
 <
   - Install language server: >
 
@@ -347,6 +363,19 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
       rustup component add rls
 <
+  - Install Rust analyzer (preferred to rls when available):
+
+    - Available from: https://rust-analyzer.github.io/
+    - Download from releases area.
+    - Expand into directory in the path, e.g.:
+    >
+        sudo cp rust-analyzer-x86_64-unknown-linux-gnu.gz /usr/local/bin
+        sudo gunzip /usr/local/bin/rust-analyzer-x86_64-unknown-linux-gnu.gz
+        sudo chmod +x /usr/local/bin/rust-analyzer-x86_64-unknown-linux-gnu
+        sudo chmod ln -s \
+          /usr/local/bin/rust-analyzer-x86_64-unknown-linux-gnu \
+          /usr/local/bin/rust-analyzer
+<
 - Shell:
 
   - Install shellcheck linter: >
@@ -363,6 +392,41 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
       go get -u mvdan.cc/sh/cmd/shfmt
 <
+- C/C++:
+
+  - Install Clang daemon (Clangd): >
+
+      # [Ubuntu] Use the default version:
+      sudo apt install clangd
+
+      # [Ubuntu] Use a specific version and make it the default:
+      sudo apt install clangd-10
+      sudo update-alternatives --install /usr/bin/clangd \
+          clangd /usr/bin/clangd-10 100
+<
+
+  - Install `compiledb` to automatically generate a `compile-commands.json` file
+    for use with Clangd. >
+
+      pip install compiledb
+<
+    See `compiledb --help` for details.
+
+Fonts
+-----
+
+Suggested fonts to install:
+
+- "Hack"
+- "PragmataPro for Powerline"
+- "PragmataPro"
+- "DejaVu Sans Mono for Powerline"
+- "Droid Sans Mono for Powerline"
+- "Consolas for Powerline"
+- "DejaVu Sans Mono"
+- "Droid Sans Mono"
+- "Consolas"
+
 ------------------------------------------------------------------------------
 Build Vim                                               *notes_build_vim*
 
@@ -429,17 +493,6 @@ update this line: >
 
 to use a full path: >
     Exec=/usr/local/bin/gvim -f %F
-
-Fonts
------
-
-On Linux, ensure the following fonts are available:
-
-- levien-inconsolata-fonts (Fedora package).  Reference:
-  http://www.levien.com/type/myfonts/inconsolata.html
-
-- Bitstream Vera Sans.  Reference:
-  http://www.gnome.org/fonts/
 
 Sources
 -------
@@ -2909,6 +2962,37 @@ VIMBALL                                                 *notes_vimball*
 
 Version 33 (4ba9a9e) from:
 https://github.com/vim-scripts/Vimball
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+VIM-LSP                                                 *notes_vim-lsp*
+  Language Server Protocol support                      |vim-lsp|
+
+Supports these mappings (experimental at present):
+- <Space>lgd     <plug>(lsp-definition)
+- <Space>lgD     <plug>(lsp-declaration)
+- <Space>lpd     <plug>(lsp-peek-definition)
+- <Space>lpD     <plug>(lsp-peek-declaration)
+- <Space>lr      <plug>(lsp-references)
+- <Space>lR      <plug>(lsp-rename)
+- <Space>lh      <plug>(lsp-hover)
+- <Space>l=      <plug>(lsp-document-format)
+- <Space>l=      <plug>(lsp-document-range-format)
+
+Version 2021-05-16 (06c4b5b) from:
+https://github.com/prabirshrestha/vim-lsp.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+VIM-LSP-ALE                                             *notes_vim-lsp-ale*
+  Bridge between vim-lsp and ALE                        |vim-lsp-ale|
+
+Version 33 (4ba9a9e) from:
+https://github.com/rhysd/vim-lsp-ale.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

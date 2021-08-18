@@ -1,0 +1,99 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  vint:
+    name: Run vint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install vim-vint
+      - run: vint --warning --verbose --enable-neovim ./autoload ./plugin
+
+  unit-test:
+    name: Unit tests
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        neovim: [true, false]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout themis.vim
+        uses: actions/checkout@v2
+        with:
+          repository: thinca/vim-themis
+          path: vim-themis
+      - uses: rhysd/action-setup-vim@v1
+        id: vim
+        with:
+          neovim: ${{ matrix.neovim }}
+      - name: Run unit tests
+        env:
+          THEMIS_VIM: ${{ steps.vim.outputs.executable }}
+          THEMIS_PROFILE: profile.txt
+        run: ./vim-themis/bin/themis ./test/unit
+      - uses: actions/setup-python@v2
+        if: matrix.os != 'windows-latest'
+      - name: Report coverage
+        if: matrix.os != 'windows-latest'
+        run: |
+          # https://github.com/Vimjas/covimerage/issues/95
+          pip install 'click<8.0.0'
+          pip install covimerage
+          covimerage write_coverage profile.txt
+          coverage report
+          coverage xml
+      - name: Upload coverage to codecov
+        if: matrix.os != 'windows-latest'
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml
+
+  integ-test:
+    name: Integration tests
+    strategy:
+      matrix:
+        neovim: [true, false]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout themis.vim
+        uses: actions/checkout@v2
+        with:
+          repository: thinca/vim-themis
+          path: vim-themis
+      - uses: rhysd/action-setup-vim@v1
+        id: vim
+        with:
+          neovim: ${{ matrix.neovim }}
+      - name: Checkout vim-lsp
+        uses: actions/checkout@v2
+        with:
+          repository: prabirshrestha/vim-lsp
+          path: test/integ/deps/vim-lsp
+      - name: Checkout ale
+        uses: actions/checkout@v2
+        with:
+          repository: dense-analysis/ale
+          path: test/integ/deps/ale
+      - name: Install rust-analyzer
+        run: |
+          mkdir ~/bin
+          curl -L https://github.com/rust-analyzer/rust-analyzer/releases/latest/download/rust-analyzer-linux -o ~/bin/rust-analyzer
+          chmod +x ~/bin/rust-analyzer
+          echo "$HOME/bin" >> $GITHUB_PATH
+      - name: Run integration tests
+        env:
+          THEMIS_VIM: ${{ steps.vim.outputs.executable }}
+        run: ./vim-themis/bin/themis ./test/integ
+      - name: Show runtime information
+        if: ${{ failure() }}
+        run: |
+          echo 'integ_messages.txt'
+          [ -f test/integ/integ_messages.txt ] && cat test/integ/integ_messages.txt
+          echo 'lsp-log.txt'
+          [ -f test/integ/lsp-log.txt ] && cat test/integ/lsp-log.txt
