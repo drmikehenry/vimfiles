@@ -5416,7 +5416,7 @@ let g:EnableVimLsp_c = g:EnableVimLsp_clangd
 if !exists('g:EnableVimLsp_rust_analyzer')
     let g:EnableVimLsp_rust_analyzer = 1
 endif
-if !g:EnableVimLsp || !executable('rust_analyzer')
+if !g:EnableVimLsp || !executable('rust-analyzer')
     let g:EnableVimLsp_rust_analyzer = 0
 endif
 
@@ -5507,11 +5507,11 @@ if g:EnableVimLsp
     " normally turn into <Space> (moving the cursor), l (moving right), p
     " (putting text), and 0 (move to start of line).  But after mapping
     " <Space>lp to <nop>, the <Space>lp gets eaten and only 0 is left.
-    nmap <Space>l       <nop>
-    nmap <Space>lg      <nop>
+    " nmap <Space>l       <nop>
+    " nmap <Space>lg      <nop>
     nmap <Space>lgd     <plug>(lsp-definition)
     nmap <Space>lgD     <plug>(lsp-declaration)
-    nmap <Space>lp      <nop>
+    " nmap <Space>lp      <nop>
     nmap <Space>lpd     <plug>(lsp-peek-definition)
     nmap <Space>lpD     <plug>(lsp-peek-declaration)
     nmap <Space>lr      <plug>(lsp-references)
