@@ -494,11 +494,21 @@ update this line: >
 to use a full path: >
     Exec=/usr/local/bin/gvim -f %F
 
+Testing different Vim versions from build directory
+---------------------------------------------------
+
+After compiling a version of Vim, it may be tested without installation
+by setting `VIMRUNTIME` to point to the correct `runtime` directory.
+For example, after building into the directory `vim-8.1.0290`, execute via: >
+
+  cd vim-8.1.0290/src
+  VIMRUNTIME=$(dirname $PWD)/runtime ./vim
+<
 Sources
 -------
 
 Vim source lives in a git repository as described here:
-  http://www.vim.org/download.php
+  http://www.vim.org/sources.php
 
 Clone the repository via: >
   cd ~/build
