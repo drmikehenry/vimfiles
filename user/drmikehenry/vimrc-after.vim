@@ -11,6 +11,19 @@ function! CustomSetupMake()
 endfunction
 command! -bar SetupMake call CustomSetupMake()
 
+" Execute linehash on current file into ~/tmp/linehash.out, automatically
+" reloading that file.  Preserves the window layout.
+function Linehash()
+    let savePos=winsaveview()
+    wall
+    silent !linehash % > ~/tmp/linehash.out
+    checktime
+    call winrestview(savePos)
+endfunction
+
+nnoremap <f8> :silent call Linehash()<CR>
+imap <f8> <esc><f8>
+
 " Use cpsm matcher for CtrlP.
 let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
 let g:cpsm_query_inverting_delimiter = ' '
