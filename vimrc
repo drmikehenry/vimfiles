@@ -210,6 +210,94 @@ function! GetSymbol(script, symbol)
     return ''
 endfunction
 
+" Return [line, col] subset of the output of getpos(expr).
+function! GetPos(expr)
+    return getpos(a:expr)[1:2]
+endfunction
+
+" [line, col] points to the start of a character in the buffer.
+" [1, 1] indicates the [first line, first character on the line].
+" Adjust col to point to the final byte of this character; this will do nothing
+" for single-byte characters.
+function! AdjustColToCharEnd(line, col)
+    let end_col = a:col
+    " Match a single character at end_col.
+    " Note that end_col might be an oversize value (e.g., 2147483647)
+    " compared to the number of bytes on the corresponding line.  This occurs
+    " when doing a linewise selection, for example.  To keep matchstr() from
+    " throwing E951 due to an oversized column number, avoid testing the
+    " text when end_col is too large to need incrementation.
+    let text = getline(a:line)
+    if end_col < len(text)
+        let num_bytes = len(matchstr(text, '\%' . end_col . 'c.'))
+        if num_bytes > 1
+            let end_col += num_bytes - 1
+        endif
+    endif
+    return end_col
+endfunction
+
+" If start_pos comes after end_pos in the buffer, reverse them.
+" Return the pair in their proper order within the buffer.
+function! NormalizeStartEndPos(start_pos, end_pos)
+    let [start_line, start_col] = a:start_pos
+    let [end_line, end_col] = a:end_pos
+    if start_line > end_line || (start_line == end_line && start_col > end_col)
+        return [a:end_pos, a:start_pos]
+    endif
+    return [a:start_pos, a:end_pos]
+endfunction
+
+" start_pos = [start_line, start_col]
+" end_pos = [end_line, end_col]
+" end_pos may be earlier in the buffer than start_pos.
+" Each col number is a one-based byte index into the corresponding line.
+" For example, [1, 1] is the first line, first column.
+" If the ending column points to a multi-byte character, the byte index must
+" be adjusted to include all of the bytes in that character.
+" Ref: https://stackoverflow.com/questions/1533565/how-to-get-visually-selected-text-in-vimscript
+function GetLines(start_pos, end_pos)
+    let [start_pos, end_pos] = NormalizeStartEndPos(a:start_pos, a:end_pos)
+    let [start_line, start_col] = start_pos
+    let [end_line, end_col] = end_pos
+    " Account for end_col pointing to multi-byte character.
+    let end_col = AdjustColToCharEnd(end_line, end_col)
+    let lines = []
+    let end_final_col = col([end_line, '$'])
+    let start_line_text = getline(start_line)
+    if start_line == end_line
+        if end_col >= end_final_col
+            call extend(lines, [start_line_text[(start_col - 1):], ""])
+        else
+            call add(lines, start_line_text[(start_col - 1):(end_col - 1)])
+        endif
+    else
+        call add(lines, start_line_text[(start_col - 1):])
+        let end_line_text = getline(end_line)
+        if (end_line - start_line) > 1
+            call extend(lines, getline(start_line + 1, end_line - 1))
+        endif
+        if end_col < end_final_col
+            call add(lines, end_line_text[:(end_col - 1)])
+        else
+            call extend(lines, [end_line_text, ""])
+        endif
+    endif
+    return lines
+endfunction
+
+" start_pos = [start_line, start_col]
+" end_pos = [end_line, end_col]
+" Joins lines returned from GetLines(start_pos, end_pos) into a single string.
+function GetText(start_pos, end_pos)
+    return join(GetLines(a:start_pos, a:end_pos), "\n")
+endfunction
+
+" Get most recently selected visual text.
+function GetSelectedText()
+    return GetText(GetPos("'<"), GetPos("'>"))
+endfunction
+
 " -------------------------------------------------------------
 " runtimepath manipulation
 " -------------------------------------------------------------
@@ -2524,39 +2612,62 @@ function! SetSearch(pattern)
     redraw
 endfunction
 
+" Set search to a pattern for the given literal string.
+function! SetSearchLiteral(literal)
+    call SetSearch(SearchLiteralPattern(a:literal))
+endfunction
+
+" Set search to a pattern for the given word (matching on word boundaries).
+function! SetSearchLiteralWord(word)
+    call SetSearch('\<' . SearchLiteralPattern(a:word) . '\>')
+endfunction
+
 " Set search register @/ to unnamed ("scratch") register and highlight.
-command! -bar MatchScratch     call SetSearch(SearchLiteralPattern(@"))
-command! -bar MatchScratchWord call SetSearch('\<' . SearchLiteralPattern(@") . '\>')
+command! -bar MatchScratch
+        \ call SetSearch(SearchLiteralPattern(@"))
+command! -bar MatchScratchWord
+        \ call SetSearch('\<' . SearchLiteralPattern(@") . '\>')
 
-" Map normal-mode '*' to just highlight, not search for next.
-" Note: Yank into @a to avoid clobbering register 0.
+" Map '*' to just highlight, not search for next.
 " The extra <Space>N at the end moves forward one space and then searches
-" backward again for the word, allowing the [n/m] search message to be
-" displayed (assuming 'shortmess' does not contain ``S``).
-" This has one low-probability edge case when highlighting a single-character
-" word at the end of the file.  When this happens, the <Space> can't move
-" forward, so Vim aborts the mapping with an error.  Most of the work is done
-" correctly, but in this rare case the [n/m] message won't be displayed.
+" backward again for the word, allowing the [n/m] search message to be displayed
+" (assuming 'shortmess' does not contain ``S``).  This an edge case with the
+" cursor on the last character of a word at the end of the file.  When this
+" happens, the <Space> can't move forward, so Vim aborts the mapping with an
+" error.  Most of the work is done correctly, but in this rare case the [n/m]
+" message won't be displayed.
 nnoremap <silent>
-        \* :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR><Space>N
+        \* :call SetSearchLiteralWord(expand('<cword>'))<CR><Space>N
 
 nnoremap <silent>
-        \g* :call PushA()<CR>"ayiw:MatchScratch<CR>:call PopA()<CR><Space>N
+        \g* :call SetSearchLiteral(expand('<cword>'))<CR><Space>N
 
 xnoremap <silent>
-        \* <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR><Space>N
+        \* <Esc>:call SetSearchLiteral(GetSelectedText())<CR><Space>N
 
-" :Regrep of word under cursor.
-nnoremap <F3> :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
-        \:Regrep \<<C-r>=EgrepLiteralPattern(@")<CR>\>
+" :Regrep of word under cursor, matching on word boundaries.
+nnoremap <F3>
+        \ :let g:temporary_text=expand('<cword>')<CR>
+        \:call SetSearchLiteralWord(g:temporary_text)<CR>
+        \:Regrep \<<C-r>=EgrepLiteralPattern(g:temporary_text)<CR>\>
+
 " :Regrep of visual selection.
-xnoremap <F3> <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
-        \:Regrep <C-r>=EgrepLiteralPattern(@")<CR>
+xnoremap <F3>
+        \ <Esc>:let g:temporary_text=GetSelectedText()<CR>
+        \:call SetSearchLiteral(g:temporary_text)<CR>
+        \:Regrep <C-r>=EgrepLiteralPattern(g:temporary_text)<CR>
 
-nnoremap # :call PushA()<CR>"ayiw:MatchScratchWord<CR>:call PopA()<CR>
-        \:G <C-r>=GrepLiteralPattern(@")<CR> -w
-xnoremap # <Esc>:call PushA()<CR>gv"ay:MatchScratch<CR>:call PopA()<CR>
-        \:G <C-r>=GrepLiteralPattern(@")<CR>
+" :G of word under cursor, matching on word boundaries.
+nnoremap #
+        \ :let g:temporary_text=expand('<cword>')<CR>
+        \:call SetSearchLiteralWord(g:temporary_text)<CR>
+        \:G <C-r>=GrepLiteralPattern(g:temporary_text)<CR> -w
+
+" :G of visual selection.
+xnoremap #
+        \ <Esc>:let g:temporary_text=GetSelectedText()<CR>
+        \:call SetSearchLiteral(g:temporary_text)<CR>
+        \:G <C-r>=GrepLiteralPattern(g:temporary_text)<CR>
 
 function! SearchWord(...)
     if a:0 == 0
