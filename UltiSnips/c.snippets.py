@@ -187,17 +187,37 @@ main(int argc, char *argv[])
 }
 """)
 
-# @todo Is the hard-wired \n OK?
-put(r"""
-snippet fprintf "fprintf(..., '...', ...);" w!
-fprintf(${1:stderr}, "${2:%s}\n"${2/([^%]|%%)*(%.)?.*/(?2:, :\);)/}$3${2/([^%]|%%)*(%.)?.*/(?2:\);)/}
-endsnippet
+def printf_fmt_varargs(fmt_tabstop_num):
+    t1 = str(fmt_tabstop_num)
+    t2 = str(fmt_tabstop_num + 1)
+    # Capture group 2 will be non-empty if format string contains any
+    # format specifiers (``%d``, ``%s``, ...) that require varargs:
+    if_varargs_cap2 = r"([^%]|%%)*(%.)?.*"
 
-snippet printf "printf('...', ...);" w!
-printf("${1:%s}\n"${1/([^%]|%%)*(%.)?.*/(?2:, :\);)/}$2${1/([^%]|%%)*(%.)?.*/(?2:\);)/}
-endsnippet
+    fmt = r'"${' + t1 + r':%s}\n"'
+    after_fmt = r"${" + t1 + r"/" + if_varargs_cap2 + r"/(?2:, :\);)/}$" + t2
+    rest = r"${" + t1 + r"/" + if_varargs_cap2 + r"/(?2:\);)/}"
+    return fmt + after_fmt + rest
 
-""")
+wsnip("printf", """printf('...', ...);""",
+    r"printf(" + printf_fmt_varargs(1),
+    aliases=["pr"])
+
+wsnip("dprintf", """dprintf(fd, '...', ...);""",
+    r"dprintf(${1:fd}, " + printf_fmt_varargs(2),
+    aliases=["dpr"])
+
+wsnip("fprintf", """fprintf(FILE, '...', ...);""",
+    r"fprintf(${1:stderr}, " + printf_fmt_varargs(2),
+    aliases=["fpr"])
+
+wsnip("sprintf", """sprintf(buf, '...', ...);""",
+    r"sprintf(${1:buf}, " + printf_fmt_varargs(2),
+    aliases=["spr"])
+
+wsnip("snprintf", """snprintf(buf, sizeof(buf), '...', ...);""",
+    r"snprintf(${1:buf}, ${2:sizeof($1)}, " + printf_fmt_varargs(3),
+    aliases=["snpr"])
 
 bsnip("Func", "type func(...);", r"""
 /******************************************************************************
@@ -275,6 +295,7 @@ for width in [8, 16, 32, 64]:
 wabbr("st", "size_t")
 wabbr("sst", "ssize_t")
 wabbr("un", "unsigned")
+wabbr("uc", "unsigned char")
 
 # Doxygen.
 babbr("@param",     "@param[in] ${1:inParam}  ${0:@todo Description of $1.}",
