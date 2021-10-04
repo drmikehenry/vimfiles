@@ -3810,6 +3810,27 @@ augroup END
 " cpsm (matcher for CtrlP)
 " -------------------------------------------------------------
 
+" Pressing this delimiter causes later characters to be placed before earlier.
+" E.g., setting this to <Space> means that this string:
+"   "foo bar qux"
+" will be matched as if it were this string:
+"   "quxbarfoo"
+" Useful for matching on a file extension first, then the name, e.g.:
+"   ".c file path"
+" is the same as:
+"   "pathfile.c"
+if !exists('g:cpsm_query_inverting_delimiter')
+    let g:cpsm_query_inverting_delimiter = ' '
+endif
+
+if !exists('g:ctrlp_match_func')
+    " Use cpsm matcher for CtrlP if the compiled "cpsm_cli" executable exists.
+    " See `:help notes_cpsm` for instructions on compiling cpsm.
+    if glob($VIMFILES . '/bundle/cpsm/bin/cpsm_cli*') != ''
+        let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
+    endif
+endif
+
 " -------------------------------------------------------------
 " CtrlP
 " -------------------------------------------------------------
