@@ -347,7 +347,7 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
   - Install language server: >
 
       # Recommended to use a virtual environment:
-      pip install 'python-language-server[mccabe,pycodestyle,pydocstyle,pyflakes,rope']
+      pip install 'python-language-server[mccabe,pycodestyle,pydocstyle,pyflakes,rope]'
 
       # (Not yet recommended: pyls-mypy seems to have trouble finding
       # local imports, whereas ALE's direct support for mypy works properly).
