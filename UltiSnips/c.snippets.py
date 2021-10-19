@@ -172,7 +172,16 @@ case ${1:val}:
 
 bsnip("re", "return ", r"""return """)
 
-bsnip("main", "main(...)", r"""
+bsnip("main", "main(...) (uncommented)", r"""
+int
+main(int argc, char *argv[])
+{
+    $0
+    return 0;
+}
+""")
+
+bsnip("main", "main(...) (Doxygen)", r"""
 /** @brief Main program entry point.
     @param[in] argc  Number of arguments in @c argv.
     @param[in] argv  Command-line arguments.
@@ -256,7 +265,14 @@ $1(${4:void})
 """, aliases=["static"])
 
 # Type-related snippets.
-bsnip("struct", "typedef struct name {...} name;", r"""
+bsnip("struct", "typedef struct name {...} name; (uncommented)", r"""
+typedef struct ${1:name}
+{
+    $0
+} $1;
+""")
+
+bsnip("struct", "typedef struct name {...} name; (Doxygen)", r"""
 /** @brief ${2:@todo Description of $1}`!p snip.rv = autoPeriod(t[2])`
 */
 typedef struct ${1:name}
@@ -265,7 +281,14 @@ typedef struct ${1:name}
 } $1;
 """)
 
-bsnip("enum", "typedef enum name {...} name;", r"""
+bsnip("enum", "typedef enum name {...} name; (uncommented)", r"""
+typedef enum ${1:name}
+{
+    $0
+} $1;
+""")
+
+bsnip("enum", "typedef enum name {...} name; (Doxygen)", r"""
 /** @brief ${2:@todo Description of $1}`!p snip.rv = autoPeriod(t[2])`
 */
 typedef enum ${1:name}
