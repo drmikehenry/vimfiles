@@ -985,10 +985,22 @@ set updatetime=1000
 " Disallow octal numbers for increment/decrement (CTRL-a/CTRL-x).
 set nrformats-=octal
 
-" Perform vertically split diffs by default.
-set diffopt+=vertical
+function! HasInternalDiff()
+    let parts = split(&diffopt, ',')
+    let using_internal = (count(parts, 'internal') == 1)
+    try
+        set diffopt+=internal
+        if !using_internal
+            set diffopt-=internal
+        endif
+        return 1
+    catch /E474:/
+        set diffopt-=internal
+        return 0
+    endtry
+endfunction
 
-if v:version > 801 || (v:version == 801 && has('patch-8.1.0360'))
+if HasInternalDiff()
     " Use the new internal diff feature with options:
     " - indent-heuristic: uses indentation to improve diffs.
     " - algorithm:histogram: an improved patience algorithm as used in Git.
@@ -996,6 +1008,9 @@ if v:version > 801 || (v:version == 801 && has('patch-8.1.0360'))
     set diffopt+=indent-heuristic
     set diffopt+=algorithm:histogram
 endif
+
+" Perform vertically split diffs by default.
+set diffopt+=vertical
 
 " Unfortunately, do to some redirection that Vim uses underneath the hood, it
 " can hide an error status of a command.  This helps to preserve the error
