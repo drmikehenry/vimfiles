@@ -985,6 +985,21 @@ set updatetime=1000
 " Disallow octal numbers for increment/decrement (CTRL-a/CTRL-x).
 set nrformats-=octal
 
+" Apple has patched out support for ``diffopt=internal`` in some versions of
+" Vim that they ship, so our previous test for has('patch-8.1.0360') is
+" unreliable for detecting that feature.  See, for example:
+" https://github.com/thoughtbot/dotfiles/issues/655
+" https://www.micahsmith.com/blog/2019/11/fixing-vim-invalid-argument-diffopt-iwhite/
+"
+" As a result, this probe detects support for ``diffopt=internal``.
+" Note that Apple's patch removes ``internal`` as a valid option for
+" ``diffopt``, but the default value of ``diffopt`` still contains ``internal``.
+" This means that ``set diffopt+=SomeValidOption`` has the effect of doing
+" ``set diffopt=internal,OtherDefaults,SomeValidOption``, which fails with E474
+" regardless of having support for ``SomeValidOption``.  Therefore, the function
+" below has the side-effect of removing ``internal`` from ``diffopt`` on builds
+" of Vim that lack internal diff support, allowing subsequent statements such as
+" ``set diffopt+=SomeValidOption`` to work.
 function! HasInternalDiff()
     let parts = split(&diffopt, ',')
     let using_internal = (count(parts, 'internal') == 1)

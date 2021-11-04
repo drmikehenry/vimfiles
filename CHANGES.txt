@@ -12,6 +12,7 @@ require adjustment of per-user settings.
 
 - Fix diffopt errors when using native macOS vim, see
   https://github.com/thoughtbot/dotfiles/issues/655
+  (thanks to Dave Shepherd).
 
 2021-10-19
 ==========
