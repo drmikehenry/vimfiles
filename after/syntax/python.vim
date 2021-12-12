@@ -1,3 +1,6 @@
+if !exists('g:VimfilesFiletypeReady')
+    finish
+endif
 " The highlight group pythonDot applies to a dot in a Python dotted name (e.g.,
 " sys.stdout).  By default, this is mapped to the group Normal.  When Gvim is
 " using a dark background, making a :hardcopy ends up using a dark background

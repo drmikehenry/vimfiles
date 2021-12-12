@@ -7,6 +7,20 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2021-12-12
+==========
+
+- Fix problem with ``:syntax on`` in system vimrc (e.g., ``/etc/vimrc`` for
+  Fedora 35).  With an early ``:syntax on`` in the system vimrc, Vim will load
+  files from ``~/.vim/after/syntax/`` before ``~/.vim/vimrc`` has been sourced.
+  This causes problems for syntax files that refer to functions defined in
+  ``~/.vim/vimrc`` (e.g., ``SetupRstSyntax`` for ``.rst`` files).
+
+  To work around this, Vimfiles now performs an early ``:syntax off`` (in case
+  the system vimrc has turned it on), and places guards in the various
+  ``after/syntax`` scripts to check for the existence of
+  ``g:VimfilesFiletypeReady`` (which proves ``~/.vim/vimrc`` has run).
+
 2021-11-02
 ==========
 

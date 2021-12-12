@@ -20,6 +20,13 @@ set encoding=utf-8
 " Setting this value explicitly, though to the default value.
 set fileencodings=ucs-bom,utf-8,default,latin1
 
+" Turn off syntax highlighting and filetype support in case a system vimrc
+" has enabled them.  We'll turn them back on after necessary configuration
+" has been done.
+syntax off
+filetype plugin indent off
+filetype off
+
 " Leaving 'fileencoding' unset, as it defaults to the value of 'encoding'.
 " May set 'fileencoding' before writing a file to force a new encoding.
 " May also set 'bomb' to force use of a BOM (Byte Order Mark).
@@ -6304,11 +6311,6 @@ let g:SpellMap["mail"] = "<on>"
 " -------------------------------------------------------------
 
 function! DisableMarkdownSyntaxCodeList()
-    if exists ("g:markdown_fenced_languages") &&
-            \ len(g:markdown_fenced_languages) > 0
-        echoerr "Disabling g:markdown_fenced_languages; " .
-                \ "use g:markdownEmbeddedLangs"
-    endif
     let g:markdown_fenced_languages = []
 endfunction
 
@@ -6371,9 +6373,6 @@ command! -bar SetupLess call SetupLess()
 " - It's easier to disable the support in syntax/rst.vim entirely than to
 "   partially use it and work around its limitations.
 function! DisableRstSyntaxCodeList()
-    if exists ("g:rst_syntax_code_list") && len(g:rst_syntax_code_list) > 0
-        echoerr "Disabling g:rst_syntax_code_list; use g:rstEmbeddedLangs"
-    endif
     let g:rst_syntax_code_list = []
 endfunction
 
@@ -7437,24 +7436,30 @@ command! -bar SetupZ80 call SetupZ80()
 let g:SpellMap["<z80>"] = "<off>"
 
 " =============================================================
-" Autocmds
+" Syntax highlighting and filetype support
 " =============================================================
 
-" NOTE: This must be done *after* all bundles have been loaded.
+" NOTE: This must be done after bundles have been loaded and support functions
+" have been defined, etc.
+
+" Provide an indication that filetype support is ready.
+" Filetype-related files should check exists('g:VimfilesFiletypeReady')
+" before calling functions defined in vimrc.
+let g:VimfilesFiletypeReady = 1
+
+" Enable filetype detection, filetype plugins, and filetype-specific
+" indentation.
+filetype plugin indent on
+
 " Enable syntax highlighting and search highlighting when colors available.
 if &t_Co > 2 || has("gui_running")
     syntax on
     set hlsearch
 endif
 
-" Enable file type detection.
-" Use the default filetype settings, so that mail gets 'tw' set to 72,
-" 'cindent' is on in C files, etc.
-" Also load indent files, to automatically do language-dependent indenting.
-filetype plugin indent on
-
-" Extended filetype detection by extensions is found in
-" filetype.vim
+" =============================================================
+" Autocmds
+" =============================================================
 
 function! AutoRestoreLastCursorPosition()
     " Restore the position only for regular buffers.
