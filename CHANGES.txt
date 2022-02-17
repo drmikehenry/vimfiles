@@ -16,6 +16,20 @@ require adjustment of per-user settings.
 
     Include config.d/*.conf
 
+- Add extend_list plugin v0.1.0 (thanks to Matt).  Press ``CTRL-o n`` to extend
+  a list with a new list item (bulleted or numbered).  For example, starting in
+  insert mode with your cursor at ``<CURSOR_HERE>`` below::
+
+    1. First list item.<CURSOR_HERE>
+
+  Pressing ``CTRL-o n`` will automatically insert a newline and the next line
+  number, e.g.::
+
+    1. First list item.
+    2. <CURSOR_HERE>
+
+  ``:help extend_list`` for details.
+
 2021-12-12
 ==========
 

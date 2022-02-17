@@ -1,0 +1,78 @@
+*extend_list.txt*  Plugin to extend simple numbered and bulleted lists
+*extend_list*      Version 0.1.0
+
+==============================================================================
+CONTENTS
+
+INTRODUCTION                                         |extend_list-introduction|
+MAPPINGS                                             |extend_list-mappings|
+FUNCTIONS                                            |extend_list-functions|
+SETTINGS                                             |extend_list-settings|
+CHANGELOG                                            |extend_list-changelog|
+CREDITS                                              |extend_list-credits|
+
+===============================================================================
+INTRODUCTION                                         *extend_list-introduction*
+
+This plugin will find the most recent list, and add a new element to it.
+Indentation and whitespace will be maintained, and the element number will be
+incremented.
+
+This plugin displays three distinct behaviors:
+  - If this is called within a list, a new element will be placed immediately
+    following the existing list.
+  - If this is called on a blank line below a list, the new element will be
+    placed on the current line.
+  - If there is no list, a new list will be started using
+    |g:extend_list_default_new|.
+
+===============================================================================
+MAPPINGS                                             *extend_list-mappings*
+
+<c-o>n                  Extend the most recent list, or start a new list.
+
+===============================================================================
+FUNCTIONS                                            *extend_list-functions*
+
+:extend_list#extend_list()
+                        Extend the most recent list, or start a new list.
+
+===============================================================================
+SETTINGS                                             *extend_list-settings*
+
+g:extend_list_default_new                           *g:extend_list_default_new*
+
+  Type: |String|
+  Default: `'1. '`
+
+  This changes the default written when no lists exist prior to extend_list()
+  being called.
+
+g:extend_list_map_keys                                 *g:extend_list_map_keys*
+
+  Type: |Number|
+  Default: `1`
+
+  If set to 1, extend_list will create the mappings described at
+  |extend_list-mappings|.
+
+===============================================================================
+CHANGELOG                                            *extend_list-changelog*
+
+Version 0.1.0   Date    2021-07-29                *extend_list-changelog-0.1.0*
+
+  - Initial version
+
+===============================================================================
+CREDITS                                              *extend_list-credits*
+
+Original plugin by Matt.
+
+Maintained by Michael Henry (vim at drmikehenry.com).
+
+Distributed under Vim's |license|.
+
+Git repository:       https://github.com/drmikehenry/vim-extend_list
+
+===============================================================================
+vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:
