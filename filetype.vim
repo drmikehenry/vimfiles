@@ -42,13 +42,16 @@ augroup filetypedetect
     au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
 
     " Treat .syntastic_c_config as vim.
-    autocmd BufRead,BufNewFile .syntastic_c_config setfiletype vim
+    autocmd BufNewFile,BufRead .syntastic_c_config setfiletype vim
 
     " Salt server support.  Treat .sls files as yaml, unless #!py is at the top.
-    autocmd BufRead,BufNewFile *.sls
+    autocmd BufNewFile,BufRead *.sls
                 \ if getline(1) =~ "^#!py" |
                 \   setfiletype python |
                 \ else |
                 \   setfiletype yaml |
                 \ endif
+
+    " ssh-related configuration:
+    autocmd BufNewFile,BufRead */.ssh/config.d/*.conf setfiletype sshconfig
 augroup END
