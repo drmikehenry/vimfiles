@@ -37,6 +37,35 @@ require adjustment of per-user settings.
 - Add ``bash`` UltiSnips snippet for Markdown and reStructuredText to start
   Bash-syntax code blocks.
 
+- Refine the ``:RstLiteralBlockFix`` command.  Previously, enumerators were
+  permitted to be digits and letters, allowing list items like this::
+
+    i.  The first thing.
+    ii. The second thing.
+
+  Though this is legal reStructuredText, it is uncommon; moreover, due to
+  limitations with the regular expression for detecting enumerators in a list
+  while checking for the ``::`` at the end of a line, in the more common case
+  shown below, literals aren't detected properly.  Consider this example of
+  reStructuredText::
+
+    This is a sentence with many
+    words.  Now a literal follows::
+
+        But it is not highlighted correctly because "words." looks like
+        an enumerator, so the indentation is insufficient to be considered
+        a valid literal (it would need to be indented beneath the "Now").
+
+  Any single word followed by a period will trigger this unwanted behavior.
+  Since digits are by far more common and it's not very likely to have both an
+  alphabetic enumerator and a ``::`` at end-of-line, a new control variable has
+  been defined to disable alphabetic enumerators::
+
+    g:RstLiteralBlockFix_alphaEnumerators
+
+  This defaults to zero, but it may be overridden in a ``VIMRC_BEFORE`` script
+  to restore the previous treatment.
+
 2021-12-12
 ==========
 

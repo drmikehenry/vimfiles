@@ -6384,6 +6384,18 @@ call DisableRstSyntaxCodeList()
 " -------------------------------------------------------------
 
 " Define function and command for fixing literal block syntax highlighting.
+" But don't use alphabetic enumerators like `ii.`, since they can show
+" up at start-of-line like this::
+"
+"   This is a sentence with many
+"   words.  Now a literal follows::
+"
+"       But it is not highlighted correctly because "words." looks like
+"       an enumerator, so the indentation is insufficient to be considered
+"       a valid literal (it would need to be indented beneath the "Now").
+if !exists('g:RstLiteralBlockFix_alphaEnumerators')
+    let g:RstLiteralBlockFix_alphaEnumerators = 0
+endif
 runtime scripts/rstliteralblockfix.vim
 
 function! SetupRstSyntax()

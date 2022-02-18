@@ -232,14 +232,23 @@
 "   \z8\z8\z8\z8\z8\z8\z8\z8
 "   \z9
 
+if !exists('g:RstLiteralBlockFix_alphaEnumerators')
+    let g:RstLiteralBlockFix_alphaEnumerators = 1
+endif
+
 " Return a pattern for the given number of digits (in enumerations).
 function! s:digits_pat(num_digits)
+    if g:RstLiteralBlockFix_alphaEnumerators
+        let letters = 'a-zA-Z'
+    else
+        let letters = ''
+    endif
     if a:num_digits == 1
         " A lone "digit" includes numbers, letters and '#'.
-        return '[0-9a-zA-Z#]'
+        return '[0-9' . letters . '#]'
     endif
     " Multiple "digits" comprise numbers and letters (but not '#').
-    return '[0-9a-zA-Z]\{' . a:num_digits . '}'
+    return '[0-9' . letters . ']\{' . a:num_digits . '}'
 endfunction
 
 " Build up s:pat, a pattern to detect the start of rstLiteral.
