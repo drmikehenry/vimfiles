@@ -60,6 +60,12 @@ bsnip("code", "code block", r"""
   $0
 """)
 
+bsnip("bash", "bash code block", r"""
+.. code-block:: bash
+
+  $0
+""")
+
 bsnip("sh", "sh code block", r"""
 .. code-block:: sh
 

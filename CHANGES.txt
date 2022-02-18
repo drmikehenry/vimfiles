@@ -34,6 +34,9 @@ require adjustment of per-user settings.
 
 - Add ``bash`` embedded syntax highlighting for Markdown, reStructuredText.
 
+- Add ``bash`` UltiSnips snippet for Markdown and reStructuredText to start
+  Bash-syntax code blocks.
+
 2021-12-12
 ==========
 

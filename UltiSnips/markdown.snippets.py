@@ -23,6 +23,12 @@ $0
 \`\`\`
 """)
 
+bsnip("bash", "bash code block", r"""
+\`\`\`bash
+$0
+\`\`\`
+""")
+
 bsnip("sh", "sh code block", r"""
 \`\`\`sh
 $0
