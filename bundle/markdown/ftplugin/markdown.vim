@@ -1,7 +1,7 @@
 " Vim filetype plugin
-" Language:		Markdown
-" Maintainer:		Tim Pope <vimNOSPAM@tpope.org>
-" Last Change:		2019 Dec 05
+" Language:     Markdown
+" Maintainer:   Tim Pope <https://github.com/tpope/vim-markdown>
+" Last Change:  2019 Dec 05
 
 if exists("b:did_ftplugin")
   finish
@@ -11,7 +11,7 @@ runtime! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
 
 setlocal comments=fb:*,fb:-,fb:+,n:> commentstring=<!--%s-->
 setlocal formatoptions+=tcqln formatoptions-=r formatoptions-=o
-setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^\\s*[-*+]\\s\\+\\\|^\\[^\\ze[^\\]]\\+\\]:
+setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^\\s*[-*+]\\s\\+\\\|^\\[^\\ze[^\\]]\\+\\]:\\&^.\\{4\\}
 
 if exists('b:undo_ftplugin')
   let b:undo_ftplugin .= "|setl cms< com< fo< flp<"
@@ -28,7 +28,7 @@ if !exists("g:no_plugin_maps") && !exists("g:no_markdown_maps")
 endif
 
 function! s:NotCodeBlock(lnum) abort
-  return synIDattr(synID(v:lnum, 1, 1), 'name') !=# 'markdownCode'
+  return synIDattr(synID(a:lnum, 1, 1), 'name') !=# 'markdownCode'
 endfunction
 
 function! MarkdownFold() abort
@@ -76,7 +76,7 @@ if has("folding") && get(g:, "markdown_folding", 0)
   setlocal foldexpr=MarkdownFold()
   setlocal foldmethod=expr
   setlocal foldtext=MarkdownFoldText()
-  let b:undo_ftplugin .= " foldexpr< foldmethod< foldtext<"
+  let b:undo_ftplugin .= "|setl foldexpr< foldmethod< foldtext<"
 endif
 
 " vim:set sw=2:

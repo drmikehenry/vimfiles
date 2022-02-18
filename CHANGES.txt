@@ -30,6 +30,8 @@ require adjustment of per-user settings.
 
   ``:help extend_list`` for details.
 
+- Upgrade Markdown language support plugin to version 2022-01-24.
+
 2021-12-12
 ==========
 

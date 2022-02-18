@@ -1833,7 +1833,7 @@ Use `:Man topic` to get help on `topic`.
 MARKDOWN                                                 *notes_markdown*
   Markdown syntax support
 
-Version 2021-04-21 (9d87cc1) from:
+Version 2022-01-24 (891dff5) from:
 https://github.com/tpope/vim-markdown
 
 Local Customizations:
