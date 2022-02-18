@@ -6102,7 +6102,8 @@ endfunction
 if !exists('g:commonEmbeddedLangs')
     " NOTE: Embedding java causes spell checking to be disabled, because
     " the syntax file for java monkeys with the spell checking settings.
-    let g:commonEmbeddedLangs = ['c', 'cpp', 'dosini', 'html', 'ini', 'python',
+    let g:commonEmbeddedLangs = [
+            \ 'bash', 'c', 'cpp', 'dosini', 'html', 'ini', 'python',
             \ 'ruby', 'rust', 'sh', 'vim', 'toml']
 endif
 

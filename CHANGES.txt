@@ -32,6 +32,8 @@ require adjustment of per-user settings.
 
 - Upgrade Markdown language support plugin to version 2022-01-24.
 
+- Add ``bash`` embedded syntax highlighting for Markdown, reStructuredText.
+
 2021-12-12
 ==========
 
