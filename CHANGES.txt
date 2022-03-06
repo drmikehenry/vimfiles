@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-03-06
+==========
+
+- Update cpsm plugin to version 2021-07-25.  This fixes a compilation error
+  based on a missing include of ``<limits>``.
+
 2022-02-17
 ==========
 

@@ -992,7 +992,7 @@ Setting up cpsm                                         *notes_cpsm_setup*
 
 See cpsm/README.md for additional optional settings.
 
-Version 2020-08-01 (42cfb0f) from:
+Version 2021-07-25 (814961a) from:
 https://github.com/nixprime/cpsm
 
 Installation:
