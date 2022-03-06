@@ -17,6 +17,8 @@ require adjustment of per-user settings.
   ``.md``) to all file contexts.  Press ``date<Tab>`` to expand to today's date
   in the format ``yyyy-mm-dd``.
 
+- Update CtrlP plugin to version 2022-02-09.
+
 2022-02-17
 ==========
 
