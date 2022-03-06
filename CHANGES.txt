@@ -13,6 +13,10 @@ require adjustment of per-user settings.
 - Update cpsm plugin to version 2021-07-25.  This fixes a compilation error
   based on a missing include of ``<limits>``.
 
+- Promote the ``date`` snippet from being language-specific (just ``.rst`` and
+  ``.md``) to all file contexts.  Press ``date<Tab>`` to expand to today's date
+  in the format ``yyyy-mm-dd``.
+
 2022-02-17
 ==========
 

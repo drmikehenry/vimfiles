@@ -175,5 +175,3 @@ wsnip("link", "link markup", r"""
 wsnip("title", "title reference", r"""
 :title:\`${1:`!p betterVisual(snip, default='title')`}\`$0
 """)
-
-wsnip("date", "today's date", r"""`!v strftime("%Y-%m-%d")`""")

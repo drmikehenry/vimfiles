@@ -58,5 +58,3 @@ bsnip("text", "text code block", r"""
 $0
 \`\`\`
 """)
-
-wsnip("date", "today's date", r"""`!v strftime("%Y-%m-%d")`""")
