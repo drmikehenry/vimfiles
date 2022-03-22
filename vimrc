@@ -6072,8 +6072,8 @@ function! SyntaxInclude(group, syntaxType)
     let cmd = 'syntax include @' . a:group
     let syntaxName = a:syntaxType . '.vim'
 
-    execute cmd . ' syntax/' . syntaxName
     try
+        execute cmd . ' syntax/' . syntaxName
         execute cmd . ' after/syntax/' . syntaxName
     catch
     endtry

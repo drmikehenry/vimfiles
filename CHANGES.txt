@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-03-22
+==========
+
+- Silently ignore missing syntax languages included into reStructuredText and
+  Markdown files.  This fixes errors trying to include syntax support for
+  ``filetype=bash`` for Vim versions prior to 8.1.2088 (where support for
+  ``bash`` was added).
+
 2022-03-06
 ==========
 
