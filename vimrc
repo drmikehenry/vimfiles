@@ -2186,16 +2186,24 @@ set sessionoptions=blank,buffers,curdir,folds,help,resize,slash
 
 
 " Setup undofile capability if available.
-if exists("&undodir")
-    set undofile
-
-    if isdirectory(expand('$VIMFILES/.undo'))
-        set undodir=$VIMFILES/.undo
-    else
-        " Use silent! because mkdir() can fail if the directory already exists.
-        silent! call mkdir(expand('$VIM_CACHE_DIR/undo'), "p")
-        set undodir=$VIM_CACHE_DIR/undo
+if has('persistent_undo')
+    if !exists('g:UndoDirectory')
+        let s:oldUndoDirectory = expand('$VIMFILES/.undo')
+        if has('nvim-0.5')
+            " New undofile format in https://github.com/neovim/neovim/pull/13973
+            " (f42e932, 2021-04-13).
+            let g:UndoDirectory = expand('$VIM_CACHE_DIR/undo2')
+        elseif isdirectory(s:oldUndoDirectory)
+            let g:UndoDirectory = s:oldUndoDirectory
+        else
+            let g:UndoDirectory = expand('$VIM_CACHE_DIR/undo')
+        endif
     endif
+    if !isdirectory(g:UndoDirectory)
+        silent! call mkdir(g:UndoDirectory, 'p')
+    endif
+    let &undodir=g:UndoDirectory
+    set undofile
 endif
 
 " -------------------------------------------------------------

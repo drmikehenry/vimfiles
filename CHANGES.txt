@@ -47,6 +47,10 @@ require adjustment of per-user settings.
 - Synchronize ``fifosignal``, ``fifowait``, and ``gentags`` (found in
   ``~/.vim/tool/``) with upstream copies living in ``home.git`` (in ``~/bin/``).
 
+- Use distinct ``undodir`` for Neovim-0.5 (since format has changed from Vim).
+  For Neovim 0.5+, use ``$VIM_CACHE_DIR/undo2`` instead of
+  ``$VIM_CACHE_DIR/undo``.
+
 2022-03-22
 ==========
 
