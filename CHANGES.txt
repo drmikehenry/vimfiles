@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-03-26
+==========
+
+- After using ``:DiffOrig``, wipe out scratch buffer when it is removed from the
+  window.  Remove obsolete ``:DiffClose``, ``:DiffOff`` commands.
+
 2022-03-22
 ==========
 

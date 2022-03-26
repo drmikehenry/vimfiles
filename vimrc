@@ -3410,7 +3410,6 @@ command! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 " Force current window to be the only window (like <C-w>o).
 " Avoids "Already only one window" error if only one window is showing.
 function! OneWindow()
-    DiffClose
     if winnr("$") > 1
         wincmd o
     endif
@@ -3427,9 +3426,20 @@ nnoremap <silent> <C-w>o     :OneWindow<CR>
 
 " Taken from :help :DiffOrig.  Shows unsaved differences between
 " this buffer and original file.
-command! -bar DiffOrig OneWindow | vert new | set bt=nofile |
-        \ r ++edit # | 0d_ | diffthis | wincmd p | diffthis | wincmd L
-
+function! DiffOrig()
+    OneWindow
+    vertical new
+    set buftype=nofile
+    " When this scratch buffer leaves the window, wipe it out.
+    setlocal bufhidden=wipe
+    read ++edit #
+    0d_
+    diffthis
+    wincmd p
+    diffthis
+    wincmd L
+endfunction
+command! -bar DiffOrig silent call DiffOrig()
 
 " Return list of window numbers for all diff windows (in descending order).
 function! GetDiffWinNums()
@@ -3444,57 +3454,6 @@ function! GetDiffWinNums()
     execute "noautocmd " . curWinNum . "wincmd w"
     return diffWinNums
 endfunction
-
-" Turn off diff mode for current window.
-" Understands Fugitive diff restoration.
-function! DiffOff(...)
-    if exists('w:fugitive_diff_restore')
-        execute w:fugitive_diff_restore
-        unlet w:fugitive_diff_restore
-    else
-        if a:0 > 1
-            throw 'Wrong number of arguments'
-        elseif a:0 == 1
-            let bang = a:000[0]
-        else
-            let bang = ''
-        endif
-        execute 'diffoff' . bang
-        setlocal noscrollbind
-        setlocal nocursorbind
-    endif
-endfunction
-command! -bar -bang DiffOff call DiffOff('<bang>')
-
-" Restore all diff windows and close them all except current window.
-" Since folding is enabled for certain kinds of diffs, folds are
-" expanded as part of restoring settings.
-" Also deletes diff buffers that are known-transient.
-function! DiffClose()
-    for diffWinNum in GetDiffWinNums()
-        let curWinNum = winnr()
-        execute diffWinNum . "wincmd w"
-        let name = bufname("%")
-        if &modified || (curWinNum == diffWinNum)
-            " Leave this window in-place, but turn off diff.
-            DiffOff
-            normal zR
-        else
-            if &buftype == "nofile" || name =~# "^fugitive:"
-                bwipeout
-            else
-                wincmd c
-            endif
-            if curWinNum > diffWinNum
-                " Our window number decreased when we deleted the
-                " smaller-numbered window.
-                let curWinNum -= 1
-            endif
-        endif
-        execute curWinNum . "wincmd w"
-    endfor
-endfunction
-command! -bar DiffClose call DiffClose()
 
 " Diff current window and "next" window or a newly split file.
 function! Diff(filename)
