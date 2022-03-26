@@ -44,6 +44,9 @@ require adjustment of per-user settings.
 
 - Upgrade ``tool/ack`` to v3.5.0.
 
+- Synchronize ``fifosignal``, ``fifowait``, and ``gentags`` (found in
+  ``~/.vim/tool/``) with upstream copies living in ``home.git`` (in ``~/bin/``).
+
 2022-03-22
 ==========
 

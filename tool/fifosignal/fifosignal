@@ -1,5 +1,9 @@
 #!/bin/bash
 
+##############################################################################
+# **NOTE** This file lives in both ~/bin and ~/.vim/tool.
+##############################################################################
+
 # Scan for a fifo to signal.
 # Usage:
 #   fifosignal [-n] [FIFOPATH]
