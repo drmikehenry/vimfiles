@@ -701,7 +701,7 @@ Local customizations:
 
 For more information on "ack", see http://beyondgrep.com/.
 
-Version 2018-02-07 (36e40f9) from:
+Version 2018-02-27 (36e40f9) from:
 https://github.com/mileszs/ack.vim.git
 
 Installation:
