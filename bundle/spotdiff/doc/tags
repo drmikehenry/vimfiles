@@ -1,0 +1,5 @@
+spotdiff	spotdiff.txt	/*spotdiff*
+spotdiff-area	spotdiff.txt	/*spotdiff-area*
+spotdiff-history	spotdiff.txt	/*spotdiff-history*
+spotdiff-range	spotdiff.txt	/*spotdiff-range*
+spotdiff.vim	spotdiff.txt	/*spotdiff.vim*

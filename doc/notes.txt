@@ -76,6 +76,7 @@
     Session - Provides better session management        |notes_session|
     Signature - Signs and helpers for bookmarks         |notes_signature|
     Snippets - Default snippets for UltiSnips           |notes_snippets|
+    SpotDiff - Partial diffs of areas and line ranges   |notes_spotdiff|
     Surround - Manipulating "surroundings"              |notes_surround|
     Svn - View Subversion diffs while writing log       |notes_svn|
     SwapIt - Cycle through related words                |notes_swapit|
@@ -2353,6 +2354,34 @@ https://github.com/honza/vim-snippets.git
 Installation:
 - Follow bundle installation instructions (|bundle_installation|), placing
   into ~/.vim/optional-bundle/snippets.
+
+------------------------------------------------------------------------------
+SPOTDIFF                                                *notes_spotdiff*
+    Partial diffs of areas and line ranges              |spotdiff|
+
+- Commands:
+
+    :[range]Diffthis
+        Select a range of lines with [range] (default: current line) and make
+        the current window diff mode.
+
+    :Diffoff[!]
+        Clear the selected range of lines and reset diff mode for the current
+        window. If ! flag is specified, clear and reset for all windows in the
+        current tab page.
+
+    :Diffupdate
+        Update the differences for the selected range of lines in the current
+        tab page.
+
+Do not use vim original diff commands together with this plugin's ones. Try
+:Diffoff! to reset all in a trouble.
+
+Version 2021-12-09 (12a8677) from:
+https://github.com/rickhowe/spotdiff.vim.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 SURROUND                                                *notes_surround*

@@ -25,6 +25,23 @@ require adjustment of per-user settings.
     <Leader>g   Get difference unit from other buffer
     <Leader>p   Put difference unit to other buffer
 
+- Add SpotDiff plugin for partial diffs of areas and line ranges.
+
+  Commands::
+
+    :[range]Diffthis
+        Select a range of lines with [range] (default: current line) and make
+        the current window diff mode.
+
+    :Diffoff[!]
+        Clear the selected range of lines and reset diff mode for the current
+        window. If ! flag is specified, clear and reset for all windows in the
+        current tab page.
+
+    :Diffupdate
+        Update the differences for the selected range of lines in the current
+        tab page.
+
 2022-03-22
 ==========
 

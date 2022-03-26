@@ -161,6 +161,7 @@ notes_signature	notes.txt	/*notes_signature*
 notes_snippets	notes.txt	/*notes_snippets*
 notes_source_control	notes.txt	/*notes_source_control*
 notes_spell_checking	notes.txt	/*notes_spell_checking*
+notes_spotdiff	notes.txt	/*notes_spotdiff*
 notes_surround	notes.txt	/*notes_surround*
 notes_svn	notes.txt	/*notes_svn*
 notes_swapit	notes.txt	/*notes_swapit*
