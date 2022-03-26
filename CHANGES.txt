@@ -51,6 +51,9 @@ require adjustment of per-user settings.
   For Neovim 0.5+, use ``$VIM_CACHE_DIR/undo2`` instead of
   ``$VIM_CACHE_DIR/undo``.
 
+- Add support for Python ``isort`` (using the ``black`` profile).  If ``isort``
+  is installed, it will be used by ``<Space>=`` (which invokes ``:ALEFix``).
+
 2022-03-22
 ==========
 

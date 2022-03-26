@@ -347,6 +347,13 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
       [tool.black]
       line-length = 79
 <
+  - Install isort formatter: >
+
+      pip install isort
+<
+    Vimfiles will supply the `--profile black` option for black-compatible
+    ordering.
+
   - Install language server: >
 
       # Recommended to use a virtual environment:

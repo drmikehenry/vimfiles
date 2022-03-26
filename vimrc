@@ -3733,12 +3733,13 @@ if g:EnableAle
     let g:ale_fixers = {
         \ 'c': ['clang-format'],
         \ 'cpp': ['clang-format'],
-        \ 'python': ['black'],
+        \ 'python': ['black', 'isort'],
         \ 'ruby': ['rubocop'],
         \ 'rust': ['rustfmt'],
         \ 'sh': ['shfmt'],
         \ }
     let g:ale_python_black_options = '-l 79'
+    let g:ale_python_isort_options = '--profile black'
 
     " Use ALE fixer on the current buffer.
     nmap <Space>=  <Plug>(ale_fix)
