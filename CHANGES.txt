@@ -15,6 +15,16 @@ require adjustment of per-user settings.
 
 - Upgrade endwise plugin to version 2022-03-24.
 
+- Add DiffChar plugin for highlighting differences based on characters and
+  words.  Mappings for navigating among differences:
+
+    [b          Jump to the start position of the previous difference unit
+    ]b          Jump to the start position of the next difference unit
+    [e          Jump to the end position of the previous difference unit
+    ]e          Jump to the end position of the next difference unit
+    <Leader>g   Get difference unit from other buffer
+    <Leader>p   Put difference unit to other buffer
+
 2022-03-22
 ==========
 

@@ -25,6 +25,7 @@
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
     CPSM - CtrlP matcher in C++ for speed               |notes_cpsm|
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
+    DiffChar - Highlight diffs for characters and words |notes_diffchar|
     Dual - Dual color scheme (gvim, vim)                |notes_dual|
     Easy-Align - Align text on delimiters               |notes_easyalign|
     EasyMotion - Multiple new motions                   |notes_easymotion|
@@ -1045,6 +1046,25 @@ Local customizations:
 
 Version 2022-02-09 (d5b0920) from:
 https://github.com/ctrlpvim/ctrlp.vim.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+DIFFCHAR                                                *notes_diffchar*
+  Highlight diffs for characters and words              |diffchar|
+
+Version 2021-12-07 (0c4fcb6) from:
+https://github.com/rickhowe/diffchar.vim.git
+
+- Normal-mode mappings:
+
+    [b          Jump to the start position of the previous difference unit
+    ]b          Jump to the start position of the next difference unit
+    [e          Jump to the end position of the previous difference unit
+    ]e          Jump to the end position of the next difference unit
+    <Leader>g   Get difference unit from other buffer
+    <Leader>p   Put difference unit to other buffer
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

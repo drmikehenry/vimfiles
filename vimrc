@@ -3941,6 +3941,23 @@ let g:ctrlp_open_new_file = 'r'
 let g:ctrlp_follow_symlinks = 1
 
 " -------------------------------------------------------------
+" DiffChar
+" -------------------------------------------------------------
+
+" 0 : hl-DiffText (default)
+" 1 : hl-DiffText + up to 3 other highlights
+" 2 : hl-DiffText + up to 7 other highlights
+" 3 : hl-DiffText + up to 15 other highlights
+let g:DiffColors = 2
+
+" 0 : disable
+" 1 : highlight with hl-Cursor (default)
+" 2 : highlight with hl-Cursor + echo in the command line
+" 3 : highlight with hl-Cursor + popup/floating window at cursor position
+" 4 : highlight with hl-Cursor + popup/floating window at mouse position
+let g:DiffPairVisible = 3
+
+" -------------------------------------------------------------
 " Easy-Align
 " -------------------------------------------------------------
 
