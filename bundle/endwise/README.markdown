@@ -5,7 +5,7 @@ automatically.  In Ruby, this means adding `end` after `if`, `do`, `def`
 and several other keywords. In Vimscript, this amounts to appropriately
 adding `endfunction`, `endif`, etc.  There's also Bourne shell, Z shell,
 VB (don't ask), C/C++ preprocessor, Lua, Elixir, Haskell, Objective-C,
-Matlab, Crystal and Jinja templates support.
+Matlab, Crystal, Make, Verilog and Jinja templates support.
 
 A primary guiding principle in designing this plugin was that an
 erroneous insertion is never acceptable.  The behavior is only triggered
@@ -21,12 +21,12 @@ endwise's behavior.
 
 ## Installation
 
-If you don't have a preferred installation method, I recommend
-installing [pathogen.vim](https://github.com/tpope/vim-pathogen), and
-then simply copy and paste:
+Install using your favorite package manager, or use Vim's built-in package
+support:
 
-    cd ~/.vim/bundle
-    git clone git://github.com/tpope/vim-endwise.git
+    mkdir -p ~/.vim/pack/tpope/start
+    cd ~/.vim/pack/tpope/start
+    git clone https://tpope.io/vim/endwise.git
 
 ## Self-Promotion
 

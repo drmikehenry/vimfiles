@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - After using ``:DiffOrig``, wipe out scratch buffer when it is removed from the
   window.  Remove obsolete ``:DiffClose``, ``:DiffOff`` commands.
 
+- Upgrade endwise plugin to version 2022-03-24.
+
 2022-03-22
 ==========
 
