@@ -202,6 +202,7 @@ notes_window_related	notes.txt	/*notes_window_related*
 notes_wombat256i	notes.txt	/*notes_wombat256i*
 notes_yank	notes.txt	/*notes_yank*
 notes_z80	notes.txt	/*notes_z80*
+notes_zig	notes.txt	/*notes_zig*
 project	project.txt	/*project*
 project-adding-mappings	project.txt	/*project-adding-mappings*
 project-example	project.txt	/*project-example*

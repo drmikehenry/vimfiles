@@ -3668,6 +3668,7 @@ if g:EnableAle
     let g:ale_linters['python'] = ['pyls', 'flake8', 'mypy']
     let g:ale_linters['c'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
     let g:ale_linters['cpp'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
+    let g:ale_linters['zig'] = ['zls']
 
     " Pylint is too picky to be on by default.
     let g:ale_linters_ignore = { 'python': ['pylint'] }
@@ -5585,6 +5586,17 @@ endif
 " Any kind of Rust support:
 let g:EnableVimLsp_rust = g:EnableVimLsp_rust_analyzer || g:EnableVimLsp_rls
 
+" Zig support:
+if !exists('g:EnableVimLsp_zls')
+    let g:EnableVimLsp_zls = 1
+endif
+if !g:EnableVimLsp || !executable('zls')
+    let g:EnableVimLsp_zls = 0
+endif
+" Any kind of Zig support:
+let g:EnableVimLsp_zig = g:EnableVimLsp_zls
+
+
 if g:EnableVimLsp
     let g:lsp_document_code_action_signs_enabled = 0
 
@@ -5653,6 +5665,25 @@ if g:EnableVimLsp
         " Remove "rls" (if present); prepend "vim-lsp":
         call filter(g:ale_linters['rust'], 'v:val != "rls"')
         call insert(g:ale_linters['rust'], "vim-lsp")
+    endif
+
+    " For any kind of Zig support:
+    if g:EnableVimLsp_zig
+        " Zig Language Server (zls) support:
+        if g:EnableVimLsp_zls
+            augroup local_lsp_zls
+                autocmd!
+                autocmd User lsp_setup call lsp#register_server({
+                        \ 'name': 'zls',
+                        \ 'cmd': ['zls'],
+                        \ 'allowlist': ['zig'],
+                        \ })
+            augroup END
+        endif
+
+        " Remove "zls" (if present); prepend "vim-lsp":
+        call filter(g:ale_linters['zig'], 'v:val != "zls"')
+        call insert(g:ale_linters['zig'], "vim-lsp")
     endif
 
     " Experimental vim-lsp mappings:
@@ -5741,6 +5772,13 @@ nmap <silent> <Leader>sv :OneWindow<CR><Plug>VCSVimDiff<C-w>H<C-w>w
 " :nnoremap <C-w><C-t>   :WMToggle<CR>
 " :nnoremap <C-w><C-f>   :FirstExplorerWindow<CR>
 " :nnoremap <C-w><C-b>   :BottomExplorerWindow<CR>
+
+" -------------------------------------------------------------
+" Zig
+" -------------------------------------------------------------
+
+" Don't automatically run ``zig fmt``:
+let g:zig_fmt_autosave = 0
 
 " =============================================================
 " Language and filetype setup

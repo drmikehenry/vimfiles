@@ -103,6 +103,7 @@
     VisSwap - Swap visually selected areas              |notes_visswap|
     Wombat256i - A dark colorscheme                     |notes_wombat256i|
     Z80 - Support for Z80 assembly language             |notes_z80|
+    Zig - Support for Zig language                      |notes_zig|
 4.  Extensions                                          |notes_extensions|
     C Additions - Extra syntax highlighting for C       |notes_c_additions|
     Python indentation support                          |notes_python_indent|
@@ -3244,6 +3245,20 @@ https://github.com/drmikehenry/vim-z80
 
 - (branch remove-mapping) Removing misbehaving mapping.
 - (branch hash-comment) Handle #comment/#endcomment syntax.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+ZIG                                                     *notes_zig*
+  Support for Zig language
+
+Version 2022-03-14 (dd5e2c2) from:
+https://github.com/ziglang/zig.vim
+
+Local customizations:
+
+- Avoid running `zig fmt` on save automatically.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
