@@ -7,6 +7,16 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-04-02
+==========
+
+- Change ALE configuration for flake8 from using ``--ignore`` to using
+  ``--extend-ignore``; otherwise, any ignores set in configuration files will be
+  replaced with the list in ``g:ale_python_flake8_options``.  Currently,
+  Vimfiles uses::
+
+    --extend-ignore=E203,N811,N812,N813,N814,W503
+
 2022-03-30
 ==========
 

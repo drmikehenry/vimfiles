@@ -3690,7 +3690,7 @@ if g:EnableAle
     endif
 
     if len(g:AleFlake8Ignores) > 0
-        let g:ale_python_flake8_options .= '--ignore='
+        let g:ale_python_flake8_options .= '--extend-ignore='
                 \ . join(g:AleFlake8Ignores, ',')
     endif
 
