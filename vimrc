@@ -992,6 +992,11 @@ set updatetime=1000
 " Disallow octal numbers for increment/decrement (CTRL-a/CTRL-x).
 set nrformats-=octal
 
+" Enable "virtual" space (beyond end-of-line) when in visual-block mode.
+" This is useful for making a rectangular selection at the end of the longest
+" line in a set of lines of varying lengths.
+set virtualedit=block
+
 " Apple has patched out support for ``diffopt=internal`` in some versions of
 " Vim that they ship, so our previous test for has('patch-8.1.0360') is
 " unreliable for detecting that feature.  See, for example:
