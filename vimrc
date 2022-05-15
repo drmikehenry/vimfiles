@@ -3714,6 +3714,18 @@ if g:EnableAle
                 \   }
     endif
 
+    " Disable some markdownlint warnings; see
+    " https://github.com/markdownlint/markdownlint/blob/master/docs/RULES.md
+    " [MD013 - Line length]
+    " [MD024 - Multiple headers with the same content]
+    " [MD046 - Code block style]
+    let g:ale_markdown_mdl_options =
+            \ '-r ' . ale#Escape(join([
+            \   '~MD013',
+            \   '~MD024',
+            \   '~MD046',
+            \ ], ','))
+
     " Experiment with disabling the extra-picky info messages out of rstcheck.
     let g:ale_rst_rstcheck_options =
             \ '--ignore-messages ' . ale#Escape(join([
@@ -6132,7 +6144,7 @@ if !exists('g:commonEmbeddedLangs')
     " the syntax file for java monkeys with the spell checking settings.
     let g:commonEmbeddedLangs = [
             \ 'bash', 'c', 'cpp', 'dosini', 'html', 'ini', 'python',
-            \ 'ruby', 'rust', 'sh', 'vim', 'toml']
+            \ 'ruby', 'rust', 'sh', 'vim', 'toml', 'yaml']
 endif
 
 " -------------------------------------------------------------
