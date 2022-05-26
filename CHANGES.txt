@@ -22,6 +22,9 @@ require adjustment of per-user settings.
 
 - Use ``#!/usr/bin/env python3`` for ``tool/rst2ctags/rst2ctags.py``.
 
+- Modernize to Python 3 + Black various UltiSnips-related Python scripts
+  (``pythonx/sniputil.py``, ``UltiSnips/*.py``).
+
 2022-05-15
 ==========
 
