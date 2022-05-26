@@ -18,6 +18,10 @@ require adjustment of per-user settings.
 
 - Tweak ``tool/execargs.py`` for Python 3.
 
+- Use ``#!/usr/bin/env python3`` for ``tool/markdown2ctags/markdown2ctags.py``.
+
+- Use ``#!/usr/bin/env python3`` for ``tool/rst2ctags/rst2ctags.py``.
+
 2022-05-15
 ==========
 

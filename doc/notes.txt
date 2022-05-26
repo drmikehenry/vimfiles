@@ -2676,11 +2676,11 @@ Local customizations:
 
 Added support for reStructuredText using rst2ctags v0.2.6.  rst2ctags can be
 found at https://github.com/jszakmeister/rst2ctags, and a copy has been
-embedded in $VIMFILES/tool/rst2ctags.
+embedded in $VIMFILES/tool/rst2ctags (with a patch to use `python3`).
 
 Also added support for markdown using markdown2ctags v0.3.3.  markdown2ctags
 can be found at https://github.com/jszakmeister/markdown2ctags, and a copy has
-been embedded in $VIMFILES/tool/markdown2ctags.
+been embedded in $VIMFILES/tool/markdown2ctags (with a patch to use `python3`).
 
 The Tagbar wiki has more information:
 https://github.com/majutsushi/tagbar/wiki
