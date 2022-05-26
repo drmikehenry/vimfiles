@@ -423,6 +423,12 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 <
     See `compiledb --help` for details.
 
+- Markdown:
+
+  - Install linters: >
+
+      gem install mdl
+
 Fonts
 -----
 
