@@ -12,16 +12,13 @@ import shutil
 import subprocess
 import sys
 
-__version__ = '0.1.2'
+__version__ = "0.1.2"
 
 prog_name = os.path.basename(sys.argv[0])
 
 extra_environ_vars = {}
 
-download_dirs = [
-    '~/download/programming/vim',
-    '/tools/software/vim'
-]
+download_dirs = ["~/download/programming/vim", "/tools/software/vim"]
 
 configure_options = """
     --quiet
@@ -36,13 +33,11 @@ configure_options = """
     --with-compiledby=vim@drmikehenry.com
     """.split()
 
-ruby_command = '/usr/bin/ruby'
+ruby_command = "/usr/bin/ruby"
 if os.path.exists(ruby_command):
-    configure_options.extend(
-        ['--with-ruby-command=' + ruby_command]
-    )
+    configure_options.extend(["--with-ruby-command=" + ruby_command])
 
-tmp_dir = 'build'
+tmp_dir = "build"
 
 usage = """%(prog)s [-h] [--version] [-v] [-q] CMD
 For more detailed help: %(prog)s --help
@@ -75,14 +70,15 @@ use:
 Configuration is done with these options:
   %(configure_options)s
 """ % dict(
-    download_dirs='\n  '.join(download_dirs),
-    configure_options=' '.join(configure_options))
+    download_dirs="\n  ".join(download_dirs),
+    configure_options=" ".join(configure_options),
+)
 
 
 # Add a default handler for logging.
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
-logger = logging.getLogger('buildtool')
+logger = logging.getLogger("buildtool")
 
 
 class BuildError(Exception):
@@ -132,21 +128,21 @@ def get_run_env():
 
 
 def run(args):
-    logger.debug('  ' + ' '.join(args))
+    logger.debug("  " + " ".join(args))
     output_bytes = subprocess.check_output(
-        args,
-        env=get_run_env(),
-        stderr=subprocess.STDOUT)
-    return output_bytes.decode(errors='ignore')
+        args, env=get_run_env(), stderr=subprocess.STDOUT
+    )
+    return output_bytes.decode(errors="ignore")
 
 
 def run_pipe(args):
-    logger.debug('  ' + ' '.join(args))
+    logger.debug("  " + " ".join(args))
     process = subprocess.Popen(
         args,
         env=get_run_env(),
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
+        stderr=subprocess.STDOUT,
+    )
     return process
 
 
@@ -159,63 +155,65 @@ def vim_version_from_version_ch(version_ch):
     in_patches = False
     for line in version_ch.splitlines():
         if in_patches:
-            m = re.match(r'^\s*(\d+)\s*,?\s*$', line)
+            m = re.match(r"^\s*(\d+)\s*,?\s*$", line)
             if m:
                 patch = max(patch, int(m.group(1)))
-            elif re.match(r'^\s*\}', line):
+            elif re.match(r"^\s*\}", line):
                 in_patches = False
-        elif re.search(r'^\s*static\s+int\s+included_patches\[\]\s*=', line):
+        elif re.search(r"^\s*static\s+int\s+included_patches\[\]\s*=", line):
             in_patches = True
 
         else:
             m = re.match(
-                r'\s*#define\s+VIM_VERSION_(MAJOR|MINOR)\s+(\d+)\s*$',
-                line)
+                r"\s*#define\s+VIM_VERSION_(MAJOR|MINOR)\s+(\d+)\s*$", line
+            )
             if m:
                 value = int(m.group(2))
-                if m.group(1) == 'MAJOR':
+                if m.group(1) == "MAJOR":
                     major = value
                 else:
                     minor = value
 
     if in_patches or major < 0 or minor < 0 or patch < 0:
-        raise BuildError('Could not determine version from Vim source')
+        raise BuildError("Could not determine version from Vim source")
 
-    version = '%d.%d.%04d' % (major, minor, patch)
+    version = "%d.%d.%04d" % (major, minor, patch)
     return version
 
 
-def vim_version_from_source_tree(tree='.'):
-    c = path_join(tree, 'src/version.c')
-    h = path_join(tree, 'src/version.h')
+def vim_version_from_source_tree(tree="."):
+    c = path_join(tree, "src/version.c")
+    h = path_join(tree, "src/version.h")
     try:
         source = open(c).read() + open(h).read()
     except OSError:
-        raise BuildError('not a valid Vim source tree')
+        raise BuildError("not a valid Vim source tree")
     return vim_version_from_version_ch(source)
 
 
 def could_be_git_repo(path):
-    return (os.path.exists(path_join(path, '.git')) or
-            os.path.exists(path_join(path, 'refs')))
+    return os.path.exists(path_join(path, ".git")) or os.path.exists(
+        path_join(path, "refs")
+    )
 
 
 def vim_version_ch_from_git(git_source):
     if not could_be_git_repo(git_source):
-        return ''
+        return ""
     with preserve_cwd(git_source):
         try:
             version_ch = run(
-                'git show HEAD:src/version.c HEAD:src/version.h'.split())
+                "git show HEAD:src/version.c HEAD:src/version.h".split()
+            )
         except subprocess.CalledProcessError:
-            version_ch = ''
+            version_ch = ""
     return version_ch
 
 
 def vim_version_from_git(git_source):
     version_ch = vim_version_ch_from_git(git_source)
     if not version_ch:
-        raise BuildError('%s is not a Vim git repository' % git_source)
+        raise BuildError("%s is not a Vim git repository" % git_source)
     return vim_version_from_version_ch(version_ch)
 
 
@@ -224,13 +222,13 @@ def download_dir():
         d = os.path.expanduser(d)
         if os.path.isdir(d):
             return d
-    raise BuildError('cannot find download directory')
+    raise BuildError("cannot find download directory")
 
 
 def versioned_tarballs(root):
     for root, dirs, files in os.walk(download_dir()):
         for f in files:
-            m = re.match(r'vim-(\d+\.\d+(\.\d+)?)\.tar\.(gz|bz2)$', f)
+            m = re.match(r"vim-(\d+\.\d+(\.\d+)?)\.tar\.(gz|bz2)$", f)
             if m:
                 yield m.group(1), path_join(root, f)
 
@@ -251,19 +249,20 @@ def versioned_sources(root):
 def sorted_versioned_sources(ver_sources):
     return sorted(
         ver_sources,
-        key=lambda version_path: list(map(int, version_path[0].split('.'))),
-        reverse=True)
+        key=lambda version_path: list(map(int, version_path[0].split("."))),
+        reverse=True,
+    )
 
 
 def guess_source():
     candidates = sorted_versioned_sources(versioned_sources(download_dir()))
     if candidates:
         for version, source in candidates:
-            logger.debug('Found Vim version {} at {}'.format(version, source))
+            logger.debug("Found Vim version {} at {}".format(version, source))
         version, source = candidates[0]
-        print('Using Vim {} from {}'.format(version, source))
+        print("Using Vim {} from {}".format(version, source))
         return source
-    return ''
+    return ""
 
 
 def resolve_source(source):
@@ -271,63 +270,62 @@ def resolve_source(source):
     if not source:
         source = guess_source()
         if not source:
-            raise BuildError('could not guess source')
+            raise BuildError("could not guess source")
 
     # Files must be tarballs.
     if os.path.isfile(source):
         return source
 
     if not os.path.isdir(source):
-        raise BuildError('source must be tarball or directory')
+        raise BuildError("source must be tarball or directory")
 
     # If source is a Vim git repository, return it.
     if vim_version_ch_from_git(source):
         return source
 
-    raise BuildError('bad source %s' % source)
+    raise BuildError("bad source %s" % source)
 
 
 def verify_empty_unpack_dest(dest):
     if os.path.exists(dest):
-        raise BuildError(
-            'must remove %s before unpacking' % dest)
+        raise BuildError("must remove %s before unpacking" % dest)
 
 
 def start_phase(phase):
     print()
-    print('### ' + phase)
+    print("### " + phase)
 
 
 def update():
     candidates = sorted_versioned_sources(versioned_git_repos(download_dir()))
     if not candidates:
-        raise BuildError('cannot find a Git repo to update')
+        raise BuildError("cannot find a Git repo to update")
     version, repo = candidates[0]
-    print('Updating Git repo %s' % repo)
+    print("Updating Git repo %s" % repo)
     with preserve_cwd(repo):
-        run('git pull'.split())
-    print('Old version = %s' % version)
-    print('New version = %s' % vim_version_from_git(repo))
+        run("git pull".split())
+    print("Old version = %s" % version)
+    print("New version = %s" % vim_version_from_git(repo))
 
 
 def unpack_tar(source):
-    tmp_extract_dir = '__TMP_EXTRACT__'
+    tmp_extract_dir = "__TMP_EXTRACT__"
     if os.path.exists(tmp_extract_dir):
         raise BuildError(
-            'must remove %s for tarball extraction' % tmp_extract_dir)
+            "must remove %s for tarball extraction" % tmp_extract_dir
+        )
     try:
-        print('Extracting %s into temp area %s' %
-              (source, tmp_extract_dir))
+        print("Extracting %s into temp area %s" % (source, tmp_extract_dir))
         os.mkdir(tmp_extract_dir)
-        run(['tar', '-C', tmp_extract_dir, '-xf', source])
+        run(["tar", "-C", tmp_extract_dir, "-xf", source])
 
         extracted = os.listdir(tmp_extract_dir)
         if len(extracted) != 1:
-            raise BuildError('invalid tarball %s' % source)
+            raise BuildError("invalid tarball %s" % source)
         tar_root = path_join(tmp_extract_dir, extracted[0])
         version = vim_version_from_source_tree(tar_root)
-        print('Found version %s' % version)
-        dest_dir = 'vim-' + version
+        print("Found version %s" % version)
+        dest_dir = "vim-" + version
         verify_empty_unpack_dest(dest_dir)
         os.rename(tar_root, dest_dir)
         return dest_dir
@@ -338,20 +336,20 @@ def unpack_tar(source):
 
 def unpack_git(source):
     version = vim_version_from_git(source)
-    dest_dir = 'vim-' + version
+    dest_dir = "vim-" + version
     verify_empty_unpack_dest(dest_dir)
-    print('Cloning Git source {} into {}'.format(source, dest_dir))
-    run(['git', 'clone', source, dest_dir])
+    print("Cloning Git source {} into {}".format(source, dest_dir))
+    run(["git", "clone", source, dest_dir])
     return dest_dir
 
 
 def package_src(dest_dir=None):
-    start_phase('packagesrc')
+    start_phase("packagesrc")
     with preserve_cwd(dest_dir):
         version = vim_version_from_source_tree()
-        logger.debug('Packaging source for version %s' % version)
+        logger.debug("Packaging source for version %s" % version)
 
-        src_tar_name = 'vim-%s.tar.bz2' % version
+        src_tar_name = "vim-%s.tar.bz2" % version
         rm_rf(src_tar_name)
 
         # To ensure the proper directory structure, first tar everything into
@@ -361,123 +359,131 @@ def package_src(dest_dir=None):
         print('Performing "make distclean"')
         make_dist_clean()
         mkdir_p(tmp_dir)
-        src_dir_name = 'vim-%s' % version
+        src_dir_name = "vim-%s" % version
         src_dir = path_join(tmp_dir, src_dir_name)
         mkdir_p(src_dir)
-        tmp_tar = path_join(tmp_dir, 'tmp.tar')
+        tmp_tar = path_join(tmp_dir, "tmp.tar")
         # Create temporary tarfile with no enclosing parent directory, e.g.:
         #   tar -cf build/tmp.tar \
         #   --exclude .git --exclude *.gz --exclude *.bz2 --exclude build .
-        run([
-            'tar',
-            '-cf',
-            tmp_tar,
-            '--exclude', '.git',
-            '--exclude', '*.gz',
-            '--exclude', '*.bz2',
-            '--exclude', tmp_dir,
-            '.'])
+        run(
+            [
+                "tar",
+                "-cf",
+                tmp_tar,
+                "--exclude",
+                ".git",
+                "--exclude",
+                "*.gz",
+                "--exclude",
+                "*.bz2",
+                "--exclude",
+                tmp_dir,
+                ".",
+            ]
+        )
 
         # Extract back into src_dir, e.g.::
         #   tar -C build/vim-8.1.0216 -xf build/tmp.tar
-        run(['tar', '-C', src_dir, '-xf', tmp_tar])
+        run(["tar", "-C", src_dir, "-xf", tmp_tar])
 
         # Create final tarfile with proper parent directory, e.g.::
         #   tar -C build -cf vim-8.1.0216.tar.bz2 vim-8.1.0216
-        run(['tar', '-C', tmp_dir, '-cf', src_tar_name, src_dir_name])
-        print('Created source archive %s' % path_join(dest_dir, src_tar_name))
+        run(["tar", "-C", tmp_dir, "-cf", src_tar_name, src_dir_name])
+        print("Created source archive %s" % path_join(dest_dir, src_tar_name))
 
 
 def unpack(source):
-    start_phase('unpack')
+    start_phase("unpack")
     if os.path.isfile(source):
         dest_dir = unpack_tar(source)
     elif os.path.isdir(source):
         dest_dir = unpack_git(source)
     else:
-        raise BuildError('source is neither file nor directory')
-    print('Unpacked to %s' % dest_dir)
+        raise BuildError("source is neither file nor directory")
+    print("Unpacked to %s" % dest_dir)
     return dest_dir
 
 
 def configure(dest_dir=None):
-    start_phase('configure')
+    start_phase("configure")
     with preserve_cwd(dest_dir):
-        print('If configure fails, look at %s' %
-              path_join(dest_dir, 'src/auto/config.log'))
-        run(['./configure'] + configure_options)
+        print(
+            "If configure fails, look at %s"
+            % path_join(dest_dir, "src/auto/config.log")
+        )
+        run(["./configure"] + configure_options)
 
 
 def make(dest_dir=None):
-    start_phase('make')
+    start_phase("make")
     with preserve_cwd(dest_dir):
-        log_path = path_join(tmp_dir, 'build.log')
-        print('On build failure, examine %s for errors' %
-              path_join(dest_dir, log_path))
+        log_path = path_join(tmp_dir, "build.log")
+        print(
+            "On build failure, examine %s for errors"
+            % path_join(dest_dir, log_path)
+        )
         mkdir_p(tmp_dir)
 
-        p = run_pipe(['make'])
+        p = run_pipe(["make"])
 
         i = 0
         width = 40
-        with open(log_path, 'wb') as log:
-            for line_bytes in iter(p.stdout.readline, b''):
+        with open(log_path, "wb") as log:
+            for line_bytes in iter(p.stdout.readline, b""):
                 log.write(line_bytes)
 
-                line = line_bytes.decode(errors='ignore')
-                if line.startswith('gcc'):
-                    msg = '[compile] %s' % line.split()[-1]
+                line = line_bytes.decode(errors="ignore")
+                if line.startswith("gcc"):
+                    msg = "[compile] %s" % line.split()[-1]
                 else:
-                    msg = 'Working %s' % (r'-\|/'[i])
+                    msg = "Working %s" % (r"-\|/"[i])
                     i = (i + 1) % 4
                 msg = msg.ljust(width)
-                sys.stdout.write('\r' + msg)
+                sys.stdout.write("\r" + msg)
                 sys.stdout.flush()
-        print('\r' + ' ' * width)
+        print("\r" + " " * width)
         sys.stdout.flush()
         exit_status = p.wait()
         if exit_status != 0:
-            raise BuildError('error running make')
+            raise BuildError("error running make")
 
 
 def make_dist_clean(dest_dir=None):
     with preserve_cwd(dest_dir):
-        run('make distclean'.split())
+        run("make distclean".split())
 
 
 def package(dest_dir=None):
-    start_phase('package')
+    start_phase("package")
     with preserve_cwd(dest_dir):
         version = vim_version_from_source_tree()
         arch = platform.uname()[-1]
-        logger.debug('Packaging for version {} on {}'.format(version, arch))
+        logger.debug("Packaging for version {} on {}".format(version, arch))
 
-        bin_tar_name = 'vim-{}.{}.tar.gz'.format(version, arch)
+        bin_tar_name = "vim-{}.{}.tar.gz".format(version, arch)
 
         tar_opts = []
         try:
-            if 'GNU tar' in run('tar --version'.split()):
-                tar_opts = '--owner=0 --group=0'.split()
+            if "GNU tar" in run("tar --version".split()):
+                tar_opts = "--owner=0 --group=0".split()
         except subprocess.CalledProcessError:
             pass
 
         mkdir_p(tmp_dir)
-        dest = path_join(tmp_dir, 'DESTDIR')
+        dest = path_join(tmp_dir, "DESTDIR")
         rm_rf(dest)
-        run(['make', 'install', 'DESTDIR=' + os.path.abspath(dest)])
-        run('chmod -R u=rwX,go=rX'.split() + [dest])
-        run([
-            'tar',
-            '-C', dest,
-            '--numeric-owner',
-            ] + tar_opts + [
-            '-zcf',
-            bin_tar_name,
-            '.'])
+        run(["make", "install", "DESTDIR=" + os.path.abspath(dest)])
+        run("chmod -R u=rwX,go=rX".split() + [dest])
+        run(
+            ["tar", "-C", dest, "--numeric-owner"]
+            + tar_opts
+            + ["-zcf", bin_tar_name, "."]
+        )
         tar_path = path_join(dest_dir, bin_tar_name)
-        print('Created binary archive %s' % tar_path)
-        print('To install:')
-        print('sudo tar -C / -xf %s' % tar_path)
+        print("Created binary archive %s" % tar_path)
+        print("To install:")
+        print("sudo tar -C / -xf %s" % tar_path)
 
 
 def setup_fedora_environment():
@@ -535,13 +541,15 @@ def setup_fedora_environment():
         -specs=/usr/lib/rpm/redhat/redhat-hardened-ld}"
 
     """
-    if not os.path.exists('/etc/redhat-release'):
+    if not os.path.exists("/etc/redhat-release"):
         return
     try:
-        output = run('rpmbuild --eval %{configure}'.split())
+        output = run("rpmbuild --eval %{configure}".split())
     except OSError:
-        print('## Warning: could not run rpmbuild; '
-              'not setting environment variables')
+        print(
+            "## Warning: could not run rpmbuild; "
+            "not setting environment variables"
+        )
         return
 
     env_vars = re.findall(
@@ -554,8 +562,9 @@ def setup_fedora_environment():
             }"
         """,
         output,
-        re.MULTILINE | re.VERBOSE)
-    print('## Detected rpmbuild; adding environment variables')
+        re.MULTILINE | re.VERBOSE,
+    )
+    print("## Detected rpmbuild; adding environment variables")
     for var, value in env_vars:
         logger.debug('{}="{}"'.format(var, value))
         extra_environ_vars[var] = value
@@ -566,72 +575,69 @@ def inner_main():
         usage=usage,
         description=help_description,
         epilog=help_epilog,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
 
+    parser.add_argument("--version", action="version", version=__version__)
     parser.add_argument(
-        '--version',
-        action='version',
-        version=__version__)
-    parser.add_argument(
-        '-v', '--verbose',
-        action='store_const',
-        dest='verbose',
+        "-v",
+        "--verbose",
+        action="store_const",
+        dest="verbose",
         const=logging.DEBUG,
-        help="""verbose output for debugging""")
+        help="""verbose output for debugging""",
+    )
     parser.add_argument(
-        '-q', '--quiet',
-        action='store_const',
-        dest='verbose',
+        "-q",
+        "--quiet",
+        action="store_const",
+        dest="verbose",
         const=logging.WARNING,
-        help="""suppress informational output""")
+        help="""suppress informational output""",
+    )
 
-    subparsers = parser.add_subparsers(
-        dest='cmd',
-        help=argparse.SUPPRESS)
+    subparsers = parser.add_subparsers(dest="cmd", help=argparse.SUPPRESS)
 
     # 'update' command:
     subparsers.add_parser(
-        'update',
-        help='"git pull" in newest Git repo in download_dirs')
+        "update", help='"git pull" in newest Git repo in download_dirs'
+    )
 
     # 'build' command:
     parser_build = subparsers.add_parser(
-        'build',
-        help='unpack, packagesrc, configure, build, and package')
+        "build", help="unpack, packagesrc, configure, build, and package"
+    )
     parser_build.add_argument(
-        'source',
-        nargs='?',
-        help='Vim source tarball or Git repo')
+        "source", nargs="?", help="Vim source tarball or Git repo"
+    )
 
     # 'unpack' command:
     parser_unpack = subparsers.add_parser(
-        'unpack',
-        help='unpack source to vim-x.y.z/')
+        "unpack", help="unpack source to vim-x.y.z/"
+    )
     parser_unpack.add_argument(
-        'source',
-        nargs='?',
-        help='Vim source tarball or Git repo')
+        "source", nargs="?", help="Vim source tarball or Git repo"
+    )
 
     # 'packagesrc' command:
     subparsers.add_parser(
-        'packagesrc',
-        help='create source package vim-x.y.z.tar.bz2 in PWD (Note: '
-             'runs "make clean" before packaging!)')
+        "packagesrc",
+        help="create source package vim-x.y.z.tar.bz2 in PWD (Note: "
+        'runs "make clean" before packaging!)',
+    )
 
     # 'configure' command:
     subparsers.add_parser(
-        'configure',
-        help='run "./configure [options]" in PWD')
+        "configure", help='run "./configure [options]" in PWD'
+    )
 
     # 'make' command:
-    subparsers.add_parser(
-        'make',
-        help='run "make" in PWD')
+    subparsers.add_parser("make", help='run "make" in PWD')
 
     # 'package' command:
     subparsers.add_parser(
-        'package',
-        help='create binary package vim-x.y.z.arch.tar.bz2 in PWD')
+        "package", help="create binary package vim-x.y.z.arch.tar.bz2 in PWD"
+    )
 
     global args
     args = parser.parse_args(namespace=Args())
@@ -643,29 +649,29 @@ def inner_main():
 
     setup_fedora_environment()
 
-    if args.cmd == 'update':
+    if args.cmd == "update":
         update()
 
-    elif args.cmd == 'build':
+    elif args.cmd == "build":
         dest_dir = unpack(resolve_source(args.source))
         package_src(dest_dir)
         configure(dest_dir)
         make(dest_dir)
         package(dest_dir)
 
-    elif args.cmd == 'unpack':
+    elif args.cmd == "unpack":
         unpack(resolve_source(args.source))
 
-    elif args.cmd == 'configure':
+    elif args.cmd == "configure":
         configure()
 
-    elif args.cmd == 'make':
+    elif args.cmd == "make":
         make()
 
-    elif args.cmd == 'package':
+    elif args.cmd == "package":
         package()
 
-    elif args.cmd == 'packagesrc':
+    elif args.cmd == "packagesrc":
         package_src()
 
 
@@ -673,9 +679,9 @@ def main():
     try:
         inner_main()
     except BuildError as e:
-        print('{}: {}'.format(prog_name, e))
+        print("{}: {}".format(prog_name, e))
         sys.exit(2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
