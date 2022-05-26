@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
 
 import os
 import re
@@ -29,7 +28,7 @@ def join_lines(lines):
 
 
 def read_lines(path):
-    f = open(path, 'r')
+    f = open(path)
     lines = f.read().splitlines()
     f.close()
     return lines
