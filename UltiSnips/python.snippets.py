@@ -20,10 +20,9 @@ endglobal
 
 bsnip(
     "#!",
-    "#!/usr/bin/env python...",
+    "#!/usr/bin/env python3...",
     r"""
-#!/usr/bin/env python
-# vim:set fileencoding=utf8: #
+#!/usr/bin/env python3
 
 """,
 )
@@ -284,8 +283,7 @@ bsnip(
     "template_python.snippets.py",
     "new snippet template",
     r"""
-#!/usr/bin/env python
-# vim:set fileencoding=utf8:
+#!/usr/bin/env python3
 
 import os
 import sys
