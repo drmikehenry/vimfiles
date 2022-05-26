@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Works with either Python 2 or Python 3.
 
-from __future__ import print_function
 
 import argparse
 import contextlib
@@ -191,7 +190,7 @@ def vim_version_from_source_tree(tree='.'):
     h = path_join(tree, 'src/version.h')
     try:
         source = open(c).read() + open(h).read()
-    except IOError:
+    except OSError:
         raise BuildError('not a valid Vim source tree')
     return vim_version_from_version_ch(source)
 
@@ -260,9 +259,9 @@ def guess_source():
     candidates = sorted_versioned_sources(versioned_sources(download_dir()))
     if candidates:
         for version, source in candidates:
-            logger.debug('Found Vim version %s at %s' % (version, source))
+            logger.debug('Found Vim version {} at {}'.format(version, source))
         version, source = candidates[0]
-        print('Using Vim %s from %s' % (version, source))
+        print('Using Vim {} from {}'.format(version, source))
         return source
     return ''
 
@@ -341,7 +340,7 @@ def unpack_git(source):
     version = vim_version_from_git(source)
     dest_dir = 'vim-' + version
     verify_empty_unpack_dest(dest_dir)
-    print('Cloning Git source %s into %s' % (source, dest_dir))
+    print('Cloning Git source {} into {}'.format(source, dest_dir))
     run(['git', 'clone', source, dest_dir])
     return dest_dir
 
@@ -429,7 +428,7 @@ def make(dest_dir=None):
                 if line.startswith('gcc'):
                     msg = '[compile] %s' % line.split()[-1]
                 else:
-                    msg = 'Working %s' % ('-\|/'[i])
+                    msg = 'Working %s' % (r'-\|/'[i])
                     i = (i + 1) % 4
                 msg = msg.ljust(width)
                 sys.stdout.write('\r' + msg)
@@ -451,9 +450,9 @@ def package(dest_dir=None):
     with preserve_cwd(dest_dir):
         version = vim_version_from_source_tree()
         arch = platform.uname()[-1]
-        logger.debug('Packaging for version %s on %s' % (version, arch))
+        logger.debug('Packaging for version {} on {}'.format(version, arch))
 
-        bin_tar_name = 'vim-%s.%s.tar.gz' % (version, arch)
+        bin_tar_name = 'vim-{}.{}.tar.gz'.format(version, arch)
 
         tar_opts = []
         try:
@@ -482,7 +481,7 @@ def package(dest_dir=None):
 
 
 def setup_fedora_environment():
-    """
+    r"""
     Setup environment variables needed on Fedora 23+.
 
     On Fedora 23+, libraries are built with "hardened" settings.  They are
@@ -558,7 +557,7 @@ def setup_fedora_environment():
         re.MULTILINE | re.VERBOSE)
     print('## Detected rpmbuild; adding environment variables')
     for var, value in env_vars:
-        logger.debug('%s="%s"' % (var, value))
+        logger.debug('{}="{}"'.format(var, value))
         extra_environ_vars[var] = value
 
 
@@ -674,7 +673,7 @@ def main():
     try:
         inner_main()
     except BuildError as e:
-        print('%s: %s' % (prog_name, e))
+        print('{}: {}'.format(prog_name, e))
         sys.exit(2)
 
 
