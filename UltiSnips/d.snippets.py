@@ -10,8 +10,10 @@ from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
 
 
-put(r"""
+put(
+    r"""
 priority -5
 
 extends c
-""")
+"""
+)

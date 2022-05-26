@@ -9,41 +9,79 @@ from sniputil import put
 from sniputil import snip, bsnip, wsnip
 from sniputil import abbr, babbr, wabbr
 
-put(r"""
+put(
+    r"""
 priority -5
-""")
+"""
+)
 
-wsnip("ca", "$(call ","""
+wsnip(
+    "ca",
+    "$(call ",
+    """
 $(call $0
-""", aliases=["call"])
+""",
+    aliases=["call"],
+)
 
-wsnip("cs", "$(call S.","""
+wsnip(
+    "cs",
+    "$(call S.",
+    """
 $(call S.$0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("v", "$(","""
+wsnip(
+    "v",
+    "$(",
+    """
 $($0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("vs", "$(S.","""
+wsnip(
+    "vs",
+    "$(S.",
+    """
 $(S.$0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("fi", "$(filter ","""
+wsnip(
+    "fi",
+    "$(filter ",
+    """
 $(filter $0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("fo", "$(filter-out ","""
+wsnip(
+    "fo",
+    "$(filter-out ",
+    """
 $(filter-out $0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
 
-bsnip("def", "define ...endef","""
+bsnip(
+    "def",
+    "define ...endef",
+    """
 define $0
 endef
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-put(r"""
+put(
+    r"""
 global !p
 def makeParamComments(nameAndArgs):
     numArgs = len(nameAndArgs.split(",")) - 1
@@ -54,79 +92,150 @@ def makeParamComments(nameAndArgs):
 
     return s
 endglobal
-""")
+"""
+)
 
-bsnip("func", "$(call S.func,funcName,...)... $(call S.endFunc)","""
+bsnip(
+    "func",
+    "$(call S.func,funcName,...)... $(call S.endFunc)",
+    """
 $(call S.func,$1)
 # $2`!p snip.rv = makeParamComments(t[1])`
 define ${1/,.*//}
   $0
 endef
 $(call S.endFunc)
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("if", "$(if ","""
+wsnip(
+    "if",
+    "$(if ",
+    """
 $(if $0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("ie", "ifeq '$1' $'2' ... endif","""
+wsnip(
+    "ie",
+    "ifeq '$1' $'2' ... endif",
+    """
 ifeq '$1' '$2'
   $0
 endif
-""", aliases=["ifeq"])
+""",
+    aliases=["ifeq"],
+)
 
-wsnip("eie", "else ifeq '$1' $'2'","""
+wsnip(
+    "eie",
+    "else ifeq '$1' $'2'",
+    """
 else ifeq '$1' '$2'
   $0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("ine", "ifneq '$1' $'2' ... endif","""
+wsnip(
+    "ine",
+    "ifneq '$1' $'2' ... endif",
+    """
 ifneq '$1' '$2'
   $0
 endif
-""", aliases=["ifneq"])
+""",
+    aliases=["ifneq"],
+)
 
-wsnip("eine", "else ifenq '$1' $'2'","""
+wsnip(
+    "eine",
+    "else ifenq '$1' $'2'",
+    """
 else ifneq '$1' '$2'
   $0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("i", "_if ... endif","""
+wsnip(
+    "i",
+    "_if ... endif",
+    """
 _if $0
 endif
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("ei", "else _if","""
+wsnip(
+    "ei",
+    "else _if",
+    """
 else _if $0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("in", "_ifNot ... endif","""
+wsnip(
+    "in",
+    "_ifNot ... endif",
+    """
 _ifNot $0
 endif
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("ein", "else _ifNot","""
+wsnip(
+    "ein",
+    "else _ifNot",
+    """
 else _ifNot $0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("ib", "_ifBool ... endif","""
+wsnip(
+    "ib",
+    "_ifBool ... endif",
+    """
 _ifBool $0
 endif
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("eib", "else _ifBool","""
+wsnip(
+    "eib",
+    "else _ifBool",
+    """
 else _ifBool $0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("inb", "_ifNotBool ... endif","""
+wsnip(
+    "inb",
+    "_ifNotBool ... endif",
+    """
 _ifNotBool $0
 endif
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wsnip("einb", "else _ifNotBool","""
+wsnip(
+    "einb",
+    "else _ifNotBool",
+    """
 else _ifNotBool $0
-""", aliases=[])
+""",
+    aliases=[],
+)
 
-wabbr("t","$(true)")
-wabbr("f","$(false)")
-wabbr("e","$(empty)")
+wabbr("t", "$(true)")
+wabbr("f", "$(false)")
+wabbr("e", "$(empty)")
