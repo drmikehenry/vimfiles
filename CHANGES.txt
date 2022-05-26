@@ -16,6 +16,8 @@ require adjustment of per-user settings.
 
 - Use ``#!/usr/bin/env python3`` for ``setup.py``.
 
+- Tweak ``tool/execargs.py`` for Python 3.
+
 2022-05-15
 ==========
 
