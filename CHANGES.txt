@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Note how to install ``mdl`` (Markdown linter).
 
+- Use ``#!/usr/bin/env python3`` for ``buildtool``.
+
 2022-05-15
 ==========
 
