@@ -944,7 +944,7 @@ endif
 " =============================================================
 
 " Number of lines of VIM history to remember.
-set history=500
+set history=10000
 
 " Automatically re-read files that have changed as long as there
 " are no outstanding edits in the buffer.
