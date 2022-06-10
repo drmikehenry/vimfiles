@@ -24,6 +24,17 @@ endfunction
 nnoremap <f8> :silent call Linehash()<CR>
 imap <f8> <esc><f8>
 
+" Mapping for reviewing code in a Markdown document.
+xnoremap q y:call CreateReviewEntry()<CR>
+function! CreateReviewEntry()
+    let text = '    ' . expand('%') . ':' . line('.') . "::\n\n"
+    let text .= '```' . &filetype . "\n" . getreg('0') . "```\n\n\n"
+    call setreg('"', text, 'V')
+    call setreg('0', text, 'V')
+    call setreg('+', text, 'V')
+    call setreg('*', text, 'V')
+endfunction
+
 " Experiment with 'splitright'.
 set splitright
 
