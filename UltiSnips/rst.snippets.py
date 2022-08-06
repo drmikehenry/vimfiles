@@ -236,6 +236,15 @@ wsnip(
 """,
 )
 
+snip(
+    "`",
+    "literal (code) markup",
+    r"""
+\`\`${1:`!p betterVisual(snip)`}\`\`$0
+""",
+    aliases=["``"],
+)
+
 wsnip(
     "m",
     "inline math",

@@ -7,6 +7,32 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-08-06
+==========
+
+- Add backtick as a reStructuredText snippet for inserting literal text.
+
+  To get this::
+
+    ``some literal text``
+
+  Press this::
+
+    `<Tab>
+
+  to get this::
+
+    ``<cursor_here>``
+
+  then type ``some literal text`` and press Tab to get::
+
+    ``some literal text``<cursor_here>
+
+  Two backticks are usable as the trigger as well.
+
+  This is the same as the trigger ``lit``, but a bit less to type and
+  easier to use after already typing one or two backticks by habit.
+
 2022-06-03
 ==========
 
