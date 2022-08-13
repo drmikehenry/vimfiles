@@ -59,7 +59,6 @@
     Monokai - A dark colorscheme                        |notes_monokai|
     Moonscript - support for a dialect of Lua           |notes_moonscript|
     Mundo - Visualize your undo tree                    |notes_mundo|
-    Netrw - File reading and writing across networks    |notes_netrw|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
     Paredit - Structured editing of Lisp S-expressions  |notes_paredit|
     Pathogen - Runtime path management for bundles      |notes_pathogen|
@@ -1956,34 +1955,6 @@ https://github.com/simnalamburt/vim-mundo
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-NETRW                                                   *notes_netrw*
-  File reading and writing across networks              |netrw|
-
-Version 147e from:
-http://www.vim.org/scripts/script.php?script_id=1075
-
-(Also check Dr. Chip's site: http://www.drchip.org/astronaut/vim/#NETRW)
-
-Use <Leader>fe to invoke :Explore.  This will explore in the directory
-of the current file.
-
-To dismiss netrw buffer, simply wipe it via :bwipe or similar.
-
-Installation:
-- Distributed as a |vimball|  >
-
-    mkdir ~/.vim/bundle/netrw
-    vim netrw.vba.gz
-    :UseVimball ~/.vim/bundle/netrw
-    :q
-
-- Remove .VimballRecord: >
-    rm ~/.vim/bundle/netrw/.VimballRecord
-
-- Update help tags: >
-    vim '+:Helptags|q'
 
 ------------------------------------------------------------------------------
 OMNICPPCOMPLETE                                         *notes_omnicppcomplete*

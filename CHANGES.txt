@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-08-13
+==========
+
+- Remove obsolete ``netrw`` plugin (version v147, from November 2012).  This
+  plugin comes bundled with Vim.  At some point, the bundled ``netrw`` in old
+  versions of Vim had an issue (now long forgotten) that was solved by including
+  a newer ``netrw`` in Vimfiles.  That version is now ancient; even Vim 7.4
+  has a better ``netrw`` version (v156, from Feb 2016).
+
 2022-08-06
 ==========
 
