@@ -155,7 +155,7 @@ bsnip(
     "foot",
     "footnote description",
     r"""
-.. [${1:`!p betterVisual(snip, default='label')`}] $0
+.. [#${1:`!p betterVisual(snip, default='label')`}] $0
 """,
 )
 
