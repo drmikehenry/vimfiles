@@ -25,6 +25,7 @@ augroup filetypedetect
     au BufNewFile,BufRead leinrc setfiletype sh
     au BufNewFile,BufRead .pypirc setfiletype cfg
     au BufNewFile,BufRead .coveragerc setfiletype cfg
+    au BufNewFile,BufRead Jenkinsfile setfiletype groovy
 
     " Setup Git-related filetypes.
     au BufNewFile,BufRead *.git/MERGE_MSG setfiletype gitcommit
