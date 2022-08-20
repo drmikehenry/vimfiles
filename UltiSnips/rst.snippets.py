@@ -151,11 +151,42 @@ bsnip(
 """,
 )
 
+put(
+    r"""
+global !p
+def snip_rst_footnoteAutoNumber(s):
+    if s.isdigit() or s == "*":
+        return ""
+    return "#"
+
+endglobal
+"""
+)
+
+"""
+For ``foot`` below:
+
+The ``label_num_star_or_backspace`` will be selected.  Type desired footnote
+label, overwriting the selection.  If the label is ``*`` or a decimal number,
+the ``#`` will be removed; if the label is any other non-empty value (or if
+the label is deleted by pressing Backspace), the ``#`` will be kept.  For
+example::
+
+.. [#text] After typing ``text`` and <Tab>.
+
+.. [1234] After typing ``1234`` and <Tab>.
+
+.. [*] After typing ``*`` and <Tab>.
+
+.. [#] After typing <Backspace> and <Tab>.
+"""
+
 bsnip(
     "foot",
     "footnote description",
     r"""
-.. [${1:`!p betterVisual(snip, default='label')`}] $0
+.. [`!p snip.rv = snip_rst_footnoteAutoNumber(t[1])`""" +
+    """${1:`!p betterVisual(snip, default='label_num_star_or_backspace')`}] $0
 """,
 )
 

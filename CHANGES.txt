@@ -16,6 +16,25 @@ require adjustment of per-user settings.
   switch between ``*.c``/``*.cpp`` files in ``src/`` and correspondingly named
   ``*.h`` files in any of ``pubinc/``, ``include/``, and ``inc/`` directories.
 
+- Update the reStructuredText footnote snippet to automatically insert
+  ``#`` when appropriate.  Typing ``foot<Tab>`` will now insert the following::
+
+    .. [#label_num_star_or_backspace]
+
+  The ``label_num_star_or_backspace`` will be selected.  Type desired footnote
+  label, overwriting the selection.  If the label is ``*`` or a decimal number,
+  the ``#`` will be removed; if the label is any other non-empty value (or if
+  the label is deleted by pressing Backspace), the ``#`` will be kept.  For
+  example::
+
+    .. [#text] After typing ``text`` and <Tab>.
+
+    .. [1234] After typing ``1234`` and <Tab>.
+
+    .. [*] After typing ``*`` and <Tab>.
+
+    .. [#] After typing <Backspace> and <Tab>.
+
 2022-08-13
 ==========
 
