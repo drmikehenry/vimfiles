@@ -12,6 +12,10 @@ require adjustment of per-user settings.
 
 - Map ``Jenkinsfile`` to filetype ``groovy``.
 
+- Add ``inc/`` directory for the FSwitch plugin.  Now pressing ``\of`` will
+  switch between ``*.c``/``*.cpp`` files in ``src/`` and correspondingly named
+  ``*.h`` files in any of ``pubinc/``, ``include/``, and ``inc/`` directories.
+
 2022-08-13
 ==========
 
