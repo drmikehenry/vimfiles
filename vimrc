@@ -4387,14 +4387,23 @@ endpython
     function! s:SmartOpen(mode) range
         if a:mode ==# 'n'
             let uri = ExtractUrl(expand("<cWORD>"))
-            if l:uri == ""
+            if uri == ""
                 return
             endif
         else
             let uri = s:GetSelectedText()
         endif
 
-        call netrw#NetrwBrowseX(l:uri, 0)
+        try
+            " In Vim v7.4.567, `netrw#NetrwBrowseX()` was renamed to
+            " `netrw#BrowseX()`, at the same time as the function
+            " `netrw#CheckIfRemote()` was introduced.  Use the existence of
+            " `netrw#CheckIfRemote()` to indicate which browse function to call.
+            call netrw#CheckIfRemote(uri)
+            call netrw#BrowseX(uri, 0)
+        catch
+            call netrw#NetrwBrowseX(uri, 0)
+        endtry
     endfunction
 
     nnoremap gx :call <SID>SmartOpen('n')<CR>

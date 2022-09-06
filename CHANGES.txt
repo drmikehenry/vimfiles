@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-09-06
+==========
+
+- Fix ``gx`` mapping that was inadvertently broken by removing the obsolete
+  ``netrw`` plugin.  ``netrw`` (which ships with Vim) renamed the function
+  ``netrw#NetrwBrowseX()`` to ``netrw#BrowseX()`` in Vim v7.4.567.  The ``gx``
+  mapping, which calls this function, now adapts to whichever name is available.
+
 2022-08-20
 ==========
 
