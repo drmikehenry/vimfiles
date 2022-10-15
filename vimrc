@@ -4068,8 +4068,8 @@ augroup local_fswitch
     " because we don't want to override values set by a .lvimrc file.
     autocmd BufEnter *.h call SetFswitchVars(
             \ 'c,cpp',
-            \  'reg:@\v/(pubinc|include|inc)($|/.*$)@/src@'
-            \.',reg:@\v/(pubinc|include|inc)($|/.*$)@/src/**@'
+            \  'reg:@\v/(pubinc|include|inc|Iface)($|/.*$)@/src@'
+            \.',reg:@\v/(pubinc|include|inc|Iface)($|/.*$)@/src/**@'
             \.',../src'
             \)
     autocmd BufEnter *.c,*.cpp call SetFswitchVars(
@@ -4077,12 +4077,15 @@ augroup local_fswitch
             \  'reg:@\v/src($|/.*$)@/pubinc@'
             \.',reg:@\v/src($|/.*$)@/include@'
             \.',reg:@\v/src($|/.*$)@/inc@'
+            \.',reg:@\v/src($|/.*$)@/Iface@'
             \.',reg:@\v/src($|/.*$)@/pubinc/**@'
             \.',reg:@\v/src($|/.*$)@/include/**@'
             \.',reg:@\v/src($|/.*$)@/inc/**@'
+            \.',reg:@\v/src($|/.*$)@/Iface/**@'
             \.',../pubinc'
             \.',../include'
             \.',../inc'
+            \.',../Iface'
             \)
     autocmd BufEnter *.snippets call SetFswitchVars(
             \ 'snippets.py',

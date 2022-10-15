@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-10-15
+==========
+
+- Add ``Iface/`` directory for the FSwitch plugin.  Now pressing ``\of`` will
+  switch between ``*.c``/``*.cpp`` files in ``src/`` and correspondingly named
+  ``*.h`` files in any of ``pubinc/``, ``include/``, ``inc/``, and ``Iface/``
+  directories.
+
 2022-09-06
 ==========
 
