@@ -2,8 +2,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
-" @Last Change: 2018-07-02.
-" @Revision:    24
+" @Last Change: 2019-02-01.
+" @Revision:    63
 
 if exists(':Tlibtrace') != 2
     command! -nargs=+ -bang Tlibtrace :
@@ -20,31 +20,40 @@ if !exists('g:tcomment#filetype#guess')
     "   0        ... don't guess
     "   1        ... guess
     "   FILETYPE ... assume this filetype
-    let g:tcomment#filetype#guess = 1   "{{{2
+    "
+    " NOTE: Issue 222, 224: Default=1 doesn't work well
+    let g:tcomment#filetype#guess = 0   "{{{2
+endif
+if !exists('g:tcomment#filetype#guess_cpp')
+    " See |g:tcomment#filetype#guess_php|.
+    let g:tcomment#filetype#guess_cpp = 0   "{{{2
 endif
 if !exists('g:tcomment#filetype#guess_blade')
     " See |g:tcomment#filetype#guess_php|.
     let g:tcomment#filetype#guess_blade = 'html'   "{{{2
 endif
-" if !exists('g:tcomment#filetype#guess_django')
-"     let g:tcomment#filetype#guess_django = 1   "{{{2
-" endif
+if !exists('g:tcomment#filetype#guess_django')
+    let g:tcomment#filetype#guess_django = 1   "{{{2
+endif
 if !exists('g:tcomment#filetype#guess_dsl')
     " For dsl documents, assume filetype = xml.
     let g:tcomment#filetype#guess_dsl = 'xml'   "{{{2
 endif
-" if !exists('g:tcomment#filetype#guess_eruby')
-"     let g:tcomment#filetype#guess_eruby = 1   "{{{2
-" endif
-" if !exists('g:tcomment#filetype#guess_html')
-"     let g:tcomment#filetype#guess_html = 1   "{{{2
-" endif
+if !exists('g:tcomment#filetype#guess_eruby')
+    let g:tcomment#filetype#guess_eruby = 1   "{{{2
+endif
+if !exists('g:tcomment#filetype#guess_html')
+    let g:tcomment#filetype#guess_html = 1   "{{{2
+endif
+if !exists('g:tcomment#filetype#guess_javascript')
+    let g:tcomment#filetype#guess_javascript = 1   "{{{2
+endif
 if !exists('g:tcomment#filetype#guess_jinja')
     let g:tcomment#filetype#guess_jinja = 'html'   "{{{2
 endif
-" if !exists('g:tcomment#filetype#guess_perl')
-"     let g:tcomment#filetype#guess_perl = 1   "{{{2
-" endif
+if !exists('g:tcomment#filetype#guess_perl')
+    let g:tcomment#filetype#guess_perl = 1   "{{{2
+endif
 if !exists('g:tcomment#filetype#guess_php')
     " In php documents, the php part is usually marked as phpRegion. We 
     " thus assume that the buffers default comment style isn't php but 
@@ -57,17 +66,26 @@ endif
 if !exists('g:tcomment#filetype#guess_rnoweb')
     let g:tcomment#filetype#guess_rnoweb = 'r'   "{{{2
 endif
-" if !exists('g:tcomment#filetype#guess_smarty')
-"     let g:tcomment#filetype#guess_smarty = 1   "{{{2
-" endif
-" if !exists('g:tcomment#filetype#guess_tskeleton')
-"     let g:tcomment#filetype#guess_tskeleton = 1   "{{{2
-" endif
-" if !exists('g:tcomment#filetype#guess_vim')
-"     let g:tcomment#filetype#guess_vim = 1   "{{{2
-" endif
+if !exists('g:tcomment#filetype#guess_smarty')
+    let g:tcomment#filetype#guess_smarty = 1   "{{{2
+endif
+if !exists('g:tcomment#filetype#guess_tex')
+    let g:tcomment#filetype#guess_tex = 1   "{{{2
+endif
+if !exists('g:tcomment#filetype#guess_tskeleton')
+    let g:tcomment#filetype#guess_tskeleton = 1   "{{{2
+endif
+if !exists('g:tcomment#filetype#guess_typescript')
+    let g:tcomment#filetype#guess_typescript = 1   "{{{2
+endif
+if !exists('g:tcomment#filetype#guess_vim')
+    let g:tcomment#filetype#guess_vim = 1   "{{{2
+endif
 if !exists('g:tcomment#filetype#guess_vue')
     let g:tcomment#filetype#guess_vue = 'html'   "{{{2
+endif
+if !exists('g:tcomment#filetype#guess_svelte')
+    let g:tcomment#filetype#guess_svelte = 'html'   "{{{2
 endif
 
 
@@ -93,6 +111,9 @@ if !exists('g:tcomment#filetype#map')
                 \ 'tblgen': 'cpp',
                 \ }
 endif
+if exists('g:tcomment#filetype#map_user')
+    let g:tcomment#filetype#map = extend(g:tcomment#filetype#map, g:tcomment#filetype#map_user)
+endif
 
 
 if !exists('g:tcomment#filetype#syntax_map')
@@ -100,12 +121,24 @@ if !exists('g:tcomment#filetype#syntax_map')
     " region. This works well if the syntax names match 
     " /filetypeSomeName/. Other syntax names have to be explicitly 
     " mapped onto the corresponding filetype.
+    "
+    " NOTE: |g:tcomment#syntax#substitute| and 
+    " |g:tcomment#syntax#substitute_by_filetype| provide alternative, 
+    " and maybe preferable means to detect the proper filetype from a 
+    " syntax group name.
     " :read: let g:tcomment#filetype#syntax_map = {...}   "{{{2
     let g:tcomment#filetype#syntax_map = {
                 \ 'bladeEcho':          'php',
                 \ 'bladePhpParenBlock': 'php',
                 \ 'erubyExpression':    'ruby',
                 \ 'rmdRChunk':          'r',
+                \ 'texZonePythontex':   'python',
+                \ 'texZonePythontexArg': 'python',
+                \ 'texZoneLua':         'lua',
+                \ 'texZoneLuaArg':      'lua',
+                \ 'texZoneGnuplot':     'gnuplot',
+                \ 'texZoneAsymptote':   'cpp',
+                \ 'texZoneDot':         'cpp',
                 \ 'vimMzSchemeRegion':  'scheme',
                 \ 'vimPerlRegion':      'perl',
                 \ 'vimPythonRegion':    'python',
@@ -127,6 +160,9 @@ if !exists('g:tcomment#filetype#syntax_map')
                 \     ],
                 \ },
                 \ }
+endif
+if exists('g:tcomment#filetype#syntax_map_user')
+    let g:tcomment#filetype#syntax_map = extend(g:tcomment#filetype#syntax_map, g:tcomment#filetype#syntax_map_user)
 endif
 
 
@@ -168,15 +204,22 @@ function! tcomment#filetype#Guess(beg, end, comment_mode, filetype, ...) abort
     while n <= end
         let text = getline(n)
         let indentstring = matchstr(text, '^\s*')
-        let m = tcomment#compatibility#Strwidth(indentstring)
+        let m = tcomment#compatibility#Strwidth(indentstring) + 1
         " let m  = indent(n) + 1
-        let le = tcomment#compatibility#Strwidth(text)
+        let le = tcomment#compatibility#Strwidth(text) + 1
         Tlibtrace 'tcomment', n, m, le
-        while m <= le
-            let syntax_name = tcomment#syntax#GetSyntaxName(n, m)
-            Tlibtrace 'tcomment', syntax_name, n, m
-            unlet! ftype_map
-            let ftype_map = get(g:tcomment#filetype#syntax_map, syntax_name, '')
+        let cont = 1
+        while cont && m <= le
+            for tran in [1, 0]
+                let syntax_name = tcomment#syntax#GetSyntaxName(n, m, tran, cdef)
+                Tlibtrace 'tcomment', syntax_name, n, m, tran
+                unlet! ftype_map
+                let ftype_map = get(g:tcomment#filetype#syntax_map, syntax_name, '')
+                if !empty(ftype_map)
+                    Tlibtrace 'tcomment', ftype_map
+                    break
+                endif
+            endfor
             Tlibtrace 'tcomment', ftype_map
             if !empty(ftype_map) && type(ftype_map) == 4
                 if n < a:beg
@@ -196,6 +239,7 @@ function! tcomment#filetype#Guess(beg, end, comment_mode, filetype, ...) abort
                     for mapdef in ftype_map[key]
                         if strpart(text, m - 1) =~# '^'. mapdef.match
                             let mapft = mapdef.filetype
+                            let cont = 0
                             break
                         endif
                     endfor
@@ -221,6 +265,7 @@ function! tcomment#filetype#Guess(beg, end, comment_mode, filetype, ...) abort
             elseif empty(syntax_name) || syntax_name ==? 'None' || syntax_name =~# '^\u\+$' || syntax_name =~# '^\u\U*$'
                 let m += 1
             else
+                let cont = 0
                 break
             endif
         endwh
@@ -266,20 +311,23 @@ endf
 " Handle sub-filetypes etc.
 function! tcomment#filetype#GetAlt(filetype, cdef) abort "{{{3
     let filetype = empty(a:filetype) ? tcomment#filetype#Get(&filetype, [-1]) : a:filetype
+    let vfiletype = substitute(filetype, '[.]', '_', 'g')
     Tlibtrace 'tcomment', a:filetype, filetype
-    if g:tcomment#filetype#guess || (exists('g:tcomment#filetype#guess_'. filetype) 
-                \ && g:tcomment#filetype#guess_{filetype} =~# '[^0]')
-        if g:tcomment#filetype#guess || g:tcomment#filetype#guess_{filetype} == 1
-            if filetype =~# '^.\{-}\..\+$'
-                let alt_filetype = tcomment#filetype#Get(filetype)
-            else
-                let alt_filetype = ''
-            endif
+    let guess = get(a:cdef, 'guess',
+                \ exists('g:tcomment#filetype#guess_'. vfiletype) ?
+                \    g:tcomment#filetype#guess_{vfiletype} :
+                \    g:tcomment#filetype#guess)
+    if guess ==# '1'
+        if filetype =~# '^.\{-}\..\+$'
+            let alt_filetype = tcomment#filetype#Get(filetype)
         else
-            let alt_filetype = g:tcomment#filetype#guess_{filetype}
+            let alt_filetype = ''
         endif
         Tlibtrace 'tcomment', 1, alt_filetype
         return [1, alt_filetype]
+    elseif !empty(guess)
+        Tlibtrace 'tcomment', 2, guess
+        return [1, guess]
     elseif filetype =~# '^.\{-}\..\+$'
         " Unfortunately the handling of "sub-filetypes" isn't 
         " consistent. Some use MAJOR.MINOR, others use MINOR.MAJOR.
@@ -290,14 +338,13 @@ function! tcomment#filetype#GetAlt(filetype, cdef) abort "{{{3
         "         let alt_filetype = tcomment#filetype#Get(filetype, 0)
         "     endif
         " endif
-        Tlibtrace 'tcomment', 2, alt_filetype
+        Tlibtrace 'tcomment', 3, alt_filetype
         return [1, alt_filetype]
     else
-        Tlibtrace 'tcomment', 3, ''
+        Tlibtrace 'tcomment', 4, ''
         return [0, '']
     endif
 endf
-
 
 
 " vi: ft=vim:tw=72:ts=4:fo=w2croql

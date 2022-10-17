@@ -8,6 +8,7 @@ autoload/tcomment.vim	tcomment.txt	/*autoload\/tcomment.vim*
 autoload/tcomment/commentdef.vim	tcomment.txt	/*autoload\/tcomment\/commentdef.vim*
 autoload/tcomment/filetype.vim	tcomment.txt	/*autoload\/tcomment\/filetype.vim*
 autoload/tcomment/operator.vim	tcomment.txt	/*autoload\/tcomment\/operator.vim*
+autoload/tcomment/syntax.vim	tcomment.txt	/*autoload\/tcomment\/syntax.vim*
 autoload/tcomment/type.vim	tcomment.txt	/*autoload\/tcomment\/type.vim*
 b:tcomment_def_{NAME}	tcomment.txt	/*b:tcomment_def_{NAME}*
 g:tcomment#blank_lines	tcomment.txt	/*g:tcomment#blank_lines*
@@ -15,6 +16,7 @@ g:tcomment#block2_fmt_c	tcomment.txt	/*g:tcomment#block2_fmt_c*
 g:tcomment#block_fmt_xml	tcomment.txt	/*g:tcomment#block_fmt_xml*
 g:tcomment#filetype#guess	tcomment.txt	/*g:tcomment#filetype#guess*
 g:tcomment#filetype#guess_blade	tcomment.txt	/*g:tcomment#filetype#guess_blade*
+g:tcomment#filetype#guess_cpp	tcomment.txt	/*g:tcomment#filetype#guess_cpp*
 g:tcomment#filetype#guess_dsl	tcomment.txt	/*g:tcomment#filetype#guess_dsl*
 g:tcomment#filetype#guess_php	tcomment.txt	/*g:tcomment#filetype#guess_php*
 g:tcomment#filetype#ignore_php	tcomment.txt	/*g:tcomment#filetype#ignore_php*
@@ -32,12 +34,15 @@ g:tcomment#options_commentstring	tcomment.txt	/*g:tcomment#options_commentstring
 g:tcomment#replacements_c	tcomment.txt	/*g:tcomment#replacements_c*
 g:tcomment#replacements_xml	tcomment.txt	/*g:tcomment#replacements_xml*
 g:tcomment#rstrip_on_uncomment	tcomment.txt	/*g:tcomment#rstrip_on_uncomment*
+g:tcomment#syntax#substitute	tcomment.txt	/*g:tcomment#syntax#substitute*
+g:tcomment_map_modifier	tcomment.txt	/*g:tcomment_map_modifier*
 g:tcomment_mapleader1	tcomment.txt	/*g:tcomment_mapleader1*
 g:tcomment_mapleader2	tcomment.txt	/*g:tcomment_mapleader2*
 g:tcomment_mapleader_comment_anyway	tcomment.txt	/*g:tcomment_mapleader_comment_anyway*
 g:tcomment_mapleader_uncomment_anyway	tcomment.txt	/*g:tcomment_mapleader_uncomment_anyway*
 g:tcomment_maps	tcomment.txt	/*g:tcomment_maps*
 g:tcomment_opleader1	tcomment.txt	/*g:tcomment_opleader1*
+g:tcomment_opmap_modifier	tcomment.txt	/*g:tcomment_opmap_modifier*
 g:tcomment_types	tcomment.txt	/*g:tcomment_types*
 plugin/tcomment.vim	tcomment.txt	/*plugin\/tcomment.vim*
 tcomment#Comment()	tcomment.txt	/*tcomment#Comment()*
@@ -49,6 +54,8 @@ tcomment#filetype#GetAlt()	tcomment.txt	/*tcomment#filetype#GetAlt()*
 tcomment#filetype#Guess()	tcomment.txt	/*tcomment#filetype#Guess()*
 tcomment#type#Define()	tcomment.txt	/*tcomment#type#Define()*
 tcomment#type#GetDefinition()	tcomment.txt	/*tcomment#type#GetDefinition()*
+tcomment-debug	tcomment.txt	/*tcomment-debug*
 tcomment-maps	tcomment.txt	/*tcomment-maps*
+tcomment-new-filetype	tcomment.txt	/*tcomment-new-filetype*
 tcomment-operator	tcomment.txt	/*tcomment-operator*
 tcomment.txt	tcomment.txt	/*tcomment.txt*

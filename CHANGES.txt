@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Update Eunuch plugin to version 2022-10-12.  See ``:help notes_eunuch`` for
   summary of plugin commands.
 
+- Update tComment plugin to version 2022-07-22.
+
 2022-10-15
 ==========
 

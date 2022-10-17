@@ -2745,7 +2745,7 @@ To default to using leading asterisks for C-style comments, add the following in
 |VIMRC_BEFORE|: >
     let g:UseLeadingAsterisks = 1
 <
-Version 2018-08-01 (1acf5b9) from: https://github.com/tomtom/tcomment_vim.git
+Version 2022-07-22 (e77e1bf) from: https://github.com/tomtom/tcomment_vim
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

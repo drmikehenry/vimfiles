@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2018-07-03
-" @Revision:    20
+" @Last Change: 2022-04-24
+" @Revision:    23
 
 if exists(':Tlibtrace') != 2
     command! -nargs=+ -bang Tlibtrace :
@@ -38,7 +38,11 @@ function! tcomment#commentdef#Get(beg, end, comment_mode, ...) abort
     if empty(cms)
         let filetype = tcomment#filetype#Get(ft)
         Tlibtrace 'tcomment', filetype
-        if exists('b:commentstring')
+        if exists('*TCommentGetCommentstring')
+            let cms = TCommentGetCommentstring()
+            Tlibtrace 'tcomment', 0, cms
+            return tcomment#commentdef#GetCustom(filetype, a:comment_mode, cms)
+        elseif exists('b:commentstring')
             let cms = b:commentstring
             Tlibtrace 'tcomment', 1, cms
             return tcomment#commentdef#GetCustom(filetype, a:comment_mode, cms)
@@ -68,12 +72,12 @@ function! tcomment#commentdef#Get(beg, end, comment_mode, ...) abort
 endf
 
 
-" tcomment#commentdef#GetCustom(ft, comment_mode, ?default="", ?default_cdef={})
-function! tcomment#commentdef#GetCustom(ft, comment_mode, ...) abort
-    Tlibtrace 'tcomment', a:ft, a:comment_mode, a:000
+" tcomment#commentdef#GetCustom(filetype, comment_mode, ?default="", ?default_cdef={})
+function! tcomment#commentdef#GetCustom(filetype, comment_mode, ...) abort
+    Tlibtrace 'tcomment', a:filetype, a:comment_mode, a:000
     let comment_mode   = a:comment_mode
-    let custom_comment = tcomment#type#Exists(a:ft)
-    let custom_comment_mode = tcomment#type#Exists(a:ft, comment_mode)
+    let custom_comment = tcomment#type#Exists(a:filetype)
+    let custom_comment_mode = tcomment#type#Exists(a:filetype, comment_mode)
     let supported_comment_mode = !empty(custom_comment_mode) ? comment_mode : ''
     Tlibtrace 'tcomment', custom_comment, custom_comment_mode
     let default = a:0 >= 1 ? a:1 : ''
@@ -104,7 +108,7 @@ function! tcomment#commentdef#GetCustom(ft, comment_mode, ...) abort
     if !has_key(cdef, 'mode')
         let cdef.mode = comment_mode
     endif
-    let cdef.filetype = a:ft
+    let cdef.filetype = a:filetype
     Tlibtrace 'tcomment', cdef
     return cdef
 endf

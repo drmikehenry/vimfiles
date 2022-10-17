@@ -2,8 +2,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
-" @Last Change: 2018-03-20.
-" @Revision:    25
+" @Last Change: 2020-03-12.
+" @Revision:    42
 
 if exists(':Tlibtrace') != 2
     command! -nargs=+ -bang Tlibtrace :
@@ -14,12 +14,22 @@ let s:definitions = {}
 let g:tcomment#types#dirty = 1
 let s:init = 0
 
+" :doc:
+" A dictionary of NAME => COMMENT DEFINITION (see |tcomment#type#Define()|) 
+" that can be set in vimrc to override tcomment's default comment 
+" styles.
+" :read: let g:tcomment_types = {} "{{{2
 
 " collect all known comment types
 " :nodoc:
 function! tcomment#type#Collect() abort
     if !s:init
         runtime! autoload/tcomment/types/*.vim
+        if exists('g:tcomment_types')
+            for [name, def] in items(g:tcomment_types)
+                call tcomment#type#Define(name, def)
+            endfor
+        endif
         let s:init = 1
     endif
     if g:tcomment#types#dirty
@@ -80,11 +90,36 @@ endf
 " Return b:tcomment_def_{NAME} if the variable exists. Otherwise return 
 " the comment definition as set with |tcomment#type#Define|.
 function! tcomment#type#GetDefinition(name, ...) abort
+    Tlibtrace 'tcomment', a:name
     if exists('b:tcomment_def_'. a:name)
-        return b:tcomment_def_{a:name}
+        let def = b:tcomment_def_{a:name}
     else
-        return get(s:definitions, a:name, a:0 >= 1 ? a:1 : '')
+        let def = get(s:definitions, a:name, a:0 >= 1 ? a:1 : '')
     endif
+    Tlibtrace 'tcomment', def
+    if has_key(def, 'choose')
+        let def = copy(def)
+        let defs = def.choose
+        let ndefs = len(defs)
+        Tlibtrace 'tcomment', ndefs
+        for idef in range(ndefs)
+            let cdef = defs[idef]
+            Tlibtrace 'tcomment', idef, cdef
+            if idef == ndefs - 1
+                let choose = 1
+            else
+                let choose = eval(cdef.if)
+            endif
+            Tlibtrace 'tcomment', choose
+            if choose
+                call remove(def, 'choose')
+                let def = extend(def, cdef)
+                break
+            endif
+        endfor
+    endif
+    Tlibtrace 'tcomment', def
+    return def
 endf
 
 
@@ -101,16 +136,4 @@ function! tcomment#type#Exists(name, ...) abort
     return has_key(s:definitions, name) ? name : ''
 endf
 
-
-" :doc:
-" A dictionary of NAME => COMMENT DEFINITION (see |tcomment#type#Define()|) 
-" that can be set in vimrc to override tcomment's default comment 
-" styles.
-" :read: let g:tcomment_types = {} "{{{2
-if exists('g:tcomment_types')
-    for [s:name, s:def] in items(g:tcomment_types)
-        call tcomment#type#Define(s:name, s:def)
-    endfor
-    unlet! s:name s:def
-endif
 
