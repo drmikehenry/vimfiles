@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-10-17
+==========
+
+- Update Eunuch plugin to version 2022-10-12.  See ``:help notes_eunuch`` for
+  summary of plugin commands.
+
 2022-10-15
 ==========
 
