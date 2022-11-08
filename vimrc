@@ -3718,11 +3718,13 @@ if g:EnableAle
     " https://github.com/markdownlint/markdownlint/blob/master/docs/RULES.md
     " [MD013 - Line length]
     " [MD024 - Multiple headers with the same content]
+    " [MD036 - Emphasis used instead of a header]
     " [MD046 - Code block style]
     let g:ale_markdown_mdl_options =
             \ '-r ' . ale#Escape(join([
             \   '~MD013',
             \   '~MD024',
+            \   '~MD036',
             \   '~MD046',
             \ ], ','))
 

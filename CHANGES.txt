@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-11-07
+==========
+
+- Disable markdownlint warning ``MD036`` (emphasis used instead of a header).
+
 2022-10-17
 ==========
 
