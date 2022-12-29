@@ -3739,8 +3739,9 @@ if g:EnableAle
     " Setup shellcheck for shell scripting.
     " Warnings:
     "   SC1090: Can't follow non-constant source.
+    "   SC2016: Expressions don't expand in single quotes.
     " Join warnings to ignore with commas (e.g., 'SC2034,SC2154').
-    let g:ale_sh_shellcheck_exclusions = 'SC1090'
+    let g:ale_sh_shellcheck_exclusions = 'SC1090,SC2016'
 
     " Setup shfmt for shell scripting.
     " Invoke via:  ALEFix shfmt

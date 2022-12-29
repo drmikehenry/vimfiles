@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2022-12-29
+==========
+
+- Disable ShellCheck overly-cautious warning: "SC2016: Expressions don't expand
+  in single quotes", as using single quotes is idiomatic for suppressing special
+  behavior of characters such as backticks.
+
 2022-12-17
 ==========
 
