@@ -2206,7 +2206,7 @@ Installation:
 RUST SUPPORT                                            *notes_rust*
   Language support for Rust                             |rust|
 
-Version 2019-08-30 (e99f3f5) from:
+Version 2022-11-27 (889b9a7) from:
 https://github.com/rust-lang/rust.vim
 
 with the following modifications found in branch `vimfiles` at:
