@@ -5,7 +5,6 @@
 'ctrlp-fullregexp'	ctrlp.txt	/*'ctrlp-fullregexp'*
 'ctrlp-pasting'	ctrlp.txt	/*'ctrlp-pasting'*
 'ctrlp-wildignore'	ctrlp.txt	/*'ctrlp-wildignore'*
-'g:ctrlp_abbrev'	ctrlp.txt	/*'g:ctrlp_abbrev'*
 'g:ctrlp_arg_map'	ctrlp.txt	/*'g:ctrlp_arg_map'*
 'g:ctrlp_brief_prompt'	ctrlp.txt	/*'g:ctrlp_brief_prompt'*
 'g:ctrlp_buffer_func'	ctrlp.txt	/*'g:ctrlp_buffer_func'*

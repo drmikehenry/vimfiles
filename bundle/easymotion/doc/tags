@@ -150,4 +150,3 @@ n_<Plug>(easymotion-overwin-f)	easymotion.txt	/*n_<Plug>(easymotion-overwin-f)*
 n_<Plug>(easymotion-overwin-f2)	easymotion.txt	/*n_<Plug>(easymotion-overwin-f2)*
 n_<Plug>(easymotion-overwin-line)	easymotion.txt	/*n_<Plug>(easymotion-overwin-line)*
 n_<Plug>(easymotion-overwin-w)	easymotion.txt	/*n_<Plug>(easymotion-overwin-w)*
-t,	easymotion.txt	/*t,*

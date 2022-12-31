@@ -45,7 +45,6 @@ g:rust_conceal_mod_path	rust.txt	/*g:rust_conceal_mod_path*
 g:rust_conceal_pub	rust.txt	/*g:rust_conceal_pub*
 g:rust_fold	rust.txt	/*g:rust_fold*
 g:rust_keep_autopairs_default	rust.txt	/*g:rust_keep_autopairs_default*
-g:rust_playpen_url	rust.txt	/*g:rust_playpen_url*
 g:rust_recommended_style	rust.txt	/*g:rust_recommended_style*
 g:rust_shortener_url	rust.txt	/*g:rust_shortener_url*
 g:rust_use_custom_ctags_defs	rust.txt	/*g:rust_use_custom_ctags_defs*
