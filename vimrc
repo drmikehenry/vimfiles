@@ -3071,6 +3071,33 @@ command! -nargs=* -bar Redir
 " Tags
 " -------------------------------------------------------------
 
+if !exists('g:Local_ctags_bins')
+    let g:Local_ctags_bins = []
+    " Prefer Universal Ctags (the maintained fork of Exuberant Ctags).
+    let g:Local_ctags_bins += ['ctags-universal']
+    let g:Local_ctags_bins += ['universal-ctags']
+
+    " Remaining options taken from `tagbar/autoload/tagbar.vim`:
+    let g:Local_ctags_bins += ['ctags-exuberant'] " Debian
+    let g:Local_ctags_bins += ['exuberant-ctags']
+    let g:Local_ctags_bins += ['exctags'] " FreeBSD, NetBSD
+    let g:Local_ctags_bins += ['/usr/local/bin/ctags'] " Homebrew
+    let g:Local_ctags_bins += ['/opt/local/bin/ctags'] " Macports
+    let g:Local_ctags_bins += ['ectags'] " OpenBSD
+    let g:Local_ctags_bins += ['ctags']
+    let g:Local_ctags_bins += ['ctags.exe']
+    let g:Local_ctags_bins += ['tags']
+endif
+
+if !exists('g:Local_ctags_bin')
+    for name in g:Local_ctags_bins
+        if executable(name)
+            let g:Local_ctags_bin = name
+            break
+        endif
+    endfor
+endif
+
 " The semicolon gives permission to search up toward the root
 " directory.  When followed by a path, the upward search terminates
 " at this "stop directory"; otherwise, the search terminates at the root.
@@ -3875,6 +3902,11 @@ if executable('rg')
                 \ 1: ['.git', 'cd %s && rg -g "!.git/" --files --hidden'],
                 \ },
         \ }
+endif
+
+" Configure `ctags` executable for `CtrlPBufTag` support.
+if !exists('g:ctrlp_buftag_ctags_bin') && exists('g:Local_ctags_bin')
+    let g:ctrlp_buftag_ctags_bin = g:Local_ctags_bin
 endif
 
 " Directory mode for launching ':CtrlP' with no directory argument:
@@ -5189,7 +5221,10 @@ augroup END
 " -------------------------------------------------------------
 
 " Must have ctags of some kind or keep plugin from running.
-let usingTagbar = executable("ctags") || executable("ctags.exe")
+if !exists('g:tagbar_ctags_bin') && exists('g:Local_ctags_bin')
+    let g:tagbar_ctags_bin = g:Local_ctags_bin
+endif
+let usingTagbar = exists('g:tagbar_ctags_bin')
 if !usingTagbar
     " Tagbar doesn't actually care about the value... only the existence
     " of the variable.
