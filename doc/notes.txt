@@ -288,11 +288,14 @@ following methods for informing Vim:
 For all platforms
 =================
 
-ctags support
+Ctags support
 -------------
 
-For ctags support, ensure that Exuberant ctags is in the PATH.  This will
-enable the TagList plugin.
+For Ctags support, ensure that some flavor of Ctags is installed.  Universal
+Ctags is preferred, as it is currently maintained, but the unmaintained
+Exuberant Ctags is still supported by Vimfiles.  Ctags is required for the
+TagList plugin, for the CtrlP plugin's tag support, and for generating "tags"
+files.  See |notes_tag_files| for more details.
 
 Ruby-based plugins
 ------------------
@@ -1981,8 +1984,15 @@ CTRL-p - Insert previous completion.
 <Down> - Select next match (like CTRL-n), but don't insert it.
 <Up>   - Select previous match (like CTRL-p), but don't insert it.
 
-Requires Exuberant ctags database with these options: >
-    ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
+Requires a ctags database generated using these options: >
+    --c++-kinds=+p
+    --fields=+iaS
+    --extras=+q             " if using Universal Ctags
+    --extra=+q              " if using Exuberant Ctags
+<
+
+The supplied "gentags" script generates "tags" files with the correct options;
+see |notes_tag_files| for more details.
 
 For more details on insert-mode completion:|ins-completion|
 
@@ -2645,9 +2655,8 @@ Installation:
 TAGBAR                                                  *notes_tagbar*
   Source code browser                                   |tagbar.txt|
 
-Requires ctags to be in the path.  Generally this comes with Linux
-distributions.  Compiled binaries may be found at
-http://ctags.sourceforge.net/
+Requires a Ctags executable to be in the path.  See |notes_tag_files| for
+details on acquiring Ctags.
 
 Local customizations:
   <S-F8>        - toggle the tagbar (:TagbarToggle)
@@ -4036,6 +4045,17 @@ this as an example, or else copy or symlink this into a directory in your PATH
 to use this implementation as-is, e.g. >
 
   ln -s ~/.vim/tool/gentags ~/bin
+
+The supplied "gentags" script supports both the preferred Universal Ctags and
+the older (but no longer maintained) Exuberant Ctags.  It probes for the
+existence of various "ctags" executables and detects the version via
+"ctags --version".  Universal Ctags is preferred, followed by a list of names
+taken from the Tagbar plugin (in "tagbar/autoload/tagbar.vim").
+
+See "gentags --help-gentags" for details.
+
+Universal Ctags is generally available in Linux distributions, or at:
+https://github.com/universal-ctags/ctags
 
 ------------------------------------------------------------------------------
 Cscope                                                  *notes_cscope*
