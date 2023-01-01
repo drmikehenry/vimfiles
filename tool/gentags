@@ -1,42 +1,221 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
 ##############################################################################
 # **NOTE** This file lives in both ~/bin and ~/.vim/tool.
 ##############################################################################
 
-# Rust ctags definitions from:
-# https://github.com/rust-lang/rust/blob/master/src/etc/ctags.rust
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import typing as T
 
-run_ctags()
-{
-    ctags                       \
-    --c-kinds=+px               \
-    --c++-kinds=+px             \
-    --fields=+iaS               \
-    --extra=+qf                 \
-    --exclude=export            \
-    --exclude=build             \
-    --exclude=pkgexp            \
-    --exclude=Sphere            \
-    --exclude=target            \
-    --langdef=Rust \
-    --langmap=Rust:.rs \
-    --regex-Rust='/^[ \t]*(#\[[^\]]\][ \t]*)*(pub[ \t]+)?(extern[ \t]+)?("[^"]+"[ \t]+)?(unsafe[ \t]+)?fn[ \t]+([a-zA-Z0-9_]+)/\6/f,functions,function definitions/' \
-    --regex-Rust='/^[ \t]*(pub[ \t]+)?type[ \t]+([a-zA-Z0-9_]+)/\2/T,types,type definitions/' \
-    --regex-Rust='/^[ \t]*(pub[ \t]+)?enum[ \t]+([a-zA-Z0-9_]+)/\2/g,enum,enumeration names/' \
-    --regex-Rust='/^[ \t]*(pub[ \t]+)?struct[ \t]+([a-zA-Z0-9_]+)/\2/s,structure names/' \
-    --regex-Rust='/^[ \t]*(pub[ \t]+)?mod[ \t]+([a-zA-Z0-9_]+)/\2/m,modules,module names/' \
-    --regex-Rust='/^[ \t]*(pub[ \t]+)?(static|const)[ \t]+(mut[ \t]+)?([a-zA-Z0-9_]+)/\4/c,consts,static constants/' \
-    --regex-Rust='/^[ \t]*(pub[ \t]+)?(unsafe[ \t]+)?trait[ \t]+([a-zA-Z0-9_]+)/\3/t,traits,traits/' \
-    --regex-Rust='/^[ \t]*(pub[ \t]+)?(unsafe[ \t]+)?impl([ \t\n]*<[^>]*>)?[ \t]+(([a-zA-Z0-9_:]+)[ \t]*(<[^>]*>)?[ \t]+(for)[ \t]+)?([a-zA-Z0-9_]+)/\5 \7 \8/i,impls,trait implementations/' \
-    --regex-Rust='/^[ \t]*macro_rules![ \t]+([a-zA-Z0-9_]+)/\1/d,macros,macro definitions/' \
-    "$@"
-}
 
-if [ -n "$(command -v rg)" ]; then
-    # Use ripgrep to generate list of source files, as that honors .gitignore.
-    rg --files | run_ctags -L - "$@"
-else
-    # Have ctags recursively search for files on its own.
-    run_ctags --recurse "$@"
-fi
+VERSION = "0.1.0"
+
+
+def split(args_str: str) -> T.List[str]:
+    return args_str.strip().splitlines()
+
+
+# From `vimrc`.
+ctags_bins = []
+# Prefer Universal Ctags (the maintained fork of Exuberant Ctags).
+ctags_bins += ["ctags-universal"]
+ctags_bins += ["universal-ctags"]
+
+# Remaining options taken from `tagbar/autoload/tagbar.vim`:
+ctags_bins += ["ctags-exuberant"]  # Debian
+ctags_bins += ["exuberant-ctags"]
+ctags_bins += ["exctags"]  # FreeBSD, NetBSD
+ctags_bins += ["/usr/local/bin/ctags"]  # Homebrew
+ctags_bins += ["/opt/local/bin/ctags"]  # Macports
+ctags_bins += ["ectags"]  # OpenBSD
+ctags_bins += ["ctags"]
+ctags_bins += ["ctags.exe"]
+ctags_bins += ["tags"]
+
+ctags_std_args = split(
+    r"""
+--c-kinds=+px
+--c++-kinds=+px
+--fields=+iaS
+--extra=+qf
+"""
+)
+
+ctags_stdx_args = split(
+    r"""
+--exclude=export
+--exclude=build
+--exclude=builddir
+--exclude=bindir
+--exclude=pkgexp
+--exclude=Sphere
+--exclude=target
+--exclude=venv
+--exclude=dist
+--exclude=.pytest_cache
+--exclude=.cache
+"""
+)
+
+# For use with ctags-exuberant only.
+# Taken from `ctags/rust.ctags` in https://github.com/rust-lang/rust.vim.
+ctags_rust_args = split(
+    r"""
+--langdef=Rust
+--langmap=Rust:.rs
+--regex-Rust=/^[ \t]*(#\[[^\]]\][ \t]*)*(pub[ \t]+)?(extern[ \t]+)?("[^"]+"[ \t]+)?(unsafe[ \t]+)?fn[ \t]+([a-zA-Z0-9_]+)/\6/f,functions,function definitions/
+--regex-Rust=/^[ \t]*(pub[ \t]+)?type[ \t]+([a-zA-Z0-9_]+)/\2/T,types,type definitions/
+--regex-Rust=/^[ \t]*(pub[ \t]+)?enum[ \t]+([a-zA-Z0-9_]+)/\2/g,enum,enumeration names/
+--regex-Rust=/^[ \t]*(pub[ \t]+)?struct[ \t]+([a-zA-Z0-9_]+)/\2/s,structure names/
+--regex-Rust=/^[ \t]*(pub[ \t]+)?mod[ \t]+([a-zA-Z0-9_]+)/\2/m,modules,module names/
+--regex-Rust=/^[ \t]*(pub[ \t]+)?(static|const)[ \t]+([a-zA-Z0-9_]+)/\3/c,consts,static constants/
+--regex-Rust=/^[ \t]*(pub[ \t]+)?trait[ \t]+([a-zA-Z0-9_]+)/\2/t,traits,traits/
+--regex-Rust=/^[ \t]*(pub[ \t]+)?impl([ \t\n]*<[^>]*>)?[ \t]+(([a-zA-Z0-9_:]+)[ \t]*(<[^>]*>)?[ \t]+(for)[ \t]+)?([a-zA-Z0-9_]+)/\4 \6 \7/i,impls,trait implementations/
+--regex-Rust=/^[ \t]*macro_rules![ \t]+([a-zA-Z0-9_]+)/\1/d,macros,macro definitions/
+"""
+)
+
+
+def probe_ctags_bin() -> str:
+    for name in ctags_bins:
+        if shutil.which(name):
+            return name
+    return "ctags"
+
+
+def is_universal_ctags(ctags_bin: str) -> bool:
+    output = subprocess.check_output([ctags_bin, "--version"])
+    return b"universal ctags" in output.lower()
+
+
+def launder_args(
+    args: T.List[str], *, is_universal: bool
+) -> T.Generator[str, None, None]:
+    extras = "--extras" if is_universal else "--extra"
+    for arg in args:
+        for prefix in ["--extras", "--extra"]:
+            if arg.startswith(prefix):
+                arg = extras + arg[len(prefix) :]
+                break
+        yield arg
+
+
+class Config:
+    def __init__(self) -> None:
+        self.ctags_bin = probe_ctags_bin()
+        self.show = False
+        self.show_help = False
+        self.show_gentags_help = False
+        self.is_universal = True
+        self.std = False
+        self.stdx = False
+        self.rg = False
+        self.args: T.List[str] = []
+
+
+def help_gentags() -> None:
+    print(
+        f"""\
+Help for gentags version {VERSION}
+  --help-gentags            Help on gentags
+  --show                    Show args for ctags
+  --ctags CTAGS             Use CTAGS executable
+  --std                     Use "standard" ctags arguments
+  --stdx                    Use "standard" ctags `--exclude` paths
+  --rg                      Use `rg --files | ctags -L -`
+
+With no arguments, `--std --stdx` is implied; additionally, use `--rg` if have
+`.gitignore/.ignore` files and `rg` is detected, and `--recursive` otherwise.
+"""
+    )
+
+
+def required_arg(arg: str, args: T.List[str]) -> str:
+    if args:
+        return args.pop(0)
+    print(f"Missing required arg for {arg}")
+    sys.exit()
+
+
+def parse_args(args: T.List[str]) -> Config:
+    config = Config()
+    args = args[:]
+    while args:
+        arg = args.pop(0)
+        if arg == "--help":
+            config.show_help = True
+        elif arg == "--help-gentags":
+            config.show_gentags_help = True
+        elif arg == "--show":
+            config.show = True
+        elif arg == "--ctags":
+            config.ctags_bin = required_arg(arg, args)
+        elif arg == "--std":
+            config.std = True
+        elif arg == "--stdx":
+            config.stdx = True
+        elif arg == "--rg":
+            config.rg = True
+        else:
+            config.args.append(arg)
+    config.is_universal = is_universal_ctags(config.ctags_bin)
+    return config
+
+
+def main() -> None:
+    args = sys.argv[1:]
+    rg = shutil.which("rg")
+    has_ignore = Path(".gitignore").exists() or Path(".ignore").exists()
+    if args == [] or args == ["--show"]:
+        args.extend(["--std", "--stdx"])
+        if rg and has_ignore:
+            args.append("--rg")
+        else:
+            args.append("--recurse")
+    config = parse_args(args)
+
+    if config.show_gentags_help:
+        help_gentags()
+        return
+
+    if config.show_help:
+        subprocess.run([config.ctags_bin, "--help"])
+        print("Use --help-gentags for gentags help")
+        return
+
+    if config.stdx:
+        config.args[:0] = ctags_stdx_args
+    if config.std:
+        if not config.is_universal:
+            config.args[:0] = ctags_rust_args
+        config.args[:0] = ctags_std_args
+    if config.rg:
+        config.args[:0] = ["-L", "-"]
+        rg_cmd_args = ["rg", "--files"]
+    else:
+        rg_cmd_args = []
+
+    # Launder args for Exuberant/Universal incompatibilities.
+    config.args = list(
+        launder_args(config.args, is_universal=config.is_universal)
+    )
+    ctags_cmd_args = [config.ctags_bin] + config.args
+
+    if config.show:
+        pre = " ".join(rg_cmd_args) + " | " if rg_cmd_args else ""
+        sep = " \\\n    "
+        print(pre + sep.join(ctags_cmd_args))
+    elif rg_cmd_args:
+        rg_proc = subprocess.Popen(rg_cmd_args, stdout=subprocess.PIPE)
+        assert rg_proc.stdout is not None
+        subprocess.run(ctags_cmd_args, stdin=rg_proc.stdout)
+        rg_proc.stdout.close()
+    else:
+        subprocess.run(ctags_cmd_args)
+
+
+if __name__ == "__main__":
+    main()
