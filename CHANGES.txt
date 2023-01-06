@@ -10,7 +10,7 @@ require adjustment of per-user settings.
 2023-01-01
 ==========
 
-- Add new ``gentags`` utility supporting both Universal and Exuberant Ctags. 
+- Add new ``gentags`` utility supporting both Universal and Exuberant Ctags.
 
 2022-12-31
 ==========
