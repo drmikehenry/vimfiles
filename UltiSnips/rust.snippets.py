@@ -50,12 +50,16 @@ pub fn new($1) -> Self {
 """,
 )
 
+print_fmt = r"("
+print_fmt += r'"${1:{}}"'
+print_fmt += r"${1/[^{]*({)?.*/(?1:, :\);)/}"
+print_fmt += r"$2"
+print_fmt += r"${1/[^{]*({)?.*/(?1:\);:)/}"
+
 wsnip(
     "pr",
     "println!(...)",
-    r"""
-println!("${1:{}}"${1/[^{]*({)?.*/(?1:, :\);)/}$2${1/[^{]*({)?.*/(?1:\);:)/}
-""",
+    "println!" + print_fmt,
 )
 
 wsnip(
@@ -69,9 +73,7 @@ println!("{:?}", $1);$0
 wsnip(
     "pri",
     "print!(...)",
-    r"""
-print!("${1:{}}"${1/[^{]*({)?.*/(?1:, :\);)/}$2${1/[^{]*({)?.*/(?1:\);:)/}
-""",
+    "print!" + print_fmt,
 )
 
 wsnip(
@@ -79,6 +81,34 @@ wsnip(
     "print!( :? ...)",
     r"""
 print!("{:?}", $1);$0
+""",
+)
+
+wsnip(
+    "epr",
+    "eprintln!(...)",
+    "eprintln!" + print_fmt,
+)
+
+wsnip(
+    "eprd",
+    "eprintln!( :? ...)",
+    r"""
+eprintln!("{:?}", $1);$0
+""",
+)
+
+wsnip(
+    "epri",
+    "eprint!(...)",
+    "eprint!" + print_fmt,
+)
+
+wsnip(
+    "eprid",
+    "eprint!( :? ...)",
+    r"""
+eprint!("{:?}", $1);$0
 """,
 )
 
