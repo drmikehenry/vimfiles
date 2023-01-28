@@ -6449,6 +6449,13 @@ function! SetupMarkdown()
     " when we don't support the embedded language or the block is inline.
     highlight default link markdownCode                  String
     highlight default link markdownCodeBlock             String
+
+    " Having underscores within a word `like_this` is not generally an error;
+    " see: https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis
+    " To retain this highlighting anyway, let g:LocalAllowMarkdownError = 1.
+    if !exists('g:LocalAllowMarkdownError') || !g:LocalAllowMarkdownError
+        highlight link markdownError NONE
+    endif
 endfunction
 command! -bar SetupMarkdown call SetupMarkdown()
 

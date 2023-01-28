@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-01-28
+==========
+
+- Disable highlighting of the ``markdownError`` syntax group for Markdown files;
+  this group indicates the presence of underscores within words.  Such
+  underscores are not generally errors (see
+  https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis).  To retain
+  the original highlighting anyway, use::
+
+    let g:LocalAllowMarkdownError = 1
+
 2023-01-19
 ==========
 

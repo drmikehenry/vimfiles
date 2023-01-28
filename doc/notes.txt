@@ -1891,6 +1891,10 @@ Local Customizations:
   embedding.
 - Made syntax/mkd.vim delegate in syntax/markdown.vim to give anyone who sets
   the filetype to "mkd" support for markdown.
+- Disable highlighting of `markdownError`; this syntax group detects underscores
+  within words.  Such underscores are not generally errors (see
+  https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis), but to retain
+  the original highlighting anyway, set g:LocalAllowMarkdownError to 1.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
