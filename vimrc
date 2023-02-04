@@ -3741,19 +3741,17 @@ if g:EnableAle
                 \   }
     endif
 
-    " Disable some markdownlint warnings; see
-    " https://github.com/markdownlint/markdownlint/blob/master/docs/RULES.md
-    " [MD013 - Line length]
-    " [MD024 - Multiple headers with the same content]
-    " [MD036 - Emphasis used instead of a header]
-    " [MD046 - Code block style]
-    let g:ale_markdown_mdl_options =
-            \ '-r ' . ale#Escape(join([
-            \   '~MD013',
-            \   '~MD024',
-            \   '~MD036',
-            \   '~MD046',
-            \ ], ','))
+    " Any `~/.mdlrc` file will take precedence; if this file does not exist,
+    " then point to `$VIMFILES/etc/mdl-style.rb`.
+    " To use the above style file when using `mdl` from the command line, create
+    " `~/.mdlrc` with contents:
+    "
+    "   style "#{File.dirname(__FILE__)}/.vim/etc/mdl-style.rb"
+    if !exists('g:ale_markdown_mdl_options') &&
+            \ !filereadable(expand('$HOME/.mdlrc'))
+        let g:ale_markdown_mdl_options =
+            \ '--style ' . ale#Escape($VIMFILES . '/etc/mdl-style.rb')
+    endif
 
     " Experiment with disabling the extra-picky info messages out of rstcheck.
     let g:ale_rst_rstcheck_options =

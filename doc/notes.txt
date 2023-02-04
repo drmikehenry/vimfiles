@@ -430,7 +430,12 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
   - Install linters: >
 
       gem install mdl
+<
+  - Optionally create ~/.mdlrc to use $VIMFILES/etc/mdl-style.rb with `mdl`
+    invocations from the command line: >
 
+      style "#{File.dirname(__FILE__)}/.vim/etc/mdl-style.rb"
+<
 Fonts
 -----
 

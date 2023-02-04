@@ -7,6 +7,20 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-02-04
+==========
+
+- Rework configuration settings for markdownlint (``mdl``).
+
+  - Any ``~/.mdlrc`` file will take precedence; if this file does not exist,
+    ``g:ale_markdown_mdl_options`` will be set to point ``mdl`` at the file
+    ``$VIMFILES/etc/mdl-style.rb``, which contains rule adjustments for ``mdl``.
+
+  - To use the above ``$VIMFILES/etc/mdl-style.rb`` file when running ``mdl``
+    from the command line, create ``~/.mdlrc`` with contents::
+
+      style "#{File.dirname(__FILE__)}/.vim/etc/mdl-style.rb"
+
 2023-01-28
 ==========
 
