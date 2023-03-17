@@ -18,6 +18,8 @@ endglobal
 """
 )
 
+wabbr("t", "- TODO: ")
+
 bsnip(
     "code",
     "code block",

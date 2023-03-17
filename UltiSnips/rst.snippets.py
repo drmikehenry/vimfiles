@@ -18,6 +18,8 @@ endglobal
 """
 )
 
+wabbr("t", "- TODO: ")
+
 # Title snippets.
 
 
