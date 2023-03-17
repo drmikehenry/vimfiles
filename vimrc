@@ -2168,6 +2168,12 @@ set wildignore+=*.dSYM
 " Ignore Rust target/ directory.
 set wildignore+=target
 
+" Ignore Meson build-related directories:
+set wildignore+=builddir,bindir,subprojects
+
+" Ignore Python virtual environments:
+set wildignore+=venv
+
 " Want sessionoptions to contain:
 "   blank - save unnamed buffers.
 "   buffers - save buffers.

@@ -12,6 +12,18 @@ require adjustment of per-user settings.
 
 - Add ``t`` snippet for ``- TODO:`` in reStructuredText and Markdown.
 
+- Set ``wildignore`` to ignore a few directories:
+
+  - Meson build-related directories::
+
+      builddir
+      bindir
+      subprojects
+
+  - Python virtual environments::
+
+      venv
+
 2023-02-04
 ==========
 

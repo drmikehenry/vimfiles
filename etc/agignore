@@ -35,3 +35,7 @@ classes
 *.jar
 .lein-*
 *.dSYM
+builddir
+bindir
+subprojects
+venv
