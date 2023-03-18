@@ -19,7 +19,6 @@
     BufKill - Kill buffer without closing window        |notes_bufkill|
     Calutil - Calendar utilities                        |notes_calutil|
     Cecutil - Utilities for Dr. Chip's plugins          |notes_cecutil|
-    Clojure-static - Edit Clojure without runtime       |notes_clojure-static|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
     CMake syntax support                                |notes_cmake|
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
@@ -60,7 +59,6 @@
     Moonscript - support for a dialect of Lua           |notes_moonscript|
     Mundo - Visualize your undo tree                    |notes_mundo|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
-    Paredit - Structured editing of Lisp S-expressions  |notes_paredit|
     Pathogen - Runtime path management for bundles      |notes_pathogen|
     Powerline - The ultimate vim statusline utility     |notes_powerline|
     Project - Managing "projects" of files              |notes_project|
@@ -923,19 +921,6 @@ CECUTIL                                                  *notes_cecutil*
 
 Version v18k (Nov 22, 2017) from:
 http://www.drchip.org/astronaut/vim/index.html#CECUTIL
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-CLOJURE-STATIC                                          *notes_clojure-static*
-  Edit Clojure without runtime (REPL) environment       |clojure.txt|
-
-Syntax, indent, filetype, and other miscellaneous support for editing Clojure
-without having a runtime environment.
-
-Version 2017-10-23 (fae5710a) from:
-https://github.com/guns/vim-clojure-static.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -2015,21 +2000,6 @@ https://github.com/drmikehenry/OmniCppComplete
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-PAREDIT                                               *notes_paredit*
-  Structured editing of Lisp S-expressions in Vim     |paredit|
-
-Paredit tries to maintain a balanced state of matched characters, similar to
-paredit.el for Emacs.  This is helpful for Lisp programming languages like
-Clojure.
-
-Version 0.9.7 from:
-http://www.vim.org/scripts/script.php?script_id=3988
-
-Installation (via pathogen):
-- Unzip in ~/.vim/bundle/paredit
-- :Helptags
 
 ------------------------------------------------------------------------------
 PATHOGEN                                                *notes_pathogen*
