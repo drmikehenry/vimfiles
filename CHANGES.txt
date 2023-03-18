@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-03-18
+==========
+
+- Remove insufficiently maintained Clojure language support (thanks to John
+  Szakmeister).
+
 2023-03-17
 ==========
 
