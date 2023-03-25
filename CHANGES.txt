@@ -14,6 +14,9 @@ require adjustment of per-user settings.
   warning about unused functions in header files (see ``:help notes`` near
   linters/formatters).
 
+- When clangd is available, remove linters "cc" and "clangtidy", as they just
+  get in the way.
+
 2023-03-18
 ==========
 

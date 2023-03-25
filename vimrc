@@ -5698,6 +5698,8 @@ if g:EnableVimLsp
 
     " For any kind of C support:
     if g:EnableVimLsp_c
+        call insert(g:ale_linters['c'], 'vim-lsp')
+        call insert(g:ale_linters['cpp'], 'vim-lsp')
         " Clangd (C/C++) support:
         if g:EnableVimLsp_clangd
             augroup local_lsp_clangd
@@ -5708,10 +5710,12 @@ if g:EnableVimLsp
                         \ 'allowlist': ['c', 'cpp', 'objc', 'objcpp'],
                         \ })
             augroup END
+            " Remove linters that just get in the way when we have clangd.
+            for s:lang in ['c', 'cpp']
+                call filter(g:ale_linters[s:lang],
+                        \ 'index(["cc", "clangtidy"], v:val) < 0')
+            endfor
         endif
-        " Prepend "vim-lsp":
-        call insert(g:ale_linters['c'], "vim-lsp")
-        call insert(g:ale_linters['cpp'], "vim-lsp")
     endif
 
     " For any kind of rust support:
