@@ -415,7 +415,16 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
       sudo update-alternatives --install /usr/bin/clangd \
           clangd /usr/bin/clangd-10 100
 <
+  - (recommended) Configure clangd to disable warning about unused functions in
+    header files.  Create `~/.config/clangd/config.yaml` with contents: >
 
+      ---
+      If:
+        PathMatch: .*\.h
+
+      CompileFlags:
+        Add: [-Wno-unused-functions]
+<
   - Install `compiledb` to automatically generate a `compile-commands.json` file
     for use with Clangd. >
 

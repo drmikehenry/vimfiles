@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-03-25
+==========
+
+- Suggest use of ``~/.config/clangd/config.yaml`` to configure clangd to disable
+  warning about unused functions in header files (see ``:help notes`` near
+  linters/formatters).
+
 2023-03-18
 ==========
 
