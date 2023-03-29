@@ -3782,6 +3782,9 @@ if g:EnableAle
     " (The `-p` option will be added based on filetype detection.)
     let g:ale_sh_shfmt_options = '-sr -i 4'
 
+    " Use pre-processor with assembly files.
+    let g:ale_asm_gcc_options = '-Wall -x assembler-with-cpp'
+
     let g:ale_fixers = {
         \ 'c': ['clang-format'],
         \ 'cpp': ['clang-format'],
