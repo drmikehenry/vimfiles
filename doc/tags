@@ -60,7 +60,6 @@ notes_calutil	notes.txt	/*notes_calutil*
 notes_cecutil	notes.txt	/*notes_cecutil*
 notes_changes	notes.txt	/*notes_changes*
 notes_clipboard	notes.txt	/*notes_clipboard*
-notes_clojure-static	notes.txt	/*notes_clojure-static*
 notes_closetag	notes.txt	/*notes_closetag*
 notes_cmake	notes.txt	/*notes_cmake*
 notes_colorcolumn	notes.txt	/*notes_colorcolumn*
@@ -131,7 +130,6 @@ notes_moving_out	notes.txt	/*notes_moving_out*
 notes_mundo	notes.txt	/*notes_mundo*
 notes_omnicppcomplete	notes.txt	/*notes_omnicppcomplete*
 notes_overrides	notes.txt	/*notes_overrides*
-notes_paredit	notes.txt	/*notes_paredit*
 notes_pasting	notes.txt	/*notes_pasting*
 notes_pathogen	notes.txt	/*notes_pathogen*
 notes_plugins	notes.txt	/*notes_plugins*
