@@ -1212,7 +1212,7 @@ Installation:
 FIXKEY                                                  *notes_fixkey*
   Fix key code for console Vim                          |fixkey.txt|
 
-Version 0.3.11 (eb81aa2) from:
+Version 0.3.14 (454c19d) from:
 https://github.com/drmikehenry/vim-fixkey
 
 Installation:

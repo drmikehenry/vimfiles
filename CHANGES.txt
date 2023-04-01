@@ -15,6 +15,10 @@ require adjustment of per-user settings.
   may now be disabled on a per-buffer basis using ``b:Spell`` (see ``:help
   notes``).
 
+- Upgrade Fixkey plugin to v0.3.14.  This works around a problem with newer Vim
+  and gnome-terminal whereby the user's first keystroke is swallowed.  See
+  ``:help fixkey`` for details.
+
 2023-03-29
 ==========
 
