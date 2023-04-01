@@ -6151,7 +6151,7 @@ function! SetSpell()
         return
     endif
 
-    let key = LookupKey("b:SpellType", "g:SpellMap")
+    let key = get(b:, "Spell", LookupKey("b:SpellType", "g:SpellMap"))
 
     if key == "<on>"
         setlocal spell
@@ -7326,6 +7326,10 @@ function! SetupHelp()
     " The "@" adds in all "alphabetic" characters, including
     " accented characters beyond ASCII a-z and A-Z.
     setlocal iskeyword=@,!-~,^*,^\|,^\",192-255
+    if &readonly
+        " Disable spell checking when just reading help pages.
+        let b:Spell = "<off>"
+    endif
 endfunction
 command! -bar SetupHelp call SetupHelp()
 

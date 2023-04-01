@@ -3566,6 +3566,10 @@ Turn on spell-checking for files of type "javascript": >
 Add "perl" filetype to the "<source>" group: >
   let g:SpellMap["perl"] = "<source>"
 
+Use b:Spell for per-buffer control that overrides g:SpellMap.
+E.g. to disable spell checking for the buffer: >
+  let b:Spell = "<off>"
+<
 See g:SpellMap documentation in vimrc for more detail.
 
 ------------------------------------------------------------------------------
