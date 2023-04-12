@@ -7,6 +7,21 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-04-12
+==========
+
+- Adjust ALE ``flake8`` settings.  Note that newer ``flake8`` no longer supports
+  a user-wide configuration file in ``~/.config/flake8``, so per-user
+  adjustments no longer take place automatically.  Adjustments:
+
+  - Ignore "I202 Additional newline in a group of imports".
+  - Match Black's use of double-quoted strings with ``--inline-quotes=double``.
+  - Match the python-language-server default McCabe complexity value via
+    ``--max-complexity=15``.
+
+  Override these changes by adjusting ``g:AleFlake8Ignores`` and/or
+  ``g:ale_python_flake8_options`` (see ``vimrc``).
+
 2023-04-01
 ==========
 

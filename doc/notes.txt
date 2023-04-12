@@ -318,24 +318,12 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
       pip install flake8 flake8-quotes pep8-naming
       pip install mypy pyannotate monkeytype pytype
 <
-    Create `~/.config/flake8` with the following contents: >
+    Note: `flake8` no longer honors the per-user configuration file
+    `~/.config/flake8`.  For configuration of `flake8` within Vim, see `vimrc`
+    and `g:ale_python_flake8_options`.
 
-      [flake8]
-      # Black uses double-quotes:
-      inline-quotes = double
-
-      # Black puts space around colons for slice expressions with operators,
-      # e.g.:
-      #   array[x:y]            # No spaces because ``x`` and ``y`` are simple.
-      #   array[x + 1 : y]      # Spaces because of ``x + 1``.
-      # Ignore flake8's E203 error, since black will fix things properly.
-      ignore = E203
-
-      # Match python-language-server default McCabe complexity.
-      max-complexity = 15
-<
-    For per-project configuration of flake8, put the same content in a `.flake8`
-    file in the project's root directory.
+    `flake8` will honor a per-project `.flake8` configuration file; see `flake8`
+    documentation for details.
 
   - Install black formatter: >
 
