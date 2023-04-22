@@ -2033,13 +2033,7 @@ cnoremap <C-o><C-p> <C-p>
 " <C-o>   Nothing.
 " <C-p>   Prev. match after wildchar, or recall prev. command-line history.
 
-" Work around bug on Fedora (resetting guifont seems to fix it).
-function! ResetGuiFont()
-    let &guifont=&guifont
-endfunction
-
 function! RefreshScreen()
-    call ResetGuiFont()
     if &diff
         diffupdate
     endif

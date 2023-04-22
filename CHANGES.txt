@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-04-22
+==========
+
+- Remove obsolete ``:ResetGuiFont`` command.  This was a work-around from at
+  least a dozen years ago to handle a long-forgotten bug in Fedora's build of
+  Vim.  The work-around was to use ``:let &guifont=&guifont`` to set the font
+  back to its current value.  This function had been part of ``:RefreshScreen``
+  (invoked by ``CTRL-L``).
+
 2023-04-12
 ==========
 
