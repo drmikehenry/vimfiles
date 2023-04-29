@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-04-29
+==========
+
+- Update Fixkey plugin to v0.3.15.  This fixes a regression in version 0.3.14
+  for terminals that lack ``TermResponse``.  Now, in addition to
+  ``TermResponse``, Fixkey watches for the ``VimEnter`` autocmd to ensure Fixkey
+  setup will always be invoked.  Notably tmux, PuTTY, and Linux console do not
+  trigger ``TermResponse`` autocmd events.
+
 2023-04-22
 ==========
 
