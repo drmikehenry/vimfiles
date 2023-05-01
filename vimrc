@@ -3148,21 +3148,30 @@ endfunction
 " Convenience for building tag files in current directory.
 command! -bar Ctags :wall|silent! !gentags
 
-" The :tjump command is more convenient than :tag because it will pop up a
-" menu if and only if multiple tags match.  Exchange the default meaning
-" of CTRL-] and friends to use :tjump for the more convenient keystrokes,
-" and to allow the old behavior via tha "g"-prefixed less-convenient keystrokes.
-" Additionally, map the mouse to use the :tjump variants.
+if !exists("g:SwapTagKeys")
+let g:SwapTagKeys = 0
+endif
 
-nnoremap g<C-]>   <C-]>
-xnoremap g<C-]>   <C-]>
-nnoremap  <C-]>  g<C-]>
-xnoremap  <C-]>  g<C-]>
+if g:SwapTagKeys
+    " Historically these remappings were always done; but the built-in
+    " defaults are actually more convenient than originally thought.
+    " The defaults are:
+    "
+    " - `CTRL-]` jumps to the definition directly, saving the navigation of a
+    "   menu in this common case.
+    " - `g ]` always results in a menu for matching tags.
+    " - `g CTRL-]` makes a menu unless there's only one matching tag.
 
-nnoremap g<LeftMouse>   g<C-]>
-xnoremap g<LeftMouse>   g<C-]>
-nnoremap <C-LeftMouse>  g<C-]>
-xnoremap <C-LeftMouse>  g<C-]>
+    nnoremap g<C-]>   <C-]>
+    xnoremap g<C-]>   <C-]>
+    nnoremap  <C-]>  g<C-]>
+    xnoremap  <C-]>  g<C-]>
+
+    nnoremap g<LeftMouse>   g<C-]>
+    xnoremap g<LeftMouse>   g<C-]>
+    nnoremap <C-LeftMouse>  g<C-]>
+    xnoremap <C-LeftMouse>  g<C-]>
+endif
 
 " Helper for adding tag files from your $HOME/.tags folder.  Useful within
 " .lvimrc files.

@@ -7,6 +7,21 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-05-01
+==========
+
+- Stop overriding ``CTRL-]`` and friends for following tags.  The built-in
+  defaults are actually more convenient than originally thought.  The defaults
+  are:
+
+   - ``CTRL-]`` jumps to the definition directly, saving the navigation of a
+     menu in this common case.
+   - ``g ]`` always results in a menu for matching tags.
+   - ``g CTRL-]`` makes a menu unless there's only one matching tag.
+
+  To restore the old mappings, ``let g:SwapTagKeys = 1`` in your
+  ``VIMRC_BEFORE`` file.
+
 2023-04-29
 ==========
 
