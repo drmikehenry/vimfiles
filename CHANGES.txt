@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-05-06
+==========
+
+- Update extline plugin to v0.2.1.  This fixes the line length for titles with
+  multi-byte characters and allows multi-byte characters for "horizontal line
+  update".
+
 2023-05-01
 ==========
 

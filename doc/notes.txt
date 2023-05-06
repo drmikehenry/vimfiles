@@ -1190,7 +1190,7 @@ Installation:
 EXTLINE                                                 *notes_extline*
   Extend lines (e.g., for underlined titles)            |extline.txt|
 
-Version 0.2.0 (704ec96) from:
+Version 0.2.1 (0529b0d) from:
 https://github.com/drmikehenry/vim-extline
 
 Installation:

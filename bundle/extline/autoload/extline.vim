@@ -26,11 +26,12 @@ function! extline#leadingWhitespace(s)
 endfunction
 
 function! extline#getMonochar(s)
-    let monochar = substitute(extline#strip(a:s), '^\(\S\)\1*$', '\1', '')
-    if len(monochar) > 1
-        let monochar = ''
+    let monoline = matchstr(extline#strip(a:s), '\v^(.)\1*$')
+    if monoline != ''
+        " Return first character of `monoline`.
+        return substitute(monoline, '\v^(.).*$', '\1', '')
     endif
-    return monochar
+    return ''
 endfunction
 
 " Return monochar that is non-alphanumeric.
@@ -124,19 +125,19 @@ endfunction
 
 function! extline#updateTitle(tg)
     let titleLineNum = a:tg['titleLineNum']
-    let titleLen = len(a:tg['title'])
+    let title = a:tg['title']
     let underChar = a:tg['underChar']
     let overChar = a:tg['overChar']
     let titlePrefix = a:tg['titlePrefix']
 
     if overChar != ''
-        let lineText = titlePrefix . repeat(overChar, titleLen)
+        let lineText = titlePrefix . substitute(title, '.', overChar, 'g')
         exe (titleLineNum - 1) . 's/^.*/\=lineText/g'
     endif
     exe titleLineNum
     normal! $
     if underChar != ''
-        let lineText = titlePrefix . repeat(underChar, titleLen)
+        let lineText = titlePrefix . substitute(title, '.', underChar, 'g')
         exe (titleLineNum + 1) . 's/^.*/\=lineText/g'
         normal! $
     endif
@@ -167,12 +168,14 @@ function! extline#makeTitle(forceMonochar, useOver, useUnder)
 endfunction
 
 function! extline#makeHline()
+    let n = 78
     let lineNum = line('.')
-    let t = extline#rstrip(getline(lineNum))
-    let monochar = extline#getMonochar(t)
+    let lineText = extline#rstrip(getline(lineNum))
+    let monochar = extline#getMonochar(lineText)
     if monochar != ''
-        let lineText = (t . repeat(monochar, 80))[:77]
-        exe 's/^.*/' . escape(lineText, '/') . '/g'
+        let lineText .= repeat(monochar, n)
+        let lineText = substitute(lineText, '\v^(.{' . n . '}).*', '\1', '')
+        call setline(lineNum, lineText)
         normal! $
     endif
 endfunction
