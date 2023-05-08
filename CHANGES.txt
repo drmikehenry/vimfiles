@@ -7,6 +7,16 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-05-08
+==========
+
+- Update Grepper plugin to version 2021-08-30.  Also fix the Grepper patch that
+  forces a ``BufReadPost`` event when a search operation finishes.  Previously,
+  ``setqflist(list)`` was used to write the current search results back to the
+  current QuickFix list, but this actually creates a new QuickFix list.
+  ``setqflist(list, 'r')`` replaces the list with itself so that ``:colder``
+  operations don't encounter duplicate sets of search results.
+
 2023-05-06
 ==========
 

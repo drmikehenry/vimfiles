@@ -9,6 +9,7 @@ let g:loaded_grepper = 1
 " ..ad\\f40+$':-# @=,!;%^&&*()_{}/ /4304\'""?`9$343%$ ^adfadf[ad)[(
 
 highlight default link GrepperPrompt Question
+highlight default link GrepperQuery String
 
 "
 " Default values that get used for missing values in g:grepper.
@@ -29,7 +30,7 @@ let s:defaults = {
       \ 'searchreg':     0,
       \ 'side':          0,
       \ 'side_cmd':      'vnew',
-      \ 'stop':          5000,
+      \ 'stop':          0,
       \ 'dir':           'cwd',
       \ 'prompt_mapping_tool': '<tab>',
       \ 'prompt_mapping_dir':  '<c-d>',
@@ -804,7 +805,7 @@ function! s:prompt(flags)
             \ 'prompt':     prompt_text,
             \ 'default':    a:flags.query,
             \ 'completion': 'customlist,grepper#complete_files',
-            \ 'highlight':  { cmdline -> [[0, len(cmdline), 'String']] },
+            \ 'highlight':  { cmdline -> [[0, len(cmdline), 'GrepperQuery']] },
             \ })
     else
       let a:flags.query = input(prompt_text, a:flags.query,
@@ -931,14 +932,26 @@ function! s:run(flags)
     if exists('s:id')
       silent! call jobstop(s:id)
     endif
+    let opts = {
+          \ 'on_stdout': function('s:on_stdout_nvim'),
+          \ 'on_stderr': function('s:on_stdout_nvim'),
+          \ 'on_exit':   function('s:on_exit'),
+          \ }
+    if has('nvim-0.5.1')
+      " Starting with version 13, ripgrep always stats stdin and if it's not a
+      " TTY it uses it to read data. Unfortunately, Neovim always attaches a
+      " pipe to stdin by default and that leads to ripgrep reading nothing...
+      " (see https://github.com/mhinz/vim-grepper/issues/244 for more info)
+      " This was fixed in nvim by adding an option to jobstart to not pipe stdin
+      " (see https://github.com/neovim/neovim/pull/14812).
+      let opts.stdin = 'null'
+    endif
+    if !a:flags.stop
+      let opts.stdout_buffered = 1
+      let opts.stderr_buffered = 1
+    endif
     try
-      let s:id = jobstart(cmd, extend(options, {
-            \ 'on_stdout': function('s:on_stdout_nvim'),
-            \ 'on_stderr': function('s:on_stdout_nvim'),
-            \ 'stdout_buffered': 1,
-            \ 'stderr_buffered': 1,
-            \ 'on_exit':   function('s:on_exit'),
-            \ }))
+      let s:id = jobstart(cmd, extend(options, opts))
     finally
       call s:chdir_pop(orig_dir)
     endtry
@@ -985,10 +998,10 @@ function! s:finish_up(flags)
           \ : {'title': cmdline, 'context': {'query': @/}}
     let qfWinView = winsaveview()
     if qf
-      call setqflist(list)
+      call setqflist(list, 'r')
       call setqflist([], a:flags.append ? 'a' : 'r', attrs)
     else
-      call setloclist(0, list)
+      call setloclist(0, list, 'r')
       call setloclist(0, [], a:flags.append ? 'a' : 'r', attrs)
     endif
     call winrestview(qfWinView)
