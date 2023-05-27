@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-05-27
+==========
+
+- Adjust ``t_8f`` and ``t_8b`` (terminal foreground and background colors) for
+  ``TERM`` values starting with ``tmux`` in addition to those starting with
+  ``screen``.  Historically, tmux has used ``TERM`` values starting with
+  ``screen``, but more recent tmux now uses value starting with ``tmux``
+  (noticed in Ubuntu 23.04).
+
 2023-05-08
 ==========
 
