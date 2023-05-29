@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-05-29
+==========
+
+- Configure ``.toml`` files (analogously to ``.yaml`` files) (expand tab
+  characters, two-space indentation, configurable spell checking).
+
 2023-05-27
 ==========
 

@@ -7517,6 +7517,14 @@ function! SetupTmux()
 endfunction
 command! -bar SetupTmux call SetupTmux()
 
+function! SetupToml()
+    SetupSource
+    setlocal sts=2 sw=2
+    let b:SpellType = "<toml>"
+endfunction
+command! -bar SetupToml call SetupToml()
+let g:SpellMap["<toml>"] = "<off>"
+
 function! SetupYaml()
     SetupSource
     setlocal sts=2 sw=2
