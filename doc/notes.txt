@@ -3031,7 +3031,7 @@ Supports these mappings (experimental at present):
 - <Space>l=      <plug>(lsp-document-format)
 - <Space>l=      <plug>(lsp-document-range-format)
 
-Version 2021-05-16 (06c4b5b) from:
+Version 2023-05-16 (e74bd3c) from:
 https://github.com/prabirshrestha/vim-lsp.git
 
 Installation:

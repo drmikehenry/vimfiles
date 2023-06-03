@@ -41,7 +41,7 @@ function! lsp#internal#diagnostics#highlights#_enable() abort
             for l:severity in keys(s:severity_sign_names_mapping)
                 let l:hl_group = s:severity_sign_names_mapping[l:severity] . 'Highlight'
                 call prop_type_add(s:get_prop_type_name(l:severity),
-                    \ {'highlight': l:hl_group, 'combine': v:true })
+                    \ {'highlight': l:hl_group, 'combine': v:true, 'priority': lsp#internal#textprop#priority('diagnostics_highlight') })
             endfor
         endif
     endif
@@ -129,7 +129,7 @@ endfunction
 
 function! s:place_highlights(server, diagnostics_response, bufnr) abort
     " TODO: make diagnostics highlights same across vim and neovim
-    for l:item in a:diagnostics_response['params']['diagnostics']
+    for l:item in lsp#utils#iteratable(a:diagnostics_response['params']['diagnostics'])
         let [l:start_line, l:start_col] = lsp#utils#position#lsp_to_vim(a:bufnr, l:item['range']['start'])
         let [l:end_line, l:end_col] = lsp#utils#position#lsp_to_vim(a:bufnr, l:item['range']['end'])
         let l:severity = get(l:item, 'severity', 3)
@@ -163,18 +163,45 @@ function! s:place_highlights(server, diagnostics_response, bufnr) abort
                    \ l:line - 1, l:highlight_start_col - 1, l:highlight_end_col == -1 ? -1 : l:highlight_end_col)
             endfor
         else
-            try
-                " TODO: need to check for valid range before calling prop_add
-                " See https://github.com/prabirshrestha/vim-lsp/pull/721
-                silent! call prop_add(l:start_line, l:start_col, {
-                    \ 'end_lnum': l:end_line,
-                    \ 'end_col': l:end_col,
-                    \ 'bufnr': a:bufnr,
-                    \ 'type': s:get_prop_type_name(l:severity),
-                    \ })
-            catch
-                call lsp#log('diagnostics', 'place_highlights', 'prop_add', v:exception, v:throwpoint)
-            endtry
+            if l:start_line == l:end_line
+                try
+                     " TODO: need to check for valid range before calling prop_add
+                     " See https://github.com/prabirshrestha/vim-lsp/pull/721
+                     silent! call prop_add(l:start_line, l:start_col, {
+                     \ 'end_col': l:end_col,
+                     \ 'bufnr': a:bufnr,
+                     \ 'type': s:get_prop_type_name(l:severity),
+                     \ })
+                catch
+                     call lsp#log('diagnostics', 'place_highlights', 'prop_add', v:exception, v:throwpoint)
+                endtry
+            else
+                for l:line in range(l:start_line, l:end_line)
+                    if l:line == l:start_line
+                        let l:highlight_start_col = l:start_col
+                    else
+                        let l:highlight_start_col = 1
+                    endif
+
+                    if l:line == l:end_line
+                        let l:highlight_end_col = l:end_col
+                    else
+                        let l:highlight_end_col = strlen(getbufline(a:bufnr, l:line, l:line)[0]) + 1
+                    endif
+
+                    try
+                        " TODO: need to check for valid range before calling prop_add
+                        " See https://github.com/prabirshrestha/vim-lsp/pull/721
+                        silent! call prop_add(l:line, l:highlight_start_col, {
+                        \ 'end_col': l:highlight_end_col,
+                        \ 'bufnr': a:bufnr,
+                        \ 'type': s:get_prop_type_name(l:severity),
+                        \ })
+                    catch
+                        call lsp#log('diagnostics', 'place_highlights', 'prop_add', v:exception, v:throwpoint)
+                    endtry
+                endfor
+            endif
         endif
     endfor
 endfunction

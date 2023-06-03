@@ -8,39 +8,80 @@ on:
     branches:
       - master
 
+env:
+  VIM_LSP_GO_VERSION: '1.17'
+  VIM_LSP_GOPLS_VERSION: '0.7.3'
+  VIM_LSP_GOPLS_CACHE_VER: 1
+
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        name: [neovim-v04-x64,neovim-nightly-x64]
+        name: [neovim-v04-x64, neovim-v05-x64, neovim-nightly-x64]
         include:
           - name: neovim-v04-x64
             os: windows-latest
             neovim_version: v0.4.4
             neovim_arch: win64
+            allow_failure: false
+          - name: neovim-v05-x64
+            os: windows-latest
+            neovim_version: v0.5.1
+            neovim_arch: win64
+            allow_failure: false
           - name: neovim-nightly-x64
             os: windows-latest
             neovim_version: nightly
             neovim_arch: win64
+            allow_failure: true
     runs-on: ${{matrix.os}}
+    continue-on-error: ${{matrix.allow_failure}}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Download neovim
         shell: PowerShell
         run: Invoke-WebRequest -Uri https://github.com/neovim/neovim/releases/download/${{matrix.neovim_version}}/nvim-${{matrix.neovim_arch}}.zip -OutFile neovim.zip
+        continue-on-error: ${{matrix.allow_failure}}
       - name: Extract neovim
         shell: PowerShell
         run: Expand-Archive -Path neovim.zip -DestinationPath $env:USERPROFILE
+        continue-on-error: ${{matrix.allow_failure}}
+      - name: Cache gopls
+        id: cache-gopls
+        uses: actions/cache@v3
+        with:
+          path: bin/gopls
+          key: ${{ runner.os }}-${{ env.VIM_LSP_GO_VERSION }}-${{ env.VIM_LSP_GOPLS_VERSION }}-${{ env.VIM_LSP_GOPLS_CACHE_VER }}-gopls
+      - name: Install Go for gopls
+        if: steps.cache-gopls.outputs.cache-hit != 'true'
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.VIM_LSP_GO_VERSION }}
+      - name: Install gopls
+        if: steps.cache-gopls.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          go install golang.org/x/tools/gopls@v${{ env.VIM_LSP_GOPLS_VERSION }}
+          gopls version
+          mkdir bin
+          mv "$(which gopls)" ./bin/
+        env:
+          GO111MODULE: 'on'
       - name: Download test runner
-        shell: PowerShell
-        run: git clone --depth 1 --branch v1.5.5 --single-branch https://github.com/thinca/vim-themis $env:USERPROFILE\themis
+        uses: actions/checkout@v3
+        with:
+          repository: thinca/vim-themis
+          path: ./vim-themis
+          ref: v1.5.5
       - name: Run tests
         shell: cmd
         run: |
           SET PATH=%USERPROFILE%\Neovim\bin;%PATH%;
-          SET PATH=%USERPROFILE%\themis\bin;%PATH%;
+          SET PATH=.\vim-themis\bin;%PATH%;
+          SET PATH=.\bin;%PATH%;
           SET THEMIS_VIM=nvim
           nvim --version
           themis
+        continue-on-error: ${{matrix.allow_failure}}

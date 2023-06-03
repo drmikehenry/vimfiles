@@ -119,7 +119,7 @@ function! lsp#ui#vim#rename() abort
             \   'textDocument': lsp#get_text_document_identifier(),
             \   'position': lsp#get_position(),
             \ },
-            \ 'on_notification': function('s:handle_rename_prepare', [l:server, l:command_id, 'rename_prepare']),
+            \ 'on_notification': function('s:handle_rename_prepare', [l:server, l:command_id, 'rename_prepare', expand('<cword>'), lsp#get_position()]),
             \ })
         return
     endif
@@ -270,7 +270,7 @@ function! s:handle_location(ctx, server, type, data) abort "ctx = {counter, list
     endif
 endfunction
 
-function! s:handle_rename_prepare(server, last_command_id, type, data) abort
+function! s:handle_rename_prepare(server, last_command_id, type, cword, position, data) abort
     if a:last_command_id != lsp#_last_command()
         return
     endif
@@ -279,8 +279,28 @@ function! s:handle_rename_prepare(server, last_command_id, type, data) abort
         call lsp#utils#error('Failed to retrieve '. a:type . ' for ' . a:server . ': ' . lsp#client#error_message(a:data['response']))
         return
     endif
+    let l:result = a:data['response']['result']
 
-    let l:range = a:data['response']['result']
+    " Check response: null.
+    if empty(l:result)
+        echo 'The ' . a:server . ' returns for ' . a:type . ' (The rename request may be invalid at the given position).'
+        return
+    endif
+
+    " Check response: { defaultBehavior: boolean }.
+    if has_key(l:result, 'defaultBehavior')
+        call timer_start(1, {x->s:rename(a:server, input('new name: ', a:cword), a:position)})
+        return
+    endif
+
+    " Check response: { placeholder: string }
+    if has_key(l:result, 'placeholder') && !empty(l:result['placeholder'])
+        call timer_start(1, {x->s:rename(a:server, input('new name: ', a:cword), a:position)})
+        return
+    endif
+
+    " Check response: { range: Range } | Range
+    let l:range = get(l:result, 'range', l:result)
     let l:lines = getline(1, '$')
     let [l:start_line, l:start_col] = lsp#utils#position#lsp_to_vim('%', l:range['start'])
     let [l:end_line, l:end_col] = lsp#utils#position#lsp_to_vim('%', l:range['end'])
@@ -331,16 +351,147 @@ function! s:handle_text_edit(server, last_command_id, type, data) abort
     redraw | echo 'Document formatted'
 endfunction
 
-function! lsp#ui#vim#code_action() abort
-    call lsp#ui#vim#code_action#do({
+function! lsp#ui#vim#code_action(opts) abort
+    call lsp#ui#vim#code_action#do(extend({
         \   'sync': v:false,
         \   'selection': v:false,
         \   'query': '',
-        \ })
+        \ }, a:opts))
 endfunction
 
 function! lsp#ui#vim#code_lens() abort
     call lsp#ui#vim#code_lens#do({
         \   'sync': v:false,
         \ })
+endfunction
+
+function! lsp#ui#vim#add_tree_call_hierarchy_incoming() abort
+    let l:ctx = { 'add_tree': v:true }
+    call lsp#ui#vim#call_hierarchy_incoming(l:ctx)
+endfunction
+
+function! lsp#ui#vim#call_hierarchy_incoming(ctx) abort
+    let l:ctx = extend({ 'method': 'incomingCalls', 'key': 'from' }, a:ctx)
+    call s:prepare_call_hierarchy(l:ctx)
+endfunction
+
+function! lsp#ui#vim#call_hierarchy_outgoing() abort
+    let l:ctx = { 'method': 'outgoingCalls', 'key': 'to' }
+    call s:prepare_call_hierarchy(l:ctx)
+endfunction
+
+function! s:prepare_call_hierarchy(ctx) abort
+    let l:servers = filter(lsp#get_allowed_servers(), 'lsp#capabilities#has_call_hierarchy_provider(v:val)')
+    let l:command_id = lsp#_new_command()
+
+    let l:ctx = extend({ 'counter': len(l:servers), 'list':[], 'last_command_id': l:command_id }, a:ctx)
+    if len(l:servers) == 0
+        call s:not_supported('Retrieving call hierarchy')
+        return
+    endif
+
+    for l:server in l:servers
+        call lsp#send_request(l:server, {
+            \ 'method': 'textDocument/prepareCallHierarchy',
+            \ 'params': {
+            \   'textDocument': lsp#get_text_document_identifier(),
+            \   'position': lsp#get_position(),
+            \ },
+            \ 'on_notification': function('s:handle_prepare_call_hierarchy', [l:ctx, l:server, 'prepare_call_hierarchy']),
+            \ })
+    endfor
+
+    echo 'Preparing call hierarchy ...'
+endfunction
+
+function! s:handle_prepare_call_hierarchy(ctx, server, type, data) abort
+    if a:ctx['last_command_id'] != lsp#_last_command()
+        return
+    endif
+
+    if lsp#client#is_error(a:data['response']) || !has_key(a:data['response'], 'result')
+        call lsp#utils#error('Failed to '. a:type . ' for ' . a:server . ': ' . lsp#client#error_message(a:data['response']))
+        return
+    endif
+    if empty(a:data['response']['result'])
+        call lsp#utils#warning('Failed to '. a:type . ' for ' . a:server . ': ' . lsp#client#error_message(a:data['response']))
+        return
+    endif
+
+    for l:item in a:data['response']['result']
+        call s:call_hierarchy(a:ctx, a:server, l:item)
+    endfor
+endfunction
+
+function! s:call_hierarchy(ctx, server, item) abort
+    call lsp#send_request(a:server, {
+        \ 'method': 'callHierarchy/' . a:ctx['method'],
+        \ 'params': {
+        \   'item': a:item,
+        \ },
+        \ 'on_notification': function('s:handle_call_hierarchy', [a:ctx, a:server, 'call_hierarchy']),
+        \ })
+endfunction
+
+function! s:handle_call_hierarchy(ctx, server, type, data) abort
+    if a:ctx['last_command_id'] != lsp#_last_command()
+        return
+    endif
+
+    let a:ctx['counter'] = a:ctx['counter'] - 1
+
+    if lsp#client#is_error(a:data['response']) || !has_key(a:data['response'], 'result')
+        call lsp#utils#error('Failed to retrieve '. a:type . ' for ' . a:server . ': ' . lsp#client#error_message(a:data['response']))
+    elseif a:data['response']['result'] isnot v:null
+        for l:item in a:data['response']['result']
+            let l:loc = s:hierarchy_item_to_vim(l:item[a:ctx['key']], a:server)
+            if l:loc isnot v:null
+                let a:ctx['list'] += [l:loc]
+            endif
+        endfor
+    endif
+
+    if a:ctx['counter'] == 0
+        if empty(a:ctx['list'])
+            call lsp#utils#error('No ' . a:type .' found')
+        else
+            call lsp#utils#tagstack#_update()
+            if get(a:ctx, 'add_tree', v:false)
+                let l:qf = getqflist({'idx' : 0, 'items': []})
+                let l:pos = l:qf.idx
+                let l:parent = l:qf.items
+                let l:level = count(l:parent[l:pos-1].text, g:lsp_tree_incoming_prefix)
+                let a:ctx['list'] = extend(l:parent, map(a:ctx['list'], 'extend(v:val, {"text": repeat("' . g:lsp_tree_incoming_prefix . '", l:level+1) . v:val.text})'), l:pos)
+            endif
+            call setqflist([])
+            call setqflist(a:ctx['list'])
+            echo 'Retrieved ' . a:type
+            botright copen
+            if get(a:ctx, 'add_tree', v:false)
+                " move the cursor to the newly added item
+                execute l:pos + 1
+            endif
+        endif
+    endif
+endfunction
+
+function! s:hierarchy_item_to_vim(item, server) abort
+    let l:uri = a:item['uri']
+    if !lsp#utils#is_file_uri(l:uri)
+        return v:null
+    endif
+
+    let l:path = lsp#utils#uri_to_path(l:uri)
+    let [l:line, l:col] = lsp#utils#position#lsp_to_vim(l:path, a:item['range']['start'])
+    let l:text = '[' . lsp#ui#vim#utils#_get_symbol_text_from_kind(a:server, a:item['kind']) . '] ' . a:item['name']
+    if has_key(a:item, 'detail')
+        let l:text .= ": " . a:item['detail']
+    endif
+
+    return {
+        \ 'filename': l:path,
+        \ 'lnum': l:line,
+        \ 'col': l:col,
+        \ 'text': l:text,
+        \ }
 endfunction

@@ -1,4 +1,4 @@
-" https://github.com/prabirshrestha/callbag.vim#62a31fd03dfceb0e94a19295a1f6d3d0f2a954ed
+" https://github.com/prabirshrestha/callbag.vim#82f96a7d97342fbf0286e6578b65a60f2bc1ce33
 "    :CallbagEmbed path=autoload/lsp/callbag.vim namespace=lsp#callbag
 
 let s:undefined_token = '__callbag_undefined__'
@@ -467,7 +467,7 @@ function! lsp#callbag#fromEvent(events, ...) abort
     if a:0 > 0
         let l:data['augroup'] = a:1
     else
-        let l:data['augroup'] = '__callbag_fromEvent_prefix_' + s:event_prefix_index + '__'
+        let l:data['augroup'] = '__callbag_fromEvent_prefix_' . s:event_prefix_index . '__'
         let s:event_prefix_index = s:event_prefix_index + 1
     endif
     return function('s:fromEventFactory', [l:data])
@@ -1355,6 +1355,7 @@ endfunction
 function! s:shareTalkbackCallback(data, sink, t, d) abort
     if a:t == 2
         let l:i = 0
+        let l:found = 0
         while l:i < len(a:data['sinks'])
             if a:data['sinks'][l:i] == a:sink
                 let l:found = 1

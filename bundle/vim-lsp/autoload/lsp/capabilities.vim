@@ -33,6 +33,22 @@ function! lsp#capabilities#has_rename_prepare_provider(server_name) abort
     return s:has_provider(a:server_name, 'renameProvider', 'prepareProvider')
 endfunction
 
+function! lsp#capabilities#has_workspace_folders_change_notifications(server_name) abort
+    let l:capabilities = lsp#get_server_capabilities(a:server_name)
+    if type(l:capabilities) == type({}) && !empty(l:capabilities)
+        let l:workspace = get(l:capabilities, 'workspace', {})
+        if type(l:workspace) == type({}) && !empty(l:workspace)
+            let l:workspace_folders = get(l:workspace, 'workspaceFolders', {})
+            if type(l:workspace_folders) == type({}) && !empty(l:workspace_folders)
+                if get(l:workspace_folders, 'supported', v:false) && get(l:workspace_folders, 'changeNotifications', '') ==# 'workspace/didChangeWorkspaceFolders'
+                    return v:true
+                endif
+            endif
+        endif
+    endif
+    return v:false
+endfunction
+
 function! lsp#capabilities#has_document_formatting_provider(server_name) abort
     return s:has_provider(a:server_name, 'documentFormattingProvider')
 endfunction
@@ -89,26 +105,12 @@ function! lsp#capabilities#has_folding_range_provider(server_name) abort
     return s:has_provider(a:server_name, 'foldingRangeProvider')
 endfunction
 
-function! lsp#capabilities#has_semantic_highlight(server_name) abort
-    let l:capabilities = lsp#get_server_capabilities(a:server_name)
+function! lsp#capabilities#has_call_hierarchy_provider(server_name) abort
+    return s:has_provider(a:server_name, 'callHierarchyProvider')
+endfunction
 
-    if empty(l:capabilities) || type(l:capabilities) != type({}) || !has_key(l:capabilities, 'semanticHighlighting')
-        return 0
-    endif
-
-    let l:semantic_hl = l:capabilities['semanticHighlighting']
-
-    if type(l:semantic_hl) != type({}) || !has_key(l:semantic_hl, 'scopes')
-        return 0
-    endif
-
-    let l:scopes = l:semantic_hl['scopes']
-
-    if type(l:scopes) != type([]) || empty(l:scopes)
-        return 0
-    endif
-
-    return 1
+function! lsp#capabilities#has_semantic_tokens(server_name) abort
+    return s:has_provider(a:server_name, 'semanticTokensProvider')
 endfunction
 
 " [supports_did_save (boolean), { 'includeText': boolean }]
@@ -187,3 +189,10 @@ function! lsp#capabilities#get_code_action_kinds(server_name) abort
     return []
 endfunction
 
+function! lsp#capabilities#has_completion_resolve_provider(server_name) abort
+    return s:has_provider(a:server_name, 'completionProvider', 'resolveProvider')
+endfunction
+
+function! lsp#capabilities#has_inlay_hint_provider(server_name) abort
+    return s:has_provider(a:server_name, 'inlayHintProvider')
+endfunction

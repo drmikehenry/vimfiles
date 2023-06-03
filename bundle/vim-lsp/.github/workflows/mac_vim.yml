@@ -1,0 +1,58 @@
+name: mac_vim
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  VIM_LSP_GO_VERSION: '1.17'
+  VIM_LSP_GOPLS_VERSION: '0.7.3'
+  VIM_LSP_GOPLS_CACHE_VER: 1
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install MacVim
+        shell: bash
+        run: brew install macvim
+      - name: Download test runner
+        uses: actions/checkout@v3
+        with:
+          repository: thinca/vim-themis
+          path: ./vim-themis
+          ref: v1.5.5
+      - name: Cache gopls
+        id: cache-gopls
+        uses: actions/cache@v3
+        with:
+          path: bin/gopls
+          key: ${{ runner.os }}-${{ env.VIM_LSP_GO_VERSION }}-${{ env.VIM_LSP_GOPLS_VERSION }}-${{ env.VIM_LSP_GOPLS_CACHE_VER }}-gopls
+      - name: Install Go for gopls
+        if: steps.cache-gopls.outputs.cache-hit != 'true'
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.VIM_LSP_GO_VERSION }}
+      - name: Install gopls
+        if: steps.cache-gopls.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          go install golang.org/x/tools/gopls@v${{ env.VIM_LSP_GOPLS_VERSION }}
+          gopls version
+          mkdir bin
+          mv "$(which gopls)" ./bin/
+        env:
+          GO111MODULE: 'on'
+      - name: Run tests
+        shell: bash
+        run: |
+          export PATH=./vim-themis/bin:$PATH
+          export PATH=./bin:$PATH
+          export THEMIS_VIM=vim
+          vim --version
+          themis

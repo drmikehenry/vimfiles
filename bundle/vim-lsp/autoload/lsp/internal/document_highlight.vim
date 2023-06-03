@@ -12,7 +12,7 @@ function! lsp#internal#document_highlight#_enable() abort
 
     " Note:
     " - update highlight references when CusorMoved or CursorHold
-    " - clear highlights when InsertEnter of BufLeave
+    " - clear highlights when InsertEnter or BufLeave
     " - debounce highlight requests
     " - automatically switch to latest highlight request via switchMap()
     " - cancel highlight request via takeUntil() when BufLeave
@@ -183,19 +183,17 @@ function! s:in_reference(reference_list) abort
 endfunction
 
 function! s:init_reference_highlight(buf) abort
-    if !empty(getbufvar(a:buf, 'lsp_did_reference_setup'))
-        return
-    endif
-
     if s:use_vim_textprops
-        call prop_type_add('vim-lsp-reference-highlight', {
+        let l:props = {
             \   'bufnr': a:buf,
             \   'highlight': 'lspReference',
-            \   'combine': v:true
-            \ })
+            \   'combine': v:true,
+            \   'priority': lsp#internal#textprop#priority('document_highlight')
+            \ }
+        if prop_type_get('vim-lsp-reference-highlight', { 'bufnr': a:buf }) == {}
+            call prop_type_add('vim-lsp-reference-highlight', l:props)
+        endif
     endif
-
-    call setbufvar(a:buf, 'lsp_did_reference_setup', 1)
 endfunction
 
 " Cyclically move between references by `offset` occurrences.

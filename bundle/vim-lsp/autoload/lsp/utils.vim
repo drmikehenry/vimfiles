@@ -1,5 +1,15 @@
+let s:has_lua = has('nvim-0.4.0') || (has('lua') && has('patch-8.2.0775'))
+function! lsp#utils#has_lua() abort
+    return s:has_lua
+endfunction
+
+let s:has_native_lsp_client = !has('nvim') && has('patch-8.2.4780')
+function! lsp#utils#has_native_lsp_client() abort
+    return s:has_native_lsp_client
+endfunction
+
 let s:has_virtual_text = exists('*nvim_buf_set_virtual_text') && exists('*nvim_create_namespace')
-function! lsp#utils#_has_virtual_text() abort
+function! lsp#utils#_has_nvim_virtual_text() abort
     return s:has_virtual_text
 endfunction
 
@@ -8,7 +18,7 @@ function! lsp#utils#_has_signs() abort
     return s:has_signs
 endfunction
 
-let s:has_nvim_buf_highlight = exists('*nvim_buf_add_highlight')
+let s:has_nvim_buf_highlight = exists('*nvim_buf_add_highlight') && has('nvim')
 function! lsp#utils#_has_nvim_buf_highlight() abort
     return s:has_nvim_buf_highlight
 endfunction
@@ -19,9 +29,24 @@ function! lsp#utils#_has_textprops() abort
     return s:has_textprops
 endfunction
 
+let s:has_vim9textprops = exists('*prop_add') && has('patch-9.0.0178')
+function! lsp#utils#_has_vim_virtual_text() abort
+    return s:has_vim9textprops
+endfunction
+
+let s:has_prop_remove_types = exists('*prop_remove') && has('patch-9.0.0233')
+function! lsp#utils#_has_prop_remove_types() abort
+    return s:has_prop_remove_types
+endfunction
+
 let s:has_higlights = has('nvim') ? lsp#utils#_has_nvim_buf_highlight() : lsp#utils#_has_textprops()
 function! lsp#utils#_has_highlights() abort
     return s:has_higlights
+endfunction
+
+let s:has_popup_menu = exists('*popup_menu')
+function! lsp#utils#_has_popup_menu() abort
+    return s:has_popup_menu
 endfunction
 
 function! lsp#utils#is_file_uri(uri) abort
@@ -56,7 +81,7 @@ function! s:encode_uri(path, start_pos_encode, default_prefix) abort
 
     for l:i in range(a:start_pos_encode, len(l:path) - 1)
         " Don't encode '/' here, `path` is expected to be a valid path.
-        if l:path[l:i] =~# '^[a-zA-Z0-9_.~/-]$'
+        if l:path[l:i] =~# '^[a-zA-Z0-9_.~/@-]$'
             let l:result .= l:path[l:i]
         else
             let l:result .= s:urlencode_char(l:path[l:i])
@@ -66,39 +91,77 @@ function! s:encode_uri(path, start_pos_encode, default_prefix) abort
     return l:prefix . l:result
 endfunction
 
-if has('win32') || has('win64')
+let s:path_to_uri_cache = {}
+if has('win32') || has('win64') || has('win32unix')
     function! lsp#utils#path_to_uri(path) abort
+        if has_key(s:path_to_uri_cache, a:path)
+            return s:path_to_uri_cache[a:path]
+        endif
+
         if empty(a:path) || lsp#utils#is_remote_uri(a:path)
-            return a:path
+            let s:path_to_uri_cache[a:path] = a:path
+            return s:path_to_uri_cache[a:path]
         else
+            " Transform cygwin paths to windows paths
+            let l:path = a:path
+            if has('win32unix')
+                let l:path = substitute(a:path, '\c^/\([a-z]\)/', '\U\1:/', '')
+            endif
+
             " You must not encode the volume information on the path if
             " present
-            let l:end_pos_volume = matchstrpos(a:path, '\c[A-Z]:')[2]
+            let l:end_pos_volume = matchstrpos(l:path, '\c[A-Z]:')[2]
 
             if l:end_pos_volume == -1
                 let l:end_pos_volume = 0
             endif
 
-            return s:encode_uri(substitute(a:path, '\', '/', 'g'), l:end_pos_volume, 'file:///')
+            let s:path_to_uri_cache[l:path] = s:encode_uri(substitute(l:path, '\', '/', 'g'), l:end_pos_volume, 'file:///')
+            return s:path_to_uri_cache[l:path]
         endif
     endfunction
 else
     function! lsp#utils#path_to_uri(path) abort
+        if has_key(s:path_to_uri_cache, a:path)
+            return s:path_to_uri_cache[a:path]
+        endif
+
         if empty(a:path) || lsp#utils#is_remote_uri(a:path)
-            return a:path
+            let s:path_to_uri_cache[a:path] = a:path
+            return s:path_to_uri_cache[a:path]
         else
-            return s:encode_uri(a:path, 0, 'file://')
+            let s:path_to_uri_cache[a:path] = s:encode_uri(a:path, 0, 'file://')
+            return s:path_to_uri_cache[a:path]
         endif
     endfunction
 endif
 
-if has('win32') || has('win64')
+let s:uri_to_path_cache = {}
+if has('win32') || has('win64') || has('win32unix')
     function! lsp#utils#uri_to_path(uri) abort
-        return substitute(s:decode_uri(a:uri[len('file:///'):]), '/', '\\', 'g')
+        if has_key(s:uri_to_path_cache, a:uri)
+            return s:uri_to_path_cache[a:uri]
+        endif
+
+        let l:path = substitute(s:decode_uri(a:uri[len('file:///'):]), '/', '\\', 'g')
+
+        " Transform windows paths to cygwin paths
+        if has('win32unix')
+            let l:path = substitute(l:path, '\c^\([A-Z]\):\\', '/\l\1/', '')
+            let l:path = substitute(l:path, '\\', '/', 'g')
+        endif
+
+        let s:uri_to_path_cache[a:uri] = l:path
+        return s:uri_to_path_cache[a:uri]
     endfunction
 else
     function! lsp#utils#uri_to_path(uri) abort
-        return s:decode_uri(a:uri[len('file://'):])
+        if has_key(s:uri_to_path_cache, a:uri)
+            return s:uri_to_path_cache[a:uri]
+        endif
+
+        let s:uri_to_path_cache[a:uri] = s:decode_uri(a:uri[len('file://'):])
+        return s:uri_to_path_cache[a:uri]
     endfunction
 endif
 
@@ -124,12 +187,17 @@ function! lsp#utils#get_buffer_path(...) abort
 endfunction
 
 function! lsp#utils#get_buffer_uri(...) abort
-    return lsp#utils#path_to_uri(expand((a:0 > 0 ? '#' . a:1 : '%') . ':p'))
+    let l:name = a:0 > 0 ? bufname(a:1) : expand('%')
+    if empty(l:name)
+        let l:nr = a:0 > 0 ? a:1 : bufnr('%')
+        let l:name = printf('%s/__NO_NAME_%d__', getcwd(), l:nr)
+    endif
+    return lsp#utils#path_to_uri(fnamemodify(l:name, ':p'))
 endfunction
 
 " Find a nearest to a `path` parent directory `directoryname` by traversing the filesystem upwards
 function! lsp#utils#find_nearest_parent_directory(path, directoryname) abort
-    let l:relative_path = finddir(a:directoryname, a:path . ';')
+    let l:relative_path = finddir(a:directoryname, fnameescape(a:path) . ';')
 
     if !empty(l:relative_path)
         return fnamemodify(l:relative_path, ':p')
@@ -140,7 +208,7 @@ endfunction
 
 " Find a nearest to a `path` parent filename `filename` by traversing the filesystem upwards
 function! lsp#utils#find_nearest_parent_file(path, filename) abort
-    let l:relative_path = findfile(a:filename, a:path . ';')
+    let l:relative_path = findfile(a:filename, fnameescape(a:path) . ';')
 
     if !empty(l:relative_path)
         return fnamemodify(l:relative_path, ':p')
@@ -224,6 +292,13 @@ function! lsp#utils#error(msg) abort
     echom a:msg
     echohl NONE
 endfunction
+
+function! lsp#utils#warning(msg) abort
+    echohl WarningMsg
+    echom a:msg
+    echohl NONE
+endfunction
+
 
 function! lsp#utils#echo_with_truncation(msg) abort
     let l:msg = a:msg
@@ -398,6 +473,11 @@ function! lsp#utils#parse_command_options(params) abort
     return l:result
 endfunction
 
+function! lsp#utils#is_large_window(winid) abort
+    let l:buffer_size = line2byte(line('$', a:winid))
+    return g:lsp_max_buffer_size >= 0 && l:buffer_size >= g:lsp_max_buffer_size
+endfunction
+
 " polyfill for the neovim wait function
 if exists('*wait')
     function! lsp#utils#_wait(timeout, condition, ...) abort
@@ -437,3 +517,7 @@ else
         endtry
     endfunction
 endif
+
+function! lsp#utils#iteratable(list) abort
+    return type(a:list) !=# v:t_list ? [] : a:list
+endfunction

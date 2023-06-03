@@ -1,10 +1,31 @@
-" https://github.com/prabirshrestha/quickpick.vim#37e29b28f65d3ae344ec8eaf7ce2d5f87e2f4b90
+" https://github.com/prabirshrestha/quickpick.vim#968f00787c1a118228aee869351e754bec555298
 "    :QuickpickEmbed path=autoload/lsp/internal/ui/quickpick.vim namespace=lsp#internal#ui#quickpick prefix=lsp-quickpick
 
 let s:has_timer = exists('*timer_start') && exists('*timer_stop')
 let s:has_matchfuzzy = exists('*matchfuzzy')
 let s:has_matchfuzzypos = exists('*matchfuzzypos')
 let s:has_proptype = exists('*prop_type_add') && exists('*prop_type_delete')
+
+"
+" is_floating
+"
+if has('nvim')
+  function! s:is_floating(winid) abort
+    if !s:win_exists(a:winid)
+      return 0
+    endif
+    let l:config = nvim_win_get_config(a:winid)
+    return empty(l:config) || !empty(get(l:config, 'relative', ''))
+  endfunction
+else
+  function! s:is_floating(winid) abort
+    return s:win_exists(a:winid) && win_id2win(a:winid) == 0
+  endfunction
+endif
+
+function! s:win_exists(winid) abort
+  return winheight(a:winid) != -1
+endfunction
 
 function! lsp#internal#ui#quickpick#open(opt) abort
   call lsp#internal#ui#quickpick#close() " hide existing picker if exists
@@ -31,9 +52,10 @@ function! lsp#internal#ui#quickpick#open(opt) abort
 
   let s:state['bufnr'] = bufnr('%')
   let s:state['winid'] = win_getid()
+  let s:state['wininfo'] = getwininfo()
 
   " create result buffer
-  exe printf('keepalt botright 1new %s', s:state['filetype'])
+  exe printf('keepalt botright 3new %s', s:state['filetype'])
   let s:state['resultsbufnr'] = bufnr('%')
   let s:state['resultswinid'] = win_getid()
   if s:has_proptype
@@ -66,11 +88,11 @@ function! lsp#internal#ui#quickpick#open(opt) abort
   inoremap <buffer><silent> <Plug>(lsp-quickpick-cancel) <ESC>:<C-u>call <SID>on_cancel()<CR>
   nnoremap <buffer><silent> <Plug>(lsp-quickpick-cancel) :<C-u>call <SID>on_cancel()<CR>
 
-  inoremap <buffer><silent> <Plug>(lsp-quickpick-move-next) <ESC>:<C-u>call <SID>on_move_next(1)<CR>
-  nnoremap <buffer><silent> <Plug>(lsp-quickpick-move-next) :<C-u>call <SID>on_move_next(0)<CR>
+  inoremap <buffer><silent> <Plug>(lsp-quickpick-move-next) <C-o>:<C-u>call <SID>on_move_next()<CR>
+  nnoremap <buffer><silent> <Plug>(lsp-quickpick-move-next) :<C-u>call <SID>on_move_next()<CR>
 
-  inoremap <buffer><silent> <Plug>(lsp-quickpick-move-previous) <ESC>:<C-u>call <SID>on_move_previous(1)<CR>
-  nnoremap <buffer><silent> <Plug>(lsp-quickpick-move-previous) :<C-u>call <SID>on_move_previous(0)<CR>
+  inoremap <buffer><silent> <Plug>(lsp-quickpick-move-previous) <C-o>:<C-u>call <SID>on_move_previous()<CR>
+  nnoremap <buffer><silent> <Plug>(lsp-quickpick-move-previous) :<C-u>call <SID>on_move_previous()<CR>
 
   exec printf('setlocal filetype=' . s:state['promptfiletype'])
 
@@ -150,7 +172,7 @@ function! lsp#internal#ui#quickpick#close() abort
 
   call lsp#internal#ui#quickpick#busy(0)
 
-  call win_gotoid(s:state['bufnr'])
+  call win_gotoid(s:state['winid'])
   call s:notify('close', { 'bufnr': s:state['bufnr'], 'winid': s:state['winid'], 'resultsbufnr': s:state['resultsbufnr'], 'resultswinid': s:state['winid'] })
 
   augroup lsp#internal#ui#quickpick
@@ -159,10 +181,40 @@ function! lsp#internal#ui#quickpick#close() abort
 
   exe 'silent! bunload! ' . s:state['promptbufnr']
   exe 'silent! bunload! ' . s:state['resultsbufnr']
+  call s:restore_windows()
 
   let s:inputecharpre = 0
 
   unlet s:state
+endfunction
+
+function! s:restore_windows() abort
+  let [l:tabnr, l:_] = win_id2tabwin(s:state['winid'])
+  if l:tabnr == 0
+    return
+  endif
+
+  let l:Resizable = {_, info ->
+        \ info.tabnr == l:tabnr &&
+        \ s:win_exists(info.winid) &&
+        \ !s:is_floating(info.winid)
+        \ }
+  let l:wins_to_resize = sort(filter(s:state['wininfo'], l:Resizable), {l, r -> l.winnr - r.winnr})
+  let l:open_winids_to_resize = map(filter(getwininfo(), l:Resizable), {_, info -> info.winid})
+
+  let l:resize_cmd = ''
+  for l:info in l:wins_to_resize
+    if index(l:open_winids_to_resize, l:info.winid) == -1
+      return
+    endif
+
+    let l:resize_cmd .= printf('%dresize %d | vert %dresize %d |', l:info.winnr, l:info.height, l:info.winnr, l:info.width)
+  endfor
+
+  " winrestcmd repeats :resize commands twice after patch-8.2.2631.
+  " To simulate this behavior, execute the :resize commands twice.
+  " see https://github.com/vim/vim/issues/7988
+  exe 'silent! ' . l:resize_cmd . l:resize_cmd
 endfunction
 
 function! lsp#internal#ui#quickpick#items(items) abort
@@ -190,6 +242,14 @@ function! lsp#internal#ui#quickpick#busy(busy) abort
   endif
 endfunction
 
+function! lsp#internal#ui#quickpick#results_winid() abort
+  if exists('s:state')
+    return s:state['resultswinid']
+  else
+    return 0
+  endif
+endfunction
+
 function! s:busy_tick(...) abort
   let s:state['busyframe'] = s:state['busyframe'] + 1
   if s:state['busyframe'] >= len(s:state['busyframes'])
@@ -201,7 +261,7 @@ function! s:busy_tick(...) abort
 endfunction
 
 function! s:update_items() abort
-  call s:win_execute(s:state['resultswinid'], 'silent! %delete')
+  call s:win_execute(s:state['resultswinid'], 'silent! %delete _')
 
   let s:state['highlights'] = []
 
@@ -268,10 +328,11 @@ endfunction
 function! s:on_accept() abort
   if win_gotoid(s:state['resultswinid'])
     let l:index = line('.') - 1 " line is 1 index, list is 0 index
-    if l:index < 0
+    let l:fitems = s:state['fitems']
+    if l:index < 0 || len(l:fitems) <= l:index
       let l:items = []
     else
-      let l:items = [s:state['fitems'][l:index]]
+      let l:items = [l:fitems[l:index]]
     endif
     call win_gotoid(s:state['winid'])
     call s:notify('accept', { 'items': l:items })
@@ -284,21 +345,15 @@ function! s:on_cancel() abort
   call lsp#internal#ui#quickpick#close()
 endfunction
 
-function! s:on_move_next(insertmode) abort
+function! s:on_move_next() abort
   let l:col = col('.')
   call s:win_execute(s:state['resultswinid'], 'normal! j')
-  if a:insertmode
-    call s:win_execute(s:state['promptwinid'], 'startinsert | call setpos(".", [0, 1, ' . (l:col + 1) .', 1])')
-  endif
   call s:notify_selection()
 endfunction
 
-function! s:on_move_previous(insertmode) abort
+function! s:on_move_previous() abort
   let l:col = col('.')
   call s:win_execute(s:state['resultswinid'], 'normal! k')
-  if a:insertmode
-    call s:win_execute(s:state['promptwinid'], 'startinsert | call setpos(".", [0, 1, ' . (l:col + 1) .', 1])')
-  endif
   call s:notify_selection()
 endfunction
 
@@ -323,9 +378,9 @@ function! s:notify_selection() abort
     \ 'resultswinid': s:state['resultswinid'],
     \ 'items': l:items,
     \ }
-  call win_gotoid(s:state['winid'])
+  noautocmd call win_gotoid(s:state['winid'])
   call s:notify('selection', l:data)
-  call win_gotoid(l:original_winid)
+  noautocmd call win_gotoid(l:original_winid)
 endfunction
 
 function! s:on_inputchanged() abort
@@ -399,7 +454,7 @@ if exists('*trim')
   endfunction
 else
   function! s:trim(str) abort
-    return substitute(a:string, '^\s*\|\s*$', '', 'g')
+    return substitute(a:str, '^\s*\|\s*$', '', 'g')
   endfunction
 endif
 

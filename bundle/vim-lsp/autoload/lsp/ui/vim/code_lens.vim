@@ -71,21 +71,26 @@ function! s:chooseCodeLens(items, bufnr) abort
     if empty(a:items)
         return lsp#callbag#throwError('No codelens found')
     endif
-    if g:lsp_experimental_quickpick_ui
-        return lsp#callbag#create(function('s:quickpick_open', [a:items, a:bufnr]))
-    else
-        let l:index = inputlist(map(copy(a:items), {i, value ->
-            \   printf("%s - [%s] %s\t| L%s:%s", i + 1, value['server'], value['codelens']['command']['title'],
-            \   lsp#utils#position#lsp_line_to_vim(a:bufnr, value['codelens']['range']['start']),
-            \   getbufline(a:bufnr, lsp#utils#position#lsp_line_to_vim(a:bufnr, value['codelens']['range']['start']))[0][:50])
-            \ }))
-        if l:index > 0 && l:index <= len(a:items)
-            let l:selected = a:items[l:index - 1]
-            return lsp#callbag#of(l:selected)
-        else
-            return lsp#callbag#empty()
-        endif
+    return lsp#callbag#create(function('s:quickpick_open', [a:items, a:bufnr]))
+endfunction
+
+function! lsp#ui#vim#code_lens#_get_subtitle(item) abort
+    " Since element of arguments property of Command interface is defined as any in LSP spec, it is
+    " up to the language server implementation.
+    " Currently this only impacts rust-analyzer. See #1118 for more details.
+
+    if !has_key(a:item['codelens']['command'], 'arguments')
+        return ''
     endif
+
+    let l:arguments = a:item['codelens']['command']['arguments']
+    for l:argument in l:arguments
+        if type(l:argument) != type({}) || !has_key(l:argument, 'label')
+            return ''
+        endif
+    endfor
+
+    return ': ' . join(map(copy(l:arguments), 'v:val["label"]'), ' > ')
 endfunction
 
 function! s:quickpick_open(items, bufnr, next, error, complete) abort
@@ -95,9 +100,10 @@ function! s:quickpick_open(items, bufnr, next, error, complete) abort
 
     let l:items = []
     for l:item in a:items
-        let l:title = printf("[%s] %s\t| L%s:%s",
+        let l:title = printf("[%s] %s%s\t| L%s:%s",
             \ l:item['server'],
             \ l:item['codelens']['command']['title'],
+            \ lsp#ui#vim#code_lens#_get_subtitle(l:item),
             \ lsp#utils#position#lsp_line_to_vim(a:bufnr, l:item['codelens']['range']['start']),
             \ getbufline(a:bufnr, lsp#utils#position#lsp_line_to_vim(a:bufnr, l:item['codelens']['range']['start']))[0])
         call add(l:items, { 'title': l:title, 'item': l:item })
@@ -119,7 +125,10 @@ endfunction
 
 function! s:quickpick_accept(next, error, complete, data, ...) abort
     call lsp#internal#ui#quickpick#close()
-    call a:next(a:data['items'][0]['item'])
+    let l:items = a:data['items']
+    if len(l:items) > 0
+        call a:next(l:items[0]['item'])
+    endif
     call a:complete()
 endfunction
 

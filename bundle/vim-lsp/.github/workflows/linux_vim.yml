@@ -8,14 +8,23 @@ on:
     branches:
       - master
 
+env:
+  VIM_LSP_GO_VERSION: '1.17'
+  VIM_LSP_GOPLS_VERSION: '0.7.3'
+  VIM_LSP_GOPLS_CACHE_VER: 1
+
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        name: [vim-v82-x64, vim-v81-x64]
+        name: [vim-v90-x64, vim-v82-x64, vim-v81-x64]
         include:
+          - name: vim-v90-x64
+            os: ubuntu-latest
+            vim_version: 9.0.0250
+            glibc_version: 2.15
           - name: vim-v82-x64
             os: ubuntu-latest
             vim_version: 8.2.0813
@@ -26,29 +35,54 @@ jobs:
             glibc_version: 2.15
     runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@v1
+      - name: Install dependencies
+        shell: bash
+        run: |
+          # https://github.com/Zettlr/Zettlr/issues/3517
+          sudo apt-get install libfuse2
+      - uses: actions/checkout@v3
       - name: Download vim
         shell: bash
         run: |
           mkdir -p ~/vim/bin
           curl -L https://github.com/vim/vim-appimage/releases/download/v${{matrix.vim_version}}/GVim-v${{matrix.vim_version}}.glibc${{matrix.glibc_version}}-x86_64.AppImage -o ~/vim/bin/vim
           chmod u+x ~/vim/bin/vim
-      - name: Download language servers
+      - name: Cache gopls
+        id: cache-gopls
+        uses: actions/cache@v3
+        with:
+          path: bin/gopls
+          key: ${{ runner.os }}-${{ env.VIM_LSP_GO_VERSION }}-${{ env.VIM_LSP_GOPLS_VERSION }}-${{ env.VIM_LSP_GOPLS_CACHE_VER }}-gopls
+      - name: Install Go for gopls
+        if: steps.cache-gopls.outputs.cache-hit != 'true'
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.VIM_LSP_GO_VERSION }}
+      - name: Install gopls
+        if: steps.cache-gopls.outputs.cache-hit != 'true'
         shell: bash
         run: |
-          mkdir -p ~/langservers
-          curl -L https://github.com/rust-analyzer/rust-analyzer/releases/download/2020-12-21/rust-analyzer-linux -o ~/langservers/rust-analyzer
-          chmod u+x ~/langservers/rust-analyzer
-          ~/langservers/rust-analyzer --version
+          go install golang.org/x/tools/gopls@v${{ env.VIM_LSP_GOPLS_VERSION }}
+          gopls version
+          mkdir bin
+          mv "$(which gopls)" ./bin/
+        env:
+          GO111MODULE: 'on'
       - name: Download test runner
-        shell: bash
-        run: git clone --depth 1 --branch v1.5.5 --single-branch https://github.com/thinca/vim-themis ~/themis
+        uses: actions/checkout@v3
+        with:
+          repository: thinca/vim-themis
+          path: ./vim-themis
+          ref: v1.5.5
       - name: Run tests
         shell: bash
         run: |
           export PATH=~/vim/bin:$PATH
-          export PATH=~/langservers:$PATH
-          export PATH=~/themis/bin:$PATH
+          export PATH=./vim-themis/bin:$PATH
+          export PATH=./bin:$PATH
           export THEMIS_VIM=vim
-          vim --version
-          themis
+          # https://github.com/project-slippi/Ishiiruka/issues/323
+          # It was needed to detect the actual path of `libgmodule` via `ldconfig -p | grep libg`.
+          LD_PRELOAD=/lib/x86_64-linux-gnu/libgmodule-2.0.so vim --version
+          LD_PRELOAD=/lib/x86_64-linux-gnu/libgmodule-2.0.so themis
+
