@@ -4,6 +4,7 @@
 # **NOTE** This file lives in both ~/bin and ~/.vim/tool.
 ##############################################################################
 
+import os.path
 from pathlib import Path
 import shutil
 import subprocess
@@ -11,7 +12,7 @@ import sys
 import typing as T
 
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 
 def split(args_str: str) -> T.List[str]:
@@ -103,6 +104,67 @@ def launder_args(
         yield arg
 
 
+# (`ttype`, `tag_path_suffix`, `tag_line`)
+Item = T.Tuple[bytes, bytes, bytes]
+
+
+def sort_tags_file(tags_path_in: Path, tags_path_out: Path) -> None:
+    with open(tags_path_in, "rb") as tags_in, open(
+        tags_path_out, "wb"
+    ) as tags_out:
+        c_suffixes = set(
+            b"""
+            .c .h .cpp .cxx .c++ .hh .hxx .hpp .ipp .moc .tcc .inl
+        """.split()
+        )
+        group: T.List[Item] = []
+        cur_tag_name = b""
+
+        def item_key(item: Item) -> int:
+            ttype, tag_path_suffix, _tag_line = item
+            if ttype == b"p" and tag_path_suffix in c_suffixes:
+                # Move C function prototypes later in the `tags` file.
+                return 1
+
+            # Leave other items alone.
+            return 0
+
+        def flush() -> None:
+            if len(group) > 1:
+                group.sort(key=item_key)
+            for _ttype, _tag_path_suffix, tag_line in group:
+                tags_out.write(tag_line)
+            group.clear()
+
+        def pass_bline(tag_line) -> None:
+            flush()
+            tags_out.write(tag_line)
+
+        for tag_line in tags_in:
+            if tag_line.startswith(b"!_"):
+                pass_bline(tag_line)
+                continue
+            parts = tag_line.split(b';"\t')
+            if len(parts) != 2:
+                pass_bline(tag_line)
+                continue
+
+            fields0 = parts[0].split(b"\t")
+            if len(fields0) < 2:
+                pass_bline(tag_line)
+                continue
+
+            tag_name = fields0[0]
+            tag_path_suffix = os.path.splitext(fields0[1])[1]
+            ttype = parts[1].split(b"\t")[0]
+            if tag_name != cur_tag_name:
+                flush()
+                cur_tag_name = tag_name
+            group.append((ttype, tag_path_suffix, tag_line))
+
+        flush()
+
+
 class Config:
     def __init__(self) -> None:
         self.ctags_bin = probe_ctags_bin()
@@ -113,6 +175,7 @@ class Config:
         self.std = False
         self.stdx = False
         self.rg = False
+        self.sort_tags = False
         self.args: T.List[str] = []
 
 
@@ -126,9 +189,15 @@ Help for gentags version {VERSION}
   --std                     Use "standard" ctags arguments
   --stdx                    Use "standard" ctags `--exclude` paths
   --rg                      Use `rg --files | ctags -L -`
+  --sort-tags               Sort `tags` file after generation
 
-With no arguments, `--std --stdx` is implied; additionally, use `--rg` if have
-`.gitignore/.ignore` files and `rg` is detected, and `--recursive` otherwise.
+`--sort-tags` moves C function prototype tags later in the `tags` file so
+function definitions take precedence.  Currently, this assumes the generated
+tags file is the default `tags`.
+
+With no arguments, `--std --stdx --sort-tags` is implied; additionally, use
+`--rg` if have `.gitignore/.ignore` files and `rg` is detected, and
+`--recursive` otherwise.
 """
     )
 
@@ -159,6 +228,8 @@ def parse_args(args: T.List[str]) -> Config:
             config.stdx = True
         elif arg == "--rg":
             config.rg = True
+        elif arg == "--sort-tags":
+            config.sort_tags = True
         else:
             config.args.append(arg)
     config.is_universal = is_universal_ctags(config.ctags_bin)
@@ -170,7 +241,7 @@ def main() -> None:
     rg = shutil.which("rg")
     has_ignore = Path(".gitignore").exists() or Path(".ignore").exists()
     if args == [] or args == ["--show"]:
-        args.extend(["--std", "--stdx"])
+        args.extend(["--std", "--stdx", "--sort-tags"])
         if rg and has_ignore:
             args.append("--rg")
         else:
@@ -204,6 +275,13 @@ def main() -> None:
     )
     ctags_cmd_args = [config.ctags_bin] + config.args
 
+    def sort_tags():
+        if config.sort_tags:
+            orig_tags_path = Path("tags")
+            sorted_tags_path = Path("tags.sorted")
+            sort_tags_file(orig_tags_path, sorted_tags_path)
+            os.rename(sorted_tags_path, orig_tags_path)
+
     if config.show:
         pre = " ".join(rg_cmd_args) + " | " if rg_cmd_args else ""
         sep = " \\\n    "
@@ -213,8 +291,10 @@ def main() -> None:
         assert rg_proc.stdout is not None
         subprocess.run(ctags_cmd_args, stdin=rg_proc.stdout)
         rg_proc.stdout.close()
+        sort_tags()
     else:
         subprocess.run(ctags_cmd_args)
+        sort_tags()
 
 
 if __name__ == "__main__":

@@ -14,6 +14,19 @@ require adjustment of per-user settings.
 
 - Update vim-lsp-ale plugin to version 2021-12-29.
 
+- Update ``tool/gentags`` to sort tags to put C prototypes later in the ``tags``
+  file.  This makes function definitions appear first so that ``:tag`` and
+  ``CTRL-]`` will jump to the definition.  Previously it appeared this would
+  naturally be the case anyway, but it turns out that ``tags`` files sort first
+  on the tag name, then on the filename where the tag is found, then on other
+  fields.  If ``file.c`` contains the tag ``myfunc`` (a function definition,
+  type ``f``) and ``file.h`` contains the tag ``myfunc`` (a function prototype,
+  type ``p``), the definition sorts first because ``file.c`` sorts before
+  ``file.h``; but if the paths are ``inc/file.h`` and ``src/file.c``, the former
+  sorts first (``inc`` comes before ``src``) and the prototype ends up first in
+  the sort order.  Post-sorting ensures that the prototype comes later
+  regardless of the file name.
+
 2023-05-29
 ==========
 
