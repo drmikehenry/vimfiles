@@ -3041,7 +3041,7 @@ Installation:
 VIM-LSP-ALE                                             *notes_vim-lsp-ale*
   Bridge between vim-lsp and ALE                        |vim-lsp-ale|
 
-Version 33 (4ba9a9e) from:
+Version 2021-12-29 (db0f9a8) from:
 https://github.com/rhysd/vim-lsp-ale.git
 
 Installation:

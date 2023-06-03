@@ -1,5 +1,6 @@
 g:lsp_ale_auto_config_ale	vim-lsp-ale.txt	/*g:lsp_ale_auto_config_ale*
 g:lsp_ale_auto_config_vim_lsp	vim-lsp-ale.txt	/*g:lsp_ale_auto_config_vim_lsp*
+g:lsp_ale_auto_enable_linter	vim-lsp-ale.txt	/*g:lsp_ale_auto_enable_linter*
 g:lsp_ale_diagnostics_severity	vim-lsp-ale.txt	/*g:lsp_ale_diagnostics_severity*
 lsp#ale#disable	vim-lsp-ale.txt	/*lsp#ale#disable*
 lsp#ale#enable	vim-lsp-ale.txt	/*lsp#ale#enable*

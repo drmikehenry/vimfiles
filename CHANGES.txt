@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Update vim-lsp plugin to version 2023-05-16.
 
+- Update vim-lsp-ale plugin to version 2021-12-29.
+
 2023-05-29
 ==========
 
