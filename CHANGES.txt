@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-06-30
+==========
+
+- Set ``printoptions`` only if the ``:hardcopy`` feature is available.  Note
+  that Neovim recently removed the ``:hardcopy`` command.  Until a better
+  solution arrives, the suggestion is to use the ``:TOhtml`` command and use a
+  browser to make the actual printout.
+
 2023-06-03
 ==========
 

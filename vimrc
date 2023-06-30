@@ -950,8 +950,11 @@ set history=10000
 " are no outstanding edits in the buffer.
 set autoread
 
-" Setup print options for hardcopy command.
-set printoptions=paper:letter,duplex:off
+" Setup print options for hardcopy command (if available; Neovim has removed the
+" `:hardcopy` functionality).
+if has('&printoptions')
+    set printoptions=paper:letter,duplex:off
+endif
 
 " Enable the [n/m] message for searching.
 set shortmess-=S
