@@ -5621,7 +5621,7 @@ endif
 let g:Unicode_data_directory = expand('$VIMFILES/bundle/unicode')
 
 " Avoid default mappings, then put in just the ones we support.
-let g:Unicode_no_default_mappings = v:true
+let g:Unicode_no_default_mappings = 1
 
 " nmap <F4> <Plug>(MakeDigraph)
 " vmap <F4> <Plug>(MakeDigraph)

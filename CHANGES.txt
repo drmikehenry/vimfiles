@@ -32,6 +32,8 @@ require adjustment of per-user settings.
   detect ``#format rst`` at the start of certain files from an obsolete Wiki
   engine, so this file has been removed.
 
+- Avoid ``v:true`` for Vim 7.4 compatibility.
+
 2023-06-30
 ==========
 
