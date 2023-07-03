@@ -27,6 +27,11 @@ require adjustment of per-user settings.
   ``SpecialKey`` highlighting by default as well.  To separately control these
   features, define both variables explicitly.
 
+- Remove ``~/.vim/scripts.vim``.  Vim uses this file for extended filetype
+  detection.  Neovim no longer supports this.  At present, the only use was to
+  detect ``#format rst`` at the start of certain files from an obsolete Wiki
+  engine, so this file has been removed.
+
 2023-06-30
 ==========
 
