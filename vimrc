@@ -4,6 +4,10 @@
 " Early Setup
 " =============================================================
 
+if !exists('g:UsingNvim')
+    let g:UsingNvim = 0
+endif
+
 " Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
 set nocompatible
 
@@ -5886,6 +5890,14 @@ nmap <silent> <Leader>sv :OneWindow<CR><Plug>VCSVimDiff<C-w>H<C-w>w
 
 " Don't automatically run ``zig fmt``:
 let g:zig_fmt_autosave = 0
+
+" =============================================================
+" Neovim Setup
+" =============================================================
+
+if g:UsingNvim
+:lua require('vimf').setup()
+endif
 
 " =============================================================
 " Language and filetype setup

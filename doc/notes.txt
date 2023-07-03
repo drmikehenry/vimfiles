@@ -636,7 +636,11 @@ General bundle installation instructions:               *bundle_installation*
 - Move to bundle directory: >
 
     cd ~/.vim/bundle
+<
+  May also use Neovim-specific bundle directory: >
 
+    cd ~/.vim/nvim/bundle
+>
 - Move existing bundle (if any) to a backup directory (optional): >
 
     mv bundle-name bundle-name~
@@ -695,7 +699,11 @@ General bundle installation instructions:               *bundle_installation*
 - Process help tags (if any) in Vim: >
 
     vim '+Helptags|q'
+<
+  Use `nvim` instead for Neovim-specific plugin: >
 
+    nvim '+Helptags|q'
+<
 - Force-add any documentation tag files: >
 
     git add -f doc/tag*
