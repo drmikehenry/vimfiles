@@ -21,6 +21,12 @@
     Cecutil - Utilities for Dr. Chip's plugins          |notes_cecutil|
     CloseTag - Close XML and HTML tags automatically    |notes_closetag|
     CMake syntax support                                |notes_cmake|
+    Cmp - Neovim completion engine                      |notes_cmp|
+    Cmp-buffer - Cmp source for buffer words            |notes_cmp-buffer|
+    Cmp-cmdline - Cmp source for Vim's cmdline          |notes_cmp-cmdline|
+    Cmp-nvim-lsp - Cmp source for built-in LSP          |notes_cmp-nvim-lsp|
+    Cmp-nvim-ultisnips - Cmp source for UltiSnips       |notes_cmp-nvim-ultisnips|
+    Cmp-path - Cmp source for filesystem paths          |notes_cmp-path|
     ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
     CPSM - CtrlP matcher in C++ for speed               |notes_cpsm|
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
@@ -50,6 +56,7 @@
     Less - Syntax highlighting for LessCSS              |notes_less|
     Localvimrc - Override settings via local files      |notes_localvimrc|
     LoremIpsum - Generate dummy text                    |notes_loremipsum|
+    LspConfig - Neovim LSP configuration                |notes_lspconfig|
     Lusty Explorer/Juggler - File/buffer switcher       |notes_lusty|
     Man - Vim's built-in support for man pages          |notes_man|
     Markdown - Markdown syntax support                  |notes_markdown|
@@ -58,9 +65,11 @@
     Monokai - A dark colorscheme                        |notes_monokai|
     Moonscript - support for a dialect of Lua           |notes_moonscript|
     Mundo - Visualize your undo tree                    |notes_mundo|
+    Null-LS - Neovim non-LSP language tool support      |notes_null-ls|
     OmniCppComplete - C/C++ Omnicompletion              |notes_omnicppcomplete|
     Pathogen - Runtime path management for bundles      |notes_pathogen|
     Powerline - The ultimate vim statusline utility     |notes_powerline|
+    Plenary - Neovim functions for Telescope            |notes_plenary|
     Project - Managing "projects" of files              |notes_project|
     Quickfix-reflector - edit QuickFix and save changes |notes_quickfix-reflector|
     Rainbow Parentheses - Highlight nested parens       |notes_rainbow-parens|
@@ -82,6 +91,7 @@
     Toml - Support for TOML files                       |notes_toml|
     TagSignature - Balloon signatures for tags          |notes_tagsignature|
     Tcomment - Comment lines in a program               |notes_tcomment|
+    Telescope - Fuzzy finding in Neovim                 |notes_telescope|
     TextObj-Diff - Diff-based text objects              |notes_textobj-diff|
     TextObj-Function - Function-based text objects      |notes_textobj-func|
     TextObj-Indent - Indentation-based text objects     |notes_textobj-indent|
@@ -98,6 +108,7 @@
     VisIncr - Increment visually selected areas         |notes_visincr|
     VisSort - Sort visually selected areas              |notes_vissort|
     VisSwap - Swap visually selected areas              |notes_visswap|
+    WhichKey - Neovim show key bindings                 |notes_whichkey|
     Wombat256i - A dark colorscheme                     |notes_wombat256i|
     Z80 - Support for Z80 assembly language             |notes_z80|
     Zig - Support for Zig language                      |notes_zig|
@@ -965,6 +976,66 @@ Installation:
 - Generally follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
+CMP                                                     *notes_cmp*
+  Neovim completion engine                              |cmp.txt|
+
+Version 2023-06-30 (2743dd9) from:
+https://github.com/hrsh7th/nvim-cmp
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+CMP-BUFFER                                              *notes_cmp-buffer*
+  Cmp source for buffer words
+
+Version 2022-08-10 (3022dbc) from:
+https://github.com/hrsh7th/cmp-buffer
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+CMP-CMDLINE                                             *notes_cmp-cmdline*
+  Cmp source for Vim's cmdline
+
+Version 2023-06-09 (8ee981b) from:
+https://github.com/hrsh7th/cmp-cmdline
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+CMP-NVIM-LSP                                            *notes_cmp-nvim-lsp*
+  Cmp source for built-in LSP                           |cmp-nvim-lsp.txt|
+
+Version 2023-06-23 (44b16d1) from:
+https://github.com/hrsh7th/cmp-nvim-lsp
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+CMP-NVIM-ULTISNIPS                                      *notes_cmp-nvim-ultisnips*
+  Cmp source for UltiSnips
+
+Version 2023-07-06 (24bca5c) from:
+https://github.com/quangnguyen30192/cmp-nvim-ultisnips
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+CMP-PATH                                                *notes_cmp-path*
+  Cmp source for filesystem paths
+
+Version 2022-10-03 (91ff86c) from:
+https://github.com/hrsh7th/cmp-path
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 COLORSAMPLERPACK                                        *notes_colorsamplerpack*
   Color schemes and theme menu
 
@@ -1679,6 +1750,23 @@ Installation:
     :q
 
 ------------------------------------------------------------------------------
+LSPCONFIG                                               *notes_lspconfig*
+  Neovim LSP configuration                              |lspconfig|
+
+Version 2023-06-30 (0011c43) from:
+https://github.com/neovim/nvim-lspconfig
+
+Local customizations:
+  <Space>=        - Format buffer
+  <Space>lR       - Rename identifier
+  <Space>la       - Action
+  gd              - Go to Definition
+  gI              - Go to Implementation
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 LUSTY                                                   *notes_lusty*
   Lusty Explorer/Juggler - File/buffer switcher
 
@@ -1969,6 +2057,16 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
+NULL-LS                                                 *notes_null-ls*
+  Neovim non-LSP language tool support
+
+Version 2023-07-04 (0789777) from:
+https://github.com/jose-elias-alvarez/null-ls.nvim
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 OMNICPPCOMPLETE                                         *notes_omnicppcomplete*
   C/C++ Omnicompletion                                  |omnicppcomplete|
 
@@ -2064,6 +2162,16 @@ https://github.com/drmikehenry/vim-powerline
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+PLENARY                                                 *notes_plenary*
+  Neovim functions for Telescope                        |plenary|
+
+Version 2023-06-30 (102c029) from:
+https://github.com/nvim-lua/plenary.nvim
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 PROJECT                                                 *notes_project*
@@ -2745,6 +2853,26 @@ Installation:
 - Removed the spec/ directory before 'git add'ing the bundle.
 
 ------------------------------------------------------------------------------
+TELESCOPE                                               *notes_telescope*
+  Fuzzy finding in Neovim                               |telescope|
+
+Version 0.1.2 (776b509) from:
+https://github.com/nvim-telescope/telescope.nvim
+
+Local customizations:
+  <Space>lr       - find references of identifier under cursor
+  <Space>bb       - browse buffers
+  <Space>f'       - find marks
+  <Space>fb       - find buffers
+  <Space>ff       - find files
+  <Space>fh       - find help tags
+  <Space>fk       - find keymaps
+  <Space>fm       - find man pages
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 TEXTOBJ-DIFF                                            *notes_textobj-diff*
   Diff-based text objects                               |textobj-diff.txt|
 
@@ -3202,6 +3330,19 @@ http://www.drchip.org/astronaut/vim/index.html#VISSWAP
 Installation:
 - Depends on DrC's Utilities: |notes_cecutils|
 - Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+WHICHKEY                                                *notes_whichkey*
+  Neovim show key bindings                              |whichkey|
+
+Version 2023-06-19 (d871f2b) from:
+https://github.com/folke/which-key.nvim
+
+Press a key (<Space>, for example), then wait for the 'timeoutlen' to expire.
+WhichKey will pop up a navigable menu of key bindings.
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 WOMBAT256I                                              *notes_wombat256i*

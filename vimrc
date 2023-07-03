@@ -579,20 +579,25 @@ endif
 "   let g:EnableUltiSnips = 0
 
 if !exists('g:EnableAle')
-    let g:EnableAle = 1
+    let g:EnableAle = !g:UsingNvim
 endif
 
 if !exists('g:EnableSyntastic')
-    let g:EnableSyntastic = 1
+    let g:EnableSyntastic = !g:UsingNvim
 endif
 
 if !exists('g:EnableVimLsp')
-    let g:EnableVimLsp = 1
+    let g:EnableVimLsp = !g:UsingNvim
 endif
 
-" vim-lsp requires Vim 8.1.1035 or newer.
-if v:version < 801 || (v:version == 801 && !has('patch1035'))
-    let g:EnableVimLsp = 0
+" Determine vim-lsp compatibility.
+if g:UsingNvim
+    " TODO: Determine what version of Neovim is required for vim-lsp.
+else
+    " vim-lsp requires Vim 8.1.1035 or newer.
+    if v:version < 801 || (v:version == 801 && !has('patch1035'))
+        let g:EnableVimLsp = 0
+    endif
 endif
 
 " Gvim bug https://github.com/vim/vim/issues/3417 is fixed in Gvim 8.1.0834.

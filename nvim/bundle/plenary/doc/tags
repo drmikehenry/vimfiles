@@ -1,0 +1,8 @@
+:PlenaryBustedDirectory	plenary-test.txt	/*:PlenaryBustedDirectory*
+:PlenaryBustedFile	plenary-test.txt	/*:PlenaryBustedFile*
+plenary-test	plenary-test.txt	/*plenary-test*
+plenary-test-busted	plenary-test.txt	/*plenary-test-busted*
+plenary-test-commands	plenary-test.txt	/*plenary-test-commands*
+plenary-test-license	plenary-test.txt	/*plenary-test-license*
+plenary-test-plugs	plenary-test.txt	/*plenary-test-plugs*
+plenary-test-usage	plenary-test.txt	/*plenary-test-usage*

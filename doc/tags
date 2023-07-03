@@ -115,6 +115,7 @@ notes_less	notes.txt	/*notes_less*
 notes_list_of_numbers	notes.txt	/*notes_list_of_numbers*
 notes_localvimrc	notes.txt	/*notes_localvimrc*
 notes_loremipsum	notes.txt	/*notes_loremipsum*
+notes_lspconfig	notes.txt	/*notes_lspconfig*
 notes_lusty	notes.txt	/*notes_lusty*
 notes_lustyexplorer	notes.txt	/*notes_lustyexplorer*
 notes_lustyjuggler	notes.txt	/*notes_lustyjuggler*
@@ -128,10 +129,12 @@ notes_moonscript	notes.txt	/*notes_moonscript*
 notes_movement	notes.txt	/*notes_movement*
 notes_moving_out	notes.txt	/*notes_moving_out*
 notes_mundo	notes.txt	/*notes_mundo*
+notes_null-ls	notes.txt	/*notes_null-ls*
 notes_omnicppcomplete	notes.txt	/*notes_omnicppcomplete*
 notes_overrides	notes.txt	/*notes_overrides*
 notes_pasting	notes.txt	/*notes_pasting*
 notes_pathogen	notes.txt	/*notes_pathogen*
+notes_plenary	notes.txt	/*notes_plenary*
 notes_plugins	notes.txt	/*notes_plugins*
 notes_powerline	notes.txt	/*notes_powerline*
 notes_project	notes.txt	/*notes_project*
@@ -168,6 +171,7 @@ notes_tag_files	notes.txt	/*notes_tag_files*
 notes_tagbar	notes.txt	/*notes_tagbar*
 notes_tagsignature	notes.txt	/*notes_tagsignature*
 notes_tcomment	notes.txt	/*notes_tcomment*
+notes_telescope	notes.txt	/*notes_telescope*
 notes_textobj-diff	notes.txt	/*notes_textobj-diff*
 notes_textobj-func	notes.txt	/*notes_textobj-func*
 notes_textobj-indent	notes.txt	/*notes_textobj-indent*
@@ -194,6 +198,7 @@ notes_vis	notes.txt	/*notes_vis*
 notes_visincr	notes.txt	/*notes_visincr*
 notes_vissort	notes.txt	/*notes_vissort*
 notes_visswap	notes.txt	/*notes_visswap*
+notes_whichkey	notes.txt	/*notes_whichkey*
 notes_window_layout	notes.txt	/*notes_window_layout*
 notes_window_related	notes.txt	/*notes_window_related*
 notes_wombat256i	notes.txt	/*notes_wombat256i*
