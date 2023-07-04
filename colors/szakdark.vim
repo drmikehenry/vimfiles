@@ -2,6 +2,9 @@
 " It's a modified version of the ir_black color scheme.
 " More at: http://blog.infinitered.com.
 
+" A chart of Xterm colors can be found at:
+" https://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
+
 set background=dark
 hi clear
 
@@ -15,11 +18,20 @@ if !exists("g:szakdark_subtle_search")
     let g:szakdark_subtle_search=0
 endif
 
+if !exists("g:szakdark_subtle")
+    let g:szakdark_subtle = g:szakdark_subtle_search
+endif
+
 "hi Example         guifg=NONE        guibg=NONE        gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
 
 " General colors
 hi Normal           guifg=#bbbbbb     guibg=#0d0d0d     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=NONE
+
+if g:szakdark_subtle
 hi NonText          guifg=#303030     guibg=#1c1c1c     gui=NONE      ctermfg=236         ctermbg=234         cterm=NONE
+else
+hi NonText          guifg=#585858     guibg=#1c1c1c     gui=NONE      ctermfg=240         ctermbg=234         cterm=NONE
+endif
 
 hi Cursor           guifg=black       guibg=white       gui=NONE      ctermfg=black       ctermbg=white       cterm=reverse
 hi LineNr           guifg=#4e4e4e     guibg=#262626     gui=NONE      ctermfg=239         ctermbg=235         cterm=NONE
@@ -35,7 +47,11 @@ hi Folded           guifg=#a0a8b0     guibg=#384048     gui=NONE      ctermfg=NO
 hi Title            guifg=#e3dab7     guibg=NONE        gui=BOLD      ctermfg=223         ctermbg=NONE        cterm=BOLD
 hi Visual           guifg=NONE        guibg=#262D51     gui=NONE      ctermfg=NONE        ctermbg=NONE        cterm=REVERSE
 
+if g:szakdark_subtle
 hi SpecialKey       guifg=#303030     guibg=#1c1c1c     gui=NONE      ctermfg=236         ctermbg=234         cterm=NONE
+else
+hi SpecialKey       guifg=#585858     guibg=#1c1c1c     gui=NONE      ctermfg=240         ctermbg=234         cterm=NONE
+endif
 
 hi WildMenu         guifg=#e8e0c3     guibg=#222240     gui=NONE      ctermfg=187         ctermbg=17          cterm=NONE
 hi PmenuSbar        guifg=black       guibg=white       gui=NONE      ctermfg=black       ctermbg=white       cterm=NONE

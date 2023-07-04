@@ -7,6 +7,26 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-07-04
+==========
+
+- Increase szakdark colorscheme contrast to aid in readability for ``NonText``
+  and ``SpecialKey`` highlight groups by lightening the foreground color.
+
+  To opt back into the subtle highlighting for these highlight groups::
+
+    let g:szakdark_subtle = 1
+
+  Subtle highlighting of the ``Search`` group was already available via::
+
+    let g:szakdark_subtle_search = 1
+
+  By default, ``g:szakdark_subtle_search = 0``, after which by default
+  ``g:szakdark_subtle = g:szakdark_subtle_search``; therefore, opting into
+  subtle ``Search`` highlighting also opts into subtle ``NonText`` and
+  ``SpecialKey`` highlighting by default as well.  To separately control these
+  features, define both variables explicitly.
+
 2023-06-30
 ==========
 
