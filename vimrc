@@ -8,6 +8,16 @@ if !exists('g:UsingNvim')
     let g:UsingNvim = 0
 endif
 
+if has('nvim')
+    " Ensure Neovim Python provider is setup before any use of Python.
+    for s:pynvim_python in ['/opt/pynvim/bin/python']
+        if executable(s:pynvim_python)
+            let g:python3_host_prog = s:pynvim_python
+            break
+        endif
+    endfor
+endif
+
 " Enable vi-incompatible Vim extensions (redundant since .vimrc exists).
 set nocompatible
 
