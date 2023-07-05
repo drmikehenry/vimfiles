@@ -7,6 +7,25 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-07-05
+==========
+
+- Shorten ``timeoutlen`` to 1.5 seconds.
+
+  This attempts to balance competing desires:
+
+  - A longer delay gives the user more time to recall and press the keys
+    in a multi-key mapping.
+
+  - A shorter delay allows the Neovim which-key plugin to pop up a help
+    menu faster to show possible menu completions when the user is unsure
+    of the available mappings.
+
+  ``timeoutlen`` also controls how long "micro modes" last for things like
+  the BufMRU plugin (launched via ``<C-^>``).
+
+  Hopefully this ``timeoutlen`` strikes a good balance.
+
 2023-07-04
 ==========
 

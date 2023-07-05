@@ -962,7 +962,7 @@ set shortmess-=S
 " Configure mapping timeout in milliseconds (default 1000).
 " Controls how long Vim waits for partially complete mapping
 " before timing out and using prefix directly.
-set timeout timeoutlen=3000
+set timeout timeoutlen=1500
 
 " Configure keycode timeout in milliseconds (default -1).
 " Controls how long Vim waits for partially complete
