@@ -641,6 +641,14 @@ if !exists("g:EnableUltiSnips")
     let g:EnableUltiSnips = g:Python != ''
 endif
 
+if !exists('g:EnableOmniCppComplete')
+    let g:EnableOmniCppComplete = !g:UsingNvim
+endif
+
+if !g:EnableOmniCppComplete
+    call add(g:pathogen_disabled, 'omnicppcomplete')
+endif
+
 " -------------------------------------------------------------
 " Pathogen bundle management
 " -------------------------------------------------------------
@@ -2088,6 +2096,11 @@ set selection=inclusive
 " [ - left arrow  (insert and replace modes)
 " ] - right arrow (insert and replace modes)
 set whichwrap=b,s,<,>,[,]
+
+" Keep `signcolumn` on all the time, rather than allow it to disconcertingly
+" come and go as errors are detected.  Make this independent of ALE or other
+" plugins.
+set signcolumn=yes
 
 " Setup command-line completion (inside of Vim's ':' command line).
 " Controlled by two options, 'wildmode' and 'wildmenu'.

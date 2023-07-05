@@ -26,6 +26,10 @@ require adjustment of per-user settings.
 
   Hopefully this ``timeoutlen`` strikes a good balance.
 
+- Keep ``signcolumn`` on all the time, rather than allow it to disconcertingly
+  come and go as errors are detected.  This was previously the case when ALE was
+  enabled; this change ensures the ``signcolumn`` is active even without ALE.
+
 2023-07-04
 ==========
 
