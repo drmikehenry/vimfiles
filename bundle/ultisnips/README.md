@@ -1,19 +1,19 @@
-[![Build Status](https://travis-ci.org/SirVer/ultisnips.svg?branch=master)](https://travis-ci.org/SirVer/ultisnips)
-[![Stories in Ready](https://badge.waffle.io/SirVer/ultisnips.png?label=ready&title=Ready)](https://waffle.io/SirVer/ultisnips)
+![Build Status](https://github.com/SirVer/ultisnips/actions/workflows/main.yml/badge.svg)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/SirVer/ultisnips?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 UltiSnips
 =========
 
-UltiSnips is the ultimate solution for snippets in Vim. It has tons of features
-and is very fast.
+UltiSnips is the ultimate solution for snippets in Vim. It has many features,
+speed being one of them.
 
 ![GIF Demo](https://raw.github.com/SirVer/ultisnips/master/doc/demo.gif)
 
 In this demo I am editing a python file. I first expand the `#!` snippet, then
 the `class` snippet. The completion menu comes from
 [YouCompleteMe](https://github.com/Valloric/YouCompleteMe), UltiSnips also
-integrates with [deoplete](https://github.com/Shougo/deoplete.nvim). I can
+integrates with [deoplete](https://github.com/Shougo/deoplete.nvim),
+[vim-easycomplete](https://github.com/jayli/vim-easycomplete) and more. I can
 jump through placeholders and add text while the snippet inserts text in other
 places automatically: when I add `Animal` as a base class, `__init__` gets
 updated to call the base class constructor. When I add arguments to the
@@ -27,15 +27,11 @@ The official home of UltiSnips is at <https://github.com/sirver/ultisnips>.
 Please add pull requests and issues there.
 
 UltiSnips was started in Jun 2009 by @SirVer. In Dec 2015, maintenance was
-handed over to [@seletskiy](https://github.com/seletskiy).
+handed over to [@seletskiy](https://github.com/seletskiy) who ran out of time
+in early 2017. Since Jun 2019, @SirVer is maintaining UltiSnips again on a
+very constraint time budget. If you can help triaging issues it would be
+greatly appreciated.
 
-What can you do with UltiSnips?
--------------------------------
-
-1. Advanced snippets:
-
-    * [Snippets Aliases](doc/examples/snippets-aliasing/README.md)
-    * [Dynamic Tabstops/Tabstop Generation](doc/examples/tabstop-generation/README.md)
 
 Quick Start
 -----------
@@ -49,7 +45,9 @@ for your plugin manager of choice. Put this into your `.vimrc`.
     " Snippets are separated from the engine. Add this if you want them:
     Plugin 'honza/vim-snippets'
 
-    " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+    " Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+    " - https://github.com/Valloric/YouCompleteMe
+    " - https://github.com/nvim-lua/completion-nvim
     let g:UltiSnipsExpandTrigger="<tab>"
     let g:UltiSnipsJumpForwardTrigger="<c-b>"
     let g:UltiSnipsJumpBackwardTrigger="<c-z>"
@@ -60,6 +58,11 @@ for your plugin manager of choice. Put this into your `.vimrc`.
 UltiSnips comes with comprehensive
 [documentation](https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt).
 As there are more options and tons of features I suggest you at least skim it.
+
+There are example uses for some power user features here:
+
+  * [Snippets Aliases](doc/examples/snippets-aliasing/README.md)
+  * [Dynamic Tabstops/Tabstop Generation](doc/examples/tabstop-generation/README.md)
 
 Screencasts
 -----------

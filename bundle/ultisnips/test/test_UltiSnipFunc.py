@@ -3,65 +3,67 @@ from test.vim_test_case import VimTestCase as _VimTest
 from test.constant import *
 from test.util import running_on_windows
 
-# AddSnippet Function  {{{#
-
 
 class _AddFuncBase(_VimTest):
-    args = ''
+    args = ""
 
     def _before_test(self):
-        self.vim.send_to_vim(':call UltiSnips#AddSnippetWithPriority(%s)\n' % self.args)
+        self.vim.send_to_vim(":call UltiSnips#AddSnippetWithPriority(%s)\n" % self.args)
 
 
 class AddFunc_Simple(_AddFuncBase):
     args = '"test", "simple expand", "desc", "", "all", 0'
-    keys = 'abc test' + EX
-    wanted = 'abc simple expand'
+    keys = "abc test" + EX
+    wanted = "abc simple expand"
 
 
 class AddFunc_Opt(_AddFuncBase):
     args = '".*test", "simple expand", "desc", "r", "all", 0'
-    keys = 'abc test' + EX
-    wanted = 'simple expand'
-# End: AddSnippet Function  #}}}
+    keys = "abc test" + EX
+    wanted = "simple expand"
 
-# Langmap Handling  {{{#
+
 # Test for bug 501727 #
 
 
 class TestNonEmptyLangmap_ExpectCorrectResult(_VimTest):
-    snippets = ('testme',
-                """my snipped ${1:some_default}
+    snippets = (
+        "testme",
+        """my snipped ${1:some_default}
 and a mirror: $1
 $2...$3
-$0""")
-    keys = 'testme' + EX + 'hi1' + JF + 'hi2' + JF + 'hi3' + JF + 'hi4'
+$0""",
+    )
+    keys = "testme" + EX + "hi1" + JF + "hi2" + JF + "hi3" + JF + "hi4"
     wanted = """my snipped hi1
 and a mirror: hi1
 hi2...hi3
 hi4"""
 
     def _extra_vim_config(self, vim_config):
-        vim_config.append('set langmap=dj,rk,nl,ln,jd,kr,DJ,RK,NL,LN,JD,KR')
+        vim_config.append("set langmap=dj,rk,nl,ln,jd,kr,DJ,RK,NL,LN,JD,KR")
+
 
 # Test for https://bugs.launchpad.net/bugs/501727 #
 
 
 class TestNonEmptyLangmapWithSemi_ExpectCorrectResult(_VimTest):
-    snippets = ('testme',
-                """my snipped ${1:some_default}
+    snippets = (
+        "testme",
+        """my snipped ${1:some_default}
 and a mirror: $1
 $2...$3
-$0""")
-    keys = 'testme' + EX + 'hi;' + JF + 'hi2' + \
-        JF + 'hi3' + JF + 'hi4' + ESC + ';Hello'
+$0""",
+    )
+    keys = "testme" + EX + "hi;" + JF + "hi2" + JF + "hi3" + JF + "hi4" + ESC + ";Hello"
     wanted = """my snipped hi;
 and a mirror: hi;
 hi2...hi3
 hi4Hello"""
 
     def _before_test(self):
-        self.vim.send_to_vim(':set langmap=\\\\;;A\n')
+        self.vim.send_to_vim(":set langmap=\\\\;;A\n")
+
 
 # Test for bug 871357 #
 
@@ -69,12 +71,14 @@ hi4Hello"""
 class TestLangmapWithUtf8_ExpectCorrectResult(_VimTest):
     # SendKeys can't send UTF characters
     skip_if = lambda self: running_on_windows()
-    snippets = ('testme',
-                """my snipped ${1:some_default}
+    snippets = (
+        "testme",
+        """my snipped ${1:some_default}
 and a mirror: $1
 $2...$3
-$0""")
-    keys = 'testme' + EX + 'hi1' + JF + 'hi2' + JF + 'hi3' + JF + 'hi4'
+$0""",
+    )
+    keys = "testme" + EX + "hi1" + JF + "hi2" + JF + "hi3" + JF + "hi4"
     wanted = """my snipped hi1
 and a mirror: hi1
 hi2...hi3
@@ -82,11 +86,8 @@ hi4"""
 
     def _before_test(self):
         self.vim.send_to_vim(
-            ":set langmap=йq,цw,уe,кr,еt,нy,гu,шi,щo,зp,х[,ъ],фa,ыs,вd,аf,пg,рh,оj,лk,дl,ж\\;,э',яz,чx,сc,мv,иb,тn,ьm,ю.,ё',ЙQ,ЦW,УE,КR,ЕT,НY,ГU,ШI,ЩO,ЗP,Х\{,Ъ\},ФA,ЫS,ВD,АF,ПG,РH,ОJ,ЛK,ДL,Ж\:,Э\",ЯZ,ЧX,СC,МV,ИB,ТN,ЬM,Б\<,Ю\>\n")
-
-# End: Langmap Handling  #}}}
-
-# SnippetsInCurrentScope  {{{#
+            ":set langmap=йq,цw,уe,кr,еt,нy,гu,шi,щo,зp,х[,ъ],фa,ыs,вd,аf,пg,рh,оj,лk,дl,ж\\;,э',яz,чx,сc,мv,иb,тn,ьm,ю.,ё',ЙQ,ЦW,УE,КR,ЕT,НY,ГU,ШI,ЩO,ЗP,Х\{,Ъ\},ФA,ЫS,ВD,АF,ПG,РH,ОJ,ЛK,ДL,Ж\:,Э\",ЯZ,ЧX,СC,МV,ИB,ТN,ЬM,Б\<,Ю\>\n"
+        )
 
 
 class VerifyVimDict1(_VimTest):
@@ -98,12 +99,15 @@ class VerifyVimDict1(_VimTest):
     if the prefix is mismatched no resulting dict should have 0 elements
     """
 
-    snippets = ('testâ', 'abc123ά', '123\'êabc')
-    keys = ('test=(type(UltiSnips#SnippetsInCurrentScope()) . len(UltiSnips#SnippetsInCurrentScope()) . ' +
-            'UltiSnips#SnippetsInCurrentScope()["testâ"]' + ')\n' +
-            '=len(UltiSnips#SnippetsInCurrentScope())\n')
+    snippets = ("testâ", "abc123ά", "123'êabc")
+    keys = (
+        "test=(type(UltiSnips#SnippetsInCurrentScope()) . len(UltiSnips#SnippetsInCurrentScope()) . "
+        + 'UltiSnips#SnippetsInCurrentScope()["testâ"]'
+        + ")\n"
+        + "=len(UltiSnips#SnippetsInCurrentScope())\n"
+    )
 
-    wanted = 'test41123\'êabc0'
+    wanted = "test41123'êabc0"
 
 
 class VerifyVimDict2(_VimTest):
@@ -112,10 +116,9 @@ class VerifyVimDict2(_VimTest):
     can use " in trigger
     """
 
-    snippets = ('te"stâ', 'abc123ά', '123êabc')
+    snippets = ('te"stâ', "abc123ά", "123êabc")
     akey = "'te{}stâ'".format('"')
-    keys = (
-        'te"=(UltiSnips#SnippetsInCurrentScope()[{}]'.format(akey) + ')\n')
+    keys = 'te"=(UltiSnips#SnippetsInCurrentScope()[{}]'.format(akey) + ")\n"
     wanted = 'te"123êabc'
 
 
@@ -125,31 +128,32 @@ class VerifyVimDict3(_VimTest):
     can use ' in trigger
     """
 
-    snippets = ("te'stâ", 'abc123ά', '123êabc')
+    snippets = ("te'stâ", "abc123ά", "123êabc")
     akey = '"te{}stâ"'.format("'")
-    keys = (
-        "te'=(UltiSnips#SnippetsInCurrentScope()[{}]".format(akey) + ')\n')
+    keys = "te'=(UltiSnips#SnippetsInCurrentScope()[{}]".format(akey) + ")\n"
     wanted = "te'123êabc"
-# End: SnippetsInCurrentScope  #}}}
-
-# Snippet Source  {{{#
 
 
 class AddNewSnippetSource(_VimTest):
-    keys = ('blumba' + EX + ESC +
-            ':%(python)s UltiSnips_Manager.register_snippet_source(' +
-            "'temp', MySnippetSource())\n" +
-            'oblumba' + EX + ESC +
-            ":%(python)s UltiSnips_Manager.unregister_snippet_source('temp')\n" +
-            'oblumba' + EX) % {'python': 'py3' if PYTHON3 else 'py'}
-    wanted = (
-        'blumba' + EX + '\n' +
-        'this is a dynamic snippet' + '\n' +
-        'blumba' + EX
+    keys = (
+        "blumba"
+        + EX
+        + ESC
+        + ":py3 UltiSnips_Manager.register_snippet_source("
+        + "'temp', MySnippetSource())\n"
+        + "oblumba"
+        + EX
+        + ESC
+        + ":py3 UltiSnips_Manager.unregister_snippet_source('temp')\n"
+        + "oblumba"
+        + EX
     )
+    wanted = "blumba" + EX + "\n" + "this is a dynamic snippet" + "\n" + "blumba" + EX
 
     def _extra_vim_config(self, vim_config):
-        self._create_file('snippet_source.py', """
+        self._create_file(
+            "snippet_source.py",
+            """
 from UltiSnips.snippet.source import SnippetSource
 from UltiSnips.snippet.definition import UltiSnipsSnippetDefinition
 
@@ -163,9 +167,6 @@ class MySnippetSource(SnippetSource):
               None, {})
         ]
     return []
-""")
-        pyfile = 'py3file' if PYTHON3 else 'pyfile'
-        vim_config.append(
-            '%s %s' %
-            (pyfile, self.name_temp('snippet_source.py')))
-# End: Snippet Source  #}}}
+""",
+        )
+        vim_config.append("py3file %s" % (self.name_temp("snippet_source.py")))

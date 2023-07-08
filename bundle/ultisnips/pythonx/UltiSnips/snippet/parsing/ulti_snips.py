@@ -1,14 +1,36 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 """Parses a UltiSnips snippet definition and launches it into Vim."""
 
-from UltiSnips.snippet.parsing._base import tokenize_snippet_text, finalize, resolve_ambiguity
-from UltiSnips.snippet.parsing._lexer import EscapeCharToken, \
-    VisualToken, TransformationToken, TabStopToken, MirrorToken, \
-    PythonCodeToken, VimLCodeToken, ShellCodeToken
-from UltiSnips.text_objects import EscapedChar, Mirror, PythonCode, \
-    ShellCode, TabStop, Transformation, VimLCode, Visual
+from UltiSnips.snippet.parsing.base import (
+    tokenize_snippet_text,
+    finalize,
+    resolve_ambiguity,
+)
+from UltiSnips.snippet.parsing.lexer import (
+    EscapeCharToken,
+    VisualToken,
+    TransformationToken,
+    ChoicesToken,
+    TabStopToken,
+    MirrorToken,
+    PythonCodeToken,
+    VimLCodeToken,
+    ShellCodeToken,
+)
+from UltiSnips.text_objects import (
+    EscapedChar,
+    Mirror,
+    PythonCode,
+    ShellCode,
+    TabStop,
+    Transformation,
+    VimLCode,
+    Visual,
+    Choices,
+)
+from UltiSnips.error import PebkacError
 
 _TOKEN_TO_TEXTOBJECT = {
     EscapeCharToken: EscapedChar,
@@ -16,11 +38,19 @@ _TOKEN_TO_TEXTOBJECT = {
     ShellCodeToken: ShellCode,
     PythonCodeToken: PythonCode,
     VimLCodeToken: VimLCode,
+    ChoicesToken: Choices,
 }
 
 __ALLOWED_TOKENS = [
-    EscapeCharToken, VisualToken, TransformationToken, TabStopToken,
-    MirrorToken, PythonCodeToken, VimLCodeToken, ShellCodeToken
+    EscapeCharToken,
+    VisualToken,
+    TransformationToken,
+    ChoicesToken,
+    TabStopToken,
+    MirrorToken,
+    PythonCodeToken,
+    VimLCodeToken,
+    ShellCodeToken,
 ]
 
 
@@ -29,9 +59,10 @@ def _create_transformations(all_tokens, seen_ts):
     for parent, token in all_tokens:
         if isinstance(token, TransformationToken):
             if token.number not in seen_ts:
-                raise RuntimeError(
-                    'Tabstop %i is not known but is used by a Transformation'
-                    % token.number)
+                raise PebkacError(
+                    "Tabstop %i is not known but is used by a Transformation"
+                    % token.number
+                )
             Transformation(parent, seen_ts[token.number], token)
 
 
@@ -43,8 +74,14 @@ def parse_and_instantiate(parent_to, text, indent):
     parent_to. Will also put the initial text into Vim.
 
     """
-    all_tokens, seen_ts = tokenize_snippet_text(parent_to, text, indent,
-                                                __ALLOWED_TOKENS, __ALLOWED_TOKENS, _TOKEN_TO_TEXTOBJECT)
+    all_tokens, seen_ts = tokenize_snippet_text(
+        parent_to,
+        text,
+        indent,
+        __ALLOWED_TOKENS,
+        __ALLOWED_TOKENS,
+        _TOKEN_TO_TEXTOBJECT,
+    )
     resolve_ambiguity(all_tokens, seen_ts)
     _create_transformations(all_tokens, seen_ts)
     finalize(all_tokens, seen_ts, parent_to)

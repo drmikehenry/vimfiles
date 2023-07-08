@@ -1,0 +1,39 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+     fail-fast: false
+     matrix:
+      include:
+        - { vim_version: "8.1", python_image: "3.7-stretch", tag: "vim_81_py37" }
+        - { vim_version: "8.2", python_image: "3.7-stretch", tag: "vim_82_py37" }
+        - { vim_version: "git", python_image: "3.7-stretch", tag: "vim_git_py37" }
+
+        - { vim_version: "8.1", python_image: "3.8-buster", tag: "vim_81_py38" }
+        - { vim_version: "8.2", python_image: "3.8-buster", tag: "vim_82_py38" }
+        - { vim_version: "git", python_image: "3.8-buster", tag: "vim_git_py38" }
+
+        - { vim_version: "8.1", python_image: "3.9-buster", tag: "vim_81_py39" }
+        - { vim_version: "8.2", python_image: "3.9-buster", tag: "vim_82_py39" }
+        - { vim_version: "9.0", python_image: "3.9-buster", tag: "vim_90_py39" }
+        - { vim_version: "git", python_image: "3.8-buster", tag: "vim_git_py39" }
+
+        # Vim 8.1 and 8.2 do not build with python 3.10.
+        - { vim_version: "9.0", python_image: "3.10-buster", tag: "vim_90_py310" }
+        - { vim_version: "git", python_image: "3.10-buster", tag: "vim_git_py310" }
+
+    name: Build & Test using Docker
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the image
+        run: docker build -t ultisnips:${{ matrix.tag }} --build-arg PYTHON_IMAGE=${{ matrix.python_image }} --build-arg VIM_VERSION=${{ matrix.vim_version }} .
+      - name: Run the tests
+        run: docker run --rm -t ultisnips:${{ matrix.tag }} docker/run_tests.sh

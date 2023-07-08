@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 """Code to provide access to UltiSnips files from disk."""
@@ -6,18 +6,18 @@
 from collections import defaultdict
 import os
 
-from UltiSnips import _vim
 from UltiSnips import compatibility
-from UltiSnips.snippet.source._base import SnippetSource
+from UltiSnips import vim_helper
+from UltiSnips.error import PebkacError
+from UltiSnips.snippet.source.base import SnippetSource
 
 
-class SnippetSyntaxError(RuntimeError):
+class SnippetSyntaxError(PebkacError):
 
     """Thrown when a syntax error is found in a file."""
 
     def __init__(self, filename, line_index, msg):
-        RuntimeError.__init__(self, '%s in %s:%d' % (
-            msg, filename, line_index))
+        RuntimeError.__init__(self, "%s in %s:%d" % (msg, filename, line_index))
 
 
 class SnippetFileSource(SnippetSource):
@@ -49,7 +49,7 @@ class SnippetFileSource(SnippetSource):
 
     def _load_snippets_for(self, ft):
         """Load all snippets for the given 'ft'."""
-        assert(ft not in self._snippets)
+        assert ft not in self._snippets
         for fn in self._get_all_snippet_files_for(ft):
             self._parse_snippets(ft, fn)
         # Now load for the parents
@@ -59,24 +59,29 @@ class SnippetFileSource(SnippetSource):
 
     def _parse_snippets(self, ft, filename):
         """Parse the 'filename' for the given 'ft'."""
-        file_data = compatibility.open_ascii_file(filename, 'r').read()
+        with open(filename, "r", encoding="utf-8-sig") as to_read:
+            file_data = to_read.read()
         self._snippets[ft]  # Make sure the dictionary exists
         for event, data in self._parse_snippet_file(file_data, filename):
-            if event == 'error':
+            if event == "error":
                 msg, line_index = data
-                filename = _vim.eval("""fnamemodify(%s, ":~:.")""" %
-                                     _vim.escape(filename))
+                filename = vim_helper.eval(
+                    """fnamemodify(%s, ":~:.")""" % vim_helper.escape(filename)
+                )
                 raise SnippetSyntaxError(filename, line_index, msg)
-            elif event == 'clearsnippets':
+            elif event == "clearsnippets":
                 priority, triggers = data
                 self._snippets[ft].clear_snippets(priority, triggers)
-            elif event == 'extends':
+            elif event == "extends":
                 # TODO(sirver): extends information is more global
                 # than one snippet source.
-                filetypes, = data
+                (filetypes,) = data
                 self.update_extends(ft, filetypes)
-            elif event == 'snippet':
-                snippet, = data
+            elif event == "snippet":
+                (snippet,) = data
                 self._snippets[ft].add_snippet(snippet)
             else:
-                assert False, 'Unhandled %s: %r' % (event, data)
+                assert False, "Unhandled %s: %r" % (event, data)
+        # precompile global snippets code for all snipepts we just sourced
+        for snippet in self._snippets[ft]:
+            snippet._precompile_globals()

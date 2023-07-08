@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-07-08
+==========
+
+- Upgrade UltiSnips plugin to version 2023-02-01.
+
 2023-07-05
 ==========
 

@@ -1,11 +1,10 @@
 # coding=utf8
 
 import vim
-import UltiSnips._vim
-from UltiSnips.compatibility import as_unicode, as_vimencoding
+from UltiSnips import vim_helper
+from UltiSnips.diff import diff
+from UltiSnips.error import PebkacError
 from UltiSnips.position import Position
-from UltiSnips._diff import diff
-from UltiSnips import _vim
 
 from contextlib import contextmanager
 
@@ -17,12 +16,12 @@ def use_proxy_buffer(snippets_stack, vstate):
     function call.
     """
     buffer_proxy = VimBufferProxy(snippets_stack, vstate)
-    old_buffer = _vim.buf
+    old_buffer = vim_helper.buf
     try:
-        _vim.buf = buffer_proxy
+        vim_helper.buf = buffer_proxy
         yield
     finally:
-        _vim.buf = old_buffer
+        vim_helper.buf = old_buffer
     buffer_proxy.validate_buffer()
 
 
@@ -31,17 +30,17 @@ def suspend_proxy_edits():
     """
     Prevents changes being applied to the snippet stack while function call.
     """
-    if not isinstance(_vim.buf, VimBufferProxy):
+    if not isinstance(vim_helper.buf, VimBufferProxy):
         yield
     else:
         try:
-            _vim.buf._disable_edits()
+            vim_helper.buf._disable_edits()
             yield
         finally:
-            _vim.buf._enable_edits()
+            vim_helper.buf._enable_edits()
 
 
-class VimBufferProxy(_vim.VimBuffer):
+class VimBufferProxy(vim_helper.VimBuffer):
     """
     Proxy object used for tracking changes that made from snippet actions.
 
@@ -83,11 +82,13 @@ class VimBufferProxy(_vim.VimBuffer):
         Raises exception if buffer is changes beyound proxy object.
         """
         if self.is_buffer_changed_outside():
-            raise RuntimeError('buffer was modified using vim.command or ' +
-            'vim.current.buffer; that changes are untrackable and leads to ' +
-            'errors in snippet expansion; use special variable `snip.buffer` '
-            'for buffer modifications.\n\n' +
-            'See :help UltiSnips-buffer-proxy for more info.')
+            raise PebkacError(
+                "buffer was modified using vim.command or "
+                + "vim.current.buffer; that changes are untrackable and leads to "
+                + "errors in snippet expansion; use special variable `snip.buffer` "
+                "for buffer modifications.\n\n"
+                + "See :help UltiSnips-buffer-proxy for more info."
+            )
 
     def __setitem__(self, key, value):
         """
@@ -95,13 +96,11 @@ class VimBufferProxy(_vim.VimBuffer):
         changes and applies them to the current snippet stack.
         """
         if isinstance(key, slice):
-            value = [as_vimencoding(line) for line in value]
+            value = [line for line in value]
             changes = list(self._get_diff(key.start, key.stop, value))
-            self._buffer[key.start:key.stop] = [
-                line.strip('\n') for line in value
-            ]
+            self._buffer[key.start : key.stop] = [line.strip("\n") for line in value]
         else:
-            value = as_vimencoding(value)
+            value = value
             changes = list(self._get_line_diff(key, self._buffer[key], value))
             self._buffer[key] = value
 
@@ -123,10 +122,7 @@ class VimBufferProxy(_vim.VimBuffer):
         """
         Just passing call to the vim.current.window.buffer.__getitem__.
         """
-        if isinstance(key, slice):
-            return [as_unicode(l) for l in self._buffer[key.start:key.stop]]
-        else:
-            return as_unicode(self._buffer[key])
+        return self._buffer[key]
 
     def __getslice__(self, i, j):
         """
@@ -148,13 +144,13 @@ class VimBufferProxy(_vim.VimBuffer):
             line_number = len(self)
         if not isinstance(line, list):
             line = [line]
-        self[line_number:line_number] = [as_vimencoding(l) for l in line]
+        self[line_number:line_number] = [l for l in line]
 
     def __delitem__(self, key):
         if isinstance(key, slice):
             self.__setitem__(key, [])
         else:
-            self.__setitem__(slice(key, key+1), [])
+            self.__setitem__(slice(key, key + 1), [])
 
     def _get_diff(self, start, end, new_value):
         """
@@ -163,19 +159,19 @@ class VimBufferProxy(_vim.VimBuffer):
         for line_number in range(start, end):
             if line_number < 0:
                 line_number = len(self._buffer) + line_number
-            yield ('D', line_number, 0, self._buffer[line_number], True)
+            yield ("D", line_number, 0, self._buffer[line_number], True)
 
         if start < 0:
             start = len(self._buffer) + start
         for line_number in range(0, len(new_value)):
-            yield ('I', start+line_number, 0, new_value[line_number], True)
+            yield ("I", start + line_number, 0, new_value[line_number], True)
 
     def _get_line_diff(self, line_number, before, after):
         """
         Use precise diffing for tracking changes in single line.
         """
-        if before == '':
-            for change in self._get_diff(line_number, line_number+1, [after]):
+        if before == "":
+            for change in self._get_diff(line_number, line_number + 1, [after]):
                 yield change
         else:
             for change in diff(before, after):
@@ -195,18 +191,14 @@ class VimBufferProxy(_vim.VimBuffer):
         column_before = column_number <= self._snippets_stack[0]._start.col
         if line_before and column_before:
             direction = 1
-            if change_type == 'D':
+            if change_type == "D":
                 direction = -1
 
             diff = Position(direction, 0)
             if len(change) != 5:
                 diff = Position(0, direction * len(change_text))
-            print(change, diff)
 
-            self._snippets_stack[0]._move(
-                Position(line_number, column_number),
-                diff
-            )
+            self._snippets_stack[0]._move(Position(line_number, column_number), diff)
         else:
             if line_number > self._snippets_stack[0]._end.line:
                 return

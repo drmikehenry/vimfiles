@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 """Implements `!v ` VimL interpolation."""
 
-from UltiSnips import _vim
-from UltiSnips.text_objects._base import NoneditableTextObject
+from UltiSnips import vim_helper
+from UltiSnips.text_objects.base import NoneditableTextObject
 
 
 class VimLCode(NoneditableTextObject):
@@ -12,10 +12,10 @@ class VimLCode(NoneditableTextObject):
     """See module docstring."""
 
     def __init__(self, parent, token):
-        self._code = token.code.replace('\\`', '`').strip()
+        self._code = token.code.replace("\\`", "`").strip()
 
         NoneditableTextObject.__init__(self, parent, token)
 
     def _update(self, done, buf):
-        self.overwrite(buf, _vim.eval(self._code))
+        self.overwrite(buf, vim_helper.eval(self._code))
         return True

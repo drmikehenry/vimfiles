@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 """A Snippet instance is an instance of a Snippet Definition.
@@ -9,20 +9,32 @@ also a TextObject.
 
 """
 
-from UltiSnips import _vim
-from UltiSnips.position import Position
-from UltiSnips.text_objects._base import EditableTextObject, \
-    NoneditableTextObject
-from UltiSnips.text_objects._tabstop import TabStop
+from UltiSnips import vim_helper
+from UltiSnips.error import PebkacError
+from UltiSnips.position import Position, JumpDirection
+from UltiSnips.text_objects.base import EditableTextObject, NoneditableTextObject
+from UltiSnips.text_objects.tabstop import TabStop
 
 
 class SnippetInstance(EditableTextObject):
 
     """See module docstring."""
+
     # pylint:disable=protected-access
 
-    def __init__(self, snippet, parent, initial_text,
-                 start, end, visual_content, last_re, globals, context):
+    def __init__(
+        self,
+        snippet,
+        parent,
+        initial_text,
+        start,
+        end,
+        visual_content,
+        last_re,
+        globals,
+        context,
+        _compiled_globals=None,
+    ):
         if start is None:
             start = Position(0, 0)
         if end is None:
@@ -31,8 +43,9 @@ class SnippetInstance(EditableTextObject):
         self._cts = 0
 
         self.context = context
-        self.locals = {'match': last_re, 'context': context}
+        self.locals = {"match": last_re, "context": context}
         self.globals = globals
+        self._compiled_globals = _compiled_globals
         self.visual_content = visual_content
         self.current_placeholder = None
 
@@ -40,12 +53,14 @@ class SnippetInstance(EditableTextObject):
 
     def replace_initial_text(self, buf):
         """Puts the initial text of all text elements into Vim."""
+
         def _place_initial_text(obj):
             """recurses on the children to do the work."""
             obj.overwrite_with_initial_text(buf)
             if isinstance(obj, EditableTextObject):
                 for child in obj._children:
                     _place_initial_text(child)
+
         _place_initial_text(self)
 
     def replay_user_edits(self, cmds, ctab=None):
@@ -61,18 +76,25 @@ class SnippetInstance(EditableTextObject):
         This might also move the Cursor
 
         """
-        vc = _VimCursor(self)
         done = set()
         not_done = set()
 
         def _find_recursive(obj):
             """Finds all text objects and puts them into 'not_done'."""
+            cursorInsideLowest = None
             if isinstance(obj, EditableTextObject):
+                if obj.start <= vim_helper.buf.cursor <= obj.end and not (
+                    isinstance(obj, TabStop) and obj.number == 0
+                ):
+                    cursorInsideLowest = obj
                 for child in obj._children:
-                    _find_recursive(child)
+                    cursorInsideLowest = _find_recursive(child) or cursorInsideLowest
             not_done.add(obj)
-        _find_recursive(self)
+            return cursorInsideLowest
 
+        cursorInsideLowest = _find_recursive(self)
+        if cursorInsideLowest is not None:
+            vc = _VimCursor(cursorInsideLowest)
         counter = 10
         while (done != not_done) and counter:
             # Order matters for python locals!
@@ -81,29 +103,31 @@ class SnippetInstance(EditableTextObject):
                     done.add(obj)
             counter -= 1
         if not counter:
-            raise RuntimeError(
-                'The snippets content did not converge: Check for Cyclic '
-                'dependencies or random strings in your snippet. You can use '
+            raise PebkacError(
+                "The snippets content did not converge: Check for Cyclic "
+                "dependencies or random strings in your snippet. You can use "
                 "'if not snip.c' to make sure to only expand random output "
-                'once.')
-        vc.to_vim()
-        self._del_child(vc)
+                "once."
+            )
+        if cursorInsideLowest is not None:
+            vc.to_vim()
+            cursorInsideLowest._del_child(vc)
 
-    def select_next_tab(self, backwards=False):
-        """Selects the next tabstop or the previous if 'backwards' is True."""
+    def select_next_tab(self, jump_direction: JumpDirection):
+        """Selects the next tabstop in the direction of 'jump_direction'."""
         if self._cts is None:
             return
 
-        if backwards:
-            cts_bf = self._cts
+        if jump_direction == JumpDirection.BACKWARD:
+            current_tabstop_backup = self._cts
 
             res = self._get_prev_tab(self._cts)
             if res is None:
-                self._cts = cts_bf
+                self._cts = current_tabstop_backup
                 return self._tabstops.get(self._cts, None)
             self._cts, ts = res
             return ts
-        else:
+        elif jump_direction == JumpDirection.FORWARD:
             res = self._get_next_tab(self._cts)
             if res is None:
                 self._cts = None
@@ -120,8 +144,15 @@ class SnippetInstance(EditableTextObject):
             else:
                 self._cts, ts = res
                 return ts
+        else:
+            assert False, "Unknown JumpDirection: %r" % jump_direction
 
-        return self._tabstops[self._cts]
+    def has_next_tab(self, jump_direction: JumpDirection):
+        if jump_direction == JumpDirection.BACKWARD:
+            return self._get_prev_tab(self._cts) is not None
+        # There is always a next tabstop if we jump forward, since the snippet
+        # instance is deleted once we reach tabstop 0.
+        return True
 
     def _get_tabstop(self, requester, no):
         # SnippetInstances are completely self contained, therefore, we do not
@@ -143,10 +174,14 @@ class _VimCursor(NoneditableTextObject):
 
     def __init__(self, parent):
         NoneditableTextObject.__init__(
-            self, parent, _vim.buf.cursor, _vim.buf.cursor,
-            tiebreaker=Position(-1, -1))
+            self,
+            parent,
+            vim_helper.buf.cursor,
+            vim_helper.buf.cursor,
+            tiebreaker=Position(-1, -1),
+        )
 
     def to_vim(self):
         """Moves the cursor in the Vim to our position."""
         assert self._start == self._end
-        _vim.buf.cursor = self._start
+        vim_helper.buf.cursor = self._start

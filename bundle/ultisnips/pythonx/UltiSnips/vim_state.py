@@ -1,15 +1,16 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 """Some classes to conserve Vim's state for comparing over time."""
 
 from collections import deque, namedtuple
 
-from UltiSnips import _vim
-from UltiSnips.compatibility import as_unicode, byte2col
+from UltiSnips import vim_helper
+from UltiSnips.compatibility import byte2col
 from UltiSnips.position import Position
 
-_Placeholder = namedtuple('_FrozenPlaceholder', ['current_text', 'start', 'end'])
+_Placeholder = namedtuple("_FrozenPlaceholder", ["current_text", "start", "end"])
+
 
 class VimPosition(Position):
 
@@ -17,8 +18,8 @@ class VimPosition(Position):
     variables that might change our decisions down the line."""
 
     def __init__(self):
-        pos = _vim.buf.cursor
-        self._mode = _vim.eval('mode()')
+        pos = vim_helper.buf.cursor
+        self._mode = vim_helper.eval("mode()")
         Position.__init__(self, pos.line, pos.col)
 
     @property
@@ -27,7 +28,7 @@ class VimPosition(Position):
         return self._mode
 
 
-class VimState(object):
+class VimState:
 
     """Caches some state information from Vim to better guess what editing
     tasks the user might have done in the last step."""
@@ -36,7 +37,7 @@ class VimState(object):
         self._poss = deque(maxlen=5)
         self._lvb = None
 
-        self._text_to_expect = ''
+        self._text_to_expect = ""
         self._unnamed_reg_cached = False
 
         # We store the cached value of the unnamed register in Vim directly to
@@ -45,7 +46,7 @@ class VimState(object):
         # data that cannot be coerced to Unicode, and so a simple vim.eval('@"')
         # fails badly.  Keeping the cached value in Vim directly, sidesteps the
         # problem.
-        _vim.command('let g:_ultisnips_unnamed_reg_cache = ""')
+        vim_helper.command('let g:_ultisnips_unnamed_reg_cache = ""')
 
     def remember_unnamed_register(self, text_to_expect):
         """Save the unnamed register.
@@ -58,16 +59,16 @@ class VimState(object):
         """
         self._unnamed_reg_cached = True
         escaped_text = self._text_to_expect.replace("'", "''")
-        res = int(_vim.eval('@" != ' + "'" + escaped_text + "'"))
+        res = int(vim_helper.eval('@" != ' + "'" + escaped_text + "'"))
         if res:
-            _vim.command('let g:_ultisnips_unnamed_reg_cache = @"')
+            vim_helper.command('let g:_ultisnips_unnamed_reg_cache = @"')
         self._text_to_expect = text_to_expect
 
     def restore_unnamed_register(self):
         """Restores the unnamed register and forgets what we cached."""
         if not self._unnamed_reg_cached:
             return
-        _vim.command('let @" = g:_ultisnips_unnamed_reg_cache')
+        vim_helper.command('let @" = g:_ultisnips_unnamed_reg_cache')
         self._unnamed_reg_cached = False
 
     def remember_position(self):
@@ -76,15 +77,15 @@ class VimState(object):
 
     def remember_buffer(self, to):
         """Remember the content of the buffer and the position."""
-        self._lvb = _vim.buf[to.start.line:to.end.line + 1]
-        self._lvb_len = len(_vim.buf)
+        self._lvb = vim_helper.buf[to.start.line : to.end.line + 1]
+        self._lvb_len = len(vim_helper.buf)
         self.remember_position()
 
     @property
     def diff_in_buffer_length(self):
         """Returns the difference in the length of the current buffer compared
         to the remembered."""
-        return len(_vim.buf) - self._lvb_len
+        return len(vim_helper.buf) - self._lvb_len
 
     @property
     def pos(self):
@@ -102,7 +103,7 @@ class VimState(object):
         return self._lvb[:]
 
 
-class VisualContentPreserver(object):
+class VisualContentPreserver:
 
     """Saves the current visual selection and the selection mode it was done in
     (e.g. line selection, block selection or regular selection.)"""
@@ -112,43 +113,43 @@ class VisualContentPreserver(object):
 
     def reset(self):
         """Forget the preserved state."""
-        self._mode = ''
-        self._text = as_unicode('')
+        self._mode = ""
+        self._text = ""
         self._placeholder = None
 
     def conserve(self):
         """Save the last visual selection and the mode it was made in."""
-        sl, sbyte = map(int,
-                        (_vim.eval("""line("'<")"""), _vim.eval("""col("'<")""")))
-        el, ebyte = map(int,
-                        (_vim.eval("""line("'>")"""), _vim.eval("""col("'>")""")))
+        sl, sbyte = map(
+            int, (vim_helper.eval("""line("'<")"""), vim_helper.eval("""col("'<")"""))
+        )
+        el, ebyte = map(
+            int, (vim_helper.eval("""line("'>")"""), vim_helper.eval("""col("'>")"""))
+        )
         sc = byte2col(sl, sbyte - 1)
         ec = byte2col(el, ebyte - 1)
-        self._mode = _vim.eval('visualmode()')
+        self._mode = vim_helper.eval("visualmode()")
 
         # When 'selection' is 'exclusive', the > mark is one column behind the
         # actual content being copied, but never before the < mark.
-        if _vim.eval('&selection') == 'exclusive':
+        if vim_helper.eval("&selection") == "exclusive":
             if not (sl == el and sbyte == ebyte):
                 ec -= 1
 
-        _vim_line_with_eol = lambda ln: _vim.buf[ln] + '\n'
+        _vim_line_with_eol = lambda ln: vim_helper.buf[ln] + "\n"
 
         if sl == el:
-            text = _vim_line_with_eol(sl - 1)[sc:ec + 1]
+            text = _vim_line_with_eol(sl - 1)[sc : ec + 1]
         else:
             text = _vim_line_with_eol(sl - 1)[sc:]
             for cl in range(sl, el - 1):
                 text += _vim_line_with_eol(cl)
-            text += _vim_line_with_eol(el - 1)[:ec + 1]
+            text += _vim_line_with_eol(el - 1)[: ec + 1]
         self._text = text
 
     def conserve_placeholder(self, placeholder):
         if placeholder:
             self._placeholder = _Placeholder(
-                placeholder.current_text,
-                placeholder.start,
-                placeholder.end
+                placeholder.current_text, placeholder.start, placeholder.end
             )
         else:
             self._placeholder = None

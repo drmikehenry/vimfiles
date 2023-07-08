@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 """See module comment."""
 
-from UltiSnips.text_objects._base import NoneditableTextObject
+from UltiSnips.text_objects.base import NoneditableTextObject
 
 
 class EscapedChar(NoneditableTextObject):

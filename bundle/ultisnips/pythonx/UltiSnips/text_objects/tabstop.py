@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 """This is the most important TextObject.
@@ -8,7 +8,7 @@ the Snippet.
 
 """
 
-from UltiSnips.text_objects._base import EditableTextObject
+from UltiSnips.text_objects.base import EditableTextObject
 
 
 class TabStop(EditableTextObject):
@@ -22,8 +22,7 @@ class TabStop(EditableTextObject):
         else:
             self._number = token.number
             EditableTextObject.__init__(self, parent, token)
-        parent._tabstops[
-            self._number] = self  # pylint:disable=protected-access
+        parent._tabstops[self._number] = self  # pylint:disable=protected-access
 
     @property
     def number(self):
@@ -40,6 +39,5 @@ class TabStop(EditableTextObject):
         try:
             text = self.current_text
         except IndexError:
-            text = '<err>'
-        return 'TabStop(%s,%r->%r,%r)' % (self.number, self._start,
-                                          self._end, text)
+            text = "<err>"
+        return "TabStop(%s,%r->%r,%r)" % (self.number, self._start, self._end, text)

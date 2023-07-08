@@ -1,14 +1,14 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 """Common functionality of the snippet parsing codes."""
 
 from UltiSnips.position import Position
-from UltiSnips.snippet.parsing._lexer import tokenize, TabStopToken
+from UltiSnips.snippet.parsing.lexer import tokenize, TabStopToken
 from UltiSnips.text_objects import TabStop
 
-from UltiSnips.text_objects import  Mirror
-from UltiSnips.snippet.parsing._lexer import MirrorToken
+from UltiSnips.text_objects import Mirror
+from UltiSnips.snippet.parsing.lexer import MirrorToken
 
 
 def resolve_ambiguity(all_tokens, seen_ts):
@@ -25,9 +25,14 @@ def resolve_ambiguity(all_tokens, seen_ts):
                 Mirror(parent, seen_ts[token.number], token)
 
 
-def tokenize_snippet_text(snippet_instance, text, indent,
-                          allowed_tokens_in_text, allowed_tokens_in_tabstops,
-                          token_to_textobject):
+def tokenize_snippet_text(
+    snippet_instance,
+    text,
+    indent,
+    allowed_tokens_in_text,
+    allowed_tokens_in_tabstops,
+    token_to_textobject,
+):
     """Turns 'text' into a stream of tokens and creates the text objects from
     those tokens that are mentioned in 'token_to_textobject' assuming the
     current 'indent'.
@@ -48,12 +53,16 @@ def tokenize_snippet_text(snippet_instance, text, indent,
             if isinstance(token, TabStopToken):
                 ts = TabStop(parent, token)
                 seen_ts[token.number] = ts
-                _do_parse(ts, token.initial_text,
-                          allowed_tokens_in_tabstops)
+                _do_parse(ts, token.initial_text, allowed_tokens_in_tabstops)
             else:
                 klass = token_to_textobject.get(token.__class__, None)
                 if klass is not None:
-                    klass(parent, token)
+                    text_object = klass(parent, token)
+
+                    # TabStop has some subclasses (e.g. Choices)
+                    if isinstance(text_object, TabStop):
+                        seen_ts[text_object.number] = text_object
+
     _do_parse(snippet_instance, text, allowed_tokens_in_text)
     return all_tokens, seen_ts
 
