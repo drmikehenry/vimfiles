@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-07-09
+==========
+
+- Add experimental support for Neovim.  Documentation is greatly lacking for
+  setting this up.  Neovim-specific changes shouldn't take effect until
+  ``~/.config/nvim/init.lua`` is changed to explicitly chain to
+  ``~/.vim/init.lua``.
+
 2023-07-08
 ==========
 
