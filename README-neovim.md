@@ -75,4 +75,4 @@ These are work-in-progress notes about using vimfiles with Neovim.
       -- if not vim.env['VIMUSER'] then
       --     vim.env['VIMUSER'] = 'drmikehenry'
       -- end
-      vim.cmd('source ~/.vim/nvim/init.lua')
+      vim.cmd('source ~/.vim/init.lua')
