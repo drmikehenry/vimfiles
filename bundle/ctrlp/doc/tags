@@ -4,7 +4,6 @@
 'ctrlp-autocompletion'	ctrlp.txt	/*'ctrlp-autocompletion'*
 'ctrlp-fullregexp'	ctrlp.txt	/*'ctrlp-fullregexp'*
 'ctrlp-pasting'	ctrlp.txt	/*'ctrlp-pasting'*
-'ctrlp-wildignore'	ctrlp.txt	/*'ctrlp-wildignore'*
 'g:ctrlp_arg_map'	ctrlp.txt	/*'g:ctrlp_arg_map'*
 'g:ctrlp_brief_prompt'	ctrlp.txt	/*'g:ctrlp_brief_prompt'*
 'g:ctrlp_buffer_func'	ctrlp.txt	/*'g:ctrlp_buffer_func'*
@@ -52,6 +51,7 @@
 'g:ctrlp_tilde_homedir'	ctrlp.txt	/*'g:ctrlp_tilde_homedir'*
 'g:ctrlp_types'	ctrlp.txt	/*'g:ctrlp_types'*
 'g:ctrlp_use_caching'	ctrlp.txt	/*'g:ctrlp_use_caching'*
+'g:ctrlp_use_readdir'	ctrlp.txt	/*'g:ctrlp_use_readdir'*
 'g:ctrlp_user_command'	ctrlp.txt	/*'g:ctrlp_user_command'*
 'g:ctrlp_working_path_mode'	ctrlp.txt	/*'g:ctrlp_working_path_mode'*
 'g:loaded_ctrlp'	ctrlp.txt	/*'g:loaded_ctrlp'*
@@ -96,6 +96,7 @@ ctrlp-mappings	ctrlp.txt	/*ctrlp-mappings*
 ctrlp-miscellaneous-configs	ctrlp.txt	/*ctrlp-miscellaneous-configs*
 ctrlp-options	ctrlp.txt	/*ctrlp-options*
 ctrlp.txt	ctrlp.txt	/*ctrlp.txt*
+ctrlp_compare_lim	ctrlp.txt	/*ctrlp_compare_lim*
 g:ctrlp_dont_split	ctrlp.txt	/*g:ctrlp_dont_split*
 g:ctrlp_dotfiles	ctrlp.txt	/*g:ctrlp_dotfiles*
 g:ctrlp_highlight_match	ctrlp.txt	/*g:ctrlp_highlight_match*

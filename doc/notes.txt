@@ -1127,8 +1127,14 @@ Local customizations:
   around, and to avoid binding a commonly used function to the tmux prefix key
   (CTRL-j).
 
-Version 2022-02-09 (d5b0920) from:
-https://github.com/ctrlpvim/ctrlp.vim.git
+Version 2022-08-03 (8b4a952) from:
+https://github.com/ctrlpvim/ctrlp.vim
+
+with the following modifications found in branch `vimfiles` at:
+https://github.com/drmikehenry/ctrlp.vim
+
+- (branch no_cscopetag) Neovim lacks the `cscopetag` (`cst`) option; avoid
+  referencing this option when it is unavailable.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

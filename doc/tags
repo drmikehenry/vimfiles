@@ -62,6 +62,12 @@ notes_changes	notes.txt	/*notes_changes*
 notes_clipboard	notes.txt	/*notes_clipboard*
 notes_closetag	notes.txt	/*notes_closetag*
 notes_cmake	notes.txt	/*notes_cmake*
+notes_cmp	notes.txt	/*notes_cmp*
+notes_cmp-buffer	notes.txt	/*notes_cmp-buffer*
+notes_cmp-cmdline	notes.txt	/*notes_cmp-cmdline*
+notes_cmp-nvim-lsp	notes.txt	/*notes_cmp-nvim-lsp*
+notes_cmp-nvim-ultisnips	notes.txt	/*notes_cmp-nvim-ultisnips*
+notes_cmp-path	notes.txt	/*notes_cmp-path*
 notes_colorcolumn	notes.txt	/*notes_colorcolumn*
 notes_colorsamplerpack	notes.txt	/*notes_colorsamplerpack*
 notes_colorschemes	notes.txt	/*notes_colorschemes*

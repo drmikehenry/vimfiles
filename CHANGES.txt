@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-07-15
+==========
+
+- Upgrade CtrlP plugin to version 2022-08-03.  This includes a patch to prevent
+  referencing the 'cst' ('cscopetag') option when it is unavailable (a patch
+  needed for use with Neovim, as the latter lacks this option).
+
 2023-07-09
 ==========
 
