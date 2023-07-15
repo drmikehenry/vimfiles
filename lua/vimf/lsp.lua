@@ -50,10 +50,10 @@ M.lsp_on_attach = function(client, bufnr)
         end
     end
 
-    nmapif('K', vim.lsp.buf.hover, 'Hover symbol details', 'hover')
-    nmapif('<Space>lR', vim.lsp.buf.rename, 'Rename current symbol', 'rename')
     nmapif('<Space>la', vim.lsp.buf.code_action, 'Code Action', 'codeAction')
-    nmapif('<Space>lh', vim.lsp.buf.signature_help, 'Signature help',
+    nmapif('<Space>lh', vim.lsp.buf.hover, 'Hover info at cursor', 'hover info')
+    nmapif('<Space>lR', vim.lsp.buf.rename, 'Rename current symbol', 'rename')
+    nmapif('<Space>ls', vim.lsp.buf.signature_help, 'Signature help',
         'signatureHelp')
     nmapif('gD', vim.lsp.buf.declaration, 'Go to Declaration', 'declaration')
 
@@ -64,7 +64,6 @@ M.lsp_on_attach = function(client, bufnr)
         nmap('<Space>lG', vim.lsp.buf.workspace_symbol,
             'Find Workspace Symbols')
     end
-
 end
 
 ---------------------------------------------------------------
