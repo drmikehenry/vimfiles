@@ -14,6 +14,26 @@ require adjustment of per-user settings.
   referencing the 'cst' ('cscopetag') option when it is unavailable (a patch
   needed for use with Neovim, as the latter lacks this option).
 
+- Require case-sensitive matching for tags by setting ``tagcase=match``.
+
+  Previously Vim's default value ``tagcase=followic`` was used, meaning it
+  followed the ``ignorecase`` setting.  But generally tag lookup should ignore
+  case, as most of the time tags are looked up by pointing the cursor on a tag
+  and pressing CTRL-].  When case is ignored, the binary search optimization for
+  sorted tagfiles can't be done, and tag searches with large ``tags`` files are
+  very slow.
+
+  Note that using a regular expression for tag lookup causes the ``ignorecase``
+  setting to be honored again.  So::
+
+    " `sometag` must match the case exactly:
+    :tag sometag
+
+    " `sometag` is treated like a regex, so it matches case-insensitively.
+    " Note that this is a substring match as well, so it would match
+    " `anothersometag` as well:
+    :tag /sometag
+
 2023-07-09
 ==========
 

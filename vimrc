@@ -2393,6 +2393,27 @@ set incsearch
 set ignorecase
 set smartcase
 
+" For tag lookup, the default is `tagcase=followic`, meaning it following the
+" `ignorecase` setting.  But generally tag lookup should ignore case, as most of
+" the time tags are looked up by pointing the cursor on a tag and pressing
+" CTRL-].  When case is ignored, the binary search optimization for sorted
+" tagfiles can't be done, and tag searches with large `tags` files are very
+" slow.
+"
+" Note that using a regular expression for tag lookup causes the `ignorecase`
+" setting to be honored again.  So:
+"
+"   " `sometag` must match the case exactly:
+"   :tag sometag
+"
+"   " `sometag` is treated like a regex, so it matches case-insensitively.
+"   " Note that this is a substring match as well, so it would match
+"   " `anothersometag` as well:
+"   :tag /sometag
+
+" Require case-sensitive matching for tags:
+set tagcase=match
+
 " Do not wrap around buffer when searching.
 set nowrapscan
 
