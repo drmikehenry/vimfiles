@@ -2393,7 +2393,7 @@ set incsearch
 set ignorecase
 set smartcase
 
-" For tag lookup, the default is `tagcase=followic`, meaning it following the
+" For tag lookup, the default is `tagcase=followic`, meaning it follows the
 " `ignorecase` setting.  But generally tag lookup should ignore case, as most of
 " the time tags are looked up by pointing the cursor on a tag and pressing
 " CTRL-].  When case is ignored, the binary search optimization for sorted
