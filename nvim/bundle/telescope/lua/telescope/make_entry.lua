@@ -191,8 +191,15 @@ do
       return rawget(t, rawget(lookup_keys, k))
     end
 
-    return function(line)
-      return setmetatable({ line }, mt_file_entry)
+    if opts.file_entry_encoding then
+      return function(line)
+        line = vim.iconv(line, opts.file_entry_encoding, "utf8")
+        return setmetatable({ line }, mt_file_entry)
+      end
+    else
+      return function(line)
+        return setmetatable({ line }, mt_file_entry)
+      end
     end
   end
 end
@@ -319,10 +326,9 @@ do
           end
         end
 
-        local text = opts.file_encoding and vim.iconv(entry.text, opts.file_encoding, "utf8") or entry.text
         local display, hl_group, icon = utils.transform_devicons(
           entry.filename,
-          string.format(display_string, display_filename, coordinates, text),
+          string.format(display_string, display_filename, coordinates, entry.text),
           disable_devicons
         )
 
@@ -836,11 +842,23 @@ function make_entry.gen_from_keymaps(opts)
     return utils.display_termcodes(entry.lhs)
   end
 
+  local function get_attr(entry)
+    local ret = ""
+    if entry.value.noremap ~= 0 then
+      ret = ret .. "*"
+    end
+    if entry.value.buffer ~= 0 then
+      ret = ret .. "@"
+    end
+    return ret
+  end
+
   local displayer = require("telescope.pickers.entry_display").create {
     separator = "▏",
     items = {
-      { width = 2 },
+      { width = 3 },
       { width = opts.width_lhs },
+      { width = 2 },
       { remaining = true },
     },
   }
@@ -848,6 +866,7 @@ function make_entry.gen_from_keymaps(opts)
     return displayer {
       entry.mode,
       get_lhs(entry),
+      get_attr(entry),
       get_desc(entry),
     }
   end
@@ -1067,9 +1086,9 @@ function make_entry.gen_from_ctags(opts)
 
   local current_file_cache = {}
   return function(line)
-    if line == "" or line:sub(1, 1) == "!" then
-      return nil
-    end
+    local tag_file
+    -- split line by ':'
+    tag_file, line = string.match(line, "([^:]+):(.+)")
 
     local tag, file, scode, lnum
     -- ctags gives us: 'tags\tfile\tsource'
@@ -1077,6 +1096,12 @@ function make_entry.gen_from_ctags(opts)
     if not tag then
       -- hasktags gives us: 'tags\tfile\tlnum'
       tag, file, lnum = string.match(line, "([^\t]+)\t([^\t]+)\t(%d+).*")
+    end
+
+    -- append tag file path
+    if vim.opt.tagrelative:get() then
+      local tag_path = Path:new(tag_file):parent()
+      file = Path:new(tag_path .. "/" .. file):normalize(cwd)
     end
 
     if Path.path.sep == "\\" then
@@ -1133,8 +1158,15 @@ function make_entry.gen_from_diagnostics(opts)
     return signs
   end)()
 
+  local sign_width
+  if opts.disable_coordinates then
+    sign_width = signs ~= nil and 2 or 0
+  else
+    sign_width = signs ~= nil and 10 or 8
+  end
+
   local display_items = {
-    { width = signs ~= nil and 10 or 8 },
+    { width = sign_width },
     { remaining = true },
   }
   local line_width = vim.F.if_nil(opts.line_width, 0.5)
@@ -1152,8 +1184,9 @@ function make_entry.gen_from_diagnostics(opts)
 
     -- add styling of entries
     local pos = string.format("%4d:%2d", entry.lnum, entry.col)
+    local line_info_text = signs and signs[entry.type] .. " " or ""
     local line_info = {
-      (signs and signs[entry.type] .. " " or "") .. pos,
+      opts.disable_coordinates and line_info_text or line_info_text .. pos,
       "DiagnosticSign" .. entry.type,
     }
 

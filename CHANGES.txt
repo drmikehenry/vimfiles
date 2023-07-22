@@ -18,6 +18,10 @@ require adjustment of per-user settings.
 
     :WhichKey
 
+- Upgrade Telescope plugin to version 2023-07-22.  This fixes problems with fast
+  typing wherein the user's keystrokes intended to be used as a search pattern
+  can be ignored or can cause mis-behavior of the Picker.
+
 2023-07-15
 ==========
 

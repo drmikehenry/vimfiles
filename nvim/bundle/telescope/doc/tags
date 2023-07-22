@@ -64,15 +64,21 @@ telescope.actions.open_loclist()	telescope.txt	/*telescope.actions.open_loclist(
 telescope.actions.open_qflist()	telescope.txt	/*telescope.actions.open_qflist()*
 telescope.actions.paste_register()	telescope.txt	/*telescope.actions.paste_register()*
 telescope.actions.preview_scrolling_down()	telescope.txt	/*telescope.actions.preview_scrolling_down()*
+telescope.actions.preview_scrolling_left()	telescope.txt	/*telescope.actions.preview_scrolling_left()*
+telescope.actions.preview_scrolling_right()	telescope.txt	/*telescope.actions.preview_scrolling_right()*
 telescope.actions.preview_scrolling_up()	telescope.txt	/*telescope.actions.preview_scrolling_up()*
 telescope.actions.remove_selected_picker()	telescope.txt	/*telescope.actions.remove_selected_picker()*
 telescope.actions.remove_selection()	telescope.txt	/*telescope.actions.remove_selection()*
 telescope.actions.results_scrolling_down()	telescope.txt	/*telescope.actions.results_scrolling_down()*
+telescope.actions.results_scrolling_left()	telescope.txt	/*telescope.actions.results_scrolling_left()*
+telescope.actions.results_scrolling_right()	telescope.txt	/*telescope.actions.results_scrolling_right()*
 telescope.actions.results_scrolling_up()	telescope.txt	/*telescope.actions.results_scrolling_up()*
 telescope.actions.select_all()	telescope.txt	/*telescope.actions.select_all()*
 telescope.actions.select_default()	telescope.txt	/*telescope.actions.select_default()*
+telescope.actions.select_drop()	telescope.txt	/*telescope.actions.select_drop()*
 telescope.actions.select_horizontal()	telescope.txt	/*telescope.actions.select_horizontal()*
 telescope.actions.select_tab()	telescope.txt	/*telescope.actions.select_tab()*
+telescope.actions.select_tab_drop()	telescope.txt	/*telescope.actions.select_tab_drop()*
 telescope.actions.select_vertical()	telescope.txt	/*telescope.actions.select_vertical()*
 telescope.actions.send_selected_to_loclist()	telescope.txt	/*telescope.actions.send_selected_to_loclist()*
 telescope.actions.send_selected_to_qflist()	telescope.txt	/*telescope.actions.send_selected_to_qflist()*
@@ -80,6 +86,8 @@ telescope.actions.send_to_loclist()	telescope.txt	/*telescope.actions.send_to_lo
 telescope.actions.send_to_qflist()	telescope.txt	/*telescope.actions.send_to_qflist()*
 telescope.actions.set	telescope.txt	/*telescope.actions.set*
 telescope.actions.set.edit()	telescope.txt	/*telescope.actions.set.edit()*
+telescope.actions.set.scroll_horizontal_previewer()	telescope.txt	/*telescope.actions.set.scroll_horizontal_previewer()*
+telescope.actions.set.scroll_horizontal_results()	telescope.txt	/*telescope.actions.set.scroll_horizontal_results()*
 telescope.actions.set.scroll_previewer()	telescope.txt	/*telescope.actions.set.scroll_previewer()*
 telescope.actions.set.scroll_results()	telescope.txt	/*telescope.actions.set.scroll_results()*
 telescope.actions.set.select()	telescope.txt	/*telescope.actions.set.select()*
@@ -116,6 +124,7 @@ telescope.builtin.fd()	telescope.txt	/*telescope.builtin.fd()*
 telescope.builtin.filetypes()	telescope.txt	/*telescope.builtin.filetypes()*
 telescope.builtin.find_files()	telescope.txt	/*telescope.builtin.find_files()*
 telescope.builtin.git_bcommits()	telescope.txt	/*telescope.builtin.git_bcommits()*
+telescope.builtin.git_bcommits_range()	telescope.txt	/*telescope.builtin.git_bcommits_range()*
 telescope.builtin.git_branches()	telescope.txt	/*telescope.builtin.git_branches()*
 telescope.builtin.git_commits()	telescope.txt	/*telescope.builtin.git_commits()*
 telescope.builtin.git_files()	telescope.txt	/*telescope.builtin.git_files()*
@@ -161,6 +170,8 @@ telescope.changelog-1553	telescope_changelog.txt	/*telescope.changelog-1553*
 telescope.changelog-1851	telescope_changelog.txt	/*telescope.changelog-1851*
 telescope.changelog-1866	telescope_changelog.txt	/*telescope.changelog-1866*
 telescope.changelog-1945	telescope_changelog.txt	/*telescope.changelog-1945*
+telescope.changelog-2499	telescope_changelog.txt	/*telescope.changelog-2499*
+telescope.changelog-2529	telescope_changelog.txt	/*telescope.changelog-2529*
 telescope.changelog-473	telescope_changelog.txt	/*telescope.changelog-473*
 telescope.changelog-839	telescope_changelog.txt	/*telescope.changelog-839*
 telescope.changelog-922	telescope_changelog.txt	/*telescope.changelog-922*
@@ -180,6 +191,7 @@ telescope.defaults.file_sorter	telescope.txt	/*telescope.defaults.file_sorter*
 telescope.defaults.generic_sorter	telescope.txt	/*telescope.defaults.generic_sorter*
 telescope.defaults.get_selection_window	telescope.txt	/*telescope.defaults.get_selection_window*
 telescope.defaults.get_status_text	telescope.txt	/*telescope.defaults.get_status_text*
+telescope.defaults.git_worktrees	telescope.txt	/*telescope.defaults.git_worktrees*
 telescope.defaults.grep_previewer	telescope.txt	/*telescope.defaults.grep_previewer*
 telescope.defaults.history	telescope.txt	/*telescope.defaults.history*
 telescope.defaults.hl_result_eol	telescope.txt	/*telescope.defaults.hl_result_eol*
@@ -250,5 +262,6 @@ telescope.themes.get_dropdown()	telescope.txt	/*telescope.themes.get_dropdown()*
 telescope.themes.get_ivy()	telescope.txt	/*telescope.themes.get_ivy()*
 telescope.theprimeagen	secret.txt	/*telescope.theprimeagen*
 telescope.utils	telescope.txt	/*telescope.utils*
+telescope.utils.has_ts_parser()	telescope.txt	/*telescope.utils.has_ts_parser()*
 telescope.utils.notify()	telescope.txt	/*telescope.utils.notify()*
 telescope.utils.transform_path()	telescope.txt	/*telescope.utils.transform_path()*

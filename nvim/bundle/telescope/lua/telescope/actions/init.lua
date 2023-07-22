@@ -222,6 +222,18 @@ actions.preview_scrolling_down = function(prompt_bufnr)
   action_set.scroll_previewer(prompt_bufnr, 1)
 end
 
+--- Scroll the preview window to the left
+---@param prompt_bufnr number: The prompt bufnr
+actions.preview_scrolling_left = function(prompt_bufnr)
+  action_set.scroll_horizontal_previewer(prompt_bufnr, -1)
+end
+
+--- Scroll the preview window to the right
+---@param prompt_bufnr number: The prompt bufnr
+actions.preview_scrolling_right = function(prompt_bufnr)
+  action_set.scroll_horizontal_previewer(prompt_bufnr, 1)
+end
+
 --- Scroll the results window up
 ---@param prompt_bufnr number: The prompt bufnr
 actions.results_scrolling_up = function(prompt_bufnr)
@@ -232,6 +244,18 @@ end
 ---@param prompt_bufnr number: The prompt bufnr
 actions.results_scrolling_down = function(prompt_bufnr)
   action_set.scroll_results(prompt_bufnr, 1)
+end
+
+--- Scroll the results window to the left
+---@param prompt_bufnr number: The prompt bufnr
+actions.results_scrolling_left = function(prompt_bufnr)
+  action_set.scroll_horizontal_results(prompt_bufnr, -1)
+end
+
+--- Scroll the results window to the right
+---@param prompt_bufnr number: The prompt bufnr
+actions.results_scrolling_right = function(prompt_bufnr)
+  action_set.scroll_horizontal_results(prompt_bufnr, 1)
 end
 
 --- Center the cursor in the window, can be used after selecting a file to edit
@@ -286,6 +310,30 @@ actions.select_tab = {
   pre = append_to_history,
   action = function(prompt_bufnr)
     return action_set.select(prompt_bufnr, "tab")
+  end,
+}
+
+--- Perform 'drop' action on selection, usually something like<br>
+---`:drop <selection>`
+---
+--- i.e. open the selection in a window
+---@param prompt_bufnr number: The prompt bufnr
+actions.select_drop = {
+  pre = append_to_history,
+  action = function(prompt_bufnr)
+    return action_set.select(prompt_bufnr, "drop")
+  end,
+}
+
+--- Perform 'tab drop' action on selection, usually something like<br>
+---`:tab drop <selection>`
+---
+--- i.e. open the selection in a new tab
+---@param prompt_bufnr number: The prompt bufnr
+actions.select_tab_drop = {
+  pre = append_to_history,
+  action = function(prompt_bufnr)
+    return action_set.select(prompt_bufnr, "tab drop")
   end,
 }
 
@@ -644,18 +692,34 @@ actions.git_track_branch = make_git_branch_action {
   end,
 }
 
---- Delete the currently selected branch
+--- Delete all currently selected branches
 ---@param prompt_bufnr number: The prompt bufnr
-actions.git_delete_branch = make_git_branch_action {
-  should_confirm = true,
-  action_name = "actions.git_delete_branch",
-  confirmation_question = "Do you really wanna delete branch %s? [Y/n] ",
-  success_message = "Deleted branch: %s",
-  error_message = "Error when deleting branch: %s. Git returned: '%s'",
-  command = function(branch_name)
-    return { "git", "branch", "-D", branch_name }
-  end,
-}
+actions.git_delete_branch = function(prompt_bufnr)
+  local confirmation = vim.fn.input "Do you really want to delete the selected branches? [Y/n] "
+  if confirmation ~= "" and string.lower(confirmation) ~= "y" then
+    return
+  end
+
+  local picker = action_state.get_current_picker(prompt_bufnr)
+  local action_name = "actions.git_delete_branch"
+  picker:delete_selection(function(selection)
+    local branch = selection.value
+    print("Deleting branch " .. branch)
+    local _, ret, stderr = utils.get_os_command_output({ "git", "branch", "-D", branch }, picker.cwd)
+    if ret == 0 then
+      utils.notify(action_name, {
+        msg = string.format("Deleted branch: %s", branch),
+        level = "INFO",
+      })
+    else
+      utils.notify(action_name, {
+        msg = string.format("Error when deleting branch: %s. Git returned: '%s'", branch, table.concat(stderr, " ")),
+        level = "ERROR",
+      })
+    end
+    return ret == 0
+  end)
+end
 
 --- Merge the currently selected branch
 ---@param prompt_bufnr number: The prompt bufnr
@@ -1274,20 +1338,30 @@ end
 ---@param prompt_bufnr number: The prompt bufnr
 actions.to_fuzzy_refine = function(prompt_bufnr)
   local line = action_state.get_current_line()
-  local prefix = (function()
+  local opts = (function()
+    local opts = {
+      sorter = conf.generic_sorter {},
+    }
+
     local title = action_state.get_current_picker(prompt_bufnr).prompt_title
     if title == "Live Grep" then
-      return "Find Word"
+      opts.prefix = "Find Word"
     elseif title == "LSP Dynamic Workspace Symbols" then
-      return "LSP Workspace Symbols"
+      opts.prefix = "LSP Workspace Symbols"
+      opts.sorter = conf.prefilter_sorter {
+        tag = "symbol_type",
+        sorter = opts.sorter,
+      }
     else
-      return "Fuzzy over"
+      opts.prefix = "Fuzzy over"
     end
+
+    return opts
   end)()
 
   require("telescope.actions.generate").refine(prompt_bufnr, {
-    prompt_title = string.format("%s (%s)", prefix, line),
-    sorter = conf.generic_sorter {},
+    prompt_title = string.format("%s (%s)", opts.prefix, line),
+    sorter = opts.sorter,
   })
 end
 

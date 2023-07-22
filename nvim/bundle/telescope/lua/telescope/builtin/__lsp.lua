@@ -25,7 +25,7 @@ lsp.references = function(opts)
     local locations = {}
     if result then
       local results = vim.lsp.util.locations_to_items(result, vim.lsp.get_client_by_id(ctx.client_id).offset_encoding)
-      if include_current_line then
+      if not include_current_line then
         locations = vim.tbl_filter(function(v)
           -- Remove current line from result
           return not (v.filename == filepath and v.lnum == lnum)
@@ -36,6 +36,32 @@ lsp.references = function(opts)
     end
 
     if vim.tbl_isempty(locations) then
+      return
+    end
+
+    if #locations == 1 and opts.jump_type ~= "never" then
+      if filepath ~= locations[1].filename then
+        if opts.jump_type == "tab" then
+          vim.cmd "tabedit"
+        elseif opts.jump_type == "split" then
+          vim.cmd "new"
+        elseif opts.jump_type == "vsplit" then
+          vim.cmd "vnew"
+        end
+      end
+      -- jump to location
+      local location = locations[1]
+      local bufnr = opts.bufnr
+      if location.filename then
+        local uri = location.filename
+        if not utils.is_uri(uri) then
+          uri = vim.uri_from_fname(uri)
+        end
+
+        bufnr = vim.uri_to_bufnr(uri)
+      end
+      vim.api.nvim_win_set_buf(0, bufnr)
+      vim.api.nvim_win_set_cursor(0, { location.lnum, location.col - 1 })
       return
     end
 
@@ -175,7 +201,8 @@ local function list_or_jump(action, title, opts)
           vim.cmd "vnew"
         end
       end
-      vim.lsp.util.jump_to_location(flattened_results[1], offset_encoding)
+
+      vim.lsp.util.jump_to_location(flattened_results[1], offset_encoding, opts.reuse_win)
     else
       local locations = vim.lsp.util.locations_to_items(flattened_results, offset_encoding)
       pickers
@@ -207,6 +234,38 @@ lsp.implementations = function(opts)
   return list_or_jump("textDocument/implementation", "LSP Implementations", opts)
 end
 
+local symbols_sorter = function(symbols)
+  if vim.tbl_isempty(symbols) then
+    return symbols
+  end
+
+  local current_buf = vim.api.nvim_get_current_buf()
+
+  -- sort adequately for workspace symbols
+  local filename_to_bufnr = {}
+  for _, symbol in ipairs(symbols) do
+    if filename_to_bufnr[symbol.filename] == nil then
+      filename_to_bufnr[symbol.filename] = vim.uri_to_bufnr(vim.uri_from_fname(symbol.filename))
+    end
+    symbol.bufnr = filename_to_bufnr[symbol.filename]
+  end
+
+  table.sort(symbols, function(a, b)
+    if a.bufnr == b.bufnr then
+      return a.lnum < b.lnum
+    end
+    if a.bufnr == current_buf then
+      return true
+    end
+    if b.bufnr == current_buf then
+      return false
+    end
+    return a.bufnr < b.bufnr
+  end)
+
+  return symbols
+end
+
 lsp.document_symbols = function(opts)
   local params = vim.lsp.util.make_position_params(opts.winnr)
   vim.lsp.buf_request(opts.bufnr, "textDocument/documentSymbol", params, function(err, result, _, _)
@@ -224,7 +283,7 @@ lsp.document_symbols = function(opts)
     end
 
     local locations = vim.lsp.util.symbols_to_items(result or {}, opts.bufnr) or {}
-    locations = utils.filter_symbols(locations, opts)
+    locations = utils.filter_symbols(locations, opts, symbols_sorter)
     if locations == nil then
       -- error message already printed in `utils.filter_symbols`
       return
@@ -267,7 +326,7 @@ lsp.workspace_symbols = function(opts)
     end
 
     local locations = vim.lsp.util.symbols_to_items(server_result or {}, opts.bufnr) or {}
-    locations = utils.filter_symbols(locations, opts)
+    locations = utils.filter_symbols(locations, opts, symbols_sorter)
     if locations == nil then
       -- error message already printed in `utils.filter_symbols`
       return
@@ -315,7 +374,7 @@ local function get_workspace_symbols_requester(bufnr, opts)
 
     local locations = vim.lsp.util.symbols_to_items(res or {}, bufnr) or {}
     if not vim.tbl_isempty(locations) then
-      locations = utils.filter_symbols(locations, opts) or {}
+      locations = utils.filter_symbols(locations, opts, symbols_sorter) or {}
     end
     return locations
   end
@@ -339,44 +398,38 @@ lsp.dynamic_workspace_symbols = function(opts)
     :find()
 end
 
-local function check_capabilities(feature, bufnr)
-  local clients = vim.lsp.buf_get_clients(bufnr)
+local function check_capabilities(method, bufnr)
+  local clients = vim.lsp.get_active_clients { bufnr = bufnr }
 
-  local supported_client = false
   for _, client in pairs(clients) do
-    supported_client = client.server_capabilities[feature]
-    if supported_client then
-      break
+    if client.supports_method(method, { bufnr = bufnr }) then
+      return true
     end
   end
 
-  if supported_client then
-    return true
+  if #clients == 0 then
+    utils.notify("builtin.lsp_*", {
+      msg = "no client attached",
+      level = "INFO",
+    })
   else
-    if #clients == 0 then
-      utils.notify("builtin.lsp_*", {
-        msg = "no client attached",
-        level = "INFO",
-      })
-    else
-      utils.notify("builtin.lsp_*", {
-        msg = "server does not support " .. feature,
-        level = "INFO",
-      })
-    end
-    return false
+    utils.notify("builtin.lsp_*", {
+      msg = "server does not support " .. method,
+      level = "INFO",
+    })
   end
+  return false
 end
 
 local feature_map = {
-  ["document_symbols"] = "documentSymbolProvider",
-  ["references"] = "referencesProvider",
-  ["definitions"] = "definitionProvider",
-  ["type_definitions"] = "typeDefinitionProvider",
-  ["implementations"] = "implementationProvider",
-  ["workspace_symbols"] = "workspaceSymbolProvider",
-  ["incoming_calls"] = "callHierarchyProvider",
-  ["outgoing_calls"] = "callHierarchyProvider",
+  ["document_symbols"] = "textDocument/documentSymbol",
+  ["references"] = "textDocument/references",
+  ["definitions"] = "textDocument/definition",
+  ["type_definitions"] = "textDocument/typeDefinition",
+  ["implementations"] = "textDocument/implementation",
+  ["workspace_symbols"] = "workspace/symbol",
+  ["incoming_calls"] = "callHierarchy/incomingCalls",
+  ["outgoing_calls"] = "callHierarchy/outgoingCalls",
 }
 
 local function apply_checks(mod)
@@ -384,8 +437,8 @@ local function apply_checks(mod)
     mod[k] = function(opts)
       opts = opts or {}
 
-      local feature_name = feature_map[k]
-      if feature_name and not check_capabilities(feature_name, opts.bufnr) then
+      local method = feature_map[k]
+      if method and not check_capabilities(method, opts.bufnr) then
         return
       end
       v(opts)

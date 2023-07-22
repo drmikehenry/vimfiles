@@ -126,6 +126,10 @@ files.live_grep = function(opts)
     end
   end
 
+  if opts.file_encoding then
+    additional_args[#additional_args + 1] = "--encoding=" .. opts.file_encoding
+  end
+
   local args = flatten { vimgrep_arguments, additional_args }
   opts.__inverted, opts.__matches = opts_contain_invert(args)
 
@@ -162,10 +166,20 @@ files.live_grep = function(opts)
 end
 
 files.grep_string = function(opts)
-  -- TODO: This should probably check your visual selection as well, if you've got one
   opts.cwd = opts.cwd and vim.fn.expand(opts.cwd) or vim.loop.cwd()
   local vimgrep_arguments = vim.F.if_nil(opts.vimgrep_arguments, conf.vimgrep_arguments)
-  local word = vim.F.if_nil(opts.search, vim.fn.expand "<cword>")
+  local word
+  local visual = vim.fn.mode() == "v"
+
+  if visual == true then
+    local saved_reg = vim.fn.getreg "v"
+    vim.cmd [[noautocmd sil norm "vy]]
+    local sele = vim.fn.getreg "v"
+    vim.fn.setreg("v", saved_reg)
+    word = vim.F.if_nil(opts.search, sele)
+  else
+    word = vim.F.if_nil(opts.search, vim.fn.expand "<cword>")
+  end
   local search = opts.use_regex and word or escape_chars(word)
 
   local additional_args = {}
@@ -177,18 +191,32 @@ files.grep_string = function(opts)
     end
   end
 
+  if opts.file_encoding then
+    additional_args[#additional_args + 1] = "--encoding=" .. opts.file_encoding
+  end
+
   if search == "" then
     search = { "-v", "--", "^[[:space:]]*$" }
   else
     search = { "--", search }
   end
 
-  local args = flatten {
-    vimgrep_arguments,
-    additional_args,
-    opts.word_match,
-    search,
-  }
+  local args
+  if visual == true then
+    args = flatten {
+      vimgrep_arguments,
+      additional_args,
+      search,
+    }
+  else
+    args = flatten {
+      vimgrep_arguments,
+      additional_args,
+      opts.word_match,
+      search,
+    }
+  end
+
   opts.__inverted, opts.__matches = opts_contain_invert(args)
 
   if opts.grep_open_files then
@@ -363,7 +391,7 @@ files.treesitter = function(opts)
   local has_nvim_treesitter, _ = pcall(require, "nvim-treesitter")
   if not has_nvim_treesitter then
     utils.notify("builtin.treesitter", {
-      msg = "User need to install nvim-treesitter needs to be installed",
+      msg = "This picker requires nvim-treesitter",
       level = "ERROR",
     })
     return
@@ -386,6 +414,12 @@ files.treesitter = function(opts)
       entry.kind = vim.F.if_nil(entry.kind, "")
       table.insert(results, entry)
     end
+  end
+
+  results = utils.filter_symbols(results, opts)
+  if results == nil then
+    -- error message already printed in `utils.filter_symbols`
+    return
   end
 
   if vim.tbl_isempty(results) then
@@ -425,16 +459,10 @@ files.current_buffer_fuzzy_find = function(opts)
     })
   end
 
-  local ts_ok, ts_parsers = pcall(require, "nvim-treesitter.parsers")
-  if ts_ok then
-    filetype = ts_parsers.ft_to_lang(filetype)
-  end
-  local _, ts_configs = pcall(require, "nvim-treesitter.configs")
-
-  local parser_ok, parser = pcall(vim.treesitter.get_parser, opts.bufnr, filetype)
-  local get_query = vim.treesitter.query.get or vim.treesitter.get_query
-  local query_ok, query = pcall(get_query, filetype, "highlights")
-  if parser_ok and query_ok and ts_ok and ts_configs.is_enabled("highlight", filetype, opts.bufnr) then
+  local lang = vim.treesitter.language.get_lang(filetype)
+  if lang and utils.has_ts_parser(lang) then
+    local parser = vim.treesitter.get_parser(opts.bufnr, lang)
+    local query = vim.treesitter.query.get(lang, "highlights")
     local root = parser:parse()[1]:root()
 
     local line_highlights = setmetatable({}, {
@@ -445,25 +473,8 @@ files.current_buffer_fuzzy_find = function(opts)
       end,
     })
 
-    -- update to changes on Neovim master, see https://github.com/neovim/neovim/pull/19931
-    -- TODO(clason): remove when dropping support for Neovim 0.7
-    local get_hl_from_capture = (function()
-      if vim.fn.has "nvim-0.8" == 1 then
-        return function(q, id)
-          return "@" .. q.captures[id]
-        end
-      else
-        local highlighter = vim.treesitter.highlighter.new(parser)
-        local highlighter_query = highlighter:get_query(filetype)
-
-        return function(_, id)
-          return highlighter_query:_get_hl_from_capture(id)
-        end
-      end
-    end)()
-
     for id, node in query:iter_captures(root, opts.bufnr, 0, -1) do
-      local hl = get_hl_from_capture(query, id)
+      local hl = "@" .. query.captures[id]
       if hl and type(hl) ~= "number" then
         local row1, col1, row2, col2 = node:range()
 
@@ -518,6 +529,23 @@ files.current_buffer_fuzzy_find = function(opts)
 end
 
 files.tags = function(opts)
+  -- find lines not matching tags file format (begins with !) or empty lines.
+  local tags_command = (function()
+    if 1 == vim.fn.executable "rg" then
+      return { "rg", "-H", "-N", "--no-heading", "--color", "never", "-v", "^!|^$" }
+    elseif 1 == vim.fn.executable "grep" then
+      return { "grep", "-H", "--color=never", "-v", "^!\\|^$" }
+    end
+  end)()
+
+  if not tags_command then
+    utils.notify("builtin.tags", {
+      msg = "You need to install either grep or rg",
+      level = "ERROR",
+    })
+    return
+  end
+
   local tagfiles = opts.ctags_file and { opts.ctags_file } or vim.fn.tagfiles()
   for i, ctags_file in ipairs(tagfiles) do
     tagfiles[i] = vim.fn.expand(ctags_file, true)
@@ -534,7 +562,7 @@ files.tags = function(opts)
   pickers
     .new(opts, {
       prompt_title = "Tags",
-      finder = finders.new_oneshot_job(flatten { "cat", tagfiles }, opts),
+      finder = finders.new_oneshot_job(flatten { tags_command, tagfiles }, opts),
       previewer = previewers.ctags.new(opts),
       sorter = conf.generic_sorter(opts),
       attach_mappings = function()
