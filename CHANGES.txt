@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-07-22
+==========
+
+- Restore ``timeoutlen`` to 3 seconds.
+
+  The previous shortening to 1.5 seconds was too short.  If waiting the full 3
+  seconds for WhichKey to pop up feels too long, it turns out plugin can be
+  triggered directly via::
+
+    :WhichKey
+
 2023-07-15
 ==========
 
