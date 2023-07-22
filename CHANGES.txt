@@ -22,6 +22,11 @@ require adjustment of per-user settings.
   typing wherein the user's keystrokes intended to be used as a search pattern
   can be ignored or can cause mis-behavior of the Picker.
 
+- Add Telescope mappings for tags::
+
+    <Space>ft       - find tags in current directory
+    <Space>fT       - find tags in current buffer
+
 2023-07-15
 ==========
 

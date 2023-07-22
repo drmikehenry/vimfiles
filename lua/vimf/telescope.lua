@@ -47,6 +47,9 @@ M.setup = function()
         end,
         'Find Man pages'
     )
+    nmap('<Space>ft', telescope.tags, 'Tags in current dir (telescope)')
+    nmap('<Space>fT', telescope.current_buffer_tags,
+        'Tags in current buffer (telescope)')
     nmap('<Space>lD', telescope.diagnostics, 'all Line Diagnostics (telescope)')
     nmap('gd', telescope.lsp_definitions, 'LSP: Go to Definition (telescope)')
     nmap('gI', telescope.lsp_implementations,
