@@ -21,6 +21,13 @@ These are work-in-progress notes about using vimfiles with Neovim.
 
       let g:python3_host_prog = '/opt/pynvim/env/bin/python'
 
+- Install Neovim-qt:
+
+      sudo apt-get install neovim-qt
+
+  Invoke via `nvim-qt`.  The packed version of `neovim-qt` is older than Neovim
+  0.9.1 but it works well.
+
 - Install Neovide:
 
   Building is offline-only at this point.
@@ -57,8 +64,12 @@ These are work-in-progress notes about using vimfiles with Neovim.
 
   - For telescope:
 
+        # On Ubuntu:
         sudo apt-get install fd-find
-        # Or `cargo install fd`
+        sudo ln -s /usr/bin/fdfind /usr/local/bin/fd
+
+        # Alternatively, install via Cargo:
+        cargo install fd-find
 
   - For LSP:
 
