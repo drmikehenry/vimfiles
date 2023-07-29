@@ -44,14 +44,14 @@ augroup endwise " {{{1
         \ let b:endwise_syngroups = 'vbStatement,vbnetStorage,vbnetProcedure,vbnet.*Words,AspVBSStatement'
   autocmd FileType vim
         \ let b:endwise_addition = '\=submatch(0)=~"aug\\%[roup]" ? submatch(0) . " END" : "end" . submatch(0)' |
-        \ let b:endwise_words = 'fu\%[nction],wh\%[ile],if,for,try,aug\%[roup]\%(\s\+\cEND\)\@!' |
-        \ let b:endwise_end_pattern = '\%(end\%(fu\%[nction]\|wh\%[hile]\|if\|for\|try\)\)\|aug\%[roup]\%(\s\+\cEND\)' |
+        \ let b:endwise_words = 'fu\%[nction],wh\%[ile],if,for,try,def,aug\%[roup]\%(\s\+\cEND\)\@!' |
+        \ let b:endwise_end_pattern = '\%(end\%(fu\%[nction]\|wh\%[hile]\|if\|for\|try\|def\)\)\|aug\%[roup]\%(\s\+\cEND\)' |
         \ let b:endwise_syngroups = 'vimFuncKey,vimNotFunc,vimCommand,vimAugroupKey,vimAugroup,vimAugroupError'
   autocmd FileType c,cpp,xdefaults,haskell
         \ let b:endwise_addition = '#endif' |
         \ let b:endwise_words = 'if,ifdef,ifndef' |
         \ let b:endwise_pattern = '^\s*#\%(if\|ifdef\|ifndef\)\>' |
-        \ let b:endwise_syngroups = 'cPreCondit,cPreConditMatch,cCppInWrapper,xdefaultsPreProc'
+        \ let b:endwise_syngroups = 'cPreCondit,cPreConditMatch,cCppInWrapper,cCppOutWrapper,xdefaultsPreProc'
   autocmd FileType objc
         \ let b:endwise_addition = '@end' |
         \ let b:endwise_words = 'interface,implementation' |
@@ -62,15 +62,15 @@ augroup endwise " {{{1
         \ let b:endwise_words = 'ifdef,ifndef,ifeq,ifneq,define' |
         \ let b:endwise_pattern = '^\s*\(d\zsef\zeine\|\zsif\zen\=\(def\|eq\)\)\>' |
         \ let b:endwise_syngroups = 'makePreCondit,makeDefine'
-  autocmd FileType verilog
-        \ let b:endwise_addition = 'end&' |
-        \ let b:endwise_words = 'begin,module,case,function,primitive,specify,task' |
-        \ let b:endwise_pattern = '\<\%(\zs\zebegin\|module\|case\|function\|primitive\|specify\|task\)\>.*$' |
-        \ let b:endwise_syngroups = 'verilogConditional,verilogLabel,verilogStatement'
+  autocmd FileType verilog,systemverilog
+        \ let b:endwise_addition = '\=submatch(0)==#"begin" ? "end" : "end" . submatch(0)' |
+        \ let b:endwise_words = 'begin,module,case,function,primitive,specify,task,generate,package,interface,class,program,property,sequence,table,clocking,checker,config' |
+        \ let b:endwise_pattern = '\<\%(begin\|module\|case\|function\|primitive\|specify\|task\|generate\|package\|interface\|class\|program\|property\|sequence\|table\|clocking\|checker\|config\)\>' |
+        \ let b:endwise_syngroups = 'verilogConditional,verilogLabel,verilogStatement,systemverilogStatement'
   autocmd FileType matlab
         \ let b:endwise_addition = 'end' |
-        \ let b:endwise_words = 'function,if,for' |
-        \ let b:endwise_syngroups = 'matlabStatement,matlabFunction,matlabConditional,matlabRepeat'
+        \ let b:endwise_words = 'function,if,for,switch,while,try' |
+        \ let b:endwise_syngroups = 'matlabStatement,matlabFunction,matlabConditional,matlabRepeat,matlabLabel,matlabExceptions'
   autocmd FileType htmldjango
         \ let b:endwise_addition = '{% end& %}' |
         \ let b:endwise_words = 'autoescape,block,blocktrans,cache,comment,filter,for,if,ifchanged,ifequal,ifnotequal,language,spaceless,verbatim,with' |
@@ -83,13 +83,18 @@ augroup endwise " {{{1
         \ let b:endwise_addition = 'endsnippet' |
         \ let b:endwise_words = 'snippet' |
         \ let b:endwise_syngroups = 'snipSnippet,snipSnippetHeader,snipSnippetHeaderKeyword'
+  autocmd FileType ocaml
+        \ let b:endwise_addition = '\=submatch(0) ==# "do" ? "done" : submatch(0) =~# "match\\|try" ? "with" : "end"' |
+        \ let b:endwise_words = 'struct,sig,begin,object,do,match,try' |
+        \ let b:endwise_pattern = '\zs\<&\>\ze\%(.*\%(end\|done\|with\)\)\@!.*$' |
+        \ let b:endwise_syngroups = 'ocamlStruct,ocamlStructEncl,ocamlSig,ocamlSigEncl,ocamlObject,ocamlLCIdentifier,ocamlKeyword,ocamlDo,ocamlEnd,'
   autocmd FileType * call s:abbrev()
   autocmd CmdwinEnter * call s:NeutralizeMap()
   autocmd VimEnter * call s:DefineMap()
 augroup END " }}}1
 
 function! s:abbrev() abort
-  if get(g:, 'endwise_abbreviations', 0) && &buftype =~# '^\%(nowrite\|acwrite\)\=$'
+  if get(g:, 'endwise_abbreviations', 0) && &buftype =~# '^\%(nowrite\)\=$'
     for word in split(get(b:, 'endwise_words', ''), ',')
       execute 'iabbrev <buffer><script>' word word.'<CR><SID>(endwise-append)<Space><C-U><BS>'
     endfor
@@ -101,7 +106,7 @@ endfunction
 function! EndwiseAppend(...) abort
   if !a:0 || type(a:1) != type('')
     return "\<C-R>=EndwiseDiscretionary()\r"
-  elseif a:1 =~# "\r"
+  elseif a:1 =~# "\r" && &buftype =~# '^\%(nowrite\)\=$'
     return a:1 . "\<C-R>=EndwiseDiscretionary()\r"
   else
     return a:1
@@ -122,22 +127,23 @@ function! s:NeutralizeMap() abort
   endif
 endfunction
 
-imap <script><expr> <SID>(endwise-append) EndwiseDiscretionary()
+imap <script><silent> <SID>(endwise-append) <C-R>=EndwiseDiscretionary()<CR>
 imap <script> <Plug>(endwise-append) <SID>(endwise-append)
 imap <script> <Plug>DiscretionaryEnd <SID>(endwise-append)
 
 function! s:DefineMap() abort
-  if exists('g:endwise_no_mappings') || maparg('<CR>','i') =~# '[eE]ndwise\|<Plug>DiscretionaryEnd'
+  let rhs = substitute(maparg('<CR>', 'i'), '|', '<Bar>', 'g')
+  if exists('g:endwise_no_mappings') || rhs =~# '[eE]ndwise\|<Plug>DiscretionaryEnd' || get(maparg('<CR>', 'i', 0, 1), 'buffer')
     return
   endif
   if get(maparg('<CR>', 'i', 0, 1), 'expr')
-    exe "imap <silent><script><expr> <CR> EndwiseAppend(" . substitute(substitute(maparg('<CR>','i'), '|', '<Bar>', 'g'), '\c<sid>', "\<SNR>" . get(maparg('<CR>','i', 0, 1), 'sid') . '_', 'g') . ')'
-  elseif maparg('<CR>','i') =~? '<cr>'
-    exe "imap <silent><script> <CR>" substitute(maparg('<CR>','i'), '|', '<Bar>', 'g')."<SID>(endwise-append)"
-  elseif maparg('<CR>','i') =~# '<Plug>\w\+CR'
-    exe "imap <silent> <CR> ".maparg('<CR>', 'i')."<SID>(endwise-append)"
+    exe "imap <silent><script><expr> <CR> EndwiseAppend(" . rhs . ")"
+  elseif rhs =~? '<cr>' && rhs !~? '<plug>'
+    exe "imap <silent><script> <CR>" rhs."<SID>(endwise-append)"
+  elseif rhs =~? '<cr>' || rhs =~# '<[Pp]lug>\w\+CR'
+    exe "imap <silent> <CR>" rhs."<SID>(endwise-append)"
   else
-    imap <script> <CR> <CR><SID>(endwise-append)
+    imap <silent><script><expr> <CR> EndwiseAppend("<Bslash>r")
   endif
 endfunction
 call s:DefineMap()
@@ -155,7 +161,7 @@ endfunction
 
 function! s:crend(always) abort
   let n = ""
-  if &buftype !~# '^\%(nowrite\|acwrite\)\=$' || !exists("b:endwise_addition") || !exists("b:endwise_words") || !exists("b:endwise_syngroups")
+  if &buftype !~# '^\%(nowrite\)\=$' || !exists("b:endwise_addition") || !exists("b:endwise_words") || !exists("b:endwise_syngroups")
     return n
   endif
   let synids = join(map(split(b:endwise_syngroups, ','), 'hlID(v:val)'), ',')

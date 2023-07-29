@@ -20,6 +20,8 @@ require adjustment of per-user settings.
   Eunuch's insert-mode mapping of ``<CR>`` isn't necessary and this is the
   easiest way to avoid breaking ``vim-endwise``.
 
+- Upgrade the Endwise plugin to version 2023-04-23.
+
 2023-07-22
 ==========
 

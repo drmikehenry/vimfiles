@@ -1218,7 +1218,7 @@ support.
 This plugin does remap <CR> in insert mode.  It also adds a <C-x><CR> mapping
 to force inserting an end.  However, the forced version isn't always correct.
 
-Version 2022-03-24 (8faf48b) from:
+Version 2023-04-23 (e714ac3) from:
 https://github.com/tpope/vim-endwise
 
 Installation:
@@ -1249,8 +1249,22 @@ Vim sugar for the UNIX shell commands that need it the most. Commands include:
 :Wall                   Like |:wall|, but for windows rather than buffers.
 :W                      Writes files that haven't changed.
 
-Version 2022-10-12 (291ef1f) from:
+Version 2023-06-28 (67f3dd3) from:
 https://github.com/tpope/vim-eunuch
+
+Local customizations:
+- Disable mapping of <CR> via: >
+
+    let g:eunuch_no_maps = 1
+<
+  This is needed to avoid interfering with `vim-endwise` while using Neovim with
+  the `cmp` plugin.  In particular, `vim-endwise` would fail to work after
+  typing `if true; then<CR>` in a shell script after editing the shell script
+  via `:e shellscript.sh` (though it works with `nvim shellscript.sh` for some
+  reason).
+
+  Eunuch's insert-mode mapping of <CR> isn't necessary and this is the easiest
+  way to avoid breaking `vim-endwise`.
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
