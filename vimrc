@@ -4142,6 +4142,15 @@ let g:EasyMotion_re_anywhere = '\v' .
         \ '#\zs.'
 
 " -------------------------------------------------------------
+" eunuch
+" -------------------------------------------------------------
+
+" Undocumented way to disable mapping of <CR>.  The default mapping of <CR>
+" is supposed to help re-write a shebang line with an interpreter and redetect
+" the filetype.
+let g:eunuch_no_maps = 1
+
+" -------------------------------------------------------------
 " fswitch
 " -------------------------------------------------------------
 

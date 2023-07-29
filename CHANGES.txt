@@ -7,6 +7,19 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-07-29
+==========
+
+- Disable the Eunuch plugin's insert-mode mapping of ``<CR>``. This is needed to
+  avoid interfering with ``vim-endwise`` while using Neovim with the ``cmp``
+  plugin.  In particular, ``vim-endwise`` would fail to work after typing ``if
+  true; then<CR>`` in a shell script after editing the shell script via ``:e
+  shellscript.sh`` (though it works with ``nvim shellscript.sh`` for some
+  reason).
+
+  Eunuch's insert-mode mapping of ``<CR>`` isn't necessary and this is the
+  easiest way to avoid breaking ``vim-endwise``.
+
 2023-07-22
 ==========
 
