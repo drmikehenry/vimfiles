@@ -22,6 +22,13 @@ require adjustment of per-user settings.
 
 - Upgrade the Endwise plugin to version 2023-04-23.
 
+- Work around lack of 'autoread' feature in Neovim GUIs. Both ``nvim-qt`` and
+  ``neovide`` as of 2023-07-29 do not correctly work with the 'autoread' feature.
+  (see https://github.com/equalsraf/neovim-qt/issues/846).
+
+  For now, provide a work-around to detect the ``FocusGained`` event and perform
+  a ``:checktime`` manually to trigger the 'autoread' logic.
+
 2023-07-22
 ==========
 

@@ -5941,6 +5941,21 @@ let g:zig_fmt_autosave = 0
 " =============================================================
 
 if g:UsingNvim
+
+if has('gui_running')
+augroup vimf_nvim_gui
+autocmd!
+
+" Neovim GUIs (both `nvim-qt` and `neovide` as of 2023-07-29) do not correctly
+" work with the 'autoread' feature.
+" Ref: https://github.com/equalsraf/neovim-qt/issues/846
+"
+" For now, provide a work-around to detect the `FocusGained` event and perform
+" a `:checktime` manually to trigger the 'autoread' logic.
+autocmd FocusGained * checktime
+augroup END
+endif
+
 :lua require('vimf').setup()
 endif
 
