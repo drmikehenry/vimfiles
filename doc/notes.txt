@@ -2870,7 +2870,7 @@ Installation:
 TELESCOPE                                               *notes_telescope*
   Fuzzy finding in Neovim                               |telescope|
 
-Version 2023-07-22 (e7e6492) from:
+Version 2023-07-29 (b6fccfb) from:
 https://github.com/nvim-telescope/telescope.nvim
 
 Local customizations:
