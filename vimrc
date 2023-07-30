@@ -5946,12 +5946,42 @@ if has('gui_running')
 augroup vimf_nvim_gui
 autocmd!
 
-" Neovim GUIs (both `nvim-qt` and `neovide` as of 2023-07-29) do not correctly
-" work with the 'autoread' feature.
-" Ref: https://github.com/equalsraf/neovim-qt/issues/846
+" The `'autoread'` feature does not work out-of-the-box for both `nvim-qt` and
+" `neovide`:
+" - <https://github.com/equalsraf/neovim-qt/issues/846>
+" - <https://github.com/neovide/neovide/issues/1477>
 "
-" For now, provide a work-around to detect the `FocusGained` event and perform
-" a `:checktime` manually to trigger the 'autoread' logic.
+" The `'autoread'` feature does work for `nvim`'s TUI.
+"
+" The reason it works for the TUI is mentioned in this now-closed Neovim issue:
+" <https://github.com/neovim/neovim/issues/20082#issuecomment-1236324274>
+" > No. I just noticed that neovide already triggers `FocusGained`, and that
+" > triggering `FocusGained` from `:doautocmd` doesn't actually trigger a
+" > timestamp check. With TUI a timestamp check is done the same time as
+" > `FocusGained`, but it is not an autocommand callback, but something
+" > triggered the same time as the autocommand.
+"
+" In that issue, Neovim maintainer @justinmk has commented on the `'autoread'`
+" feature:
+" <https://github.com/neovim/neovim/issues/20082#issuecomment-1288913518>
+" > As mentioned above, FocusGained can be used to opt-in to the behavior you
+" > want.
+" >
+" > The general story of improving autoread is tracked in
+" > <https://github.com/neovim/neovim/issues/1380>
+"
+" This refers to having GUI users add this to their configuration:
+"
+" ```vim
+" autocmd FocusGained * checktime
+" ```
+"
+" I can confirm that this work-around does restore the `'autoread'`
+" functionality for me, with both GUIs.
+"
+" It's unclear to me whether there is a long-term plan to restore the
+" `'autoread'` feature for Neovim GUIs users without requiring the above
+" work-around.
 autocmd FocusGained * checktime
 augroup END
 endif
