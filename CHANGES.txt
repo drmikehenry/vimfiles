@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-08-05
+==========
+
+- Update UltiSnips plugin to version 2023-08-05.  This works around a crash
+  caused in part by a bug in Neovim 0.9.1 (slated to be fixed in a later 0.9
+  release).
+
 2023-07-31
 ==========
 
