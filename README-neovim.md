@@ -11,6 +11,10 @@ These are work-in-progress notes about using vimfiles with Neovim.
 
 - Install pynvim for Python-based plugins:
 
+      # Choose installation location.
+      # Vimfiles will detect pynvim at any of these locations:
+      #   ~/venvs/pynvim
+      #   /opt/pynvim
       cd /opt
       python -m venv pynvim
       . pynvim/bin/activate

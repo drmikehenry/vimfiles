@@ -8,9 +8,12 @@ if !exists('g:UsingNvim')
     let g:UsingNvim = 0
 endif
 
-if has('nvim')
+if has('nvim') && !exists('g:python3_host_prog')
     " Ensure Neovim Python provider is setup before any use of Python.
-    for s:pynvim_python in ['/opt/pynvim/bin/python']
+    for s:pynvim_python in [
+            \ expand('~/venvs/pynvim/bin/python'),
+            \ '/opt/pynvim/bin/python'
+            \ ]
         if executable(s:pynvim_python)
             let g:python3_host_prog = s:pynvim_python
             break

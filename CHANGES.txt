@@ -26,6 +26,9 @@ require adjustment of per-user settings.
 
   In Vim, this is for ``CtrlPCurFile``; in Neovim, it's for Telescope.
 
+- For Neovim, probe at ``~/venvs/pynvim`` and ``/opt/pynvim`` for the virtual
+  environment holding ``pynvim``.
+
 2023-08-05
 ==========
 
