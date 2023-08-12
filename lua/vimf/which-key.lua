@@ -28,6 +28,7 @@ M.setup = function()
         ["<Space>f"] = { name = "+find" },
         ["<Space>j"] = { name = "+jump" },
         ["<Space>l"] = { name = "+language" },
+        ["<Space>p"] = { name = "+project" },
         ["<Space>q"] = { name = "+toggle" },
         ["<Space>w"] = { name = "+window" },
         ["<Space>x"] = { name = "+text" },

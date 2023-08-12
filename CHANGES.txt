@@ -7,6 +7,25 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-08-12
+==========
+
+- Adjust mappings for fuzzy file finding::
+
+    <Space>pf       - find files at project directory
+
+    " Experimental: same as <Space>pf but easier to type:
+    <Space>pp       - find files at project directory
+
+  In Vim, this is for ``CtrlPRoot``; in Neovim, it's for Telescope.
+
+  For fuzzy file finding relative to the current file's directory, the existing
+  mapping for Vim has been extended to Neovim::
+
+    <Space>ff       - find files at current file's directory
+
+  In Vim, this is for ``CtrlPCurFile``; in Neovim, it's for Telescope.
+
 2023-08-05
 ==========
 

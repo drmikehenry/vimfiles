@@ -4047,6 +4047,10 @@ nnoremap <Space>ff          :<C-u>CtrlPCurFile<CR>
 " Select files relative to the project root directory.
 nnoremap <Space>pf          :<C-u>CtrlPRoot<CR>
 
+" Duplicative, but easier to type.
+" Select files relative to the project root directory.
+nnoremap <Space>pp          :<C-u>CtrlPRoot<CR>
+
 
 " Adjust move and history binding pairs:
 " - For consistency with other plugins that use <C-n>/<C-p> for moving around.

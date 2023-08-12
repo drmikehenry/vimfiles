@@ -37,7 +37,19 @@ M.setup = function()
     nmap('<Space>bb', telescope.buffers, 'Browse Buffers')
     nmap("<Space>f'", telescope.marks, "Find marks")
     nmap('<Space>fb', telescope.buffers, 'Find Buffers')
-    nmap('<Space>ff', telescope.find_files, 'Find Files')
+    nmap('<Space>pf', telescope.find_files, 'Find Files at project root')
+
+    -- Duplicative but easier to type.
+    nmap('<Space>pp', telescope.find_files, 'Find Files at project root')
+    nmap(
+        '<Space>ff',
+        function()
+            telescope.find_files {
+                cwd=vim.fn["expand"]("%:p:h"),
+            }
+        end,
+        'Find Files at current file'
+    )
     nmap('<Space>fh', telescope.help_tags, 'Find Help tags')
     nmap('<Space>fk', telescope.keymaps, 'Find Keymaps')
     nmap(
@@ -47,17 +59,14 @@ M.setup = function()
         end,
         'Find Man pages'
     )
-    nmap('<Space>ft', telescope.tags, 'Tags in current dir (telescope)')
-    nmap('<Space>fT', telescope.current_buffer_tags,
-        'Tags in current buffer (telescope)')
-    nmap('<Space>lD', telescope.diagnostics, 'all Line Diagnostics (telescope)')
-    nmap('gd', telescope.lsp_definitions, 'LSP: Go to Definition (telescope)')
-    nmap('gI', telescope.lsp_implementations,
-        'LSP: Go to Implementation (telescope)')
-    nmap('gT', telescope.lsp_type_definitions,
-        'LSP: Go to Type Definition (telescope)')
-    nmap('<Space>lr', telescope.lsp_references, 'LSP: References (telescope)')
-    nmap('gr', telescope.lsp_references, 'LSP: References (telescope)')
+    nmap('<Space>ft', telescope.tags, 'Tags in current dir')
+    nmap('<Space>fT', telescope.current_buffer_tags, 'Tags in current buffer')
+    nmap('<Space>lD', telescope.diagnostics, 'all Line Diagnostics')
+    nmap('gd', telescope.lsp_definitions, 'LSP: Go to Definition')
+    nmap('gI', telescope.lsp_implementations, 'LSP: Go to Implementation')
+    nmap('gT', telescope.lsp_type_definitions, 'LSP: Go to Type Definition')
+    nmap('<Space>lr', telescope.lsp_references, 'LSP: References')
+    nmap('gr', telescope.lsp_references, 'LSP: References')
 
 end
 
