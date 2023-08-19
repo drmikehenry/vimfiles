@@ -13,6 +13,11 @@ require adjustment of per-user settings.
 - Enable UltiSnips only if Python3 is available.  UltiSnips no longer
   supports Python2.
 
+- Wrap ``:lua`` command in ``execute`` to prevent errors on Vim builds that lack
+  Lua.  Even though the ``:lua`` command was inside an ``if`` body where the
+  predicate was false, Vim still complains about the lack of Lua while skipping
+  over the inactive line.
+
 2023-08-12
 ==========
 

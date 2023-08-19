@@ -5992,7 +5992,10 @@ autocmd FocusGained * checktime
 augroup END
 endif
 
-:lua require('vimf').setup()
+" Use `execute` below to avoid having a `:lua` command inside the `if`, because
+" even though the `if` predicate might be false, Vim still requires the `if`
+" body to contain valid lines.
+execute "lua require('vimf').setup()"
 endif
 
 " =============================================================
