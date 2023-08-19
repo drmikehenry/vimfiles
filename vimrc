@@ -12,6 +12,7 @@ if has('nvim') && !exists('g:python3_host_prog')
     " Ensure Neovim Python provider is setup before any use of Python.
     for s:pynvim_python in [
             \ expand('~/venvs/pynvim/bin/python'),
+            \ expand('~/venvs/pynvim/Scripts/python.exe'),
             \ '/opt/pynvim/bin/python'
             \ ]
         if executable(s:pynvim_python)

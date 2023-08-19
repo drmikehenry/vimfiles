@@ -18,6 +18,10 @@ require adjustment of per-user settings.
   predicate was false, Vim still complains about the lack of Lua while skipping
   over the inactive line.
 
+- Detect location of ``pynvim`` for Python support on Windows.  Previous probing
+  looked only for ``bin/python`` in the venv; now ``Scripts/python.exe`` is
+  probed as well.
+
 2023-08-12
 ==========
 
