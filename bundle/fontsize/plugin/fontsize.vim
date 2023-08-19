@@ -1,6 +1,9 @@
 " Plugin for modifying guifont size.
 
-if exists("loaded_fontsize") || !has('gui')
+" Note that Neovim always returns false for `has('gui')`, but
+" `has('gui_running')` returns true for Neovim GUIs (at least for
+" `nvim-qt` and `neovide`).
+if exists("loaded_fontsize") || !has('gui_running')
     finish
 endif
 let loaded_fontsize = 1

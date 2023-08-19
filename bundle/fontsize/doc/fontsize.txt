@@ -1,5 +1,5 @@
 *fontsize.txt*   Plugin for modifying guifont size
-*fontsize*       Version 0.4.1
+*fontsize*       Version 0.5.0
 
 ==============================================================================
 1.  Introduction                                    |fontsize-intro|
@@ -165,6 +165,10 @@ the font names.  For example, on Chinese Windows XP, the fonts are encoded in
 
 ===============================================================================
 5.  ChangeLog                                       *fontsize-changelog*
+
+Version 0.5.0    Date    2023-08-19                 *fontsize-changelog-0.5.0*
+
+  - Add support for Neovim GUIs (at least nvim-qt and neovide).
 
 Version 0.4.1    Date    2016-11-15                 *fontsize-changelog-0.4.1*
 

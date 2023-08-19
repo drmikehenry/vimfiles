@@ -42,6 +42,43 @@ else
     let s:regex = fontsize#regex_other
 endif
 
+function! fontsize#getFontName()
+    " On Neovim, `getfontname()` always returns the empty string; however,
+    " Neovim GUIs seem to support the 'guifont' option.  Unlike Gvim (which
+    " supports multiple comma-separated fonts in 'guifont'), Neovim GUIs seem
+    " to support only a single font in 'guifont'.  Try `getfontname()` first to
+    " handle the Gvim cases smoothly (such as when 'guifont' is empty, or
+    " contains multiple fonts, or contains an invalid font), but fall back to
+    " using 'guifont' directly if `getfontname()` returns the empty string.
+    let fontName = getfontname()
+    if fontName == ''
+        let fontName = &guifont
+    endif
+    return fontName
+endfunction
+
+function! fontsize#setFontName(fontName)
+    " `nvim-qt` has a `GuiFont(fontName, force)` function for changing the font.
+    " Though `nvim-qt` also seems to support assigning to the 'guifont'
+    " option, this causes various warnings and bad behavior for some fonts
+    " (notably "Hack" and "Consolas"), such as:
+    "   Warning: Font "Hack" reports bad fixed pitch metrics
+    " Without the `force=1` argument, the `GuiFont()` function generates the
+    " same warnings.
+    " `neovide` lacks a `GuiFont()` function, but it seems well behaved when
+    " changing the font by assigning to the 'guifont' option.
+    if exists('*GuiFont')
+        call GuiFont(a:fontName, 1)
+    else
+        let &guifont = a:fontName
+    endif
+endfunction
+
+function! fontsize#setFontNameWide(fontName)
+    " NOTE: `GuiFont()` doesn't work for the 'guifontwide' option.
+    let &guifontwide = a:fontName
+endfunction
+
 function! fontsize#encodeFont(font)
     if has("iconv") && exists("g:fontsize#encoding")
         let encodedFont = iconv(a:font, &enc, g:fontsize#encoding)
@@ -104,7 +141,7 @@ endfunction
 function! fontsize#display()
     redraw
     sleep 100m
-    echo fontsize#fontString(getfontname()) . " (+/= - 0 ! q CR SP)"
+    echo fontsize#fontString(fontsize#getFontName()) . " (+/= - 0 ! q CR SP)"
 endfunction
 
 function! fontsize#ensureDefault()
@@ -112,7 +149,7 @@ function! fontsize#ensureDefault()
         let g:fontsize#defaultSize = 0
     endif
     if g:fontsize#defaultSize == 0
-        let g:fontsize#defaultSize = fontsize#getSize(getfontname())
+        let g:fontsize#defaultSize = fontsize#getSize(fontsize#getFontName())
     endif
 endfunction
 
@@ -182,39 +219,44 @@ function! fontsize#begin()
 endfunction
 
 function! fontsize#quit()
-    echo fontsize#fontString(getfontname()) . " (Done)"
+    echo fontsize#fontString(fontsize#getFontName()) . " (Done)"
     call fontsize#restoreOptions()
 endfunction
 
 function! fontsize#default()
     call fontsize#setupOptions()
     call fontsize#ensureDefault()
-    let &guifont = fontsize#setSize(getfontname(), g:fontsize#defaultSize)
-    let &guifontwide = fontsize#setSize(&guifontwide, g:fontsize#defaultSize)
+    call fontsize#setFontName(
+            \ fontsize#setSize(fontsize#getFontName(), g:fontsize#defaultSize))
+    call fontsize#setFontNameWide(
+            \ fontsize#setSize(&guifontwide, g:fontsize#defaultSize))
     call fontsize#display()
 endfunction
 
 function! fontsize#setDefault()
     call fontsize#setupOptions()
-    let g:fontsize#defaultSize = fontsize#getSize(getfontname())
+    let g:fontsize#defaultSize = fontsize#getSize(fontsize#getFontName())
 endfunction
 
 function! fontsize#inc()
     call fontsize#setupOptions()
     call fontsize#ensureDefault()
-    let newSize = fontsize#getSize(getfontname()) + v:count1
-    let &guifont = fontsize#setSize(getfontname(), newSize)
-    let &guifontwide = fontsize#setSize(&guifontwide, newSize)
+    let newSize = fontsize#getSize(fontsize#getFontName()) + v:count1
+    call fontsize#setFontName(fontsize#setSize(fontsize#getFontName(), newSize))
+    call fontsize#setFontNameWide(
+            \ fontsize#setSize(&guifontwide, newSize))
     call fontsize#display()
 endfunction
 
 function! fontsize#dec()
     call fontsize#setupOptions()
     call fontsize#ensureDefault()
-    let newSize = fontsize#getSize(getfontname()) - v:count1
+    let newSize = fontsize#getSize(fontsize#getFontName()) - v:count1
     if newSize > 0
-        let &guifont = fontsize#setSize(getfontname(), newSize)
-        let &guifontwide = fontsize#setSize(&guifontwide, newSize)
+        call fontsize#setFontName(
+                \ fontsize#setSize(fontsize#getFontName(), newSize))
+            call fontsize#setFontNameWide(
+                    \ fontsize#setSize(&guifontwide, newSize))
     endif
     call fontsize#display()
 endfunction
