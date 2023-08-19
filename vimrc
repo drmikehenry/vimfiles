@@ -519,9 +519,7 @@ endif
 " Python path management
 " -------------------------------------------------------------
 
-if has('pythonx')
-    let g:Python = 'pythonx'
-elseif has('python3')
+if has('python3')
     let g:Python = 'python3'
 elseif has('python')
     let g:Python = 'python'
@@ -660,7 +658,8 @@ endif
 
 
 if !exists("g:EnableUltiSnips")
-    let g:EnableUltiSnips = g:Python != ''
+    " UltiSnips now requires Python3.
+    let g:EnableUltiSnips = has('python3')
 endif
 
 if !exists('g:EnableOmniCppComplete')
@@ -5595,7 +5594,7 @@ function! SetupUltiSnipsMapping()
     inoremap <silent> <M-u><M-l> <C-r>=UltiSnips#ListSnippets()<CR>
 endfunction
 
-if g:Python != ''
+if g:EnableUltiSnips && g:Python != ''
     function! EditSnippets()
         if exists("b:UltiSnipsSnippetDirectories")
             let l:snippetDirs = b:UltiSnipsSnippetDirectories
