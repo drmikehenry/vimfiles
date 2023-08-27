@@ -20,4 +20,5 @@ let g:default_swap_list = [
         \{'name':'on/off', 'options': ['on','off']},
         \{'name':'On/Off', 'options': ['On','Off']},
         \{'name':'ON/OFF', 'options': ['ON','OFF']},
+        \{'name':'TODO/DOING/DONE', 'options': ['TODO','DOING', 'DONE']},
         \]
