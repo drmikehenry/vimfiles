@@ -4,10 +4,6 @@
 " Early Setup
 " =============================================================
 
-if !exists('g:UsingNvim')
-    let g:UsingNvim = 0
-endif
-
 if has('nvim') && !exists('g:python3_host_prog')
     " Ensure Neovim Python provider is setup before any use of Python.
     for s:pynvim_python in [
@@ -581,19 +577,19 @@ endif
 "   let g:EnableUltiSnips = 0
 
 if !exists('g:EnableAle')
-    let g:EnableAle = !g:UsingNvim
+    let g:EnableAle = !has('nvim')
 endif
 
 if !exists('g:EnableSyntastic')
-    let g:EnableSyntastic = !g:UsingNvim
+    let g:EnableSyntastic = !has('nvim')
 endif
 
 if !exists('g:EnableVimLsp')
-    let g:EnableVimLsp = !g:UsingNvim
+    let g:EnableVimLsp = !has('nvim')
 endif
 
 " Determine vim-lsp compatibility.
-if g:UsingNvim
+if has('nvim')
     " TODO: Determine what version of Neovim is required for vim-lsp.
 else
     " vim-lsp requires Vim 8.1.1035 or newer.
@@ -664,7 +660,7 @@ if !exists("g:EnableUltiSnips")
 endif
 
 if !exists('g:EnableOmniCppComplete')
-    let g:EnableOmniCppComplete = !g:UsingNvim
+    let g:EnableOmniCppComplete = !has('nvim')
 endif
 
 if !g:EnableOmniCppComplete
@@ -5947,7 +5943,7 @@ let g:zig_fmt_autosave = 0
 " Neovim Setup
 " =============================================================
 
-if g:UsingNvim
+if has('nvim')
 
 if has('gui_running')
 augroup vimf_nvim_gui

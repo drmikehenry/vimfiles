@@ -10,7 +10,6 @@ Example contents:
 
 --]]
 
-vim.g.UsingNvim = 1
 local dot_vim = vim.fn.expand('<sfile>:p:h')
 
 vim.opt.runtimepath:prepend(dot_vim)
