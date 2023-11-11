@@ -2122,7 +2122,7 @@ Installation:
 PATHOGEN                                                *notes_pathogen*
   Runtime path management for bundles                   |notes_pathogen|
 
-Version 2013-01-19 from:
+Version 2022-08-24 (ac4dd94) from:
 https://github.com/tpope/vim-pathogen
 
 Installation:

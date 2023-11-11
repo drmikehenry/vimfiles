@@ -4,13 +4,16 @@ Manage your `'runtimepath'` with ease.  In practical terms, pathogen.vim
 makes it super easy to install plugins and runtime files in their own
 private directories.
 
+**For new users, I recommend using Vim's built-in package management
+instead.**  `:help packages`
+
 ## Installation
 
-Install to `~/.vim/autoload/pathogen.vim`.  Or copy and paste:
+Install to `~/.vim/autoload/pathogen.vim`.
+Or copy and paste the following into your terminal/shell:
 
-    mkdir -p ~/.vim/autoload ~/.vim/bundle; \
-    curl -Sso ~/.vim/autoload/pathogen.vim \
-        https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+    mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+    curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
 If you're using Windows, change all occurrences of `~/.vim` to `~\vimfiles`.
 
@@ -31,8 +34,8 @@ Now any plugins you wish to install can be extracted to a subdirectory
 under `~/.vim/bundle`, and they will be added to the `'runtimepath'`.
 Observe:
 
-    cd ~/.vim/bundle
-    git clone git://github.com/tpope/vim-sensible.git
+    cd ~/.vim/bundle && \
+    git clone https://github.com/tpope/vim-sensible.git
 
 Now [sensible.vim](https://github.com/tpope/vim-sensible) is installed.
 If you really want to get crazy, you could set it up as a submodule in
@@ -44,12 +47,11 @@ glob as an argument:
 
     execute pathogen#infect('stuff/{}')
 
-The `{}` indicates where the expansion should occur.  Currently only a
-trailing `{}` is supported.
+The `{}` indicates where the expansion should occur.
 
 You can also pass an absolute path instead.  I keep the plugins I maintain under `~/src`, and this is how I add them:
 
-    execute pathogen#infect('bundle/{}, '~/src/vim/bundle/{}')
+    execute pathogen#infect('bundle/{}', '~/src/vim/bundle/{}')
 
 Normally to generate documentation, Vim expects you to run `:helptags`
 on each directory with documentation (e.g., `:helptags ~/.vim/doc`).
@@ -63,10 +65,18 @@ and other comma-delimited path options in ways most people will never
 need to do.  If you're one of those edge cases, look at the source.
 It's well documented.
 
+## Native Vim Package Management
+
+Vim 8 includes support for package management in a manner similar to
+pathogen.vim.  If you'd like to transition to this native support,
+pathogen.vim can help.  Calling `pathogen#infect()` on an older version of Vim
+will supplement the `bundle/{}` default with `pack/{}/start/{}`, effectively
+backporting a subset of the new native functionality.
+
 ## Runtime File Editing
 
 `:Vopen`, `:Vedit`, `:Vsplit`, `:Vvsplit`, `:Vtabedit`, `:Vpedit`, and
-`:Vread` have all moved to [scriptease.vim][]
+`:Vread` have all moved to [scriptease.vim][].
 
 [scriptease.vim]: https://github.com/tpope/vim-scriptease
 
@@ -102,6 +112,14 @@ If you really must use one:
     :e name.vba
     :!mkdir ~/.vim/bundle/name
     :UseVimball ~/.vim/bundle/name
+
+> Why don't my plugins load when I use Vim sessions?
+
+Vim sessions default to capturing all global options, which includes the
+`'runtimepath'` that pathogen.vim manipulates.  This can cause other problems
+too, so I recommend turning that behavior off:
+
+    set sessionoptions-=options
 
 ## Contributing
 
