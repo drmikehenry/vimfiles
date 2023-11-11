@@ -644,14 +644,32 @@ For help with plugins:
 
 General bundle installation instructions:               *bundle_installation*
 
+Bundles are activated by the Pathogen plugin.  Each directory in 'runtimepath'
+is probed looking for bundles matching the following patterns, where `{}` is
+the name of the bundle itself: >
+
+    bundle/{}           # Both Vim and Neovim
+    vim-bundle/{}       # Vim only
+    nvim-bundle/{}      # Neovim only
+    pre-bundle/{}       # Higher-priority; both Vim and Neovim
+    pre-vim-bundle/{}   # Higher-priority; Vim only
+    pre-nvim-bundle/{}  # Higher-priority; Neovim only
+<
+The `pre-*bundle` directories are higher priority, giving a chance to override
+things like UltiSnips with values from per-user directories and the like.
+
+To install a bundle:
+
 - Move to bundle directory: >
 
     cd ~/.vim/bundle
 <
-  May also use Neovim-specific bundle directory: >
+  Instead of `bundle`, may use any of the above patterns (e.g,. `nvim-bundle` for
+  Neovim-specific plugins).
 
-    cd ~/.vim/nvim/bundle
->
+  Instead of `~/.vim`, may also use per-user or per-location directories (e.g.,
+  `~/.vimuser` or `~/.vimlocal`).
+
 - Move existing bundle (if any) to a backup directory (optional): >
 
     mv bundle-name bundle-name~

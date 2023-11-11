@@ -430,6 +430,13 @@ function! RtpInherit(path)
 endfunction
 
 " -------------------------------------------------------------
+" Ensure `$VIMFILES` is in 'runtimepath'.
+" -------------------------------------------------------------
+if index(PathSplit(&runtimepath), $VIMFILES) < 0
+    call RtpPrepend($VIMFILES)
+endif
+
+" -------------------------------------------------------------
 " Per-user customization pre-setup
 " -------------------------------------------------------------
 
@@ -671,12 +678,32 @@ endif
 " Pathogen bundle management
 " -------------------------------------------------------------
 
-" Infect all bundles.
-call pathogen#infect()
+" Bundle directories:
+"
+" - `bundle/` is for bundles used by both Vim and Neovim.
+" - `nvim-bundle/` is for Neovim-only bundles.
+" - `vim-bundle/` is for Vim-only bundles.
+" - Bundles in a directory with prefix `pre-` will come earlier in the
+"   'runtimepoath' than those without the prefix.
 
-" Bundles in the "pre-bundle" directories will come earlier in the path
-" than those in "bundle" directories.
-call pathogen#infect('pre-bundle/{}')
+" Infect all bundle directories in order of increasing priority.
+
+if has('nvim')
+    let s:editor_name = 'nvim'
+else
+    let s:editor_name = 'vim'
+endif
+
+let g:vimf_bundle_dirnames = [
+        \ 'bundle',
+        \ s:editor_name . '-bundle',
+        \ 'pre-bundle',
+        \ 'pre-' . s:editor_name . '-bundle',
+        \ ]
+
+for s:dirname in g:vimf_bundle_dirnames
+    call pathogen#infect(s:dirname . '/{}')
+endfor
 
 " Enable 24-bit color for terminals that support it.
 " To countermand this, put ``set notermguicolors`` in your vimrc-before file.
@@ -5603,6 +5630,7 @@ if g:EnableUltiSnips && g:Python != ''
 
 execute g:Python . ' << endpython'
 import os.path
+import re
 
 primary_filetype = vim.eval("&ft")
 filename = primary_filetype + '.snippets'
@@ -5614,6 +5642,12 @@ rtp = [os.path.realpath(os.path.expanduser(p))
 # Process them in reverse, because the UltiSnips uses the last one first.
 snippetDirs = vim.eval("l:snippetDirs")
 
+def pathContainsBundle(path):
+    parts = set(re.split(r"[/\\]", path))
+    if parts.intersection(vim.eval('g:vimf_bundle_dirnames')):
+        return True
+    return False
+
 def searchForFile(filename):
     editPath = None
     for snippetDir in snippetDirs:
@@ -5621,7 +5655,7 @@ def searchForFile(filename):
             break
 
         for p in rtp:
-            if '/bundle/' in p or '/pre-bundle/' in p:
+            if pathContainsBundle(p):
                 continue
 
             fullPath = os.path.join(p, snippetDir, filename)
@@ -5637,7 +5671,7 @@ if path is None:
         if path is not None:
             break
 
-        if '/bundle/' in p or '/pre-bundle/' in p:
+        if pathContainsBundle(p):
             continue
 
         for snippetDir in snippetDirs:

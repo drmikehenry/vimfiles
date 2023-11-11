@@ -12,14 +12,4 @@ Example contents:
 
 local dot_vim = vim.fn.expand('<sfile>:p:h')
 
-vim.opt.runtimepath:prepend(dot_vim)
-vim.opt.runtimepath:append(dot_vim .. '/after')
-
-vim.opt.runtimepath:prepend(dot_vim .. '/nvim')
-vim.opt.runtimepath:append(dot_vim .. '/nvim/after')
-
--- TODO: Setting `packpath` like this from online examples.
--- Not sure yet if this is useful.
-vim.o.packpath = vim.o.runtimepath
-
 vim.cmd('source ' .. dot_vim .. '/vimrc')

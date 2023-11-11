@@ -12,6 +12,23 @@ require adjustment of per-user settings.
 
 - Update pathogen plugin to version 2022-08-24.
 
+- Adjust patterns where Pathogen probes for bundles below each directory in
+  'runtimepath'::
+
+    bundle/{}           # Both Vim and Neovim
+    vim-bundle/{}       # Vim only
+    nvim-bundle/{}      # Neovim only
+    pre-bundle/{}       # Higher-priority; both Vim and Neovim
+    pre-vim-bundle/{}   # Higher-priority; Vim only
+    pre-nvim-bundle/{}  # Higher-priority; Neovim only
+
+  So, for example, to add a Neovim-only bundle named ``SomeBundle`` to your
+  personal ``~/.vimuser/`` tree, place it in::
+
+    ~/.vimuser/nvim-bundle/SomeBundle
+
+  See ``:help bundle_installation`` for details.
+
 2023-08-27
 ==========
 
