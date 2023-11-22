@@ -483,7 +483,9 @@ endif
 "   call add(g:pathogen_disabled, "pluginname")
 " To remove a plugin from the list:
 "   call filter(g:pathogen_disabled, 'v:val != "pluginname"')
-let g:pathogen_disabled = []
+if !exists('g:pathogen_disabled')
+    let g:pathogen_disabled = []
+endif
 
 " Disable an experimental plugin for users in general.
 " call add(g:pathogen_disabled, 'plugin_name')
