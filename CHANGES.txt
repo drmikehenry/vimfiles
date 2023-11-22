@@ -7,6 +7,20 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2023-11-22
+==========
+
+- Provide helper functions for plugin enable status:
+
+  To enable, disable, or check the enabled status of a plugin, use the below
+  functions::
+
+      call vimf#plugin#enable('plugin_name')
+      call vimf#plugin#disable('plugin_name')
+      if vimf#plugin#enabled('plugin_name')
+          " 'plugin_name' is enabled....
+      endif
+
 2023-11-11
 ==========
 

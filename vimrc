@@ -477,18 +477,27 @@ if $VIMUSERLOCALFILES == ''
     let $VIMUSERLOCALFILES = s:vimParent . s:slashdot . 'vimuserlocal'
 endif
 
+" To enable, disable, or check the enabled status of a plugin, use the below
+" functions:
+"
+"   call vimf#plugin#enable('plugin_name')
+"   call vimf#plugin#disable('plugin_name')
+"   if vimf#plugin#enabled('plugin_name')
+"       " 'plugin_name' is enabled....
+"   endif
+"
+" NOTE: Plugin enabling or disabling must be performed very early in your
+" vimrc-vars.vim.
+"
+" Plugin enabling is based on the Pathogen plugin.
 " Define an empty g:pathogen_disabled so users can assume it always exists.
-" NOTE: This variable must be adjusted very early in your vimrc-vars.vim.
-" To disable a plugin:
-"   call add(g:pathogen_disabled, "pluginname")
-" To remove a plugin from the list:
-"   call filter(g:pathogen_disabled, 'v:val != "pluginname"')
 if !exists('g:pathogen_disabled')
     let g:pathogen_disabled = []
 endif
 
-" Disable an experimental plugin for users in general.
-" call add(g:pathogen_disabled, 'plugin_name')
+" Disable an experimental plugin for users in general.  Do this early (before
+" `vimrc-vars.vim`):
+"   call vimf#plugin#disable('plugin_name')
 
 " Activate pathogen in case a user would need to activate a bundle in
 " |VIMRC_VARS| as part of setting up some variable.
@@ -620,19 +629,18 @@ if g:EnableAle
 endif
 
 if !g:EnableSyntastic
-    call add(g:pathogen_disabled, 'syntastic')
-
+    call vimf#plugin#disable('syntastic')
     " Define :SyntasticReset so other Syntastic wrapper functions will not fail.
     command! SyntasticReset let b:syntastic_enabled = 0
 endif
 
 if !g:EnableAle
-    call add(g:pathogen_disabled, 'ale')
+    call vimf#plugin#disable('ale')
 endif
 
 if !g:EnableVimLsp
-    call add(g:pathogen_disabled, 'vim-lsp')
-    call add(g:pathogen_disabled, 'vim-lsp-ale')
+    call vimf#plugin#disable('vim-lsp')
+    call vimf#plugin#disable('vim-lsp-ale')
 endif
 
 " Don't use Powerline or Airline on 8-color terminals; they don't look good.
@@ -655,11 +663,11 @@ endif
 
 " Disable Powerline and/or Airline.
 if !g:EnablePowerline
-    call add(g:pathogen_disabled, 'powerline')
+    call vimf#plugin#disable('powerline')
 endif
 if !g:EnableAirline
-    call add(g:pathogen_disabled, 'airline')
-    call add(g:pathogen_disabled, 'airline-themes')
+    call vimf#plugin#disable('airline')
+    call vimf#plugin#disable('airline-themes')
 endif
 
 
@@ -673,7 +681,7 @@ if !exists('g:EnableOmniCppComplete')
 endif
 
 if !g:EnableOmniCppComplete
-    call add(g:pathogen_disabled, 'omnicppcomplete')
+    call vimf#plugin#disable('omnicppcomplete')
 endif
 
 " -------------------------------------------------------------

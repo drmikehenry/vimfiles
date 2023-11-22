@@ -576,6 +576,15 @@ the name of the bundle itself: >
 The `pre-*bundle` directories are higher priority, giving a chance to override
 things like UltiSnips with values from per-user directories and the like.
 
+To enable, disable, or check the enabled status of a plugin, use the below
+functions:
+>
+    call vimf#plugin#enable('plugin_name')
+    call vimf#plugin#disable('plugin_name')
+    if vimf#plugin#enabled('plugin_name')
+        " 'plugin_name' is enabled....
+    endif
+<
 To install a bundle:
 
 - Move to bundle directory: >
@@ -3493,8 +3502,8 @@ vimrc-vars.vim                                *VIMRC_VARS*
   to disable the "fixkey" bundle, place the following line in
   $VIMUSERFILES/vimrc-vars.vim: >
 
-    call add(g:pathogen_disabled, 'fixkey')
-
+    call vimf#plugin#disable('fixkey')
+<
 vimrc-before.vim, vimrc-after.vim             *VIMRC_BEFORE*   *VIMRC_AFTER*
   If these files exist, they will be sourced before or after the majority of the
   main "vimrc" file.  These scripts are located immediately within an override
