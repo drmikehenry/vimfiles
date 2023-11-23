@@ -5,11 +5,20 @@ local M = {}
 ---------------------------------------------------------------
 
 M.setup = function()
+    local plugin = require('vimf.plugin')
     vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-    require('vimf.plugin.cmp').setup()
-    require('vimf.plugin.lsp').setup()
-    require('vimf.plugin.telescope').setup()
-    require('vimf.plugin.which-key').setup()
+    if plugin.enabled("cmp") then
+        require('vimf.plugin.cmp').setup()
+    end
+    if plugin.enabled("lsp") then
+        require('vimf.plugin.lsp').setup()
+    end
+    if plugin.enabled("telescope") then
+        require('vimf.plugin.telescope').setup()
+    end
+    if plugin.enabled("which-key") then
+        require('vimf.plugin.which-key').setup()
+    end
 end
 
 return M
