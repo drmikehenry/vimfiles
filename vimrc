@@ -7905,6 +7905,9 @@ augroup local_vimrc
     " Set makeprg for *.snippet.py files.
     autocmd BufRead,BufNewFile *.snippets.py
             \ setlocal makeprg=make\ -s\ -C\ %:p:h
+    " Do not allow writing a file named apostrophe (a too-common error
+    " for Mike on his laptop keyboard).
+    autocmd BufWritePre  ' throw "Do not write ' as a filename"
 augroup END
 
 " Support for gpg-encrypted files.
