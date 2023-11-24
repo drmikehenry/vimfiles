@@ -1,5 +1,9 @@
 local M = {}
 
+---------------------------------------------------------------
+-- cmp
+---------------------------------------------------------------
+
 local cmp = require('cmp')
 
 M.settings = {
@@ -35,28 +39,28 @@ M.settings = {
 }
 
 M.setup = function()
-
     cmp.setup(M.settings)
 
-    local cmdline_mapping = function()
-        -- Fallback function that always falls back.
-        local fb = function (fallback) fallback() end
+    -- TODO: This interferes with cmdline history for some reason.
+    -- local cmdline_mapping = function()
+    --     -- Fallback function that always falls back.
+    --     local fb = function (fallback) fallback() end
 
-        -- Start with `cmp` default mapping for cmdline mode.
-        local mapping = cmp.mapping.preset.cmdline()
-        -- These keys must be spelled exactly as below, as Lua is case-sensitive
-        -- and would allow both `<C-p>` and `<C-P>` to exist (for example).
-        -- mapping['<C-P>'] = fb
-        -- mapping['<C-N>'] = fb
-        mapping['<C-P>'] = nil
-        mapping['<C-N>'] = nil
-        -- TODO: I've got some `:cmap` stuff that might be interfering.
-        print('mapping:')
-        for key,_ in pairs(mapping) do
-            print(key)
-        end
-        return mapping
-    end
+    --     -- Start with `cmp` default mapping for cmdline mode.
+    --     local mapping = cmp.mapping.preset.cmdline()
+    --     -- These keys must be spelled exactly as below, as Lua is case-sensitive
+    --     -- and would allow both `<C-p>` and `<C-P>` to exist (for example).
+    --     -- mapping['<C-P>'] = fb
+    --     -- mapping['<C-N>'] = fb
+    --     mapping['<C-P>'] = nil
+    --     mapping['<C-N>'] = nil
+    --     -- TODO: I've got some `:cmap` stuff that might be interfering.
+    --     print('mapping:')
+    --     for key,_ in pairs(mapping) do
+    --         print(key)
+    --     end
+    --     return mapping
+    -- end
 
     -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this
     -- won't work anymore).
