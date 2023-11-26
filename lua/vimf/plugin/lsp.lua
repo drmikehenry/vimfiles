@@ -36,34 +36,96 @@ M.servers = {
 }
 
 
+-- Key bindings that are related to the language but not associated
+-- with a specific LSP.
+M.mappings = {
+    n = {
+        ["<Space>ld"] = {vim.diagnostic.open_float, "Line Diagnostics"};
+        ["<Space>lq"] = {
+            vim.diagnostic.setloclist,
+            "copy diagnostics into Location List",
+        };
+        ["[d"] = {vim.diagnostic.goto_prev, "Go to Previous Diagnostic"};
+        ["]d"] = {vim.diagnostic.goto_next, "Go to Next Diagnostic"};
+        ["<Space>li"] = {"<Cmd>LspInfo<CR>", "LSP Information"};
+        ["<Space>lI"] = {"<Cmd>NullLsInfo<CR>", "Null-ls LSP Information"};
+    }
+}
+
+
+-- Per-buffer mappings to LSP methods.
+M.lsp_mappings = {
+    n = {
+        ["<Space>la"] = {
+            vim.lsp.buf.code_action,
+            "Code Action",
+            method="textDocument/codeAction",
+        };
+        ["<Space>lh"] = {
+            vim.lsp.buf.hover,
+            "Hover info at cursor",
+            method="textDocument/hover info",
+        };
+        ["<Space>lR"] = {
+            vim.lsp.buf.rename,
+            "Rename current symbol",
+            method="textDocument/rename",
+        };
+        ["<Space>ls"] = {
+            vim.lsp.buf.signature_help,
+            "Signature help",
+            method="textDocument/signatureHelp",
+        };
+        ["gD"] = {
+            vim.lsp.buf.declaration,
+            "Go to Declaration",
+            method="textDocument/declaration",
+        };
+        ["<Space>="] = {
+            vim.lsp.buf.format,
+            "Format buffer",
+            method="textDocument/formatting",
+        };
+        ["<Space>lf"] = {
+            vim.lsp.buf.format,
+            "Format buffer",
+            method="textDocument/formatting",
+        };
+        ["<Space>lG"] = {
+            vim.lsp.buf.workspace_symbol,
+            "Find Workspace Symbols",
+            method="workspace/symbol",
+        };
+    }
+}
+
+M.set_lsp_mappings = function(client, bufnr, lsp_mappings, opts)
+    local utils = require('vimf.utils')
+    local mode
+    local value
+    for mode, value in pairs(lsp_mappings) do
+        local lhs
+        local details
+        for lhs, details in pairs(value) do
+            if client.supports_method(details.method) then
+                details = utils.table_shallow_copy(details)
+                details.map_opts = utils.table_shallow_copy(
+                    details.map_opts or {}
+                )
+                details.map_opts.buffer = bufnr
+                utils.set_mappings(
+                    {[mode] = {[lhs] = details}},
+                    opts
+                )
+            end
+        end
+    end
+end
+
+
 M.lsp_on_attach = function(client, bufnr)
-    local nmap = function(keys, func, desc)
-        if desc then
-            desc = 'LSP: ' .. desc
-        end
-        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-    end
-
-    local nmapif = function(keys, func, desc, method)
-        if client.supports_method('textDocument/' .. method) then
-            nmap(keys, func, desc)
-        end
-    end
-
-    nmapif('<Space>la', vim.lsp.buf.code_action, 'Code Action', 'codeAction')
-    nmapif('<Space>lh', vim.lsp.buf.hover, 'Hover info at cursor', 'hover info')
-    nmapif('<Space>lR', vim.lsp.buf.rename, 'Rename current symbol', 'rename')
-    nmapif('<Space>ls', vim.lsp.buf.signature_help, 'Signature help',
-        'signatureHelp')
-    nmapif('gD', vim.lsp.buf.declaration, 'Go to Declaration', 'declaration')
-
-    nmapif('<Space>=', vim.lsp.buf.format, 'Format buffer', 'formatting')
-    nmapif('<Space>lf', vim.lsp.buf.format, 'Format buffer', 'formatting')
-
-    if client.supports_method('workspace/symbol') then
-        nmap('<Space>lG', vim.lsp.buf.workspace_symbol,
-            'Find Workspace Symbols')
-    end
+    opts = {desc_prefix="LSP: "}
+    M.set_lsp_mappings(client, bufnr, M.lsp_mappings, opts)
 end
 
 ---------------------------------------------------------------
@@ -112,19 +174,8 @@ M.setup = function()
         end
     end
 
-    local nmap = function(keys, func, desc)
-        vim.keymap.set('n', keys, func, { desc = desc })
-    end
-
-    -- Key bindings that are related to the language but not associated
-    -- with a specific LSP.
-    nmap('<Space>ld', vim.diagnostic.open_float, 'Line Diagnostics')
-    nmap('<Space>lq', vim.diagnostic.setloclist,
-        'copy diagnostics into Location List')
-    nmap('[d', vim.diagnostic.goto_prev, 'Go to Previous Diagnostic')
-    nmap(']d', vim.diagnostic.goto_next, 'Go to Next Diagnostic')
-    nmap('<Space>li', '<Cmd>LspInfo<CR>', 'LSP Information')
-    nmap('<Space>lI', '<Cmd>NullLsInfo<CR>', 'Null-ls LSP Information')
+    local utils = require('vimf.utils')
+    utils.set_mappings(M.mappings)
 
     M.null_ls_setup()
 end
