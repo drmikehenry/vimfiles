@@ -20,6 +20,10 @@ require adjustment of per-user settings.
 
 - Add Sonokai colorscheme (Monokai with reduced contrast) for Vim and Neovim.
 
+- Restore Dr. Chip's Align plugin; use prefix ``\|`` for mappings instead of the
+  default ``\`` to avoid mapping collisions.  See ``:help notes_align`` for
+  details.
+
 2023-11-23
 ==========
 

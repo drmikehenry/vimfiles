@@ -12,6 +12,7 @@
     Ag - Search using 'ag' utility                      |notes_ag|
     Airline - statusline utility in pure vimscript      |notes_airline|
     ALE - Asynchronous Lint Engine                      |notes_ale|
+    Align - Align things into columns                   |notes_align|
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
     BufMRU - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
@@ -629,8 +630,10 @@ To install a bundle:
 
   - Using a Vimball:
 
+      # **Important** pre-create the bundle directory:
       mkdir bundle-name
       vim .../bundle-name.vba.gz
+      " **Important** use absolute path:
       :UseVimball ~/.vim/bundle/bundle-name
       :q
 
@@ -767,6 +770,32 @@ https://github.com/drmikehenry/ale.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+ALIGN                                                   *notes_align*
+    Align things into columns                           |align|
+
+Align vimball comprises AlignPlugin and AlignMapsPlugin with a combined
+version number.
+
+Local customizations:
+
+- The AlignMaps use `\|` (backslash pipe as the prefix instead of <Leader> to
+  avoid mapping collisions.  So, for example, to align on `=` , use
+  the mapping `\|t=` instead of `\t=` as originally defined.
+
+Version 40a_46h (circa 2016-10-16) from section "Alignment" at
+http://www.drchip.org/astronaut/vim/#ALIGN
+
+with the following modifications found in branch `main` at:
+https://github.com/drmikehenry/vim-align
+
+- Allow g:Align_mapleader to define the leader prefix for AlignMaps.
+
+Installation:
+- Distributed as a |vimball|.
+- Follow bundle installation instructions (|bundle_installation|).
+- Remove bundle/align/plugin/cecutil.vim (this is in a separate bundle).
 
 ------------------------------------------------------------------------------
 BUFEXPLORER                                             *notes_bufexplorer*
