@@ -70,6 +70,7 @@ notes_cmp-nvim-ultisnips	notes.txt	/*notes_cmp-nvim-ultisnips*
 notes_cmp-path	notes.txt	/*notes_cmp-path*
 notes_colorcolumn	notes.txt	/*notes_colorcolumn*
 notes_colorsamplerpack	notes.txt	/*notes_colorsamplerpack*
+notes_colorscheme_plugins	notes.txt	/*notes_colorscheme_plugins*
 notes_colorschemes	notes.txt	/*notes_colorschemes*
 notes_conflict_marker	notes.txt	/*notes_conflict_marker*
 notes_cpsm	notes.txt	/*notes_cpsm*

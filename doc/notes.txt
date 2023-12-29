@@ -12,8 +12,6 @@
     Ag - Search using 'ag' utility                      |notes_ag|
     Airline - statusline utility in pure vimscript      |notes_airline|
     ALE - Asynchronous Lint Engine                      |notes_ale|
-    Badwolf colorscheme                                 |notes_badwolf|
-    Base16 colorscheme collection                       |notes_base16|
     BufExplorer - Buffer switcher and manager           |notes_bufexplorer|
     BufMRU - Most-recently-used buffer switcher         |notes_bufmru|
     BufKill - Kill buffer without closing window        |notes_bufkill|
@@ -27,11 +25,9 @@
     Cmp-nvim-lsp - Cmp source for built-in LSP          |notes_cmp-nvim-lsp|
     Cmp-nvim-ultisnips - Cmp source for UltiSnips       |notes_cmp-nvim-ultisnips|
     Cmp-path - Cmp source for filesystem paths          |notes_cmp-path|
-    ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
     CPSM - CtrlP matcher in C++ for speed               |notes_cpsm|
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
     DiffChar - Highlight diffs for characters and words |notes_diffchar|
-    Dual - Dual color scheme (gvim, vim)                |notes_dual|
     Easy-Align - Align text on delimiters               |notes_easyalign|
     EasyMotion - Multiple new motions                   |notes_easymotion|
     Endwise - End certain structures automatically      |notes_endwise|
@@ -45,11 +41,8 @@
     Fugitive - A wrapper for Git in Vim                 |notes_fugitive|
     Grep - Wrapper for grep/xargs                       |notes_grep|
     Grepper - Extensible wrapper for grep-like tools    |notes_grepper|
-    Gruvbox - a dark colorscheme                        |notes_gruvbox|
     Headerguard - Add guards for header files           |notes_headerguard|
-    Hemisu - A dark colorscheme                         |notes_hemisu|
     HiLinkTrace - Display syntax highlighting stack     |notes_hilinktrace|
-    Hybrid - A dark colorscheme                         |notes_hybrid|
     Indent-guides - Adds indent guides                  |notes_indent-guides|
     JavaComplete - Java Omnicompletion                  |notes_javacomplete|
     Keepcase - Search-and-replace keeping case          |notes_keepcase|
@@ -62,7 +55,6 @@
     Markdown - Markdown syntax support                  |notes_markdown|
     Matchup - Enhanced extended matching with '%'       |notes_matchup|
     Misc - Contains many useful Vimscript functions     |notes_misc|
-    Monokai - A dark colorscheme                        |notes_monokai|
     Moonscript - support for a dialect of Lua           |notes_moonscript|
     Mundo - Visualize your undo tree                    |notes_mundo|
     Null-LS - Neovim non-LSP language tool support      |notes_null-ls|
@@ -109,9 +101,18 @@
     VisSort - Sort visually selected areas              |notes_vissort|
     VisSwap - Swap visually selected areas              |notes_visswap|
     WhichKey - Neovim show key bindings                 |notes_whichkey|
-    Wombat256i - A dark colorscheme                     |notes_wombat256i|
     Z80 - Support for Z80 assembly language             |notes_z80|
     Zig - Support for Zig language                      |notes_zig|
+3.1 Colorscheme plugins                             |notes_colorscheme_plugins|
+    Badwolf colorscheme                                 |notes_badwolf|
+    Base16 colorscheme collection                       |notes_base16|
+    ColorSamplerPack - Color schemes and theme menu     |notes_colorsamplerpack|
+    Dual - Dual color scheme (gvim, vim)                |notes_dual|
+    Gruvbox - a dark colorscheme                        |notes_gruvbox|
+    Hemisu - A dark colorscheme                         |notes_hemisu|
+    Hybrid - A dark colorscheme                         |notes_hybrid|
+    Monokai - A dark colorscheme                        |notes_monokai|
+    Wombat256i - A dark colorscheme                     |notes_wombat256i|
 4.  Extensions                                          |notes_extensions|
     C Additions - Extra syntax highlighting for C       |notes_c_additions|
     Python indentation support                          |notes_python_indent|
@@ -764,26 +765,6 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-BADWOLF                                                 *notes_badwolf*
-  A dark colorscheme
-
-Version 2013-07-19 (e6fdf18) from:
-https://github.com/sjl/badwolf.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-BASE16                                                  *notes_base16*
-  A colorscheme collection
-
-Version 2014-07-22 (1ce4b84) from:
-https://github.com/chriskempson/base16-vim.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
 BUFEXPLORER                                             *notes_bufexplorer*
   Buffer switcher and manager                           |bufexplorer|
 
@@ -981,17 +962,6 @@ Installation:
 - Follow Neovim-only bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-COLORSAMPLERPACK                                        *notes_colorsamplerpack*
-  Color schemes and theme menu
-
-Version 2012.10.28 from:
-http://www.vim.org/scripts/script.php?script_id=625
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-- Unpack in bundle/colorsamplerpack.
-
-------------------------------------------------------------------------------
 CPSM                                                    *notes_cpsm*
     CtrlP matcher in C++ for speed
 
@@ -1096,19 +1066,6 @@ https://github.com/rickhowe/diffchar.vim.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-DUAL                                                    *notes_dual*
-  Dual color scheme (gvim, vim)                         |notes_dual|
-
-Version 1.1 from:
-http://www.vim.org/scripts/script.php?script_id=2688
-
-Installation:
-- Copy to ~/.vim/colors/dual.vim
-
-Use: >
-    :colorscheme dual
 
 ------------------------------------------------------------------------------
 EASY-ALIGN                                              *notes_easyalign*
@@ -1453,16 +1410,6 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-GRUVBOX                                                 *notes_gruvbox*
-  A dark colorscheme
-
-Version 2020-07-03 (bf2885a) from:
-https://github.com/morhetz/gruvbox
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
 HEADERGUARD                                             *notes_headerguard*
   Add guards for header files                           |headerguard|
 
@@ -1472,16 +1419,6 @@ To add or update a header guard in a .h file: >
 
 Version 0.2.2 (e53b37fa) from:
 https://github.com/drmikehenry/vim-headerguard
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-HEMISU                                                  *notes_hemisu*
-  A dark colorscheme
-
-Version 2013-09-05 (37ea6aa) from:
-https://github.com/noahfrederick/vim-hemisu.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1504,16 +1441,6 @@ Local Customizations:
 
 Version 4l (lowercase "L") from:
 http://www.drchip.org/astronaut/vim/index.html#HILINKS
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-HYBRID                                                  *notes_hybrid*
-  A dark colorscheme
-
-Version 2014-05-10 (81b7e55) from:
-https://github.com/w0ng/vim-hybrid.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -1974,16 +1901,6 @@ https://github.com/drmikehenry/vim-misc
   junk escape sequences during startup.
 
 This plugin is also used by the session plugin.
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
-MONOKAI                                                 *notes_monokai*
-  A dark colorscheme
-
-Version 2014-06-10 (168adea) from:
-https://github.com/w0ng/vim-hybrid.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
@@ -3306,16 +3223,6 @@ Installation:
 - Follow Neovim-only bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-WOMBAT256I                                              *notes_wombat256i*
-  A dark colorscheme
-
-Version 2013-08-04 (f99475e) from:
-https://github.com/dsolstad/vim-wombat256i.git
-
-Installation:
-- Follow bundle installation instructions (|bundle_installation|).
-
-------------------------------------------------------------------------------
 Z80                                                     *notes_z80*
   Support for Z80 assembly language
 
@@ -3341,6 +3248,103 @@ https://github.com/ziglang/zig.vim
 Local customizations:
 
 - Avoid running `zig fmt` on save automatically.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+==============================================================================
+3.1 Colorscheme plugins                             *notes_colorscheme_plugins*
+
+------------------------------------------------------------------------------
+BADWOLF                                                 *notes_badwolf*
+  A dark colorscheme
+
+Version 2013-07-19 (e6fdf18) from:
+https://github.com/sjl/badwolf.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+BASE16                                                  *notes_base16*
+  A colorscheme collection
+
+Version 2014-07-22 (1ce4b84) from:
+https://github.com/chriskempson/base16-vim.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+COLORSAMPLERPACK                                        *notes_colorsamplerpack*
+  Color schemes and theme menu
+
+Version 2012.10.28 from:
+http://www.vim.org/scripts/script.php?script_id=625
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+- Unpack in bundle/colorsamplerpack.
+
+------------------------------------------------------------------------------
+DUAL                                                    *notes_dual*
+  Dual color scheme (gvim, vim)                         |notes_dual|
+
+Version 1.1 from:
+http://www.vim.org/scripts/script.php?script_id=2688
+
+Installation:
+- Copy to ~/.vim/colors/dual.vim
+
+Use: >
+    :colorscheme dual
+
+------------------------------------------------------------------------------
+GRUVBOX                                                 *notes_gruvbox*
+  A dark colorscheme
+
+Version 2020-07-03 (bf2885a) from:
+https://github.com/morhetz/gruvbox
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+HEMISU                                                  *notes_hemisu*
+  A dark colorscheme
+
+Version 2013-09-05 (37ea6aa) from:
+https://github.com/noahfrederick/vim-hemisu.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+HYBRID                                                  *notes_hybrid*
+  A dark colorscheme
+
+Version 2014-05-10 (81b7e55) from:
+https://github.com/w0ng/vim-hybrid.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+MONOKAI                                                 *notes_monokai*
+  A dark colorscheme
+
+Version 2014-06-10 (168adea) from:
+https://github.com/ku1ik/vim-monokai.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+WOMBAT256I                                              *notes_wombat256i*
+  A dark colorscheme
+
+Version 2013-08-04 (f99475e) from:
+https://github.com/dsolstad/vim-wombat256i.git
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
