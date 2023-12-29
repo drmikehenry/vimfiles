@@ -169,6 +169,7 @@ notes_session	notes.txt	/*notes_session*
 notes_setup_vimfiles	notes.txt	/*notes_setup_vimfiles*
 notes_signature	notes.txt	/*notes_signature*
 notes_snippets	notes.txt	/*notes_snippets*
+notes_sonokai	notes.txt	/*notes_sonokai*
 notes_source_control	notes.txt	/*notes_source_control*
 notes_spell_checking	notes.txt	/*notes_spell_checking*
 notes_spotdiff	notes.txt	/*notes_spotdiff*

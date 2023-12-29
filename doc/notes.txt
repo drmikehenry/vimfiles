@@ -115,6 +115,7 @@
     Melange - A dark or light colorscheme               |notes_melange|
     Monokai - A dark colorscheme                        |notes_monokai|
     Nightfox - A customizable dark colorscheme          |notes_nightfox|
+    Sonokai -  Monokai colorscheme with less contrast   |notes_sonokai|
     Wombat256i - A dark colorscheme                     |notes_wombat256i|
 4.  Extensions                                          |notes_extensions|
     C Additions - Extra syntax highlighting for C       |notes_c_additions|
@@ -3368,6 +3369,16 @@ NIGHTFOX                                                *notes_nightfox*
 
 Version 3.7.1 (fcf699b) from:
 https://github.com/EdenEast/nightfox.nvim
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+SONOKAI                                                 *notes_sonokai*
+  Monokai colorscheme with reduced contrast
+
+Version 2023-10-24 (bdce098) from:
+https://github.com/sainnhe/sonokai
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

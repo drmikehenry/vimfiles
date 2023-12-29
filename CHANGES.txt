@@ -18,6 +18,8 @@ require adjustment of per-user settings.
 
 - Add Melange dark or light colorscheme for Neovim.
 
+- Add Sonokai colorscheme (Monokai with reduced contrast) for Vim and Neovim.
+
 2023-11-23
 ==========
 
