@@ -16,6 +16,8 @@ require adjustment of per-user settings.
 
 - Add Iceberg bluish colorscheme for Vim and Neovim.
 
+- Add Melange dark or light colorscheme for Neovim.
+
 2023-11-23
 ==========
 

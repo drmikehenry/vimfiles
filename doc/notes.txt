@@ -112,6 +112,7 @@
     Hemisu - A dark colorscheme                         |notes_hemisu|
     Hybrid - A dark colorscheme                         |notes_hybrid|
     Iceberg - A bluish colorscheme                      |notes_iceberg|
+    Melange - A dark or light colorscheme               |notes_melange|
     Monokai - A dark colorscheme                        |notes_monokai|
     Nightfox - A customizable dark colorscheme          |notes_nightfox|
     Wombat256i - A dark colorscheme                     |notes_wombat256i|
@@ -3337,6 +3338,16 @@ HYBRID                                                  *notes_hybrid*
 
 Version 2014-05-10 (81b7e55) from:
 https://github.com/w0ng/vim-hybrid.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+MELANGE                                                 *notes_melange*
+  A dark or light colorscheme for Neovim
+
+Version 2023-10-19 (ca3444c) from:
+https://github.com/savq/melange-nvim
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
