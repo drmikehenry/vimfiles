@@ -1,0 +1,51 @@
+Changelog
+=========
+
+
+1.0
+---
+* Added plugin supports: CtrlP, EasyMotion, Syntastic, vim-plug, etc.
+* Improve filetype supports: css, javascript, sass, graphql, etc.
+* Added new highlight supports: StatusLineTerm, StatusLineTermNC
+* Added Neovim terminal colors support
+* Improve stability of airline/lightline support
+
+
+0.6
+---
+* Added airline support
+* Added lightline support
+* Added rules for new highlight group: `EndOfBuffer`
+* Improved colors for javascript, markdown, etc.
+* Minor color updates
+
+
+0.5
+---
+* Improved visibility of diff with cursorline
+* Updated color for swift
+* Minor color updates
+
+
+0.4
+---
+* Updated color for html
+
+
+0.3
+---
+* Added rules for diff
+* Added links for help
+* Minor color updates
+
+
+0.2
+---
+* Added rules for `SignColumn`, `Spell*`, `StorageClass`, `WileMenu`
+* Added links for css, html, javascript, xml, yaml
+* Minor color updates
+
+
+0.1
+---
+* Hello, world!

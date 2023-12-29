@@ -111,6 +111,7 @@
     Gruvbox - a dark colorscheme                        |notes_gruvbox|
     Hemisu - A dark colorscheme                         |notes_hemisu|
     Hybrid - A dark colorscheme                         |notes_hybrid|
+    Iceberg - A bluish colorscheme                      |notes_iceberg|
     Monokai - A dark colorscheme                        |notes_monokai|
     Nightfox - A customizable dark colorscheme          |notes_nightfox|
     Wombat256i - A dark colorscheme                     |notes_wombat256i|
@@ -3316,6 +3317,16 @@ HEMISU                                                  *notes_hemisu*
 
 Version 2013-09-05 (37ea6aa) from:
 https://github.com/noahfrederick/vim-hemisu.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+ICEBERG                                                 *notes_iceberg*
+  A bluish colorscheme for Vim and Neovim
+
+Version 2022-11-23 (e01ac08) from:
+https://github.com/cocopon/iceberg.vim
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
