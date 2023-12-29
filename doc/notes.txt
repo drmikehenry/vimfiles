@@ -112,6 +112,7 @@
     Hemisu - A dark colorscheme                         |notes_hemisu|
     Hybrid - A dark colorscheme                         |notes_hybrid|
     Monokai - A dark colorscheme                        |notes_monokai|
+    Nightfox - A customizable dark colorscheme          |notes_nightfox|
     Wombat256i - A dark colorscheme                     |notes_wombat256i|
 4.  Extensions                                          |notes_extensions|
     C Additions - Extra syntax highlighting for C       |notes_c_additions|
@@ -3335,6 +3336,16 @@ MONOKAI                                                 *notes_monokai*
 
 Version 2014-06-10 (168adea) from:
 https://github.com/ku1ik/vim-monokai.git
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+NIGHTFOX                                                *notes_nightfox*
+  A customizable dark colorscheme for Neovim
+
+Version 3.7.1 (fcf699b) from:
+https://github.com/EdenEast/nightfox.nvim
 
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).

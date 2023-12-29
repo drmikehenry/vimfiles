@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Reorganize colorscheme plugins in ``:help notes``.
 
+- Add Nightfox customizable dark colorscheme for Neovim.
+
 2023-11-23
 ==========
 
