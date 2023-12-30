@@ -77,6 +77,7 @@ notes_conflict_marker	notes.txt	/*notes_conflict_marker*
 notes_cpsm	notes.txt	/*notes_cpsm*
 notes_cpsm_setup	notes.txt	/*notes_cpsm_setup*
 notes_cscope	notes.txt	/*notes_cscope*
+notes_cscope_maps	notes.txt	/*notes_cscope_maps*
 notes_ctrl_o	notes.txt	/*notes_ctrl_o*
 notes_ctrlp	notes.txt	/*notes_ctrlp*
 notes_customizations	notes.txt	/*notes_customizations*

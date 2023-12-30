@@ -10,6 +10,9 @@ M.setup = function()
     if plugin.enabled("cmp") then
         require('vimf.plugin.cmp').setup()
     end
+    if plugin.enabled("cscope_maps") then
+        require('vimf.plugin.cscope_maps').setup()
+    end
     if plugin.enabled("lsp") then
         require('vimf.plugin.lsp').setup()
     end

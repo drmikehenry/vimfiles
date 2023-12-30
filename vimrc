@@ -3282,7 +3282,7 @@ endfunction
 " Cscope
 " -------------------------------------------------------------
 
-if has("cscope")
+if has('cscope') && !has('nvim')
     set cscopeprg=/usr/bin/cscope
     " 0 ==> search cscope database(s) first, then tag file(s) if no matches.
     " 1 ==> search tag file(s) first, then cscope database(s) if no matches.
@@ -3321,6 +3321,7 @@ if has("cscope")
     "   - Clear QuickFix window before appending results.
     "   0 Don't use QuickFix window.
     " Search types:
+    " a - assigns:  find all assignments to the symbol.
     " c - calls:    find all calls to the function name.
     " d - called:   find functions called by given function name.
     " e - egrep:    egrep search for text.
@@ -3329,16 +3330,18 @@ if has("cscope")
     " i - includes: find files that include given filename.
     " s - symbol:   find all references to symbol.
     " t - text:     find all instances of the text.
-    set cscopequickfix=c-,d-,e-,i-,s-,t-
+    set cscopequickfix=a-,c-,d-,e-,i-,s-,t-
 
-    nnoremap <C-\>c :cs find c <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
-    nnoremap <C-\>d :cs find d <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
-    nnoremap <C-\>e :cs find e <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
-    nnoremap <C-\>f :cs find f <C-r>=expand("<cfile>")<CR><CR>
-    nnoremap <C-\>g :cs find g <C-r>=expand("<cword>")<CR><CR>
-    nnoremap <C-\>i :cs find i ^<C-r>=expand("<cfile>")<CR>$<CR>:Copen<CR>
-    nnoremap <C-\>s :cs find s <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
-    nnoremap <C-\>t :cs find t <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <Space>ca :cs find a <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <Space>cb :!cscope -f ./cscope.out -bqkv<CR>
+    nnoremap <Space>cc :cs find c <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <Space>cd :cs find d <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <Space>ce :cs find e <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <Space>cf :cs find f <C-r>=expand("<cfile>")<CR><CR>
+    nnoremap <Space>cg :cs find g <C-r>=expand("<cword>")<CR><CR>
+    nnoremap <Space>ci :cs find i ^<C-r>=expand("<cfile>")<CR>$<CR>:Copen<CR>
+    nnoremap <Space>cs :cs find s <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
+    nnoremap <Space>ct :cs find t <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
 endif
 
 " -------------------------------------------------------------

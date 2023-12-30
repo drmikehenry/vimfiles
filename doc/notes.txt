@@ -27,6 +27,7 @@
     Cmp-nvim-ultisnips - Cmp source for UltiSnips       |notes_cmp-nvim-ultisnips|
     Cmp-path - Cmp source for filesystem paths          |notes_cmp-path|
     CPSM - CtrlP matcher in C++ for speed               |notes_cpsm|
+    Cscope_maps - Neovim cscope support                 |notes_cscope_maps|
     CtrlP - Fuzzy matches for files, buffers, etc.      |notes_ctrlp|
     DiffChar - Highlight diffs for characters and words |notes_diffchar|
     Easy-Align - Align text on delimiters               |notes_easyalign|
@@ -1030,6 +1031,18 @@ https://github.com/nixprime/cpsm
 Installation:
 - Follow bundle installation instructions (|bundle_installation|).
   However, leave the .gitignore so that bin/ and build/ are ignored.
+
+------------------------------------------------------------------------------
+CSCOPE_MAPS                                             *notes_cscope_maps*
+  Neovim cscope support                                 |cscope_maps.txt|
+
+Version 2023-11-24 (c3922f1) from:
+https://github.com/dhananjaylatkar/cscope_maps.nvim
+
+See |notes_cscope| for more configuration information.
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
 CTRLP                                                   *notes_ctrlp*
@@ -4227,16 +4240,29 @@ https://github.com/universal-ctags/ctags
 ------------------------------------------------------------------------------
 Cscope                                                  *notes_cscope*
 
-Key bindings have been setup for cscope (:help cscope):
+Key bindings have been setup for cscope.
 
-<C-\>c     :cs find c on current word under cursor
-<C-\>d     :cs find d on current word under cursor
-<C-\>e     :cs find e on current word under cursor
-<C-\>f     :cs find f on current word under cursor
-<C-\>g     :cs find g on current word under cursor
-<C-\>i     :cs find i on current word under cursor
-<C-\>s     :cs find s on current word under cursor
-<C-\>t     :cs find t on current word under cursor
+For Vim:
+- The mappings generally uses the word under the cursor as input.
+- Most results are sent to the QuickFix list, and some are in a menu.
+- See `:help cscope` for more information.
+
+For Neovim:
+- The mappings use the word under the cursor or an interactively entered word.
+- Results are sent to the Telescope plugin; use CTRL-Q to send Telescope results
+  to the QuickFix window.
+- See `:help plugin_cscope_maps`  for more information.
+
+<Space>ca     Find assignments to symbol.
+<Space>cb     Build database.
+<Space>cc     Find callers of this func.
+<Space>cd     Find called funcs from this func.
+<Space>ce     Find egrep pattern.
+<Space>cf     Find file.
+<Space>cg     Find global definition.
+<Space>ci     Find #includers of this file.
+<Space>cs     Find symbol.
+<Space>ct     Find text string.
 
 ------------------------------------------------------------------------------
 Window Layout                                           *notes_window_layout*
