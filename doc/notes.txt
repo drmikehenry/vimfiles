@@ -2789,6 +2789,7 @@ Local customizations:
   <Space>ff       - find files
   <Space>fh       - find help tags
   <Space>fk       - find keymaps
+  <Space>fq       - find in QuickFix list
   <Space>fm       - find man pages
   <Space>ft       - find tags in current directory
   <Space>fT       - find tags in current buffer

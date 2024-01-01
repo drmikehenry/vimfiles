@@ -49,6 +49,7 @@ M.mappings = {
             end,
             "Find Man pages"
         },
+        ["<Space>fq"] = {tsb.quickfix, "Find in QuickFix list"},
         ["<Space>ft"] = {tsb.tags, "Tags in current dir"},
         ["<Space>fT"] = {tsb.current_buffer_tags, "Tags in current buffer"},
         ["<Space>lD"] = {tsb.diagnostics, "all Line Diagnostics"},
