@@ -12,6 +12,9 @@ require adjustment of per-user settings.
 
 - Add ``<Space>fq`` for Telescope over QuickFix list (Neovim only).
 
+- Add ``<Space>fg`` for Telescope ``live_grep`` defaulting to the word under the
+  cursor (Neovim only).
+
 2023-12-30
 ==========
 

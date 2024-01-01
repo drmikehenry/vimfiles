@@ -2787,6 +2787,7 @@ Local customizations:
   <Space>f'       - find marks
   <Space>fb       - find buffers
   <Space>ff       - find files
+  <Space>fg       - find grep (regex defaults to word under cursor)
   <Space>fh       - find help tags
   <Space>fk       - find keymaps
   <Space>fq       - find in QuickFix list

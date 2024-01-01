@@ -36,10 +36,18 @@ M.mappings = {
         ["<Space>ff"] = {
             function()
                 tsb.find_files {
-                    cwd=vim.fn["expand"]("%:p:h"),
+                    cwd=vim.fn.expand("%:p:h"),
                 }
             end,
             "Find Files at current file"
+        },
+        ["<Space>fg"] = {
+            function()
+                tsb.live_grep {
+                    default_text = vim.fn.expand("<cword>")
+                }
+            end,
+            "Find Grep (default to word under cursor)",
         },
         ["<Space>fh"] = {tsb.help_tags, "Find Help tags"},
         ["<Space>fk"] = {tsb.keymaps, "Find Keymaps"},
