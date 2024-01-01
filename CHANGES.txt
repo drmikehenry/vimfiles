@@ -15,6 +15,12 @@ require adjustment of per-user settings.
 - Add ``<Space>fg`` for Telescope ``live_grep`` defaulting to the word under the
   cursor (Neovim only).
 
+- Follow symlinks for Telescope ``find_files`` operations::
+
+    <Space>ff       - find files
+    <Space>pf       - find files at project root
+    <Space>pp       - find files at project root
+
 2023-12-30
 ==========
 

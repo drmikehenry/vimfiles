@@ -29,13 +29,26 @@ M.mappings = {
         ["<Space>bb"] = {tsb.buffers, "Browse Buffers"},
         ["<Space>f'"] = {tsb.marks, "Find marks"},
         ["<Space>fb"] = {tsb.buffers, "Find Buffers"},
-        ["<Space>pf"] = {tsb.find_files, "Find Files at project root"},
+        ["<Space>pf"] = {
+            function()
+                tsb.find_files {
+                    follow=true,
+                }
+            end,
+            "Find Files at project root"},
 
         -- Duplicative but easier to type.
-        ["<Space>pp"] = {tsb.find_files, "Find Files at project root"},
+        ["<Space>pp"] = {
+            function()
+                tsb.find_files {
+                    follow=true,
+                }
+            end,
+            "Find Files at project root"},
         ["<Space>ff"] = {
             function()
                 tsb.find_files {
+                    follow=true,
                     cwd=vim.fn.expand("%:p:h"),
                 }
             end,

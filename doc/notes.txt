@@ -2794,6 +2794,8 @@ Local customizations:
   <Space>fm       - find man pages
   <Space>ft       - find tags in current directory
   <Space>fT       - find tags in current buffer
+  <Space>pf       - find files at project root
+  <Space>pp       - find files at project root
 
 Installation:
 - Follow Neovim-only bundle installation instructions (|bundle_installation|).
