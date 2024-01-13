@@ -30,7 +30,18 @@ M.settings = {
     sources = cmp.config.sources(
         {
             { name = 'nvim_lsp' },
-            { name = 'ultisnips' },
+            -- For now, disabling support for UltiSnips as a source because
+            -- it's unusably slow in `.c` files when there are a large number of
+            -- snippets (have 1800+ snippets in some cases).
+            -- An alternative that didn't work effectively is to allow caching
+            -- of the snippets in `cmp_nvim_ultisnips`.  This still has the
+            -- annoyance of a one-time lengthy delay at first editing, and it
+            -- also didn't seem to fix the performance issues entirely.
+            -- To experiment with allowing caching in the plugin, use this:
+            --   require('cmp_nvim_ultisnips').setup {
+            --       show_snippets = "all",
+            --   }
+            -- { name = 'ultisnips' },
         },
         {
             { name = 'buffer' },

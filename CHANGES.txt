@@ -7,6 +7,14 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-01-13
+==========
+
+- Disable the use of UltiSnips as a source for the Neovim ``cmp`` plugin (which
+  provides completion options as you type).  When there are many snippets
+  defined, performance of insertion-mode typing is unusably slow when UltiSnips
+  are used.
+
 2024-01-01
 ==========
 
