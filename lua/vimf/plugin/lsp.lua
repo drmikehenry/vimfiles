@@ -4,14 +4,68 @@ local M = {}
 -- LSP
 ---------------------------------------------------------------
 
+-- Enable debug if desired:
+-- vim.lsp.set_log_level("debug")
+
 -- Table of language servers to configure.
 M.servers = {
     clangd = {
-        executable = 'clangd',
+        executable = "clangd",
         settings = {},
     },
+    lua_ls = {
+        executable = "lua-language-server",
+        cmd = {
+            "lua-language-server",
+            "--logpath",
+            vim.fn.stdpath("cache") .. "/lua-language-server/",
+            "--metapath",
+            vim.fn.stdpath("cache") .. "/lua-language-server/meta/"
+        },
+        settings = {},
+        on_init = function(client)
+            local path = client.workspace_folders[1].name
+            if (not vim.loop.fs_stat(path .. "/.luarc.json")
+                    and not vim.loop.fs_stat(path .. "/.luarc.jsonc")) then
+                client.config.settings = vim.tbl_deep_extend(
+                    "force", client.config.settings, {
+                        Lua = {
+                            runtime = {
+                                -- Tell the language server which version of
+                                -- Lua you"re using (most likely LuaJIT in the
+                                -- case of Neovim).
+                                version = "LuaJIT"
+                            },
+                            -- Make the server aware of Neovim runtime files.
+                            workspace = {
+                                checkThirdParty = false,
+                                -- Can define individual top-level directories:
+                                -- library = {
+                                --     -- vim.env.VIMRUNTIME
+                                --     vim.env.VIMRUNTIME
+                                --     -- "${3rd}/luv/library"
+                                --     -- "${3rd}/busted/library",
+                                -- }
+                                -- Or pull in all of 'runtimepath'.
+                                library = vim.api.nvim_get_runtime_file("", true)
+                            }
+                        }
+                    }
+                )
+
+                vim.print(client.config.settings)
+                client.notify(
+                    "workspace/didChangeConfiguration",
+                    {
+                        settings = client.config.settings
+                    }
+                )
+            end
+            return true
+        end
+    },
     pylsp = {
-        executable = 'pylsp',
+        executable = "pylsp",
         settings = {
             pylsp = {
                 plugins = {
@@ -36,7 +90,7 @@ M.servers = {
         },
     },
     rust_analyzer = {
-        executable = 'rust-analyzer',
+        executable = "rust-analyzer",
         settings = {},
     },
 }
@@ -46,15 +100,15 @@ M.servers = {
 -- with a specific LSP.
 M.mappings = {
     n = {
-        ["<Space>ld"] = {vim.diagnostic.open_float, "Line Diagnostics"};
+        ["<Space>ld"] = { vim.diagnostic.open_float, "Line Diagnostics" },
         ["<Space>lq"] = {
             vim.diagnostic.setloclist,
             "copy diagnostics into Location List",
-        };
-        ["[d"] = {vim.diagnostic.goto_prev, "Go to Previous Diagnostic"};
-        ["]d"] = {vim.diagnostic.goto_next, "Go to Next Diagnostic"};
-        ["<Space>li"] = {"<Cmd>LspInfo<CR>", "LSP Information"};
-        ["<Space>lI"] = {"<Cmd>NullLsInfo<CR>", "Null-ls LSP Information"};
+        },
+        ["[d"] = { vim.diagnostic.goto_prev, "Go to Previous Diagnostic" },
+        ["]d"] = { vim.diagnostic.goto_next, "Go to Next Diagnostic" },
+        ["<Space>li"] = { "<Cmd>LspInfo<CR>", "LSP Information" },
+        ["<Space>lI"] = { "<Cmd>NullLsInfo<CR>", "Null-ls LSP Information" },
     }
 }
 
@@ -65,48 +119,48 @@ M.lsp_mappings = {
         ["<Space>la"] = {
             vim.lsp.buf.code_action,
             "Code Action",
-            method="textDocument/codeAction",
-        };
+            method = "textDocument/codeAction",
+        },
         ["<Space>lh"] = {
             vim.lsp.buf.hover,
             "Hover info at cursor",
-            method="textDocument/hover info",
-        };
+            method = "textDocument/hover info",
+        },
         ["<Space>lR"] = {
             vim.lsp.buf.rename,
             "Rename current symbol",
-            method="textDocument/rename",
-        };
+            method = "textDocument/rename",
+        },
         ["<Space>ls"] = {
             vim.lsp.buf.signature_help,
             "Signature help",
-            method="textDocument/signatureHelp",
-        };
+            method = "textDocument/signatureHelp",
+        },
         ["gD"] = {
             vim.lsp.buf.declaration,
             "Go to Declaration",
-            method="textDocument/declaration",
-        };
+            method = "textDocument/declaration",
+        },
         ["<Space>="] = {
             vim.lsp.buf.format,
             "Format buffer",
-            method="textDocument/formatting",
-        };
+            method = "textDocument/formatting",
+        },
         ["<Space>lf"] = {
             vim.lsp.buf.format,
             "Format buffer",
-            method="textDocument/formatting",
-        };
+            method = "textDocument/formatting",
+        },
         ["<Space>lG"] = {
             vim.lsp.buf.workspace_symbol,
             "Find Workspace Symbols",
-            method="workspace/symbol",
-        };
+            method = "workspace/symbol",
+        },
     }
 }
 
 M.set_lsp_mappings = function(client, bufnr, lsp_mappings, opts)
-    local utils = require('vimf.utils')
+    local utils = require("vimf.utils")
     local mode
     local value
     for mode, value in pairs(lsp_mappings) do
@@ -120,7 +174,7 @@ M.set_lsp_mappings = function(client, bufnr, lsp_mappings, opts)
                 )
                 details.map_opts.buffer = bufnr
                 utils.set_mappings(
-                    {[mode] = {[lhs] = details}},
+                    { [mode] = { [lhs] = details } },
                     opts
                 )
             end
@@ -130,7 +184,7 @@ end
 
 
 M.lsp_on_attach = function(client, bufnr)
-    opts = {desc_prefix="LSP: "}
+    opts = { desc_prefix = "LSP: " }
     M.set_lsp_mappings(client, bufnr, M.lsp_mappings, opts)
 end
 
@@ -138,11 +192,11 @@ end
 -- null-ls
 ---------------------------------------------------------------
 
-local null_ls = require('null-ls')
+local null_ls = require("null-ls")
 
 M.shellcheck_exclusions = {
-    "SC1090",   -- Can't follow non-constant source.
-    "SC2016",   -- Expressions don't expand in single quotes.
+    "SC1090", -- Can't follow non-constant source.
+    "SC2016", -- Expressions don't expand in single quotes.
 }
 
 M.null_ls_setup = function()
@@ -170,17 +224,19 @@ M.setup = function()
     local config
     for server, config in pairs(M.servers) do
         local on_attach = config.on_attach or M.lsp_on_attach
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
         if vim.fn.executable(config.executable) == 1 then
-            require('lspconfig')[server].setup {
+            require("lspconfig")[server].setup {
+                on_init = config.on_init,
                 on_attach = on_attach,
+                cmd = config.cmd,
                 settings = config.settings,
                 capabilities = capabilities,
             }
         end
     end
 
-    local utils = require('vimf.utils')
+    local utils = require("vimf.utils")
     utils.set_mappings(M.mappings)
 
     M.null_ls_setup()
