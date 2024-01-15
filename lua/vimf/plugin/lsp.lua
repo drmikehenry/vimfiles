@@ -22,6 +22,12 @@ M.servers = {
                     mypy = {
                         enabled = true,
                     },
+                    pycodestyle = {
+                        enabled = false,
+                    },
+                    pylint = {
+                        enabled = false,
+                    },
                     ruff = {
                         enabled = true,
                     },
