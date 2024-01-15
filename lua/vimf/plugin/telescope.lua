@@ -83,8 +83,8 @@ M.mappings = {
 }
 
 M.setup = function()
-    require('telescope').setup(M.settings)
-    require('vimf.utils').set_mappings(
+    require("telescope").setup(M.settings)
+    require("vimf.utils").set_mappings(
         M.mappings,
         {desc_prefix="Telescope: "}
     )
