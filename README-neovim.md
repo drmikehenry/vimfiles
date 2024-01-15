@@ -93,7 +93,7 @@ Alternatively, use `python -m pip install --user`.
 - Acquire `lua-language-server` binaries:
   <https://github.com/LuaLS/lua-language-server/releases/download/3.7.4/lua-language-server-3.7.4-linux-x64.tar.gz>
 
-- Choose installation location:
+- Install from pre-built binaries:
 
   - Install globally (preferred):
 
@@ -112,6 +112,24 @@ Alternatively, use `python -m pip install --user`.
         ~/.local/bin
 
     **NOTE** Ensure `~/.local/bin/` is in the `PATH`.
+
+- If desired, may install from source:
+
+  - Acquire sources:
+
+        git clone https://github.com/sumneko/lua-language-server
+        cd lua-language-server/
+        git submodule update --init --recursive
+
+
+  - May need to install `libstdc++-static` for the build to complete.
+
+  - Build:
+
+        cd 3rd/luamake
+        compile/install.sh
+        cd ../..
+        ./3rd/luamake/luamake rebuild
 
 # Setup `init.lua` for vimfiles
 
