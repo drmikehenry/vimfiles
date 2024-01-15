@@ -195,6 +195,11 @@ as well; you can look at them via: >
 
   :help localnotes
 
+Similarly, user-specific extensions (which typically live in ~/.vimuser) may
+have notes; view them via:
+>
+  :help usernotes
+<
 ------------------------------------------------------------------------------
 Changes                                                 *notes_changes*
 
