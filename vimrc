@@ -6501,8 +6501,7 @@ function! SetupMarkup()
     runtime scripts/xml.vim
     let b:SpellType = "<markup>"
 
-    " Re-synchronize syntax highlighting minlines before top of window.
-    syntax sync minlines=1000
+    syntax sync minlines=300 maxlines=300
 endfunction
 command! -bar SetupMarkup call SetupMarkup()
 let g:SpellMap["<markup>"] = "<on>"
@@ -6593,8 +6592,7 @@ function! SetupMail()
     highlight default link gitDiffStatAdd diffAdded
     highlight default link gitDiffStatDelete diffRemoved
 
-    " Re-synchronize syntax highlighting minlines before top of window.
-    syntax sync minlines=1000
+    syntax sync minlines=300 maxlines=300
 endfunction
 command! -bar SetupMail call SetupMail()
 let g:SpellMap["mail"] = "<on>"
@@ -6620,10 +6618,16 @@ function! SetupMarkdownSyntax()
     " The group naming convention is the same as vim-markdown's, but the logic
     " is a little different here.  Namely, we don't deal with dotted names, and
     " we have special handling for the c language.
+
+    " Do not re-include the same `synLang` twice.
+    let includedSynLangs = {}
     for lang in g:markdownEmbeddedLangs
         let synLang = SyntaxMap(lang)
         let synGroup = 'markdown_embed_' . synLang
-        call SyntaxInclude(synGroup, synLang)
+        if !has_key(includedSynLangs, synLang)
+            call SyntaxInclude(synGroup, synLang)
+            let includedSynLangs[synLang] = 1
+        endif
 
         execute 'syntax region ' . synGroup .
                 \ ' matchgroup=markdownCodeDelimiter start="^\s*```\s*' .
@@ -6741,16 +6745,21 @@ function! SetupRstSyntax()
     call DisableRstSyntaxCodeList()
     " Handle unspecified languages first.
     call s:EmbedCodeBlock("", "")
+
+    " Do not re-include the same `synLang` twice.
+    let includedSynLangs = {}
     for lang in g:rstEmbeddedLangs
         let synLang = SyntaxMap(lang)
         let synGroup = 'rst_embed_' . synLang
-        call SyntaxInclude(synGroup, synLang)
+        if !has_key(includedSynLangs, synLang)
+            call SyntaxInclude(synGroup, synLang)
+            let includedSynLangs[synLang] = 1
+        endif
         call s:EmbedCodeBlock(lang, synGroup)
     endfor
     let &iskeyword = old_iskeyword
 
-    " Re-synchronize syntax highlighting minlines before top of window.
-    syntax sync minlines=1000
+    syntax sync minlines=300 maxlines=300
     " Enable fix for literal block highlighting.
     RstLiteralBlockFix on
 endfunction
@@ -6986,8 +6995,7 @@ function! SetupCmake()
     SetupSource
     setlocal commentstring=#\ %s
 
-    " Re-synchronize syntax highlighting minlines before top of window.
-    syntax sync minlines=1000
+    syntax sync minlines=300 maxlines=300
 endfunction
 command! -bar SetupCmake call SetupCmake()
 
@@ -7136,8 +7144,7 @@ function! SetupPython()
     inoremap <buffer> <C-o><CR> <C-\><C-n>A:<CR>
     vnoremap <buffer> <C-o><CR> <C-\><C-n>A:<CR>
 
-    " Re-synchronize syntax highlighting minlines before top of window.
-    syntax sync minlines=1000
+    syntax sync minlines=300 maxlines=300
 
     SyntasticBufferSetup strict
     if g:EnableVimLsp_python
@@ -7370,8 +7377,7 @@ let g:sh_noisk = 1
 function! SetupShell()
     SetupSource
 
-    " Re-synchronize syntax highlighting minlines before top of window.
-    syntax sync minlines=1000
+    syntax sync minlines=300 maxlines=300
 
     if exists('g:ale_sh_shfmt_options')
         let options = g:ale_sh_shfmt_options . ' '

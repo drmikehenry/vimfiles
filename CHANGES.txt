@@ -7,6 +7,21 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-03-02
+==========
+
+- Fix some syntax highlighting issues in ``.rst`` and ``.md`` files caused by
+  embedding both ``cpp`` and ``c`` languages into code blocks.  Because ``cpp``
+  internally includes the definitions for ``c``, some syntax regions were being
+  duplicated, causing issues.  Also adjust the number of lines used for
+  resynchronization of syntax highlighting for several languages to::
+
+    syntax sync minlines=300 maxlines=300
+
+  This helps keep Vim from becoming confused when hopping around a file
+  containing lengthy snippets of an embedded language (such as example ``c``
+  code inside an ``.rst`` file).
+
 2024-01-13
 ==========
 
