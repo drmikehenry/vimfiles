@@ -1,12 +1,9 @@
 --[[
-Source this file from Neovim's `init.lua` file:
+This file will eventually be removed.  Instead of sourcing this file from
+`~/.config/nvim/init.lua`, following the directions in `vimfiles/doc/notes.txt`
+to setup `~/.config/nvim/init.vim` to directly source `~/.vim/vimrc`, e.g.:
 
-- On Linux, this is `~/.config/nvim/init.lua`
-
-Example contents:
-
-    -- Chain to startup file in vimfiles:
-    vim.cmd('source ~/.vim/init.lua')
+    source ~/.vim/vimrc
 
 --]]
 
