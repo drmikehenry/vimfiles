@@ -14,6 +14,8 @@ require adjustment of per-user settings.
 
 - Move ``loremipsum`` plugin into ``bundle/`` directory.
 
+- Move ``project`` plugin into ``bundle/`` directory.
+
 2024-03-02
 ==========
 

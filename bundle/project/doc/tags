@@ -1,0 +1,12 @@
+project	project.txt	/*project*
+project-adding-mappings	project.txt	/*project-adding-mappings*
+project-example	project.txt	/*project-example*
+project-flags	project.txt	/*project-flags*
+project-inheritance	project.txt	/*project-inheritance*
+project-invoking	project.txt	/*project-invoking*
+project-mappings	project.txt	/*project-mappings*
+project-plugin	project.txt	/*project-plugin*
+project-settings	project.txt	/*project-settings*
+project-syntax	project.txt	/*project-syntax*
+project-tips	project.txt	/*project-tips*
+project.txt	project.txt	/*project.txt*
