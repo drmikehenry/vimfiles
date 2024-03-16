@@ -19,6 +19,8 @@ require adjustment of per-user settings.
 - Update setup instructions now that ``.vimrc``/``_vimrc`` is no longer needed.
   The obsolete ``setup.py`` script and ``home.vimrc`` have been removed.
 
+- Update instructions for building Vim from source.
+
 2024-03-02
 ==========
 

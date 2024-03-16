@@ -488,24 +488,28 @@ Suggested fonts to install:
 ------------------------------------------------------------------------------
 Build Vim                                               *notes_build_vim*
 
-Sources
--------
+Most users won't have to build Vim from source.  If your Linux distribution's
+Vim package lacks features, you can build Vim from source as described below.
 
-Vim source lives in a git repository as described here:
-  http://www.vim.org/sources.php
+Acquire Vim source
+------------------
 
-Clone the repository via: >
+Clone Vim repository via: >
   cd ~/build
   git clone https://github.com/vim/vim.git
+<
+Install prerequisites
+---------------------
 
-Prerequisites
--------------
+The easiest way to install prerequisites for building Vim is to use the Linux
+distribution's package manager to install the build dependencies needed for the
+distro itself, then augment with additional dependencies as needed.
 
-Prerequisites for Ubuntu: >
+Install prerequisites for Ubuntu: >
     sudo apt-get build-dep vim-gnome
     sudo apt-get install python python3 python-dev python3-dev
 <
-Prerequisites for Fedora: >
+Install prerequisites for Fedora: >
     sudo dnf builddep -y vim-X11
     sudo dnf install -y rpm-build
 <
@@ -516,61 +520,66 @@ Build Vim using buildtool (Unix-only)
 -------------------------------------
 
 The detailed steps for download and building Vim are captured in
-the script ~/.vim/buildtool.  Run the script with no arguments for usage
+the script `~/.vim/buildtool`.  Run the script with no arguments for usage
 help, or read the script for more detailed information.
 
-Optionally, update the git directory (in the default download location) with
-the latest Vim source: >
+- Choose a build location (e.g., `~/build`): >
 
-  ~/.vim/buildtool update
+    mkdir ~/build
+    cd ~/build
+<
+  Vim will be built in a subdirectory such as `vim-x.y.z`.
 
-Unpack, configure, build, and create binary and source tarballs: >
+- (optional) Update the Vim source git directory (in the default download
+  location) with the latest Vim source: >
 
-  # Source will be unpacked and built below the current directory:
-  cd ~/build
+    ~/.vim/buildtool update
+<
+- Unpack, configure, build, and create binary and source tarballs using one of
+  the following commands: >
 
-  # Build the newest version available in download directories:
-  ~/.vim/buildtool build
+    # Build the newest version available in download directories:
+    ~/.vim/buildtool build
 
-  # Or build a particular tarball:
-  ~/.vim/buildtool build path/to/vim-x.y.z.tar.gz
+    # Or build using a specified source tarball:
+    ~/.vim/buildtool build path/to/vim-x.y.z.tar.gz
 
-  # Or build a particular Git clone:
-  ~/.vim/buildtool build path/to/some/git-clone
-
+    # Or build from a specified Git clone:
+    ~/.vim/buildtool build path/to/some/git-clone
+<
 Installation of Vim
 ^^^^^^^^^^^^^^^^^^^
 
-Installation of final tarball is done as follows (for example): >
+- Install the final tarball: >
     sudo tar -C / -zxf vim-x.y.z/vim-x.y.z.x86_64.tar.gz
 <
 After installation on Linux, the distro-provided global vimrc file will not be
-used, but Vim now includes default settings for userse without .vimrc files,
-so it is no longer recommended to copy the distro's vimrc settings; if one
-was copied in the past, it's best to remove it: >
+used, but Vim now includes default settings for users without ` vimrc ` files.
+Previously, these directions recommended to copy the distro's ` vimrc `
+settings, but this is no longer desirable;  if a `vimrc` was copied in the past,
+it's best to remove it: >
 
+  # Remove this file if it exists:
   sudo rm -f /usr/local/share/vim/vimrc
 <
-
 Removing this distro-supplied file fixes errors in `~/.vim/filetype.vim` of the
 form: >
 
     E10: \ should be followed by /, ? or &
 <
-
 To register the newly installed vim as the system alternative: >
 
   for i in gvim gview gvimdiff; do
     update-alternatives --install /usr/bin/$i $i /usr/local/bin/$i 500
   done
 
-If /usr/share/applications/*gvim.desktop exists, it may be necessary to
+If `/usr/share/applications/*gvim.desktop` exists, it may be necessary to
 update this line: >
     Exec=gvim -f %F
-
+<
 to use a full path: >
     Exec=/usr/local/bin/gvim -f %F
-
+<
 Testing different Vim versions from build directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
