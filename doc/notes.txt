@@ -236,20 +236,17 @@ Setup vimfiles                                          *notes_setup_vimfiles*
 To setup for Unix (Linux, mac)
 ==============================
 
-First, checkout vimfiles to ``~/.vim`` (such that this README.txt file ends up
-as ``~/.vim/README.txt``).  Using Subversion, this might be: >
+Clone vimfiles to ``~/.vim`` (such that the ` vimrc ` files at the root of the
+repository ends up as ``~/.vim/vimrc``); for example:
 
-  svn co https://server/svn/.../vimfiles ~/.vim
+  git clone https://github.com/drmikehenry/vimfiles ~/.vim
 
-Next, choose one of these methods:
+With modern Vim (newer than 7.3.1178), there is no need for a top-level `
+` ~/.vimrc ` file; Vim will automatically locate ` ~/.vim/vimrc` and use that if
+no ` ~/.vimrc ` file exists.
 
-- Automated method (preferred): >
-
-    ~/.vim/setup.py
-
-- Manual method (make sure you don't mind losing any existing settings!): >
-
-    cp ~/.vim/home.vimrc ~/.vimrc
+Therefore, remove any pre-existing ` ~/.vimrc ` file (making sure you don't
+mind losing any existing settings).
 
 To setup for Windows
 ====================
@@ -272,19 +269,24 @@ It's easiest to use this default location:
 
 - Start ``cmd.exe`` (Start | Run | cmd).
 
-- The current working directory will typically be the ``USERPROFILE``
-  directory, but you can confirm this location by executing: >
+- The current working directory should be the ``USERPROFILE``
+  directory.  You can confirm the current directory by executing: >
 
     set USERPROFILE
+<
+  Use ` cd %USERPROFILE% ` if necessary to change to the correct directory.
 
-- Checkout vimfiles below this directory. Using Subversion, this might be: >
+Clone vimfiles to ``vimfiles`` (such that the ` vimrc ` files at the root of the
+repository ends up as ``vimfiles\vimrc``); for example:
 
-    svn co https://server/svn/.../vimfiles vimfiles
+  git clone https://github.com/drmikehenry/vimfiles vimfiles
 
-- Copy source-controlled ``home.vimrc`` file to become ``_vimrc``
-  (make sure you don't mind losing any existing settings!): >
+With modern Vim (newer than 7.3.1178), there is no need for a top-level `
+` _vimrc ` file; Vim will automatically locate ` vimfiles\vimrc` and use that if
+no ` _vimrc ` file exists.
 
-    copy vimfiles\home.vimrc _vimrc
+Therefore, remove any pre-existing ` _vimrc ` file (making sure you don't mind
+losing any existing settings).
 
 If the default location is not suitable, you may move the ``vimfiles``
 directory elsewhere and inform Vim of the new location.  Choose one of the
@@ -301,25 +303,25 @@ following methods for informing Vim:
     ``HOME`` to someplace like ``c:\home\username``, and Vim will then set
     ``VIMFILES`` to ``c:\home\username\vimfiles``.
 
-  With this method, move the ``vimfiles`` directory and the ``_vimrc`` file to
-  the ``HOME`` directory.
+  With this method, move the ``vimfiles`` directory to the new ``HOME`` directory.
 
 - Method 2: Chain to alternate location:
 
-  - With this method, copy the ``vimfiles\_vimrc`` file to the expected
-    location specified by ``USERPROFILE``, as for the default case.
+  - Choose an alternate location; for this example, use `c:\vimfiles`.
 
-  - Modify ``%USERPROFILE%\_vimrc`` to extend your ``runtimepath`` to include
-    a new location.  For example, to checkout ``vimfiles`` directly into ``C:``,
-    add the following lines at the start of ``%USERPROFILE%\_vimrc``::
+  - Move the `vimfiles` directory to ``C:\vimfiles``.
 
-    " Prepend, append vimfiles paths from hard drive
-    " to avoid slow %USERPROFILE% directory.
+  - Create the file `%USERPROFILE%\_vimrc` (where Vim expects to find it) using
+    the following lines to extend the `runtimepath` for the new location and
+    then chain to `vimfiles\vimrc`: >
+
+    " Prepend the `vimfiles` directory:
     set runtimepath^=c:\vimfiles
+    " Append the `vimfile\after` directory:
     set runtimepath+=c:\vimfiles\after
-
-  - Now move the checkout of ``vimfiles`` to become ``C:\vimfiles``.
-
+    " Chain to the `vimrc` from Vimfiles (which is now in the `runtimepath`):
+    runtime vimrc
+<
 For all platforms
 =================
 
@@ -338,7 +340,7 @@ Ruby-based plugins
 Install the Ruby programming language for Windows to enable the Ruby-based
 plugins (e.g., Lusty Explorer) to work.  Ensure the Ruby interpreter is in the
 PATH.  Also, ensure your build of Gvim for Windows includes the Ruby
-interpreter. (Note: the "Vim without Cream" build does *not* include Ruby).
+interpreter.
 To see if Ruby is included, run the following from within Gvim: >
 
   :echo has("ruby")
@@ -692,7 +694,9 @@ To install a bundle:
 
     git add -f doc/tag*
 
-Installed plugins:
+INSTALLED PLUGINS~
+
+Below are details of the installed plugins.
 
 ------------------------------------------------------------------------------
 Ack - Search using 'ack' utility                        *notes_ack*
@@ -1841,7 +1845,7 @@ Juggler Usage (taken from lusty-juggler.vim):           *notes_lustyjuggler*
        in a new split, press "b" for horizontal or "v" for vertical.
 
        To display the key with the name of the buffer, add one of
-       the following lines to your .vimrc:
+       the following lines to your |VIMRC_BEFORE| script:
 
          let g:LustyJugglerShowKeys = 'a'   (for alpha characters)
          let g:LustyJugglerShowKeys = 1     (for digits)
@@ -1850,7 +1854,8 @@ Juggler Usage (taken from lusty-juggler.vim):           *notes_lustyjuggler*
        "<BS>", "<Del>", or "<C-h>".
 
        LustyJuggler can act very much like <A-Tab> window switching.
-       To enable this mode, add the following line to your .vimrc:
+       To enable this mode, add the following line to your
+       |VIMRC_BEFORE| script:
 
          let g:LustyJugglerAltTabMode = 1
 
@@ -3131,7 +3136,7 @@ Popular uses for this command include: >
   :B right
 
 Using // and ?? after a visual selection (the // is only available
-if you have g:vis_WantSlashSlash=1 in your <.vimrc> file):
+if you have g:vis_WantSlashSlash=1 in your |VIMRC_BEFORE| script):
 >
   ex. select region via V, v, or ctrl-v
       //pattern
@@ -3465,17 +3470,10 @@ Override directories (in increasing order of priority):
 - VIMUSERFILES:       per-user settings usable at all locations
 - VIMUSERLOCALFILES:  per-user location-specific settings
 
-The directories are configured using envionment variables.  These environment
-variables may be set outside of Vim using standard operating-system methods.  In
-addition, it may be convenient to set them in the ~/.vimrc (%USERPROFILE%\_vimrc
-on Windows) file before the "runtime vimrc" command invokes the main "vimrc"
-file, since no logout/login is required to make the settings take effect.  It's
-safe to put assignments like the following in ~/.vimrc, as the ~/.vim/setup.py
-script will not clobber them: >
+The directories are configured using envionment variables.  In general, it's
+recommended to keep the Vimfiles defaults for these variables.
 
-  let $VIMUSER = "username"
-
-The environment variables are:
+Most users should put their personal customizations into VIMUSERFILES.
 
 VIMUSER
   Name of the user running Vim.  This defaults to the logged-in user, but
@@ -4703,17 +4701,15 @@ Press <CR> on a line in the window to execute it.
 ------------------------------------------------------------------------------
 Debugging Vim problems                                  *notes_tips_debugging*
 
-- To disable plugins, ~/.vimrc, and ~/.gvimrc, use ``-u NONE``.
-- Use -N to set nocompatible.
+- To disable plugins, per-user customizations, etc.: >
 
-Standard invocation for bare-vim testing: >
+    vim --clean
+<
+- To display characters under the cursor: >
 
-    vim -u NONE -N
-
-Displaying characters under cursor: >
     ga  - decimal, hexadecimal, octal
     g8  - bytes in UTF-8 character
-
+<
 ------------------------------------------------------------------------------
 Quitting with non-zero return code                      *notes_tips_quitting*
 

@@ -16,6 +16,9 @@ require adjustment of per-user settings.
 
 - Move ``project`` plugin into ``bundle/`` directory.
 
+- Update setup instructions now that ``.vimrc``/``_vimrc`` is no longer needed.
+  The obsolete ``setup.py`` script and ``home.vimrc`` have been removed.
+
 2024-03-02
 ==========
 
