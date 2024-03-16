@@ -21,6 +21,8 @@ require adjustment of per-user settings.
 
 - Update instructions for building Vim from source.
 
+- Update installation instructions for Vim and Neovim.
+
 2024-03-02
 ==========
 

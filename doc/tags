@@ -26,7 +26,6 @@ VIMRC_AFTER	notes.txt	/*VIMRC_AFTER*
 VIMRC_BEFORE	notes.txt	/*VIMRC_BEFORE*
 VIMRC_VARS	notes.txt	/*VIMRC_VARS*
 bundle_installation	notes.txt	/*bundle_installation*
-not	notes.txt	/*not*
 notes	notes.txt	/*notes*
 notes.txt	notes.txt	/*notes.txt*
 notes_G	notes.txt	/*notes_G*
@@ -156,6 +155,7 @@ notes_scriptease	notes.txt	/*notes_scriptease*
 notes_scrollcolor	notes.txt	/*notes_scrollcolor*
 notes_search	notes.txt	/*notes_search*
 notes_session	notes.txt	/*notes_session*
+notes_setup_optional	notes.txt	/*notes_setup_optional*
 notes_setup_vimfiles	notes.txt	/*notes_setup_vimfiles*
 notes_signature	notes.txt	/*notes_signature*
 notes_snippets	notes.txt	/*notes_snippets*

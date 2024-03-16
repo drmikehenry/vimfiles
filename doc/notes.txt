@@ -10,6 +10,7 @@ Changes                                                 |notes_changes|
 ------------------------------------------------------------------------------
 Installation                                            |notes_installation|
 Setup vimfiles                                          |notes_setup_vimfiles|
+Setup optional features                                 |notes_setup_optional|
 Build Vim                                               |notes_build_vim|
 
 ------------------------------------------------------------------------------
@@ -230,26 +231,135 @@ Alternatively, place cursor on the filename below and press gf:
 ==============================================================================
 Installation                                            *notes_installation*
 
+Install Vim and/or Neovim as desired.  Common installation methods are shown
+below.
+
+Vim installation
+----------------
+
+Vim version 7.4.0 or newer is required.
+
+- Ubuntu Vim installation: >
+
+    sudo apt install vim-gtk3
+<
+- Fedora Vim installation: >
+
+    sudo dnf install vim-enhanced vim-X11
+<
+- Windows Vim installation:
+
+  - Visit https://github.com/vim/vim-win32-installer/releases
+
+  - Download and install `gvim_x.y.z_x64.exe`.
+
+Execute `vim` for console Vim and `gvim` for GUI Vim.
+
+Neovim installation
+-------------------
+
+The main Neovim project provides console-only support for most platforms (with
+Windows as a notable exception).
+
+Neovim version 0.9.0 or newer is required.
+
+- Linux Neovim installation:
+
+  - Visit Neovim release area: https://github.com/neovim/neovim/releases
+
+  - Choose a version (e.g., 0.9.5); visit corresponding download directory,
+    e.g.: https://github.com/neovim/neovim/releases/tag/v0.9.5
+
+  - Download `nvim-linux64.tar.gz`.
+
+  - Unpack and create a symlink in `PATH`.  For global installation: >
+
+      sudo -i
+      cd /opt
+      tar -zxf .../nvim-linux64.tar.gz
+      ln -s /opt/nvim-linux64/bin/nvim /usr/local/bin/
+<
+  - Execute by running `nvim`.
+
+- Windows Neovim installation:
+
+  - Visit Neovim release area: https://github.com/neovim/neovim/releases
+
+  - Choose a version (e.g., 0.9.5); visit corresponding download directory,
+    e.g.: https://github.com/neovim/neovim/releases/tag/v0.9.5
+
+  - Download `nvim-win64.zip`.
+
+  - Unpack; execute by running: >
+
+      nvim-qt.exe
+<
+    Unlike other platforms, base Neovim for Windows comes with GUI support
+    (built from the Neovim-qt project described below).
+
+Neovim-qt installation
+----------------------
+
+For Neovim GUI support on Linux, Neovim-qt is recommended.  (Note that GUI
+support on Windows is provided by the base Neovim project above.)  The easiest
+method of installation for recent Linux distributions is to install `neovim-qt`
+from the package manager.  This will also install a (likely older) version of
+Neovim as a dependency, but `neovim-qt` will use the first `nvim` executable in
+`PATH`, so newer Neovim may be installed as above and used with `neovim-qt`.
+
+- Ubuntu Neovim-qt installation: >
+
+    sudo apt install neovim-qt
+<
+- Fedora Neovim-qt installation: >
+
+    sudo dnf install neovim-qt
+<
+Execute by running `nvim-qt`.
+
 ------------------------------------------------------------------------------
 Setup vimfiles                                          *notes_setup_vimfiles*
 
-To setup for Unix (Linux, mac)
-==============================
+Setup for Unix (Linux, mac)
+===========================
 
-Clone vimfiles to ``~/.vim`` (such that the ` vimrc ` files at the root of the
-repository ends up as ``~/.vim/vimrc``); for example:
+Setup for Vim on Unix
+^^^^^^^^^^^^^^^^^^^^^
 
-  git clone https://github.com/drmikehenry/vimfiles ~/.vim
+- Clone vimfiles to ``~/.vim`` (such that the ` vimrc ` files at the root of
+  the repository ends up as ``~/.vim/vimrc``); for example: >
 
-With modern Vim (newer than 7.3.1178), there is no need for a top-level `
-` ~/.vimrc ` file; Vim will automatically locate ` ~/.vim/vimrc` and use that if
-no ` ~/.vimrc ` file exists.
+    git clone https://github.com/drmikehenry/vimfiles ~/.vim
+<
+- With modern Vim (newer than 7.3.1178), there is no need for a top-level
+  `~/.vimrc` file; Vim will automatically locate ` ~/.vim/vimrc` and use that
+  if no ` ~/.vimrc ` file exists.
 
-Therefore, remove any pre-existing ` ~/.vimrc ` file (making sure you don't
-mind losing any existing settings).
+  Therefore, remove any pre-existing ` ~/.vimrc ` file (making sure you don't
+  mind losing any existing settings).
 
-To setup for Windows
-====================
+Setup for Neovim on Unix
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+- First, setup for Vim as above.
+
+- Create a Neovim startup script `~/.config/nvim/init.vim` to chain to
+  the `vimrc` file within Vimfiles: >
+
+    source ~/.vim/vimrc
+<
+
+Minimal installation is now complete
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For full functionality, follow the steps in the section |notes_setup_optional|
+below.
+
+Setup for Windows
+=================
+
+Setup for Vim on Windows
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 NOTE: On some Windows environments, the GUI for changing the per-user
 environment variables has been administratively locked out; nevertheless, you
@@ -322,8 +432,88 @@ following methods for informing Vim:
     " Chain to the `vimrc` from Vimfiles (which is now in the `runtimepath`):
     runtime vimrc
 <
-For all platforms
-=================
+Setup for Neovim on Windows
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- First, setup for Vim as above.
+
+- Neovim looks for its configuration directory in
+  `%LOCALAPPDATA%\nvim` (commonly, `%LOCALAPPDATA%` is something like
+  `C:\Users\<USERNAME>\AppData\Local`).
+
+- Create a Neovim startup script `%LOCALAPPDATA%\nvim\init.vim` to chain to
+  the `vimrc` file within Vimfiles: >
+
+    source $USERPROFILE\vimfiles\vimrc
+<
+
+Minimal installation is now complete
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For full functionality, follow the steps in the section |notes_setup_optional|
+below.
+
+------------------------------------------------------------------------------
+Setup optional features                                 *notes_setup_optional*
+
+Additional features are available if the following optional steps are performed.
+
+pipx for Python-based tool installation
+---------------------------------------
+
+Note: For Python-based tools suggested below, installation via `pipx`
+(https://pipx.pypa.io/stable/) is recommended.  `pipx` is like `pip`, except it
+installs each tool into its own virtual environment and ensures it gets added to
+the `PATH`.  See the above link for more information; brief instructions below
+follow for installing `pipx`.
+
+- Ubuntu, Fedora: >
+
+    python3 -m pip install --user pipx
+<
+  Ensure `~/.local/bin` is in `PATH`.
+
+Python-based plugins
+--------------------
+
+Most builds of Vim on Linux come with Python support compiled in.  If necessary,
+you may build Vim with Python support (|notes_build_vim|).
+
+For Neovim, `pynvim` is required to enable Python-based plugins:
+
+- Choose installation directory. Vimfiles probes for pynvim at any of these
+  locations: >
+
+    ~/venvs/pynvim
+    /opt/pynvim
+<
+- Create a Python virtual environment for `pynvim` and install.  Using the
+  global location in `/opt`: >
+
+    sudo -i
+    cd /opt
+    python3 -m venv pynvim
+    . pynvim/bin/activate
+    pip install pynvim
+>
+- Vimfiles will detect the location of `pynvim` and set the following Neovim
+  variable accordingly: >
+
+    let g:python3_host_prog = '/opt/pynvim/env/bin/python'
+<
+  For installation to another location, set this variable accordingly in your
+  |VIMRC_BEFORE| script.
+
+Ruby-based plugins
+------------------
+
+Install the Ruby programming language to enable the Ruby-based
+plugins (e.g., Lusty Explorer) to work.  Ensure the Ruby interpreter is in the
+PATH.  Also, ensure your build of Vim includes the Ruby interpreter.
+
+To see if Ruby support is included, run the following from within Vim: >
+
+  :echo has("ruby")
 
 Ctags support
 -------------
@@ -332,18 +522,37 @@ For Ctags support, ensure that some flavor of Ctags is installed.  Universal
 Ctags is preferred, as it is currently maintained, but the unmaintained
 Exuberant Ctags is still supported by Vimfiles.  Ctags is required for the
 TagList plugin, for the CtrlP plugin's tag support, and for generating "tags"
-files.  See |notes_tag_files| for more details.
+files.
 
-Ruby-based plugins
-------------------
+- On recent Ubuntu, install Universal Ctags via: >
 
-Install the Ruby programming language for Windows to enable the Ruby-based
-plugins (e.g., Lusty Explorer) to work.  Ensure the Ruby interpreter is in the
-PATH.  Also, ensure your build of Gvim for Windows includes the Ruby
-interpreter.
-To see if Ruby is included, run the following from within Gvim: >
+    sudo apt install universal-ctags
+<
+- On Fedora, install Universal Ctags via: >
 
-  :echo has("ruby")
+    sudo dnf install ctags
+<
+See |notes_tag_files| for more details.
+
+Telescope plugin (Neovim-only)
+------------------------------
+
+The `fd` command (https://github.com/sharkdp/fd) is a fast alternative to the
+Unix `find` command.  To install for use with the Telescope plugin:
+
+- Ubuntu installation of `fd-find`: >
+
+    sudo apt install fd-find
+<
+
+- Fedora installation of `fd-find`: >
+
+    sudo dnf install fd-find
+<
+- Alternative installation via Cargo: >
+
+    cargo install fd-find
+<
 
 Linters/formatters
 ------------------
@@ -352,10 +561,18 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
 - Python:
 
-  - Install linters: >
+  - Install `mypy` for type checking: >
 
-      pip install flake8 flake8-quotes pep8-naming
-      pip install mypy pyannotate monkeytype pytype
+      pipx install mypy
+<
+  - Install the excellent `ruff` for Python linting: >
+
+      pipx install ruff
+<
+  - Install `flake8` and associated plugins for Python linting: >
+
+      pipx install flake8
+      pipx inject flake8 flake8-quotes pep8-naming
 <
     Note: `flake8` no longer honors the per-user configuration file
     `~/.config/flake8`.  For configuration of `flake8` within Vim, see `vimrc`
@@ -366,7 +583,7 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
   - Install black formatter: >
 
-      pip install black
+      pipx install black
 <
     Note: For the few configurable things black supports (e.g., line length),
     you can create a per-project `pyproject.toml` file with a section to
@@ -377,7 +594,7 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 <
   - Install isort formatter: >
 
-      pip install isort
+      pipx install isort
 <
     Vimfiles will supply the `--profile black` option for black-compatible
     ordering.
@@ -385,11 +602,11 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
   - Install language server: >
 
       # Recommended to use a virtual environment:
-      pip install 'python-language-server[mccabe,pycodestyle,pydocstyle,pyflakes,rope]'
+      pipx install 'python-language-server[mccabe,pycodestyle,pydocstyle,pyflakes,rope]'
 
       # (Not yet recommended: pyls-mypy seems to have trouble finding
       # local imports, whereas ALE's direct support for mypy works properly).
-      # pip install pyls-mypy
+      # pip inject python-language-server pyls-mypy
 <
 - Rust:
 
@@ -397,31 +614,31 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
       rustup component add rustfmt
 <
-  - Install language server: >
+  - Install Rust Analyzer: >
 
-      rustup component add rls
-<
-  - Install Rust analyzer (preferred to rls when available):
-
-    - Available from: https://rust-analyzer.github.io/
-    - Download from releases area.
-    - Expand into directory in the path, e.g.:
-    >
-        sudo cp rust-analyzer-x86_64-unknown-linux-gnu.gz /usr/local/bin
-        sudo gunzip /usr/local/bin/rust-analyzer-x86_64-unknown-linux-gnu.gz
-        sudo chmod +x /usr/local/bin/rust-analyzer-x86_64-unknown-linux-gnu
-        sudo chmod ln -s \
-          /usr/local/bin/rust-analyzer-x86_64-unknown-linux-gnu \
-          /usr/local/bin/rust-analyzer
+      rustup component add rust-analyzer
 <
 - Shell:
 
   - Install shellcheck linter: >
 
+      # Ubuntu:
       sudo apt-get install shellcheck
+
+      # Fedora:
+      sudo dnf install ShellCheck
 <
   - Install shfmt formatter: >
 
+      # Ubuntu:
+      sudo apt-get install shfmt
+
+      # Fedora
+      sudo dnf install shfmt
+<
+    For alternative installation via source: >
+
+      # Ubuntu:
       sudo apt-get install golang
 
       # Add these lines to ~/.bashrc:
@@ -432,15 +649,17 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 <
 - C/C++:
 
-  - Install Clang daemon (Clangd): >
+  - Install Clang daemon (Clangd):
 
-      # [Ubuntu] Use the default version:
-      sudo apt install clangd
+    - Ubuntu: install the default version: >
 
-      # [Ubuntu] Use a specific version and make it the default:
-      sudo apt install clangd-10
-      sudo update-alternatives --install /usr/bin/clangd \
-          clangd /usr/bin/clangd-10 100
+        sudo apt install clangd
+<
+    - Ubuntu: Use a specific version and make it the default: >
+
+        sudo apt install clangd-10
+        sudo update-alternatives --install /usr/bin/clangd \
+            clangd /usr/bin/clangd-10 100
 <
   - (recommended) Configure clangd to disable warning about unused functions in
     header files.  Create `~/.config/clangd/config.yaml` with contents: >
@@ -455,7 +674,7 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
   - Install `compiledb` to automatically generate a `compile-commands.json` file
     for use with Clangd. >
 
-      pip install compiledb
+      pipx install compiledb
 <
     See `compiledb --help` for details.
 
@@ -470,6 +689,63 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
       style "#{File.dirname(__FILE__)}/.vim/etc/mdl-style.rb"
 <
+
+Python LSP dependencies
+-----------------------
+
+- Install `python-lsp-server` and associated dependencies: >
+
+    pipx install ruff
+    pipx install python-lsp-server
+    pipx inject python-lsp-server python-lsp-black
+    pipx inject python-lsp-server pylsp-mypy
+    pipx inject python-lsp-server python-lsp-ruff
+<
+
+LUA LSP dependencies
+--------------------
+
+- Acquire `lua-language-server` binaries:
+  https://github.com/LuaLS/lua-language-server/releases/download/3.7.4/lua-language-server-3.7.4-linux-x64.tar.gz
+
+- Install from pre-built binaries:
+
+  - Install globally (preferred): >
+
+      sudo mkdir -p /opt/lua-language-server
+      sudo tar -C /opt/lua-language-server -xf \
+        lua-language-server-3.7.4-linux-x64.tar.gz
+      sudo ln -s /opt/lua-language-server/bin/lua-language-server /usr/local/bin
+<
+  - Alternatively, install in `~/.local/lua-language-server`: >
+
+      mkdir -p ~/.local/bin
+      mkdir -p ~/.local/lua-language-server
+      tar -C ~/.local/lua-language-server -xf \
+        lua-language-server-3.7.4-linux-x64.tar.gz
+      ln -s ~/.local/lua-language-server/bin/lua-language-server \
+        ~/.local/bin
+<
+    **NOTE** Ensure `~/.local/bin/` is in the `PATH`.
+
+- If desired, may install from source:
+
+  - Acquire sources: >
+
+        git clone https://github.com/sumneko/lua-language-server
+        cd lua-language-server/
+        git submodule update --init --recursive
+<
+  - May need to install `libstdc++-static` for the build to complete.
+
+  - Build: >
+
+        cd 3rd/luamake
+        compile/install.sh
+        cd ../..
+        ./3rd/luamake/luamake rebuild
+<
+
 Fonts
 -----
 
@@ -506,7 +782,7 @@ distribution's package manager to install the build dependencies needed for the
 distro itself, then augment with additional dependencies as needed.
 
 Install prerequisites for Ubuntu: >
-    sudo apt-get build-dep vim-gnome
+    sudo apt-get build-dep vim-gtk3
     sudo apt-get install python python3 python-dev python3-dev
 <
 Install prerequisites for Fedora: >
