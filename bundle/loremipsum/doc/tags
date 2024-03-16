@@ -1,0 +1,12 @@
+:Loremipsum	loremipsum.txt	/*:Loremipsum*
+:Loreplace	loremipsum.txt	/*:Loreplace*
+b:loremipsum_file	loremipsum.txt	/*b:loremipsum_file*
+g:loremipsum_files	loremipsum.txt	/*g:loremipsum_files*
+g:loremipsum_marker	loremipsum.txt	/*g:loremipsum_marker*
+g:loremipsum_paragraph_template	loremipsum.txt	/*g:loremipsum_paragraph_template*
+g:loremipsum_words	loremipsum.txt	/*g:loremipsum_words*
+loremipsum#Generate()	loremipsum.txt	/*loremipsum#Generate()*
+loremipsum#GenerateInline()	loremipsum.txt	/*loremipsum#GenerateInline()*
+loremipsum#Insert()	loremipsum.txt	/*loremipsum#Insert()*
+loremipsum#Replace()	loremipsum.txt	/*loremipsum#Replace()*
+loremipsum.txt	loremipsum.txt	/*loremipsum.txt*

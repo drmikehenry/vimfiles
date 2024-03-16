@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Restructure ``:help notes`` for easier maintenance.
 
+- Move ``loremipsum`` plugin into ``bundle/`` directory.
+
 2024-03-02
 ==========
 

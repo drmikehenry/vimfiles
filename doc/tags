@@ -1,6 +1,4 @@
 :G	notes.txt	/*:G*
-:Loremipsum	loremipsum.txt	/*:Loremipsum*
-:Loreplace	loremipsum.txt	/*:Loreplace*
 FoldQuickFixDirs	notes.txt	/*FoldQuickFixDirs*
 FoldQuickFixFiles	notes.txt	/*FoldQuickFixFiles*
 GrepLmc	notes.txt	/*GrepLmc*
@@ -27,17 +25,7 @@ Underscore	notes.txt	/*Underscore*
 VIMRC_AFTER	notes.txt	/*VIMRC_AFTER*
 VIMRC_BEFORE	notes.txt	/*VIMRC_BEFORE*
 VIMRC_VARS	notes.txt	/*VIMRC_VARS*
-b:loremipsum_file	loremipsum.txt	/*b:loremipsum_file*
 bundle_installation	notes.txt	/*bundle_installation*
-g:loremipsum_files	loremipsum.txt	/*g:loremipsum_files*
-g:loremipsum_marker	loremipsum.txt	/*g:loremipsum_marker*
-g:loremipsum_paragraph_template	loremipsum.txt	/*g:loremipsum_paragraph_template*
-g:loremipsum_words	loremipsum.txt	/*g:loremipsum_words*
-loremipsum#Generate()	loremipsum.txt	/*loremipsum#Generate()*
-loremipsum#GenerateInline()	loremipsum.txt	/*loremipsum#GenerateInline()*
-loremipsum#Insert()	loremipsum.txt	/*loremipsum#Insert()*
-loremipsum#Replace()	loremipsum.txt	/*loremipsum#Replace()*
-loremipsum.txt	loremipsum.txt	/*loremipsum.txt*
 not	notes.txt	/*not*
 notes	notes.txt	/*notes*
 notes.txt	notes.txt	/*notes.txt*
