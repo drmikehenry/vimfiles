@@ -5343,7 +5343,11 @@ augroup END
 " surround
 " -------------------------------------------------------------
 
-" No customizations.
+" Use `S` (ASCII code 83) as a custom character to surround with
+" double-backticks (especially useful for reStructuredText).
+" The carriage return (`\r`) is where the surrounded text will land.
+" See `:help surround-customizing` for details.
+let g:surround_83 = "``\r``"
 
 " -------------------------------------------------------------
 " Tagbar

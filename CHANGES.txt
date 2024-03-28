@@ -7,6 +7,20 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-03-28
+==========
+
+- Add custom surround character ``S`` to surround with double-backticks (for use
+  with the ``surround`` plugin).  This is especially convenient for
+  reStructuredText literal text (as found in this paragraph).  For example, to
+  to surround the below expression with double-backticks::
+
+    y = m*x + b
+
+  Visually highlight the portion to surround, then press ``SS``, yielding::
+
+    ``y = m*x + b``
+
 2024-03-16
 ==========
 
