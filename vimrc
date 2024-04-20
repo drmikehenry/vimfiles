@@ -6136,7 +6136,14 @@ function! HighlightSyntaxMatch(groupName, pattern)
     let varName = 'b:' . a:groupName . '_pattern'
     if exists(varName) && {varName} == a:pattern
         " The pattern has already been set.
-        return
+        " TODO: This early return used to be a performance advantage, but at
+        " some point due to changes in Vim or Vimfiles, it's not longer usable
+        " because something is clearing the `syntax match` items which are added
+        " below.  Commenting out this `return` allows the items to be reapplied
+        " by a call to `HighlightApply()` triggered by the`Syntax` autocmd.
+        " It's hard to determine what's clearing the items, so for now we're
+        " just giving up on this small performance boost.
+        " return
     endif
     if a:pattern == ''
         execute 'silent! syntax clear ' . a:groupName

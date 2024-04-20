@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-04-20
+==========
+
+- Restore the ``:Highlight`` command functionality that went missing due to some
+  change in Vim or Vimfiles.  The underlying cause of the regression hasn't been
+  determined, but something is clearing the ``syntax match`` commands that the
+  ``:Highlight`` command was adding.  To work around this, the ``syntax match``
+  commands are now re-added when the ``Syntax`` autocmd fires.
+
 2024-03-28
 ==========
 
