@@ -780,6 +780,20 @@ function! BackgroundIsTrustworthy()
 endfunction
 
 " =============================================================
+" Title
+" =============================================================
+
+" Enable setting the title in the titlebar.
+set title
+
+" Defer calculation of 'titlestring' until entering Vim, as it depends
+" on the value of `v:servername` that won't be set this early.
+augroup vimf_title
+    autocmd!
+    autocmd VimEnter * call vimf#init#setupTitle()
+augroup END
+
+" =============================================================
 " Color schemes
 " =============================================================
 

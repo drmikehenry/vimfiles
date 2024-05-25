@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-05-25
+==========
+
+- Setup ``titlestring`` to include the "server name" of the running editor
+  instance.  On Vim, this comes from ``--servername``, and on Neovim it comes
+  from the named pipe used by Neovim at startup or by the ``--listen`` argument.
+  This allows activating the running instance's window by searching for the
+  expected name in the window's title (e.g., using ``wmctrl -a`` on X11).
+
 2024-04-20
 ==========
 
