@@ -21,8 +21,37 @@ function Linehash()
     call winrestview(savePos)
 endfunction
 
-nnoremap <f8> :silent call Linehash()<CR>
-imap <f8> <esc><f8>
+" Custom setup for <F8>.
+function! F8Args(ArgLead, CmdLine, CursorPos)
+    return "linehash\npaste"
+endfunction
+
+function! F8(...)
+    if len(a:000) == 0
+        let arg = ''
+    else
+        let arg = a:000[0]
+    endif
+    if arg == 'linehash'
+        nmap <F8> :silent call Linehash()<CR>
+        xmap <F8> <Esc><F8>
+        imap <F8> <Esc><F8>
+    elseif arg == 'paste'
+        nmap <F8> VY:silent !pastewin konsole-3<CR>
+        xmap <F8>  Y:silent !pastewin konsole-3<CR>
+        imap <F8> <nop>
+    else
+        echo 'Current mappings:'
+        nmap <F8>
+        vmap <F8>
+        imap <F8>
+    endif
+endfunction
+
+command! -nargs=? -complete=custom,F8Args F8 call F8(<f-args>)
+
+" Default to `linehash` functionality.
+F8 linehash
 
 " Mapping for reviewing code in a Markdown document.
 xnoremap q y:call CreateReviewEntry()<CR>
