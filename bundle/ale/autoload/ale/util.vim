@@ -25,7 +25,8 @@ function! ale#util#ShowMessage(string, ...) abort
 
     " We have to assume the user is using a monospace font.
     if has('nvim') || (a:string !~? "\n" && len(a:string) < &columns)
-        execute 'echo a:string'
+        " no-custom-checks
+        echo a:string
     else
         call ale#preview#Show(split(a:string, "\n"), extend(
         \   {
@@ -491,8 +492,12 @@ function! ale#util#FindItemAtCursor(buffer) abort
     return [l:info, l:loc]
 endfunction
 
-function! ale#util#Input(message, value) abort
-    return input(a:message, a:value)
+function! ale#util#Input(message, value, ...) abort
+    if a:0 > 0
+        return input(a:message, a:value, a:1)
+    else
+        return input(a:message, a:value)
+    endif
 endfunction
 
 function! ale#util#HasBuflineApi() abort
@@ -517,7 +522,18 @@ function! ale#util#SetBufferContents(buffer, lines) abort
 
     " Use a Vim API for setting lines in other buffers, if available.
     if l:has_bufline_api
-        call setbufline(a:buffer, 1, l:new_lines)
+        if has('nvim')
+            " save and restore signs to avoid flickering
+            let signs = sign_getplaced(a:buffer, {'group': 'ale'})[0].signs
+
+            call nvim_buf_set_lines(a:buffer, 0, l:first_line_to_remove, 0, l:new_lines)
+
+            " restore signs (invalid line numbers will be skipped)
+            call sign_placelist(map(signs, {_, v -> extend(v, {'buffer': a:buffer})}))
+        else
+            call setbufline(a:buffer, 1, l:new_lines)
+        endif
+
         call deletebufline(a:buffer, l:first_line_to_remove, '$')
     " Fall back on setting lines the old way, for the current buffer.
     else
@@ -534,4 +550,36 @@ function! ale#util#SetBufferContents(buffer, lines) abort
     endif
 
     return l:new_lines
+endfunction
+
+function! ale#util#GetBufferContents(buffer) abort
+    return join(getbufline(a:buffer, 1, '$'), "\n") . "\n"
+endfunction
+
+function! ale#util#ToURI(resource) abort
+    let l:uri_handler = ale#uri#GetURIHandler(a:resource)
+
+    if l:uri_handler is# v:null
+        " resource is a filesystem path
+        let l:uri = ale#path#ToFileURI(a:resource)
+    else
+        " resource is a URI
+        let l:uri = a:resource
+    endif
+
+    return l:uri
+endfunction
+
+function! ale#util#ToResource(uri) abort
+    let l:uri_handler = ale#uri#GetURIHandler(a:uri)
+
+    if l:uri_handler is# v:null
+        " resource is a filesystem path
+        let l:resource = ale#path#FromFileURI(a:uri)
+    else
+        " resource is a URI
+        let l:resource = a:uri
+    endif
+
+    return l:resource
 endfunction

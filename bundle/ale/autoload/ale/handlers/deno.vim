@@ -1,8 +1,10 @@
 " Author: Mohammed Chelouti - https://github.com/motato1
+"         Arnold Chand <creativenull@outlook.com>
 " Description: Handler functions for Deno.
 
 call ale#Set('deno_executable', 'deno')
 call ale#Set('deno_unstable', 0)
+call ale#Set('deno_import_map', 'import_map.json')
 call ale#Set('deno_lsp_project_root', '')
 
 function! ale#handlers#deno#GetExecutable(buffer) abort
@@ -27,6 +29,8 @@ function! ale#handlers#deno#GetProjectRoot(buffer) abort
     endif
 
     let l:possible_project_roots = [
+    \   'deno.json',
+    \   'deno.jsonc',
     \   'tsconfig.json',
     \   '.git',
     \   bufname(a:buffer),
@@ -49,4 +53,35 @@ function! ale#handlers#deno#GetProjectRoot(buffer) abort
     endfor
 
     return ''
+endfunction
+
+" Initialization Options for deno, for javascript and typescript
+function! ale#handlers#deno#GetInitializationOptions(buffer) abort
+    let l:options = {
+    \   'enable': v:true,
+    \   'lint': v:true,
+    \   'unstable': v:false,
+    \   'importMap': ale#path#FindNearestFile(a:buffer, 'import_map.json'),
+    \   }
+
+    if ale#Var(a:buffer, 'deno_unstable')
+        let l:options.unstable = v:true
+    endif
+
+    " Look for a value set using the historical option name.
+    let l:import_map = getbufvar(
+    \   a:buffer,
+    \   'ale_deno_importMap',
+    \   get(g:, 'ale_deno_importMap', '')
+    \)
+
+    if empty(l:import_map)
+        let l:import_map = ale#Var(a:buffer, 'deno_import_map')
+    endif
+
+    if !empty(l:import_map)
+        let l:options.importMap = ale#path#FindNearestFile(a:buffer, l:import_map)
+    endif
+
+    return l:options
 endfunction

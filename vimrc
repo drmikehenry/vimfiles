@@ -3815,7 +3815,7 @@ if g:EnableAle
     " 'rls' - Rust Language Server.
     let g:ale_linters = {}
     let g:ale_linters['rust'] = ['rls', 'cargo']
-    let g:ale_linters['python'] = ['pyls', 'flake8', 'mypy']
+    let g:ale_linters['python'] = ['pylsp', 'flake8', 'mypy']
     let g:ale_linters['c'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
     let g:ale_linters['cpp'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
     let g:ale_linters['zig'] = ['zls']
@@ -3846,21 +3846,6 @@ if g:EnableAle
     if len(g:AleFlake8Ignores) > 0
         let g:ale_python_flake8_options .= ' --extend-ignore='
                 \ . join(g:AleFlake8Ignores, ',')
-    endif
-
-    if !exists('g:ale_python_pyls_config')
-        " Disable pycodestyle plugin for pyls, falling back to the flake8
-        " plugin instead.  The flake8 plugin will then correctly honor
-        " the global ~/.config/flake8 configuration.
-        let g:ale_python_pyls_config = {
-                \       'pyls': {
-                \           'plugins': {
-                \               'pycodestyle': {
-                \                   'enabled': v:false
-                \               },
-                \           }
-                \       }
-                \   }
     endif
 
     " Any `~/.mdlrc` file will take precedence; if this file does not exist,
@@ -5774,14 +5759,14 @@ nmap ga <Plug>(UnicodeGA)
 " -------------------------------------------------------------
 
 " Python support:
-if !exists('g:EnableVimLsp_pyls')
-    let g:EnableVimLsp_pyls = 1
+if !exists('g:EnableVimLsp_pylsp')
+    let g:EnableVimLsp_pylsp = 1
 endif
-if !g:EnableVimLsp || !executable('pyls')
-    let g:EnableVimLsp_pyls = 0
+if !g:EnableVimLsp || !executable('pylsp')
+    let g:EnableVimLsp_pylsp = 0
 endif
 " Any kind of Python support:
-let g:EnableVimLsp_python = g:EnableVimLsp_pyls
+let g:EnableVimLsp_python = g:EnableVimLsp_pylsp
 
 
 " C/C++ support:
@@ -5829,20 +5814,20 @@ if g:EnableVimLsp
 
     " For any kind of python support:
     if g:EnableVimLsp_python
-        " Python Language Server (pyls) support:
-        if g:EnableVimLsp_pyls
-            augroup local_lsp_pyls
+        " Python Language Server (pylsp) support:
+        if g:EnableVimLsp_pylsp
+            augroup local_lsp_pylsp
                 autocmd!
                 autocmd User lsp_setup call lsp#register_server({
-                        \ 'name': 'pyls',
-                        \ 'cmd': ['pyls'],
+                        \ 'name': 'pylsp',
+                        \ 'cmd': ['pylsp'],
                         \ 'allowlist': ['python'],
                         \ })
             augroup END
         endif
 
-        " Remove "pyls" (if present); prepend "vim-lsp":
-        call filter(g:ale_linters['python'], 'v:val != "pyls"')
+        " Remove "pylsp" (if present); prepend "vim-lsp":
+        call filter(g:ale_linters['python'], 'v:val != "pylsp"')
         call insert(g:ale_linters['python'], "vim-lsp")
     endif
 

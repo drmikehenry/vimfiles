@@ -18,8 +18,39 @@ function! ale_linters#ansible#ansible_lint#Handle(buffer, version, lines) abort
         endif
     endfor
 
-    let l:version_group = ale#semver#GTE(a:version, [5, 0, 0]) ? '>=5.0.0' : '<5.0.0'
+    let l:version_group = ale#semver#GTE(a:version, [6, 0, 0]) ? '>=6.0.0' :
+    \                     ale#semver#GTE(a:version, [5, 0, 0]) ? '>=5.0.0' :
+    \                     '<5.0.0'
     let l:output = []
+
+    if '>=6.0.0' is# l:version_group
+        let l:error_codes = { 'blocker': 'E', 'critical': 'E', 'major': 'W', 'minor': 'W', 'info': 'I' }
+        let l:linter_issues = ale#util#FuzzyJSONDecode(a:lines, [])
+
+        for l:issue in l:linter_issues
+            if ale#path#IsBufferPath(a:buffer, l:issue.location.path)
+                if exists('l:issue.location.positions')
+                    let l:coord_keyname = 'positions'
+                else
+                    let l:coord_keyname = 'lines'
+                endif
+
+                let l:column_member = printf(
+                \    'l:issue.location.%s.begin.column', l:coord_keyname
+                \)
+
+                call add(l:output, {
+                \   'lnum': exists(l:column_member) ? l:issue.location[l:coord_keyname].begin.line :
+                \           l:issue.location[l:coord_keyname].begin,
+                \   'col': exists(l:column_member) ? l:issue.location[l:coord_keyname].begin.column : 0,
+                \   'text': l:issue.check_name,
+                \   'detail': l:issue.description,
+                \   'code': l:issue.severity,
+                \   'type': l:error_codes[l:issue.severity],
+                \})
+            endif
+        endfor
+    endif
 
     if '>=5.0.0' is# l:version_group
         " Matches patterns line the following:
@@ -73,10 +104,13 @@ endfunction
 
 function! ale_linters#ansible#ansible_lint#GetCommand(buffer, version) abort
     let l:commands = {
-    \   '>=5.0.0': '%e --parseable-severity -x yaml',
-    \   '<5.0.0': '%e -p %t'
+    \   '>=6.0.0': '%e --nocolor -f json -x yaml %s',
+    \   '>=5.0.0': '%e --nocolor --parseable-severity -x yaml %s',
+    \   '<5.0.0': '%e --nocolor -p %t'
     \}
-    let l:command = ale#semver#GTE(a:version, [5, 0]) ? l:commands['>=5.0.0'] : l:commands['<5.0.0']
+    let l:command = ale#semver#GTE(a:version, [6, 0]) ? l:commands['>=6.0.0'] :
+    \               ale#semver#GTE(a:version, [5, 0]) ? l:commands['>=5.0.0'] :
+    \               l:commands['<5.0.0']
 
     return l:command
 endfunction
@@ -91,6 +125,7 @@ call ale#linter#Define('ansible', {
 \       '%e --version',
 \       function('ale_linters#ansible#ansible_lint#GetCommand'),
 \   )},
+\   'lint_file': 1,
 \   'callback': {buffer, lines -> ale#semver#RunWithVersionCheck(
 \       buffer,
 \       ale_linters#ansible#ansible_lint#GetExecutable(buffer),

@@ -29,6 +29,11 @@ g:ale_html_angular_use_global                   *g:ale_html_angular_use_global*
 
 
 ===============================================================================
+cspell                                                        *ale-html-cspell*
+
+See |ale-cspell-options|
+
+===============================================================================
 fecs                                                            *ale-html-fecs*
 
 `fecs` options for HTML are the same as the options for JavaScript, and both
@@ -40,12 +45,28 @@ See: |ale-javascript-fecs|.
 ===============================================================================
 html-beautify                                               *ale-html-beautify*
 
+g:ale_html_beautify_executable                 *g:ale_html_beautify_executable*
+                                               *b:ale_html_beautify_executable*
+  Type: |String|
+  Default: `'html-beautify'`
+
+  See |ale-integrations-local-executables|
+
+
 g:ale_html_beautify_options                       *g:ale_html_beautify_options*
                                                   *b:ale_html_beautify_options*
   Type: |String|
   Default: `''`
 
   This variable can be changed to modify flags given to html-beautify.
+
+
+g:ale_html_beautify_use_global                 *g:ale_html_beautify_use_global*
+                                               *b:ale_html_beautify_use_global*
+  Type: |String|
+  Default: `get(g:, 'ale_use_global_executables', 0)`
+
+  See |ale-integrations-local-executables|
 
 
 ===============================================================================
@@ -75,11 +96,29 @@ g:ale_html_htmlhint_use_global                 *g:ale_html_htmlhint_use_global*
   See |ale-integrations-local-executables|
 
 
-
 ===============================================================================
 prettier                                                    *ale-html-prettier*
 
 See |ale-javascript-prettier| for information about the available options.
+
+
+===============================================================================
+rustywind                                                  *ale-html-rustywind*
+
+g:ale_html_rustywind_executable               *g:ale_html_rustywind_executable*
+                                              *b:ale_html_rustywind_executable*
+  Type: |String|
+  Default: `'rustywind'`
+
+  See |ale-integrations-local-executables|
+
+
+g:ale_html_rustywind_options                     *g:ale_html_rustywind_options*
+                                                 *b:ale_html_rustywind_options*
+  Type: |String|
+  Default: `''`
+
+  This variable can be changed to modify flags given to rustywind.
 
 
 ===============================================================================
@@ -158,6 +197,19 @@ g:ale_html_tidy_use_global                             *g:html_tidy_use_global*
 
   See |ale-integrations-local-executables|
 
+
+===============================================================================
+vscodehtml                                                    *ale-html-vscode*
+
+Website: https://github.com/hrsh7th/vscode-langservers-extracted
+
+Installation
+-------------------------------------------------------------------------------
+
+Install VSCode html language server either globally or locally: >
+
+  npm install -g vscode-langservers-extracted
+<
 
 ===============================================================================
 write-good                                                *ale-html-write-good*

@@ -3,6 +3,37 @@ ALE TypeScript Integration                             *ale-typescript-options*
 
 
 ===============================================================================
+biome                                                    *ale-typescript-biome*
+
+g:ale_biome_executable                                 *g:ale_biome_executable*
+                                                       *b:ale_biome_executable*
+  Type: |String|
+  Default: `'biome'`
+
+
+g:ale_biome_options                                       *g:ale_biome_options*
+                                                          *b:ale_biome_options*
+  Type: |String|
+  Default: `''`
+
+  This variable can be set to pass additional options to biome.
+
+
+g:ale_biome_use_global                                 *g:ale_biome_use_global*
+                                                       *b:ale_biome_use_global*
+  Type: |Number|
+  Default: `get(g:, 'ale_use_global_executables', 0)`
+
+  See |ale-integrations-local-executables|
+
+
+===============================================================================
+cspell                                                  *ale-typescript-cspell*
+
+See |ale-cspell-options|
+
+
+===============================================================================
 deno                                                      *ale-typescript-deno*
 
 Starting from version 1.6.0, Deno comes with its own language server. Earlier
@@ -23,9 +54,10 @@ g:ale_deno_lsp_project_root                       *g:ale_deno_lsp_project_root*
   executing the following steps in the given order:
 
   1. Find an ancestor directory containing a tsconfig.json.
-  2. Find an ancestory irectory containing a .git folder.
+  2. Find an ancestor directory containing a .git folder.
   3. Use the directory of the current buffer (if the buffer was opened from
      a file).
+
 
 g:ale_deno_unstable                                       *g:ale_deno_unstable*
                                                           *b:ale_deno_unstable*
@@ -33,6 +65,20 @@ g:ale_deno_unstable                                       *g:ale_deno_unstable*
   Default: `0`
 
   Enable or disable unstable Deno features and APIs.
+
+
+g:ale_deno_import_map                                   *g:ale_deno_import_map*
+                                                        *b:ale_deno_import_map*
+  Type: |String|
+  Default: `'import_map.json'`
+
+  Specify the import map filename to load url maps in a deno project.
+
+
+===============================================================================
+dprint                                                  *ale-typescript-dprint*
+
+See |ale-dprint-options| and https://dprint.dev/plugins/typescript
 
 
 ===============================================================================

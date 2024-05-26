@@ -45,7 +45,9 @@ function! ale#hover#HandleTSServerResponse(conn_id, response) abort
             \&& (l:set_balloons is 1 || l:set_balloons is# 'hover')
                 call balloon_show(a:response.body.displayString)
             elseif get(l:options, 'truncated_echo', 0)
-                call ale#cursor#TruncatedEcho(split(a:response.body.displayString, "\n")[0])
+                if !empty(a:response.body.displayString)
+                    call ale#cursor#TruncatedEcho(a:response.body.displayString)
+                endif
             elseif g:ale_hover_to_floating_preview || g:ale_floating_preview
                 call ale#floating_preview#Show(split(a:response.body.displayString, "\n"), {
                 \   'filetype': 'ale-preview.message',
@@ -66,6 +68,18 @@ endfunction
 " The language name could be an empty string or v:null
 function! s:ConvertLanguageName(language) abort
     return a:language
+endfunction
+
+" Cache syntax file (non-)existence to avoid calling globpath repeatedly.
+let s:syntax_file_exists_cache = {}
+
+function! s:SyntaxFileExists(syntax_file) abort
+    if !has_key(s:syntax_file_exists_cache, a:syntax_file)
+        let s:syntax_file_exists_cache[a:syntax_file] =
+        \   !empty(globpath(&runtimepath, a:syntax_file))
+    endif
+
+    return s:syntax_file_exists_cache[a:syntax_file]
 endfunction
 
 function! ale#hover#ParseLSPResult(contents) abort
@@ -103,10 +117,10 @@ function! ale#hover#ParseLSPResult(contents) abort
             for l:line in split(l:item, "\n")
                 if l:fence_language is v:null
                     " Look for the start of a code fence. (```python, etc.)
-                    let l:match = matchlist(l:line, '^```\(.*\)$')
+                    let l:match = matchlist(l:line, '^``` *\([^ ]\+\)\? *$')
 
                     if !empty(l:match)
-                        let l:fence_language = l:match[1]
+                        let l:fence_language = len(l:match) > 1 ? l:match[1] : 'text'
 
                         if !empty(l:marked_list)
                             call add(l:fence_lines, '')
@@ -158,10 +172,11 @@ function! ale#hover#ParseLSPResult(contents) abort
                 let l:language = s:ConvertLanguageName(l:language)
 
                 if !empty(l:language)
-                    let l:includes[l:language] = printf(
-                    \   'syntax/%s.vim',
-                    \   l:language,
-                    \)
+                    let l:syntax_file = printf('syntax/%s.vim', l:language)
+
+                    if s:SyntaxFileExists(l:syntax_file)
+                        let l:includes[l:language] = l:syntax_file
+                    endif
 
                     let l:start = len(l:lines) + 1
                     let l:end = l:start + len(l:marked_lines)
@@ -229,7 +244,11 @@ function! ale#hover#HandleLSPResponse(conn_id, response) abort
             \&& (l:set_balloons is 1 || l:set_balloons is# 'hover')
                 call balloon_show(join(l:lines, "\n"))
             elseif get(l:options, 'truncated_echo', 0)
-                call ale#cursor#TruncatedEcho(l:lines[0])
+                if type(l:lines[0]) is# v:t_list
+                    call ale#cursor#TruncatedEcho(join(l:lines[0], '\n'))
+                else
+                    call ale#cursor#TruncatedEcho(l:lines[0])
+                endif
             elseif g:ale_hover_to_floating_preview || g:ale_floating_preview
                 call ale#floating_preview#Show(l:lines, {
                 \   'filetype': 'ale-preview.message',
@@ -310,10 +329,9 @@ function! ale#hover#Show(buffer, line, col, opt) abort
     let l:show_documentation = get(a:opt, 'show_documentation', 0)
     let l:Callback = function('s:OnReady', [a:line, a:col, a:opt])
 
-    for l:linter in ale#linter#Get(getbufvar(a:buffer, '&filetype'))
+    for l:linter in ale#lsp_linter#GetEnabled(a:buffer)
         " Only tsserver supports documentation requests at the moment.
-        if !empty(l:linter.lsp)
-        \&& (!l:show_documentation || l:linter.lsp is# 'tsserver')
+        if !l:show_documentation || l:linter.lsp is# 'tsserver'
             call ale#lsp_linter#StartLSP(a:buffer, l:linter, l:Callback)
         endif
     endfor
@@ -332,6 +350,10 @@ endfunction
 function! ale#hover#ShowTruncatedMessageAtCursor() abort
     let l:buffer = bufnr('')
     let l:pos = getpos('.')[0:2]
+
+    if !getbufvar(l:buffer, 'ale_enabled', 1)
+        return
+    endif
 
     if l:pos != s:last_pos
         let s:last_pos = l:pos

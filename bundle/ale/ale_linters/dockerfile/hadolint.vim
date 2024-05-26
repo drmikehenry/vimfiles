@@ -3,11 +3,12 @@
 " always, yes, never
 call ale#Set('dockerfile_hadolint_use_docker', 'never')
 call ale#Set('dockerfile_hadolint_docker_image', 'hadolint/hadolint')
+call ale#Set('dockerfile_hadolint_options', '')
 
 function! ale_linters#dockerfile#hadolint#Handle(buffer, lines) abort
     " Matches patterns line the following:
     "
-    " /dev/stdin:19 DL3001 Pipe chain should start with a raw value.
+    " -:19 DL3001 warning: Pipe chain should start with a raw value.
     " /dev/stdin:19:3 unexpected thing
     let l:pattern = '\v^%(/dev/stdin|-):(\d+):?(\d+)? ((DL|SC)(\d+) )?((.+)?: )?(.+)$'
     let l:output = []
@@ -38,6 +39,8 @@ function! ale_linters#dockerfile#hadolint#Handle(buffer, lines) abort
         let l:text = l:match[8]
         let l:detail = l:match[8]
         let l:domain = 'https://github.com/hadolint/hadolint/wiki/'
+        let l:code = ''
+        let l:link = ''
 
         if l:match[4] is# 'SC'
             let l:domain = 'https://github.com/koalaman/shellcheck/wiki/'
@@ -46,18 +49,26 @@ function! ale_linters#dockerfile#hadolint#Handle(buffer, lines) abort
         if l:match[5] isnot# ''
             let l:code = l:match[4] . l:match[5]
             let l:link = ' ( ' . l:domain . l:code . ' )'
+            let l:text = l:code . ': ' . l:detail
             let l:detail = l:code . l:link . "\n\n" . l:detail
         else
             let l:type = 'E'
+            let l:detail = 'hadolint could not parse the file because of a syntax error.'
         endif
 
-        call add(l:output, {
+        let l:line_output = {
         \   'lnum': l:lnum,
         \   'col': l:colnum,
         \   'type': l:type,
         \   'text': l:text,
         \   'detail': l:detail
-        \})
+        \}
+
+        if l:code isnot# ''
+            let l:line_output['code'] = l:code
+        endif
+
+        call add(l:output, l:line_output)
     endfor
 
     return l:output
@@ -92,7 +103,7 @@ endfunction
 
 function! ale_linters#dockerfile#hadolint#GetCommand(buffer) abort
     let l:command = ale_linters#dockerfile#hadolint#GetExecutable(a:buffer)
-    let l:opts = '--no-color -'
+    let l:opts = ale#Var(a:buffer, 'dockerfile_hadolint_options') . ' --no-color -'
 
     if l:command is# 'docker'
         return printf('docker run --rm -i %s hadolint %s',

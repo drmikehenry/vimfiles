@@ -3,13 +3,16 @@ ALE Verilog/SystemVerilog Integration                     *ale-verilog-options*
 
 
 ===============================================================================
-ALE can use five different linters for Verilog HDL:
+ALE can use seven different linters for Verilog HDL:
 
   HDL Checker
     Using `hdl_checker --lsp`
 
   iverilog:
     Using `iverilog -t null -Wall`
+
+  slang:
+    Using `slang -Weverything`
 
   verilator
     Using `verilator --lint-only -Wall`
@@ -19,6 +22,9 @@ ALE can use five different linters for Verilog HDL:
 
   Vivado
     Using `xvlog`
+
+  Yosys
+    Using `yosys -Q -T -p 'read_verilog'`
 
 By default, both 'verilog' and 'systemverilog' filetypes are checked.
 
@@ -61,6 +67,15 @@ iverilog                                                 *ale-verilog-iverilog*
 
   No additional options
 
+===============================================================================
+slang                                                       *ale-verilog-slang*
+
+g:ale_verilog_slang_option                        *g:ale_verilog_slang_options*
+                                                  *b:ale_verilog_slang_options*
+  Type: String
+  Default: ''
+
+  This variable can be changed to modify 'slang' command arguments.
 
 ===============================================================================
 verilator                                               *ale-verilog-verilator*
@@ -70,7 +85,7 @@ g:ale_verilog_verilator_options               *g:ale_verilog_verilator_options*
   Type: |String|
   Default: `''`
 
-  This variable can be changed to modify 'verilator' command arguments
+  This variable can be changed to modify 'verilator' command arguments.
 
   For example `'-sv --default-language "1800-2012"'` if you want to enable
   SystemVerilog parsing and select the 2012 version of the language.
@@ -112,6 +127,27 @@ g:ale_verilog_xvlog_options                       *g:ale_verilog_xvlog_options*
   Default: `''`
 
   This variable can be changed to modify the flags/options passed to 'xvlog'.
+
+
+===============================================================================
+yosys                                                       *ale-verilog-yosys*
+
+g:ale_verilog_yosys_executable                 *g:ale_verilog_yosys_executable*
+                                               *b:ale_verilog_yosys_executable*
+  Type: |String|
+  Default: `'yosys'`
+
+  This variable can be changed to the path to the 'yosys' executable.
+
+
+g:ale_verilog_yosys_options                       *g:ale_verilog_yosys_options*
+                                                  *b:ale_verilog_yosys_options*
+  Type: |String|
+  Default: `'-Q -T -p ''read_verilog %s'''`
+
+  This variable can be changed to modify the flags/options passed to 'yosys'.
+  By default, Yosys is an interactive program. To obtain linting functionality,
+  the `'read_verilog'` command is used.
 
 
 ===============================================================================

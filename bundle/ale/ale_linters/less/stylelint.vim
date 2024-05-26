@@ -12,7 +12,8 @@ endfunction
 
 call ale#linter#Define('less', {
 \   'name': 'stylelint',
-\   'executable': {b -> ale#node#FindExecutable(b, 'less_stylelint', [
+\   'output_stream': 'both',
+\   'executable': {b -> ale#path#FindExecutable(b, 'less_stylelint', [
 \       'node_modules/.bin/stylelint',
 \   ])},
 \   'command': function('ale_linters#less#stylelint#GetCommand'),

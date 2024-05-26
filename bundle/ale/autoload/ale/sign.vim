@@ -9,11 +9,11 @@ let g:ale_max_signs = get(g:, 'ale_max_signs', -1)
 " there are errors.
 let g:ale_change_sign_column_color = get(g:, 'ale_change_sign_column_color', 0)
 " These variables dictate what signs are used to indicate errors and warnings.
-let g:ale_sign_error = get(g:, 'ale_sign_error', '>>')
+let g:ale_sign_error = get(g:, 'ale_sign_error', 'E')
 let g:ale_sign_style_error = get(g:, 'ale_sign_style_error', g:ale_sign_error)
-let g:ale_sign_warning = get(g:, 'ale_sign_warning', '--')
+let g:ale_sign_warning = get(g:, 'ale_sign_warning', 'W')
 let g:ale_sign_style_warning = get(g:, 'ale_sign_style_warning', g:ale_sign_warning)
-let g:ale_sign_info = get(g:, 'ale_sign_info', g:ale_sign_warning)
+let g:ale_sign_info = get(g:, 'ale_sign_info', 'I')
 let g:ale_sign_priority = get(g:, 'ale_sign_priority', 30)
 " This variable sets an offset which can be set for sign IDs.
 " This ID can be changed depending on what IDs are set for other plugins.
@@ -52,9 +52,7 @@ endif
 function! ale#sign#SetUpDefaultColumnWithoutErrorsHighlight() abort
     let l:verbose = &verbose
     set verbose=0
-    redir => l:output
-        0verbose silent highlight SignColumn
-    redir end
+    let l:output = execute('highlight SignColumn', 'silent')
     let &verbose = l:verbose
 
     let l:highlight_syntax = join(split(l:output)[2:])
@@ -87,9 +85,9 @@ execute 'sign define ALEStyleWarningSign text=' . s:EscapeSignText(g:ale_sign_st
 \   . ' texthl=ALEStyleWarningSign linehl=ALEWarningLine'
 execute 'sign define ALEInfoSign text=' . s:EscapeSignText(g:ale_sign_info)
 \   . ' texthl=ALEInfoSign linehl=ALEInfoLine'
-sign define ALEDummySign
+sign define ALEDummySign text=\  texthl=SignColumn
 
-if g:ale_sign_highlight_linenrs && has('nvim-0.3.2')
+if g:ale_sign_highlight_linenrs && (has('nvim-0.3.2') || has('patch-8.2.3874'))
     if !hlexists('ALEErrorSignLineNr')
         highlight link ALEErrorSignLineNr CursorLineNr
     endif
@@ -163,7 +161,7 @@ endfunction
 
 function! s:GroupCmd() abort
     if s:supports_sign_groups
-        return ' group=ale '
+        return ' group=ale_signs '
     else
         return ' '
     endif
@@ -171,10 +169,10 @@ endfunction
 
 " Read sign data for a buffer to a list of lines.
 function! ale#sign#ReadSigns(buffer) abort
-    redir => l:output
-        silent execute 'sign place ' . s:GroupCmd() . s:PriorityCmd()
-        \ . ' buffer=' . a:buffer
-    redir end
+    let l:output = execute(
+    \   'sign place ' . s:GroupCmd() . s:PriorityCmd()
+    \   . ' buffer=' . a:buffer
+    \ )
 
     return split(l:output, "\n")
 endfunction
@@ -182,13 +180,13 @@ endfunction
 function! ale#sign#ParsePattern() abort
     if s:supports_sign_groups
         " Matches output like :
-        " line=4  id=1  group=ale  name=ALEErrorSign
-        " строка=1  id=1000001  группа=ale  имя=ALEErrorSign
-        " 行=1  識別子=1000001  グループ=ale  名前=ALEWarningSign
-        " línea=12 id=1000001 grupo=ale  nombre=ALEWarningSign
-        " riga=1 id=1000001  gruppo=ale   nome=ALEWarningSign
-        " Zeile=235  id=1000001 Gruppe=ale  Name=ALEErrorSign
-        let l:pattern = '\v^.*\=(\d+).*\=(\d+).*\=ale>.*\=(ALE[a-zA-Z]+Sign)'
+        " line=4  id=1  group=ale_signs  name=ALEErrorSign
+        " строка=1  id=1000001  группа=ale_signs  имя=ALEErrorSign
+        " 行=1  識別子=1000001  グループ=ale_signs  名前=ALEWarningSign
+        " línea=12 id=1000001 grupo=ale_signs  nombre=ALEWarningSign
+        " riga=1 id=1000001  gruppo=ale_signs   nome=ALEWarningSign
+        " Zeile=235  id=1000001 Gruppe=ale_signs  Name=ALEErrorSign
+        let l:pattern = '\v^.*\=(\d+).*\=(\d+).*\=ale_signs>.*\=(ALE[a-zA-Z]+Sign)'
     else
         " Matches output like :
         " line=4  id=1  name=ALEErrorSign
@@ -201,6 +199,27 @@ function! ale#sign#ParsePattern() abort
     endif
 
     return l:pattern
+endfunction
+
+" Given a buffer number, return a List of placed signs [line, id, group]
+function! ale#sign#ParseSignsWithGetPlaced(buffer) abort
+    let l:signs = sign_getplaced(a:buffer, { 'group': s:supports_sign_groups ? 'ale_signs' : '' })[0].signs
+    let l:result = []
+    let l:is_dummy_sign_set = 0
+
+    for l:sign in l:signs
+        if l:sign['name'] is# 'ALEDummySign'
+            let l:is_dummy_sign_set = 1
+        else
+            call add(l:result, [
+            \   str2nr(l:sign['lnum']),
+            \   str2nr(l:sign['id']),
+            \   l:sign['name'],
+            \])
+        endif
+    endfor
+
+    return [l:is_dummy_sign_set, l:result]
 endfunction
 
 " Given a list of lines for sign output, return a List of [line, id, group]
@@ -229,9 +248,13 @@ function! ale#sign#ParseSigns(line_list) abort
 endfunction
 
 function! ale#sign#FindCurrentSigns(buffer) abort
-    let l:line_list = ale#sign#ReadSigns(a:buffer)
+    if exists('*sign_getplaced')
+        return ale#sign#ParseSignsWithGetPlaced(a:buffer)
+    else
+        let l:line_list = ale#sign#ReadSigns(a:buffer)
 
-    return ale#sign#ParseSigns(l:line_list)
+        return ale#sign#ParseSigns(l:line_list)
+    endif
 endfunction
 
 " Given a loclist, group the List into with one List per line.
@@ -466,7 +489,7 @@ endfunction
 " Remove all signs.
 function! ale#sign#Clear() abort
     if s:supports_sign_groups
-        sign unplace group=ale *
+        sign unplace group=ale_signs *
     else
         sign unplace *
     endif

@@ -559,6 +559,90 @@ Linters/formatters
 
 Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
+- C/C++:
+
+  - Install Clang daemon (Clangd):
+
+    - Ubuntu: install the default version: >
+
+        sudo apt install clangd
+<
+    - Ubuntu: Use a specific version and make it the default: >
+
+        sudo apt install clangd-10
+        sudo update-alternatives --install /usr/bin/clangd \
+            clangd /usr/bin/clangd-10 100
+<
+  - (recommended) Configure clangd to disable warning about unused functions in
+    header files.  Create `~/.config/clangd/config.yaml` with contents: >
+
+      ---
+      If:
+        PathMatch: .*\.h
+
+      CompileFlags:
+        Add: [-Wno-unused-functions]
+<
+  - Install `compiledb` to automatically generate a `compile-commands.json` file
+    for use with Clangd. >
+
+      pipx install compiledb
+<
+    See `compiledb --help` for details.
+
+- LUA:
+
+  - Acquire `lua-language-server` binaries:
+    https://github.com/LuaLS/lua-language-server/releases/download/3.7.4/lua-language-server-3.7.4-linux-x64.tar.gz
+
+  - Install from pre-built binaries:
+
+    - Install globally (preferred): >
+
+        sudo mkdir -p /opt/lua-language-server
+        sudo tar -C /opt/lua-language-server -xf \
+          lua-language-server-3.7.4-linux-x64.tar.gz
+        sudo ln -s /opt/lua-language-server/bin/lua-language-server /usr/local/bin
+<
+    - Alternatively, install in `~/.local/lua-language-server`: >
+
+        mkdir -p ~/.local/bin
+        mkdir -p ~/.local/lua-language-server
+        tar -C ~/.local/lua-language-server -xf \
+          lua-language-server-3.7.4-linux-x64.tar.gz
+        ln -s ~/.local/lua-language-server/bin/lua-language-server \
+          ~/.local/bin
+<
+      **NOTE** Ensure `~/.local/bin/` is in the `PATH`.
+
+  - If desired, may install from source:
+
+    - Acquire sources: >
+
+          git clone https://github.com/sumneko/lua-language-server
+          cd lua-language-server/
+          git submodule update --init --recursive
+<
+    - May need to install `libstdc++-static` for the build to complete.
+
+    - Build: >
+
+          cd 3rd/luamake
+          compile/install.sh
+          cd ../..
+          ./3rd/luamake/luamake rebuild
+<
+- Markdown:
+
+  - Install linters: >
+
+      gem install mdl
+<
+  - Optionally create ~/.mdlrc to use $VIMFILES/etc/mdl-style.rb with `mdl`
+    invocations from the command line: >
+
+      style "#{File.dirname(__FILE__)}/.vim/etc/mdl-style.rb"
+<
 - Python:
 
   - Install `mypy` for type checking: >
@@ -599,14 +683,12 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
     Vimfiles will supply the `--profile black` option for black-compatible
     ordering.
 
-  - Install language server: >
+  - Install `python-lsp-server` and associated dependencies: >
 
-      # Recommended to use a virtual environment:
-      pipx install 'python-language-server[mccabe,pycodestyle,pydocstyle,pyflakes,rope]'
-
-      # (Not yet recommended: pyls-mypy seems to have trouble finding
-      # local imports, whereas ALE's direct support for mypy works properly).
-      # pip inject python-language-server pyls-mypy
+      pipx install python-lsp-server[mccabe,pycodestyle,pydocstyle,pyflakes,rope]
+      pipx inject python-lsp-server python-lsp-black
+      pipx inject python-lsp-server pylsp-mypy
+      pipx inject python-lsp-server python-lsp-ruff
 <
 - Rust:
 
@@ -647,105 +729,6 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
       go get -u mvdan.cc/sh/cmd/shfmt
 <
-- C/C++:
-
-  - Install Clang daemon (Clangd):
-
-    - Ubuntu: install the default version: >
-
-        sudo apt install clangd
-<
-    - Ubuntu: Use a specific version and make it the default: >
-
-        sudo apt install clangd-10
-        sudo update-alternatives --install /usr/bin/clangd \
-            clangd /usr/bin/clangd-10 100
-<
-  - (recommended) Configure clangd to disable warning about unused functions in
-    header files.  Create `~/.config/clangd/config.yaml` with contents: >
-
-      ---
-      If:
-        PathMatch: .*\.h
-
-      CompileFlags:
-        Add: [-Wno-unused-functions]
-<
-  - Install `compiledb` to automatically generate a `compile-commands.json` file
-    for use with Clangd. >
-
-      pipx install compiledb
-<
-    See `compiledb --help` for details.
-
-- Markdown:
-
-  - Install linters: >
-
-      gem install mdl
-<
-  - Optionally create ~/.mdlrc to use $VIMFILES/etc/mdl-style.rb with `mdl`
-    invocations from the command line: >
-
-      style "#{File.dirname(__FILE__)}/.vim/etc/mdl-style.rb"
-<
-
-Python LSP dependencies
------------------------
-
-- Install `python-lsp-server` and associated dependencies: >
-
-    pipx install ruff
-    pipx install python-lsp-server
-    pipx inject python-lsp-server python-lsp-black
-    pipx inject python-lsp-server pylsp-mypy
-    pipx inject python-lsp-server python-lsp-ruff
-<
-
-LUA LSP dependencies
---------------------
-
-- Acquire `lua-language-server` binaries:
-  https://github.com/LuaLS/lua-language-server/releases/download/3.7.4/lua-language-server-3.7.4-linux-x64.tar.gz
-
-- Install from pre-built binaries:
-
-  - Install globally (preferred): >
-
-      sudo mkdir -p /opt/lua-language-server
-      sudo tar -C /opt/lua-language-server -xf \
-        lua-language-server-3.7.4-linux-x64.tar.gz
-      sudo ln -s /opt/lua-language-server/bin/lua-language-server /usr/local/bin
-<
-  - Alternatively, install in `~/.local/lua-language-server`: >
-
-      mkdir -p ~/.local/bin
-      mkdir -p ~/.local/lua-language-server
-      tar -C ~/.local/lua-language-server -xf \
-        lua-language-server-3.7.4-linux-x64.tar.gz
-      ln -s ~/.local/lua-language-server/bin/lua-language-server \
-        ~/.local/bin
-<
-    **NOTE** Ensure `~/.local/bin/` is in the `PATH`.
-
-- If desired, may install from source:
-
-  - Acquire sources: >
-
-        git clone https://github.com/sumneko/lua-language-server
-        cd lua-language-server/
-        git submodule update --init --recursive
-<
-  - May need to install `libstdc++-static` for the build to complete.
-
-  - Build: >
-
-        cd 3rd/luamake
-        compile/install.sh
-        cd ../..
-        ./3rd/luamake/luamake rebuild
-<
-
 Fonts
 -----
 
@@ -1068,7 +1051,7 @@ Usage notes:
 
 See |ALE| documentation for more details.
 
-Version 2021-05-04 (bee8ecc) from:
+Version 2024-05-08 (c88bddf) from:
 https://github.com/dense-analysis/ale
 
 with the following modifications found in branch `vimfiles` at:

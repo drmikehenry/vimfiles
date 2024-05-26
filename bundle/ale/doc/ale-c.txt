@@ -25,10 +25,10 @@ g:ale_c_build_dir_names                               *g:ale_c_build_dir_names*
   Type: |List|
   Default: `['build', 'bin']`
 
-  A list of directory names to be used when searching upwards from cpp files
+  A list of directory names to be used when searching upwards from C files
   to discover compilation databases with. For directory named `'foo'`, ALE
   will search for `'foo/compile_commands.json'` in all directories on and
-  above the directory containing the cpp file to find path to compilation
+  above the directory containing the C file to find path to compilation
   database.  This feature is useful for the clang tools wrapped around
   LibTooling (namely here, clang-tidy)
 
@@ -133,7 +133,42 @@ g:ale_c_cc_options                                         *g:ale_c_cc_options*
   Type: |String|
   Default: `'-std=c11 -Wall'`
 
-  This variable can be change to modify flags given to the C compiler.
+  This variable can be changed to modify flags given to the C compiler.
+
+
+g:ale_c_cc_use_header_lang_flag               *g:ale_c_cc_use_header_lang_flag*
+                                              *b:ale_c_cc_use_header_lang_flag*
+  Type: |Number|
+  Default: `-1`
+
+  By default, ALE will use `'-x c-header'` instead of `'-x c'` for header files
+  when using Clang.
+
+  This variable can be changed to manually activate or deactivate this flag
+  for header files.
+
+  - When set to `-1`, the default beviour is used, `'-x c-header'` is used with
+    Clang and `'-x c'` is used with other compilers.
+  - When set to `0`, the flag is deactivated, `'-x c'` is always used
+    independently of the compiler.
+  - When set to `1`, the flag is activated, `'-x c-header'` is always used
+    independently of the compiler.
+
+  Gcc does not support `'-x c-header'` when using `'-'` as input filename,
+  which is what ALE does. This why, by default, ALE only uses `'-x c-header'`
+  with Clang.
+
+
+g:ale_c_cc_header_exts                                 *g:ale_c_cc_header_exts*
+                                                       *b:ale_c_cc_header_exts*
+  Type: |List|
+  Default: `['h']`
+
+  This variable can be changed to modify the list of extensions of the files
+  considered as header files.
+
+  This variable is only used when `'-x c-header'` is used instead of `'-x c'`,
+  see |g:ale_c_cc_use_header_lang_flag|.
 
 
 ===============================================================================
@@ -163,8 +198,39 @@ g:ale_c_ccls_init_options                           *g:ale_c_ccls_init_options*
     \   },
     \ }
 <
-  Visit https://github.com/MaskRay/ccls/wiki/Initialization-options for all
-  available options and explanations.
+  For all available options and explanations, visit
+  https://github.com/MaskRay/ccls/wiki/Customization#initialization-options.
+
+
+===============================================================================
+clangcheck                                                   *ale-c-clangcheck*
+
+`clang-check` will be run only when files are saved to disk, so that
+`compile_commands.json` files can be used. It is recommended to use this
+linter in combination with `compile_commands.json` files.
+Therefore, `clang-check` linter reads the options |g:ale_c_build_dir| and
+|g:ale_c_build_dir_names|. Also, setting |g:ale_c_build_dir| actually
+overrides |g:ale_c_build_dir_names|.
+
+
+g:ale_c_clangcheck_executable                   *g:ale_c_clangcheck_executable*
+                                                *b:ale_c_clangcheck_executable*
+  Type: |String|
+  Default: `'clang-check'`
+
+  This variable can be changed to use a different executable for clangcheck.
+
+
+g:ale_c_clangcheck_options                         *g:ale_c_clangcheck_options*
+                                                   *b:ale_c_clangcheck_options*
+  Type: |String|
+  Default: `''`
+
+  This variable can be changed to modify flags given to clang-check.
+
+  This variable should not be set to point to build subdirectory with
+  `-p path/to/build` option, as it is handled by the |g:ale_c_build_dir|
+  option.
 
 
 ===============================================================================
@@ -343,13 +409,19 @@ g:ale_c_cquery_executable                           *g:ale_c_cquery_executable*
   This variable can be changed to use a different executable for cquery.
 
 
-g:ale_cpp_cquery_cache_directory               *g:ale_c_cquery_cache_directory*
+g:ale_c_cquery_cache_directory                 *g:ale_c_cquery_cache_directory*
                                                *b:ale_c_cquery_cache_directory*
   Type: |String|
   Default: `'~/.cache/cquery'`
 
   This variable can be changed to decide which directory cquery uses for its
 cache.
+
+
+===============================================================================
+cspell                                                           *ale-c-cspell*
+
+See |ale-cspell-options|
 
 
 ===============================================================================

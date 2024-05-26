@@ -19,6 +19,7 @@ let s:default_ale_linter_aliases = {
 \   'rmd': 'r',
 \   'systemverilog': 'verilog',
 \   'typescriptreact': ['typescript', 'tsx'],
+\   'vader': ['vim', 'vader'],
 \   'verilog_systemverilog': ['verilog_systemverilog', 'verilog'],
 \   'vimwiki': 'markdown',
 \   'vue': ['vue', 'javascript'],
@@ -41,19 +42,25 @@ let s:default_ale_linters = {
 \   'apkbuild': ['apkbuild_lint', 'secfixes_check'],
 \   'csh': ['shell'],
 \   'elixir': ['credo', 'dialyxir', 'dogma'],
-\   'go': ['gofmt', 'golint', 'go vet'],
+\   'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
+\   'groovy': ['npm-groovy-lint'],
 \   'hack': ['hack'],
 \   'help': [],
 \   'inko': ['inko'],
+\   'json': ['jsonlint', 'spectral', 'vscodejson'],
+\   'json5': [],
+\   'jsonc': [],
 \   'perl': ['perlcritic'],
 \   'perl6': [],
-\   'python': ['flake8', 'mypy', 'pylint', 'pyright'],
-\   'rust': ['cargo', 'rls'],
+\   'python': ['flake8', 'mypy', 'pylint', 'pyright', 'ruff'],
+\   'rust': ['analyzer', 'cargo'],
 \   'spec': [],
 \   'text': [],
+\   'vader': ['vimls'],
 \   'vue': ['eslint', 'vls'],
 \   'zsh': ['shell'],
 \   'v': ['v'],
+\   'yaml': ['spectral', 'yaml-language-server', 'yamllint'],
 \}
 
 " Testing/debugging helper to unload all linters.
@@ -408,16 +415,6 @@ function! ale#linter#Get(original_filetypes) abort
     endfor
 
     return reverse(l:combined_linters)
-endfunction
-
-function! ale#linter#RemoveIgnored(buffer, filetype, linters) abort
-    " Apply ignore lists for linters only if needed.
-    let l:ignore_config = ale#Var(a:buffer, 'linters_ignore')
-    let l:disable_lsp = ale#Var(a:buffer, 'disable_lsp')
-
-    return !empty(l:ignore_config) || l:disable_lsp
-    \   ? ale#engine#ignore#Exclude(a:filetype, a:linters, l:ignore_config, l:disable_lsp)
-    \   : a:linters
 endfunction
 
 " Given a buffer and linter, get the executable String for the linter.

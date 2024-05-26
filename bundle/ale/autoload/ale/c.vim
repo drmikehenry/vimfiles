@@ -151,8 +151,6 @@ function! ale#c#ParseCFlags(path_prefix, should_quote, raw_arguments) abort
         \ || stridx(l:option, '-isystem') == 0
         \ || stridx(l:option, '-idirafter') == 0
         \ || stridx(l:option, '-iframework') == 0
-        \ || stridx(l:option, '-include') == 0
-        \ || stridx(l:option, '-imacros') == 0
             if stridx(l:option, '-I') == 0 && l:option isnot# '-I'
                 let l:arg = join(split(l:option, '\zs')[2:], '')
                 let l:option = '-I'
@@ -182,6 +180,7 @@ function! ale#c#ParseCFlags(path_prefix, should_quote, raw_arguments) abort
         " Options that have an argument (always separate)
         elseif l:option is# '-iprefix' || stridx(l:option, '-iwithprefix') == 0
         \ || l:option is# '-isysroot' || l:option is# '-imultilib'
+        \ || l:option is# '-include' || l:option is# '-imacros'
             call add(l:items, [0, l:option])
             call add(l:items, [0, l:arguments[l:option_index]])
             let l:option_index = l:option_index + 1
@@ -585,4 +584,39 @@ function! ale#c#IncludeOptions(include_paths) abort
     endif
 
     return join(l:option_list)
+endfunction
+
+" Get the language flag depending on on the executable, options and
+" file extension
+function! ale#c#GetLanguageFlag(
+\   buffer,
+\   executable,
+\   use_header_lang_flag,
+\   header_exts,
+\   linter_lang_flag
+\) abort
+    " Use only '-header' if the executable is 'clang' by default
+    if a:use_header_lang_flag == -1
+        let l:use_header_lang_flag = a:executable =~# 'clang'
+    else
+        let l:use_header_lang_flag = a:use_header_lang_flag
+    endif
+
+    " If we don't use the header language flag, return the default linter
+    " language flag
+    if !l:use_header_lang_flag
+        return a:linter_lang_flag
+    endif
+
+    " Get the buffer file extension
+    let l:buf_ext = expand('#' . a:buffer . ':e')
+
+    " If the buffer file is an header according to its extension, use
+    " the linter language flag + '-header', ex: 'c-header'
+    if index(a:header_exts, l:buf_ext) >= 0
+        return a:linter_lang_flag . '-header'
+    endif
+
+    " Else, use the default linter language flag
+    return a:linter_lang_flag
 endfunction

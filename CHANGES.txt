@@ -16,6 +16,29 @@ require adjustment of per-user settings.
   This allows activating the running instance's window by searching for the
   expected name in the window's title (e.g., using ``wmctrl -a`` on X11).
 
+- BREAKING CHANGE: upgrade ALE plugin to version 2024-05-08.
+
+  Support for the old ``python-language-server`` was removed from ALE in 2021
+  because that LSP became unmaintained.  ``python-lsp-server`` is a
+  community-supported fork of the LSP that ALE (and other plugins) support.
+
+  The old LSP's executable was named ``pyls``; the new one is ``pylsp``.
+  Configuration in ALE (and in Vimfiles) had been done using variables
+  containing the string ``pyls``, but now they contain ``pylsp``.
+
+  See ``:help notes_setup_optional`` in the ``python-lsp-server`` section for
+  instructions on setting up the new ``pylsp``.  If desired, you may also
+  uninstall the old ``pyls`` via ``pipx uninstall python-language-server`` (or
+  similar, depending on how you installed it).
+
+  The Vimfiles variable ``g:EnableVimLsp_pyls`` has become
+  ``g:EnableVimLsp_pylsp``.
+
+  The support in Vimfiles for Neovim and Python LSPs was already using the new
+  ``pylsp``, so you might already have it installed.  The installation
+  instructions mentioned above have some additional details that might make it
+  worth reinstalling ``pylsp`` for some optional extra features.
+
 2024-04-20
 ==========
 
