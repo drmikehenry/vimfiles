@@ -39,6 +39,8 @@ require adjustment of per-user settings.
   instructions mentioned above have some additional details that might make it
   worth reinstalling ``pylsp`` for some optional extra features.
 
+- Switch ALE Rust support from old ``rls`` to ``rust-analyzer``.
+
 2024-04-20
 ==========
 

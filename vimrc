@@ -3814,7 +3814,7 @@ if g:EnableAle
 
     " 'rls' - Rust Language Server.
     let g:ale_linters = {}
-    let g:ale_linters['rust'] = ['rls', 'cargo']
+    let g:ale_linters['rust'] = ['analyzer', 'cargo']
     let g:ale_linters['python'] = ['pylsp', 'flake8', 'mypy']
     let g:ale_linters['c'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
     let g:ale_linters['cpp'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
