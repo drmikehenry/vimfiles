@@ -41,6 +41,8 @@ require adjustment of per-user settings.
 
 - Switch ALE Rust support from old ``rls`` to ``rust-analyzer``.
 
+- Recommend newer ``lua-language-server-3.9.1``.
+
 2024-04-20
 ==========
 
