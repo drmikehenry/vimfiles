@@ -766,7 +766,7 @@ distro itself, then augment with additional dependencies as needed.
 
 Install prerequisites for Ubuntu: >
     sudo apt-get build-dep vim-gtk3
-    sudo apt-get install python python3 python-dev python3-dev
+    sudo apt-get install python3 python3-dev
 <
 Install prerequisites for Fedora: >
     sudo dnf builddep -y vim-X11
