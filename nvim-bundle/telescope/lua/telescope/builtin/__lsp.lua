@@ -25,7 +25,7 @@ lsp.references = function(opts)
     local locations = {}
     if result then
       local results = vim.lsp.util.locations_to_items(result, vim.lsp.get_client_by_id(ctx.client_id).offset_encoding)
-      if not include_current_line then
+      if include_current_line then
         locations = vim.tbl_filter(function(v)
           -- Remove current line from result
           return not (v.filename == filepath and v.lnum == lnum)
@@ -36,32 +36,6 @@ lsp.references = function(opts)
     end
 
     if vim.tbl_isempty(locations) then
-      return
-    end
-
-    if #locations == 1 and opts.jump_type ~= "never" then
-      if filepath ~= locations[1].filename then
-        if opts.jump_type == "tab" then
-          vim.cmd "tabedit"
-        elseif opts.jump_type == "split" then
-          vim.cmd "new"
-        elseif opts.jump_type == "vsplit" then
-          vim.cmd "vnew"
-        end
-      end
-      -- jump to location
-      local location = locations[1]
-      local bufnr = opts.bufnr
-      if location.filename then
-        local uri = location.filename
-        if not utils.is_uri(uri) then
-          uri = vim.uri_from_fname(uri)
-        end
-
-        bufnr = vim.uri_to_bufnr(uri)
-      end
-      vim.api.nvim_win_set_buf(0, bufnr)
-      vim.api.nvim_win_set_cursor(0, { location.lnum, location.col - 1 })
       return
     end
 
@@ -95,12 +69,12 @@ local function call_hierarchy(opts, method, title, direction, item)
     local locations = {}
     for _, ch_call in pairs(result) do
       local ch_item = ch_call[direction]
-      for _, range in pairs(ch_call.fromRanges) do
+      for _, rng in pairs(ch_call.fromRanges) do
         table.insert(locations, {
           filename = vim.uri_to_fname(ch_item.uri),
           text = ch_item.name,
-          lnum = range.start.line + 1,
-          col = range.start.character + 1,
+          lnum = rng.start.line + 1,
+          col = rng.start.character + 1,
         })
       end
     end
@@ -179,7 +153,7 @@ local function list_or_jump(action, title, opts)
     local flattened_results = {}
     if result then
       -- textDocument/definition can return Location or Location[]
-      if not vim.tbl_islist(result) then
+      if not utils.islist(result) then
         flattened_results = { result }
       end
 
@@ -191,18 +165,26 @@ local function list_or_jump(action, title, opts)
     if #flattened_results == 0 then
       return
     elseif #flattened_results == 1 and opts.jump_type ~= "never" then
-      local uri = params.textDocument.uri
-      if uri ~= flattened_results[1].uri and uri ~= flattened_results[1].targetUri then
+      local current_uri = params.textDocument.uri
+      local target_uri = flattened_results[1].uri or flattened_results[1].targetUri
+      if current_uri ~= target_uri then
+        local cmd
+        local file_path = vim.uri_to_fname(target_uri)
         if opts.jump_type == "tab" then
-          vim.cmd "tabedit"
+          cmd = "tabedit"
         elseif opts.jump_type == "split" then
-          vim.cmd "new"
+          cmd = "new"
         elseif opts.jump_type == "vsplit" then
-          vim.cmd "vnew"
+          cmd = "vnew"
+        elseif opts.jump_type == "tab drop" then
+          cmd = "tab drop"
+        end
+
+        if cmd then
+          vim.cmd(string.format("%s %s", cmd, file_path))
         end
       end
-
-      vim.lsp.util.jump_to_location(flattened_results[1], offset_encoding, opts.reuse_win)
+      vim.lsp.util.jump_to_location(flattened_results[1], offset_encoding)
     else
       local locations = vim.lsp.util.locations_to_items(flattened_results, offset_encoding)
       pickers
@@ -234,38 +216,6 @@ lsp.implementations = function(opts)
   return list_or_jump("textDocument/implementation", "LSP Implementations", opts)
 end
 
-local symbols_sorter = function(symbols)
-  if vim.tbl_isempty(symbols) then
-    return symbols
-  end
-
-  local current_buf = vim.api.nvim_get_current_buf()
-
-  -- sort adequately for workspace symbols
-  local filename_to_bufnr = {}
-  for _, symbol in ipairs(symbols) do
-    if filename_to_bufnr[symbol.filename] == nil then
-      filename_to_bufnr[symbol.filename] = vim.uri_to_bufnr(vim.uri_from_fname(symbol.filename))
-    end
-    symbol.bufnr = filename_to_bufnr[symbol.filename]
-  end
-
-  table.sort(symbols, function(a, b)
-    if a.bufnr == b.bufnr then
-      return a.lnum < b.lnum
-    end
-    if a.bufnr == current_buf then
-      return true
-    end
-    if b.bufnr == current_buf then
-      return false
-    end
-    return a.bufnr < b.bufnr
-  end)
-
-  return symbols
-end
-
 lsp.document_symbols = function(opts)
   local params = vim.lsp.util.make_position_params(opts.winnr)
   vim.lsp.buf_request(opts.bufnr, "textDocument/documentSymbol", params, function(err, result, _, _)
@@ -283,7 +233,7 @@ lsp.document_symbols = function(opts)
     end
 
     local locations = vim.lsp.util.symbols_to_items(result or {}, opts.bufnr) or {}
-    locations = utils.filter_symbols(locations, opts, symbols_sorter)
+    locations = utils.filter_symbols(locations, opts)
     if locations == nil then
       -- error message already printed in `utils.filter_symbols`
       return
@@ -326,7 +276,7 @@ lsp.workspace_symbols = function(opts)
     end
 
     local locations = vim.lsp.util.symbols_to_items(server_result or {}, opts.bufnr) or {}
-    locations = utils.filter_symbols(locations, opts, symbols_sorter)
+    locations = utils.filter_symbols(locations, opts)
     if locations == nil then
       -- error message already printed in `utils.filter_symbols`
       return
@@ -374,7 +324,7 @@ local function get_workspace_symbols_requester(bufnr, opts)
 
     local locations = vim.lsp.util.symbols_to_items(res or {}, bufnr) or {}
     if not vim.tbl_isempty(locations) then
-      locations = utils.filter_symbols(locations, opts, symbols_sorter) or {}
+      locations = utils.filter_symbols(locations, opts) or {}
     end
     return locations
   end
@@ -399,9 +349,18 @@ lsp.dynamic_workspace_symbols = function(opts)
 end
 
 local function check_capabilities(method, bufnr)
-  local clients = vim.lsp.get_active_clients { bufnr = bufnr }
+  local clients = (function()
+    if vim.fn.has "nvim-0.10" == 1 then
+      return vim.lsp.get_clients { bufnr = bufnr }
+    elseif vim.lsp.get_active_clients then
+      return vim.lsp.get_active_clients { bufnr = bufnr }
+    else
+      return vim.lsp.buf_get_clients(bufnr)
+    end
+  end)()
 
   for _, client in pairs(clients) do
+    -- we always pass opts, even though older nvim version might not have a second param
     if client.supports_method(method, { bufnr = bufnr }) then
       return true
     end

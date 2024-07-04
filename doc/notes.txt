@@ -2365,7 +2365,7 @@ Installation:
 Plenary - Neovim functions for Telescope                *notes_plenary*
                                                         |plenary|
 
-Version 2023-06-30 (102c029) from:
+Version 2024-05-20 (a3e3bc8) from:
 https://github.com/nvim-lua/plenary.nvim
 
 Installation:
@@ -3049,7 +3049,7 @@ Installation:
 Telescope - Fuzzy finding in Neovim                     *notes_telescope*
                                                         |telescope|
 
-Version 2023-07-29 (b6fccfb) from:
+Version 0.1.8 from 2024-05-23 (a0bbec2) from:
 https://github.com/nvim-telescope/telescope.nvim
 
 Local customizations:

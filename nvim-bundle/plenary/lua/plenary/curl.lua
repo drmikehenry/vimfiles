@@ -3,15 +3,18 @@ Curl Wrapper
 
 all curl methods accepts
 
-  url     = "The url to make the request to.", (string)
-  query   = "url query, append after the url", (table)
-  body    = "The request body" (string/filepath/table)
-  auth    = "Basic request auth, 'user:pass', or {"user", "pass"}" (string/array)
-  form    = "request form" (table)
-  raw     = "any additonal curl args, it must be an array/list." (array)
-  dry_run = "whether to return the args to be ran through curl." (boolean)
-  output  = "where to download something." (filepath)
-  timeout = "request timeout in mseconds" (number)
+  url          = "The url to make the request to.", (string)
+  query        = "url query, append after the url", (table)
+  body         = "The request body" (string/filepath/table)
+  auth         = "Basic request auth, 'user:pass', or {"user", "pass"}" (string/array)
+  form         = "request form" (table)
+  raw          = "any additonal curl args, it must be an array/list." (array)
+  dry_run      = "whether to return the args to be ran through curl." (boolean)
+  output       = "where to download something." (filepath)
+  timeout      = "request timeout in mseconds" (number)
+  http_version = "HTTP version to use: 'HTTP/0.9', 'HTTP/1.0', 'HTTP/1.1', 'HTTP/2', or 'HTTP/3'" (string)
+  proxy        = "[protocol://]host[:port] Use this proxy" (string)
+  insecure     = "Allow insecure server connections" (boolean)
 
 and returns table:
 
@@ -33,6 +36,7 @@ local util, parse = {}, {}
 local F = require "plenary.functional"
 local J = require "plenary.job"
 local P = require "plenary.path"
+local compat = require "plenary.compat"
 
 -- Utils ----------------------------------------------------
 -------------------------------------------------------------
@@ -51,7 +55,7 @@ util.url_encode = function(str)
 end
 
 util.kv_to_list = function(kv, prefix, sep)
-  return vim.tbl_flatten(F.kv_map(function(kvp)
+  return compat.flatten(F.kv_map(function(kvp)
     return { prefix, kvp[1] .. sep .. kvp[2] }
   end, kv))
 end
@@ -179,6 +183,19 @@ parse.accept_header = function(s)
   return { "-H", "Accept: " .. s }
 end
 
+parse.http_version = function(s)
+  if not s then
+    return
+  end
+  if s == "HTTP/0.9" or s == "HTTP/1.0" or s == "HTTP/1.1" or s == "HTTP/2" or s == "HTTP/3" then
+    s = s:lower()
+    s = s:gsub("/", "")
+    return { "--" .. s }
+  else
+    error "Unknown HTTP version."
+  end
+end
+
 -- Parse Request -------------------------------------------
 ------------------------------------------------------------
 parse.request = function(opts)
@@ -204,6 +221,12 @@ parse.request = function(opts)
     end
   end
 
+  if opts.insecure then
+    table.insert(result, "--insecure")
+  end
+  if opts.proxy then
+    table.insert(result, { "--proxy", opts.proxy })
+  end
   if opts.compressed then
     table.insert(result, "--compressed")
   end
@@ -215,12 +238,13 @@ parse.request = function(opts)
   append(parse.form(opts.form))
   append(parse.file(opts.in_file))
   append(parse.auth(opts.auth))
+  append(parse.http_version(opts.http_version))
   append(opts.raw)
   if opts.output then
     table.insert(result, { "-o", opts.output })
   end
   table.insert(result, parse.url(opts.url, opts.query))
-  return vim.tbl_flatten(result), opts
+  return compat.flatten(result), opts
 end
 
 -- Parse response ------------------------------------------
@@ -244,7 +268,7 @@ end
 local request = function(specs)
   local response = {}
   local args, opts = parse.request(vim.tbl_extend("force", {
-    compressed = true,
+    compressed = package.config:sub(1, 1) ~= "\\",
     dry_run = false,
     dump = util.gen_dump_path(),
   }, specs))
@@ -254,32 +278,33 @@ local request = function(specs)
   end
 
   local job_opts = {
-    command = "curl",
+    command = vim.g.plenary_curl_bin_path or "curl",
     args = args,
   }
+
   if opts.stream then
     job_opts.on_stdout = opts.stream
-  else
-    job_opts.on_exit = function(j, code)
-      if code ~= 0 then
-        local stderr = vim.inspect(j:stderr_result())
-        local message = string.format("%s %s - curl error exit_code=%s stderr=%s", opts.method, opts.url, code, stderr)
-        if opts.on_error then
-          return opts.on_error {
-            message = message,
-            stderr = stderr,
-            exit = code,
-          }
-        else
-          error(message)
-        end
-      end
-      local output = parse.response(j:result(), opts.dump[2], code)
-      if opts.callback then
-        return opts.callback(output)
+  end
+
+  job_opts.on_exit = function(j, code)
+    if code ~= 0 then
+      local stderr = vim.inspect(j:stderr_result())
+      local message = string.format("%s %s - curl error exit_code=%s stderr=%s", opts.method, opts.url, code, stderr)
+      if opts.on_error then
+        return opts.on_error {
+          message = message,
+          stderr = stderr,
+          exit = code,
+        }
       else
-        response = output
+        error(message)
       end
+    end
+    local output = parse.response(j:result(), opts.dump[2], code)
+    if opts.callback then
+      return opts.callback(output)
+    else
+      response = output
     end
   end
   local job = J:new(job_opts)

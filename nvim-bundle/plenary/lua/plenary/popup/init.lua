@@ -123,6 +123,7 @@ function popup.create(what, vim_options)
     assert(bufnr, "Failed to create buffer")
 
     vim.api.nvim_buf_set_option(bufnr, "bufhidden", "wipe")
+    vim.api.nvim_buf_set_option(bufnr, "modifiable", true)
 
     -- TODO: Handle list of lines
     if type(what) == "string" then
@@ -425,6 +426,10 @@ function popup.create(what, vim_options)
       '<cmd>lua require"plenary.popup".execute_callback(' .. bufnr .. ")<CR>",
       { noremap = true }
     )
+  end
+
+  if vim_options.finalize_callback then
+    vim_options.finalize_callback(win_id, bufnr)
   end
 
   -- TODO: Perhaps there's a way to return an object that looks like a window id,

@@ -7,6 +7,7 @@
 
 local co = coroutine
 local f = require "plenary.functional"
+local compat = require "plenary.compat"
 
 --------------------------------------------------------------------------------
 -- Tools
@@ -107,7 +108,7 @@ local rawiter = function(obj, param, state)
       end
     end
 
-    if vim.tbl_islist(obj) then
+    if compat.islist(obj) then
       return ipairs(obj)
     else
       -- hash
@@ -128,7 +129,7 @@ end
 
 ---Wraps the iterator triplet into a table to allow metamethods and calling with method form
 ---Important! We do not return param and state as multivals like the original luafun
----Se the __call metamethod for more information
+---See the __call metamethod for more information
 ---@param gen any
 ---@param param any
 ---@param state any
@@ -486,6 +487,16 @@ function Iterator:filter(fun)
   return wrap(filter_gen, { self.gen, self.param, fun }, self.state)
 end
 
+---Iterator adapter that will provide numbers from 1 to n as the first multival
+---@return Iterator
+function Iterator:enumerate()
+  local i = 0
+  return self:map(function(...)
+    i = i + 1
+    return i, ...
+  end)
+end
+
 --------------------------------------------------------------------------------
 -- Reducing
 --------------------------------------------------------------------------------
@@ -529,6 +540,19 @@ function Iterator:find(val_or_fn)
     end
     return nil
   end
+end
+
+---Folds an iterator into a single value using a function.
+---@param init any
+---@param fun fun(acc: any, val: any): any
+---@return any
+function Iterator:fold(init, fun)
+  local acc = init
+  local gen, param, state = self.gen, self.param, self.state
+  for _, r in gen, param, state do
+    acc = fun(acc, r)
+  end
+  return acc
 end
 
 ---Turns an iterator into a list.

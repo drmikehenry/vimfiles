@@ -73,12 +73,12 @@ local _split_by_separator = (function()
 end)()
 
 local is_uri = function(filename)
-  return string.match(filename, "^[%w+-.]://") ~= nil
+  return string.match(filename, "^%a[%w+-.]*://") ~= nil
 end
 
 local is_absolute = function(filename, sep)
   if sep == "\\" then
-    return string.match(filename, "^[%a]:\\.*$") ~= nil
+    return string.match(filename, "^[%a]:[\\/].*$") ~= nil
   end
   return string.sub(filename, 1, 1) == sep
 end
@@ -431,13 +431,17 @@ local function shorten_len(filename, len, exclude)
 end
 
 local shorten = (function()
+  local fallback = function(filename)
+    return shorten_len(filename, 1)
+  end
+
   if jit and path.sep ~= "\\" then
     local ffi = require "ffi"
     ffi.cdef [[
     typedef unsigned char char_u;
     void shorten_dir(char_u *str);
     ]]
-    return function(filename)
+    local ffi_func = function(filename)
       if not filename or is_uri(filename) then
         return filename
       end
@@ -447,10 +451,14 @@ local shorten = (function()
       ffi.C.shorten_dir(c_str)
       return ffi.string(c_str)
     end
+    local ok = pcall(ffi_func, "/tmp/path/file.lua")
+    if ok then
+      return ffi_func
+    else
+      return fallback
+    end
   end
-  return function(filename)
-    return shorten_len(filename, 1)
-  end
+  return fallback
 end)()
 
 function Path:shorten(len, exclude)
@@ -688,7 +696,11 @@ end
 local _get_parent = (function()
   local formatted = string.format("^(.+)%s[^%s]+", path.sep, path.sep)
   return function(abs_path)
-    return abs_path:match(formatted)
+    local parent = abs_path:match(formatted)
+    if parent ~= nil and not parent:find(path.sep) then
+      return parent .. path.sep
+    end
+    return parent
   end
 end)()
 
@@ -917,7 +929,9 @@ end
 
 function Path:find_upwards(filename)
   local folder = Path:new(self)
-  while self:absolute() ~= path.root do
+  local root = path.root(folder)
+
+  while folder:absolute() ~= root do
     local p = folder:joinpath(filename)
     if p:exists() then
       return p

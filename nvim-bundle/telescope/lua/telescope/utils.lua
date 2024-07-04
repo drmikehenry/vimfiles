@@ -15,6 +15,66 @@ local get_status = require("telescope.state").get_status
 
 local utils = {}
 
+utils.iswin = vim.loop.os_uname().sysname == "Windows_NT"
+
+--TODO(clason): Remove when dropping support for Nvim 0.9
+utils.islist = vim.fn.has "nvim-0.10" == 1 and vim.islist or vim.tbl_islist
+local flatten = function(t)
+  return vim.iter(t):flatten():totable()
+end
+utils.flatten = vim.fn.has "nvim-0.11" == 1 and flatten or vim.tbl_flatten
+
+--- Hybrid of `vim.fn.expand()` and custom `vim.fs.normalize()`
+---
+--- Paths starting with '%', '#' or '<' are expanded with `vim.fn.expand()`.
+--- Otherwise avoids using `vim.fn.expand()` due to its overly aggressive
+--- expansion behavior which can sometimes lead to errors or the creation of
+--- non-existent paths when dealing with valid absolute paths.
+---
+--- Other paths will have '~' and environment variables expanded.
+--- Unlike `vim.fs.normalize()`, backslashes are preserved. This has better
+--- compatibility with `plenary.path` and also avoids mangling valid Unix paths
+--- with literal backslashes.
+---
+--- Trailing slashes are trimmed. With the exception of root paths.
+--- eg. `/` on Unix or `C:\` on Windows
+---
+---@param path string
+---@return string
+utils.path_expand = function(path)
+  vim.validate {
+    path = { path, { "string" } },
+  }
+
+  if utils.is_uri(path) then
+    return path
+  end
+
+  if path:match "^[%%#<]" then
+    path = vim.fn.expand(path)
+  end
+
+  if path:sub(1, 1) == "~" then
+    local home = vim.loop.os_homedir() or "~"
+    if home:sub(-1) == "\\" or home:sub(-1) == "/" then
+      home = home:sub(1, -2)
+    end
+    path = home .. path:sub(2)
+  end
+
+  path = path:gsub("%$([%w_]+)", vim.loop.os_getenv)
+  path = path:gsub("/+", "/")
+  if utils.iswin then
+    path = path:gsub("\\+", "\\")
+    if path:match "^%w:\\$" then
+      return path
+    else
+      return (path:gsub("(.)\\$", "%1"))
+    end
+  end
+  return (path:gsub("(.)/$", "%1"))
+end
+
 utils.get_separator = function()
   return Path.path.sep
 end
@@ -39,7 +99,7 @@ utils.repeated_table = function(n, val)
   return empty_lines
 end
 
-utils.filter_symbols = function(results, opts, post_filter)
+utils.filter_symbols = function(results, opts)
   local has_ignore = opts.ignore_symbols ~= nil
   local has_symbols = opts.symbols ~= nil
   local filtered_symbols
@@ -86,11 +146,31 @@ utils.filter_symbols = function(results, opts, post_filter)
     end, results)
   end
 
-  if type(post_filter) == "function" then
-    filtered_symbols = post_filter(filtered_symbols)
-  end
-
+  -- TODO(conni2461): If you understand this correctly then we sort the results table based on the bufnr
+  -- If you ask me this should be its own function, that happens after the filtering part and should be
+  -- called in the lsp function directly
+  local current_buf = vim.api.nvim_get_current_buf()
   if not vim.tbl_isempty(filtered_symbols) then
+    -- filter adequately for workspace symbols
+    local filename_to_bufnr = {}
+    for _, symbol in ipairs(filtered_symbols) do
+      if filename_to_bufnr[symbol.filename] == nil then
+        filename_to_bufnr[symbol.filename] = vim.uri_to_bufnr(vim.uri_from_fname(symbol.filename))
+      end
+      symbol["bufnr"] = filename_to_bufnr[symbol.filename]
+    end
+    table.sort(filtered_symbols, function(a, b)
+      if a.bufnr == b.bufnr then
+        return a.lnum < b.lnum
+      end
+      if a.bufnr == current_buf then
+        return true
+      end
+      if b.bufnr == current_buf then
+        return false
+      end
+      return a.bufnr < b.bufnr
+    end)
     return filtered_symbols
   end
 
@@ -112,14 +192,15 @@ end
 
 utils.path_smart = (function()
   local paths = {}
+  local os_sep = utils.get_separator()
   return function(filepath)
     local final = filepath
     if #paths ~= 0 then
-      local dirs = vim.split(filepath, "/")
+      local dirs = vim.split(filepath, os_sep)
       local max = 1
       for _, p in pairs(paths) do
         if #p > 0 and p ~= filepath then
-          local _dirs = vim.split(p, "/")
+          local _dirs = vim.split(p, os_sep)
           for i = 1, math.min(#dirs, #_dirs) do
             if (dirs[i] ~= _dirs[i]) and i > max then
               max = i
@@ -135,7 +216,7 @@ utils.path_smart = (function()
         final = ""
         for k, v in pairs(dirs) do
           if k >= max - 1 then
-            final = final .. (#final > 0 and "/" or "") .. v
+            final = final .. (#final > 0 and os_sep or "") .. v
           end
         end
       end
@@ -145,7 +226,7 @@ utils.path_smart = (function()
       table.insert(paths, filepath)
     end
     if final and final ~= filepath then
-      return "../" .. final
+      return ".." .. os_sep .. final
     else
       return filepath
     end
@@ -173,9 +254,32 @@ utils.is_path_hidden = function(opts, path_display)
     or type(path_display) == "table" and (vim.tbl_contains(path_display, "hidden") or path_display.hidden)
 end
 
-local URI_SCHEME_PATTERN = "^([a-zA-Z]+[a-zA-Z0-9.+-]*):.*"
 utils.is_uri = function(filename)
-  return filename:match(URI_SCHEME_PATTERN) ~= nil
+  local char = string.byte(filename, 1) or 0
+
+  -- is alpha?
+  if char < 65 or (char > 90 and char < 97) or char > 122 then
+    return false
+  end
+
+  for i = 2, #filename do
+    char = string.byte(filename, i)
+    if char == 58 then -- `:`
+      return i < #filename and string.byte(filename, i + 1) ~= 92 -- `\`
+    elseif
+      not (
+        (char >= 48 and char <= 57) -- 0-9
+        or (char >= 65 and char <= 90) -- A-Z
+        or (char >= 97 and char <= 122) -- a-z
+        or char == 43 -- `+`
+        or char == 46 -- `.`
+        or char == 45 -- `-`
+      )
+    then
+      return false
+    end
+  end
+  return false
 end
 
 local calc_result_length = function(truncate_len)
@@ -192,11 +296,11 @@ end
 --- this function outside of telescope might yield to undefined behavior and will
 --- not be addressed by us
 ---@param opts table: The opts the users passed into the picker. Might contains a path_display key
----@param path string: The path that should be formatted
+---@param path string|nil: The path that should be formatted
 ---@return string: The transformed path ready to be displayed
 utils.transform_path = function(opts, path)
   if path == nil then
-    return
+    return ""
   end
   if utils.is_uri(path) then
     return path
@@ -216,12 +320,12 @@ utils.transform_path = function(opts, path)
     elseif vim.tbl_contains(path_display, "smart") or path_display.smart then
       transformed_path = utils.path_smart(transformed_path)
     else
-      if not vim.tbl_contains(path_display, "absolute") or path_display.absolute == false then
+      if not vim.tbl_contains(path_display, "absolute") and not path_display.absolute then
         local cwd
         if opts.cwd then
           cwd = opts.cwd
           if not vim.in_fast_event() then
-            cwd = vim.fn.expand(opts.cwd)
+            cwd = utils.path_expand(opts.cwd)
           end
         else
           cwd = vim.loop.cwd()
@@ -234,7 +338,8 @@ utils.transform_path = function(opts, path)
           local shorten = path_display["shorten"]
           transformed_path = Path:new(transformed_path):shorten(shorten.len, shorten.exclude)
         else
-          transformed_path = Path:new(transformed_path):shorten(path_display["shorten"])
+          local length = type(path_display["shorten"]) == "number" and path_display["shorten"]
+          transformed_path = Path:new(transformed_path):shorten(length)
         end
       end
       if vim.tbl_contains(path_display, "truncate") or path_display.truncate then
@@ -490,12 +595,6 @@ utils.get_devicons = load_once(function()
   end
 end)
 
---- Checks if treesitter parser for language is installed
----@param lang string
-utils.has_ts_parser = function(lang)
-  return pcall(vim.treesitter.language.add, lang)
-end
-
 --- Telescope Wrapper around vim.notify
 ---@param funname string: name of the function that will be
 ---@param opts table: opts.level string, opts.msg string, opts.once bool
@@ -534,6 +633,14 @@ utils.__git_command = function(args, opts)
   end
 
   return vim.list_extend(_args, args)
+end
+
+utils.list_find = function(func, list)
+  for i, v in ipairs(list) do
+    if func(v, i, list) then
+      return i, v
+    end
+  end
 end
 
 return utils

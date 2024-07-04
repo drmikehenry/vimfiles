@@ -148,7 +148,11 @@ function Picker:new(opts)
       obj.all_previewers = { obj.all_previewers }
     end
     obj.previewer = obj.all_previewers[obj.current_previewer_index]
-    if obj.preview_title == nil or #obj.all_previewers > 1 then
+    if
+      obj.preview_title == nil
+      or #obj.all_previewers > 1
+      or opts.resumed_picker and opts.fix_preview_title ~= true
+    then
       obj.preview_title = obj.previewer:title(nil, config.values.dynamic_preview_title)
     else
       obj.fix_preview_title = true
@@ -441,10 +445,10 @@ function Picker:find()
     end
     a.nvim_feedkeys(a.nvim_replace_termcodes(keys, true, false, true), "ni", true)
   else
-    utils.notify(
-      "pickers.find",
-      { msg = "`initial_mode` should be one of ['normal', 'insert'] but passed " .. self.initial_mode, level = "ERROR" }
-    )
+    utils.notify("pickers.find", {
+      msg = "`initial_mode` should be one of ['normal', 'insert'] but passed " .. self.initial_mode,
+      level = "ERROR",
+    })
   end
 
   local main_loop = async.void(function()
@@ -455,10 +459,6 @@ function Picker:find()
     pcall(a.nvim_buf_set_option, results_bufnr, "filetype", "TelescopeResults")
 
     await_schedule()
-
-    -- we need to set the prefix color after changing mode since
-    -- https://github.com/neovim/neovim/commit/cbf9199d65325c1167d7eeb02a34c85d243e781c
-    self:_reset_prefix_color()
 
     while true do
       -- Wait for the next input
@@ -472,9 +472,14 @@ function Picker:find()
         return
       end
 
+      -- we kinda always wanna reset the color, because of `cc` and `dd` commands,
+      -- which also delete the prefix and after prefix deletion we need to reapply highlighting
+      self:_reset_prefix_color()
+
       local start_time = vim.loop.hrtime()
 
       local prompt = self:_get_next_filtered_prompt()
+      state.set_global_key("current_line", prompt)
 
       -- TODO: Entry manager should have a "bulk" setter. This can prevent a lot of redraws from display
       if self.cache_picker == false or self.cache_picker.is_cached ~= true then
@@ -756,7 +761,9 @@ function Picker.close_windows(status)
   if vim.api.nvim_win_is_valid(status.prompt_win) then
     vim.api.nvim_win_close(status.prompt_win, true)
   end
-  utils.buf_delete(status.prompt_bufnr)
+  vim.schedule(function()
+    utils.buf_delete(status.prompt_bufnr)
+  end)
 
   state.clear_status(status.prompt_bufnr)
 end
@@ -1227,7 +1234,7 @@ end
 
 --- Close all open Telescope pickers
 function Picker:close_existing_pickers()
-  for _, prompt_bufnr in ipairs(state.get_existing_prompts()) do
+  for _, prompt_bufnr in ipairs(state.get_existing_prompt_bufnrs()) do
     pcall(actions.close, prompt_bufnr)
   end
 end
@@ -1327,16 +1334,17 @@ function Picker:get_result_completor(results_bufnr, find_id, prompt, status_upda
 
     self:_do_selection(prompt)
 
-    state.set_global_key("current_line", self:_get_prompt())
     status_updater { completed = true }
 
     self:clear_extra_rows(results_bufnr)
     self.sorter:_finish(prompt)
 
-    if self.wrap_results and self.sorting_strategy == "descending" then
+    if self.sorting_strategy == "descending" then
       local visible_result_rows = vim.api.nvim_win_get_height(self.results_win)
       vim.api.nvim_win_set_cursor(self.results_win, { self.max_results - visible_result_rows, 1 })
       vim.api.nvim_win_set_cursor(self.results_win, { self.max_results, 1 })
+    else
+      vim.api.nvim_win_set_cursor(self.results_win, { 1, 0 })
     end
     self:_on_complete()
   end)
@@ -1509,7 +1517,10 @@ end
 
 --- Get the prompt text without the prompt prefix.
 function Picker:_get_prompt()
-  return vim.api.nvim_buf_get_lines(self.prompt_bufnr, 0, 1, false)[1]:sub(#self.prompt_prefix + 1)
+  local cursor_line = vim.api.nvim_win_get_cursor(self.prompt_win)[1] - 1
+  return vim.api
+    .nvim_buf_get_lines(self.prompt_bufnr, cursor_line, cursor_line + 1, false)[1]
+    :sub(#self.prompt_prefix + 1)
 end
 
 function Picker:_reset_highlights()
@@ -1560,24 +1571,15 @@ function Picker:_resume_picker()
     index = index + 1
   end
   self.cache_picker.is_cached = false
-  local on_resume_complete = function()
-    if vim.api.nvim_buf_is_valid(self.prompt_bufnr) then
-      vim.api.nvim_buf_call(self.prompt_bufnr, function()
-        vim.cmd "do User TelescopeResumePost"
-      end)
-    end
-  end
   -- if text changed, required to set anew to restart finder; otherwise hl and selection
   if self.cache_picker.cached_prompt ~= self.default_text then
     self:set_prompt(self.default_text)
-    on_resume_complete()
   else
     -- scheduling required to apply highlighting and selection appropriately
     await_schedule(function()
       if self.cache_picker.selection_row ~= nil then
         self:set_selection(self.cache_picker.selection_row)
       end
-      on_resume_complete()
     end)
   end
 end

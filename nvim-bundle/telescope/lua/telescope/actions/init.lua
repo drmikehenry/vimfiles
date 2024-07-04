@@ -222,18 +222,6 @@ actions.preview_scrolling_down = function(prompt_bufnr)
   action_set.scroll_previewer(prompt_bufnr, 1)
 end
 
---- Scroll the preview window to the left
----@param prompt_bufnr number: The prompt bufnr
-actions.preview_scrolling_left = function(prompt_bufnr)
-  action_set.scroll_horizontal_previewer(prompt_bufnr, -1)
-end
-
---- Scroll the preview window to the right
----@param prompt_bufnr number: The prompt bufnr
-actions.preview_scrolling_right = function(prompt_bufnr)
-  action_set.scroll_horizontal_previewer(prompt_bufnr, 1)
-end
-
 --- Scroll the results window up
 ---@param prompt_bufnr number: The prompt bufnr
 actions.results_scrolling_up = function(prompt_bufnr)
@@ -244,18 +232,6 @@ end
 ---@param prompt_bufnr number: The prompt bufnr
 actions.results_scrolling_down = function(prompt_bufnr)
   action_set.scroll_results(prompt_bufnr, 1)
-end
-
---- Scroll the results window to the left
----@param prompt_bufnr number: The prompt bufnr
-actions.results_scrolling_left = function(prompt_bufnr)
-  action_set.scroll_horizontal_results(prompt_bufnr, -1)
-end
-
---- Scroll the results window to the right
----@param prompt_bufnr number: The prompt bufnr
-actions.results_scrolling_right = function(prompt_bufnr)
-  action_set.scroll_horizontal_results(prompt_bufnr, 1)
 end
 
 --- Center the cursor in the window, can be used after selecting a file to edit
@@ -310,30 +286,6 @@ actions.select_tab = {
   pre = append_to_history,
   action = function(prompt_bufnr)
     return action_set.select(prompt_bufnr, "tab")
-  end,
-}
-
---- Perform 'drop' action on selection, usually something like<br>
----`:drop <selection>`
----
---- i.e. open the selection in a window
----@param prompt_bufnr number: The prompt bufnr
-actions.select_drop = {
-  pre = append_to_history,
-  action = function(prompt_bufnr)
-    return action_set.select(prompt_bufnr, "drop")
-  end,
-}
-
---- Perform 'tab drop' action on selection, usually something like<br>
----`:tab drop <selection>`
----
---- i.e. open the selection in a new tab
----@param prompt_bufnr number: The prompt bufnr
-actions.select_tab_drop = {
-  pre = append_to_history,
-  action = function(prompt_bufnr)
-    return action_set.select(prompt_bufnr, "tab drop")
   end,
 }
 
@@ -692,34 +644,18 @@ actions.git_track_branch = make_git_branch_action {
   end,
 }
 
---- Delete all currently selected branches
+--- Delete the currently selected branch
 ---@param prompt_bufnr number: The prompt bufnr
-actions.git_delete_branch = function(prompt_bufnr)
-  local confirmation = vim.fn.input "Do you really want to delete the selected branches? [Y/n] "
-  if confirmation ~= "" and string.lower(confirmation) ~= "y" then
-    return
-  end
-
-  local picker = action_state.get_current_picker(prompt_bufnr)
-  local action_name = "actions.git_delete_branch"
-  picker:delete_selection(function(selection)
-    local branch = selection.value
-    print("Deleting branch " .. branch)
-    local _, ret, stderr = utils.get_os_command_output({ "git", "branch", "-D", branch }, picker.cwd)
-    if ret == 0 then
-      utils.notify(action_name, {
-        msg = string.format("Deleted branch: %s", branch),
-        level = "INFO",
-      })
-    else
-      utils.notify(action_name, {
-        msg = string.format("Error when deleting branch: %s. Git returned: '%s'", branch, table.concat(stderr, " ")),
-        level = "ERROR",
-      })
-    end
-    return ret == 0
-  end)
-end
+actions.git_delete_branch = make_git_branch_action {
+  should_confirm = true,
+  action_name = "actions.git_delete_branch",
+  confirmation_question = "Do you really wanna delete branch %s? [Y/n] ",
+  success_message = "Deleted branch: %s",
+  error_message = "Error when deleting branch: %s. Git returned: '%s'",
+  command = function(branch_name)
+    return { "git", "branch", "-D", branch_name }
+  end,
+}
 
 --- Merge the currently selected branch
 ---@param prompt_bufnr number: The prompt bufnr
@@ -876,11 +812,12 @@ local send_all_to_qf = function(prompt_bufnr, mode, target)
   local prompt = picker:_get_prompt()
   actions.close(prompt_bufnr)
 
+  local qf_title = string.format([[%s (%s)]], picker.prompt_title, prompt)
   if target == "loclist" then
     vim.fn.setloclist(picker.original_win_id, qf_entries, mode)
+    vim.fn.setloclist(picker.original_win_id, {}, "a", { title = qf_title })
   else
     vim.fn.setqflist(qf_entries, mode)
-    local qf_title = string.format([[%s (%s)]], picker.prompt_title, prompt)
     vim.fn.setqflist({}, "a", { title = qf_title })
   end
 end
@@ -1124,12 +1061,25 @@ end
 --- This action is not mapped by default and only intended for |builtin.pickers|.
 ---@param prompt_bufnr number: The prompt bufnr
 actions.remove_selected_picker = function(prompt_bufnr)
-  local current_picker = action_state.get_current_picker(prompt_bufnr)
-  local selection_index = current_picker:get_index(current_picker:get_selection_row())
+  local curr_picker = action_state.get_current_picker(prompt_bufnr)
+  local curr_entry = action_state.get_selected_entry()
   local cached_pickers = state.get_global_key "cached_pickers"
-  current_picker:delete_selection(function()
+
+  if not curr_entry then
+    return
+  end
+
+  local selection_index, _ = utils.list_find(function(v)
+    if curr_entry.value == v.value then
+      return true
+    end
+    return false
+  end, curr_picker.finder.results)
+
+  curr_picker:delete_selection(function()
     table.remove(cached_pickers, selection_index)
   end)
+
   if #cached_pickers == 0 then
     actions.close(prompt_bufnr)
   end
@@ -1152,6 +1102,7 @@ actions.which_key = function(prompt_bufnr, opts)
   opts.normal_hl = vim.F.if_nil(opts.normal_hl, "TelescopePrompt")
   opts.border_hl = vim.F.if_nil(opts.border_hl, "TelescopePromptBorder")
   opts.winblend = vim.F.if_nil(opts.winblend, conf.winblend)
+  opts.zindex = vim.F.if_nil(opts.zindex, 100)
   opts.column_padding = vim.F.if_nil(opts.column_padding, "  ")
 
   -- Assigning into 'opts.column_indent' would override a number with a string and
@@ -1270,6 +1221,7 @@ actions.which_key = function(prompt_bufnr, opts)
     borderchars = { prompt_pos and "─" or " ", "", not prompt_pos and "─" or " ", "", "", "", "", "" },
     noautocmd = true,
     title = { { text = title_text, pos = prompt_pos and "N" or "S" } },
+    zindex = opts.zindex,
   }
   local km_win_id, km_opts = popup.create("", popup_opts)
   local km_buf = a.nvim_win_get_buf(km_win_id)
@@ -1318,19 +1270,29 @@ actions.which_key = function(prompt_bufnr, opts)
     end
   end
 
-  -- only set up autocommand after showing preview completed
+  -- if close_with_action is true, close the which_key window when any action is triggered
+  -- otherwise close the window when the prompt buffer is closed
+  local close_event, close_pattern, close_buffer
   if opts.close_with_action then
-    vim.schedule(function()
-      vim.api.nvim_create_autocmd("User TelescopeKeymap", {
-        once = true,
-        callback = function()
+    close_event, close_pattern, close_buffer = "User", "TelescopeKeymap", nil
+  else
+    close_event, close_pattern, close_buffer = "BufWinLeave", nil, prompt_bufnr
+  end
+  -- only set up autocommand after showing preview completed
+  vim.schedule(function()
+    vim.api.nvim_create_autocmd(close_event, {
+      pattern = close_pattern,
+      buffer = close_buffer,
+      once = true,
+      callback = function()
+        vim.schedule(function()
           pcall(vim.api.nvim_win_close, km_win_id, true)
           pcall(vim.api.nvim_win_close, km_opts.border.win_id, true)
-          require("telescope.utils").buf_delete(km_buf)
-        end,
-      })
-    end)
-  end
+          utils.buf_delete(km_buf)
+        end)
+      end,
+    })
+  end)
 end
 
 --- Move from a none fuzzy search to a fuzzy one<br>

@@ -1,6 +1,7 @@
 local Path = require "plenary.path"
 local os_sep = Path.path.sep
 local F = require "plenary.functional"
+local compat = require "plenary.compat"
 
 local uv = vim.loop
 
@@ -151,8 +152,8 @@ m.scan_dir = function(path, opts)
   opts = opts or {}
 
   local data = {}
-  local base_paths = vim.tbl_flatten { path }
-  local next_dir = vim.tbl_flatten { path }
+  local base_paths = compat.flatten { path }
+  local next_dir = compat.flatten { path }
 
   local gitignore = opts.respect_gitignore and make_gitignore(base_paths) or nil
   local match_search_pat = opts.search_pattern and gen_search_pat(opts.search_pattern) or nil
@@ -204,8 +205,8 @@ m.scan_dir_async = function(path, opts)
   opts = opts or {}
 
   local data = {}
-  local base_paths = vim.tbl_flatten { path }
-  local next_dir = vim.tbl_flatten { path }
+  local base_paths = compat.flatten { path }
+  local next_dir = compat.flatten { path }
   local current_dir = table.remove(next_dir, 1)
 
   -- TODO(conni2461): get gitignore is not async
@@ -319,6 +320,17 @@ local gen_date = (function()
 end)()
 
 local get_username = (function()
+  local fallback = function(tbl, id)
+    if not tbl then
+      return id
+    end
+    if tbl[id] then
+      return tbl[id]
+    end
+    tbl[id] = tostring(id)
+    return id
+  end
+
   if jit and os_sep ~= "\\" then
     local ffi = require "ffi"
     ffi.cdef [[
@@ -340,7 +352,7 @@ local get_username = (function()
       passwd *getpwuid(uid_t uid);
     ]]
 
-    return function(tbl, id)
+    local ffi_func = function(tbl, id)
       if tbl[id] then
         return tbl[id]
       end
@@ -354,21 +366,30 @@ local get_username = (function()
       tbl[id] = name
       return name
     end
-  else
-    return function(tbl, id)
-      if not tbl then
-        return id
-      end
-      if tbl[id] then
-        return tbl[id]
-      end
-      tbl[id] = tostring(id)
-      return id
+
+    local ok = pcall(ffi_func, {}, 1000)
+    if ok then
+      return ffi_func
+    else
+      return fallback
     end
+  else
+    return fallback
   end
 end)()
 
 local get_groupname = (function()
+  local fallback = function(tbl, id)
+    if not tbl then
+      return id
+    end
+    if tbl[id] then
+      return tbl[id]
+    end
+    tbl[id] = tostring(id)
+    return id
+  end
+
   if jit and os_sep ~= "\\" then
     local ffi = require "ffi"
     ffi.cdef [[
@@ -384,7 +405,7 @@ local get_groupname = (function()
       group *getgrgid(gid_t gid);
     ]]
 
-    return function(tbl, id)
+    local ffi_func = function(tbl, id)
       if tbl[id] then
         return tbl[id]
       end
@@ -398,17 +419,14 @@ local get_groupname = (function()
       tbl[id] = name
       return name
     end
-  else
-    return function(tbl, id)
-      if not tbl then
-        return id
-      end
-      if tbl[id] then
-        return tbl[id]
-      end
-      tbl[id] = tostring(id)
-      return id
+    local ok = pcall(ffi_func, {}, 1000)
+    if ok then
+      return ffi_func
+    else
+      return fallback
     end
+  else
+    return fallback
   end
 end)()
 

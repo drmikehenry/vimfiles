@@ -190,7 +190,7 @@ this case we just put the text in the current buffer with `vim.api.nvim_put`.
 
 Entry maker is a function used to transform an item from the finder to an
 internal entry table, which has a few required keys. It allows us to display
-one string but match something completly different. It also allows us to set
+one string but match something completely different. It also allows us to set
 an absolute path when working with files (so the file will always be found)
 and a relative file path for display and sorting. This means the relative file
 path doesn't even need to be valid in the context of the current working directory.
@@ -264,7 +264,7 @@ find results and call `entry_maker` for each entry. An example usage would be
 `find`.
 
 ```lua
-finder = finders.new_oneshot_job({ "find" }, opts ),
+finder = finders.new_oneshot_job { "find", opts },
 ```
 
 ### More examples
@@ -334,9 +334,9 @@ This section is an overview of how custom pickers can be created and configured.
 -- lua/telescope/pickers.lua
 Picker:new{
   prompt_title            = "",
-  finder                  = FUNCTION, -- see lua/telescope/finder.lua
-  sorter                  = FUNCTION, -- see lua/telescope/sorter.lua
-  previewer               = FUNCTION, -- see lua/telescope/previewer.lua
+  finder                  = FUNCTION, -- see lua/telescope/finders.lua
+  sorter                  = FUNCTION, -- see lua/telescope/sorters.lua
+  previewer               = FUNCTION, -- see lua/telescope/previewers/previewer.lua
   selection_strategy      = "reset", -- follow, reset, row
   border                  = {},
   borderchars             = {"─", "│", "─", "│", "┌", "┐", "┘", "└"},

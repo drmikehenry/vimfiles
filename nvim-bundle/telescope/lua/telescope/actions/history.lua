@@ -53,7 +53,6 @@ local histories = {}
 ---@field limit string: Will have the limit of the history. Can be nil, if limit is disabled.
 ---@field content table: History table. Needs to be filled by your own History implementation
 ---@field index number: Used to keep track of the next or previous index. Default is #content + 1
----@field cycle_wrap boolean: Controls if history will wrap on reaching beginning or end
 histories.History = {}
 histories.History.__index = histories.History
 
@@ -73,10 +72,9 @@ function histories.History:new(opts)
   if conf.history.limit then
     obj.limit = conf.history.limit
   end
-  obj.path = vim.fn.expand(conf.history.path)
+  obj.path = utils.path_expand(conf.history.path)
   obj.content = {}
   obj.index = 1
-  obj.cycle_wrap = conf.history.cycle_wrap
 
   opts.init(obj)
   obj._reset = opts.reset
@@ -127,10 +125,6 @@ function histories.History:get_next(line, picker)
   end
 
   local next_idx = self.index + 1
-  if next_idx > #self.content and self.cycle_wrap then
-    next_idx = 1
-  end
-
   if next_idx <= #self.content then
     self.index = next_idx
     return self.content[next_idx]
@@ -156,10 +150,6 @@ function histories.History:get_prev(line, picker)
   end
 
   local next_idx = self.index - 1
-  if next_idx < 1 and self.cycle_wrap then
-    next_idx = #self.content
-  end
-
   if self.index == #self.content + 1 then
     if line ~= "" then
       self:append(line, picker, true)

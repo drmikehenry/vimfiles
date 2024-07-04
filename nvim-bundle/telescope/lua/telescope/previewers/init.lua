@@ -47,7 +47,6 @@ local previewers = {}
 --- - `:teardown()`
 --- - `:send_input(input)`
 --- - `:scroll_fn(direction)`
---- - `:scroll_horizontal_fn(direction)`
 ---
 --- `Previewer:new()` expects a table as input with following keys:
 ---   - `setup` function(self): Will be called the first time preview will be
@@ -65,8 +64,6 @@ local previewers = {}
 ---                                         used to send input to the terminal
 ---                                         application, like less.
 ---   - `scroll_fn` function(self, direction): Used to make scrolling work.
----   - `scroll_horizontal_fn` function(self, direction): Used to make
----                                                       horizontal scrolling work.
 previewers.Previewer = Previewer
 
 --- A shorthand for creating a new Previewer.
@@ -254,8 +251,7 @@ previewers.vim_buffer_cat = buffer_previewer.cat
 --- It uses the `buffer_previewer` interface. To integrate this one into your
 --- own picker make sure that the field `path` or `filename` and `lnum` is set
 --- in each entry. If the latter is not present, it will default to the first
---- line. Additionally, `lnend`, `col` and `colend` can be set to highlight a
---- text range instead of a single line. All line/column values are 1-indexed.
+--- line.
 --- The preferred way of using this previewer is like this
 --- `require('telescope.config').values.grep_previewer`
 --- This will respect user configuration and will use `termopen_previewer` in
