@@ -263,12 +263,18 @@ Windows as a notable exception).
 
 Neovim version 0.9.0 or newer is required.
 
-- Linux Neovim installation:
+- Linux Neovim installation (Ubuntu APT method):
+
+  Ubuntu 24.04 contains Neovim 0.9.5.  To install: >
+
+    sudo apt install -y neovim
+<
+- Linux Neovim installation (tarball method):
 
   - Visit Neovim release area: https://github.com/neovim/neovim/releases
 
-  - Choose a version (e.g., 0.9.5); visit corresponding download directory,
-    e.g.: https://github.com/neovim/neovim/releases/tag/v0.9.5
+  - Choose a version (e.g., 0.10.0); visit corresponding download directory,
+    e.g.: https://github.com/neovim/neovim/releases/tag/v0.10.0
 
   - Download `nvim-linux64.tar.gz`.
 
@@ -285,8 +291,8 @@ Neovim version 0.9.0 or newer is required.
 
   - Visit Neovim release area: https://github.com/neovim/neovim/releases
 
-  - Choose a version (e.g., 0.9.5); visit corresponding download directory,
-    e.g.: https://github.com/neovim/neovim/releases/tag/v0.9.5
+  - Choose a version (e.g., 0.10.0); visit corresponding download directory,
+    e.g.: https://github.com/neovim/neovim/releases/tag/v0.10.0
 
   - Download `nvim-win64.zip`.
 
@@ -479,7 +485,18 @@ Python-based plugins
 Most builds of Vim on Linux come with Python support compiled in.  If necessary,
 you may build Vim with Python support (|notes_build_vim|).
 
-For Neovim, `pynvim` is required to enable Python-based plugins:
+For Neovim, `pynvim` is required to enable Python-based plugins.
+
+To install `pynvim` from the Ubuntu package manager:
+
+- Install using `apt`: >
+
+    sudo apt install -y python3-pynvim
+<
+- This installs `pynvim` into the default `python3` environment.  Neovim will
+  automatically detect and use it from that location.
+
+To install `pynvim` from PyPI:
 
 - Choose installation directory. Vimfiles probes for pynvim at any of these
   locations: >

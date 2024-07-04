@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Update Neovim Telescope plugin to version 0.1.8 (along with dependent plugin
   ``plenary``.  This allows Telescope to work with Neovim 0.10.0.
 
+- Note how to install Neovim using the Ubuntu package manager.
+
 2024-05-25
 ==========
 
