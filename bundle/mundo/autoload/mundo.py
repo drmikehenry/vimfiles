@@ -58,17 +58,17 @@ def _check_sanity():
 
 INLINE_HELP = '''\
 " Mundo (%d) - Press ? for Help:
-" j/k  - Next/Prev undo state.
-" J/K  - Next/Prev write state.
-" i    - Toggle 'inline diff' mode.
-" /    - Find changes that match string.
-" n/N  - Next/Prev undo that matches search.
-" P    - Play current state to selected undo.
-" d    - Vert diff of undo with current state.
-" p    - Diff of selected undo and current state.
-" r    - Diff of selected undo and prior undo.
-" q    - Quit!
-" <cr> - Revert to selected state.
+" j/k   Next/Prev undo state.
+" J/K   Next/Prev write state.
+" i     Toggle 'inline diff' mode.
+" /     Find changes that match string.
+" n/N   Next/Prev undo that matches search.
+" P     Play current state to selected undo.
+" d     Vert diff of undo with current state.
+" p     Diff selected undo and current state.
+" r     Diff selected undo and prior undo.
+" q     Quit!
+" <cr>  Revert to selected state.
 
 '''
 
@@ -99,10 +99,12 @@ def MundoRenderGraph(force=False):# {{{
     verbose = vim.eval('g:mundo_verbose_graph') == "1"
     target = int(vim.eval('g:mundo_target_n'))
 
-    if int(vim.eval('g:mundo_help')):
-        header = (INLINE_HELP % target).splitlines()
-    else:
-        header = [(INLINE_HELP % target).splitlines()[0], '\n']
+    header = []
+    if int(vim.eval('g:mundo_header')):
+        if int(vim.eval('g:mundo_help')):
+            header = (INLINE_HELP % target).splitlines()
+        else:
+            header = [(INLINE_HELP % target).splitlines()[0], '\n']
 
     show_inline_undo = int(vim.eval("g:mundo_inline_undo")) == 1
     mundo_last_visible_line = int(vim.eval("g:mundo_last_visible_line"))
@@ -192,7 +194,7 @@ def MundoGetTargetState():# {{{
     """ Get the current undo number that mundo is at. """
     util._goto_window_for_buffer('__Mundo__')
     target_line = vim.eval("getline('.')")
-    matches = re.match('^[^\[]* \[([0-9]+)\] .*$', target_line)
+    matches = re.match(r'^[^\[]* \[([0-9]+)\] .*$', target_line)
     if matches:
         return int(matches.group(1))
     return 0
@@ -260,8 +262,10 @@ def MundoMove(direction,move_count=1,relative=True,write=False):# {{{
         target_n = GetNextLine(updown,abs(MundoGetTargetState()-direction),write)
 
     # Bound the movement to the graph.
-    help_lines = 3
-    if int(vim.eval('g:mundo_help')):
+    help_lines = 0
+    if int(vim.eval('g:mundo_header')):
+        help_lines = 3
+    elif int(vim.eval('g:mundo_help')):
         help_lines = len(INLINE_HELP.split('\n'))
     if target_n <= help_lines:
         vim.command("call cursor(%d, 0)" % help_lines)
@@ -281,7 +285,10 @@ def MundoMove(direction,move_count=1,relative=True,write=False):# {{{
         idxs.append(idx2)
     if idx3 != -1:
         idxs.append(idx3)
-    minidx = min(idxs)
+    if len(idxs)==0:
+        minidx=0
+    else:
+        minidx=min(idxs)
     if idx1 == minidx:
         vim.command("call cursor(0, %d + 1)" % idx1)
     elif idx2 == minidx:
@@ -374,12 +381,13 @@ def MundoRenderPatchdiff():# {{{
         # save the __Mundo_Preview__ buffer to a temp file.
         util._goto_window_for_buffer('__Mundo_Preview__')
         (handle,filename) = tempfile.mkstemp()
-        vim.command('silent! w %s' % (filename))
+        # use w! instead of w to force the writing of file 'filename'
+        vim.command('silent! w! %s' % (filename))
         # exit the __Mundo_Preview__ window
         vim.command('bdelete')
         # diff the temp file
         vim.command('silent! keepalt vert diffpatch %s' % (filename))
-        vim.command('set buftype=nofile bufhidden=delete')
+        vim.command('setlocal buftype=nofile bufhidden=delete')
         return True
     return False
 # }}}

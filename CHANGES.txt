@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-07-11
+==========
+
+- Upgrade Mundo plugin to version 2023-12-15.  This fixes an incompatibility
+  with Python 3.12.
+
 2024-07-04
 ==========
 

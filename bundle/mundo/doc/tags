@@ -12,6 +12,7 @@ mundo_auto_preview	mundo.txt	/*mundo_auto_preview*
 mundo_auto_preview_delay	mundo.txt	/*mundo_auto_preview_delay*
 mundo_close_on_revert	mundo.txt	/*mundo_close_on_revert*
 mundo_disable	mundo.txt	/*mundo_disable*
+mundo_header	mundo.txt	/*mundo_header*
 mundo_help	mundo.txt	/*mundo_help*
 mundo_inline_undo	mundo.txt	/*mundo_inline_undo*
 mundo_map_move_newer	mundo.txt	/*mundo_map_move_newer*

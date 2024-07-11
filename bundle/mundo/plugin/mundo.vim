@@ -9,11 +9,11 @@
 " ============================================================================
 
 if !exists('g:mundo_debug') && (exists('g:mundo_disable') &&
-            \ g:mundo_disable == 1 || exists('loaded_mundo') || &cp)"{{{
+            \ g:mundo_disable == 1 || exists('loaded_mundo') || &cp) "{{{
     finish
 endif
 
-let loaded_mundo = 1"}}}
+let loaded_mundo = 1 "}}}
 
 " Default option values{{{
 
@@ -30,6 +30,8 @@ call mundo#util#set_default(
 call mundo#util#set_default(
             \ 'g:mundo_first_visible_line', 0,
             \ 'g:gundo_first_visible_line')
+
+call mundo#util#set_default('g:mundo_header', 1)
 
 call mundo#util#set_default(
             \ 'g:mundo_help', 0,
@@ -112,7 +114,7 @@ if mundo#util#set_default('g:mundo_mappings', {})
                 \ 'n': 'next_match',
                 \ 'N': 'previous_match',
                 \ 'p': 'diff_current_buffer',
-                \ 'r': 'diff',
+                \ 'r': 'rdiff',
                 \ '?': 'toggle_help',
                 \ 'q': 'quit',
                 \ '<2-LeftMouse>': 'mouse_click' }
@@ -130,9 +132,9 @@ endif
 command! -nargs=0 MundoToggle call mundo#MundoToggle()
 command! -nargs=0 MundoShow call mundo#MundoShow()
 command! -nargs=0 MundoHide call mundo#MundoHide()
-command! -nargs=0 GundoToggle call mundo#util#MundoToggle()
-command! -nargs=0 GundoShow call mundo#util#MundoShow()
-command! -nargs=0 GundoHide call mundo#util#MundoHide()
-command! -nargs=0 GundoRenderGraph call mundo#util#MundoRenderGraph()
+command! -nargs=0 GundoToggle call mundo#util#Toggle()
+command! -nargs=0 GundoShow call mundo#util#Show()
+command! -nargs=0 GundoHide call mundo#util#Hide()
+command! -nargs=0 GundoRenderGraph call mundo#util#RenderGraph()
 
 "}}}

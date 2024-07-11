@@ -2266,7 +2266,7 @@ To toggle the undo view, use :MundoToggle.
 Mappings:
   <Space>qu     :MundoToggle
 
-Version 2019-09-09 (fb86692) from:
+Version 2023-12-15 (2ceda8c) from:
 https://github.com/simnalamburt/vim-mundo
 
 Installation:
