@@ -7010,6 +7010,14 @@ endfunction
 command! -bar SetupCmake call SetupCmake()
 
 " -------------------------------------------------------------
+" Setup for C# code.
+" -------------------------------------------------------------
+function! SetupCs()
+    SetupSource
+endfunction
+command! -bar SetupCs call SetupCs()
+
+" -------------------------------------------------------------
 " Setup for D code.
 " -------------------------------------------------------------
 function! SetupD()
