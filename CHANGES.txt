@@ -7,6 +7,19 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-08-22
+==========
+
+- Fix error ``E492: Not an editor command: SetupBashFixcommand`` when using Bash
+  ``fc`` (fix command) to edit the shell command line using the Ubuntu stock
+  build of Vim.  Because of global settings in ``/etc/vim/vimrc``, launching Vim
+  via Bash's ``fc`` command causes ``~/.vim/filetype.vim`` to be processed and a
+  filetype ``autocmd`` to fire before ``~/.vim/vimrc`` has a chance to be
+  processed.  Because the ``autocmd`` is fired again once ``vimrc`` has been
+  fully read, the work-around just checks for the existence of the custom
+  ``SetupBashFixcommand`` command before invoking it.  This is not an issue for
+  custom-compiled Vim that lacks the Debian-derived global ``vimrc`` settings.
+
 2024-07-21
 ==========
 
