@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-10-13
+==========
+
+- Update ``:help notes_search`` to mention ``#`` as the preferred method of
+  launching a recursive search for the word under the cursor.  This is
+  implemented in terms of the custom ``:G`` command that invokes the
+  ``:Grepper`` plugin using the best recursive searcher detected on the system.
+  Ripgrep is the preferred tools and is highly recommended.
+
 2024-08-22
 ==========
 
