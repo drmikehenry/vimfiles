@@ -66,7 +66,8 @@ Matchup - Enhanced extended matching with '%'           |notes_matchup|
 Misc - Contains many useful Vimscript functions         |notes_misc|
 Moonscript - support for a dialect of Lua               |notes_moonscript|
 Mundo - Visualize your undo tree                        |notes_mundo|
-Null-LS - Neovim non-LSP language tool support          |notes_null-ls|
+None-LS - Neovim non-LSP language tool support          |notes_none-ls|
+None-LS-shellcheck - Shellcheck support for none-ls     |notes_none-ls-shellcheck|
 OmniCppComplete - C/C++ Omnicompletion                  |notes_omnicppcomplete|
 Pathogen - Runtime path management for bundles          |notes_pathogen|
 Powerline - The ultimate vim statusline utility         |notes_powerline|
@@ -1980,7 +1981,7 @@ Installation:
 LspConfig - Neovim LSP configuration                    *notes_lspconfig*
                                                         |lspconfig|
 
-Version 2023-06-30 (0011c43) from:
+Version 2024-10-12 (d141895) from:
 https://github.com/neovim/nvim-lspconfig
 
 Local customizations:
@@ -2273,11 +2274,22 @@ Installation:
 - Follow bundle installation instructions (|bundle_installation|).
 
 ------------------------------------------------------------------------------
-Null-LS - Neovim non-LSP language tool support          *notes_null-ls*
+None-LS - Neovim non-LSP language tool support          *notes_none-ls*
 
+Version 2024-10-11 (6bdd9b3) from:
+https://github.com/nvimtools/none-ls.nvim
 
-Version 2023-07-04 (0789777) from:
-https://github.com/jose-elias-alvarez/null-ls.nvim
+- Replaces https://github.com/jose-elias-alvarez/null-ls.nvim; internally,
+  provides the `null-ls` namespace for compatibility.
+
+Installation:
+- Follow Neovim-only bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
+None-LS-shellcheck - Shellcheck support for none-ls     *notes_none-ls-shellcheck*
+
+Version 2024-03-09 (0f84461) from:
+https://github.com/gbprod/none-ls-shellcheck.nvim
 
 Installation:
 - Follow Neovim-only bundle installation instructions (|bundle_installation|).

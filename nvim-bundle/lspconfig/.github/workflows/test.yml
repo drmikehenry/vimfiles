@@ -12,25 +12,21 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+        nvim_version: [nightly, 'v0.9.5']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: rhysd/action-setup-vim@v1
-        id: vim
         with:
           neovim: true
-          version: nightly
+          version: ${{ matrix.nvim_version }}
 
-      - name: luajit
-        uses: leafo/gh-actions-lua@v10
+      - uses: leafo/gh-actions-lua@v10
         with:
-          luaVersion: "luajit-2.1.0-beta3"
+          luaVersion: "luajit-openresty"
+      - uses: leafo/gh-actions-luarocks@v4
 
-      - name: luarocks
-        uses: leafo/gh-actions-luarocks@v4
+      - name: Install vusted
+        run: luarocks install vusted
 
-      - name: run test
-        shell: bash
-        run: |
-          luarocks install luacheck
-          luarocks install vusted
-          vusted ./test
+      - name: Run test
+        run: vusted ./test

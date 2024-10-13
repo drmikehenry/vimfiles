@@ -16,6 +16,11 @@ require adjustment of per-user settings.
   ``:Grepper`` plugin using the best recursive searcher detected on the system.
   Ripgrep is the preferred tools and is highly recommended.
 
+- Upgrade Neovim LSP-related plugins:
+  - ``lspconfig``
+  - ``null-ls`` is now ``none-ls`` (community-supported fork)
+  - ``none-ls-shellcheck`` (Shellcheck support was pulled out of ``none-ls``)
+
 2024-08-22
 ==========
 

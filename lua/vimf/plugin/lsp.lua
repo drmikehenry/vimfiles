@@ -73,8 +73,14 @@ M.servers = {
                         enabled = true,
                         line_length = 79,
                     },
-                    mypy = {
+                    pylsp_mypy = {
                         enabled = true,
+                        overrides = {
+                            "--python-executable",
+                            "python",
+                            -- `true` means "insert other arguments here".
+                            true,
+                        }
                     },
                     pycodestyle = {
                         enabled = false,
@@ -193,6 +199,8 @@ end
 ---------------------------------------------------------------
 
 local null_ls = require("null-ls")
+local shellcheck_code_actions = require("none-ls-shellcheck.code_actions")
+local shellcheck_diagnostics = require("none-ls-shellcheck.diagnostics")
 
 M.shellcheck_exclusions = {
     "SC1090", -- Can't follow non-constant source.
@@ -205,12 +213,13 @@ M.null_ls_setup = function()
             null_ls.builtins.formatting.stylua,
 
             null_ls.builtins.formatting.shfmt,
-            null_ls.builtins.diagnostics.shellcheck.with({
+            shellcheck_code_actions,
+            -- shellcheck_diagnostics,
+            shellcheck_diagnostics.with({
                 extra_args = {
                     "--exclude=" .. table.concat(M.shellcheck_exclusions, ","),
                 },
             }),
-
         },
     }
 end

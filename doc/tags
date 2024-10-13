@@ -128,7 +128,8 @@ notes_movement	notes.txt	/*notes_movement*
 notes_moving_out	notes.txt	/*notes_moving_out*
 notes_mundo	notes.txt	/*notes_mundo*
 notes_nightfox	notes.txt	/*notes_nightfox*
-notes_null-ls	notes.txt	/*notes_null-ls*
+notes_none-ls	notes.txt	/*notes_none-ls*
+notes_none-ls-shellcheck	notes.txt	/*notes_none-ls-shellcheck*
 notes_omnicppcomplete	notes.txt	/*notes_omnicppcomplete*
 notes_overrides	notes.txt	/*notes_overrides*
 notes_pasting	notes.txt	/*notes_pasting*
