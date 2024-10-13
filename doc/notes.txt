@@ -4381,32 +4381,27 @@ Miscellanous mappings                                   *notes_misc_mappings*
 ------------------------------------------------------------------------------
 Search-related customizations                           *notes_search*
 
-Vim's standard "*" operator (which searches for the word under the cursor) has
+Vim's standard `*` operator (which searches for the word under the cursor) has
 been modified to leave the cursor unmoved.  In visual mode, the selection
 becomes the search text.
 
-Use <F3> to begin a :Regrep command on the word under the cursor (in Normal
-mode) or on the current selection (in Visual mode).  See :help grep.txt for
-details on the grep plugin and the :Regrep command.
+The Grepper plugin (|notes_grepper|) wraps several recursive file search tools
+with a convenient interface.
 
-Ack is a Perl-based search tool that knows how to avoid searching in binary
-files and hidden directories.  It has several features to improve the process of
-searching for text.  The "Ack" plugin provides an interface to the 'ack'
-utility.  Inspired by Ack, the Silver Searcher ('ag') is a similar tool coded in
-"C" for speed.  The "Ag" plugin is a direct port of the "Ack" plugin.
-The "Ack" utility may be invoked explicitly using :Ack, and the Silver Searcher
-may be invoked via ":Ag".
+Vimfiles provides `:G`, a custom command to conveniently invoke `:Grepper` using
+the best available search tool detected by Vimfiles; see |notes_G| for details.
 
-Generally, the Silver Searcher is preferred for speed.  When it is not
-available, Ack is a good alternative.  The custom command |:G| (see below)
-abstracts this choice for you, choosing the best option available on your
-system.
-
-In addition, "#" is mapped to search for the word under the cursor (in Normal
-mode) or the current selection (in Visual mode) using :Ag! (when available) or
-:Ack! (otherwise).
+The `#` key is mapped to start a search for the word under the cursor (in Normal
+mode) or the current selection (in Visual mode) using `:G`.
 
 Use the mapping \z after a search to fold all but the matching lines.
+
+Alternatively, some plugins provide a direct interface into individual search
+tools (though the `:Grepper` interface is preferable):
+
+- `:Ack` (|notes_ack|) wraps the Perl-based Ack tool.
+- `:Ag` (|notes_ag|) wraps The Silver Searcher.
+- <F3> launches a `:Regrep` command (from the |grep.txt| plugin).
 
 ------------------------------------------------------------------------------
 findx-related commands                                  *notes_findx*
@@ -4420,8 +4415,9 @@ The external findx utility may be invoked using any of the below commands: >
 ------------------------------------------------------------------------------
 :G 'search pattern'                                   *:G*   *notes_G*
 
-The :G command provides a convenient way to search through a tree of files.  It
-defaults to the first external search tool it can find from the following list:
+The `:G` command provides a convenient way to search through a tree of files.
+It defaults to the first external search tool it can find from the following
+list:
 
 - rg (RipGrep, https://github.com/BurntSushi/ripgrep)
 - ag (The Silver Searcher, https://github.com/ggreer/the_silver_searcher)
@@ -4431,10 +4427,10 @@ defaults to the first external search tool it can find from the following list:
 The actual search is done via the grepper plugin |notes_grepper|.
 
 Depending on your environment, you may not have any of the external tools
-available on the PATH, but if you have Perl installed, you will at least be able
-to use :G via the single-file implementation of ack bundled with vimfiles.
-Because these tools are so similar, in most cases you don't have to care which
-one gets called.
+available on the `PATH,` but if you have Perl installed, you will at least be
+able to use `:G` via the single-file implementation of ack bundled with
+vimfiles. Because these tools are so similar, in most cases you don't have to
+care which one gets called.
 
 For all of these tools, the command line is passed directly to the shell, and
 the syntax you must use depends on the details of your environment.
