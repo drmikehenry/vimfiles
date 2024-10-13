@@ -21,6 +21,10 @@ require adjustment of per-user settings.
   - ``null-ls`` is now ``none-ls`` (community-supported fork)
   - ``none-ls-shellcheck`` (Shellcheck support was pulled out of ``none-ls``)
 
+- Move "Plugins" section of ``:help notes`` to the end, promoting ``:help
+  notes_customizations`` and ``:help notes_tips`` to be earlier in the file and
+  not lost behind the large number of plugins.
+
 2024-08-22
 ==========
 

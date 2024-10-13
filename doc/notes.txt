@@ -14,6 +14,62 @@ Setup optional features                                 |notes_setup_optional|
 Build Vim                                               |notes_build_vim|
 
 ------------------------------------------------------------------------------
+Customizations                                          |notes_customizations|
+Overrides                                               |notes_overrides|
+Python Path                                             |notes_python_path|
+GUI options                                             |notes_guioptions|
+Colorschemes                                            |notes_colorschemes|
+Fonts                                                   |notes_fonts|
+Spell checking                                          |notes_spell_checking|
+Buffer switchers and filesystem navigators              |notes_buffer_switchers|
+Building and Running                                    |notes_building_running|
+Tab page support                                        |notes_tab_page|
+QuickFix keys                                           |notes_quickfix_keys|
+QuickFix window, diff mode                              |notes_quickfix_win|
+Dragging text in four directions                        |notes_dragging_text|
+Deleting "Rubbish" Whitespace                           |notes_deleting_rubbish|
+Deleting Trailing Whitespace                            |notes_deleting_trailing|
+Re-formatting text                                      |notes_reformatting|
+Moving "out" hierarchically                             |notes_moving_out|
+Additional CTRL-o mappings                              |notes_ctrl_o|
+Pressing <Enter> removes trailing whitespace            |notes_enter|
+Movement by screen lines                                |notes_movement|
+Emacs-style command-line editing                        |notes_emacs_commandline|
+Clipboard support                                       |notes_clipboard|
+Putting most-recently-yanked text                       |notes_putting_yanked|
+Yank-related mappings                                   |notes_yank|
+Window-related customizations                           |notes_window_related|
+Miscellanous mappings                                   |notes_misc_mappings|
+Search-related customizations                           |notes_search|
+findx-related commands                                  |notes_findx|
+:G 'search pattern'                                     |notes_G|
+Pasting lines into Vim                                  |notes_pasting|
+Tag files                                               |notes_tag_files|
+Cscope                                                  |notes_cscope|
+Window Layout                                           |notes_window_layout|
+QuickFix and Location Window                            |notes_quickfix_location|
+Alternatives to :bufdo, :windo, :tabdo                  |notes_alternatives|
+Highlight command                                       |notes_highlight|
+colorcolumn                                             |notes_colorcolumn|
+Help-related mappings                                   |notes_help_mappings|
+Folding by regular expression                           |notes_folding_regex|
+QuickFix entry folding                                  |notes_quickfix_folding|
+Converting Unicode symbols to ASCII                     |notes_toascii|
+Converting identifer case                               |notes_identifier_case|
+Conflict marker navigation                              |notes_conflict_marker|
+Embedded language support                               |notes_embedded_lang|
+Source control integration                              |notes_source_control|
+List of numbers                                         |notes_list_of_numbers|
+
+------------------------------------------------------------------------------
+Tips                                                    |notes_tips|
+Command-line window                                     |notes_tips_commandline|
+Debugging Vim problems                                  |notes_tips_debugging|
+Quitting with non-zero return code                      |notes_tips_quitting|
+Redirecting Vim command-line output                     |notes_tips_redirecting|
+Using <C-q> and <C-s> in console Vim                    |notes_tips_xon_xoff|
+
+------------------------------------------------------------------------------
 Plugins                                                 |notes_plugins|
 Ack - Search using 'ack' utility                        |notes_ack|
 Ag - Search using 'ag' utility                          |notes_ag|
@@ -136,62 +192,6 @@ Extensions                                              |notes_extensions|
 C Additions - Extra syntax highlighting for C           |notes_c_additions|
 Python indentation support                              |notes_python_indent|
 Tmux syntax - Syntax definitions for tmux.conf          |notes_tmux_syntax|
-
-------------------------------------------------------------------------------
-Customizations                                          |notes_customizations|
-Overrides                                               |notes_overrides|
-Python Path                                             |notes_python_path|
-GUI options                                             |notes_guioptions|
-Colorschemes                                            |notes_colorschemes|
-Fonts                                                   |notes_fonts|
-Spell checking                                          |notes_spell_checking|
-Buffer switchers and filesystem navigators              |notes_buffer_switchers|
-Building and Running                                    |notes_building_running|
-Tab page support                                        |notes_tab_page|
-QuickFix keys                                           |notes_quickfix_keys|
-QuickFix window, diff mode                              |notes_quickfix_win|
-Dragging text in four directions                        |notes_dragging_text|
-Deleting "Rubbish" Whitespace                           |notes_deleting_rubbish|
-Deleting Trailing Whitespace                            |notes_deleting_trailing|
-Re-formatting text                                      |notes_reformatting|
-Moving "out" hierarchically                             |notes_moving_out|
-Additional CTRL-o mappings                              |notes_ctrl_o|
-Pressing <Enter> removes trailing whitespace            |notes_enter|
-Movement by screen lines                                |notes_movement|
-Emacs-style command-line editing                        |notes_emacs_commandline|
-Clipboard support                                       |notes_clipboard|
-Putting most-recently-yanked text                       |notes_putting_yanked|
-Yank-related mappings                                   |notes_yank|
-Window-related customizations                           |notes_window_related|
-Miscellanous mappings                                   |notes_misc_mappings|
-Search-related customizations                           |notes_search|
-findx-related commands                                  |notes_findx|
-:G 'search pattern'                                     |notes_G|
-Pasting lines into Vim                                  |notes_pasting|
-Tag files                                               |notes_tag_files|
-Cscope                                                  |notes_cscope|
-Window Layout                                           |notes_window_layout|
-QuickFix and Location Window                            |notes_quickfix_location|
-Alternatives to :bufdo, :windo, :tabdo                  |notes_alternatives|
-Highlight command                                       |notes_highlight|
-colorcolumn                                             |notes_colorcolumn|
-Help-related mappings                                   |notes_help_mappings|
-Folding by regular expression                           |notes_folding_regex|
-QuickFix entry folding                                  |notes_quickfix_folding|
-Converting Unicode symbols to ASCII                     |notes_toascii|
-Converting identifer case                               |notes_identifier_case|
-Conflict marker navigation                              |notes_conflict_marker|
-Embedded language support                               |notes_embedded_lang|
-Source control integration                              |notes_source_control|
-List of numbers                                         |notes_list_of_numbers|
-
-------------------------------------------------------------------------------
-Tips                                                    |notes_tips|
-Command-line window                                     |notes_tips_commandline|
-Debugging Vim problems                                  |notes_tips_debugging|
-Quitting with non-zero return code                      |notes_tips_quitting|
-Redirecting Vim command-line output                     |notes_tips_redirecting|
-Using <C-q> and <C-s> in console Vim                    |notes_tips_xon_xoff|
 
 
 ==============================================================================
@@ -866,6 +866,1312 @@ For example, after building into the directory `vim-8.1.0290`, execute via: >
 
   cd vim-8.1.0290/src
   VIMRUNTIME=$(dirname $PWD)/runtime ./vim
+
+==============================================================================
+Customizations                                          *notes_customizations*
+
+------------------------------------------------------------------------------
+Overrides                                               *notes_overrides*
+
+In order to allow customization while still sharing the bulk of the vimfiles
+configuration, vimfiles provides three kinds of override directories that may
+contain extensions and adjustments.
+
+Override directories (in increasing order of priority):
+- VIMLOCALFILES:      location-specific settings (e.g., for your workgroup)
+- VIMUSERFILES:       per-user settings usable at all locations
+- VIMUSERLOCALFILES:  per-user location-specific settings
+
+The directories are configured using envionment variables.  In general, it's
+recommended to keep the Vimfiles defaults for these variables.
+
+Most users should put their personal customizations into VIMUSERFILES.
+
+VIMUSER
+  Name of the user running Vim.  This defaults to the logged-in user, but
+  it may be changed to allow one user to activate another user's settings
+  (e.g., to allow "root" to share another user's customizations).
+
+VIMFILES (automatically determined; can't be overridden)
+  The directory holding the main "vimrc" file.  Typically this will be one of
+  the following:
+    ~/.vim                            Unix, OS/X
+    %USERPROFILE%\_vimrc              Windows
+
+  On Windows, USERPROFILE is an environment variable that often points to
+  "C:\Documents and Settings\USERNAME" or "C:\Documents\USERNAME", though the
+  location may vary.
+
+VIMLOCALFILES
+  Directory holding location-specific settings, typically to allow sharing of
+  configuration across an organization or workgroup.  If not set, this defaults
+  to the first existing directory in this list:
+
+  For Unix and OS/X:
+
+    $VIMFILES/../.vimlocal
+    $VIMFILES/local
+
+  For Windows:
+
+    $VIMFILES\..\_vimlocal
+    $VIMFILES\local
+
+VIMUSERFILES
+  Directory holding the per-user directory.  If not set, this defaults to the
+  first existing directory in this list:
+
+  For Unix and OS/X:
+
+    ~/.vimuser
+    ~/.vim/user/$VIMUSER
+
+  For Windows:
+
+    %USERPROFILE%\_vimuser
+    %USERPROFILE%\_vimfiles\user\$VIMUSER
+
+VIMUSERLOCALFILES
+  Directory holding the per-user location-specific directory.  If not set, this
+  defaults to the first existing directory in this list:
+
+  For Unix and OS/X:
+
+    ~/.vimuserlocal
+
+  For Windows:
+
+    %USERPROFILE%\_vimuserlocal
+
+Some of these directories live outside of the $VIMFILES area, which makes it
+easy to maintain the settings completely outside the source-controlled $VIMFILES
+tree; others are are inside the tree, which may be more convenient for users
+users maintaining a fork of VIMFILES.
+
+Each override directory will be added to 'runtimepath'.  Higher priority
+override directories are added earlier in 'runtimepath' (and any associated
+'/after' directory is added later in 'runtimepath').  This means that override
+directories may contain directories such as '/bundle', '/UltiSnips', '/plugin',
+etc.
+
+In addition, each override directory may optionally contain any of the
+following files for augmenting the main vimrc files found in $VIMFILES:
+
+- vimrc-vars.vim     |VIMRC_VARS|
+- vimrc-before.vim   |VIMRC_BEFORE|
+- vimrc-after.vim    |VIMRC_AFTER|
+
+vimrc-vars.vim                                *VIMRC_VARS*
+
+  This "vars" script is provided for variable initializations that must
+  occur extremely early.  It is located immediately within an override
+  directory (e.g., $VIMUSERFILES/vimrc-vars.vim).
+
+  |VIMRC_VARS| within the override directories are sourced in lowest-to-highest
+  priority order, so that the highest-priority script has the last word on
+  setting the variables.
+
+  Most users won't require a |VIMRC_VARS| script.  Its purpose is to solve a
+  chicken-and-egg problem with a |VIMRC_BEFORE| script:
+
+  - The user wants to do ":colorscheme SomeColorScheme" in his |VIMRC_BEFORE|;
+  - Support for SomeColorScheme lives in an arbitrary bundle, making it
+    desirable to activate all bundles in advance of |VIMRC_BEFORE|;
+  - Activating all bundles in advance of |VIMRC_BEFORE| makes it hard for the
+    user to disable a particular bundle.
+
+  Only the most primitive settings should live in |VIMRC_VARS|; everything else
+  belongs in |VIMRC_BEFORE| or |VIMRC_AFTER|.  The most likely reason for
+  needing this script is to disable a bundle on a per-user basis.  For example,
+  to disable the "fixkey" bundle, place the following line in
+  $VIMUSERFILES/vimrc-vars.vim: >
+
+    call vimf#plugin#disable('fixkey')
+<
+vimrc-before.vim, vimrc-after.vim             *VIMRC_BEFORE*   *VIMRC_AFTER*
+  If these files exist, they will be sourced before or after the majority of the
+  main "vimrc" file.  These scripts are located immediately within an override
+  directory (e.g., $VIMUSERFILES/vimrc-before.vim).
+
+  |VIMRC_BEFORE| files are sourced fairly early, but after all 'runtimepath'
+  manipulations are finished (such as activating bundles).  They are useful for
+  the relatively rare things that must happen early, such as setting <Leader> so
+  that it will be used by subsequent mappings in the main "vimrc".  Most other
+  settings are best overridden in |VIMRC_AFTER| scripts, which will be sourced
+  at end of the main "vimrc" file.
+
+  |VIMRC_BEFORE| scripts within the override directories are sourced in
+  highest-to-lowest priority order, so that the highest-priority script has the
+  first chance to make settings; conversely, |VIMRC_AFTER| scripts are sourced
+  in the opposite order, giving them the last word on setting the variables.
+
+------------------------------------------------------------------------------
+Python Path                                             *notes_python_path*
+
+Python's sys.path is used to locate Python modules when import commands are
+issued.  Especially for use with UltiSnips, it can be useful for Vim's
+embedded Python interpreter to have an augmented sys.path so that helper
+modules may be used from multiple places conveniently.
+
+Starting in Vim 7.3.1163, Vim will automatically look in 'python2', 'python3',
+and 'pythonx' child directories of all paths located in 'runtimepath'.  If a
+module lives in such a path, it may be imported from any Python code executed
+within Vim.
+
+See |python-special-path| for more information.
+
+To maintain backwards compatibility with older versions of Vim, the function
+AugmentPythonPath() is called from vimrc to scan all paths in Vim's
+'runtimepath' for child directories named "python2", "python3", or "pythonx" and
+adds them to Python's sys.path (unless they are already present).  If a module
+lives in such a path, it may be imported from any Python code executed within
+Vim.
+
+------------------------------------------------------------------------------
+GUI options                                    *notes_guioptions*
+
+To conserve screen space, several GUI features are disabled by default.
+The 'guioptions' option controls these settings.  You can use any of the
+below lines in your |VIMRC_AFTER| script to bring back these GUI features. >
+
+  " Enable menu bar.
+  set guioptions+=m
+
+  " Enable right-side scrollbar always.
+  set guioptions+=r
+
+  " Enable left-side scrollbar always.
+  set guioptions+=l
+
+  " Enable the toolbar.
+  set guioptions+=T
+
+------------------------------------------------------------------------------
+Colorschemes                                            *notes_colorschemes*
+
+By default, vimfiles chooses a default colorscheme.  To override this, setup
+your preferred colorscheme in |VIMRC_BEFORE|.  For example, for user
+drmikehenry, setup ~/.vim/user/drmikehenry/vimrc-before.vim with: >
+
+  colorscheme nuvola
+
+If you don't choose a colorscheme, one will be chosen for you.  Since Gvim can
+use any colorscheme, vimfiles arbitrarily chooses a dark-background
+colorscheme.  When running in a console, Vim tries to detect whether your
+background is light or dark, but it can't really detect the background color
+properly in many cases; in such cases, Vim uses a heuristic to guess the
+background color, generally based on the terminal type.  For example, Vim can't
+generally detect the background color after ssh'ing to another machine or after
+executing ``su -`` or ``sudo -i``.  For this reason, vimfiles will
+unconditionally force a dark-background colorscheme for Gvim and whenever the
+background color detection algorithm in not trustworthy.
+
+But in the special case that the COLORFGBG environment variable is set, console
+Vim can correctly detect the background color.  Not all terminal emulators set
+this variable, but rxvt and KDE's konsole do (but sadly, xterm does not).  This
+variable is lost when executing ``su -`` or ``sudo -i``, and when ssh'ing to
+another machine (unless the ssh client and server settings are changed to
+propagate the variable to the server).  In the cases where this variable has
+been set, vimfiles will now honor it, so rxvt and konsole terminals that use a
+light background will receive a light-background colorscheme by default (unless
+overridden by the user).
+
+You may want to adjust your ssh client and server settings to propagate the
+COLORFGBG variable to the server, improving Vim's detection accuracy.  To
+accomplish this with openssh, add this line to /etc/ssh/sshd_config on the
+server: >
+
+    AcceptEnv COLORFGBG
+
+Then adjust the client settings by adding these lines to either ~/.ssh/config
+(for a single user) or /etc/ssh/ssh_config (for all users): >
+
+  Host *
+      SendEnv COLORFGBG
+
+Similarly, when the `COLORTERM` environment variable contains the value
+`truecolor`, vimfiles will set 'termguicolors' which will cause Vim to assume
+24-bit color support in the terminal and to use the GUI colors for the current
+colorscheme (which are typically nicer).  It's useful to configure ssh to pass
+`COLORTERM` in addition to `COLORFGBG` as above.
+
+------------------------------------------------------------------------------
+Fonts                                                   *notes_fonts*
+
+By default, vimfiles chooses a font.  To override this, setup your preferred
+font using a |VIMRC_BEFORE| file.
+
+The simplest option is to setup g:DefaultFontFamilies with your first-choice
+fonts in preferred order, and vimfiles will try them first before its built-in
+list of fonts.  For example, for user drmikehenry, setup
+~/.vim/user/drmikehenry/vimrc-before.vim with: >
+
+  let g:DefaultFontFamilies = [
+      \ "Droid Sans Mono",
+      \ "Consolas",
+      \]
+  let g:FontSize = 10
+
+Alternatively, you may use the fontdetect plugin to decide whether to set
+g:FontFamily and g:FontSize (allowing vimfiles to choose the default font and
+size if your preferred fonts aren't available).  For example:
+
+  let detectedFamily = fontdetect#firstFontFamily([
+      \ "Droid Sans Mono",
+      \ "Consolas",
+      \])
+  if detectedFamily != ""
+      let g:FontFamily = detectedFamily
+      let g:FontSize = 10
+  endif
+
+------------------------------------------------------------------------------
+Spell checking                                          *notes_spell_checking*
+
+In order to allow per-user overriding of spell-check settings, there are two
+variables for configuring spell-checking.  Adjust these variables in per-user
+configuration files (|VIMRC_BEFORE|, |VIMRC_AFTER|).
+
+To disable automatic configuration of the 'spell' setting entirely: >
+
+  let g:Spell = 0
+
+To turn off spell-checking for just "C" source code: >
+  let g:SpellMap["c"] = "<off>"
+
+Turn off spell-checking for the entire "<source>" group: >
+  let g:SpellMap["<source>"] = "<off>"
+
+Turn on spell-checking for files of type "javascript": >
+  let g:SpellMap["javascript"] = "<on>"
+
+Add "perl" filetype to the "<source>" group: >
+  let g:SpellMap["perl"] = "<source>"
+
+Use b:Spell for per-buffer control that overrides g:SpellMap.
+E.g. to disable spell checking for the buffer: >
+  let b:Spell = "<off>"
+<
+See g:SpellMap documentation in vimrc for more detail.
+
+------------------------------------------------------------------------------
+Buffer switchers and filesystem navigators              *notes_buffer_switchers*
+
+Lusty Juggler - rapidly switch among buffers
+
+  <M-s>  Launch Lusty Juggler; while in juggler, press again to cycle
+         through most-recently-used buffers.
+  \lj    Launch Lusty Juggler (default mapping, doesn't do MRU cycling).
+
+BufMRU - most-recently-used buffer switcher
+
+  <C-6> (CTRL-6) Switch to MRU buffer and enter BufMRU mode.  This is Vim's
+                 default keystroke for switching to the alternate buffer.
+  <Space><Space> Switch to MRU buffer and enter BufMRU mode.  This is easier
+                 to invoke and closer to the original single-<Space> mapping
+                 to aid muscle memory.
+
+  See |notes_bufmru| for more details.
+
+Buf Explorer - display all buffers in a list, switch or delete buffers, etc.
+
+  \be    Invoke BufExplorer.
+
+------------------------------------------------------------------------------
+Building and Running                                    *notes_building_running*
+
+Press <F9> to save all buffers and execute :make in current directory.
+
+Press <F5> to execute current buffer (useful when editing Python scripts,
+for example).
+
+<F11> and <F12> signal fifos using the fifosignal command (a separate program).
+Each key causes a ":wall" followed by a signal to a particular fifo in a
+particular directory.
+
+<F11> signals the fifo named ".fifo2" in the current working directory.
+<F12> signals the fifo named ".fifo" in the parent directory of the current
+file.
+
+These signals are useful in combination with a separate command prompt using the
+fifowait command, commonly used to trigger a build outside of Vim.  For example:
+
+    while fifowait; do echo "Building"; ./buildall; done
+
+Reference implementations of fifosignal and fifowait are found in
+$VIMFILES/tool/fifosignal.  Copy these to a directory in your path and ensure
+they are executable, e.g.: >
+
+  cp ~/.vim/tool/fifosignal/* ~/bin
+  chmod +x ~/bin/{fifosignal,fifowait}
+
+Note: At present, fifosignal and fifowait are Unix-only.
+
+------------------------------------------------------------------------------
+Tab page support                                        *notes_tab_page*
+
+Use <C-S-PageUp>/<C-S-PageDown> in Gvim to move the current tab page left or
+right.  This unfortunately doesn't work in console Vim because those key
+sequences aren't visible to Vim.
+
+------------------------------------------------------------------------------
+QuickFix keys                                           *notes_quickfix_keys*
+
+  oo      Return to other window
+  OO      Return to other window, close QF
+  <CR>    Open in existing        (<s-CR>  = stay in QF)
+  o<CR>   Open in existing        (o<s-CR> = stay in QF; O<s-CR> = close QF)
+  oh      Open horizontal split   (oH      = stay in QF; OH      = close QF)
+  ov      Open vertical split     (oV      = stay in QF; OV      = close QF)
+  ot      Open in new tab         (oT      = stay in QF; OT      = close QF)
+  <F1>    Display this help section (:help notes_quickfix_keys)
+  { / }   Move cursor to previous/next filename in QuickFix window
+
+The above mappings are active in QuickFix and Location List windows.
+Note: "O + unshifted" is the same as "O + shifted" (so "Oh" = "OH", etc.).
+
+------------------------------------------------------------------------------
+QuickFix window, diff mode                              *notes_quickfix_win*
+
+Use <F4> and <S-F4> to navigate forward and backward.  When diff mode is
+active, browses through diff hunks; otherwise, when a Location List window is
+open, browses through the Location List; otherwise, browses through
+the QuickFix list.
+
+New diff commands:
+
+  :DiffOrig
+    Compare unsaved changes in current window against original on-disk.
+
+  :Diff
+    Initiate diff between current window and "next" window (found by <C-w>w).
+
+  :Diff {filename}
+    Initiate diff between current window and {filename}.
+
+Built-in commands for more manual control:
+
+  :diffthis
+    Put current window into diff mode.  Use this on two windows separately to
+    do a diff between them.
+
+  :diffoff
+    Remove diff mode for current window.
+
+  :diffoff!
+    Remove diff mode for all windows.
+
+------------------------------------------------------------------------------
+Dragging text in four directions                        *notes_dragging_text*
+
+Text may be "dragged" in any of the four directions (Up, Down, Left, or
+Right).  In normal and insert modes, the current line will be dragged; in
+visual mode, the visual selection will be dragged.
+
+Lines dragged vertically move as whole lines.
+
+Lines dragged horizontally are shifted one space to the left or right,
+generally as if the standard "<<" or ">>" operator had been invoked with the
+shift width ('sw') variable temporarily set to one.  For block-wise
+selections, this implies that only the selected block is shifted.
+
+Dragging up:
+  <M-Up>        (visual mode, insert mode, normal mode)
+  <M-k>         (visual mode, insert mode, normal mode)
+  -             (visual mode)
+
+Dragging down:
+  <M-Down>      (visual mode, insert mode, normal mode)
+  <M-j>         (visual mode, insert mode, normal mode)
+  +             (visual mode)
+
+Dragging left:
+  <M-Left>      (visual mode, insert mode, normal mode)
+  <M-h>         (visual mode, insert mode, normal mode)
+  <Backspace>   (visual mode)
+
+Dragging right:
+  <M-Left>      (visual mode, insert mode, normal mode)
+  <M-h>         (visual mode, insert mode, normal mode)
+  <Space>       (visual mode)
+
+------------------------------------------------------------------------------
+Deleting "Rubbish" Whitespace                           *notes_deleting_rubbish*
+
+The normal-mode mapping "drw" deletes "rubbish" whitespace, bringing a
+run of spaces down to a single space character, or a group of consecutive
+blank lines down to a single blank line.
+
+------------------------------------------------------------------------------
+Deleting Trailing Whitespace                            *notes_deleting_trailing*
+
+The normal-mode command :StripTrailingWhitespace will remove all trailing
+whitepsace from the current buffer.  It accepts a line range as well, such
+that selecting a visual range first followed by typing
+:StripTrailingWhitespace will strip only the selected lines.
+
+For convenience, the following mappings are available:
+
+  <Leader><Leader>$     :StripTrailingWhitespace
+  <Space>xdw            :StripTrailingWhitespace
+
+------------------------------------------------------------------------------
+Re-formatting text                                      *notes_reformatting*
+
+The useless key "Q" is mapped to the "gq" reformatting operator.  Pressing
+"QQ" on a line reformats that line.  Pressing "Q" in visual mode reformats the
+selection.
+
+<M-q> is mapped in normal, visual, and insert modes to reformat the current
+"inner paragraph" (as defined by Vim's paragraph operator, |ip|).  When the
+'textwidth' option is non-zero (which is typical), the paragraph will be
+re-wrapped to that width; otherwise, the paragraph will be joined into a
+single long line.  In addition, the `q` register is used to mark and restore the
+cursor position.
+
+For normal and visual modes, <Leader>q does the same as <M-q>.
+
+------------------------------------------------------------------------------
+Moving "out" hierarchically                             *notes_moving_out*
+
+Press <C-o><C-o> in insert or visual modes to exit "out" to the containing
+context.  For example, if your cursor is between parentheses, pressing
+<C-o><C-o> will move out just beyond the parentheses.  This is helpful for
+getting outside text that was automatically inserted (e.g., from a snippet).
+
+The following may be "exited": >
+
+  (Parentheses)
+  [Brackets]
+  {CurlyBraces}
+  break;
+
+------------------------------------------------------------------------------
+Additional CTRL-o mappings                              *notes_ctrl_o*
+
+<C-o>o      - Open a line below this one
+<C-o>;      - Append ";" to the current line
+<C-o>:      - Append ":" to the current line
+<C-o>.      - Append "." to the current line
+<C-o><CR>   - Append "." and <CR> to the current line unless overridden by a
+              filetype-specific mapping
+<C-o><C-h>  - Exit visual modes at start of selected text
+<C-o><C-l>  - Exit visual modes at end of selected text
+
+------------------------------------------------------------------------------
+Pressing <Enter> removes trailing whitespace            *notes_enter*
+
+To help avoid cluttering the file with trailing whitespace, pressing <Enter> in
+insert mode will strip trailing whitespace from the previous line.  This is
+helpful when trying to split a line such as the one below.  Consider this line:
+
+  Place cursor on X and press <Enter>
+
+With your cursor on the "X" above, pressing <Enter> would normally leave a
+trailing space character after the word "on"; this space will instead be
+removed.
+
+To intentionally preserve trailing whitespace when typing at the end of a line,
+simply avoid pressing <Enter>.  When pressing <Enter> in the middle of a line,
+more steps are involved.  For example, before pressing <Enter>, add a period,
+then press <Enter>, then go back and remove the period from the line.
+Alternatively, press <Enter>, then go back and restore the trailing whitespace
+on the previous line.  Though this is awkward, it's expected to be very rarely
+desirable in the course of normal editing that pressing <Enter> in the middle
+of a line should preserve whitespace.
+
+------------------------------------------------------------------------------
+Movement by screen lines                                *notes_movement*
+
+The standard movement keys have been remapped to move by screen lines instead
+of logical lines.  For "short" lines, there is no difference, but for wrapped
+lines, this reverses the default behavior of using logical lines.  Use "g" and
+the original key to move by logical lines.
+
+------------------------------------------------------------------------------
+Emacs-style command-line editing                        *notes_emacs_commandline*
+
+The standard Emacs-style command-line editing keys as used in Bash have been
+mapped for command-line mode.  These include:
+
+<C-a>   Start of line
+<C-b>   Move left one character
+<C-d>   Delete character under cursor
+<C-f>   Move right one character
+<C-n>   Next command history line
+<C-p>   Previous command history line
+<M-b>   Move left one word
+<M-f>   Move right one word
+
+<C-g>   Edit command-line history (used to be <C-f>)
+
+The original meanings for these keys may be activated by first pressing <C-o>
+(mnemonic: "Original").
+
+Original meanings:
+<C-a>   Insert all matching filenames
+<C-b>   <Home>
+<C-d>   List matching names
+<C-f>   Edit command-line history
+<C-g>   Nothing
+<C-n>   Next match after wildchar, or recall next command-line history
+<C-o>   Nothing
+<C-p>   Prev. match after wildchar, or recall prev. command-line history
+
+------------------------------------------------------------------------------
+Clipboard support                                       *notes_clipboard*
+
+Because the Windows standard keys for clipboard support are already taken in
+Vim, they have been mapped to the same keys using Alt:
+
+<M-a>         Select all
+<M-z>         Undo
+<M-x>         Cut to clipboard
+<M-c>         Copy to clipboard
+<M-v>         Paste from clipboard
+
+In addition, old-style mappings exist:
+
+<S-Insert>    Paste from clipboard
+<C-S-Insert>  Paste from X11 primary selection
+<C-Insert>    Copy to clipboard and X11 primary selection
+
+For ease of use and mnemonic value, the "undo" functionality is also
+available as <M-u><M-u>.
+
+All of these mappings are available in Normal, Visual, and Insert modes.
+
+In addition, the "unnamed" register (which is the default source for "puts"
+and the default destination for "yanks") has been configured to use the
+system clipboard by default for puts, and to use both the system clipboard
+and the X11 primary selection as the destination for yanks.  This provides
+smoother integration with the bulk of applications that use the system
+clipboard.  To put from the primary selection, either use <C-S-Insert> or
+reference the "*" register explicitly, e.g.: >
+
+  "*p
+
+Note that registers can be set via :let, which allows for moving one register
+into another easily.  For example, to move the contents of the clipboard into
+the primary selection, use: >
+
+  let @*=@+
+
+------------------------------------------------------------------------------
+Putting most-recently-yanked text                       *notes_putting_yanked*
+
+By default, yanking (e.g, "yy") copies your text into the unnamed register,
+and putting (e.g., "p") puts text from the unnamed register into your
+buffer.  Putting text onto a visual selection replaces that selection with
+your text, but it also has the sometimes undesirable effect of overwriting
+your unnamed register with the previously selected text.  Subsequent "put"
+operations will then use the overwritten text instead of your previously
+yanked text.
+
+The manual work-around for this problem is to explicitly use register 0 when
+putting, via: >
+
+  "0p
+
+To make this easier, a visual mode mapping of capital P performs a put from
+register 0.  This allows a yank followed by repeated selections and puts.
+
+------------------------------------------------------------------------------
+Yank-related mappings                                   *notes_yank*
+
+Normal-mode "Y" has been remapped to mean "yank to end of line" (equivalent to
+"y$"), for consistency with most other uppercase variants (e.g., "D", "C", ...).
+To yank a single line, use "yy".
+
+Visual-mode "Y" performs a yank-and-dedent operation on the selected text, where
+the largest common whitespace prefix is removed from all lines.  For now, the
+destination register is hard-coded to be "0 (along with both clipboard-related
+registers "+ and "*).  This is convenient when yanking shell commands to be
+pasted into a terminal.
+
+------------------------------------------------------------------------------
+Window-related customizations                           *notes_window_related*
+
+Vim provides many window-related operations beginning with <C-w>.  To make these
+easier to type, <Space>w has been mapped to <C-w>.
+
+------------------------------------------------------------------------------
+Miscellanous mappings                                   *notes_misc_mappings*
+
+  gV      Visually select the text that was last edited/pasted.
+
+  CTRL-w  (insert-mode) Break undo, then CTRL-w (delete word).
+  CTRL-u  (insert-mode) Break undo, then CTRL-y (delete to line start).
+
+  P       (visual-mode) Put from most recent yank instead of scratch register.
+
+------------------------------------------------------------------------------
+Search-related customizations                           *notes_search*
+
+Vim's standard `*` operator (which searches for the word under the cursor) has
+been modified to leave the cursor unmoved.  In visual mode, the selection
+becomes the search text.
+
+The Grepper plugin (|notes_grepper|) wraps several recursive file search tools
+with a convenient interface.
+
+Vimfiles provides `:G`, a custom command to conveniently invoke `:Grepper` using
+the best available search tool detected by Vimfiles; see |notes_G| for details.
+
+The `#` key is mapped to start a search for the word under the cursor (in Normal
+mode) or the current selection (in Visual mode) using `:G`.
+
+Use the mapping \z after a search to fold all but the matching lines.
+
+Alternatively, some plugins provide a direct interface into individual search
+tools (though the `:Grepper` interface is preferable):
+
+- `:Ack` (|notes_ack|) wraps the Perl-based Ack tool.
+- `:Ag` (|notes_ag|) wraps The Silver Searcher.
+- <F3> launches a `:Regrep` command (from the |grep.txt| plugin).
+
+------------------------------------------------------------------------------
+findx-related commands                                  *notes_findx*
+
+The external findx utility may be invoked using any of the below commands: >
+
+  :Findx <args>           Invoke ``findx``
+  :FFX <args>             Invoke ``ffx`` (a.k.a. ``findx -ffx``)
+  :FFG <args>             Invoke ``ffg`` (a.k.a. ``findx -ffg``)
+
+------------------------------------------------------------------------------
+:G 'search pattern'                                   *:G*   *notes_G*
+
+The `:G` command provides a convenient way to search through a tree of files.
+It defaults to the first external search tool it can find from the following
+list:
+
+- rg (RipGrep, https://github.com/BurntSushi/ripgrep)
+- ag (The Silver Searcher, https://github.com/ggreer/the_silver_searcher)
+- ffg (From findx, https://github.com/drmikehenry/findx)
+- ack (https://beyondgrep.com/)
+
+The actual search is done via the grepper plugin |notes_grepper|.
+
+Depending on your environment, you may not have any of the external tools
+available on the `PATH,` but if you have Perl installed, you will at least be
+able to use `:G` via the single-file implementation of ack bundled with
+vimfiles. Because these tools are so similar, in most cases you don't have to
+care which one gets called.
+
+For all of these tools, the command line is passed directly to the shell, and
+the syntax you must use depends on the details of your environment.
+
+For Unix-like systems, it's best to use single-quotes around the entire regular
+expression.  Single-quotes within the regular expression should be handled by
+closing the quotes, escaping a single-quote with a backslash, then re-opening
+the quotes.  For example, to quote this string:
+
+  I'm here
+
+Replace the apostrophe with the four characters '\'' and surround the entire
+expression with single-quotes like this:
+
+  'I'\''m here'
+
+For Windows, surround the pattern with double-quotes, and double any
+double-quotes embedded within the pattern.  For example, to quote this string:
+
+  I said "That's painful" in my loudest voice.
+
+Use the following:
+
+  "I said ""That's painful"" in my loudest voice."
+
+------------------------------------------------------------------------------
+Pasting lines into Vim                                  *notes_pasting*
+
+When pasting lines copied from outside Vim, the content is subject to
+auto-indentation at each <CR>.  The |'paste'| variable may be set to
+prevent these unintended effects during pasting.
+
+Press <S-F12> key to toggle the state of the |'paste'| variable; it may be set
+or cleared manually via: >
+    :set paste
+    :set nopaste
+Be sure to exit insert mode when pasting with :set paste active because
+mappings are disabled, so <S-INSERT> won't be interpreted as the paste
+operation.
+
+------------------------------------------------------------------------------
+Tag files                                               *notes_tag_files*
+
+Tag files (named "tags") will now be searched starting in the current working
+directory and all parent directories toward the root.
+
+The "gf" command ("goto file") will use any filename tags to augment the
+search path (:help 'path').
+
+The custom :Ctags command will launch "gentags" in the current directory to
+update the tags.
+
+An example implementation of "gentags' is found in $VIMFILES/tool/gentags; use
+this as an example, or else copy or symlink this into a directory in your PATH
+to use this implementation as-is, e.g. >
+
+  ln -s ~/.vim/tool/gentags ~/bin
+
+The supplied "gentags" script supports both the preferred Universal Ctags and
+the older (but no longer maintained) Exuberant Ctags.  It probes for the
+existence of various "ctags" executables and detects the version via
+"ctags --version".  Universal Ctags is preferred, followed by a list of names
+taken from the Tagbar plugin (in "tagbar/autoload/tagbar.vim").
+
+See "gentags --help-gentags" for details.
+
+Universal Ctags is generally available in Linux distributions, or at:
+https://github.com/universal-ctags/ctags
+
+------------------------------------------------------------------------------
+Cscope                                                  *notes_cscope*
+
+Key bindings have been setup for cscope.
+
+For Vim:
+- The mappings generally uses the word under the cursor as input.
+- Most results are sent to the QuickFix list, and some are in a menu.
+- See `:help cscope` for more information.
+
+For Neovim:
+- The mappings use the word under the cursor or an interactively entered word.
+- Results are sent to the Telescope plugin; use CTRL-Q to send Telescope results
+  to the QuickFix window.
+- See `:help plugin_cscope_maps`  for more information.
+
+<Space>ca     Find assignments to symbol.
+<Space>cb     Build database.
+<Space>cc     Find callers of this func.
+<Space>cd     Find called funcs from this func.
+<Space>ce     Find egrep pattern.
+<Space>cf     Find file.
+<Space>cg     Find global definition.
+<Space>ci     Find #includers of this file.
+<Space>cs     Find symbol.
+<Space>ct     Find text string.
+
+------------------------------------------------------------------------------
+Window Layout                                           *notes_window_layout*
+
+Usage:
+
+:L          Layout windows nicely using current number of columns.
+:L <n>      Layout windows in an <n>-column format.
+:L1         Layout windows in a one-column format.
+:L2         Layout windows in a two-column format.
+:L3         Layout windows in a three-column format.
+:L4         Layout windows in a four-column format.
+:L5         Layout windows in a five-column format.
+
+The bare :L command will not change the overall number of columns; the rest will
+set the overall number of columns to the value needed to provide <n> vertically
+split windows side-by-side, as determined by the function GetWindowWidth() (see
+the definition in the vimrc file).
+
+Within the overall number of columns, :L and friends adjust the windows as
+follows:
+- Move current window to the top (L1 only).
+- Move quickfix window to the bottom and set to standard size (if already open).
+- Make all windows equally sized (via Ctrl-w_=).
+
+*NOTE* If your Gvim window isn't positioned to span the edges of your monitor,
+the number of character columns may be truncated to keep Gvim on a single
+monitor.  To work around this, move Gvim to straddle the boundary between
+monitors before executing the above commands.
+
+With w = GetWindowWidth(), the overall number of columns is calculated as:
+- :L1  ==> w
+- :L2  ==> (2 * w + 1)
+- :L3  ==> (3 * w + 2)
+- :L4  ==> (4 * w + 3)
+- :L5  ==> (5 * w + 4)
+- :L n ==> (n * w + (n - 1))
+
+This leaves room for n windows with (n - 1) dividing lines between them.
+
+GetWindowWidth() calculates the desired window width as follows:
+- Start with a based value of g:WindowWidth (defaults to 80);
+- Unconditionally add in g:ExtraWindowWidth (allows extra room for :sign
+  columns; defaults to 2);
+- If any window is in diff mode, add two more columns for the diff indicators;
+- If any window has line numbering turned on (via 'number' or 'relativenumber'),
+  add enough space for the largest value across all windows, but no smaller
+  than 'numberwidth'.
+
+The standard heights of Location Windows and the QuickFix Window may be
+controlled by the following global variables: >
+
+  " Desired height of a Location List window.
+  let g:LocListWinHeight = 5
+
+  " Desired height of QuickFix window.
+  let g:QuickFixWinHeight = 10
+
+------------------------------------------------------------------------------
+QuickFix and Location Window                            *notes_quickfix_location*
+
+<C-q><C-l>  Toggle the Location window on or off
+<Space>ql   Toggle the Location window on or off
+<C-q><C-q>  Toggle the QuickFix window on or off
+<Space>qq   Toggle the QuickFix window on or off
+
+NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
+
+------------------------------------------------------------------------------
+Alternatives to :bufdo, :windo, :tabdo                  *notes_alternatives*
+
+These behave as their built-in counterparts but restore the current
+window, buffer, or tab when they complete.
+
+Usage:
+
+:Windo command
+:Bufdo command
+:Tabdo command
+
+------------------------------------------------------------------------------
+Highlight command                                       *notes_highlight*
+
+The custom command :Highlight provides highlighting of non-conforming coding
+styles to make it easier to locate problems during editing.
+
+Highlighting is done on a per-buffer basis via Vim's syntax highlighting
+mechanism.  Individual syntax items for a single buffer are enabled or disabled
+via the :Highlight command:
+
+    :Highlight tabs         ; enable highlighting of tab characters
+    :Highlight notabs       ; disable highlighting of tab characters
+    :Highlight longlines    ; enable highlighting of long lines
+    :Highlight nolonglines  ; disable highlighting of long lines
+    :Highlight *            ; enable all supported highlight items
+    :Highlight no*          ; disable all supported highlight items
+    :Highlight <Tab>        ; command-line completion to show all options
+
+:Highlight options include: >
+    commas
+    keywordspace
+    longlines
+    tabs
+    trailingspace
+
+In addition, highlighting may be enabled or disabled on a per-buffer basis via
+the following commands:
+
+    :HighlightOn        ; enable highlighting of previously enabled items
+    :HighlightOff       ; disable highlighting of all items
+
+The highlight items that were individually configured via the :Highlight
+command are remembered, such that :HighlightOn restores the configuration.
+
+The default disposition of highlighting is controlled by the global variable
+g:HighlightEnabled.  This is set to 1 in the vimrc, but it may be overridden in
+a vimrc-after file to cause highlighting to be disabled by default.  In this
+way, it's convenient to allow individually configured highlighting items to be
+set by the main vimrc, but have them be inactive by default (by setting
+g:HighlightEnabled to 0), such that :HighlightOn will turn on the recommended
+set of highlight items.  For this reason, it's not recommended to have
+":Highlight no*" in your configuration.
+
+------------------------------------------------------------------------------
+colorcolumn (highlighting first column in right margin) *notes_colorcolumn*
+
+Where supported, Vim's 'colorcolumn' feature will be enabled and set to create
+an indicator of the right margin.  A vertical line indicates the first column
+outside 'textwidth' (when 'textwidth' is non-zero).  To disable this feature,
+place the following in |VIMRC_AFTER|: >
+
+  :set colorcolumn=
+
+------------------------------------------------------------------------------
+Help-related mappings                                   *notes_help_mappings*
+
+The following normal-mode mappings toggle the help window on and off:
+
+  <F1>
+  <C-q><C-h>
+  <C-q>h
+  <Space>qh
+
+In visual mode, these same keys perform :help on the selected text.
+
+NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
+
+If the help window is already open, it will be closed; otherwise, the most
+recent help file will be re-opened.
+
+------------------------------------------------------------------------------
+Folding by regular expression                           *notes_folding_regex*
+
+To fold away lines that match a regex, use the custom command :Fold: >
+    :Fold regex         ; lines matching regex are hidden
+    :Fold               ; use last search pattern (@/) for regex
+
+Use the custom command :FoldSearch to search for lines matching a regex and
+fold away everything else: >
+    :FoldSearch regex   ; show lines matching regex, and fold away all else
+    :FoldSearch         ; use last search pattern (@/) for regex
+
+With :FoldSearch, increasing the 'foldlevel' to 1 will show one line of
+context around all matches.
+
+To fold away comments and blank lines, use this custom command: >
+    :FoldComments
+
+------------------------------------------------------------------------------
+QuickFix entry folding                                  *notes_quickfix_folding*
+
+To group lines of QuickFix output together by files or by directories, use one
+of the following commands when a QuickFix or Location List window is focused:
+
+                                  *FoldQuickFixFiles*
+                                  *FoldQuickFixDirs*
+    :[count] FoldQuickFixFiles
+    :[count] FoldQuickFixDirs
+
+When [count] is 0 (the default), the folds will start closed; when [count] is 1,
+the folds will start open.
+
+When a QuickFix or Location List window is opened, :1FoldQuickFixFiles is
+applied by :SetupQuickFix, such that the folds start open.  Use standard Vim
+shortcut keys within the QuickFix or Location List window to change folding
+levels:
+
+    zr    Reduce amount of folding
+    zR    Reduce amount of folding fully (no folding remaining)
+    zm    More folding
+    zM    More folding (fully folded)
+    zo    Open a fold
+    zc    Close a fold
+
+In Gvim, you may also click on the symbols in the left margin of the QuickFix
+or Location List window to toggle individual folds.
+
+------------------------------------------------------------------------------
+Converting Unicode symbols to ASCII                     *notes_toascii*
+
+Use :ToAscii to convert a range of lines (defaulting to the entire buffer)
+into ASCII.  Mainly this converts several kinds of quotes into ASCII quotes
+and generally maps some of the Unicode symbols in the range U+2000 through
+U+206F into ASCII equivalents.
+
+------------------------------------------------------------------------------
+Converting identifer case (e.g, lowerMixedCase to underscore_separated)
+                                  *notes_identifier_case*
+
+Several conventions exist for multi-word variable names, e.g.::
+
+  lowerMixedCase                  (a.k.a. mixedCase or lowerCamelCase)
+  UpperMixedCase                  (a.k.a. CamelCase or upperCamelCase)
+  underscore_separated_lowercase  (a.k.a. snake_case)
+
+In support of finding and converting variables of various naming conventions,
+the following features are provided.
+
+                                  *SearchLmc* *SearchUmc* *SearchUnderscore*
+:SearchLmc
+:SearchUmc
+:SearchUnderscore
+        Set Vim's search expression to match lowerMixedCase, UpperMixedCase,
+        or underscore_separated_lowercase identifiers.
+
+                                  *SearchWord*
+:SearchWord [ident]*
+        Set Vim's search expression to match all provided identiers; if none are
+        provided, set the search expression to WordPattern() to match all
+        identifiers.
+
+        E.g., to search for identOne and identTwo:
+
+          :SearchWord identOne identTwo
+
+                                  *GrepLmc* *GrepUmc* *GrepUnderscore*
+:GrepLmc args-for-G-command
+:GrepUmc args-for-G-command
+:GrepUnderscore args-for-G-command
+        This wraps the :G command, providing a Perl-compatible regular
+        expression matching lowerMixedCase, UpperMixedCase, or
+        underscore_separated identifiers as the implied first
+        argument to :G.  It is logically equivalent to:
+          :G <perl-regex-for-identifier-type> args-for-G-command
+
+        Also sets Vim's search expression for highlighting of matched
+        identifiers.
+
+                                  *ToUnderscore* *ToUmc* *ToLmc*
+:ToUnderscore [ident]*
+:ToUmc [ident]*
+:ToLmc [ident]*
+        These commands convert the provided identifiers to the corresponding
+        convention in the current buffer using :s///.  If no identifiers are
+        provided, the identifier under the cursor is used.  These commands
+        accept a range, which defaults to the entire file.
+
+        Examples:
+
+        " Convert identOne and identTwo to ident_one and ident_two.
+        :ToUnderscore identOne identTwo
+
+        " Convert some_name to SomeName in lines 1 through 100.
+        :1,100ToUmc some_name
+
+        " Convert identifier under cursor to lowerMixedCase in entire file.
+        :ToLmc
+
+                                  *LmcToUnderscore*
+:LmcToUnderscore
+        Similar to :ToUnderscore, but uses a regular expression to match all
+        lowerMixedCase identifiers.  This is helpful for converting Python
+        multiWordVariables to multi_word_variables.
+
+                                  *SearchLmcPattern()* *SearchUmcPattern()*
+                                  *SearchUnderscorePattern()*
+SearchLmcPattern()
+SearchUmcPattern()
+SearchUnderscorePattern()
+        These functions return Vim regular expressions to match lowerMixedCase,
+        UpperMixedCase, and underscore_separated_lowercase identifiers,
+        respectively.  They may be useful for use with the '/' command and
+        |c_CTRL-R_=| to get hold of the regular expression for further editing.
+        For example, pressing the following keys in order will perform a search
+        for lowerMixedCase identifiers:
+
+          /<C-R>=SearchLmcPattern()<CR>
+
+                                  *GrepLmcPattern()* *GrepUmcPattern()*
+                                  *GrepUnderscorePattern()*
+GrepLmcPattern()
+GrepUmcPattern()
+GrepUnderscorePattern()
+        These functions return Perl-compatible regular expressions to match
+        lowerMixedCase, UpperMixedCase, and underscore_separated_lowercase
+        identifiers, respectively.  They may be useful to create customized
+        :G commands.  For example, an :GrepLmc operation in the ~/tmp directory
+        can be simulated by pressing the following keys:
+
+          :G <C-R>=GrepLmcPattern()<CR> ~/tmp<CR>
+
+                                  *Underscore* *Umc* *Lmc*
+Underscore()
+Underscore(word)
+Umc()
+Umc(word)
+Lmc()
+Lmc(word)
+        Convert word to specified convention.  If word is not supplied, use
+        submatch(0) instead, which represent the entire matched text within
+        a :s/// command.
+
+        These functions are convenient when constructing a custom substitute
+        command.  For example, pressing "*" on an identifier under the cursor
+        will set the current search expression to match that word.  To convert
+        that word to the underscore_separated_lowercase convention, re-use the
+        search expression by leaving the pattern blank and use Vim's
+        |sub-replace-expression| feature to convert submatch(0) using the Umc()
+        function:
+
+          :%s//\=Underscore()/g
+
+Some refactoring mappings exist to rename the identifier under the cursor to a
+new convention across the entire file:
+
+  <M-r>iu     Refactor identifier to underscore_separated_lowercase
+  <M-r>iU     Refactor identifier to UpperMixedCase
+  <M-r>il     Refactor identifier to lowerMixedCase
+
+This may help after a bulk :LmcToUnderscore operation.  Using <Leader>sv on a
+file will show the diffs against the most recent comment in source control (see
+|notes_vcscommand| for details).  If an identifier was converted erroneously, it
+may be converted back via <M-r>il.
+
+------------------------------------------------------------------------------
+Conflict marker navigation                              *notes_conflict_marker*
+
+Inspired by vim-unimpaired, keybindings have been setup for move between
+conflict markers:
+
+]n    Go to the beginning of the next conflict marker.
+]N    Go to the end of the next conflict marker.
+[n    Go to the beginning of the previous conflict marker.
+[N    Go to the end of the previous conflict marker.
+
+------------------------------------------------------------------------------
+Embedded language support                               *notes_embedded_lang*
+
+The reStructuredText and Markdown support has been extended to support color
+syntax highlighting for a subset of languages.  "g:rstEmbeddedLangs" controls
+the list of languages that will include syntax highlighting in the
+"code-block" directive.  Markdown will default to the same set of languages
+as reStructuredText by default.  You can set "g:markdownEmbeddedLangs" to a
+different list, if you desire.
+
+------------------------------------------------------------------------------
+Source control integration                              *notes_source_control*
+
+During a Git rebase operation, the following additional mappings are available:
+
+<Leader><Leader>e Change rebase action to "edit"
+<Leader><Leader>f Change rebase action to "fixup"
+<Leader><Leader>p Change rebase action to "pick"
+<Leader><Leader>r Change rebase action to "reword"
+<Leader><Leader>s Change rebase action to "squash"
+
+------------------------------------------------------------------------------
+List of numbers                                         *notes_list_of_numbers*
+
+The function Inc() provides a way to generate an incrementing sequence of
+numbers during a substitute operation.  It comes in two forms: >
+
+  Inc()     " Increment by one.
+  Inc(n)    " Increment by n.
+<
+Consider this list: >
+
+  abc
+  abc
+  abc
+<
+Use `Inc()` to replace each `abc` with `xyz_#` where `#` increments: >
+
+  :let i = 1 | %s/abc/\='xyz_' . Inc()/g
+>
+Yielding this new list: >
+  xyz_1
+  xyz_2
+  xyz_3
+<
+To prefix each of these lines with a number: >
+
+  one
+  two
+  three
+<
+First, initialize the variable: >
+  :let i = 1
+<
+Then select the lines visually and use: >
+
+  :'<,'>s/^/\=Inc() . '. '/g
+<
+to get these numbered lines: >
+  1. one
+  2. two
+  3. three
+<
+See https://vim.fandom.com/wiki/Making_a_list_of_numbers for more ideas.
+
+==============================================================================
+Tips                                                    *notes_tips*
+
+Use the following command: >
+    :help quickref
+to get a nice quick reference guide.
+
+- Use filetype=Wikipedia for MediaWiki files.
+
+Set 'path' variable to include **/pubinc, **/src: >
+    set path+=**/pubinc,**/src
+
+Use |gf| to jump to file under cursor (powerful in combination with setting
+the 'path' variable).
+
+Use |:find| instead of |:edit| to use 'path' to locate a file.
+
+Use |]p| and |]P| to perform |p| and |P| with re-indentation of the pasted text.
+(Or can use |]p| and |[p| for paste-after and paste-before.)
+
+Try @: to repeat the last ex-mode command; to repeat again, use @@.
+
+Use g& to repeat the last Search-and-replace.
+
+If your syntax highlighting gets out of sync, try the command: >
+    :syntax sync fromstart
+
+------------------------------------------------------------------------------
+Command-line window                                     *notes_tips_commandline*
+
+Special window for editing current and historical command and searches.
+
+From command-line mode or while editing a search pattern, press CTRL-g to open
+the window (Note: Vim default is to use CTRL-f, but this has been remapped).
+
+From normal mode, press "q:" or "q/" to open the command-history or
+search-history window, respectively.
+
+You can edit, cut, paste, yank, etc., from these history windows.  Press
+CTRL-c to exit.
+
+Press <CR> on a line in the window to execute it.
+
+------------------------------------------------------------------------------
+Debugging Vim problems                                  *notes_tips_debugging*
+
+- To disable plugins, per-user customizations, etc.: >
+
+    vim --clean
+<
+- To display characters under the cursor: >
+
+    ga  - decimal, hexadecimal, octal
+    g8  - bytes in UTF-8 character
+<
+------------------------------------------------------------------------------
+Quitting with non-zero return code                      *notes_tips_quitting*
+
+When using Vim as the "fix command" editor in Bash (via the ``fc`` command
+or via ``Ctrl-x Ctrl-e`` - "man bash" for details on fc), a successful
+return code tells Bash to execute the commands.  This is somewhat
+counter-intuitive when mixed with Vim's :qa! syntax which means "throw away
+all my changes."  But Vim has a "throw away all my changes and return failure"
+command: >
+    :cquit
+    :cq
+
+This command is the same as :qa! but returns failure so Bash will ignore
+the edited command.
+
+------------------------------------------------------------------------------
+Redirecting Vim command-line output                     *notes_tips_redirecting*
+
+To capture the output generated by a Vim Ex command (e.g., |:map|), the
+built-in |:redir| command is useful.  For example: >
+    :redir @a
+    :map
+    :redir END
+If the output of the command is lengthy, Vim pauses after each screenful of
+output.  To avoid this, reset 'more' while redirecting: >
+    :set nomore
+    :redir @a
+    :map
+    :redir END
+    :set more
+Use a capital register name to append to an existing register.  Lowercase
+registers will be cleared before output lines are accumulated in them.
+
+A helper command :Redir has been defined to automatically set 'nomore' when
+beginning a redirection, and to set 'more' when redirection terminates.  The
+"END" keyword is optional to save typing when stopping redirection.
+So the above example becomes: >
+    :Redir @a
+    :map
+    :Redir
+
+------------------------------------------------------------------------------
+Using <C-q> and <C-s> in console Vim                    *notes_tips_xon_xoff*
+
+When using console Vim, <C-q> and <C-s> are often trapped by the console
+(they're the standard ASCII XON and XOFF characters).  To allow them to be
+seen by console Vim on Linux, try the following in your ~/.bashrc: >
+
+  # Disable XON/XOFF so CTRL-q and CTRL-s are available to Vim and friends
+  # when stdout is connected to a terminal.
+  test -t 0 && stty -ixon -ixoff
+
+This is unnecessary for Gvim.
+
 <
 ==============================================================================
 Plugins                                                 *notes_plugins*
@@ -3751,1311 +5057,5 @@ Tmux syntax - Syntax definitions for tmux.conf          *notes_tmux_syntax*
 
 Install: >
     wget http://sourceforge.net/p/tmux/tmux-code/ci/master/tree/examples/tmux.vim\?format\=raw -O syntax/tmux.vim
-
-==============================================================================
-Customizations                                          *notes_customizations*
-
-------------------------------------------------------------------------------
-Overrides                                               *notes_overrides*
-
-In order to allow customization while still sharing the bulk of the vimfiles
-configuration, vimfiles provides three kinds of override directories that may
-contain extensions and adjustments.
-
-Override directories (in increasing order of priority):
-- VIMLOCALFILES:      location-specific settings (e.g., for your workgroup)
-- VIMUSERFILES:       per-user settings usable at all locations
-- VIMUSERLOCALFILES:  per-user location-specific settings
-
-The directories are configured using envionment variables.  In general, it's
-recommended to keep the Vimfiles defaults for these variables.
-
-Most users should put their personal customizations into VIMUSERFILES.
-
-VIMUSER
-  Name of the user running Vim.  This defaults to the logged-in user, but
-  it may be changed to allow one user to activate another user's settings
-  (e.g., to allow "root" to share another user's customizations).
-
-VIMFILES (automatically determined; can't be overridden)
-  The directory holding the main "vimrc" file.  Typically this will be one of
-  the following:
-    ~/.vim                            Unix, OS/X
-    %USERPROFILE%\_vimrc              Windows
-
-  On Windows, USERPROFILE is an environment variable that often points to
-  "C:\Documents and Settings\USERNAME" or "C:\Documents\USERNAME", though the
-  location may vary.
-
-VIMLOCALFILES
-  Directory holding location-specific settings, typically to allow sharing of
-  configuration across an organization or workgroup.  If not set, this defaults
-  to the first existing directory in this list:
-
-  For Unix and OS/X:
-
-    $VIMFILES/../.vimlocal
-    $VIMFILES/local
-
-  For Windows:
-
-    $VIMFILES\..\_vimlocal
-    $VIMFILES\local
-
-VIMUSERFILES
-  Directory holding the per-user directory.  If not set, this defaults to the
-  first existing directory in this list:
-
-  For Unix and OS/X:
-
-    ~/.vimuser
-    ~/.vim/user/$VIMUSER
-
-  For Windows:
-
-    %USERPROFILE%\_vimuser
-    %USERPROFILE%\_vimfiles\user\$VIMUSER
-
-VIMUSERLOCALFILES
-  Directory holding the per-user location-specific directory.  If not set, this
-  defaults to the first existing directory in this list:
-
-  For Unix and OS/X:
-
-    ~/.vimuserlocal
-
-  For Windows:
-
-    %USERPROFILE%\_vimuserlocal
-
-Some of these directories live outside of the $VIMFILES area, which makes it
-easy to maintain the settings completely outside the source-controlled $VIMFILES
-tree; others are are inside the tree, which may be more convenient for users
-users maintaining a fork of VIMFILES.
-
-Each override directory will be added to 'runtimepath'.  Higher priority
-override directories are added earlier in 'runtimepath' (and any associated
-'/after' directory is added later in 'runtimepath').  This means that override
-directories may contain directories such as '/bundle', '/UltiSnips', '/plugin',
-etc.
-
-In addition, each override directory may optionally contain any of the
-following files for augmenting the main vimrc files found in $VIMFILES:
-
-- vimrc-vars.vim     |VIMRC_VARS|
-- vimrc-before.vim   |VIMRC_BEFORE|
-- vimrc-after.vim    |VIMRC_AFTER|
-
-vimrc-vars.vim                                *VIMRC_VARS*
-
-  This "vars" script is provided for variable initializations that must
-  occur extremely early.  It is located immediately within an override
-  directory (e.g., $VIMUSERFILES/vimrc-vars.vim).
-
-  |VIMRC_VARS| within the override directories are sourced in lowest-to-highest
-  priority order, so that the highest-priority script has the last word on
-  setting the variables.
-
-  Most users won't require a |VIMRC_VARS| script.  Its purpose is to solve a
-  chicken-and-egg problem with a |VIMRC_BEFORE| script:
-
-  - The user wants to do ":colorscheme SomeColorScheme" in his |VIMRC_BEFORE|;
-  - Support for SomeColorScheme lives in an arbitrary bundle, making it
-    desirable to activate all bundles in advance of |VIMRC_BEFORE|;
-  - Activating all bundles in advance of |VIMRC_BEFORE| makes it hard for the
-    user to disable a particular bundle.
-
-  Only the most primitive settings should live in |VIMRC_VARS|; everything else
-  belongs in |VIMRC_BEFORE| or |VIMRC_AFTER|.  The most likely reason for
-  needing this script is to disable a bundle on a per-user basis.  For example,
-  to disable the "fixkey" bundle, place the following line in
-  $VIMUSERFILES/vimrc-vars.vim: >
-
-    call vimf#plugin#disable('fixkey')
-<
-vimrc-before.vim, vimrc-after.vim             *VIMRC_BEFORE*   *VIMRC_AFTER*
-  If these files exist, they will be sourced before or after the majority of the
-  main "vimrc" file.  These scripts are located immediately within an override
-  directory (e.g., $VIMUSERFILES/vimrc-before.vim).
-
-  |VIMRC_BEFORE| files are sourced fairly early, but after all 'runtimepath'
-  manipulations are finished (such as activating bundles).  They are useful for
-  the relatively rare things that must happen early, such as setting <Leader> so
-  that it will be used by subsequent mappings in the main "vimrc".  Most other
-  settings are best overridden in |VIMRC_AFTER| scripts, which will be sourced
-  at end of the main "vimrc" file.
-
-  |VIMRC_BEFORE| scripts within the override directories are sourced in
-  highest-to-lowest priority order, so that the highest-priority script has the
-  first chance to make settings; conversely, |VIMRC_AFTER| scripts are sourced
-  in the opposite order, giving them the last word on setting the variables.
-
-------------------------------------------------------------------------------
-Python Path                                             *notes_python_path*
-
-Python's sys.path is used to locate Python modules when import commands are
-issued.  Especially for use with UltiSnips, it can be useful for Vim's
-embedded Python interpreter to have an augmented sys.path so that helper
-modules may be used from multiple places conveniently.
-
-Starting in Vim 7.3.1163, Vim will automatically look in 'python2', 'python3',
-and 'pythonx' child directories of all paths located in 'runtimepath'.  If a
-module lives in such a path, it may be imported from any Python code executed
-within Vim.
-
-See |python-special-path| for more information.
-
-To maintain backwards compatibility with older versions of Vim, the function
-AugmentPythonPath() is called from vimrc to scan all paths in Vim's
-'runtimepath' for child directories named "python2", "python3", or "pythonx" and
-adds them to Python's sys.path (unless they are already present).  If a module
-lives in such a path, it may be imported from any Python code executed within
-Vim.
-
-------------------------------------------------------------------------------
-GUI options                                    *notes_guioptions*
-
-To conserve screen space, several GUI features are disabled by default.
-The 'guioptions' option controls these settings.  You can use any of the
-below lines in your |VIMRC_AFTER| script to bring back these GUI features. >
-
-  " Enable menu bar.
-  set guioptions+=m
-
-  " Enable right-side scrollbar always.
-  set guioptions+=r
-
-  " Enable left-side scrollbar always.
-  set guioptions+=l
-
-  " Enable the toolbar.
-  set guioptions+=T
-
-------------------------------------------------------------------------------
-Colorschemes                                            *notes_colorschemes*
-
-By default, vimfiles chooses a default colorscheme.  To override this, setup
-your preferred colorscheme in |VIMRC_BEFORE|.  For example, for user
-drmikehenry, setup ~/.vim/user/drmikehenry/vimrc-before.vim with: >
-
-  colorscheme nuvola
-
-If you don't choose a colorscheme, one will be chosen for you.  Since Gvim can
-use any colorscheme, vimfiles arbitrarily chooses a dark-background
-colorscheme.  When running in a console, Vim tries to detect whether your
-background is light or dark, but it can't really detect the background color
-properly in many cases; in such cases, Vim uses a heuristic to guess the
-background color, generally based on the terminal type.  For example, Vim can't
-generally detect the background color after ssh'ing to another machine or after
-executing ``su -`` or ``sudo -i``.  For this reason, vimfiles will
-unconditionally force a dark-background colorscheme for Gvim and whenever the
-background color detection algorithm in not trustworthy.
-
-But in the special case that the COLORFGBG environment variable is set, console
-Vim can correctly detect the background color.  Not all terminal emulators set
-this variable, but rxvt and KDE's konsole do (but sadly, xterm does not).  This
-variable is lost when executing ``su -`` or ``sudo -i``, and when ssh'ing to
-another machine (unless the ssh client and server settings are changed to
-propagate the variable to the server).  In the cases where this variable has
-been set, vimfiles will now honor it, so rxvt and konsole terminals that use a
-light background will receive a light-background colorscheme by default (unless
-overridden by the user).
-
-You may want to adjust your ssh client and server settings to propagate the
-COLORFGBG variable to the server, improving Vim's detection accuracy.  To
-accomplish this with openssh, add this line to /etc/ssh/sshd_config on the
-server: >
-
-    AcceptEnv COLORFGBG
-
-Then adjust the client settings by adding these lines to either ~/.ssh/config
-(for a single user) or /etc/ssh/ssh_config (for all users): >
-
-  Host *
-      SendEnv COLORFGBG
-
-Similarly, when the `COLORTERM` environment variable contains the value
-`truecolor`, vimfiles will set 'termguicolors' which will cause Vim to assume
-24-bit color support in the terminal and to use the GUI colors for the current
-colorscheme (which are typically nicer).  It's useful to configure ssh to pass
-`COLORTERM` in addition to `COLORFGBG` as above.
-
-------------------------------------------------------------------------------
-Fonts                                                   *notes_fonts*
-
-By default, vimfiles chooses a font.  To override this, setup your preferred
-font using a |VIMRC_BEFORE| file.
-
-The simplest option is to setup g:DefaultFontFamilies with your first-choice
-fonts in preferred order, and vimfiles will try them first before its built-in
-list of fonts.  For example, for user drmikehenry, setup
-~/.vim/user/drmikehenry/vimrc-before.vim with: >
-
-  let g:DefaultFontFamilies = [
-      \ "Droid Sans Mono",
-      \ "Consolas",
-      \]
-  let g:FontSize = 10
-
-Alternatively, you may use the fontdetect plugin to decide whether to set
-g:FontFamily and g:FontSize (allowing vimfiles to choose the default font and
-size if your preferred fonts aren't available).  For example:
-
-  let detectedFamily = fontdetect#firstFontFamily([
-      \ "Droid Sans Mono",
-      \ "Consolas",
-      \])
-  if detectedFamily != ""
-      let g:FontFamily = detectedFamily
-      let g:FontSize = 10
-  endif
-
-------------------------------------------------------------------------------
-Spell checking                                          *notes_spell_checking*
-
-In order to allow per-user overriding of spell-check settings, there are two
-variables for configuring spell-checking.  Adjust these variables in per-user
-configuration files (|VIMRC_BEFORE|, |VIMRC_AFTER|).
-
-To disable automatic configuration of the 'spell' setting entirely: >
-
-  let g:Spell = 0
-
-To turn off spell-checking for just "C" source code: >
-  let g:SpellMap["c"] = "<off>"
-
-Turn off spell-checking for the entire "<source>" group: >
-  let g:SpellMap["<source>"] = "<off>"
-
-Turn on spell-checking for files of type "javascript": >
-  let g:SpellMap["javascript"] = "<on>"
-
-Add "perl" filetype to the "<source>" group: >
-  let g:SpellMap["perl"] = "<source>"
-
-Use b:Spell for per-buffer control that overrides g:SpellMap.
-E.g. to disable spell checking for the buffer: >
-  let b:Spell = "<off>"
-<
-See g:SpellMap documentation in vimrc for more detail.
-
-------------------------------------------------------------------------------
-Buffer switchers and filesystem navigators              *notes_buffer_switchers*
-
-Lusty Juggler - rapidly switch among buffers
-
-  <M-s>  Launch Lusty Juggler; while in juggler, press again to cycle
-         through most-recently-used buffers.
-  \lj    Launch Lusty Juggler (default mapping, doesn't do MRU cycling).
-
-BufMRU - most-recently-used buffer switcher
-
-  <C-6> (CTRL-6) Switch to MRU buffer and enter BufMRU mode.  This is Vim's
-                 default keystroke for switching to the alternate buffer.
-  <Space><Space> Switch to MRU buffer and enter BufMRU mode.  This is easier
-                 to invoke and closer to the original single-<Space> mapping
-                 to aid muscle memory.
-
-  See |notes_bufmru| for more details.
-
-Buf Explorer - display all buffers in a list, switch or delete buffers, etc.
-
-  \be    Invoke BufExplorer.
-
-------------------------------------------------------------------------------
-Building and Running                                    *notes_building_running*
-
-Press <F9> to save all buffers and execute :make in current directory.
-
-Press <F5> to execute current buffer (useful when editing Python scripts,
-for example).
-
-<F11> and <F12> signal fifos using the fifosignal command (a separate program).
-Each key causes a ":wall" followed by a signal to a particular fifo in a
-particular directory.
-
-<F11> signals the fifo named ".fifo2" in the current working directory.
-<F12> signals the fifo named ".fifo" in the parent directory of the current
-file.
-
-These signals are useful in combination with a separate command prompt using the
-fifowait command, commonly used to trigger a build outside of Vim.  For example:
-
-    while fifowait; do echo "Building"; ./buildall; done
-
-Reference implementations of fifosignal and fifowait are found in
-$VIMFILES/tool/fifosignal.  Copy these to a directory in your path and ensure
-they are executable, e.g.: >
-
-  cp ~/.vim/tool/fifosignal/* ~/bin
-  chmod +x ~/bin/{fifosignal,fifowait}
-
-Note: At present, fifosignal and fifowait are Unix-only.
-
-------------------------------------------------------------------------------
-Tab page support                                        *notes_tab_page*
-
-Use <C-S-PageUp>/<C-S-PageDown> in Gvim to move the current tab page left or
-right.  This unfortunately doesn't work in console Vim because those key
-sequences aren't visible to Vim.
-
-------------------------------------------------------------------------------
-QuickFix keys                                           *notes_quickfix_keys*
-
-  oo      Return to other window
-  OO      Return to other window, close QF
-  <CR>    Open in existing        (<s-CR>  = stay in QF)
-  o<CR>   Open in existing        (o<s-CR> = stay in QF; O<s-CR> = close QF)
-  oh      Open horizontal split   (oH      = stay in QF; OH      = close QF)
-  ov      Open vertical split     (oV      = stay in QF; OV      = close QF)
-  ot      Open in new tab         (oT      = stay in QF; OT      = close QF)
-  <F1>    Display this help section (:help notes_quickfix_keys)
-  { / }   Move cursor to previous/next filename in QuickFix window
-
-The above mappings are active in QuickFix and Location List windows.
-Note: "O + unshifted" is the same as "O + shifted" (so "Oh" = "OH", etc.).
-
-------------------------------------------------------------------------------
-QuickFix window, diff mode                              *notes_quickfix_win*
-
-Use <F4> and <S-F4> to navigate forward and backward.  When diff mode is
-active, browses through diff hunks; otherwise, when a Location List window is
-open, browses through the Location List; otherwise, browses through
-the QuickFix list.
-
-New diff commands:
-
-  :DiffOrig
-    Compare unsaved changes in current window against original on-disk.
-
-  :Diff
-    Initiate diff between current window and "next" window (found by <C-w>w).
-
-  :Diff {filename}
-    Initiate diff between current window and {filename}.
-
-Built-in commands for more manual control:
-
-  :diffthis
-    Put current window into diff mode.  Use this on two windows separately to
-    do a diff between them.
-
-  :diffoff
-    Remove diff mode for current window.
-
-  :diffoff!
-    Remove diff mode for all windows.
-
-------------------------------------------------------------------------------
-Dragging text in four directions                        *notes_dragging_text*
-
-Text may be "dragged" in any of the four directions (Up, Down, Left, or
-Right).  In normal and insert modes, the current line will be dragged; in
-visual mode, the visual selection will be dragged.
-
-Lines dragged vertically move as whole lines.
-
-Lines dragged horizontally are shifted one space to the left or right,
-generally as if the standard "<<" or ">>" operator had been invoked with the
-shift width ('sw') variable temporarily set to one.  For block-wise
-selections, this implies that only the selected block is shifted.
-
-Dragging up:
-  <M-Up>        (visual mode, insert mode, normal mode)
-  <M-k>         (visual mode, insert mode, normal mode)
-  -             (visual mode)
-
-Dragging down:
-  <M-Down>      (visual mode, insert mode, normal mode)
-  <M-j>         (visual mode, insert mode, normal mode)
-  +             (visual mode)
-
-Dragging left:
-  <M-Left>      (visual mode, insert mode, normal mode)
-  <M-h>         (visual mode, insert mode, normal mode)
-  <Backspace>   (visual mode)
-
-Dragging right:
-  <M-Left>      (visual mode, insert mode, normal mode)
-  <M-h>         (visual mode, insert mode, normal mode)
-  <Space>       (visual mode)
-
-------------------------------------------------------------------------------
-Deleting "Rubbish" Whitespace                           *notes_deleting_rubbish*
-
-The normal-mode mapping "drw" deletes "rubbish" whitespace, bringing a
-run of spaces down to a single space character, or a group of consecutive
-blank lines down to a single blank line.
-
-------------------------------------------------------------------------------
-Deleting Trailing Whitespace                            *notes_deleting_trailing*
-
-The normal-mode command :StripTrailingWhitespace will remove all trailing
-whitepsace from the current buffer.  It accepts a line range as well, such
-that selecting a visual range first followed by typing
-:StripTrailingWhitespace will strip only the selected lines.
-
-For convenience, the following mappings are available:
-
-  <Leader><Leader>$     :StripTrailingWhitespace
-  <Space>xdw            :StripTrailingWhitespace
-
-------------------------------------------------------------------------------
-Re-formatting text                                      *notes_reformatting*
-
-The useless key "Q" is mapped to the "gq" reformatting operator.  Pressing
-"QQ" on a line reformats that line.  Pressing "Q" in visual mode reformats the
-selection.
-
-<M-q> is mapped in normal, visual, and insert modes to reformat the current
-"inner paragraph" (as defined by Vim's paragraph operator, |ip|).  When the
-'textwidth' option is non-zero (which is typical), the paragraph will be
-re-wrapped to that width; otherwise, the paragraph will be joined into a
-single long line.  In addition, the `q` register is used to mark and restore the
-cursor position.
-
-For normal and visual modes, <Leader>q does the same as <M-q>.
-
-------------------------------------------------------------------------------
-Moving "out" hierarchically                             *notes_moving_out*
-
-Press <C-o><C-o> in insert or visual modes to exit "out" to the containing
-context.  For example, if your cursor is between parentheses, pressing
-<C-o><C-o> will move out just beyond the parentheses.  This is helpful for
-getting outside text that was automatically inserted (e.g., from a snippet).
-
-The following may be "exited": >
-
-  (Parentheses)
-  [Brackets]
-  {CurlyBraces}
-  break;
-
-------------------------------------------------------------------------------
-Additional CTRL-o mappings                              *notes_ctrl_o*
-
-<C-o>o      - Open a line below this one
-<C-o>;      - Append ";" to the current line
-<C-o>:      - Append ":" to the current line
-<C-o>.      - Append "." to the current line
-<C-o><CR>   - Append "." and <CR> to the current line unless overridden by a
-              filetype-specific mapping
-<C-o><C-h>  - Exit visual modes at start of selected text
-<C-o><C-l>  - Exit visual modes at end of selected text
-
-------------------------------------------------------------------------------
-Pressing <Enter> removes trailing whitespace            *notes_enter*
-
-To help avoid cluttering the file with trailing whitespace, pressing <Enter> in
-insert mode will strip trailing whitespace from the previous line.  This is
-helpful when trying to split a line such as the one below.  Consider this line:
-
-  Place cursor on X and press <Enter>
-
-With your cursor on the "X" above, pressing <Enter> would normally leave a
-trailing space character after the word "on"; this space will instead be
-removed.
-
-To intentionally preserve trailing whitespace when typing at the end of a line,
-simply avoid pressing <Enter>.  When pressing <Enter> in the middle of a line,
-more steps are involved.  For example, before pressing <Enter>, add a period,
-then press <Enter>, then go back and remove the period from the line.
-Alternatively, press <Enter>, then go back and restore the trailing whitespace
-on the previous line.  Though this is awkward, it's expected to be very rarely
-desirable in the course of normal editing that pressing <Enter> in the middle
-of a line should preserve whitespace.
-
-------------------------------------------------------------------------------
-Movement by screen lines                                *notes_movement*
-
-The standard movement keys have been remapped to move by screen lines instead
-of logical lines.  For "short" lines, there is no difference, but for wrapped
-lines, this reverses the default behavior of using logical lines.  Use "g" and
-the original key to move by logical lines.
-
-------------------------------------------------------------------------------
-Emacs-style command-line editing                        *notes_emacs_commandline*
-
-The standard Emacs-style command-line editing keys as used in Bash have been
-mapped for command-line mode.  These include:
-
-<C-a>   Start of line
-<C-b>   Move left one character
-<C-d>   Delete character under cursor
-<C-f>   Move right one character
-<C-n>   Next command history line
-<C-p>   Previous command history line
-<M-b>   Move left one word
-<M-f>   Move right one word
-
-<C-g>   Edit command-line history (used to be <C-f>)
-
-The original meanings for these keys may be activated by first pressing <C-o>
-(mnemonic: "Original").
-
-Original meanings:
-<C-a>   Insert all matching filenames
-<C-b>   <Home>
-<C-d>   List matching names
-<C-f>   Edit command-line history
-<C-g>   Nothing
-<C-n>   Next match after wildchar, or recall next command-line history
-<C-o>   Nothing
-<C-p>   Prev. match after wildchar, or recall prev. command-line history
-
-------------------------------------------------------------------------------
-Clipboard support                                       *notes_clipboard*
-
-Because the Windows standard keys for clipboard support are already taken in
-Vim, they have been mapped to the same keys using Alt:
-
-<M-a>         Select all
-<M-z>         Undo
-<M-x>         Cut to clipboard
-<M-c>         Copy to clipboard
-<M-v>         Paste from clipboard
-
-In addition, old-style mappings exist:
-
-<S-Insert>    Paste from clipboard
-<C-S-Insert>  Paste from X11 primary selection
-<C-Insert>    Copy to clipboard and X11 primary selection
-
-For ease of use and mnemonic value, the "undo" functionality is also
-available as <M-u><M-u>.
-
-All of these mappings are available in Normal, Visual, and Insert modes.
-
-In addition, the "unnamed" register (which is the default source for "puts"
-and the default destination for "yanks") has been configured to use the
-system clipboard by default for puts, and to use both the system clipboard
-and the X11 primary selection as the destination for yanks.  This provides
-smoother integration with the bulk of applications that use the system
-clipboard.  To put from the primary selection, either use <C-S-Insert> or
-reference the "*" register explicitly, e.g.: >
-
-  "*p
-
-Note that registers can be set via :let, which allows for moving one register
-into another easily.  For example, to move the contents of the clipboard into
-the primary selection, use: >
-
-  let @*=@+
-
-------------------------------------------------------------------------------
-Putting most-recently-yanked text                       *notes_putting_yanked*
-
-By default, yanking (e.g, "yy") copies your text into the unnamed register,
-and putting (e.g., "p") puts text from the unnamed register into your
-buffer.  Putting text onto a visual selection replaces that selection with
-your text, but it also has the sometimes undesirable effect of overwriting
-your unnamed register with the previously selected text.  Subsequent "put"
-operations will then use the overwritten text instead of your previously
-yanked text.
-
-The manual work-around for this problem is to explicitly use register 0 when
-putting, via: >
-
-  "0p
-
-To make this easier, a visual mode mapping of capital P performs a put from
-register 0.  This allows a yank followed by repeated selections and puts.
-
-------------------------------------------------------------------------------
-Yank-related mappings                                   *notes_yank*
-
-Normal-mode "Y" has been remapped to mean "yank to end of line" (equivalent to
-"y$"), for consistency with most other uppercase variants (e.g., "D", "C", ...).
-To yank a single line, use "yy".
-
-Visual-mode "Y" performs a yank-and-dedent operation on the selected text, where
-the largest common whitespace prefix is removed from all lines.  For now, the
-destination register is hard-coded to be "0 (along with both clipboard-related
-registers "+ and "*).  This is convenient when yanking shell commands to be
-pasted into a terminal.
-
-------------------------------------------------------------------------------
-Window-related customizations                           *notes_window_related*
-
-Vim provides many window-related operations beginning with <C-w>.  To make these
-easier to type, <Space>w has been mapped to <C-w>.
-
-------------------------------------------------------------------------------
-Miscellanous mappings                                   *notes_misc_mappings*
-
-  gV      Visually select the text that was last edited/pasted.
-
-  CTRL-w  (insert-mode) Break undo, then CTRL-w (delete word).
-  CTRL-u  (insert-mode) Break undo, then CTRL-y (delete to line start).
-
-  P       (visual-mode) Put from most recent yank instead of scratch register.
-
-------------------------------------------------------------------------------
-Search-related customizations                           *notes_search*
-
-Vim's standard `*` operator (which searches for the word under the cursor) has
-been modified to leave the cursor unmoved.  In visual mode, the selection
-becomes the search text.
-
-The Grepper plugin (|notes_grepper|) wraps several recursive file search tools
-with a convenient interface.
-
-Vimfiles provides `:G`, a custom command to conveniently invoke `:Grepper` using
-the best available search tool detected by Vimfiles; see |notes_G| for details.
-
-The `#` key is mapped to start a search for the word under the cursor (in Normal
-mode) or the current selection (in Visual mode) using `:G`.
-
-Use the mapping \z after a search to fold all but the matching lines.
-
-Alternatively, some plugins provide a direct interface into individual search
-tools (though the `:Grepper` interface is preferable):
-
-- `:Ack` (|notes_ack|) wraps the Perl-based Ack tool.
-- `:Ag` (|notes_ag|) wraps The Silver Searcher.
-- <F3> launches a `:Regrep` command (from the |grep.txt| plugin).
-
-------------------------------------------------------------------------------
-findx-related commands                                  *notes_findx*
-
-The external findx utility may be invoked using any of the below commands: >
-
-  :Findx <args>           Invoke ``findx``
-  :FFX <args>             Invoke ``ffx`` (a.k.a. ``findx -ffx``)
-  :FFG <args>             Invoke ``ffg`` (a.k.a. ``findx -ffg``)
-
-------------------------------------------------------------------------------
-:G 'search pattern'                                   *:G*   *notes_G*
-
-The `:G` command provides a convenient way to search through a tree of files.
-It defaults to the first external search tool it can find from the following
-list:
-
-- rg (RipGrep, https://github.com/BurntSushi/ripgrep)
-- ag (The Silver Searcher, https://github.com/ggreer/the_silver_searcher)
-- ffg (From findx, https://github.com/drmikehenry/findx)
-- ack (https://beyondgrep.com/)
-
-The actual search is done via the grepper plugin |notes_grepper|.
-
-Depending on your environment, you may not have any of the external tools
-available on the `PATH,` but if you have Perl installed, you will at least be
-able to use `:G` via the single-file implementation of ack bundled with
-vimfiles. Because these tools are so similar, in most cases you don't have to
-care which one gets called.
-
-For all of these tools, the command line is passed directly to the shell, and
-the syntax you must use depends on the details of your environment.
-
-For Unix-like systems, it's best to use single-quotes around the entire regular
-expression.  Single-quotes within the regular expression should be handled by
-closing the quotes, escaping a single-quote with a backslash, then re-opening
-the quotes.  For example, to quote this string:
-
-  I'm here
-
-Replace the apostrophe with the four characters '\'' and surround the entire
-expression with single-quotes like this:
-
-  'I'\''m here'
-
-For Windows, surround the pattern with double-quotes, and double any
-double-quotes embedded within the pattern.  For example, to quote this string:
-
-  I said "That's painful" in my loudest voice.
-
-Use the following:
-
-  "I said ""That's painful"" in my loudest voice."
-
-------------------------------------------------------------------------------
-Pasting lines into Vim                                  *notes_pasting*
-
-When pasting lines copied from outside Vim, the content is subject to
-auto-indentation at each <CR>.  The |'paste'| variable may be set to
-prevent these unintended effects during pasting.
-
-Press <S-F12> key to toggle the state of the |'paste'| variable; it may be set
-or cleared manually via: >
-    :set paste
-    :set nopaste
-Be sure to exit insert mode when pasting with :set paste active because
-mappings are disabled, so <S-INSERT> won't be interpreted as the paste
-operation.
-
-------------------------------------------------------------------------------
-Tag files                                               *notes_tag_files*
-
-Tag files (named "tags") will now be searched starting in the current working
-directory and all parent directories toward the root.
-
-The "gf" command ("goto file") will use any filename tags to augment the
-search path (:help 'path').
-
-The custom :Ctags command will launch "gentags" in the current directory to
-update the tags.
-
-An example implementation of "gentags' is found in $VIMFILES/tool/gentags; use
-this as an example, or else copy or symlink this into a directory in your PATH
-to use this implementation as-is, e.g. >
-
-  ln -s ~/.vim/tool/gentags ~/bin
-
-The supplied "gentags" script supports both the preferred Universal Ctags and
-the older (but no longer maintained) Exuberant Ctags.  It probes for the
-existence of various "ctags" executables and detects the version via
-"ctags --version".  Universal Ctags is preferred, followed by a list of names
-taken from the Tagbar plugin (in "tagbar/autoload/tagbar.vim").
-
-See "gentags --help-gentags" for details.
-
-Universal Ctags is generally available in Linux distributions, or at:
-https://github.com/universal-ctags/ctags
-
-------------------------------------------------------------------------------
-Cscope                                                  *notes_cscope*
-
-Key bindings have been setup for cscope.
-
-For Vim:
-- The mappings generally uses the word under the cursor as input.
-- Most results are sent to the QuickFix list, and some are in a menu.
-- See `:help cscope` for more information.
-
-For Neovim:
-- The mappings use the word under the cursor or an interactively entered word.
-- Results are sent to the Telescope plugin; use CTRL-Q to send Telescope results
-  to the QuickFix window.
-- See `:help plugin_cscope_maps`  for more information.
-
-<Space>ca     Find assignments to symbol.
-<Space>cb     Build database.
-<Space>cc     Find callers of this func.
-<Space>cd     Find called funcs from this func.
-<Space>ce     Find egrep pattern.
-<Space>cf     Find file.
-<Space>cg     Find global definition.
-<Space>ci     Find #includers of this file.
-<Space>cs     Find symbol.
-<Space>ct     Find text string.
-
-------------------------------------------------------------------------------
-Window Layout                                           *notes_window_layout*
-
-Usage:
-
-:L          Layout windows nicely using current number of columns.
-:L <n>      Layout windows in an <n>-column format.
-:L1         Layout windows in a one-column format.
-:L2         Layout windows in a two-column format.
-:L3         Layout windows in a three-column format.
-:L4         Layout windows in a four-column format.
-:L5         Layout windows in a five-column format.
-
-The bare :L command will not change the overall number of columns; the rest will
-set the overall number of columns to the value needed to provide <n> vertically
-split windows side-by-side, as determined by the function GetWindowWidth() (see
-the definition in the vimrc file).
-
-Within the overall number of columns, :L and friends adjust the windows as
-follows:
-- Move current window to the top (L1 only).
-- Move quickfix window to the bottom and set to standard size (if already open).
-- Make all windows equally sized (via Ctrl-w_=).
-
-*NOTE* If your Gvim window isn't positioned to span the edges of your monitor,
-the number of character columns may be truncated to keep Gvim on a single
-monitor.  To work around this, move Gvim to straddle the boundary between
-monitors before executing the above commands.
-
-With w = GetWindowWidth(), the overall number of columns is calculated as:
-- :L1  ==> w
-- :L2  ==> (2 * w + 1)
-- :L3  ==> (3 * w + 2)
-- :L4  ==> (4 * w + 3)
-- :L5  ==> (5 * w + 4)
-- :L n ==> (n * w + (n - 1))
-
-This leaves room for n windows with (n - 1) dividing lines between them.
-
-GetWindowWidth() calculates the desired window width as follows:
-- Start with a based value of g:WindowWidth (defaults to 80);
-- Unconditionally add in g:ExtraWindowWidth (allows extra room for :sign
-  columns; defaults to 2);
-- If any window is in diff mode, add two more columns for the diff indicators;
-- If any window has line numbering turned on (via 'number' or 'relativenumber'),
-  add enough space for the largest value across all windows, but no smaller
-  than 'numberwidth'.
-
-The standard heights of Location Windows and the QuickFix Window may be
-controlled by the following global variables: >
-
-  " Desired height of a Location List window.
-  let g:LocListWinHeight = 5
-
-  " Desired height of QuickFix window.
-  let g:QuickFixWinHeight = 10
-
-------------------------------------------------------------------------------
-QuickFix and Location Window                            *notes_quickfix_location*
-
-<C-q><C-l>  Toggle the Location window on or off
-<Space>ql   Toggle the Location window on or off
-<C-q><C-q>  Toggle the QuickFix window on or off
-<Space>qq   Toggle the QuickFix window on or off
-
-NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
-
-------------------------------------------------------------------------------
-Alternatives to :bufdo, :windo, :tabdo                  *notes_alternatives*
-
-These behave as their built-in counterparts but restore the current
-window, buffer, or tab when they complete.
-
-Usage:
-
-:Windo command
-:Bufdo command
-:Tabdo command
-
-------------------------------------------------------------------------------
-Highlight command                                       *notes_highlight*
-
-The custom command :Highlight provides highlighting of non-conforming coding
-styles to make it easier to locate problems during editing.
-
-Highlighting is done on a per-buffer basis via Vim's syntax highlighting
-mechanism.  Individual syntax items for a single buffer are enabled or disabled
-via the :Highlight command:
-
-    :Highlight tabs         ; enable highlighting of tab characters
-    :Highlight notabs       ; disable highlighting of tab characters
-    :Highlight longlines    ; enable highlighting of long lines
-    :Highlight nolonglines  ; disable highlighting of long lines
-    :Highlight *            ; enable all supported highlight items
-    :Highlight no*          ; disable all supported highlight items
-    :Highlight <Tab>        ; command-line completion to show all options
-
-:Highlight options include: >
-    commas
-    keywordspace
-    longlines
-    tabs
-    trailingspace
-
-In addition, highlighting may be enabled or disabled on a per-buffer basis via
-the following commands:
-
-    :HighlightOn        ; enable highlighting of previously enabled items
-    :HighlightOff       ; disable highlighting of all items
-
-The highlight items that were individually configured via the :Highlight
-command are remembered, such that :HighlightOn restores the configuration.
-
-The default disposition of highlighting is controlled by the global variable
-g:HighlightEnabled.  This is set to 1 in the vimrc, but it may be overridden in
-a vimrc-after file to cause highlighting to be disabled by default.  In this
-way, it's convenient to allow individually configured highlighting items to be
-set by the main vimrc, but have them be inactive by default (by setting
-g:HighlightEnabled to 0), such that :HighlightOn will turn on the recommended
-set of highlight items.  For this reason, it's not recommended to have
-":Highlight no*" in your configuration.
-
-------------------------------------------------------------------------------
-colorcolumn (highlighting first column in right margin) *notes_colorcolumn*
-
-Where supported, Vim's 'colorcolumn' feature will be enabled and set to create
-an indicator of the right margin.  A vertical line indicates the first column
-outside 'textwidth' (when 'textwidth' is non-zero).  To disable this feature,
-place the following in |VIMRC_AFTER|: >
-
-  :set colorcolumn=
-
-------------------------------------------------------------------------------
-Help-related mappings                                   *notes_help_mappings*
-
-The following normal-mode mappings toggle the help window on and off:
-
-  <F1>
-  <C-q><C-h>
-  <C-q>h
-  <Space>qh
-
-In visual mode, these same keys perform :help on the selected text.
-
-NOTE See |notes_tips_xon_xoff| if <C-q> doesn't work in console vim.
-
-If the help window is already open, it will be closed; otherwise, the most
-recent help file will be re-opened.
-
-------------------------------------------------------------------------------
-Folding by regular expression                           *notes_folding_regex*
-
-To fold away lines that match a regex, use the custom command :Fold: >
-    :Fold regex         ; lines matching regex are hidden
-    :Fold               ; use last search pattern (@/) for regex
-
-Use the custom command :FoldSearch to search for lines matching a regex and
-fold away everything else: >
-    :FoldSearch regex   ; show lines matching regex, and fold away all else
-    :FoldSearch         ; use last search pattern (@/) for regex
-
-With :FoldSearch, increasing the 'foldlevel' to 1 will show one line of
-context around all matches.
-
-To fold away comments and blank lines, use this custom command: >
-    :FoldComments
-
-------------------------------------------------------------------------------
-QuickFix entry folding                                  *notes_quickfix_folding*
-
-To group lines of QuickFix output together by files or by directories, use one
-of the following commands when a QuickFix or Location List window is focused:
-
-                                  *FoldQuickFixFiles*
-                                  *FoldQuickFixDirs*
-    :[count] FoldQuickFixFiles
-    :[count] FoldQuickFixDirs
-
-When [count] is 0 (the default), the folds will start closed; when [count] is 1,
-the folds will start open.
-
-When a QuickFix or Location List window is opened, :1FoldQuickFixFiles is
-applied by :SetupQuickFix, such that the folds start open.  Use standard Vim
-shortcut keys within the QuickFix or Location List window to change folding
-levels:
-
-    zr    Reduce amount of folding
-    zR    Reduce amount of folding fully (no folding remaining)
-    zm    More folding
-    zM    More folding (fully folded)
-    zo    Open a fold
-    zc    Close a fold
-
-In Gvim, you may also click on the symbols in the left margin of the QuickFix
-or Location List window to toggle individual folds.
-
-------------------------------------------------------------------------------
-Converting Unicode symbols to ASCII                     *notes_toascii*
-
-Use :ToAscii to convert a range of lines (defaulting to the entire buffer)
-into ASCII.  Mainly this converts several kinds of quotes into ASCII quotes
-and generally maps some of the Unicode symbols in the range U+2000 through
-U+206F into ASCII equivalents.
-
-------------------------------------------------------------------------------
-Converting identifer case (e.g, lowerMixedCase to underscore_separated)
-                                  *notes_identifier_case*
-
-Several conventions exist for multi-word variable names, e.g.::
-
-  lowerMixedCase                  (a.k.a. mixedCase or lowerCamelCase)
-  UpperMixedCase                  (a.k.a. CamelCase or upperCamelCase)
-  underscore_separated_lowercase  (a.k.a. snake_case)
-
-In support of finding and converting variables of various naming conventions,
-the following features are provided.
-
-                                  *SearchLmc* *SearchUmc* *SearchUnderscore*
-:SearchLmc
-:SearchUmc
-:SearchUnderscore
-        Set Vim's search expression to match lowerMixedCase, UpperMixedCase,
-        or underscore_separated_lowercase identifiers.
-
-                                  *SearchWord*
-:SearchWord [ident]*
-        Set Vim's search expression to match all provided identiers; if none are
-        provided, set the search expression to WordPattern() to match all
-        identifiers.
-
-        E.g., to search for identOne and identTwo:
-
-          :SearchWord identOne identTwo
-
-                                  *GrepLmc* *GrepUmc* *GrepUnderscore*
-:GrepLmc args-for-G-command
-:GrepUmc args-for-G-command
-:GrepUnderscore args-for-G-command
-        This wraps the :G command, providing a Perl-compatible regular
-        expression matching lowerMixedCase, UpperMixedCase, or
-        underscore_separated identifiers as the implied first
-        argument to :G.  It is logically equivalent to:
-          :G <perl-regex-for-identifier-type> args-for-G-command
-
-        Also sets Vim's search expression for highlighting of matched
-        identifiers.
-
-                                  *ToUnderscore* *ToUmc* *ToLmc*
-:ToUnderscore [ident]*
-:ToUmc [ident]*
-:ToLmc [ident]*
-        These commands convert the provided identifiers to the corresponding
-        convention in the current buffer using :s///.  If no identifiers are
-        provided, the identifier under the cursor is used.  These commands
-        accept a range, which defaults to the entire file.
-
-        Examples:
-
-        " Convert identOne and identTwo to ident_one and ident_two.
-        :ToUnderscore identOne identTwo
-
-        " Convert some_name to SomeName in lines 1 through 100.
-        :1,100ToUmc some_name
-
-        " Convert identifier under cursor to lowerMixedCase in entire file.
-        :ToLmc
-
-                                  *LmcToUnderscore*
-:LmcToUnderscore
-        Similar to :ToUnderscore, but uses a regular expression to match all
-        lowerMixedCase identifiers.  This is helpful for converting Python
-        multiWordVariables to multi_word_variables.
-
-                                  *SearchLmcPattern()* *SearchUmcPattern()*
-                                  *SearchUnderscorePattern()*
-SearchLmcPattern()
-SearchUmcPattern()
-SearchUnderscorePattern()
-        These functions return Vim regular expressions to match lowerMixedCase,
-        UpperMixedCase, and underscore_separated_lowercase identifiers,
-        respectively.  They may be useful for use with the '/' command and
-        |c_CTRL-R_=| to get hold of the regular expression for further editing.
-        For example, pressing the following keys in order will perform a search
-        for lowerMixedCase identifiers:
-
-          /<C-R>=SearchLmcPattern()<CR>
-
-                                  *GrepLmcPattern()* *GrepUmcPattern()*
-                                  *GrepUnderscorePattern()*
-GrepLmcPattern()
-GrepUmcPattern()
-GrepUnderscorePattern()
-        These functions return Perl-compatible regular expressions to match
-        lowerMixedCase, UpperMixedCase, and underscore_separated_lowercase
-        identifiers, respectively.  They may be useful to create customized
-        :G commands.  For example, an :GrepLmc operation in the ~/tmp directory
-        can be simulated by pressing the following keys:
-
-          :G <C-R>=GrepLmcPattern()<CR> ~/tmp<CR>
-
-                                  *Underscore* *Umc* *Lmc*
-Underscore()
-Underscore(word)
-Umc()
-Umc(word)
-Lmc()
-Lmc(word)
-        Convert word to specified convention.  If word is not supplied, use
-        submatch(0) instead, which represent the entire matched text within
-        a :s/// command.
-
-        These functions are convenient when constructing a custom substitute
-        command.  For example, pressing "*" on an identifier under the cursor
-        will set the current search expression to match that word.  To convert
-        that word to the underscore_separated_lowercase convention, re-use the
-        search expression by leaving the pattern blank and use Vim's
-        |sub-replace-expression| feature to convert submatch(0) using the Umc()
-        function:
-
-          :%s//\=Underscore()/g
-
-Some refactoring mappings exist to rename the identifier under the cursor to a
-new convention across the entire file:
-
-  <M-r>iu     Refactor identifier to underscore_separated_lowercase
-  <M-r>iU     Refactor identifier to UpperMixedCase
-  <M-r>il     Refactor identifier to lowerMixedCase
-
-This may help after a bulk :LmcToUnderscore operation.  Using <Leader>sv on a
-file will show the diffs against the most recent comment in source control (see
-|notes_vcscommand| for details).  If an identifier was converted erroneously, it
-may be converted back via <M-r>il.
-
-------------------------------------------------------------------------------
-Conflict marker navigation                              *notes_conflict_marker*
-
-Inspired by vim-unimpaired, keybindings have been setup for move between
-conflict markers:
-
-]n    Go to the beginning of the next conflict marker.
-]N    Go to the end of the next conflict marker.
-[n    Go to the beginning of the previous conflict marker.
-[N    Go to the end of the previous conflict marker.
-
-------------------------------------------------------------------------------
-Embedded language support                               *notes_embedded_lang*
-
-The reStructuredText and Markdown support has been extended to support color
-syntax highlighting for a subset of languages.  "g:rstEmbeddedLangs" controls
-the list of languages that will include syntax highlighting in the
-"code-block" directive.  Markdown will default to the same set of languages
-as reStructuredText by default.  You can set "g:markdownEmbeddedLangs" to a
-different list, if you desire.
-
-------------------------------------------------------------------------------
-Source control integration                              *notes_source_control*
-
-During a Git rebase operation, the following additional mappings are available:
-
-<Leader><Leader>e Change rebase action to "edit"
-<Leader><Leader>f Change rebase action to "fixup"
-<Leader><Leader>p Change rebase action to "pick"
-<Leader><Leader>r Change rebase action to "reword"
-<Leader><Leader>s Change rebase action to "squash"
-
-------------------------------------------------------------------------------
-List of numbers                                         *notes_list_of_numbers*
-
-The function Inc() provides a way to generate an incrementing sequence of
-numbers during a substitute operation.  It comes in two forms: >
-
-  Inc()     " Increment by one.
-  Inc(n)    " Increment by n.
-<
-Consider this list: >
-
-  abc
-  abc
-  abc
-<
-Use `Inc()` to replace each `abc` with `xyz_#` where `#` increments: >
-
-  :let i = 1 | %s/abc/\='xyz_' . Inc()/g
->
-Yielding this new list: >
-  xyz_1
-  xyz_2
-  xyz_3
-<
-To prefix each of these lines with a number: >
-
-  one
-  two
-  three
-<
-First, initialize the variable: >
-  :let i = 1
-<
-Then select the lines visually and use: >
-
-  :'<,'>s/^/\=Inc() . '. '/g
-<
-to get these numbered lines: >
-  1. one
-  2. two
-  3. three
-<
-See https://vim.fandom.com/wiki/Making_a_list_of_numbers for more ideas.
-
-==============================================================================
-Tips                                                    *notes_tips*
-
-Use the following command: >
-    :help quickref
-to get a nice quick reference guide.
-
-- Use filetype=Wikipedia for MediaWiki files.
-
-Set 'path' variable to include **/pubinc, **/src: >
-    set path+=**/pubinc,**/src
-
-Use |gf| to jump to file under cursor (powerful in combination with setting
-the 'path' variable).
-
-Use |:find| instead of |:edit| to use 'path' to locate a file.
-
-Use |]p| and |]P| to perform |p| and |P| with re-indentation of the pasted text.
-(Or can use |]p| and |[p| for paste-after and paste-before.)
-
-Try @: to repeat the last ex-mode command; to repeat again, use @@.
-
-Use g& to repeat the last Search-and-replace.
-
-If your syntax highlighting gets out of sync, try the command: >
-    :syntax sync fromstart
-
-------------------------------------------------------------------------------
-Command-line window                                     *notes_tips_commandline*
-
-Special window for editing current and historical command and searches.
-
-From command-line mode or while editing a search pattern, press CTRL-g to open
-the window (Note: Vim default is to use CTRL-f, but this has been remapped).
-
-From normal mode, press "q:" or "q/" to open the command-history or
-search-history window, respectively.
-
-You can edit, cut, paste, yank, etc., from these history windows.  Press
-CTRL-c to exit.
-
-Press <CR> on a line in the window to execute it.
-
-------------------------------------------------------------------------------
-Debugging Vim problems                                  *notes_tips_debugging*
-
-- To disable plugins, per-user customizations, etc.: >
-
-    vim --clean
-<
-- To display characters under the cursor: >
-
-    ga  - decimal, hexadecimal, octal
-    g8  - bytes in UTF-8 character
-<
-------------------------------------------------------------------------------
-Quitting with non-zero return code                      *notes_tips_quitting*
-
-When using Vim as the "fix command" editor in Bash (via the ``fc`` command
-or via ``Ctrl-x Ctrl-e`` - "man bash" for details on fc), a successful
-return code tells Bash to execute the commands.  This is somewhat
-counter-intuitive when mixed with Vim's :qa! syntax which means "throw away
-all my changes."  But Vim has a "throw away all my changes and return failure"
-command: >
-    :cquit
-    :cq
-
-This command is the same as :qa! but returns failure so Bash will ignore
-the edited command.
-
-------------------------------------------------------------------------------
-Redirecting Vim command-line output                     *notes_tips_redirecting*
-
-To capture the output generated by a Vim Ex command (e.g., |:map|), the
-built-in |:redir| command is useful.  For example: >
-    :redir @a
-    :map
-    :redir END
-If the output of the command is lengthy, Vim pauses after each screenful of
-output.  To avoid this, reset 'more' while redirecting: >
-    :set nomore
-    :redir @a
-    :map
-    :redir END
-    :set more
-Use a capital register name to append to an existing register.  Lowercase
-registers will be cleared before output lines are accumulated in them.
-
-A helper command :Redir has been defined to automatically set 'nomore' when
-beginning a redirection, and to set 'more' when redirection terminates.  The
-"END" keyword is optional to save typing when stopping redirection.
-So the above example becomes: >
-    :Redir @a
-    :map
-    :Redir
-
-------------------------------------------------------------------------------
-Using <C-q> and <C-s> in console Vim                    *notes_tips_xon_xoff*
-
-When using console Vim, <C-q> and <C-s> are often trapped by the console
-(they're the standard ASCII XON and XOFF characters).  To allow them to be
-seen by console Vim on Linux, try the following in your ~/.bashrc: >
-
-  # Disable XON/XOFF so CTRL-q and CTRL-s are available to Vim and friends
-  # when stdout is connected to a terminal.
-  test -t 0 && stty -ixon -ixoff
-
-This is unnecessary for Gvim.
-
 --
   vim:sw=2:sts=2:et:ai:tw=78:fo=tcq2:ft=help:nospell:
