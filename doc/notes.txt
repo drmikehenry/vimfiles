@@ -866,7 +866,7 @@ For example, after building into the directory `vim-8.1.0290`, execute via: >
 
   cd vim-8.1.0290/src
   VIMRUNTIME=$(dirname $PWD)/runtime ./vim
-
+<
 ==============================================================================
 Customizations                                          *notes_customizations*
 
@@ -2172,7 +2172,6 @@ seen by console Vim on Linux, try the following in your ~/.bashrc: >
 
 This is unnecessary for Gvim.
 
-<
 ==============================================================================
 Plugins                                                 *notes_plugins*
 
@@ -5057,5 +5056,6 @@ Tmux syntax - Syntax definitions for tmux.conf          *notes_tmux_syntax*
 
 Install: >
     wget http://sourceforge.net/p/tmux/tmux-code/ci/master/tree/examples/tmux.vim\?format\=raw -O syntax/tmux.vim
+
 --
   vim:sw=2:sts=2:et:ai:tw=78:fo=tcq2:ft=help:nospell:
