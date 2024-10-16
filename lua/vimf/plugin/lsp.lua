@@ -7,6 +7,12 @@ local M = {}
 -- Enable debug if desired:
 -- vim.lsp.set_log_level("debug")
 
+if vim.fn.executable("python3") == 1 then
+    M.python_executable = "python3"
+else
+    M.python_executable = "python"
+end
+
 -- Table of language servers to configure.
 M.servers = {
     clangd = {
@@ -66,30 +72,26 @@ M.servers = {
     },
     pylsp = {
         executable = "pylsp",
+        -- Uncomment to debug `pylsp`:
+        -- cmd = {
+        --     "pylsp", "-v", "--log-file", "/tmp/lsp.log"
+        -- },
         settings = {
             pylsp = {
                 plugins = {
-                    black = {
-                        enabled = true,
-                        line_length = 79,
-                    },
                     pylsp_mypy = {
                         enabled = true,
                         overrides = {
                             "--python-executable",
-                            "python",
+                            M.python_executable,
                             -- `true` means "insert other arguments here".
                             true,
                         }
                     },
-                    pycodestyle = {
-                        enabled = false,
-                    },
-                    pylint = {
-                        enabled = false,
-                    },
                     ruff = {
                         enabled = true,
+                        formatEnabled = true,
+                        lineLength = 79,
                     },
                 }
             }

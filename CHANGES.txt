@@ -7,6 +7,43 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-10-16
+==========
+
+- When installed, use the impressive Ruff Python linter/formatter instead of
+  the slew of alternatives it replaces (``flake8``, ``black``, ``isort``,
+  ``mccabe``, ``pyflakes``, ``pylint``, etc.).
+
+- Update the instructions in ``:help notes_setup_optional`` for installing
+  Python-based linters and formatters.  In particular, the steps for
+  ``python-lsp-server`` have been updated to use ``ruff`` in lieu of the
+  above-mentioned alternatives.  It's recommended to re-install
+  ``python-lsp-server`` to take advantage of Ruff; if you've set things up
+  following the notes in the past, this amounts to::
+
+    pipx uninstall python-lsp-server
+    pipx install python-lsp-server
+    pipx inject python-lsp-server pylsp-mypy
+    pipx inject python-lsp-server python-lsp-ruff
+
+  In addition, it's recommended to create ``~/.config/ruff/pyproject.toml`` to
+  configure Ruff globally as explained in the notes.
+
+- Fix the configuration of Python's ``mypy`` type checker so that it properly
+  picks up modules from a virtual environment.  If ``mypy`` is installed
+  globally (in its own virtual environment, for example), then it defaults to
+  using its own Python interpreter and therefore can't find the Python modules
+  installed in the virtual environment of the files being scanned.  Use the
+  switch ``mypy --python-executable PYTHON`` to point to a Python interpreter
+  in the ``PATH``.  ``PYTHON`` here is ``python3`` if that's in the ``PATH``
+  (as on Unix machines), and ``python`` otherwise (such as for Windows).  If a
+  project's virtual environment is activated before launching the editor,
+  ``mypy`` will automatically pick up that environment's modules; otherwise,
+  it will continue to work as before, typing checking what it can but being
+  unable to compare against third-party modules.  This ``mypy`` configuration
+  applies when running under the language server ``python-lsp-server``, for
+  both Vim and Neovim.
+
 2024-10-13
 ==========
 

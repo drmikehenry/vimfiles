@@ -3815,7 +3815,13 @@ if g:EnableAle
     " 'rls' - Rust Language Server.
     let g:ale_linters = {}
     let g:ale_linters['rust'] = ['analyzer', 'cargo']
-    let g:ale_linters['python'] = ['pylsp', 'flake8', 'mypy']
+    " Note: Python linters will be replaced by `vim-lsp` if available.
+    " See `vim-lsp` configuration section.
+    if executable('ruff')
+        let g:ale_linters['python'] = ['ruff', 'mypy']
+    else
+        let g:ale_linters['python'] = ['flake8', 'mypy']
+    endif
     let g:ale_linters['c'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
     let g:ale_linters['cpp'] = ['cc', 'clangtidy', 'cppcheck', 'flawfinder']
     let g:ale_linters['zig'] = ['zls']
@@ -3896,6 +3902,11 @@ if g:EnableAle
         \ }
     let g:ale_python_black_options = '-l 79'
     let g:ale_python_isort_options = '--profile black'
+
+    " If `ruff` is installed, prefer it to `black` and `isort`.
+    if executable('ruff')
+        let g:ale_fixers['python'] = ['ruff_format']
+    endif
 
     " Use ALE fixer on the current buffer.
     nmap <Space>=  <Plug>(ale_fix)
@@ -5758,6 +5769,9 @@ nmap ga <Plug>(UnicodeGA)
 " vim-lsp
 " -------------------------------------------------------------
 
+" Uncomment to generate `vim-lsp` logs:
+" let g:lsp_log_file = '/tmp/vim-lsp.log'
+
 " Python support:
 if !exists('g:EnableVimLsp_pylsp')
     let g:EnableVimLsp_pylsp = 1
@@ -5808,6 +5822,44 @@ endif
 " Any kind of Zig support:
 let g:EnableVimLsp_zig = g:EnableVimLsp_zls
 
+" Configuration for Python LSP plugins:
+let g:local_pylsp_plugins = {}
+
+if executable("python3")
+    let g:local_mypy_python_executable = "python3"
+else
+    let g:local_mypy_python_executable = "python"
+endif
+
+" `pylsp_mypy` settings:
+" `overrides` provides additional `mypy` command-line arguments.
+" `v:true` means "insert other arguments here".
+let g:local_pylsp_plugins['pylsp_mypy'] = {
+        \  'enabled': v:true,
+        \  'overrides':
+        \    ['--python-executable', g:local_mypy_python_executable, v:true]
+        \}
+
+" `ruff` settings:
+let g:local_pylsp_plugins['ruff'] = {
+        \  'enabled': v:true,
+        \  'formatEnabled': v:true,
+        \  'lineLength': 79,
+        \}
+
+" Configuration for Python LSP:
+let g:local_pylsp_settings = {}
+let g:local_pylsp_settings['name'] = 'pylsp'
+let g:local_pylsp_settings['cmd'] = ['pylsp']
+" Uncomment to debug `pylsp`:
+" let g:local_pylsp_settings['cmd'] =
+"         \  ['pylsp', '-v', '--log-file', '/tmp/lsp.log']
+let g:local_pylsp_settings['allowlist'] = ['python']
+let g:local_pylsp_settings['workspace_config'] = {
+        \  'pylsp': {
+        \    'plugins': g:local_pylsp_plugins
+        \  }
+        \}
 
 if g:EnableVimLsp
     let g:lsp_document_code_action_signs_enabled = 0
@@ -5818,17 +5870,13 @@ if g:EnableVimLsp
         if g:EnableVimLsp_pylsp
             augroup local_lsp_pylsp
                 autocmd!
-                autocmd User lsp_setup call lsp#register_server({
-                        \ 'name': 'pylsp',
-                        \ 'cmd': ['pylsp'],
-                        \ 'allowlist': ['python'],
-                        \ })
+                autocmd User lsp_setup call
+                        \ lsp#register_server(g:local_pylsp_settings)
             augroup END
         endif
 
-        " Remove "pylsp" (if present); prepend "vim-lsp":
-        call filter(g:ale_linters['python'], 'v:val != "pylsp"')
-        call insert(g:ale_linters['python'], "vim-lsp")
+        " Use `vim-lsp` instead of other Python linters.
+        let g:ale_linters['python'] = ['vim-lsp']
     endif
 
     " For any kind of C support:

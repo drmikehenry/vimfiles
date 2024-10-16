@@ -667,44 +667,40 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
 
       pipx install mypy
 <
-  - Install the excellent `ruff` for Python linting: >
+  - Install the excellent `ruff` for Python linting and formatting: >
 
       pipx install ruff
 <
-  - Install `flake8` and associated plugins for Python linting: >
+    To configure Ruff globally, create `~/.config/ruff/pyproject.toml`: >
 
-      pipx install flake8
-      pipx inject flake8 flake8-quotes pep8-naming
-<
-    Note: `flake8` no longer honors the per-user configuration file
-    `~/.config/flake8`.  For configuration of `flake8` within Vim, see `vimrc`
-    and `g:ale_python_flake8_options`.
-
-    `flake8` will honor a per-project `.flake8` configuration file; see `flake8`
-    documentation for details.
-
-  - Install black formatter: >
-
-      pipx install black
-<
-    Note: For the few configurable things black supports (e.g., line length),
-    you can create a per-project `pyproject.toml` file with a section to
-    configure black.  For example: >
-
-      [tool.black]
+      [tool.ruff]
       line-length = 79
-<
-  - Install isort formatter: >
 
-      pipx install isort
-<
-    Vimfiles will supply the `--profile black` option for black-compatible
-    ordering.
+      [tool.ruff.lint]
+      ignore = [
+          "N811",
+          "N812",
+          "N813",
+          "N814",
+      ]
+      select = [
+          "C9",
+          "E",
+          "F",
+          "N",
+          "Q",
+          "W",
+      ]
 
+      [tool.ruff.lint.flake8-quotes]
+      inline-quotes = "double"
+
+      [tool.ruff.lint.mccabe]
+      max-complexity = 15
+<
   - Install `python-lsp-server` and associated dependencies: >
 
-      pipx install python-lsp-server[mccabe,pycodestyle,pydocstyle,pyflakes,rope]
-      pipx inject python-lsp-server python-lsp-black
+      pipx install python-lsp-server
       pipx inject python-lsp-server pylsp-mypy
       pipx inject python-lsp-server python-lsp-ruff
 <
