@@ -1,4 +1,5 @@
 :LspAddTreeCallHierarchyIncoming	vim-lsp.txt	/*:LspAddTreeCallHierarchyIncoming*
+:LspAddTreeReferences	vim-lsp.txt	/*:LspAddTreeReferences*
 :LspCallHierarchyIncoming	vim-lsp.txt	/*:LspCallHierarchyIncoming*
 :LspCallHierarchyOutgoing	vim-lsp.txt	/*:LspCallHierarchyOutgoing*
 :LspCodeAction	vim-lsp.txt	/*:LspCodeAction*
@@ -20,6 +21,7 @@
 :LspNextDiagnostic	vim-lsp.txt	/*:LspNextDiagnostic*
 :LspNextError	vim-lsp.txt	/*:LspNextError*
 :LspNextReference	vim-lsp.txt	/*:LspNextReference*
+:LspNextWarning	vim-lsp.txt	/*:LspNextWarning*
 :LspPeekDeclaration	vim-lsp.txt	/*:LspPeekDeclaration*
 :LspPeekDefinition	vim-lsp.txt	/*:LspPeekDefinition*
 :LspPeekImplementation	vim-lsp.txt	/*:LspPeekImplementation*
@@ -68,6 +70,7 @@ g:lsp_document_code_action_signs_delay	vim-lsp.txt	/*g:lsp_document_code_action_
 g:lsp_document_code_action_signs_enabled	vim-lsp.txt	/*g:lsp_document_code_action_signs_enabled*
 g:lsp_document_highlight_delay	vim-lsp.txt	/*g:lsp_document_highlight_delay*
 g:lsp_document_highlight_enabled	vim-lsp.txt	/*g:lsp_document_highlight_enabled*
+g:lsp_document_symbol_detail	vim-lsp.txt	/*g:lsp_document_symbol_detail*
 g:lsp_float_max_width	vim-lsp.txt	/*g:lsp_float_max_width*
 g:lsp_fold_enabled	vim-lsp.txt	/*g:lsp_fold_enabled*
 g:lsp_format_sync_timeout	vim-lsp.txt	/*g:lsp_format_sync_timeout*

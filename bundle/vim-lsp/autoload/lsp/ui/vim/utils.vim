@@ -72,7 +72,7 @@ function! lsp#ui#vim#utils#symbols_to_loc_list(server, result) abort
                         \ 'filename': l:path,
                         \ 'lnum': l:line,
                         \ 'col': l:col,
-                        \ 'text': lsp#ui#vim#utils#_get_symbol_text_from_kind(a:server, l:symbol['kind']) . ' : ' . l:symbol['name'],
+                        \ 'text': lsp#ui#vim#utils#_get_symbol_text_from_kind(a:server, l:symbol['kind']) . ' : ' . (g:lsp_document_symbol_detail ? l:symbol['detail'] : l:symbol['name']),
                         \ })
                 endif
             else
@@ -84,7 +84,7 @@ function! lsp#ui#vim#utils#symbols_to_loc_list(server, result) abort
                         \ 'filename': l:path,
                         \ 'lnum': l:line,
                         \ 'col': l:col,
-                        \ 'text': lsp#ui#vim#utils#_get_symbol_text_from_kind(a:server, l:symbol['kind']) . ' : ' . l:symbol['name'],
+                        \ 'text': lsp#ui#vim#utils#_get_symbol_text_from_kind(a:server, l:symbol['kind']) . ' : ' . (g:lsp_document_symbol_detail ? l:symbol['detail'] : l:symbol['name']),
                         \ })
                     if has_key(l:symbol, 'children') && !empty(l:symbol['children'])
                         call s:symbols_to_loc_list_children(a:server, l:path, l:list, l:symbol['children'], 1)
@@ -161,4 +161,14 @@ endfunction
 
 function! s:get_diagnostic_severity_text(severity) abort
     return s:diagnostic_severity[a:severity]
+endfunction
+
+function! lsp#ui#vim#utils#setqflist(list, type) abort
+  if has('patch-8.2.2147')
+    call setqflist(a:list)
+    call setqflist([], 'a', {'title': a:type})
+  else
+    call setqflist([])
+    call setqflist(a:list)
+  endif
 endfunction
