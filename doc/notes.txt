@@ -2370,7 +2370,7 @@ Usage notes:
 
 See |ALE| documentation for more details.
 
-Version 2024-05-08 (c88bddf) from:
+Version 2024-10-14 (2e5f135) from:
 https://github.com/dense-analysis/ale
 
 with the following modifications found in branch `vimfiles` at:

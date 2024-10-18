@@ -7,6 +7,11 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-10-18
+==========
+
+- Upgrade ALE plugin to version 2024-10-14.
+
 2024-10-16
 ==========
 
