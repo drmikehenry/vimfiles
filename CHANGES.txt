@@ -14,6 +14,28 @@ require adjustment of per-user settings.
 
 - Upgrade vim-lsp plugin to version 2024-10-23.
 
+- Improved Python support:
+
+  - New Vimfiles-supplied custom commands for Python virtual environments::
+
+      Venvinfo
+      Venvdeactivate
+      Venvactivate
+
+    See ``:help notes_venv`` for details.
+
+  - Use ``mypy --python-executable`` on Unix only to allow a globally installed
+    ``mypy`` to follow dependent Python modules in venvs that lack a dedicated
+    copy of ``mypy``.  ``python3`` (if found on ``PATH``) or ``python``  on the
+    will be used as the interpreter for ``mypy`` type checking.  On Windows,
+    this technique doesn't seem to work for some reason, so
+    ``--python-executable`` is not used.
+
+    Note that there is a new recommended global configuration for ``mypy`` to
+    help this work smoothly; see ``:help notes_optional`` for details.
+
+- ``:help notes_lsp`` documents how to debug LSP issues with log files.
+
 2024-10-16
 ==========
 

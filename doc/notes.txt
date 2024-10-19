@@ -60,6 +60,8 @@ Conflict marker navigation                              |notes_conflict_marker|
 Embedded language support                               |notes_embedded_lang|
 Source control integration                              |notes_source_control|
 List of numbers                                         |notes_list_of_numbers|
+LSP - Language Server Protocol support                  |notes_lsp|
+Venv - Python Virtual Environment support               |notes_venv|
 
 ------------------------------------------------------------------------------
 Tips                                                    |notes_tips|
@@ -666,6 +668,33 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
   - Install `mypy` for type checking: >
 
       pipx install mypy
+<
+    On Unix, it's recommended to configure the globally installed `mypy` to
+    work around the `python_executable` issue described in |notes_venv|.
+    `mypy` will use the first-found configuration file from the list below: >
+
+        ./mypy.ini
+        ./.mypy.ini
+        ./pyproject.toml
+        ./setup.cfg
+        $XDG_CONFIG_HOME/mypy/config
+        ~/.config/mypy/config
+        ~/.mypy.ini
+<
+    The above locations are not merged; the first-found location wins.  To
+    ensure that `mypy` will use the first Python executable in the `PATH`,
+    create the file `~/.config/mypy/config` with the below contents on Unix: >
+
+        [mypy]
+        python_executable = python3
+<
+    This work-around does not behave correctly on Windows.
+
+    Note that this work-around will be ineffective if there is a more local
+    `mypy` configuration file for a project; but in that case, it's likely
+    that the project also has a venv with a dedicated installation of `mypy`,
+    and `mypy`'s default of using its own Python interpreter works when that
+    venv is activated.
 <
   - Install the excellent `ruff` for Python linting and formatting: >
 
@@ -2058,6 +2087,144 @@ to get these numbered lines: >
   3. three
 <
 See https://vim.fandom.com/wiki/Making_a_list_of_numbers for more ideas.
+
+------------------------------------------------------------------------------
+LSP - Language Server Protocol support                  *notes_lsp*
+
+Neovim has built-in LSP support: |lsp|
+
+- Neovim LSP debugging:
+
+  - Neovim LSP-related logs are written to a file: |vim.lsp.get_log_path()|
+
+    This path can be displayed via: >
+
+      :lua = vim.lsp.get_log_path()
+<
+    By default, this path is: >
+
+      ~/.local/state/nvim/lsp.log
+<
+  - Neovim LSP logging verbosity is adjustable: |vim.lsp.set_log_level()|
+
+    For debugging: >
+
+      :lua vim.lsp.set_log_level("DEBUG")
+<
+    After debugging: >
+
+      :lua vim.lsp.set_log_level("OFF")
+<
+  - To see debugging output for the `python-lsp-server` (`pylsp`) language
+    server, edit `lua/vimf/plugin/lsp.lua` and uncomment: >
+
+      -- Uncomment to debug `pylsp`:
+      -- cmd = {
+      --     "pylsp", "-v", "--log-file", "/tmp/pylsp.log"
+      -- },
+<
+    Output will be found in `/tmp/pylsp.log`.
+
+- Vim LSP debugging:
+
+  - The plugin `vim-lsp` provides LSP support for Vim.
+  - In `~/.vim/vimrc`, locate the `vim-lsp` section and uncomment for
+    debugging:
+
+    - For `vim-lsp` itself: >
+
+        " Uncomment to generate `vim-lsp` logs:
+        " let g:lsp_log_file = '/tmp/vim-lsp.log'
+<
+      Logs will be found in `/tmp/vim-lsp.log`.
+
+    - For the `python-lsp-server` (`pylsp`) language server: >
+
+        " Uncomment to debug `pylsp`:
+        " let g:local_pylsp_settings['cmd'] =
+        "         \  ['pylsp', '-v', '--log-file', '/tmp/pylsp.log']
+<
+      Logs will be found in `/tmp/pylsp.log`.
+
+------------------------------------------------------------------------------
+Venv - Python Virtual Environment support               *notes_venv*
+
+Python virtual environments (venvs) are supported in both Vim and Neovim.
+A venv is "activated" when the environment variable `VIRTUAL_ENV` is set to
+point to the venv directory, and `PATH` is set to include the venv's
+executable directory.
+
+The easiest way to get support for venvs is to activate the venv before
+launching the editor, e.g.:
+
+- Activate on Unix: >
+
+    . path/to/venv/bin/activate
+<
+- Activate on Windows >
+
+    path\to\venv\Scripts\activate.bat
+<
+In addition, a venv may be activated or deactivated from within the editor
+using some Vimfiles-supplied custom commands.
+
+- To get information about the currently active venv:
+
+    :Venvinfo                                         *:Venvinfo*
+
+- To deactivate the currently active venv (if any):
+
+    :Venvdeactivate                                   *:Venvdeactivate*
+
+- To activate a venv:
+
+    :Venvactivate path/to/venv                        *:Venvactivate*
+    :Venvactivate
+
+  Any already-active venv will first be deactivated; then, given a
+  `path/to/venv`, this will activate the venv at the given path. For
+  convenience, it will first probe `.venv/` and `venv/` subdirectories of the
+  given path, then the given path itself, for a valid virtual environment;
+  thus, the three locations probed are: >
+
+    path/to/venv/.venv
+    path/to/venv/venv
+    path/to/venv
+<
+  With no arguments, `:Venvactivate` will start at the directory for the
+  current file name and probe for virtual environments as described above,
+  stopping at the first-found venv; if none are found at this level, the scan
+  will continue upwards with the parent directory, the parent's parent, etc.
+
+Globally installing `ruff` and `mypy` generally works well, but mypy has one
+weird behavior: by default, `mypy` uses the Python interpreter that is
+executing `mypy` itself to locate dependent Python modules for `mypy`'s type
+checking purposes; this will not in general be the correct set of modules for
+the venv. Even if the venv is activated, a globally installed `mypy` won't be
+able to type check against them by default because it will still be using a
+different Python interpreter from the venv's. Installing `mypy` into each venv
+is the easiest way to ensure `mypy` can see the venv's dependent Python
+modules.
+
+However, there is a work-around for Unix that allows `mypy` to locate a venv's
+dependent Python modules without installing a per-venv instance of `mypy`.
+`mypy`'s `--python-executable` switch controls which interpreter `mypy` will
+use for locating dependent Python modules.  When using `python3` or `python`
+as the argument to the switch, `mypy` on Unix will use the first-found Python
+interpreter in `PATH`; for an activated venv, this will be the correct
+interpreter.  On Unix, Vimfiles uses this work-around for both Neovim and Vim.
+When launching the editor on an already-activated venv, `mypy` will correctly
+locate the dependent Python modules for the venv.  When activating a venv
+using the `:Venvactivate` command on Neovim, it works as above; however, there
+is still one additional caveat for Vim.  Activating or deactivating a venv
+with the above commands will stop any existing LSP processes (using `:LspStop`
+on Vim and `:LspRestart` on Neovim).  On Vim, the `:LspStop` command (provided
+by the `vim-lsp` plugin) causes the LSP to be restarted without the
+Vimfiles-provided `--python-executable` switch, disabling the above
+work-around. To work around this further Vim-specific issue, it's recommended
+to have a global `mypy` configuration file that sets `python_executable`
+properly for the globally installed `mypy` as explained in
+|notes_setup_optional|.
 
 ==============================================================================
 Tips                                                    *notes_tips*

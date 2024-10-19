@@ -1,4 +1,7 @@
 :G	notes.txt	/*:G*
+:Venvactivate	notes.txt	/*:Venvactivate*
+:Venvdeactivate	notes.txt	/*:Venvdeactivate*
+:Venvinfo	notes.txt	/*:Venvinfo*
 FoldQuickFixDirs	notes.txt	/*FoldQuickFixDirs*
 FoldQuickFixFiles	notes.txt	/*FoldQuickFixFiles*
 GrepLmc	notes.txt	/*GrepLmc*
@@ -112,6 +115,7 @@ notes_less	notes.txt	/*notes_less*
 notes_list_of_numbers	notes.txt	/*notes_list_of_numbers*
 notes_localvimrc	notes.txt	/*notes_localvimrc*
 notes_loremipsum	notes.txt	/*notes_loremipsum*
+notes_lsp	notes.txt	/*notes_lsp*
 notes_lspconfig	notes.txt	/*notes_lspconfig*
 notes_lusty	notes.txt	/*notes_lusty*
 notes_lustyexplorer	notes.txt	/*notes_lustyexplorer*
@@ -193,6 +197,7 @@ notes_ultisnips	notes.txt	/*notes_ultisnips*
 notes_unicode	notes.txt	/*notes_unicode*
 notes_vader	notes.txt	/*notes_vader*
 notes_vcscommand	notes.txt	/*notes_vcscommand*
+notes_venv	notes.txt	/*notes_venv*
 notes_vim-lsp	notes.txt	/*notes_vim-lsp*
 notes_vim-lsp-ale	notes.txt	/*notes_vim-lsp-ale*
 notes_vimball	notes.txt	/*notes_vimball*

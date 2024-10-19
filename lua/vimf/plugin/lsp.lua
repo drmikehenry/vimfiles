@@ -74,19 +74,13 @@ M.servers = {
         executable = "pylsp",
         -- Uncomment to debug `pylsp`:
         -- cmd = {
-        --     "pylsp", "-v", "--log-file", "/tmp/lsp.log"
+        --     "pylsp", "-v", "--log-file", "/tmp/pylsp.log"
         -- },
         settings = {
             pylsp = {
                 plugins = {
                     pylsp_mypy = {
                         enabled = true,
-                        overrides = {
-                            "--python-executable",
-                            M.python_executable,
-                            -- `true` means "insert other arguments here".
-                            true,
-                        }
                     },
                     ruff = {
                         enabled = true,
@@ -103,6 +97,17 @@ M.servers = {
     },
 }
 
+-- Except on Windows, use a work-around to instruct `mypy` to use the
+-- first-found Python interpreter on `PATH`, allowing a globally installed
+-- `mypy` to correctly locate dependent Python modules in an activated venv.
+if not vim.fn.has('win32') then
+    M.servers.pylsp.settings.pylsp.plugins.pylsp_mypy.overrides =  {
+        "--python-executable",
+        M.python_executable,
+        -- `true` means "insert other arguments here".
+        true,
+    }
+end
 
 -- Key bindings that are related to the language but not associated
 -- with a specific LSP.

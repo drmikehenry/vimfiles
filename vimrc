@@ -3628,6 +3628,28 @@ endfunction
 command! -bar -nargs=? Diff  call Diff(<q-args>)
 
 " =============================================================
+" Python venv support
+" =============================================================
+
+" Display information about any active Python virtual environment.
+command! -bar Venvinfo call vimf#venv#info()
+
+" Deactivate any active Python virtual environment.
+command! -bar Venvdeactivate call vimf#venv#deactivate()
+
+" Activate a Python virtual environment given on the command line.
+" E.g.:
+"   Venvactivate ../.venv
+" Will probe first for `.venv` and `venv` subdirectories below the
+" given directory; therefore, these are equivalent:
+"   Venvactivate ../.venv
+"   Venvactivate ..
+" With no argument, will scan upward from the directory of current file,
+" probing for virtual environments (checking for `.venv`, `venv`, and `.`).
+command! -bar -nargs=? -complete=file
+        \ Venvactivate call vimf#venv#activate(<q-args>)
+
+" =============================================================
 " Plugins
 " =============================================================
 
@@ -5832,13 +5854,19 @@ else
 endif
 
 " `pylsp_mypy` settings:
-" `overrides` provides additional `mypy` command-line arguments.
-" `v:true` means "insert other arguments here".
 let g:local_pylsp_plugins['pylsp_mypy'] = {
         \  'enabled': v:true,
-        \  'overrides':
-        \    ['--python-executable', g:local_mypy_python_executable, v:true]
         \}
+
+" Except on Windows, use a work-around to instruct `mypy` to use the
+" first-found Python interpreter on `PATH`, allowing a globally installed
+" `mypy` to correctly locate dependent Python modules in an activated venv.
+" `overrides` provides additional `mypy` command-line arguments.
+" `v:true` means "insert other arguments here".
+if !has('win32')
+    let g:local_pylsp_plugins['pylsp_mypy']['overrides'] =
+            \    ['--python-executable', g:local_mypy_python_executable, v:true]
+endif
 
 " `ruff` settings:
 let g:local_pylsp_plugins['ruff'] = {
@@ -5853,7 +5881,7 @@ let g:local_pylsp_settings['name'] = 'pylsp'
 let g:local_pylsp_settings['cmd'] = ['pylsp']
 " Uncomment to debug `pylsp`:
 " let g:local_pylsp_settings['cmd'] =
-"         \  ['pylsp', '-v', '--log-file', '/tmp/lsp.log']
+"         \  ['pylsp', '-v', '--log-file', '/tmp/pylsp.log']
 let g:local_pylsp_settings['allowlist'] = ['python']
 let g:local_pylsp_settings['workspace_config'] = {
         \  'pylsp': {
