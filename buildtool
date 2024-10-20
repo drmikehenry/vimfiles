@@ -49,7 +49,7 @@ help_epilog = """
 For help on specific CMD:    %%(prog)s CMD --help
 
 Typical CMD invocations:
-  %%(prog)s build [SOURCE]   - unpack, packagesrc, configure, build, package
+  %%(prog)s build [SOURCE]   - unpack, packagesrc, configure, make, package
   %%(prog)s update           - "git pull" in newest Git repo in download_dirs
 
 Less common CMD invocations:
