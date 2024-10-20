@@ -46,6 +46,15 @@ filetype off
 " May also set 'bomb' to force use of a BOM (Byte Order Mark).
 " set fileencoding=
 
+" `v:true` and `v:false` were added in Vim-7.4.1271, 2016-02-06.
+if exists('v:true')
+    let g:local_true = v:true
+    let g:local_false = v:false
+else
+    let g:local_true = 1
+    let g:local_false = 0
+endif
+
 " Set environment variable to directory containing this vimrc.  Expect absolute
 " directory $HOME/.vim on Unix or %USERPROFILE%\vimfiles on Windows.
 let $VIMFILES = expand("<sfile>:p:h")
@@ -2169,7 +2178,9 @@ set whichwrap=b,s,<,>,[,]
 " Keep `signcolumn` on all the time, rather than allow it to disconcertingly
 " come and go as errors are detected.  Make this independent of ALE or other
 " plugins.
-set signcolumn=yes
+if exists('&signcolumn')
+    set signcolumn=yes
+endif
 
 " Setup command-line completion (inside of Vim's ':' command line).
 " Controlled by two options, 'wildmode' and 'wildmenu'.
@@ -2462,7 +2473,9 @@ set smartcase
 "   :tag /sometag
 
 " Require case-sensitive matching for tags:
-set tagcase=match
+if exists('&tagcase')
+    set tagcase=match
+endif
 
 " Do not wrap around buffer when searching.
 set nowrapscan
@@ -5855,23 +5868,26 @@ endif
 
 " `pylsp_mypy` settings:
 let g:local_pylsp_plugins['pylsp_mypy'] = {
-        \  'enabled': v:true,
+        \  'enabled': g:local_true,
         \}
 
 " Except on Windows, use a work-around to instruct `mypy` to use the
 " first-found Python interpreter on `PATH`, allowing a globally installed
 " `mypy` to correctly locate dependent Python modules in an activated venv.
 " `overrides` provides additional `mypy` command-line arguments.
-" `v:true` means "insert other arguments here".
+" `g:local_true` means "insert other arguments here".
 if !has('win32')
-    let g:local_pylsp_plugins['pylsp_mypy']['overrides'] =
-            \    ['--python-executable', g:local_mypy_python_executable, v:true]
+    let g:local_pylsp_plugins['pylsp_mypy']['overrides'] = [
+            \  '--python-executable',
+            \  g:local_mypy_python_executable,
+            \  g:local_true
+            \]
 endif
 
 " `ruff` settings:
 let g:local_pylsp_plugins['ruff'] = {
-        \  'enabled': v:true,
-        \  'formatEnabled': v:true,
+        \  'enabled': g:local_true,
+        \  'formatEnabled': g:local_true,
         \  'lineLength': 79,
         \}
 
