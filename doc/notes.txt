@@ -849,6 +849,14 @@ help, or read the script for more detailed information.
     # Or build from a specified Git clone:
     ~/.vim/buildtool build path/to/some/git-clone
 <
+Test built version of Vim
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The built executable is at `./src/vim`.  This should be run with the set of
+runtime files for this version by setting `VIMRUNTIME`, e.g.: >
+
+  VIMRUNTIME=$PWD/runtime ./src/vim
+<
 Installation of Vim
 ^^^^^^^^^^^^^^^^^^^
 
