@@ -100,7 +100,7 @@ M.servers = {
 -- Except on Windows, use a work-around to instruct `mypy` to use the
 -- first-found Python interpreter on `PATH`, allowing a globally installed
 -- `mypy` to correctly locate dependent Python modules in an activated venv.
-if not vim.fn.has('win32') then
+if vim.fn.has('win32') == 0 then
     M.servers.pylsp.settings.pylsp.plugins.pylsp_mypy.overrides =  {
         "--python-executable",
         M.python_executable,
