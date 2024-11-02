@@ -2,7 +2,7 @@
 " File:         togglecursor.vim
 " Description:  Toggles cursor shape in the terminal
 " Maintainer:   John Szakmeister <john@szakmeister.net>
-" Version:      0.5.2
+" Version:      0.6.0
 " License:      Same license as Vim.
 " ============================================================================
 
@@ -15,21 +15,8 @@ if has("gui_running")
     finish
 endif
 
-if !exists("g:togglecursor_disable_neovim")
-    let g:togglecursor_disable_neovim = 0
-endif
-
 if !exists("g:togglecursor_disable_default_init")
     let g:togglecursor_disable_default_init = 0
-endif
-
-if has("nvim")
-    " If Neovim support is enabled, then let set the
-    " NVIM_TUI_ENABLE_CURSOR_SHAPE for the user.
-    if $NVIM_TUI_ENABLE_CURSOR_SHAPE == "" && g:togglecursor_disable_neovim == 0
-        let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
-    endif
-    finish
 endif
 
 let g:loaded_togglecursor = 1
@@ -52,8 +39,6 @@ let s:xterm_block = "\<Esc>[2 q"
 let s:xterm_blinking_block = "\<Esc>[0 q"
 let s:xterm_blinking_line = "\<Esc>[5 q"
 let s:xterm_blinking_underline = "\<Esc>[3 q"
-
-let s:in_tmux = exists("$TMUX")
 
 " Detect whether this version of vim supports changing the replace cursor
 " natively.
@@ -80,6 +65,10 @@ if s:supported_terminal == ""
     if $TERM_PROGRAM == "iTerm.app" || exists("$ITERM_SESSION_ID")
         let s:supported_terminal = 'xterm'
     elseif $TERM_PROGRAM == "Apple_Terminal" && str2nr($TERM_PROGRAM_VERSION) >= 388
+        let s:supported_terminal = 'xterm'
+    elseif $TERM_PROGRAM == "WezTerm"
+        let s:supported_terminal = 'xterm'
+    elseif $TERM == "xterm-kitty"
         let s:supported_terminal = 'xterm'
     elseif $TERM == "rxvt-unicode" || $TERM == "rxvt-unicode-256color"
         let s:supported_terminal = 'xterm'
@@ -130,9 +119,16 @@ if !exists("g:togglecursor_leave")
     endif
 endif
 
-if !exists("g:togglecursor_disable_tmux")
-    let g:togglecursor_disable_tmux = 0
+if !exists("g:togglecursor_enable_tmux_escaping")
+    let g:togglecursor_enable_tmux_escaping = 0
 endif
+
+if g:togglecursor_enable_tmux_escaping
+    let s:in_tmux = exists("$TMUX")
+else
+    let s:in_tmux = 0
+endif
+
 
 " -------------------------------------------------------------
 " Functions
@@ -145,7 +141,7 @@ function! s:TmuxEscape(line)
 endfunction
 
 function! s:SupportedTerminal()
-    if s:supported_terminal == '' || (s:in_tmux && g:togglecursor_disable_tmux)
+    if s:supported_terminal == ''
         return 0
     endif
 
