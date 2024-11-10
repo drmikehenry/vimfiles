@@ -3870,7 +3870,7 @@ Installation:
 Plenary - Neovim functions for Telescope                *notes_plenary*
                                                         |plenary|
 
-Version 2024-05-20 (a3e3bc8) from:
+Version 2024-09-17 (2d9b061) from:
 https://github.com/nvim-lua/plenary.nvim
 
 Installation:
