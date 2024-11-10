@@ -2748,7 +2748,7 @@ Installation:
 Cmp-nvim-lsp - Cmp source for built-in LSP              *notes_cmp-nvim-lsp*
                                                         |cmp-nvim-lsp.txt|
 
-Version 2023-06-23 (44b16d1) from:
+Version 2024-03-17 (39e2eda) from:
 https://github.com/hrsh7th/cmp-nvim-lsp
 
 Installation:
