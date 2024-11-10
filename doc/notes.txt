@@ -2757,7 +2757,7 @@ Installation:
 ------------------------------------------------------------------------------
 Cmp-nvim-ultisnips - Cmp source for UltiSnips           *notes_cmp-nvim-ultisnips*
 
-Version 2023-07-06 (24bca5c) from:
+Version 2024-08-02 (2be0eda) from:
 https://github.com/quangnguyen30192/cmp-nvim-ultisnips
 
 Installation:

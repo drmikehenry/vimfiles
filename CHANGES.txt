@@ -17,6 +17,8 @@ require adjustment of per-user settings.
 
 - Upgrade Neovim ``cmp-nvim-lsp`` plugin to version 2024-03-17.
 
+- Upgrade Neovim ``cmp-nvim-ultisnips`` plugin to version 2024-08-02.
+
 2024-11-02
 ==========
 
