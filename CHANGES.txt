@@ -13,6 +13,8 @@ require adjustment of per-user settings.
 - Upgrade Neovim ``cmp`` plugin to version 2024-11-02. This fixes the warning
   ``vim.lsp.parse_snippet() is deprecated`` in Neovim 0.10.0.
 
+- Upgrade Neovim ``cmp-cmdline`` plugin to version 2024-03-22.
+
 2024-11-02
 ==========
 

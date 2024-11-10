@@ -2738,7 +2738,7 @@ Installation:
 ------------------------------------------------------------------------------
 Cmp-cmdline - Cmp source for Vim's cmdline              *notes_cmp-cmdline*
 
-Version 2023-06-09 (8ee981b) from:
+Version 2024-03-22 (d250c63) from:
 https://github.com/hrsh7th/cmp-cmdline
 
 Installation:
