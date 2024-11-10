@@ -603,7 +603,7 @@ Install desired lint and formatting tools for Syntastic, ALE, etc.:
       CompileFlags:
         Add: [-Wno-unused-functions]
 <
-  - Install `compiledb` to automatically generate a `compile-commands.json` file
+  - Install `compiledb` to automatically generate a `compile_commands.json` file
     for use with Clangd. >
 
       pipx install compiledb
