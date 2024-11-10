@@ -34,6 +34,7 @@ cmp-config.performance.async_budget	cmp.txt	/*cmp-config.performance.async_budge
 cmp-config.performance.confirm_resolve_timeout	cmp.txt	/*cmp-config.performance.confirm_resolve_timeout*
 cmp-config.performance.debounce	cmp.txt	/*cmp-config.performance.debounce*
 cmp-config.performance.fetching_timeout	cmp.txt	/*cmp-config.performance.fetching_timeout*
+cmp-config.performance.filtering_context_budget	cmp.txt	/*cmp-config.performance.filtering_context_budget*
 cmp-config.performance.max_view_entries	cmp.txt	/*cmp-config.performance.max_view_entries*
 cmp-config.performance.throttle	cmp.txt	/*cmp-config.performance.throttle*
 cmp-config.preselect	cmp.txt	/*cmp-config.preselect*
@@ -51,6 +52,9 @@ cmp-config.sources[n].option	cmp.txt	/*cmp-config.sources[n].option*
 cmp-config.sources[n].priority	cmp.txt	/*cmp-config.sources[n].priority*
 cmp-config.sources[n].trigger_characters	cmp.txt	/*cmp-config.sources[n].trigger_characters*
 cmp-config.view	cmp.txt	/*cmp-config.view*
+cmp-config.view.docs.auto_open	cmp.txt	/*cmp-config.view.docs.auto_open*
+cmp-config.view.entries.follow_cursor	cmp.txt	/*cmp-config.view.entries.follow_cursor*
+cmp-config.view.entries.selection_order	cmp.txt	/*cmp-config.view.entries.selection_order*
 cmp-config.window.completion.col_offset	cmp.txt	/*cmp-config.window.completion.col_offset*
 cmp-config.window.completion.scrollbar	cmp.txt	/*cmp-config.window.completion.scrollbar*
 cmp-config.window.completion.side_padding	cmp.txt	/*cmp-config.window.completion.side_padding*
@@ -58,6 +62,7 @@ cmp-config.window.documentation.max_height	cmp.txt	/*cmp-config.window.documenta
 cmp-config.window.documentation.max_width	cmp.txt	/*cmp-config.window.documentation.max_width*
 cmp-config.window.{completion,documentation}.border	cmp.txt	/*cmp-config.window.{completion,documentation}.border*
 cmp-config.window.{completion,documentation}.scrolloff	cmp.txt	/*cmp-config.window.{completion,documentation}.scrolloff*
+cmp-config.window.{completion,documentation}.winblend	cmp.txt	/*cmp-config.window.{completion,documentation}.winblend*
 cmp-config.window.{completion,documentation}.winhighlight	cmp.txt	/*cmp-config.window.{completion,documentation}.winhighlight*
 cmp-config.window.{completion,documentation}.zindex	cmp.txt	/*cmp-config.window.{completion,documentation}.zindex*
 cmp-contents	cmp.txt	/*cmp-contents*
@@ -70,6 +75,7 @@ cmp-mapping	cmp.txt	/*cmp-mapping*
 cmp-usage	cmp.txt	/*cmp-usage*
 cmp.abort	cmp.txt	/*cmp.abort*
 cmp.close	cmp.txt	/*cmp.close*
+cmp.close_docs	cmp.txt	/*cmp.close_docs*
 cmp.complete	cmp.txt	/*cmp.complete*
 cmp.complete_common_string	cmp.txt	/*cmp.complete_common_string*
 cmp.config.context.in_syntax_group	cmp.txt	/*cmp.config.context.in_syntax_group*
@@ -83,12 +89,15 @@ cmp.get_entries	cmp.txt	/*cmp.get_entries*
 cmp.get_selected_entry	cmp.txt	/*cmp.get_selected_entry*
 cmp.mapping.abort	cmp.txt	/*cmp.mapping.abort*
 cmp.mapping.close	cmp.txt	/*cmp.mapping.close*
+cmp.mapping.close_docs	cmp.txt	/*cmp.mapping.close_docs*
 cmp.mapping.complete	cmp.txt	/*cmp.mapping.complete*
 cmp.mapping.complete_common_string	cmp.txt	/*cmp.mapping.complete_common_string*
 cmp.mapping.confirm	cmp.txt	/*cmp.mapping.confirm*
+cmp.mapping.open_docs	cmp.txt	/*cmp.mapping.open_docs*
 cmp.mapping.scroll_docs	cmp.txt	/*cmp.mapping.scroll_docs*
 cmp.mapping.select_next_item	cmp.txt	/*cmp.mapping.select_next_item*
 cmp.mapping.select_prev_item	cmp.txt	/*cmp.mapping.select_prev_item*
+cmp.open_docs	cmp.txt	/*cmp.open_docs*
 cmp.scroll_docs	cmp.txt	/*cmp.scroll_docs*
 cmp.select_next_item	cmp.txt	/*cmp.select_next_item*
 cmp.select_prev_item	cmp.txt	/*cmp.select_prev_item*
@@ -97,6 +106,7 @@ cmp.setup.buffer	cmp.txt	/*cmp.setup.buffer*
 cmp.setup.cmdline	cmp.txt	/*cmp.setup.cmdline*
 cmp.setup.filetype	cmp.txt	/*cmp.setup.filetype*
 cmp.visible	cmp.txt	/*cmp.visible*
+cmp.visible_docs	cmp.txt	/*cmp.visible_docs*
 cmp_docs	cmp.txt	/*cmp_docs*
 cmp_menu	cmp.txt	/*cmp_menu*
 nvim-cmp	cmp.txt	/*nvim-cmp*

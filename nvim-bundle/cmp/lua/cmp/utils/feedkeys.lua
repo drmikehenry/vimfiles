@@ -14,7 +14,7 @@ feedkeys.call = setmetatable({
     if #keys > 0 then
       table.insert(queue, { keymap.t('<Cmd>setlocal lazyredraw<CR>'), 'n' })
       table.insert(queue, { keymap.t('<Cmd>setlocal textwidth=0<CR>'), 'n' })
-      table.insert(queue, { keymap.t('<Cmd>setlocal backspace=2<CR>'), 'n' })
+      table.insert(queue, { keymap.t('<Cmd>setlocal backspace=nostop<CR>'), 'n' })
       table.insert(queue, { keys, string.gsub(mode, '[itx]', ''), true })
       table.insert(queue, { keymap.t('<Cmd>setlocal %slazyredraw<CR>'):format(vim.o.lazyredraw and '' or 'no'), 'n' })
       table.insert(queue, { keymap.t('<Cmd>setlocal textwidth=%s<CR>'):format(vim.bo.textwidth or 0), 'n' })
@@ -24,7 +24,7 @@ feedkeys.call = setmetatable({
     if callback then
       local id = misc.id('cmp.utils.feedkeys.call')
       self.callbacks[id] = callback
-      table.insert(queue, { keymap.t('<Cmd>call v:lua.cmp.utils.feedkeys.call.run(%s)<CR>'):format(id), 'n', true })
+      table.insert(queue, { keymap.t('<Cmd>lua require"cmp.utils.feedkeys".run(%s)<CR>'):format(id), 'n', true })
     end
 
     if is_insert then
@@ -42,12 +42,15 @@ feedkeys.call = setmetatable({
     end
   end,
 })
-misc.set(_G, { 'cmp', 'utils', 'feedkeys', 'call', 'run' }, function(id)
+feedkeys.run = function(id)
   if feedkeys.call.callbacks[id] then
-    feedkeys.call.callbacks[id]()
+    local ok, err = pcall(feedkeys.call.callbacks[id])
+    if not ok then
+      vim.notify(err, vim.log.levels.ERROR)
+    end
     feedkeys.call.callbacks[id] = nil
   end
   return ''
-end)
+end
 
 return feedkeys

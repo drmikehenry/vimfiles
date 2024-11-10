@@ -1,5 +1,7 @@
 local misc = {}
 
+local islist = vim.islist or vim.tbl_islist
+
 ---Create once callback
 ---@param callback function
 ---@return function
@@ -69,6 +71,16 @@ misc.empty = function(v)
   return false
 end
 
+---Search value in table
+misc.contains = function(tbl, v)
+  for _, value in ipairs(tbl) do
+    if value == v then
+      return true
+    end
+  end
+  return false
+end
+
 ---The symbol to remove key in misc.merge.
 misc.none = vim.NIL
 
@@ -78,8 +90,8 @@ misc.none = vim.NIL
 ---@param tbl2 T
 ---@return T
 misc.merge = function(tbl1, tbl2)
-  local is_dict1 = type(tbl1) == 'table' and (not vim.tbl_islist(tbl1) or vim.tbl_isempty(tbl1))
-  local is_dict2 = type(tbl2) == 'table' and (not vim.tbl_islist(tbl2) or vim.tbl_isempty(tbl2))
+  local is_dict1 = type(tbl1) == 'table' and (not islist(tbl1) or vim.tbl_isempty(tbl1))
+  local is_dict2 = type(tbl2) == 'table' and (not islist(tbl2) or vim.tbl_isempty(tbl2))
   if is_dict1 and is_dict2 then
     local new_tbl = {}
     for k, v in pairs(tbl2) do
@@ -144,28 +156,39 @@ misc.set = function(t, keys, v)
   c[keys[#keys]] = v
 end
 
----Copy table
----@generic T
----@param tbl T
----@return T
-misc.copy = function(tbl)
-  if type(tbl) ~= 'table' then
-    return tbl
-  end
+do
+  local function do_copy(tbl, seen)
+    if type(tbl) ~= 'table' then
+      return tbl
+    end
+    if seen[tbl] then
+      return seen[tbl]
+    end
 
-  if vim.tbl_islist(tbl) then
+    if islist(tbl) then
+      local copy = {}
+      seen[tbl] = copy
+      for i, value in ipairs(tbl) do
+        copy[i] = do_copy(value, seen)
+      end
+      return copy
+    end
+
     local copy = {}
-    for i, value in ipairs(tbl) do
-      copy[i] = misc.copy(value)
+    seen[tbl] = copy
+    for key, value in pairs(tbl) do
+      copy[key] = do_copy(value, seen)
     end
     return copy
   end
 
-  local copy = {}
-  for key, value in pairs(tbl) do
-    copy[key] = misc.copy(value)
+  ---Copy table
+  ---@generic T
+  ---@param tbl T
+  ---@return T
+  misc.copy = function(tbl)
+    return do_copy(tbl, {})
   end
-  return copy
 end
 
 ---Safe version of vim.str_utfindex

@@ -25,7 +25,7 @@ for kind in pairs(types.lsp.CompletionItemKind) do
   end
 end
 
-autocmd.subscribe('ColorScheme', function()
+autocmd.subscribe({ 'ColorScheme', 'UIEnter' }, function()
   highlight.inherit('CmpItemAbbrDefault', 'Pmenu', { bg = 'NONE', default = false })
   highlight.inherit('CmpItemAbbrDeprecatedDefault', 'Comment', { bg = 'NONE', default = false })
   highlight.inherit('CmpItemAbbrMatchDefault', 'Pmenu', { bg = 'NONE', default = false })
@@ -41,8 +41,9 @@ end)
 autocmd.emit('ColorScheme')
 
 if vim.on_key then
+  local control_c_termcode = vim.api.nvim_replace_termcodes('<C-c>', true, true, true)
   vim.on_key(function(keys)
-    if keys == vim.api.nvim_replace_termcodes('<C-c>', true, true, true) then
+    if keys == control_c_termcode then
       vim.schedule(function()
         if not api.is_suitable_mode() then
           autocmd.emit('InsertLeave')
@@ -51,6 +52,7 @@ if vim.on_key then
     end
   end, vim.api.nvim_create_namespace('cmp.plugin'))
 end
+
 
 vim.api.nvim_create_user_command('CmpStatus', function()
   require('cmp').status()

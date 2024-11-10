@@ -2720,7 +2720,7 @@ Installation:
 Cmp - Neovim completion engine                          *notes_cmp*
                                                         |cmp.txt|
 
-Version 2023-06-30 (2743dd9) from:
+Version 2024-11-02 (f17d9b4) from:
 https://github.com/hrsh7th/nvim-cmp
 
 Installation:

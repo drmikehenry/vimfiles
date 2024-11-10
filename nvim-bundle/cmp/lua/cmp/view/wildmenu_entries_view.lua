@@ -74,7 +74,7 @@ wildmenu_entries_view.new = function()
             })
           end
 
-          for _, m in ipairs(e.matches or {}) do
+          for _, m in ipairs(e:get_view_matches(view.abbr.text) or {}) do
             vim.api.nvim_buf_set_extmark(buf, wildmenu_entries_view.ns, 0, self.offsets[i] + m.word_match_start - 1, {
               end_line = 0,
               end_col = self.offsets[i] + m.word_match_end,
@@ -179,6 +179,12 @@ wildmenu_entries_view.info = function(self)
   return self.entries_win:info()
 end
 
+wildmenu_entries_view.get_selected_index = function(self)
+  if self:visible() and self.active then
+    return self.selected_index
+  end
+end
+
 wildmenu_entries_view.select_next_item = function(self, option)
   if self:visible() then
     local cursor
@@ -223,8 +229,9 @@ wildmenu_entries_view.get_first_entry = function(self)
 end
 
 wildmenu_entries_view.get_selected_entry = function(self)
-  if self:visible() and self.active then
-    return self.entries[self.selected_index]
+  local idx = self:get_selected_index()
+  if idx then
+    return self.entries[idx]
   end
 end
 

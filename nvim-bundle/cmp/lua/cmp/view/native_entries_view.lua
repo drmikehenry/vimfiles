@@ -116,6 +116,15 @@ native_entries_view.preselect = function(self, index)
   end
 end
 
+native_entries_view.get_selected_index = function(self)
+  if self:visible() then
+    local idx = vim.fn.complete_info({ 'selected' }).selected
+    if idx > -1 then
+      return math.max(0, idx) + 1
+    end
+  end
+end
+
 native_entries_view.select_next_item = function(self, option)
   local callback = function()
     self.event:emit('change')
@@ -163,11 +172,9 @@ native_entries_view.get_first_entry = function(self)
 end
 
 native_entries_view.get_selected_entry = function(self)
-  if self:visible() then
-    local idx = vim.fn.complete_info({ 'selected' }).selected
-    if idx > -1 then
-      return self.entries[math.max(0, idx) + 1]
-    end
+  local idx = self:get_selected_index()
+  if idx then
+    return self.entries[idx]
   end
 end
 
