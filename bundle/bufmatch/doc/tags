@@ -1,0 +1,6 @@
+bufmatch	bufmatch.txt	/*bufmatch*
+bufmatch-changelog	bufmatch.txt	/*bufmatch-changelog*
+bufmatch-changelog-0.1.0	bufmatch.txt	/*bufmatch-changelog-0.1.0*
+bufmatch-credits	bufmatch.txt	/*bufmatch-credits*
+bufmatch-introduction	bufmatch.txt	/*bufmatch-introduction*
+bufmatch.txt	bufmatch.txt	/*bufmatch.txt*

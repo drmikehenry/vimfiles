@@ -1769,45 +1769,60 @@ Usage:
 ------------------------------------------------------------------------------
 Highlight command                                       *notes_highlight*
 
-The custom command :Highlight provides highlighting of non-conforming coding
+The custom command `:Highlight` provides highlighting of non-conforming coding
 styles to make it easier to locate problems during editing.
 
-Highlighting is done on a per-buffer basis via Vim's syntax highlighting
-mechanism.  Individual syntax items for a single buffer are enabled or disabled
-via the :Highlight command:
+Highlighting is done on a per-buffer basis via Vim's match highlighting
+mechanism.  Individual options for a single buffer are enabled or disabled via
+the `:Highlight` command.
 
-    :Highlight tabs         ; enable highlighting of tab characters
-    :Highlight notabs       ; disable highlighting of tab characters
-    :Highlight longlines    ; enable highlighting of long lines
-    :Highlight nolonglines  ; disable highlighting of long lines
-    :Highlight *            ; enable all supported highlight items
-    :Highlight no*          ; disable all supported highlight items
-    :Highlight <Tab>        ; command-line completion to show all options
+:Highlight options include:
+    `commas`                  ; commas not followed by a space
+    `keywordspace`            ; C keywords not followed by a space
+                            ;   (`for`, `if`, `while`, `switch`)
+    `longlines`               ; long lines
+    `tabs`                    ; tab characters
+    `trailingspace`           ; end-of-line spaces
 
-:Highlight options include: >
-    commas
-    keywordspace
-    longlines
-    tabs
-    trailingspace
+- Use the option's name to enable the option.
+- Use `no` + the option's name to disable the option.
+- `*` implies all known options.
+- Multiple options may be provided in one `:Highlight` command.
+- Press <Tab> during command entry for completion: >
 
+    :Highlight <Tab>
+<
+Examples:
+
+- To disable `longlines` and enable `trailingspace`: >
+
+    :Highlight nolonglines trailingspace
+<
+- To enable all options, then disable `longlines`: >
+
+    :Highlight * nolonglines
+<
+- To disable all options, then enable `longlines`: >
+
+    :Highlight no* longlines
+<
 In addition, highlighting may be enabled or disabled on a per-buffer basis via
 the following commands:
 
-    :HighlightOn        ; enable highlighting of previously enabled items
-    :HighlightOff       ; disable highlighting of all items
+    `:HighlightOn`        ; enable highlighting of previously enabled items
+    `:HighlightOff`       ; disable highlighting of all items
 
-The highlight items that were individually configured via the :Highlight
-command are remembered, such that :HighlightOn restores the configuration.
+The highlight items that were individually configured via the `:Highlight`
+command are remembered, such that `:HighlightOn` restores the configuration.
 
 The default disposition of highlighting is controlled by the global variable
-g:HighlightEnabled.  This is set to 1 in the vimrc, but it may be overridden in
-a vimrc-after file to cause highlighting to be disabled by default.  In this
+`g:HighlightEnabled`.  This is set to 1 in the vimrc, but it may be overridden
+in a vimrc-after file to cause highlighting to be disabled by default.  In this
 way, it's convenient to allow individually configured highlighting items to be
 set by the main vimrc, but have them be inactive by default (by setting
-g:HighlightEnabled to 0), such that :HighlightOn will turn on the recommended
-set of highlight items.  For this reason, it's not recommended to have
-":Highlight no*" in your configuration.
+`g:HighlightEnabled` to 0), such that `:HighlightOn` will turn on the
+recommended set of highlight items.  For this reason, it's not recommended to
+use `:Highlight no*` in your configuration to disable all items.
 
 ------------------------------------------------------------------------------
 colorcolumn (highlighting first column in right margin) *notes_colorcolumn*

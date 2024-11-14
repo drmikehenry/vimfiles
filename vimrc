@@ -6219,29 +6219,24 @@ let g:HighlightRegex_keywordspace = '\(\<' . join(
         \ split('for if while switch'), '\|\<') . '\)\@<=('
 let g:HighlightRegex_trailingspace = '\s\+\%#\@<!$'
 
+" `b:highlight_groups` is a dictionary mapping from
+" `groupName` to a `buf_match_id` from the `bufmatch` plugin.
+
 " Setup groupName as a syntax match with the given pattern.
-" Because this is expensive for large files with many syntax groups,
-" track the previously set patterns in buffer-local variables and make
-" the changes only if necessary.
 function! HighlightSyntaxMatch(groupName, pattern)
-    let varName = 'b:' . a:groupName . '_pattern'
-    if exists(varName) && {varName} == a:pattern
-        " The pattern has already been set.
-        " TODO: This early return used to be a performance advantage, but at
-        " some point due to changes in Vim or Vimfiles, it's not longer usable
-        " because something is clearing the `syntax match` items which are added
-        " below.  Commenting out this `return` allows the items to be reapplied
-        " by a call to `HighlightApply()` triggered by the`Syntax` autocmd.
-        " It's hard to determine what's clearing the items, so for now we're
-        " just giving up on this small performance boost.
-        " return
+    if !exists('b:highlight_groups')
+        let b:highlight_groups = {}
     endif
-    if a:pattern == ''
-        execute 'silent! syntax clear ' . a:groupName
-    else
-        execute 'syntax match ' . a:groupName . ' /' . a:pattern . '/'
+    " Remove any existing match.
+    if has_key(b:highlight_groups, a:groupName)
+        call bufmatch#MatchDelete(b:highlight_groups[a:groupName])
+        unlet b:highlight_groups[a:groupName]
     endif
-    let {varName} = a:pattern
+    " Add new match (if any).
+    if a:pattern != ''
+        let buf_match_id = bufmatch#MatchAdd(a:groupName, a:pattern)
+        let b:highlight_groups[a:groupName] = buf_match_id
+    endif
 endfunction
 
 " Invoke as: HighlightNamedRegex('longlines1', 'HG_Warning', 1)
@@ -6253,6 +6248,8 @@ endfunction
 "   NonText     non-intrusive, fairly subtle.
 function! HighlightNamedRegex(regexName, linkedGroup, enable)
     let groupName = 'Highlight_' . a:regexName
+    execute 'highlight link ' . groupName . ' ' . a:linkedGroup
+
     let patternName = 'HighlightRegex_' . a:regexName
     let pattern = ''
     if a:enable
@@ -6265,7 +6262,6 @@ function! HighlightNamedRegex(regexName, linkedGroup, enable)
         endif
     endif
     call HighlightSyntaxMatch(groupName, pattern)
-    execute 'highlight link ' . groupName . ' ' . a:linkedGroup
 endfunction
 
 function! Highlight_commas(enable)

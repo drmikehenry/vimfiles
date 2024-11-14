@@ -1,0 +1,34 @@
+*bufmatch.txt*  Plugin to simulate per-buffer matchadd()
+*bufmatch*      Version 0.1.0
+
+==============================================================================
+CONTENTS
+
+INTRODUCTION                                         |bufmatch-introduction|
+CHANGELOG                                            |bufmatch-changelog|
+CREDITS                                              |bufmatch-credits|
+
+===============================================================================
+INTRODUCTION                                         *bufmatch-introduction*
+
+TODO: document.
+
+===============================================================================
+CHANGELOG                                            *bufmatch-changelog*
+
+Version 0.1.0   Date    2024-11-13                   *bufmatch-changelog-0.1.0*
+
+  - Initial version
+
+===============================================================================
+CREDITS                                              *bufmatch-credits*
+
+Maintained by Michael Henry (vim at drmikehenry.com).
+
+Distributed under Vim's |license|.
+
+TODO: Extract into separate Git repository:
+Git repository:       https://github.com/drmikehenry/vim-bufmatch
+
+===============================================================================
+vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:

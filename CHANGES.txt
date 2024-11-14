@@ -7,6 +7,16 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2024-11-13
+==========
+
+- Fix problem with ``:Highlight trailingspace`` in C code comments.  At some
+  point, changes to Vim's C syntax highlighting caused the trailing space
+  highlight to stop working.  Originally, ``:Highlight`` was implemented via
+  ``:syntax match`` commands; these now interact badly with other part of the
+  syntax highlighting mechanism.  ``:Highlight`` has been reimplemented using
+  Vim's ``matchadd()`` feature, which takes precedence over ``:syntax match``.
+
 2024-11-10
 ==========
 
