@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2025-01-05
+==========
+
+- Upgrade Bufkill plugin to version 2022-04-19.  This fixes the occasional
+  warning ``UpdateLastColumn failed to find bufnr``.
+
 2024-11-13
 ==========
 
