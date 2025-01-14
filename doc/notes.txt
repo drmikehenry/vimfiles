@@ -2602,7 +2602,7 @@ Installation:
 BufExplorer - Buffer switcher and manager               *notes_bufexplorer*
                                                         |bufexplorer|
 
-Version 2020-02-17 (29258f5) from:
+Version 7.4.28 (2024-11-07) from:
 https://github.com/jlanzarotta/bufexplorer
 
 Installation:

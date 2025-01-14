@@ -4,6 +4,9 @@
 " Early Setup
 " =============================================================
 
+if has('nvim') && executable('pynvim-python')
+    let g:python3_host_prog = 'pynvim-python'
+endif
 if has('nvim') && !exists('g:python3_host_prog')
     " Ensure Neovim Python provider is setup before any use of Python.
     for s:pynvim_python in [

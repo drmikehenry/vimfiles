@@ -4,3 +4,9 @@ dist.bat
 *.zip
 tags
 *.sw[a-p]
+
+# Github token.
+github_token
+
+# goreleaser dist directory.
+dist/
