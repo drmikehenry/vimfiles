@@ -6237,7 +6237,10 @@ function! HighlightSyntaxMatch(groupName, pattern)
     endif
     " Add new match (if any).
     if a:pattern != ''
-        let buf_match_id = bufmatch#MatchAdd(a:groupName, a:pattern)
+        " Choose a priority less than zero (the priority of search
+        " highlighting).
+        let priority = -10
+        let buf_match_id = bufmatch#MatchAdd(a:groupName, a:pattern, priority)
         let b:highlight_groups[a:groupName] = buf_match_id
     endif
 endfunction

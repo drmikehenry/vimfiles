@@ -27,10 +27,26 @@ function! bufmatch#SyncWindow()
     let w:bufmatch_win_match_ids = win_match_ids
 endfunction
 
-function! bufmatch#MatchAdd(group, pattern)
+" Optional arguments for `...`:
+"   `priority`: integer priority for `matchadd()`.
+"   `dict`: dictionary of additional custom values for `matchadd()`.
+function! bufmatch#MatchAdd(group, pattern, ...)
     let matches = get(b:, 'bufmatch_matches', {})
     let buf_match_id = s:NextBufMatchId(matches)
-    let matches[buf_match_id] = [a:group, a:pattern]
+    " Prepare arguments for `matchadd(group, pattern, priority, id, dict)`.
+    " Arguments `priority` and onward are optional.
+    let match_args = [a:group, a:pattern]
+    if a:0 >= 1
+        " Optional `priority` provided.
+        call add(match_args, a:000[0])
+    endif
+    if a:0 >= 2
+        " Optional `dict` provided; must supply `-1` for a default `id`,
+        " then the provided `dict`.
+        call add(match_args, -1)
+        call add(match_args, a:000[1])
+    endif
+    let matches[buf_match_id] = match_args
     let b:bufmatch_matches = matches
     call bufmatch#SyncWindow()
     return buf_match_id
