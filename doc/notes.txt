@@ -2304,6 +2304,104 @@ Debugging Vim problems                                  *notes_tips_debugging*
     ga  - decimal, hexadecimal, octal
     g8  - bytes in UTF-8 character
 <
+- To test a specific configuration of Vim:
+
+  - Create an area for testing: >
+
+      mkdir testing
+      cd testing
+<
+  - Setup fake home direcotry and `FAKEHOME` environment variable: >
+
+      mkdir fakehome
+      export FAKEHOME=$PWD/fakehome
+<
+  - Create an area for plugins: >
+
+      mkdir -p $FAKEHOME/.vim/bundle
+<
+  - Acquire plugin(s): >
+
+      git clone https://github.com/jlanzarotta/bufexplorer.git \
+        $FAKEHOME/.vim/bundle/bufexplorer
+<
+  - Create fake `~/.vimrc` and update 'runtimepath' for plugins. >
+
+      vim $FAKEHOME/.vimrc
+<
+    Use contents such as: >
+
+      " Remove `~/.vim`, add plugin directories, restore `~/.vim`.
+      set rtp-=~/.vim
+      set rtp-=~/.vim/after
+
+      set rtp^=~/.vim/bundle/bufexplorer
+      " Optional if `after/` exists:
+      " set rtp+=~/.vim/bundle/bufexplorer/after
+
+      set rtp^=~/.vim
+      set rtp+=~/.vim/after
+<
+  - Launch Vim for testing, e.g.: >
+
+      HOME=$FAKEHOME vim one two three four five
+<
+  - Launch custom-compiled Vim using fake home, e.g.: >
+
+      HOME=$FAKEHOME VIMRUNTIME=$HOME/build/vim/vim-7.4/runtime \
+        $HOME/build/vim/vim-7.4/src/vim
+<
+  - Setup Neovim plugins in fake home directory: >
+
+      mkdir -p $FAKEHOME/.config/nvim/pack/bufexplorer/start
+      ln -s  $FAKEHOME/.vim/bundle/bufexplorer \
+        $FAKEHOME/.config/nvim/pack/bufexplorer/start/bufexplorer
+<
+  - Optionally setup an `init.vim` for Neovim-specific configuration: >
+
+      mkdir -p $FAKEHOME/.config/nvim
+      vim $FAKEHOME/.config/nvim/init.vim
+<
+  - Launch Neovim for testing, e.g.: >
+
+      HOME=$FAKEHOME nvim one two three four five
+<
+- To debug script-local variables and functions:
+
+  - The best thing is to patch the plugin to provide `eval()` and `:execute` in
+    the context of the plugin.  For example, to debug `bufexplorer`, add the
+    below to `plugin/bufexplorer.vim`: >
+
+      function! BufExplorer_eval(expr)
+          return eval(a:expr)
+      endfunction
+
+      function! BufExplorer_execute(statement)
+          execute a:statement
+      endfunction
+<
+    Now test, e.g.: >
+
+      :echo BufExplorer_eval('s:bufMru')
+      :call BufExplorer_execute('let s:bufMru = s:MRUNew(0)')
+<
+- Without patching, it's not possible to examine script-local variables; but
+  script-local functions may be called with some effort.
+
+  - https://stackoverflow.com/questions/24027506/get-a-vim-scripts-snr
+
+  - https://github.com/lambdalisue/vim-localhook/tree/master
+
+  - Based on script ID from `:scriptnames`, a script-local name like `s:Name`
+    becomes `<SNR>ID_`, where `ID` is the script ID.
+
+    E.g., if `:scriptnames` shows `21` as the script ID, then you can call a
+    script-local function `s:Func()` via:
+
+        :call <SNR>21_Func()
+
+    See `<SID>` for additional info.
+
 ------------------------------------------------------------------------------
 Quitting with non-zero return code                      *notes_tips_quitting*
 
