@@ -1,7 +1,7 @@
-*bufexplorer.txt*              Buffer Explorer       Last Change: 05 Nov 2024
+*bufexplorer.txt*              Buffer Explorer       Last Change: 17 Feb 2025
 
 Buffer Explorer                                *buffer-explorer* *bufexplorer*
-                                Version 7.4.28
+                                Version 7.6.0
 
 Plugin for easily exploring (or browsing) Vim|:buffers|.
 
@@ -26,7 +26,7 @@ To install:
   - Download the bufexplorer.zip from one of the following places:
     https://github.com/jlanzarotta/bufexplorer
     http://www.vim.org/scripts/script.php?script_id=42
-    or use a package manager like Vundle.
+    or use a package manager like vim-plug, Vundle, etc..
   - Extract the zip archive into your runtime directory.
     The archive contains plugin/bufexplorer.vim, and doc/bufexplorer.txt.
   - Start Vim or goto an existing instance of Vim.
@@ -173,6 +173,17 @@ The default is to be taken to the active window.
 When a buffer is selected, the functions specified either singly or as a list
 will be called.
 
+                                                      *g:bufExplorerOnlyOneTab*
+To control whether a buffer should be shown on any tab where it has ever been
+used or only on the most-recently-used (MRU) tab (i.e., the tab where the buffer
+was most recently used), use: >
+  let g:bufExplorerOnlyOneTab=0        " Show in all tabs where buffer was used.
+  let g:bufExplorerOnlyOneTab=1        " Show buffer only in MRU tab.
+The default is `1` (show a buffer only on the MRU tab).
+This setting applies only when |g:bufExplorerShowTabBuffer| is true (i.e., when
+BufExplorer shows only those buffers used in the current tab instead of showing
+all buffers).
+
                                                      *g:bufExplorerReverseSort*
 To control whether to sort the buffer in reverse order or not, use: >
   let g:bufExplorerReverseSort=0       " Do not sort in reverse order.
@@ -269,6 +280,55 @@ The default is 1.
 ===============================================================================
 CHANGE LOG                                              *bufexplorer-changelog*
 
+7.6.0    February 17, 2025
+     What's Changed
+     - Another Major patch implemented by Dr. Michael Henry.
+       https://github.com/jlanzarotta/bufexplorer/pull/119
+       * Sorting by fullname now depends only on the buffer's absolute path
+         using a new sorting mechanism. Other sort modes have been converted to
+         use this mechanism as well.
+       * Display of directory buffers is now suppressed when
+         g:bufExplorerShowDirectories == 0 as described in the BufExplorer
+         documentation.
+       * Path calculations for the elements in s:types have been normalized.
+         fullpath now has simplify() applied to normalize paths like
+         dir/../file. Trailing path separators for directories have been
+         removed. The shortname <DIRECTORY> for directories has been
+         eliminated; instead, the directory's basename is used as is done for
+         files (except for root directories, where the trailing path separator
+         cannot be removed; a shortname of . is used for this case). A new
+         element, homepath, has been added to s.types; this is fullpath
+         shortened for paths in $HOME and without the trailing path separator.
+         Other displayable paths (path, relativepath, relativename) are
+         similarly shortened for paths in $HOME.
+       * Textual substitution of $HOME -> ~ in paths has been eliminated. This
+         substitution could occur anywhere in the path, not just at the start,
+         causing undesirable anomalies. Shortening for paths in $HOME is now
+         done via homename and associated variables from s:types.
+       * If the devicons plugin is installed, a buffer's buf.isdir status has
+         been added as a parameter passed to that plugin, allowing the plugin
+         to supply a directory icon for buffer directories.
+       * Avoid calculating buffer details until they are needed for display.
+         Users who don't want to see unlisted buffers shouldn't have to pay
+         for the expensive work of calculating buffer details for unlisted
+         buffers, only to have that information ignored. This resolves
+         bufexplorer is slow to open with many unlisted buffers.
+         https://github.com/jlanzarotta/bufexplorer/issues/20
+7.5.0    February 16, 2025
+     What's Changed
+     - Major patch implemented by Dr. Michael Henry.
+       https://github.com/jlanzarotta/bufexplorer/pull/118
+       Significant rework and restructuring of the s:SelectBuffer() method to
+       demonstrate behaviors described in Github issue #117.
+       https://github.com/jlanzarotta/bufexplorer/issues/117
+       This patch includes fixes which also resolves:
+       - Github issue #81. Previous buffer duplicated in split after openning
+         new buffer in tab.
+         https://github.com/jlanzarotta/bufexplorer/issues/81
+       - Github issue #65. bv plus t does weird things.
+         https://github.com/jlanzarotta/bufexplorer/issues/65
+       - Github issue #52. Find Active Window not working as expected.
+         https://github.com/jlanzarotta/bufexplorer/issues/52
 7.4.28   November 5, 2024
        - Thanks to GitHub user jsvia, for the addition of the new
          bufExplorerShowTerminal feature.  Please refer to the documentation

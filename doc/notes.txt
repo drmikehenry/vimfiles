@@ -2700,12 +2700,12 @@ Installation:
 BufExplorer - Buffer switcher and manager               *notes_bufexplorer*
                                                         |bufexplorer|
 
-Branch `sort` at:
+Branch `mru` at:
 https://github.com/drmikehenry/bufexplorer.vim
 
 Forked from:
 
-Version 7.4.28 (2024-11-07) from:
+Version 7.6.0 (2025-02-17) from:
 https://github.com/jlanzarotta/bufexplorer
 
 Installation:

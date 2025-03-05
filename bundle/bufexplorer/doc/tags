@@ -15,6 +15,7 @@ g:bufExplorerDetailedHelp	bufexplorer.txt	/*g:bufExplorerDetailedHelp*
 g:bufExplorerDisableDefaultKeyMapping	bufexplorer.txt	/*g:bufExplorerDisableDefaultKeyMapping*
 g:bufExplorerFindActive	bufexplorer.txt	/*g:bufExplorerFindActive*
 g:bufExplorerFuncRef	bufexplorer.txt	/*g:bufExplorerFuncRef*
+g:bufExplorerOnlyOneTab	bufexplorer.txt	/*g:bufExplorerOnlyOneTab*
 g:bufExplorerReverseSort	bufexplorer.txt	/*g:bufExplorerReverseSort*
 g:bufExplorerShowDirectories	bufexplorer.txt	/*g:bufExplorerShowDirectories*
 g:bufExplorerShowNoName	bufexplorer.txt	/*g:bufExplorerShowNoName*
