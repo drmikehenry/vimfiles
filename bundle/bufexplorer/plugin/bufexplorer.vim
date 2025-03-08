@@ -36,7 +36,7 @@
 " Name Of File: bufexplorer.vim
 "  Description: Buffer Explorer Vim Plugin
 "   Maintainer: Jeff Lanzarotta (my name at gmail dot com)
-" Last Changed: Monday, 17 February 2025
+" Last Changed: Wednesday, 05 March 2025
 "      Version: See g:bufexplorer_version for version number.
 "        Usage: This file should reside in the plugin directory and be
 "               automatically sourced.
@@ -73,8 +73,8 @@ if exists("g:bufexplorer_version") || &cp
 endif
 "1}}}
 
-" Version number
-let g:bufexplorer_version = "7.6.0"
+" Version number.
+let g:bufexplorer_version = "7.8.0"
 
 " Plugin Code {{{1
 " Check for Vim version {{{2
@@ -82,23 +82,12 @@ if !exists("g:bufExplorerVersionWarn")
     let g:bufExplorerVersionWarn = 1
 endif
 
-if v:version < 700
+" Make sure we are using the correct version of Vim. If not, do not load the
+" plugin.
+if v:version < 704
     if g:bufExplorerVersionWarn
         echohl WarningMsg
-        echo "Sorry, bufexplorer ".g:bufexplorer_version." required Vim 7.0 or greater."
-        echohl None
-    endif
-    finish
-endif
-
-" Check to see if the version of Vim has the correct patch applied, if not, do
-" not used <nowait>.
-if v:version > 703 || v:version == 703 && has('patch1261') && has('patch1264')
-    " We are good to go.
-else
-    if g:bufExplorerVersionWarn
-        echohl WarningMsg
-        echo "Sorry, bufexplorer ".g:bufexplorer_version." required Vim 7.3 or greater with patch1261 and patch1264."
+        echo "Sorry, bufexplorer ".g:bufexplorer_version." required Vim 7.4 or greater."
         echohl None
     endif
     finish

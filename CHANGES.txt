@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2025-03-08
+==========
+
+- Upgrade BufExplorer to version 7.8.0 (incorporates the new MRU algorithm into
+  a release; otherwise, functionality the same as the upgrade from 2025-03-04).
+
 2025-03-04
 ==========
 
