@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2025-03-22
+==========
+
+- Default to disabling BufExplorer's "find active buffer" feature (the ``a``
+  command key in the BufExplorer window).  This makes it more predictable to
+  open a buffer in the desired (current) window.  Press ``a`` in the BufExplorer
+  windows to toggle this feature on and off.  To change this default, add the
+  following line to your "vimrc_after.vim"::
+
+    let g:bufExplorerFindActive = 1
+
 2025-03-08
 ==========
 

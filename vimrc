@@ -3963,6 +3963,7 @@ let g:Align_mapleader = '\|'
 
 let g:bufExplorerShowRelativePath = 1
 let g:bufExplorerShowNoName = 1
+let g:bufExplorerFindActive = 0
 
 " -------------------------------------------------------------
 " bufkill
