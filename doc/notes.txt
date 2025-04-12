@@ -2348,8 +2348,8 @@ Debugging Vim problems                                  *notes_tips_debugging*
 <
   - Launch custom-compiled Vim using fake home, e.g.: >
 
-      HOME=$FAKEHOME VIMRUNTIME=$HOME/build/vim/vim-7.4/runtime \
-        $HOME/build/vim/vim-7.4/src/vim
+      HOME=$FAKEHOME VIMRUNTIME=/home/$USER/build/vim/vim-7.4/runtime \
+        /home/$USER/build/vim/vim-7.4/src/vim
 <
   - Setup Neovim plugins in fake home directory: >
 
