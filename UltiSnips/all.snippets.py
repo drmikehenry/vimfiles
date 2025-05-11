@@ -18,4 +18,5 @@ endglobal
 """
 )
 
-wsnip("date", "today's date", r"""`!v strftime("%Y-%m-%d")`""")
+wsnip("date", "today's date YYYY-MM-DD", r"""`!v strftime("%Y-%m-%d")`""")
+wsnip("datem", "today's date YYYY-MM", r"""`!v strftime("%Y-%m")`""")
