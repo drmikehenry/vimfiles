@@ -1,0 +1,19 @@
+After a discussion with [~john.doe], I am reporting the following issue.
+
+h1. Steps to reproduce
+
+* Do this
+* Do more of that
+* And finally do this
+
+h1. Expected result
+
+As per the [documentation|https://docs.com], the output should be as follows:
+{noformat}
+It works!
+{noformat}
+
+h1. Actual result
+
+The program *crashes*. See the attached screenshot:
+!screenshot.jpg|Crash in action!

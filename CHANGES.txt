@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2025-05-12
+==========
+
+- Add ``jira`` syntax support and map ``*.jira`` files to the ``jira`` filetype.
+
+  - This format may be used for Atlassian Jira and Confluence.
+
 2025-05-11
 ==========
 

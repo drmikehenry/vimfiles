@@ -16,6 +16,7 @@ augroup filetypedetect
 
     au BufNewFile,BufRead *.cxx setfiletype cpp
     au BufNewFile,BufRead *.dxy setfiletype c
+    au BufNewFile,BufRead *.jira setfiletype jira
     au BufNewFile,BufRead *.ll setfiletype llvm
     au BufNewFile,BufRead *.txt setfiletype text
     au BufNewFile,BufRead *.wiki setfiletype Wikipedia

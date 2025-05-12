@@ -3417,6 +3417,19 @@ Installation:
 - :Helptags
 
 ------------------------------------------------------------------------------
+Jira - Syntax support for Jira                          *notes_jira*
+
+Version 2024-03-03 (13f14dc) from:
+https://github.com/s3rvac/vim-syntax-jira
+
+Local customizations:
+
+- Map `*.jira` to the `jira` filetype.
+
+Installation:
+- Follow bundle installation instructions (|bundle_installation|).
+
+------------------------------------------------------------------------------
 Keepcase - Search-and-replace keeping case              *notes_keepcase*
 
 Usage:
