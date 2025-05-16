@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2025-05-16
+==========
+
+- Document the use of ``pynvim-python-interpreter`` as the preferred method of
+  installing ``pynvim`` from PyPI to add Python support to Neovim. For more
+  information, see ``:help notes_setup_optional``.
+
 2025-05-12
 ==========
 

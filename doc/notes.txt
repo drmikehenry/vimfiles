@@ -490,7 +490,47 @@ you may build Vim with Python support (|notes_build_vim|).
 
 For Neovim, `pynvim` is required to enable Python-based plugins.
 
-To install `pynvim` from the Ubuntu package manager:
+To install `pynvim` from PyPI:
+
+- The easiest method is to install `pynvim-python-interpreter` via `uv` or
+  `pipx`: >
+
+    uv install pynvim-python-interpreter
+
+    # Or using `pipx`:
+    pipx install pynvim-python-interpreter
+<
+  This will expose the Python interpreter for `pynvim` on the `PATH` as the name
+  `pynvim-python-interpreter`; Vimfiles will detect this and make the
+  assignment: >
+
+    let g:python3_host_prog = 'pynvim-python-interpreter'
+<
+- Alternatively, you can manually install `pynvim` into a virtual environment.
+  Vimfiles probes for the `pynvim` virtual environment at any of these
+  locations: >
+
+    ~/venvs/pynvim
+    /opt/pynvim
+<
+  - Create a Python virtual environment for `pynvim` and install.  Using the
+    global location in `/opt`: >
+
+      sudo -i
+      cd /opt
+      python3 -m venv pynvim
+      . pynvim/bin/activate
+      pip install pynvim
+<
+  - Vimfiles will detect the location of `pynvim` and set the following Neovim
+    variable accordingly: >
+
+      let g:python3_host_prog = '/opt/pynvim/env/bin/python'
+<
+    For installation to another location, set this variable accordingly in your
+    |VIMRC_BEFORE| script.
+
+If PyPI is not available, install `pynvim` from the Ubuntu package manager:
 
 - Install using `apt`: >
 
@@ -498,31 +538,6 @@ To install `pynvim` from the Ubuntu package manager:
 <
 - This installs `pynvim` into the default `python3` environment.  Neovim will
   automatically detect and use it from that location.
-
-To install `pynvim` from PyPI:
-
-- Choose installation directory. Vimfiles probes for pynvim at any of these
-  locations: >
-
-    ~/venvs/pynvim
-    /opt/pynvim
-<
-- Create a Python virtual environment for `pynvim` and install.  Using the
-  global location in `/opt`: >
-
-    sudo -i
-    cd /opt
-    python3 -m venv pynvim
-    . pynvim/bin/activate
-    pip install pynvim
->
-- Vimfiles will detect the location of `pynvim` and set the following Neovim
-  variable accordingly: >
-
-    let g:python3_host_prog = '/opt/pynvim/env/bin/python'
-<
-  For installation to another location, set this variable accordingly in your
-  |VIMRC_BEFORE| script.
 
 Ruby-based plugins
 ------------------
