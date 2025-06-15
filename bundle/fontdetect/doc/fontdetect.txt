@@ -1,5 +1,5 @@
 *fontdetect.txt*  Plugin to detect installed fonts
-*fontdetect*      Version 0.3.0
+*fontdetect*      Version 0.4.0
 
 ==============================================================================
 1.  Introduction                                    |fontdetect-intro|
@@ -96,6 +96,10 @@ fontdetect#firstFontFamily([{fontFamilies}])    |fontdetect#firstFontFamily|
 ===============================================================================
 4.  ChangeLog                                       |fontdetect-changelog|
 
+Version 0.4.0    Date    2025-06-15                 *fontdetect-changelog-0.4.0*
+
+  - Support newer macOS detection using `atsutil` (thanks to John Szakmeister).
+
 Version 0.3.0    Date    2018-10-27                 *fontdetect-changelog-0.3.0*
 
   - Support for Python 3 in addition to Python 2 (thanks to Mike Haig).
@@ -130,6 +134,7 @@ Git repository:       https://github.com/drmikehenry/vim-fontdetect
 Contributors (in chronological order):
 
 - Mike Haig
+- John Szakmeister
 
 ===============================================================================
 vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:

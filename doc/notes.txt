@@ -3156,7 +3156,7 @@ See |fixkey.txt| for details on setting up your terminal.
 Fontdetect - Detect installed fonts                     *notes_fontdetect*
                                                         |fontdetect.txt|
 
-Version 0.3.0 (c238ea9) from:
+Version 0.4.0 (642aae7) from:
 https://github.com/drmikehenry/vim-fontdetect
 
 Installation:

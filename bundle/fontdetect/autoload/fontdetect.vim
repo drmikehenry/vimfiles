@@ -52,54 +52,6 @@ function! fontdetect#_quote(string)
     return "'" . substitute(a:string, "'", "''", 'g') . "'"
 endfunction
 
-if has('pythonx')
-    let s:fontdetect_python = 'pythonx'
-    let s:fontdetect_pyevalFunction = 'pyxeval'
-elseif has('python3')
-    let s:fontdetect_python = 'python3'
-    let s:fontdetect_pyevalFunction = 'py3eval'
-elseif has('python')
-    let s:fontdetect_python = 'python'
-    let s:fontdetect_pyevalFunction = 'pyeval'
-else
-    let s:fontdetect_python = ''
-    let s:fontdetect_pyevalFunction = ''
-endif
-
-if s:fontdetect_python != ''
-
-" Evaluate pythonSource using the detected version of Python.
-function! fontdetect#_pyeval(pythonSource)
-    let quotedSource = fontdetect#_quote(a:pythonSource)
-    return eval(s:fontdetect_pyevalFunction . '(' . quotedSource . ')')
-endfunction
-
-function fontdetect#_setupPythonFunctions()
-    " Python function for detecting installed font families using Cocoa.
-    execute s:fontdetect_python . ' << endpython'
-def fontdetect_listFontFamiliesUsingCocoa():
-    try:
-        import Cocoa
-    except (ImportError, AttributeError):
-        return []
-    manager = Cocoa.NSFontManager.sharedFontManager()
-    fontFamilies = list(manager.availableFontFamilies())
-    return fontFamilies
-endpython
-endfunction
-
-call fontdetect#_setupPythonFunctions()
-endif
-
-" Use Cocoa font manager to return list of all installed font families.
-function! fontdetect#_listFontFamiliesUsingCocoa()
-    if s:fontdetect_python != ''
-        return fontdetect#_pyeval('fontdetect_listFontFamiliesUsingCocoa()')
-    else
-        return []
-    endif
-endfunction
-
 " Use fontconfig's ``fc-list`` to return list of all installed font families.
 function! fontdetect#_listFontFamiliesUsingFontconfig()
     if !executable('fc-list')
@@ -109,6 +61,33 @@ function! fontdetect#_listFontFamiliesUsingFontconfig()
     return split(fcOutput, '\n')
 endfunction
 
+" Helper for processing entries from ``atsutil``.
+function! fontdetect#_stripEntry(s)
+    let ret = substitute(a:s, '^\s\+', '', '')
+    return substitute(ret, '\s\+$', '', '')
+endfunction
+
+" Use macOS's ``atsutil`` to return a list of all installed fonts.
+" This technique returns more than expected as it includes variant
+" names (bold, italic, etc.).  But it does include the family too.
+" Note: atsutil has been around since OS X 10.5.
+function! fontdetect#_listFontFamiliesUsingAtsutil()
+    if !executable("atsutil")
+        return []
+    endif
+
+    let atsOutput = system('atsutil fonts -list')
+    let atsOutput = split(atsOutput, '\n',)
+
+    " Drop all headings
+    let atsOutput = filter(atsOutput, 'v:val !~ ":$"')
+
+    " Remove all leading and trailing whitespace.
+    let atsOutput = map(atsOutput, 'fontdetect#_stripEntry(v:val)')
+
+    return atsOutput
+endfunction
+
 function! fontdetect#_fontDict()
     if exists('g:fontdetect#_cachedFontDict')
         return g:fontdetect#_cachedFontDict
@@ -116,7 +95,7 @@ function! fontdetect#_fontDict()
     if has('win32')
         let families = fontdetect#_listFontFamiliesUsingWindowsRegistry()
     elseif has('macunix')
-        let families = fontdetect#_listFontFamiliesUsingCocoa()
+        let families = fontdetect#_listFontFamiliesUsingAtsutil()
         if len(families) == 0
             " Try falling back on Fontconfig.
             let families = fontdetect#_listFontFamiliesUsingFontconfig()
