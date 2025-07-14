@@ -1147,7 +1147,10 @@ endif
 "   buffer  - directory of the related buffer
 "   current - current directory (pwd)
 "   {path}  - specified directory
-set browsedir=buffer
+" Neovim has not yet implemented this feature.
+if exists('+browsedir')
+    set browsedir=buffer
+endif
 
 " -------------------------------------------------------------
 " Display settings
@@ -3146,7 +3149,10 @@ set hidden
 
 " Setup a key to toggle "paste" mode (toggles between :set paste
 " and :set nopaste by executing :set invpaste).
-set pastetoggle=<S-F12>
+" Neovim has removed the `pastetoggle` option, with the motto "Just Paste It".
+if exists('+pastetoggle')
+    set pastetoggle=<S-F12>
+endif
 
 " For smoother integration with typical applications that use the clipboard,
 " set both "unnamed" and "unnamedplus".  This causes yanks to go to both
