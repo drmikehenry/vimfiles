@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2025-07-17
+==========
+
+- Upgrade ``none-ls`` plugin to version 2025-07-13.  This fixes a problem with
+  Neovim 0.11.3 when opening ``*.sh`` files; the previous version of
+  ``none-ls`` would generate this error::
+
+    Error executing vim.schedule lua callback:
+    /home/mike/.vim/nvim-bundle/none-ls/lua/null-ls/client.lua:53: attempt to
+    index field '_request_name_to_capability' (a nil value)
+
 2025-07-14
 ==========
 

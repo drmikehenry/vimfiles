@@ -17,6 +17,36 @@ return {
   astro = {
     formatting = { "prettier", "prettierd" }
   },
+  ["atlas-config"] = {
+    formatting = { "atlas_fmt" }
+  },
+  ["atlas-plan"] = {
+    formatting = { "atlas_fmt" }
+  },
+  ["atlas-schema-clickhouse"] = {
+    formatting = { "atlas_fmt" }
+  },
+  ["atlas-schema-mariadb"] = {
+    formatting = { "atlas_fmt" }
+  },
+  ["atlas-schema-mssql"] = {
+    formatting = { "atlas_fmt" }
+  },
+  ["atlas-schema-mysql"] = {
+    formatting = { "atlas_fmt" }
+  },
+  ["atlas-schema-postgresql"] = {
+    formatting = { "atlas_fmt" }
+  },
+  ["atlas-schema-redshift"] = {
+    formatting = { "atlas_fmt" }
+  },
+  ["atlas-schema-sqlite"] = {
+    formatting = { "atlas_fmt" }
+  },
+  ["atlas-test"] = {
+    formatting = { "atlas_fmt" }
+  },
   beancount = {
     diagnostics = { "bean_check" },
     formatting = { "bean_format" }
@@ -44,7 +74,7 @@ return {
   },
   clojure = {
     diagnostics = { "clj_kondo" },
-    formatting = { "cljstyle", "zprint" }
+    formatting = { "cljfmt", "cljstyle", "zprint" }
   },
   cmake = {
     diagnostics = { "cmake_lint" },
@@ -175,7 +205,7 @@ return {
   },
   hcl = {
     diagnostics = { "terragrunt_validate" },
-    formatting = { "hclfmt", "packer", "terragrunt_fmt" }
+    formatting = { "atlas_fmt", "hclfmt", "packer", "terragrunt_fmt" }
   },
   html = {
     diagnostics = { "markuplint", "tidy" },
@@ -289,7 +319,7 @@ return {
   },
   php = {
     diagnostics = { "phpcs", "phpmd", "phpstan" },
-    formatting = { "phpcbf", "phpcsfixer", "pint", "pretty_php" }
+    formatting = { "duster", "phpcbf", "phpcsfixer", "pint", "pretty_php" }
   },
   prisma = {
     formatting = { "prisma_format" }
@@ -310,7 +340,7 @@ return {
   },
   python = {
     code_actions = { "refactoring" },
-    diagnostics = { "mypy", "pylint", "semgrep" },
+    diagnostics = { "mypy", "pydoclint", "pylint", "semgrep" },
     formatting = { "black", "blackd", "isort", "isortd", "pyink", "usort", "yapf" }
   },
   qml = {
@@ -380,8 +410,8 @@ return {
     diagnostics = { "rpmspec" }
   },
   sql = {
-    diagnostics = { "sqlfluff" },
-    formatting = { "pg_format", "sql_formatter", "sqlfluff", "sqlfmt", "sqlformat" }
+    diagnostics = { "sqlfluff", "sqruff" },
+    formatting = { "pg_format", "sql_formatter", "sqlfluff", "sqlfmt", "sqlformat", "sqruff" }
   },
   stylus = {
     diagnostics = { "stylint" }
@@ -404,11 +434,11 @@ return {
     diagnostics = { "teal" }
   },
   terraform = {
-    diagnostics = { "terraform_validate", "tfsec", "trivy" },
+    diagnostics = { "opentofu_validate", "terraform_validate", "tfsec", "trivy" },
     formatting = { "opentofu_fmt", "terraform_fmt" }
   },
   ["terraform-vars"] = {
-    diagnostics = { "terraform_validate", "tfsec", "trivy" },
+    diagnostics = { "opentofu_validate", "terraform_validate", "tfsec", "trivy" },
     formatting = { "opentofu_fmt", "terraform_fmt" }
   },
   tex = {
@@ -421,7 +451,7 @@ return {
     hover = { "dictionary" }
   },
   tf = {
-    diagnostics = { "terraform_validate", "tfsec", "trivy" },
+    diagnostics = { "opentofu_validate", "terraform_validate", "tfsec", "trivy" },
     formatting = { "opentofu_fmt", "terraform_fmt" }
   },
   twig = {

@@ -3893,7 +3893,7 @@ Installation:
 ------------------------------------------------------------------------------
 None-LS - Neovim non-LSP language tool support          *notes_none-ls*
 
-Version 2024-10-11 (6bdd9b3) from:
+Version 2025-07-13 (a5954f0) from:
 https://github.com/nvimtools/none-ls.nvim
 
 - Replaces https://github.com/jose-elias-alvarez/null-ls.nvim; internally,

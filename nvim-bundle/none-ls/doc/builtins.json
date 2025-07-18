@@ -57,6 +57,9 @@
     "luasnip": {
       "filetypes": []
     },
+    "nvim_snippets": {
+      "filetypes": []
+    },
     "spell": {
       "filetypes": []
     },
@@ -279,6 +282,13 @@
         "rego"
       ]
     },
+    "opentofu_validate": {
+      "filetypes": [
+        "terraform",
+        "tf",
+        "terraform-vars"
+      ]
+    },
     "perlimports": {
       "filetypes": [
         "perl"
@@ -320,6 +330,11 @@
       "filetypes": [
         "puppet",
         "epuppet"
+      ]
+    },
+    "pydoclint": {
+      "filetypes": [
+        "python"
       ]
     },
     "pylint": {
@@ -395,6 +410,11 @@
       ]
     },
     "sqlfluff": {
+      "filetypes": [
+        "sql"
+      ]
+    },
+    "sqruff": {
       "filetypes": [
         "sql"
       ]
@@ -547,6 +567,21 @@
         "java"
       ]
     },
+    "atlas_fmt": {
+      "filetypes": [
+        "hcl",
+        "atlas-config",
+        "atlas-schema-mysql",
+        "atlas-schema-sqlite",
+        "atlas-schema-mariadb",
+        "atlas-schema-redshift",
+        "atlas-schema-clickhouse",
+        "atlas-schema-postgresql",
+        "atlas-schema-mssql",
+        "atlas-plan",
+        "atlas-test"
+      ]
+    },
     "bean_format": {
       "filetypes": [
         "beancount"
@@ -615,6 +650,11 @@
         "proto"
       ]
     },
+    "cljfmt": {
+      "filetypes": [
+        "clojure"
+      ]
+    },
     "cljstyle": {
       "filetypes": [
         "clojure"
@@ -675,6 +715,11 @@
         "django",
         "jinja.html",
         "htmldjango"
+      ]
+    },
+    "duster": {
+      "filetypes": [
+        "php"
       ]
     },
     "dxfmt": {
@@ -871,6 +916,9 @@
       "filetypes": [
         "nim"
       ]
+    },
+    "nix_flake_fmt": {
+      "filetypes": []
     },
     "nixfmt": {
       "filetypes": [
@@ -1108,6 +1156,11 @@
       ]
     },
     "sqlformat": {
+      "filetypes": [
+        "sql"
+      ]
+    },
+    "sqruff": {
       "filetypes": [
         "sql"
       ]

@@ -124,6 +124,9 @@ return {
   opacheck = {
     filetypes = { "rego" }
   },
+  opentofu_validate = {
+    filetypes = { "terraform", "tf", "terraform-vars" }
+  },
   perlimports = {
     filetypes = { "perl" }
   },
@@ -147,6 +150,9 @@ return {
   },
   puppet_lint = {
     filetypes = { "puppet", "epuppet" }
+  },
+  pydoclint = {
+    filetypes = { "python" }
   },
   pylint = {
     filetypes = { "python" }
@@ -188,6 +194,9 @@ return {
     filetypes = { "yaml", "json" }
   },
   sqlfluff = {
+    filetypes = { "sql" }
+  },
+  sqruff = {
     filetypes = { "sql" }
   },
   staticcheck = {

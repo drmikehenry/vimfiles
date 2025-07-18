@@ -9,6 +9,29 @@ local loop = require("null-ls.loop")
 local api = vim.api
 local lsp = vim.lsp
 
+-- Inspired by upstream neovim:
+-- <https://github.com/neovim/neovim/blob/43d552c56648bc3125c7509b3d708b6bf6c0c09c/runtime/lua/vim/lsp/client.lua#L234-L249>.
+-- This can go away sometime after neovim drops support for the legacy way
+-- of invoking these functions.
+-- Alternatively, we could get out of the business of monkeypatching Neovim
+-- functions, see <https://github.com/nvimtools/none-ls.nvim/discussions/229>.
+--- @param obj table<string,any>
+--- @param cls table<string,function>
+--- @param name string
+local function method_wrapper(obj, cls, name)
+    local func = assert(obj[name], "couldn't find " .. name .. " function")
+    obj[name] = function(maybe_self, ...)
+        if maybe_self and getmetatable(maybe_self) == cls then
+            -- First argument is self. Drop it and call `func` directly.
+            return func(...)
+        end
+        vim.deprecate("client." .. name, "client:" .. name, "0.13")
+        -- First argument is not self, include it when calling `func`.
+        return func(maybe_self, ...)
+    end
+end
+
+---@type vim.lsp.Client?, integer?
 local client, id
 
 ---@param bufnr number
@@ -47,16 +70,21 @@ local get_root_dir = function(bufnr, cb)
     end
 end
 
+---@param new_client vim.lsp.Client
 local on_init = function(new_client, initialize_result)
     local capability_is_disabled = function(method)
         -- TODO: extract map to prevent future issues
-        local required_capability = lsp._request_name_to_capability[method]
+        local method_to_required_capability_map = lsp.protocol._request_name_to_capability
+            or lsp._request_name_to_capability
+            or lsp.protocol._request_name_to_server_capability
+        local required_capability = method_to_required_capability_map[method]
         return not required_capability
             or vim.tbl_get(new_client.server_capabilities, unpack(required_capability)) == false
     end
 
     -- null-ls broadcasts all capabilities on launch, so this lets us have finer control
-    new_client.supports_method = function(method)
+    ---@param method string
+    local supports_method = function(method)
         -- allow users to specifically disable capabilities
         if capability_is_disabled(method) then
             return false
@@ -70,6 +98,11 @@ local on_init = function(new_client, initialize_result)
 
         -- return true for supported methods w/o a corresponding internal method (init, shutdown)
         return methods.lsp[method] ~= nil
+    end
+
+    new_client.supports_method = supports_method
+    if vim.fn.has("nvim-0.11") == 1 then
+        method_wrapper(new_client, vim.lsp.client, "supports_method")
     end
 
     if c.get().on_init then
@@ -88,7 +121,7 @@ end
 
 local M = {}
 
----@param root_dir? string The root directory of the project.
+---@param root_dir string? The root directory of the project.
 M.start_client = function(root_dir)
     local config = {
         name = "null-ls",
@@ -114,7 +147,7 @@ M.start_client = function(root_dir)
     }
 
     log:trace("starting null-ls client")
-    id = lsp.start_client(config)
+    id = lsp.start(config)
 
     if not id then
         log:error(string.format("failed to start null-ls client with config: %s", vim.inspect(config)))
@@ -125,8 +158,8 @@ end
 
 --- This function can be asynchronous. Use cb to run code after the buffer has been retried.
 ---
----@param bufnr? number
----@param cb? fun(did_attach: boolean)
+---@param bufnr number?
+---@param cb fun(did_attach: boolean)?
 M.try_add = function(bufnr, cb)
     bufnr = bufnr or api.nvim_get_current_buf()
     if not should_attach(bufnr) then
@@ -162,6 +195,17 @@ M.setup_buffer = function(bufnr)
         return
     end
 
+    -- Notify each generator for this filetype. This gives them a chance to
+    -- precompute information.
+    local filetype = api.nvim_get_option_value("filetype", { buf = bufnr })
+    for _, source in ipairs(require("null-ls.sources").get({ filetype = filetype })) do
+        if source.generator.setup_buffer_async then
+            source.generator.setup_buffer_async(bufnr, function()
+                -- Nothing to do here.
+            end)
+        end
+    end
+
     local on_attach = c.get().on_attach
     if on_attach then
         on_attach(client, bufnr)
@@ -180,6 +224,8 @@ M.get_offset_encoding = function()
     return client and client.offset_encoding or "utf-16"
 end
 
+---@param method vim.lsp.protocol.Method|string
+---@param params table
 M.notify_client = function(method, params)
     if not client then
         log:debug(
@@ -188,9 +234,16 @@ M.notify_client = function(method, params)
         return
     end
 
-    client.notify(method, params)
+    if vim.fn.has("nvim-0.11") == 1 then
+        client:notify(method, params)
+    else
+        ---@diagnostic disable-next-line: param-type-mismatch
+        client.notify(method, params)
+    end
 end
 
+---@param method vim.lsp.protocol.Method|string
+---@return lsp.Handler handler
 M.resolve_handler = function(method)
     return client and client.handlers[method] or lsp.handlers[method]
 end

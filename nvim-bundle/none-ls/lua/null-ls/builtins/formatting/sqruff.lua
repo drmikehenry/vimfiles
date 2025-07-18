@@ -4,19 +4,20 @@ local methods = require("null-ls.methods")
 local FORMATTING = methods.internal.FORMATTING
 
 return h.make_builtin({
-    name = "csharpier",
+    name = "sqruff",
     meta = {
-        url = "https://csharpier.com/",
-        description = "CSharpier is an opinionated code formatter for c#",
+        url = "https://github.com/quarylabs/sqruff",
+        description = "A high-speed SQL linter written in Rust.",
     },
     method = FORMATTING,
-    filetypes = { "cs" },
+    filetypes = { "sql" },
     generator_opts = {
-        command = "csharpier",
+        command = "sqruff",
         args = {
-            "format",
-            "--write-stdout",
+            "fix",
+            "-",
         },
+        from_stdin = true,
         to_stdin = true,
     },
     factory = h.formatter_factory,

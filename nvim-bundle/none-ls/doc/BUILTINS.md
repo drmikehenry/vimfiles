@@ -219,6 +219,21 @@ local sources = { null_ls.builtins.completion.luasnip }
 
 - Registering this source will show available snippets in the completion list, but luasnip is in charge of expanding them. Consult [luasnip's documentation](https://github.com/L3MON4D3/LuaSnip#keymaps) to set up keymaps for expansion and jumping.
 
+### [nvim_snippets](https://github.com/garymjr/nvim-snippets)
+
+Snippets managed by nvim-snippets.
+
+#### Usage
+
+```lua
+local sources = { null_ls.builtins.completion.nvim_snippets }
+```
+
+#### Defaults
+
+- Filetypes: `{}`
+- Method: `completion`
+
 ### spell
 
 Spell suggestions completion source.
@@ -706,7 +721,7 @@ local sources = { null_ls.builtins.diagnostics.erb_lint }
 
 - Filetypes: `{ "eruby" }`
 - Method: `diagnostics`
-- Command: `erblint`
+- Command: `erb_lint`
 - Args: `{ "--format", "json", "--stdin", "$FILENAME" }`
 
 ### [fish](https://github.com/fish-shell/fish-shell)
@@ -818,7 +833,7 @@ local sources = { null_ls.builtins.diagnostics.golangci_lint }
 - Filetypes: `{ "go" }`
 - Method: `diagnostics_on_save`
 - Command: `golangci-lint`
-- Args: `{ "run", "--fix=false", "--out-format=json" }`
+- Args: dynamically resolved (see [source](https://github.com/nvimtools/none-ls.nvim/blob/main/lua/null-ls/builtins/diagnostics/golangci_lint.lua))
 
 ### [hadolint](https://github.com/hadolint/hadolint)
 
@@ -1010,7 +1025,7 @@ local sources = { null_ls.builtins.diagnostics.npm_groovy_lint }
 - Filetypes: `{ "groovy", "java", "Jenkinsfile" }`
 - Method: `diagnostics`
 - Command: `npm-groovy-lint`
-- Args: `{ "-o", "json", "-" }`
+- Args: dynamically resolved (see [source](https://github.com/nvimtools/none-ls.nvim/blob/main/lua/null-ls/builtins/diagnostics/npm_groovy_lint.lua))
 
 ### [opacheck](https://www.openpolicyagent.org/docs/latest/cli/#opa-check)
 
@@ -1028,6 +1043,25 @@ local sources = { null_ls.builtins.diagnostics.opacheck }
 - Method: `diagnostics_on_save`
 - Command: `opa`
 - Args: `{ "check", "-f", "json", "--strict", "$ROOT", "--ignore=*.yaml", "--ignore=*.yml", "--ignore=*.json", "--ignore=.git/**/*" }`
+
+### [opentofu_validate](https://opentofu.org/docs/cli/commands/validate)
+
+OpenTofu `validate` is a subcommand of OpenTofu to validate configuration files in a directory,
+            referring only to the configuration and not accessing any remote services such as remote state,
+            provider APIs, etc.
+
+#### Usage
+
+```lua
+local sources = { null_ls.builtins.diagnostics.opentofu_validate }
+```
+
+#### Defaults
+
+- Filetypes: `{ "terraform", "tf", "terraform-vars" }`
+- Method: `diagnostics_on_save`
+- Command: `tofu`
+- Args: `{ "validate", "-json" }`
 
 ### [perlimports](https://metacpan.org/dist/App-perlimports/view/script/perlimports)
 
@@ -1188,6 +1222,23 @@ local sources = { null_ls.builtins.diagnostics.puppet_lint }
 - Method: `diagnostics`
 - Command: `puppet-lint`
 - Args: `{ "--json", "$FILENAME" }`
+
+### [pydoclint](https://github.com/jsh9/pydoclint)
+
+Pydoclint is a Python docstring linter to check whether a docstring's sections (arguments, returns, raises, ...) match the function signature or function implementation. To see all violation codes go to [pydoclint](https://jsh9.github.io/pydoclint/violation_codes.html)
+
+#### Usage
+
+```lua
+local sources = { null_ls.builtins.diagnostics.pydoclint }
+```
+
+#### Defaults
+
+- Filetypes: `{ "python" }`
+- Method: `diagnostics`
+- Command: `pydoclint`
+- Args: `{ "--show-filenames-in-every-violation-message=true", "-q", "$FILENAME" }`
 
 ### [pylint](https://github.com/PyCQA/pylint)
 
@@ -1383,7 +1434,7 @@ local sources = { null_ls.builtins.diagnostics.selene }
 - Filetypes: `{ "lua", "luau" }`
 - Method: `diagnostics`
 - Command: `selene`
-- Args: `{ "--display-style", "quiet", "-" }`
+- Args: `{ "--display-style", "json2", "-" }`
 
 ### [semgrep](https://semgrep.dev/)
 
@@ -1460,6 +1511,23 @@ local sources = {
 #### Notes
 
 - SQLFluff needs a mandatory `--dialect` argument. Use `extra_args` to add yours, or create a .sqlfluff file in the same directory as the SQL file to specify the dialect (see the sqlfluff docs for details). `extra_args` can also be a function to build more sophisticated logic.
+
+### [sqruff](https://github.com/quarylabs/sqruff)
+
+A high-speed SQL linter written in Rust.
+
+#### Usage
+
+```lua
+local sources = { null_ls.builtins.diagnostics.sqruff }
+```
+
+#### Defaults
+
+- Filetypes: `{ "sql" }`
+- Method: `diagnostics`
+- Command: `sqruff`
+- Args: `{ "lint", "--format", "github-annotation-native", "$FILENAME" }`
 
 ### [staticcheck](https://staticcheck.io/)
 
@@ -1908,6 +1976,23 @@ local sources = { null_ls.builtins.formatting.astyle }
 - Command: `astyle`
 - Args: `{ "--quiet" }`
 
+### [atlas_fmt](https://atlasgo.io/cli-reference#atlas-schema-fmt)
+
+atlas fmt command rewrites `atlas` config and schema files to a canonical format and style.
+
+#### Usage
+
+```lua
+local sources = { null_ls.builtins.formatting.atlas_fmt }
+```
+
+#### Defaults
+
+- Filetypes: `{ "hcl", "atlas-config", "atlas-schema-mysql", "atlas-schema-sqlite", "atlas-schema-mariadb", "atlas-schema-redshift", "atlas-schema-clickhouse", "atlas-schema-postgresql", "atlas-schema-mssql", "atlas-plan", "atlas-test" }`
+- Method: `formatting`
+- Command: `atlas`
+- Args: `{ "schema", "fmt", "$FILENAME" }`
+
 ### [bean_format](https://beancount.github.io/docs/running_beancount_and_generating_reports.html#bean-format)
 
 This pure text processing tool will reformat `beancount` input to right-align all the numbers at the same, minimal column.
@@ -2135,6 +2220,23 @@ local sources = { null_ls.builtins.formatting.clang_format }
 - Command: `clang-format`
 - Args: dynamically resolved (see [source](https://github.com/nvimtools/none-ls.nvim/blob/main/lua/null-ls/builtins/formatting/clang_format.lua))
 
+### [cljfmt](https://github.com/weavejester/cljfmt)
+
+A tool for formatting Clojure code
+
+#### Usage
+
+```lua
+local sources = { null_ls.builtins.formatting.cljfmt }
+```
+
+#### Defaults
+
+- Filetypes: `{ "clojure" }`
+- Method: `formatting`
+- Command: `cljfmt`
+- Args: `{ "fix", "-" }`
+
 ### [cljstyle](https://github.com/greglook/cljstyle)
 
 Formatter for Clojure code.
@@ -2217,8 +2319,8 @@ local sources = { null_ls.builtins.formatting.csharpier }
 
 - Filetypes: `{ "cs" }`
 - Method: `formatting`
-- Command: `dotnet-csharpier`
-- Args: `{ "--write-stdout" }`
+- Command: `csharpier`
+- Args: `{ "format", "--write-stdout" }`
 
 ### [cueimports](https://pkg.go.dev/github.com/asdine/cueimports)
 
@@ -2337,6 +2439,23 @@ local sources = { null_ls.builtins.formatting.djlint }
 - Command: `djlint`
 - Args: `{ "--reformat", "-" }`
 
+### [duster](https://github.com/tighten/duster)
+
+Automatic configuration for Laravel apps to apply Tighten's standard linting & code standards.
+
+#### Usage
+
+```lua
+local sources = { null_ls.builtins.formatting.duster }
+```
+
+#### Defaults
+
+- Filetypes: `{ "php" }`
+- Method: `formatting`
+- Command: `duster`
+- Args: `{ "fix", "$FILENAME", "--no-interaction", "--quiet" }`
+
 ### [dxfmt](https://github.com/dioxuslabs/dioxus)
 
 Format rust file with dioxus cli
@@ -2444,7 +2563,7 @@ local sources = { null_ls.builtins.formatting.erb_lint }
 
 - Filetypes: `{ "eruby" }`
 - Method: `formatting`
-- Command: `erblint`
+- Command: `erb_lint`
 - Args: `{ "--autocorrect", "--stdin", "$FILENAME" }`
 
 ### [erlfmt](https://github.com/WhatsApp/erlfmt)
@@ -3042,6 +3161,22 @@ local sources = { null_ls.builtins.formatting.nixpkgs_fmt }
 - Method: `formatting`
 - Command: `nixpkgs-fmt`
 
+### [nix_flake_fmt](https://nix.dev/manual/nix/latest/command-ref/new-cli/nix3-fmt)
+
+`nix fmt` - reformat your code in the standard style (this is a generic formatter, not to be confused with nixfmt, a formatter for .nix files)
+
+#### Usage
+
+```lua
+local sources = { null_ls.builtins.formatting.nix_flake_fmt }
+```
+
+#### Defaults
+
+- Filetypes: `{}`
+- Method: `formatting`
+- Args: `{ "$FILENAME" }`
+
 ### [npm_groovy_lint](https://github.com/nvuillam/npm-groovy-lint)
 
 Lint, format and auto-fix Groovy, Jenkinsfile, and Gradle files.
@@ -3093,9 +3228,10 @@ local sources = { null_ls.builtins.formatting.ocdc }
 - Command: `ocdc`
 - Args: `{ "--path", "-" }`
 
-### [opentofu_fmt](https://opentofu.org/docs/cli/commands/fmt/#usage)
+### [opentofu_fmt](https://opentofu.org/docs/cli/commands/fmt)
 
-The opentofu-fmt command rewrites `opentofu` configuration files to a canonical format and style.
+The OpenTofu `fmt` command rewrites OpenTofu configuration files to a canonical
+            format and style.
 
 #### Usage
 
@@ -3689,6 +3825,23 @@ local sources = { null_ls.builtins.formatting.sql_formatter }
 - Filetypes: `{ "sql" }`
 - Method: `formatting`
 - Command: `sql-formatter`
+
+### [sqruff](https://github.com/quarylabs/sqruff)
+
+A high-speed SQL linter written in Rust.
+
+#### Usage
+
+```lua
+local sources = { null_ls.builtins.formatting.sqruff }
+```
+
+#### Defaults
+
+- Filetypes: `{ "sql" }`
+- Method: `formatting`
+- Command: `sqruff`
+- Args: `{ "fix", "-" }`
 
 ### [stylelint](https://github.com/stylelint/stylelint)
 
