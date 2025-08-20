@@ -36,7 +36,7 @@
 " Name Of File: bufexplorer.vim
 "  Description: Buffer Explorer Vim Plugin
 "   Maintainer: Jeff Lanzarotta (my name at gmail dot com)
-" Last Changed: Friday, 11 April 2025
+" Last Changed: Tuesday, 19 August 2025
 "      Version: See g:bufexplorer_version for version number.
 "        Usage: This file should reside in the plugin directory and be
 "               automatically sourced.
@@ -74,7 +74,7 @@ endif
 "1}}}
 
 " Version number.
-let g:bufexplorer_version = "7.12.0"
+let g:bufexplorer_version = "7.13.0"
 
 " Plugin Code {{{1
 " Check for Vim version {{{2
@@ -535,11 +535,6 @@ function! s:ShouldIgnore(buf)
         return 1
     endif
 
-    " Ignore buffers with no name.
-    if empty(bufname(a:buf)) == 1
-        return 1
-    endif
-
     " Ignore the BufExplorer buffer.
     if fnamemodify(bufname(a:buf), ":t") == s:name
         return 1
@@ -695,27 +690,36 @@ function! BufExplorer(...)
     call s:MRUGarbageCollectBufs()
     call s:MRUGarbageCollectTabs()
 
+    let [splitbelow, splitright] = [g:bufExplorerSplitBelow, g:bufExplorerSplitRight]
     " `{ action: [splitMode, botRight] }`.
     let actionMap = {
-            \ 'split'   : ['split', g:bufExplorerSplitBelow],
-            \ 'vsplit'  : ['vsplit', g:bufExplorerSplitRight],
-            \ 'above'   : ['split', 0],
-            \ 'below'   : ['split', 1],
-            \ 'left'    : ['vsplit', 0],
-            \ 'right'   : ['vsplit', 1],
-            \ 'current' : ['', 0],
+            \ 'split'   : ['split', splitbelow, splitright],
+            \ 'vsplit'  : ['vsplit', splitbelow, splitright],
+            \ 'above'   : ['split', 0, splitright],
+            \ 'below'   : ['split', 1, splitright],
+            \ 'left'    : ['vsplit', splitbelow, 0],
+            \ 'right'   : ['vsplit', splitbelow, 1],
+            \ 'current' : ['', splitbelow, splitright],
             \}
-    let [splitMode, botRight] = actionMap[action]
+    let [splitMode, splitbelow, splitright] = actionMap[action]
 
     " We may have to split the current window.
     if splitMode != ''
+        " Save off the original settings.
+        let [_splitbelow, _splitright] = [&splitbelow, &splitright]
+
+        " Set the setting to ours.
+        let [&splitbelow, &splitright] = [splitbelow, splitright]
         let size = splitMode == 'split' ? g:bufExplorerSplitHorzSize : g:bufExplorerSplitVertSize
-        let cmd = 'keepalt ' . (botRight ? 'botright ' : 'topleft ')
+        let cmd = 'keepalt '
         if size > 0
             let cmd .= size
         endif
         let cmd .= splitMode
         execute cmd
+
+        " Restore the original settings.
+        let [&splitbelow, &splitright] = [_splitbelow, _splitright]
 
         " Remember that a split was triggered
         let s:didSplit = 1
@@ -1571,6 +1575,12 @@ function! s:Close()
     " If we needed to split the main window, close the split one.
     if s:didSplit
         execute "wincmd c"
+        " After closing the BufExplorer split, we expect to be back on the
+        " tab from which we launched; if so, make sure we also return to the
+        " window from which we launched.
+        if s:MRUEnsureTabId(tabpagenr()) == s:tabIdAtLaunch
+            execute s:windowAtLaunch . "wincmd w"
+        endif
     endif
 
     " Check to see if there are anymore buffers listed.

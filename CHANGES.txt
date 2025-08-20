@@ -13,6 +13,10 @@ require adjustment of per-user settings.
 - Upgrade ``reStructuredText`` support to version 2025-03-07.  This fixes
   the highlighting priority of directives (e.g., ``.. directive::``).
 
+- Upgrade BufExplorer to version 7.13.0.  This fixes a minor problem with MRU
+  tracking of "No Name" buffers, as well ensuring that when BufExplorer closes
+  via ``q``, the original window-at-launch is chosen regardless of split mode.
+
 2025-07-17
 ==========
 

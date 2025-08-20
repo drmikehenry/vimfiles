@@ -1,7 +1,7 @@
-*bufexplorer.txt*              Buffer Explorer       Last Change: 11 Apr 2025
+*bufexplorer.txt*              Buffer Explorer       Last Change: 19 Aug 2025
 
 Buffer Explorer                                *buffer-explorer* *bufexplorer*
-                                Version 7.12.0
+                                Version 7.13.0
 
 Plugin for easily exploring (or browsing) Vim|:buffers|.
 
@@ -616,7 +616,7 @@ The default is to show directories.
 To control whether to show "No Name" buffers or not, use: >
   let g:bufExplorerShowNoName=0        " Do not "No Name" buffers.
   let g:bufExplorerShowNoName=1        " Show "No Name" buffers.
-The default is to NOT show "No Name buffers.
+The default is to NOT show "No Name" buffers.
 
                                                 *g:bufExplorerShowRelativePath*
 To control whether to show paths relative to the current directory, use: >
@@ -693,6 +693,19 @@ The default is 1.
 ===============================================================================
 CHANGE LOG                                              *bufexplorer-changelog*
 
+7.13.0   August 19, 2025
+     - Thanks to Dr. Michael Henry for another patch.
+       https://github.com/jlanzarotta/bufexplorer/pull/137
+       * Stop ignoring "No Name" buffers in MRU tracking.
+7.12.1   July 01, 2025
+     What's Changed
+     - Thanks to Dr. Michael Henry for another patch.
+       https://github.com/jlanzarotta/bufexplorer/pull/135
+       * Restore BufExplorer window-splitting logic. When BufExplorer closes
+         via q, ensure the original window-at-launch is chosen regardless of
+         split mode.
+       * This fixes a window-splitting regression introduced in BufExplorer
+         7.10.0.
 7.12.0   April 11, 2025
      What's Changed
      - Thanks to Dr. Michael Henry for another patch.
