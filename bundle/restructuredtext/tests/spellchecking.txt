@@ -1,0 +1,185 @@
+Spell Checking
+==============
+
+Normal text with wrrong woords should be spell checked.
+But so should text contained in inline markup, like these:
+
+*wrrong woords*
+**wrrong woords**
+`wrrong woords`
+``wrrong woords``
+|wrrong woords|
+_`wrrong woords`
+`wrrong woords`_
+
+
+wrrong woords
+-------------
+
+Headings should be spell checked.
+
+
+Lists
+-----
+
+Lists should be spell checked
+
+* wrrong woords
+* wrronger woords
+
+1. wrrong woords
+2. wrronger woords
+
+Definition lists should be spell checked
+
+wrrong woords
+   wrrong woords description
+
+also with classifiers:
+
+wrrong woords : wrronger woords
+   wrrong woords description
+
+And so should field lists
+
+:wrrong woords: wrrong woords
+:wrronger woords: wrronger woords
+
+Option lists should probably only spell check the description but not the option name:
+
+-b         wrrong woords
+--wrrong   wrronger woords
+
+
+Literal Blocks
+--------------
+
+Literal blocks should not be spell checked.
+
+Some text::
+
+   wrrong woords
+
+Some text::
+
+>  wrrong woords
+
+.. code::
+
+   wrrong woords
+
+.. code-block::
+
+   wrrong woords
+
+
+Line Blocks
+-----------
+
+Line blocks should be spell checked:
+
+| wrrong woords
+| wrronger woords
+  wrrongest woords
+| wrrong woords
+
+
+Block Quotes
+------------
+
+Some text
+
+   wrrong woords
+
+   -- Authorr nname
+
+
+Doctest Blocks
+--------------
+
+Doctest block should not be spell checked:
+
+>>> wrrong woords
+wrronger woords
+
+
+Tables
+------
+
+Contents (header and body) of tables should be spell checked:
+
++---------------+-----------------+
+| wrrong woords | wrronger woords |
++===============+=================+
+| wrrong woords | wrronger woords |
++---------------+-----------------+
+| wrrong woords | wrronger woords |
++---------------+-----------------+
+
+Same for simple tables
+
+=============  ===============
+wrrong woords  wrronger woords
+=============  ===============
+wrrong woords  wrronger woords
+wrrong woords  wrronger woords
+=============  ===============
+
+
+Footnotes and Citations
+-----------------------
+
+The contents of footnotes [*]_ [#wrrong]_ and citations [woords]_ should be spell checked but not the footnote citation label itself.
+
+.. [*] wrrong woords
+.. [#wrrong] wrrong woords
+.. [woords] wrrong woords
+
+
+Hyperlink targets
+-----------------
+
+Hyperlink targets should__ not be spell checked as they are either internal references or URLs.
+However the `wrrong words`_ in the text should be spell checked but not in the `target <wrrong woords_>`_.
+
+.. __: wrrong woords
+.. _wrrong words: wrrong woords
+
+
+Directives
+----------
+
+Names of directives should not be spell checked:
+
+.. wrrong::
+
+The contents of directives should be spell checked
+
+.. note:: wrrong woords
+
+.. wrrong::
+
+   wrrong woords
+
+Directive options should be spell checked (at least the options content should)
+
+.. directive::
+   :wrrong: woords
+
+   wrronger woords
+
+
+Substitutions
+-------------
+
+Substitutions |wrrong woords| which can contain text, should be spell checked.
+
+.. |wrrong woords| replace:: wrronger woords
+
+
+Comments
+--------
+
+Comments should be spell checked
+
+.. wrrong woords

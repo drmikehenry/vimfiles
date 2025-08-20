@@ -1,0 +1,36 @@
+Roles and interpreted text
+--------------------------
+
+Roles such as :emphasis:`this one` but also :youneverheardofme:`custom roles` and :py:class:`domain roles` should be recognised in both :myrole:`pre` and `post`:myrole: post syntax.
+
+Field lists should not be recognised as roles:
+
+:Date: 2001-08-16
+:Version: 1
+:Authors: Me
+:Parameter i: integer
+
+
+The following text is taken from the `reStructuredText Markup Specification`_:
+
+In field lists, care must be taken when using interpreted text with explicit roles in field names: the role must be a suffix to the interpreted text. The following are recognized as field list items:
+
+:`field name`:code:: interpreted text with explicit role as suffix
+
+:a `complex`:code:\  field name: a backslash-escaped space
+                                 is necessary
+
+The following are not recognized as field list items:
+
+::code:`not a field name`: paragraph with interpreted text
+
+:code:`not a field name`: paragraph with interpreted text
+
+Edge cases:
+
+:field\:`name`: interpreted text (standard role) requires
+                escaping the leading colon in a field name
+
+:field:\`name`: not interpreted text
+
+.. _reStructuredText Markup Specification: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#interpreted-text

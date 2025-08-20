@@ -1,0 +1,14 @@
+Simple doctest with multiple lines of output.
+
+>>> print('this is a Doctest block')
+this is a Doctest block
+this is a Doctest block (repeat)
+
+Subsequent prompts ``>>>`` inside a single doctest block should be highlighted.
+
+>>> print('this is a Doctest block')
+this is a Doctest block
+>>> print('this is a second Doctest block')
+this is a second Doctest block
+
+Even more text.

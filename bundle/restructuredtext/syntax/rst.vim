@@ -3,7 +3,7 @@
 " Maintainer: Marshall Ward <marshall.ward@gmail.com>
 " Previous Maintainer: Nikolai Weibull <now@bitwi.se>
 " Website: https://github.com/marshallward/vim-restructuredtext
-" Latest Revision: 2020-03-31
+" Latest Revision: 2025-03-06
 
 if exists("b:current_syntax")
   finish
@@ -29,8 +29,11 @@ syn region  rstQuotedLiteralBlock   matchgroup=rstDelimiter
       \ start="::\_s*\n\ze\z([!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]\)"
       \ end='^\z1\@!' contains=@NoSpell
 
-syn region  rstDoctestBlock         oneline display matchgroup=rstDelimiter
+syn region  rstDoctestBlock         matchgroup=rstDoctestBlockPrompt
       \ start='^>>>\s' end='^$'
+      \ contains=rstDoctestBlockPrompt
+
+syn match   rstDoctestBlockPrompt   contained '^>>>\s'
 
 syn region  rstTable                transparent start='^\n\s*+[-=+]\+' end='^$'
       \ contains=rstTableLines,@rstCruft
@@ -49,7 +52,8 @@ syn cluster rstDirectives           contains=rstFootnote,rstCitation,
       \ rstHyperlinkTarget,rstExDirective
 
 syn match   rstExplicitMarkup       '^\s*\.\.\_s'
-      \ nextgroup=@rstDirectives,rstComment,rstSubstitutionDefinition
+      \ nextgroup=@rstDirectives,rstSubstitutionDefinition
+      \ contains=rstComment
 
 " "Simple reference names are single words consisting of alphanumerics plus
 " isolated (no two adjacent) internal hyphens, underscores, periods, colons
@@ -58,20 +62,23 @@ let s:ReferenceName = '[[:alnum:]]\%([-_.:+]\?[[:alnum:]]\+\)*'
 
 syn keyword     rstTodo             contained FIXME TODO XXX NOTE
 
-execute 'syn region rstComment contained' .
-      \ ' start=/.*/'
+syn region rstComment
+      \ start='\v^\z(\s*)\.\.(\_s+[\[|_]|\_s+.*::)@!' skip=+^$+ end=/^\(\z1   \)\@!/
+      \ contains=@Spell,rstTodo
+
+" Note: Order matters for rstCitation and rstFootnote as the regex for
+" citations also matches numeric only patterns, e.g. [1], which are footnotes.
+" Since we define rstFootnote after rstCitation, it takes precedence, see
+" |:syn-define|.
+execute 'syn region rstCitation contained matchgroup=rstDirective' .
+      \ ' start=+\[' . s:ReferenceName . '\]\_s+' .
       \ ' skip=+^$+' .
-      \ ' end=/^\s\@!/ contains=rstTodo'
+      \ ' end=+^\s\@!+ contains=@Spell,@rstCruft'
 
 execute 'syn region rstFootnote contained matchgroup=rstDirective' .
       \ ' start=+\[\%(\d\+\|#\%(' . s:ReferenceName . '\)\=\|\*\)\]\_s+' .
       \ ' skip=+^$+' .
-      \ ' end=+^\s\@!+ contains=@rstCruft,@NoSpell'
-
-execute 'syn region rstCitation contained matchgroup=rstDirective' .
-      \ ' start=+\[' . s:ReferenceName . '\]\_s+' .
-      \ ' skip=+^$+' .
-      \ ' end=+^\s\@!+ contains=@rstCruft,@NoSpell'
+      \ ' end=+^\s\@!+ contains=@Spell,@rstCruft'
 
 syn region rstHyperlinkTarget contained matchgroup=rstDirective
       \ start='_\%(_\|[^:\\]*\%(\\.[^:\\]*\)*\):\_s' skip=+^$+ end=+^\s\@!+
@@ -85,7 +92,7 @@ syn region rstHyperlinkTarget matchgroup=rstDirective
 execute 'syn region rstExDirective contained matchgroup=rstDirective' .
       \ ' start=+' . s:ReferenceName . '::\_s+' .
       \ ' skip=+^$+' .
-      \ ' end=+^\s\@!+ contains=@rstCruft,rstLiteralBlock,rstExplicitMarkup'
+      \ ' end=+^\s\@!+ contains=@Spell,@rstCruft,rstLiteralBlock,rstExplicitMarkup'
 
 execute 'syn match rstSubstitutionDefinition contained' .
       \ ' /|.*|\_s\+/ nextgroup=@rstDirectives'
@@ -99,10 +106,10 @@ function! s:DefineOneInlineMarkup(name, start, middle, end, char_left, char_righ
   endif
 
   if a:start != '``'
-    let rst_contains=' contains=rstEscape' . a:name
+    let rst_contains=' contains=@Spell,rstEscape' . a:name
     execute 'syn match rstEscape'.a:name.' +\\\\\|\\'.first.'+'.' contained'
   else
-    let rst_contains=''
+    let rst_contains=' contains=@Spell'
   endif
 
   execute 'syn region rst' . a:name .
@@ -257,8 +264,7 @@ endfor
 " Enable top level spell checking
 syntax spell toplevel
 
-" TODO: Use better syncing.
-syn sync minlines=50 linebreaks=2
+exe "syn sync minlines=" . get(g:, 'rst_minlines', 50) . " linebreaks=2"
 
 hi def link rstTodo                         Todo
 hi def link rstComment                      Comment
@@ -267,6 +273,7 @@ hi def link rstTransition                   rstSections
 hi def link rstLiteralBlock                 String
 hi def link rstQuotedLiteralBlock           String
 hi def link rstDoctestBlock                 PreProc
+hi def link rstDoctestBlockPrompt           rstDelimiter
 hi def link rstTableLines                   rstDelimiter
 hi def link rstSimpleTableLines             rstTableLines
 hi def link rstExplicitMarkup               rstDirective

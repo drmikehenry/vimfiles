@@ -1,0 +1,17 @@
+.. this is a comment
+
+.. a-directive::
+
+   plain text
+
+   .. a comment
+
+   again, not a comment
+
+.. [#] not a comment either
+
+.. a-directive-with:: args
+
+.. _not-a-comment:
+
+.. _not-a-comment-either: some://url

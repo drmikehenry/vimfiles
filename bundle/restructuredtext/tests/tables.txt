@@ -1,0 +1,27 @@
++-------+--------+
+| Hello | World  |
++-------+--------+
+| Bye   | Sun    |
++-------+--------+
+
+The above table should be recognised as table and not as transition.
+
+Header
+======
+
++-------+--------+
+| Hello | World  |
++-------+--------+
+| Bye   | Sun    |
++-------+--------+
+
+.. note::
+
+   A directive before a table used to confuse the table syntax.
+   Below should be recognised as table not as transition.
+
++-------+--------+
+| Hello | World  |
++-------+--------+
+| Bye   | Sun    |
++-------+--------+

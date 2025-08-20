@@ -7,6 +7,12 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2025-08-20
+==========
+
+- Upgrade ``reStructuredText`` support to version 2025-03-07.  This fixes
+  the highlighting priority of directives (e.g., ``.. directive::``).
+
 2025-07-17
 ==========
 

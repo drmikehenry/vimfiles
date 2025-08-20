@@ -4115,7 +4115,7 @@ Installation:
 ReStructuredText - updated support for rst              *notes_rst*
 
 
-Version 2021-02-12 (8284ec3) from:
+Version 2025-03-07 (19d10f6) from:
 https://github.com/marshallward/vim-restructuredtext
 
 with scripts/rstliteralblockfix.vim supplying a command to toggle

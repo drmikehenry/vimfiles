@@ -1,0 +1,6 @@
+Text [1]_ with [#ref]_ footnotes [*]_ and [CIT200]_ citations.
+
+.. [1] I'm a footnote!
+.. [#ref] I'm a footnote, too.
+.. [*] I'm a footnote, too, too!
+.. [CIT200] I'm a citation.
