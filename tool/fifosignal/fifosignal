@@ -40,15 +40,15 @@ fi
 
 if [ $scanUpward = 1 ]; then
     here="$PWD"
-    cd "$fifoDir"
+    cd "$fifoDir" || exit 1
     while [ ! -e "$fifoName" ]; do
-        cd ..
         if [ "$PWD" == "/" ]; then
             break
         fi
+        cd .. || exit 1
     done
     fifoDir="$PWD"
-    cd "$here"
+    cd "$here" || exit 1
 fi
 
 fifo="$fifoDir/$fifoName"

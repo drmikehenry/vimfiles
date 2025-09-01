@@ -7,6 +7,15 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2025-09-01
+==========
+
+- Minor changes to ``tool/fifosignal/fifosignal`` and
+  ``tool/fifosignal/fifowait``:
+
+  - Allow use of ``.fifo`` in root directory.
+  - Small changes to appease shellcheck.
+
 2025-08-20
 ==========
 

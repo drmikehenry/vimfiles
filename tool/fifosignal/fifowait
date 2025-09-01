@@ -7,4 +7,4 @@
 FIFO=${1:-.fifo}
 trap 'rm "${FIFO}"' 0
 mkfifo "${FIFO}" || exit 1
-read junk < "${FIFO}"
+read -r _junk < "${FIFO}"
