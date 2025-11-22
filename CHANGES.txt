@@ -12,6 +12,8 @@ require adjustment of per-user settings.
 
 - Upgrade support for Zig programming language to version 2025-11-15.
 
+- Add basic support for Zig Language Server (``zls``).
+
 2025-09-01
 ==========
 

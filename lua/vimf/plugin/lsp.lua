@@ -95,6 +95,10 @@ M.servers = {
         executable = "rust-analyzer",
         settings = {},
     },
+    zls = {
+        executable = "zls",
+        settings = {},
+    },
 }
 
 -- Except on Windows, use a work-around to instruct `mypy` to use the
