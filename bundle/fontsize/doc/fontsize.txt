@@ -1,5 +1,5 @@
 *fontsize.txt*   Plugin for modifying guifont size
-*fontsize*       Version 0.5.0
+*fontsize*       Version 0.6.0
 
 ==============================================================================
 1.  Introduction                                    |fontsize-intro|
@@ -79,6 +79,18 @@ functionality.
 While "font size" mode is active, the prompt "(fontsize)" will be shown if
 'showcmd' is set.
 
+The `:Fontsize` command can be used to display the current font size or to change
+the font size: >
+
+  Fontsize                    " Display current font size.
+  Fontsize 12                 " Set font size to 12.
+<
+Using `+` or `-`, the font size may be increased or decreased by the given
+amount, e.g.: >
+
+  Fontsize +0.5               " Increment font size by 0.5.
+  Fontsize -2                 " Decrement font size by 2.
+<
 Details on customization are found in the |fontsize-customization| section
 of the included documentation.
 
@@ -163,8 +175,35 @@ the font names.  For example, on Chinese Windows XP, the fonts are encoded in
 
 (Converting font name encodings requires the +iconv feature.)
 
+By default, the font size increments and decrements by a step size of one.
+The step size is controlled by the following user-configurable variable: >
+
+  let g:fontsize#stepSize = 1
+<
+This may be set to any positive integer as desired.  If your Vim has floating
+point support enabled and fractional font sizes are supported on your platform,
+you can choose a fractional step size as well; for example, to increment by 0.5
+points: >
+
+  let g:fontsize#stepSize = 0.5
+<
+To avoid defining the `:Fontsize` command: >
+
+  let g:fontsize#defineFontsizeCommand = 0
+<
 ===============================================================================
 5.  ChangeLog                                       *fontsize-changelog*
+
+Version 0.6.0    Date    2025-11-26                 *fontsize-changelog-0.6.0*
+
+  - Add support for Haiku.
+
+  - Make font step size configurable via `g:fontsize#stepSize`, which may be
+    a fractional value.  For example, to step by 0.5 points: >
+
+      let g:fontsize#stepSize = 0.5
+<
+  - Add `:Fontsize` command to display current font size or change the font size.
 
 Version 0.5.0    Date    2023-08-19                 *fontsize-changelog-0.5.0*
 
@@ -252,6 +291,7 @@ Contributors in chronological order:
 - hfs
 - Ingo Karkat
 - Anatolii Sakhnik
+- cos
 
 ===============================================================================
 vim:sts=2:et:ai:tw=78:fo=tcq2:ft=help:

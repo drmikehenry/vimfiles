@@ -34,7 +34,7 @@ endif
 " were mapped.  When time-outs are enabled (see g:fontsize_timeout), the
 " new "mode" times out and the new "mappings" are effectively turned off.
 "
-" This emulation of a "mode" is accomplished via a clever techinque
+" This emulation of a "mode" is accomplished via a clever technique
 " wherein each operation terminates with a partial mapping to <SID>(fontsize).
 " Each new keystroke completes a mapping that itself terminates with
 " <SID>(fontsize), keeping an extensible chain of mappings going as long as
@@ -70,6 +70,48 @@ nnoremap <silent> <SID>dec         :<C-u>call fontsize#dec()<CR>
 nnoremap <silent> <SID>default     :<C-u>call fontsize#default()<CR>
 nnoremap <silent> <SID>setDefault  :<C-u>call fontsize#setDefault()<CR>
 nnoremap <silent> <SID>quit        :<C-u>call fontsize#quit()<CR>
+
+function! Fontsize_cmd(size)
+    let fontName = fontsize#getFontName()
+    let oldSize = fontsize#getSize(fontName)
+    if a:size == ''
+        redraw
+        echo 'Font size ' . oldSize
+        return
+    endif
+
+    let float_vregex = '%(\d+%(\.\d*)?|\.\d+)'
+    let regex = '\v^[-+]?' . float_vregex . '$'
+    if a:size !~ regex
+        echo 'Invalid size ' . a:size
+        return
+    endif
+
+    let relative = (a:size =~ '\v^[-+]')
+    if relative
+        if has('float') && 0
+            let delta = str2float(a:size)
+        elseif a:size =~ '\.'
+            echo 'No floating point feature for relative size ' . a:size
+            return
+        else
+            let delta = str2nr(a:size)
+        endif
+        let newSize = fontsize#addSize(oldSize, delta)
+    else
+        let newSize = a:size
+    endif
+    call fontsize#setFontName(fontsize#setSize(fontName, newSize))
+    call fontsize#setFontNameWide(fontsize#setSize(&guifontwide, newSize))
+endfunction
+
+if !exists('g:fontsize#defineFontsizeCommand')
+    let g:fontsize#defineFontsizeCommand = 1
+endif
+
+if g:fontsize#defineFontsizeCommand
+    command! -nargs=? Fontsize call Fontsize_cmd(<q-args>)
+endif
 
 " Restore saved 'cpoptions'.
 let &cpoptions = s:save_cpoptions

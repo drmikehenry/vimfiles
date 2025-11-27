@@ -3201,7 +3201,19 @@ based on mappings.
 While "font size" mode is active, the prompt "(fontsize)" will be shown if
 'showcmd' is set.
 
-Version 0.5.0 (6133212) from:
+The `:Fontsize` command can be used to display the current font size or to change
+the font size: >
+
+  Fontsize                    " Display current font size.
+  Fontsize 12                 " Set font size to 12.
+<
+Using `+` or `-`, the font size may be increased or decreased by the given
+amount, e.g.: >
+
+  Fontsize +0.5               " Increment font size by 0.5.
+  Fontsize -2                 " Decrement font size by 2.
+
+Version 0.6.0 (f5836cc) from:
 https://github.com/drmikehenry/vim-fontsize
 
 Installation:

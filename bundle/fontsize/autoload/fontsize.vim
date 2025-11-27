@@ -5,6 +5,8 @@ if exists("autoloaded_fontsize")
 endif
 let autoloaded_fontsize = 1
 
+let s:hasFloat = has('float')
+
 " Font examples from http://vim.wikia.com/wiki/VimTip632
 
 " Regex values for each platform split guifont into three
@@ -14,21 +16,26 @@ let autoloaded_fontsize = 1
 " - size (possibly fractional)
 " - suffix (possibly including extra fonts after commas)
 
-" gui_gtk2: Courier\ New\ 11
-let fontsize#regex_gtk2 = '\(.\{-} \)\(\d\+\)\(.*\)'
+let s:size_suffix_vregex = '(\d+%(\.\d*)?|\.\d+)' . '(.*)'
 
-" gui_photon: Courier\ New:s11
-let fontsize#regex_photon = '\(.\{-}:s\)\(\d\+\)\(.*\)'
+" gui_gtk2: `Courier New 11`
+let fontsize#regex_gtk2 = '\v^(.{-} )' . s:size_suffix_vregex
 
-" gui_kde: Courier\ New/11/-1/5/50/0/0/0/1/0
-let fontsize#regex_kde = '\(.\{-}\/\)\(\d\+\)\(.*\)'
+" gui_photon: `Courier New:s11`
+let fontsize#regex_photon = '\v^(.{-}:s)' . s:size_suffix_vregex
 
-" gui_x11: -*-courier-medium-r-normal-*-*-180-*-*-m-*-*
+" gui_kde: `Courier New/11/-1/5/50/0/0/0/1/0`
+let fontsize#regex_kde = '\v^(.{-}/)' . s:size_suffix_vregex
+
+" gui_x11: `-*-courier-medium-r-normal-*-*-180-*-*-m-*-*`
 " TODO For now, just taking the first string of digits.
-let fontsize#regex_x11 = '\(.\{-}-\)\(\d\+\)\(.*\)'
+let fontsize#regex_x11 = '\v^(.{-}-)' . s:size_suffix_vregex
 
-" gui_other: Courier_New:h11:cDEFAULT
-let fontsize#regex_other = '\(.\{-}:h\)\(\d\+\)\(.*\)'
+" gui_haiku: `Terminus (TTF)/Medium/20`
+let fontsize#regex_haiku = '\v^([^/]*/[^/]*/)' . s:size_suffix_vregex
+
+" gui_other: `Courier_New:h11:cDEFAULT`
+let fontsize#regex_other = '\v^(.{-}:h)' . s:size_suffix_vregex
 
 if has("gui_gtk2") || has("gui_gtk3")
     let s:regex = fontsize#regex_gtk2
@@ -38,6 +45,8 @@ elseif has("gui_kde")
     let s:regex = fontsize#regex_kde
 elseif has("x11")
     let s:regex = fontsize#regex_x11
+elseif has("haiku")
+    let s:regex = fontsize#regex_haiku
 else
     let s:regex = fontsize#regex_other
 endif
@@ -97,17 +106,97 @@ function! fontsize#decodeFont(font)
     return decodedFont
 endfunction
 
+" Return integer when font size is an integer.  For fractional font size, return
+" float if floating point is supported, and string otherwise.
+function! fontsize#normalizeSize(size)
+    " Treat as a string by concatenating ''.
+    " Remove any suffix consisting solely of a decimal point and some number of
+    " zeros.
+    let size_str = substitute(a:size . '', '\.0*$', '', '')
+    if size_str !~ '\.'
+        " No fractional portion; return integer.
+        return str2nr(size_str)
+    endif
+    if s:hasFloat
+        return str2float(size_str)
+    endif
+    " Must keep as a string.
+    return size_str
+endfunction
+
+function! fontsize#testNorm()
+    let v:errors = []
+
+    let size = fontsize#normalizeSize(2)
+    call assert_equal(type(size), type(2))
+    call assert_equal(size, 2)
+    let size = fontsize#normalizeSize('2.')
+    call assert_equal(type(size), type(2))
+    call assert_equal(size, 2)
+    let size = fontsize#normalizeSize('2.0')
+    call assert_equal(type(size), type(2))
+    call assert_equal(size, 2)
+
+    if has('float')
+        let size = fontsize#normalizeSize(2.0)
+        call assert_equal(type(size), type(2))
+        call assert_equal(size, 2)
+        let size = fontsize#normalizeSize(2.5)
+        call assert_equal(type(size), type(2.5))
+        call assert_equal(size, 2.5)
+        let size = fontsize#normalizeSize('.2')
+        call assert_equal(type(size), type(0.2))
+        call assert_equal(size, 0.2)
+    endif
+
+    let s:hasFloat = 0
+    let size = fontsize#normalizeSize('2.5')
+    call assert_equal(type(size), type('2.5'))
+    call assert_equal(size, '2.5')
+    let s:hasFloat = has('float')
+
+    for e in v:errors
+        echoerr e
+    endfor
+endfunction
+
+" `size` will be normalized; `delta` must be numeric but may be negative.
+" If sum would be negative, return normalized `size`.
+function! fontsize#addSize(size, delta)
+    let normSize = fontsize#normalizeSize(a:size)
+    if type(normSize) == type('')
+        " Must not have floating point, so `a:delta` must be integer.
+        " Trim leading digits to acquire any fractional suffix.
+        let suffix = substitute(normSize, '^\d\+', '', '')
+        let size = str2nr(normSize)
+    else
+        let suffix = ''
+        let size = normSize
+    endif
+    " `size` is numeric.
+    if size + a:delta > 0
+        let size += a:delta
+    endif
+    if suffix != ''
+        " Must not have floating point, so `size` is integer here.
+        return size . suffix
+    endif
+    return size
+endfunction
+
+" Return normalized size (see `fontsize#normalizeSize()`.
 function! fontsize#getSize(font)
     let decodedFont = fontsize#decodeFont(a:font)
     if match(decodedFont, s:regex) != -1
-        " Add zero to convert to integer.
-        let size = 0 + substitute(decodedFont, s:regex, '\2', '')
+        let size_str = substitute(decodedFont, s:regex, '\2', '')
+        let size = fontsize#normalizeSize(size_str)
     else
         let size = 0
     endif
     return size
 endfunction
 
+" `size` may be integer, float, or string.
 function! fontsize#setSize(font, size)
     let decodedFont = fontsize#decodeFont(a:font)
     if match(decodedFont, s:regex) != -1
@@ -142,15 +231,6 @@ function! fontsize#display()
     redraw
     sleep 100m
     echo fontsize#fontString(fontsize#getFontName()) . " (+/= - 0 ! q CR SP)"
-endfunction
-
-function! fontsize#ensureDefault()
-    if !exists("g:fontsize#defaultSize")
-        let g:fontsize#defaultSize = 0
-    endif
-    if g:fontsize#defaultSize == 0
-        let g:fontsize#defaultSize = fontsize#getSize(fontsize#getFontName())
-    endif
 endfunction
 
 " True when options have already been setup.
@@ -225,7 +305,6 @@ endfunction
 
 function! fontsize#default()
     call fontsize#setupOptions()
-    call fontsize#ensureDefault()
     call fontsize#setFontName(
             \ fontsize#setSize(fontsize#getFontName(), g:fontsize#defaultSize))
     call fontsize#setFontNameWide(
@@ -238,27 +317,134 @@ function! fontsize#setDefault()
     let g:fontsize#defaultSize = fontsize#getSize(fontsize#getFontName())
 endfunction
 
-function! fontsize#inc()
+function! fontsize#add(delta)
     call fontsize#setupOptions()
-    call fontsize#ensureDefault()
-    let newSize = fontsize#getSize(fontsize#getFontName()) + v:count1
+    let oldSize = fontsize#getSize(fontsize#getFontName())
+    let newSize = fontsize#addSize(oldSize, a:delta)
     call fontsize#setFontName(fontsize#setSize(fontsize#getFontName(), newSize))
     call fontsize#setFontNameWide(
             \ fontsize#setSize(&guifontwide, newSize))
     call fontsize#display()
 endfunction
 
-function! fontsize#dec()
-    call fontsize#setupOptions()
-    call fontsize#ensureDefault()
-    let newSize = fontsize#getSize(fontsize#getFontName()) - v:count1
-    if newSize > 0
-        call fontsize#setFontName(
-                \ fontsize#setSize(fontsize#getFontName(), newSize))
-            call fontsize#setFontNameWide(
-                    \ fontsize#setSize(&guifontwide, newSize))
-    endif
-    call fontsize#display()
+function! fontsize#inc()
+    call fontsize#add(v:count1 * g:fontsize#stepSize)
 endfunction
+
+function! fontsize#dec()
+    call fontsize#add(-v:count1 * g:fontsize#stepSize)
+endfunction
+
+function! fontsize#testRegexes()
+    let v:errors = []
+
+    " gui_gtk2:
+    let m = matchlist('Courier New ', g:fontsize#regex_gtk2)
+    call assert_equal(m, [])
+    let m = matchlist('Courier New11', g:fontsize#regex_gtk2)
+    call assert_equal(m, [])
+    let m = matchlist('Courier New 11', g:fontsize#regex_gtk2)
+    call assert_equal(m[1], 'Courier New ')
+    call assert_equal(m[2], '11')
+    call assert_equal(m[3], '')
+    let m = matchlist('Courier New 11.25', g:fontsize#regex_gtk2)
+    call assert_equal(m[1], 'Courier New ')
+    call assert_equal(m[2], '11.25')
+    call assert_equal(m[3], '')
+    let m = matchlist('Courier New 11.', g:fontsize#regex_gtk2)
+    call assert_equal(m[1], 'Courier New ')
+    call assert_equal(m[2], '11.')
+    call assert_equal(m[3], '')
+    let m = matchlist('Courier New .9', g:fontsize#regex_gtk2)
+    call assert_equal(m[1], 'Courier New ')
+    call assert_equal(m[2], '.9')
+    call assert_equal(m[3], '')
+    let m = matchlist('Courier New .', g:fontsize#regex_gtk2)
+    call assert_equal(m, [])
+
+    " gui_photon:
+    let m = matchlist('Courier New:11', g:fontsize#regex_photon)
+    call assert_equal(m, [])
+    let m = matchlist('Courier New:s11', g:fontsize#regex_photon)
+    call assert_equal(m[1], 'Courier New:s')
+    call assert_equal(m[2], '11')
+    call assert_equal(m[3], '')
+    let m = matchlist('Courier New:s11.25', g:fontsize#regex_photon)
+    call assert_equal(m[1], 'Courier New:s')
+    call assert_equal(m[2], '11.25')
+    call assert_equal(m[3], '')
+
+    " gui_kde:
+    let m = matchlist('Courier New 11', g:fontsize#regex_kde)
+    call assert_equal(m, [])
+    let m = matchlist('Courier New/11/-1/5/50/0/0/0/1/0', g:fontsize#regex_kde)
+    call assert_equal(m[1], 'Courier New/')
+    call assert_equal(m[2], '11')
+    call assert_equal(m[3], '/-1/5/50/0/0/0/1/0')
+    let m = matchlist('Courier New/11.25/-1/5/50/0/0/0/1/0', g:fontsize#regex_kde)
+    call assert_equal(m[1], 'Courier New/')
+    call assert_equal(m[2], '11.25')
+    call assert_equal(m[3], '/-1/5/50/0/0/0/1/0')
+
+    " gui_x11:
+    let m = matchlist('/*/courier/medium/r/normal/*/*/180/*/*/m/*/*',
+            \ g:fontsize#regex_x11)
+    call assert_equal(m, [])
+    let m = matchlist('-*-courier-medium-r-normal-*-*-180-*-*-m-*-*',
+            \ g:fontsize#regex_x11)
+    call assert_equal(m[1], '-*-courier-medium-r-normal-*-*-')
+    call assert_equal(m[2], '180')
+    call assert_equal(m[3], '-*-*-m-*-*')
+    let m = matchlist('-*-courier-medium-r-normal-*-*-180.25-*-*-m-*-*',
+            \ g:fontsize#regex_x11)
+    call assert_equal(m[1], '-*-courier-medium-r-normal-*-*-')
+    call assert_equal(m[2], '180.25')
+    call assert_equal(m[3], '-*-*-m-*-*')
+
+    " gui_haiku:
+    let m = matchlist('Terminus (TTF) Medium/20', g:fontsize#regex_haiku)
+    call assert_equal(m, [])
+    let m = matchlist('Terminus (TTF)/Medium/20', g:fontsize#regex_haiku)
+    call assert_equal(m[1], 'Terminus (TTF)/Medium/')
+    call assert_equal(m[2], '20')
+    call assert_equal(m[3], '')
+    let m = matchlist('Terminus (TTF)/Medium/20.25', g:fontsize#regex_haiku)
+    call assert_equal(m[1], 'Terminus (TTF)/Medium/')
+    call assert_equal(m[2], '20.25')
+    call assert_equal(m[3], '')
+
+    " gui_other:
+    let m = matchlist('Courier_New:11:cDEFAULT', g:fontsize#regex_other)
+    call assert_equal(m, [])
+    let m = matchlist('Courier_New:h11:cDEFAULT', g:fontsize#regex_other)
+    call assert_equal(m[1], 'Courier_New:h')
+    call assert_equal(m[2], '11')
+    call assert_equal(m[3], ':cDEFAULT')
+    let m = matchlist('Courier_New:h11.25:cDEFAULT', g:fontsize#regex_other)
+    call assert_equal(m[1], 'Courier_New:h')
+    call assert_equal(m[2], '11.25')
+    call assert_equal(m[3], ':cDEFAULT')
+
+    for e in v:errors
+        echoerr e
+    endfor
+endfunction
+
+function! fontsize#test()
+    call fontsize#testNorm()
+    call fontsize#testRegexes()
+endfunction
+
+" Setup default variables.
+if !exists("g:fontsize#defaultSize")
+    let g:fontsize#defaultSize = 0
+endif
+if g:fontsize#defaultSize == 0
+    let g:fontsize#defaultSize = fontsize#getSize(fontsize#getFontName())
+endif
+
+if !exists("g:fontsize#stepSize")
+    let g:fontsize#stepSize = 1
+endif
 
 " vim: sts=4 sw=4 tw=80 et ai:
