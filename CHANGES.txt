@@ -20,6 +20,8 @@ require adjustment of per-user settings.
   - Add ``:Fontsize`` command to display current font size or change the font
     size.
 
+- Add ``:SetupZig`` for Zig-specific setup.
+
 2025-11-22
 ==========
 

@@ -7882,6 +7882,22 @@ endfunction
 command! -bar SetupZ80 call SetupZ80()
 let g:SpellMap["<z80>"] = "<off>"
 
+" -------------------------------------------------------------
+" Setup for Zig.
+" -------------------------------------------------------------
+function! SetupZig()
+    SetupSource
+
+    setlocal tw=80
+
+    if g:EnableVimLsp_zig
+        setlocal omnifunc=lsp#complete
+    elseif g:EnableAle
+        setlocal omnifunc=ale#completion#OmniFunc
+    endif
+endfunction
+command! -bar SetupZig call SetupZig()
+
 " =============================================================
 " Syntax highlighting and filetype support
 " =============================================================
