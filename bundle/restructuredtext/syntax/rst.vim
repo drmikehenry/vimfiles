@@ -2,8 +2,9 @@
 " Language: reStructuredText documentation format
 " Maintainer: Marshall Ward <marshall.ward@gmail.com>
 " Previous Maintainer: Nikolai Weibull <now@bitwi.se>
+" Reference: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html
 " Website: https://github.com/marshallward/vim-restructuredtext
-" Latest Revision: 2025-03-06
+" Latest Revision: 2025-10-13
 
 if exists("b:current_syntax")
   finish
@@ -12,13 +13,14 @@ endif
 let s:cpo_save = &cpo
 set cpo&vim
 
-syn case ignore
+" reStructuredText is case-insensitive
+syntax case ignore
 
 syn match   rstTransition  /^[=`:.'"~^_*+#-]\{4,}\s*$/
 
 syn cluster rstCruft                contains=rstEmphasis,rstStrongEmphasis,
       \ rstInterpretedTextOrHyperlinkReference,rstInlineLiteral,
-      \ rstSubstitutionReference, rstInlineInternalTargets,rstFootnoteReference,
+      \ rstSubstitutionReference,rstInlineInternalTargets,rstFootnoteReference,
       \ rstHyperlinkReference
 
 syn region  rstLiteralBlock         matchgroup=rstDelimiter
@@ -97,6 +99,9 @@ execute 'syn region rstExDirective contained matchgroup=rstDirective' .
 execute 'syn match rstSubstitutionDefinition contained' .
       \ ' /|.*|\_s\+/ nextgroup=@rstDirectives'
 
+
+"" Inline Markup ""
+
 function! s:DefineOneInlineMarkup(name, start, middle, end, char_left, char_right)
   " Only escape the first char of a multichar delimiter (e.g. \* inside **)
   if a:start[0] == '\'
@@ -124,7 +129,6 @@ function! s:DefineOneInlineMarkup(name, start, middle, end, char_left, char_righ
   endif
 endfunction
 
-" TODO: The "middle" argument may no longer be useful here.
 function! s:DefineInlineMarkup(name, start, middle, end)
   if a:middle == '`'
     let middle = ' skip=+\s'.a:middle.'+'
@@ -132,6 +136,7 @@ function! s:DefineInlineMarkup(name, start, middle, end)
     let middle = ' skip=+\\\\\|\\' . a:middle . '\|\s' . a:middle . '+'
   endif
 
+  " Some characters may precede or follow an inline token
   call s:DefineOneInlineMarkup(a:name, a:start, middle, a:end, "'", "'")
   call s:DefineOneInlineMarkup(a:name, a:start, middle, a:end, '"', '"')
   call s:DefineOneInlineMarkup(a:name, a:start, middle, a:end, '(', ')')
@@ -190,8 +195,11 @@ execute 'syn match rstHyperlinkReference' .
 syn match   rstStandaloneHyperlink  contains=@NoSpell
       \ "\<\%(\%(\%(https\=\|file\|ftp\|gopher\)://\|\%(mailto\|news\):\)[^[:space:]'\"<>]\+\|www[[:alnum:]_-]*\.[[:alnum:]_-]\+\.[^[:space:]'\"<>]\+\)[[:alnum:]/]"
 
+" `code` is the standard reST directive for source code.
+" `code-block` is a nearly identical directive in Sphinx.
+" `sourcecode` used to be supported, but it was later removed.
 syn region rstCodeBlock contained matchgroup=rstDirective
-      \ start=+\%(sourcecode\|code\%(-block\)\=\)::\s*\(\S*\)\?\s*\n\%(\s*:.*:\s*.*\s*\n\)*\n\ze\z(\s\+\)+
+      \ start=+\%(code\%(-block\)\=\)::\s*\(\S*\)\?\s*\n\%(\s*:.*:\s*.*\s*\n\)*\n\ze\z(\s\+\)+
       \ skip=+^$+
       \ end=+^\z1\@!+
       \ contains=@NoSpell
@@ -260,6 +268,7 @@ for s:filetype in keys(g:rst_syntax_code_list)
     endif
     unlet! prior_isk
 endfor
+
 
 " Enable top level spell checking
 syntax spell toplevel
