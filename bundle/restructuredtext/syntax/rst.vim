@@ -117,11 +117,16 @@ function! s:DefineOneInlineMarkup(name, start, middle, end, char_left, char_righ
     let rst_contains=' contains=@Spell'
   endif
 
+  if !exists('g:rst_inline_stop_at_blank_line')
+    let g:rst_inline_stop_at_blank_line = 1
+  endif
+
   execute 'syn region rst' . a:name .
         \ ' start=+' . a:char_left . '\zs' . a:start .
         \ '\ze[^[:space:]' . a:char_right . a:start[strlen(a:start) - 1] . ']+' .
         \ a:middle .
-        \ ' end=+' . a:end . '\ze\%($\|\s\|[''"’)\]}>/:.,;!?\\-]\)+' .
+        \ ' end=+' . a:end . '\ze\%($\|\s\|[''"’)\]}>/:.,;!?\\-]\)' .
+        \ (g:rst_inline_stop_at_blank_line ? '\|\n\ze\s*\n' : '') . '+' .
         \ rst_contains
 
   if a:start != '``'

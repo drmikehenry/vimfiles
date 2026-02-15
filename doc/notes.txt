@@ -4130,7 +4130,18 @@ ReStructuredText - updated support for rst              *notes_rst*
 Version 2025-10-13 (422ca05) from:
 https://github.com/marshallward/vim-restructuredtext
 
-with scripts/rstliteralblockfix.vim supplying a command to toggle
+with the following modifications found in branch `vimfiles` at:
+https://github.com/drmikehenry/rust.vim
+
+- (branch stop-inline-at-blank-line) Stop inline block directives at the first
+  blank line.
+
+To opt out of the fix, use: >
+
+  let g:rst_inline_stop_at_blank_line = 0
+<
+
+Also, Vimfiles has scripts/rstliteralblockfix.vim supplying a command to toggle
 a fix for literal block syntax highlighting:
 >
   :RstLiteralBlockFix on          " Enable fix.

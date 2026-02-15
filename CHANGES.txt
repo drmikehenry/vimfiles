@@ -7,6 +7,19 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2026-02-15
+==========
+
+- Patch reStructuredText syntax highlighting to forcibly terminal inline markup
+  (such as *emphasis* and **strong emphasis**) at a blank line.  This fixes
+  cases where such a directive can become "stuck on" when syntax highlighting
+  resynchronizes in the middle of an embedded code block, where something like
+  ``char *some_pointer_in_c;`` can turn on emphasis spuriously.
+
+  To disable this fix, use::
+
+    let g:rst_inline_stop_at_blank_line = 0
+
 2026-02-13
 ==========
 
