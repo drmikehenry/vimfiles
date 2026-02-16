@@ -686,6 +686,12 @@ if !exists("g:EnableUltiSnips")
     let g:EnableUltiSnips = has('python3')
 endif
 
+if !has('nvim') && v:version < 800
+    " UltiSnips requires Vim 8.0+.
+    let g:EnableUltiSnips = 0
+endif
+
+
 if !exists('g:EnableOmniCppComplete')
     let g:EnableOmniCppComplete = !has('nvim')
 endif
