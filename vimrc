@@ -3370,7 +3370,12 @@ if has('cscope') && !has('nvim')
     " i - includes: find files that include given filename.
     " s - symbol:   find all references to symbol.
     " t - text:     find all instances of the text.
-    set cscopequickfix=a-,c-,d-,e-,i-,s-,t-
+    set cscopequickfix=c-,d-,e-,i-,s-,t-
+    " `a` is unavailable prior to Vim 7.4.2033:
+    try
+        set cscopequickfix+=a-
+    catch
+    endtry
 
     nnoremap <Space>ca :cs find a <C-r>=expand("<cword>")<CR><CR>:Copen<CR>
     nnoremap <Space>cb :!cscope -f ./cscope.out -bqkv<CR>

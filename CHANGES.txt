@@ -12,6 +12,9 @@ require adjustment of per-user settings.
 
 - Disable UltiSnips for Vim versions prior to 8.
 
+- Prevent errors from ``set cscopequickfix+=a-`` (which is invalid for Vim
+  versions prior to 7.4.2033).
+
 2026-02-15
 ==========
 
