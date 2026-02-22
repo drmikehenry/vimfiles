@@ -7,6 +7,17 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2026-02-22
+==========
+
+- Remove now-obsolete mapping for ``gx``.
+
+  The ``gx`` work-around was added in the Vim 7.4 days (or perhaps earlier).
+  While ``gx`` doesn't work great in Vim 7.4, this work-around is no longer
+  ideal for that case, and it breaks badly in more recent Vim versions, so the
+  ``gx`` mapping and associated helpers has been removed.  In Vim 8+ and in
+  Neovim, ``gx`` works well already.
+
 2026-02-16
 ==========
 
