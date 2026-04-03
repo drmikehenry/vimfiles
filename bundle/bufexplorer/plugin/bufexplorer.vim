@@ -1,5 +1,5 @@
 "============================================================================
-"    Copyright: Copyright (c) 2001-2025, Jeff Lanzarotta
+"    Copyright: Copyright (c) 2001-2026, Jeff Lanzarotta
 "               All rights reserved.
 "
 "               Redistribution and use in source and binary forms, with or
@@ -36,7 +36,7 @@
 " Name Of File: bufexplorer.vim
 "  Description: Buffer Explorer Vim Plugin
 "   Maintainer: Jeff Lanzarotta (my name at gmail dot com)
-" Last Changed: Tuesday, 19 August 2025
+" Last Changed: Tuesday, 17 March 2026
 "      Version: See g:bufexplorer_version for version number.
 "        Usage: This file should reside in the plugin directory and be
 "               automatically sourced.
@@ -74,7 +74,7 @@ endif
 "1}}}
 
 " Version number.
-let g:bufexplorer_version = "7.13.0"
+let g:bufexplorer_version = "7.14.0"
 
 " Plugin Code {{{1
 " Check for Vim version {{{2
@@ -1031,6 +1031,17 @@ function! s:CalculateBufferDetails(buf)
             if resolved_cwd != cwd_symlink
                 let cwd = resolved_cwd
             endif
+        endif
+
+        " Prefer the OSC title set by the shell (b:term_title) when available.
+        " Neovim initialises b:term_title to the raw `term://` URI before any
+        " title sequence arrives, so ignore values that still look like URIs.
+        " When the shell emits an OSC 0/2 title (e.g. via preexec/precmd hooks),
+        " this shows the running command or current directory instead of the
+        " opaque `!PID:shell` fallback, making it easy to distinguish terminals.
+        let term_title = getbufvar(buf.bufNbr, 'term_title', '')
+        if !empty(term_title) && term_title !~# '^term://'
+            let name = '!' . term_title
         endif
 
         let slashed_cwd = fnamemodify(cwd, ':p')
