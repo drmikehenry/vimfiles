@@ -109,7 +109,6 @@ def _get_potential_snippet_filenames_to_edit(
 # TODO(sirver): This class is still too long. It should only contain public
 # facing methods, most of the private methods should be moved outside of it.
 class SnippetManager:
-
     """The main entry point for all UltiSnips functionality.
 
     All Vim functions call methods in this class.
@@ -146,6 +145,10 @@ class SnippetManager:
         if enable_snipmate == "1":
             self.register_snippet_source("snipmate_files", SnipMateFileSource())
 
+        self._autotrigger = True
+        if vim_helper.eval("exists('g:UltiSnipsAutoTrigger')") == "1":
+            self._autotrigger = vim_helper.eval("g:UltiSnipsAutoTrigger") == "1"
+
         self._should_update_textobjects = False
         self._should_reset_visual = False
 
@@ -181,7 +184,7 @@ class SnippetManager:
 
     @err_to_scratch_buffer.wrap
     def expand_or_jump(self):
-        """This function is used for people who wants to have the same trigger
+        """This function is used for people who want to have the same trigger
         for expansion and forward jumping.
 
         It first tries to expand a snippet, if this fails, it tries to
@@ -193,6 +196,24 @@ class SnippetManager:
         if not rv:
             vim_helper.command("let g:ulti_expand_or_jump_res = 2")
             rv = self._jump(JumpDirection.FORWARD)
+        if not rv:
+            vim_helper.command("let g:ulti_expand_or_jump_res = 0")
+            self._handle_failure(self.expand_trigger, True)
+
+    @err_to_scratch_buffer.wrap
+    def jump_or_expand(self):
+        """This function is used for people who want to have the same trigger
+        for expansion and forward jumping.
+
+        It first tries to jump forward, if this fails, it tries to
+        expand a snippet.
+
+        """
+        vim_helper.command("let g:ulti_expand_or_jump_res = 2")
+        rv = self._jump(JumpDirection.FORWARD)
+        if not rv:
+            vim_helper.command("let g:ulti_expand_or_jump_res = 1")
+            rv = self._try_expand()
         if not rv:
             vim_helper.command("let g:ulti_expand_or_jump_res = 0")
             self._handle_failure(self.expand_trigger, True)
@@ -834,6 +855,10 @@ class SnippetManager:
     def can_jump_backwards(self):
         return self.can_jump(JumpDirection.BACKWARD)
 
+    def _toggle_autotrigger(self):
+        self._autotrigger = not self._autotrigger
+        return self._autotrigger
+
     @property
     def _current_snippet(self):
         """The current snippet or None."""
@@ -938,7 +963,8 @@ class SnippetManager:
                 before = vim_helper.buf.line_till_cursor
 
                 if (
-                    before
+                    self._autotrigger
+                    and before
                     and self._last_change[0] != ""
                     and before[-1] == self._last_change[0]
                 ):

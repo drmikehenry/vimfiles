@@ -61,8 +61,7 @@ class TabStop_Shell_ShebangPython(_VimTest):
         "test",
         """Hallo ${1:now `#!/usr/bin/env %s
 print("Hallo Welt")
-`} end"""
-        % os.environ.get("PYTHON", "python3"),
+`} end""" % os.environ.get("PYTHON", "python3"),
     )
     keys = "test" + EX + JF + "and more"
     wanted = "Hallo now Hallo Welt endand more"
@@ -204,11 +203,8 @@ snip += "Hallo2"
 snip += "Hallo3"`
 End""",
     )
-    keys = (
-        """
-    test"""
-        + EX
-    )
+    keys = """
+    test""" + EX
     wanted = """
     hi
     Hallo1
@@ -226,11 +222,8 @@ snip.rv += snip.mkline("Hallo2") + "\n"
 snip.rv += snip.mkline("Hallo3")`
 End""",
     )
-    keys = (
-        """
-    test"""
-        + EX
-    )
+    keys = """
+    test""" + EX
     wanted = """
     hi
     Hallo1
@@ -253,11 +246,8 @@ snip >> 3
 snip += "i3"`
 End""",
     )
-    keys = (
-        """
-	test"""
-        + EX
-    )
+    keys = """
+	test""" + EX
     wanted = """
 	hi
 	i1
@@ -282,11 +272,8 @@ snip.shift(3)
 snip.rv += snip.mkline("i3")`
 End""",
     )
-    keys = (
-        """
-	test"""
-        + EX
-    )
+    keys = """
+	test""" + EX
     wanted = """
 	hi
 	i1
@@ -312,11 +299,8 @@ snip.reset_indent()
 snip += "i1"`
 End""",
     )
-    keys = (
-        """
-	test"""
-        + EX
-    )
+    keys = """
+	test""" + EX
     wanted = """
 	hi
 	i1
@@ -494,7 +478,7 @@ class PythonCode_CanOverwriteTabstop(_VimTest):
         """$1`!p if len(t[1]) > 3 and len(t[2]) == 0:
             t[2] = t[1][2:];
             t[1] = t[1][:2] + '-\\n\\t';
-            vim.command('call feedkeys("\<End>", "n")');
+            vim.command('call feedkeys("\\\\<End>", "n")');
             `$2""",
     )
     keys = "test" + EX + "blah" + ", bah"

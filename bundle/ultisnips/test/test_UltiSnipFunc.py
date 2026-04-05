@@ -86,12 +86,11 @@ hi4"""
 
     def _before_test(self):
         self.vim.send_to_vim(
-            ":set langmap=йq,цw,уe,кr,еt,нy,гu,шi,щo,зp,х[,ъ],фa,ыs,вd,аf,пg,рh,оj,лk,дl,ж\\;,э',яz,чx,сc,мv,иb,тn,ьm,ю.,ё',ЙQ,ЦW,УE,КR,ЕT,НY,ГU,ШI,ЩO,ЗP,Х\{,Ъ\},ФA,ЫS,ВD,АF,ПG,РH,ОJ,ЛK,ДL,Ж\:,Э\",ЯZ,ЧX,СC,МV,ИB,ТN,ЬM,Б\<,Ю\>\n"
+            ":set langmap=йq,цw,уe,кr,еt,нy,гu,шi,щo,зp,х[,ъ],фa,ыs,вd,аf,пg,рh,оj,лk,дl,ж\\;,э',яz,чx,сc,мv,иb,тn,ьm,ю.,ё',ЙQ,ЦW,УE,КR,ЕT,НY,ГU,ШI,ЩO,ЗP,Х\\{,Ъ\\},ФA,ЫS,ВD,АF,ПG,РH,ОJ,ЛK,ДL,Ж\:,Э\",ЯZ,ЧX,СC,МV,ИB,ТN,ЬM,Б\<,Ю\>\n"
         )
 
 
 class VerifyVimDict1(_VimTest):
-
     """check:
     correct type (4 means vim dictionary)
     correct length of dictionary (in this case we have on element if the use same prefix, dictionary should have 1 element)
@@ -111,7 +110,6 @@ class VerifyVimDict1(_VimTest):
 
 
 class VerifyVimDict2(_VimTest):
-
     """check:
     can use " in trigger
     """
@@ -123,7 +121,6 @@ class VerifyVimDict2(_VimTest):
 
 
 class VerifyVimDict3(_VimTest):
-
     """check:
     can use ' in trigger
     """

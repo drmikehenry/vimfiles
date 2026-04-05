@@ -70,7 +70,7 @@ def _parse_snippet_file(content, full_filename):
 
 
 def _parse_snippet(line, lines, filename):
-    """Parse a snippet defintions."""
+    """Parse a snippet definition."""
     start_line_index = lines.line_index
     trigger, description = head_tail(line[len("snippet") :].lstrip())
     content = ""
@@ -109,7 +109,7 @@ def _parse_snippets_file(data, filename):
         head, tail = head_tail(line)
         if head == "extends":
             yield handle_extends(tail, lines.line_index)
-        elif head in "snippet":
+        elif head == "snippet":
             snippet = _parse_snippet(line, lines, filename)
             if snippet is not None:
                 yield snippet
@@ -118,7 +118,6 @@ def _parse_snippets_file(data, filename):
 
 
 class SnipMateFileSource(SnippetFileSource):
-
     """Manages all snipMate snippet definitions found in rtp."""
 
     def _get_all_snippet_files_for(self, ft):

@@ -87,6 +87,12 @@ function! UltiSnips#ExpandSnippetOrJump() abort
     return ""
 endfunction
 
+function! UltiSnips#JumpOrExpandSnippet() abort
+    call s:compensate_for_pum()
+    py3 UltiSnips_Manager.jump_or_expand()
+    return ""
+endfunction
+
 function! UltiSnips#ListSnippets() abort
     py3 UltiSnips_Manager.list_snippets()
     return ""
@@ -115,6 +121,11 @@ endfunction
 function! UltiSnips#CanJumpBackwards() abort
 	py3 vim.command("let can_jump_backwards = %d" % UltiSnips_Manager.can_jump_backwards())
 	return can_jump_backwards
+endfunction
+
+function! UltiSnips#ToggleAutoTrigger() abort
+    py3 vim.command("let autotrigger = %d" % UltiSnips_Manager._toggle_autotrigger())
+    return autotrigger
 endfunction
 
 function! UltiSnips#SaveLastVisualSelection() range abort

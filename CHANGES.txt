@@ -7,6 +7,13 @@ Significant changes to vimfiles (newest changes first).
 Changes marked with "BREAKING CHANGE" indicate an incompatible change that may
 require adjustment of per-user settings.
 
+2026-04-05
+==========
+
+- Update UltiSnips to version 2026-04-05.  This includes a patch to prevent
+  scanning all of Vim's 'runtimepath' on each keystroke.  The scanning causes
+  significant per-keystroke lag when Vimfiles is stored on a network share.
+
 2026-04-03
 ==========
 

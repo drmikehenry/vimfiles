@@ -16,7 +16,6 @@ from UltiSnips.text import escape
 from UltiSnips.text_objects import SnippetInstance
 from UltiSnips.text_objects.python_code import SnippetUtilForAction, cached_compile
 
-
 __WHITESPACE_SPLIT = re.compile(r"\s")
 
 
@@ -79,7 +78,6 @@ def _words_for_line(trigger, before, num_words=None):
 
 
 class SnippetDefinition:
-
     """Represents a snippet as parsed from a file."""
 
     _INDENT = re.compile(r"^[ \t]*")
@@ -135,7 +133,7 @@ class SnippetDefinition:
         )
 
     def _re_match(self, trigger):
-        """Test if a the current regex trigger matches `trigger`.
+        """Test if the current regex trigger matches `trigger`.
 
         If so, set _last_re and _matched.
 
@@ -248,24 +246,24 @@ class SnippetDefinition:
         return snip
 
     def _make_debug_exception(self, e, code=""):
-        e.snippet_info = textwrap.dedent(
-            """
+        e.snippet_info = textwrap.dedent("""
             Defined in: {}
             Trigger: {}
             Description: {}
             Context: {}
             Pre-expand: {}
             Post-expand: {}
-        """
-        ).format(
+        """).format(
             self._location,
             self._trigger,
             self._description,
             self._context_code if self._context_code else "<none>",
             self._actions["pre_expand"] if "pre_expand" in self._actions else "<none>",
-            self._actions["post_expand"]
-            if "post_expand" in self._actions
-            else "<none>",
+            (
+                self._actions["post_expand"]
+                if "post_expand" in self._actions
+                else "<none>"
+            ),
             code,
         )
 

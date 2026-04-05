@@ -16,7 +16,6 @@ import vim  # pylint:disable=import-error
 
 
 class VimBuffer:
-
     """Wrapper around the current Vim buffer."""
 
     def __getitem__(self, idx):
@@ -27,6 +26,11 @@ class VimBuffer:
 
     def __len__(self):
         return len(vim.current.buffer)
+
+    # This is a workaround for a bug in Neovim's Python layer. See here for
+    # context https://github.com/SirVer/ultisnips/issues/1041
+    def __iter__(self):
+        return iter(vim.current.buffer)
 
     @property
     def line_till_cursor(self):  # pylint:disable=no-self-use
@@ -120,6 +124,9 @@ def command(cmd):
 
 def eval(text):
     """Wraps vim.eval."""
+    # Replace null bytes with newlines, as vim raises a ValueError and neovim
+    # treats it as a terminator for the entire command.
+    text = text.replace("\x00", "\n")
     return vim.eval(text)
 
 

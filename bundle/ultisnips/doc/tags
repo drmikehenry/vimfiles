@@ -7,6 +7,7 @@ UltiSnips#CanExpandSnippet	UltiSnips.txt	/*UltiSnips#CanExpandSnippet*
 UltiSnips#CanJumpBackwards	UltiSnips.txt	/*UltiSnips#CanJumpBackwards*
 UltiSnips#CanJumpForwards	UltiSnips.txt	/*UltiSnips#CanJumpForwards*
 UltiSnips#SnippetsInCurrentScope	UltiSnips.txt	/*UltiSnips#SnippetsInCurrentScope*
+UltiSnips#ToggleAutoTrigger	UltiSnips.txt	/*UltiSnips#ToggleAutoTrigger*
 UltiSnips-Advanced-Debugging	UltiSnips-advanced.txt	/*UltiSnips-Advanced-Debugging*
 UltiSnips-Advanced-Pdb	UltiSnips-advanced.txt	/*UltiSnips-Advanced-Pdb*
 UltiSnips-Advanced-breakpoints	UltiSnips-advanced.txt	/*UltiSnips-Advanced-breakpoints*
@@ -68,14 +69,17 @@ UltiSnips.txt	UltiSnips.txt	/*UltiSnips.txt*
 UltiSnipsEnterFirstSnippet	UltiSnips.txt	/*UltiSnipsEnterFirstSnippet*
 UltiSnipsExitLastSnippet	UltiSnips.txt	/*UltiSnipsExitLastSnippet*
 Warning:	UltiSnips.txt	/*Warning:*
+g:UltiSnipsAutoTrigger	UltiSnips.txt	/*g:UltiSnipsAutoTrigger*
 g:UltiSnipsDebugHost	UltiSnips-advanced.txt	/*g:UltiSnipsDebugHost*
 g:UltiSnipsDebugPort	UltiSnips-advanced.txt	/*g:UltiSnipsDebugPort*
 g:UltiSnipsDebugServerEnable	UltiSnips-advanced.txt	/*g:UltiSnipsDebugServerEnable*
 g:UltiSnipsEditSplit	UltiSnips.txt	/*g:UltiSnipsEditSplit*
 g:UltiSnipsEnableSnipMate	UltiSnips.txt	/*g:UltiSnipsEnableSnipMate*
+g:UltiSnipsExpandOrJumpTrigger	UltiSnips.txt	/*g:UltiSnipsExpandOrJumpTrigger*
 g:UltiSnipsExpandTrigger	UltiSnips.txt	/*g:UltiSnipsExpandTrigger*
 g:UltiSnipsJumpBackwardTrigger	UltiSnips.txt	/*g:UltiSnipsJumpBackwardTrigger*
 g:UltiSnipsJumpForwardTrigger	UltiSnips.txt	/*g:UltiSnipsJumpForwardTrigger*
+g:UltiSnipsJumpOrExpandTrigger	UltiSnips.txt	/*g:UltiSnipsJumpOrExpandTrigger*
 g:UltiSnipsListSnippets	UltiSnips.txt	/*g:UltiSnipsListSnippets*
 g:UltiSnipsPMDebugBlocking	UltiSnips-advanced.txt	/*g:UltiSnipsPMDebugBlocking*
 g:UltiSnipsSnippetDirectories	UltiSnips.txt	/*g:UltiSnipsSnippetDirectories*

@@ -246,6 +246,7 @@ The priority will then be rails -> ruby -> programming -> all.
 
                            *g:UltiSnipsExpandTrigger* *g:UltiSnipsListSnippets*
                *g:UltiSnipsJumpForwardTrigger* *g:UltiSnipsJumpBackwardTrigger*
+              *g:UltiSnipsExpandOrJumpTrigger* *g:UltiSnipsJumpOrExpandTrigger*
 
 You can define the keys used to trigger UltiSnips actions by setting global
 variables. Variables define the keys used to expand a snippet, jump forward
@@ -267,26 +268,44 @@ following to your vimrc file or switching to a plugin like Supertab or
 YouCompleteMe. >
    inoremap <c-x><c-k> <c-x><c-k>
 
+If you prefer to use the same trigger for expanding snippets and jumping
+forward, g:UltiSnipsExpandOrJumpTrigger and g:UltiSnipsJumpOrExpandTrigger
+variables are what you want. Try to set g:UltiSnipsExpandOrJumpTrigger if
+you give priority to expanding snippets. It'll expand snippets first when
+you are in a position where you can both expand snippets and jump forward. >
+   let g:UltiSnipsExpandOrJumpTrigger = "<tab>"
+
+Or else, if you have a preference for jumping forward first, set
+g:UltiSnipsJumpOrExpandTrigger instead. >
+   let g:UltiSnipsJumpOrExpandTrigger = "<tab>"
+
+If both g:UltiSnipsExpandOrJumpTrigger and g:UltiSnipsJumpOrExpandTrigger
+is set, g:UltiSnipsExpandOrJumpTrigger variable will take effects.
+
 3.2.2 Using your own trigger functions           *UltiSnips-trigger-functions*
 
-For advanced users there are four functions that you can map directly to a
+For advanced users there are functions that you can map directly to a
 key and that correspond to some of the triggers previously defined:
    g:UltiSnipsExpandTrigger        <--> UltiSnips#ExpandSnippet
    g:UltiSnipsJumpForwardTrigger   <--> UltiSnips#JumpForwards
    g:UltiSnipsJumpBackwardTrigger  <--> UltiSnips#JumpBackwards
+   g:UltiSnipsExpandOrJumpTrigger  <--> UltiSnips#ExpandSnippetOrJump
+   g:UltiSnipsJumpOrExpandTrigger  <--> UltiSnips#JumpOrExpandSnippet
 
 If you have g:UltiSnipsExpandTrigger and g:UltiSnipsJumpForwardTrigger set
 to the same value then the function you are actually going to use is
 UltiSnips#ExpandSnippetOrJump.
 
 Each time any of the functions UltiSnips#ExpandSnippet,
-UltiSnips#ExpandSnippetOrJump, UltiSnips#JumpForwards or
-UltiSnips#JumpBackwards is called a global variable is set that contains the
-return value of the corresponding function.
+UltiSnips#ExpandSnippetOrJump, UltiSnips#JumpOrExpandSnippet,
+UltiSnips#JumpForwards or UltiSnips#JumpBackwards is called a global variable
+is set that contains the return value of the corresponding function.
 
 The corresponding variables and functions are:
 UltiSnips#ExpandSnippet       --> g:ulti_expand_res (0: fail, 1: success)
 UltiSnips#ExpandSnippetOrJump --> g:ulti_expand_or_jump_res (0: fail,
+                                                    1: expand, 2: jump)
+UltiSnips#JumpOrExpandSnippet --> g:ulti_expand_or_jump_res (0: fail,
                                                     1: expand, 2: jump)
 UltiSnips#JumpForwards        --> g:ulti_jump_forwards_res (0: fail, 1: success)
 UltiSnips#JumpBackwards       --> g:ulti_jump_backwards_res (0: fail, 1: success)
@@ -491,6 +510,21 @@ situation. This is useful in conditional mappings.
 
 This function returns 1 if UltiSnips can jump backwards in the current
 situation. This is useful in conditional mappings.
+
+ 3.4.7 UltiSnips#ToggleAutoTrigger              *UltiSnips#ToggleAutoTrigger*
+
+This function toggles the `autotrigger` functionality. Its return value
+corresponds to the new state of the `autotrigger` (0: disabled, 1: enabled).
+
+For example, the following mapping can be used to toggle the `autotrigger`
+in the Insert mode: >
+    inoremap <silent> <C-t> <CMD>call UltiSnips#ToggleAutoTrigger()<CR>
+<
+                                                    *g:UltiSnipsAutoTrigger*
+By default, `autotrigger` is enabled (relevant for snippets with the option 'A').
+If you want to disable it by default, add the following line to your vimrc: >
+    let g:UltiSnipsAutoTrigger = 0
+
 
 3.5 Warning about missing python support           *UltiSnips-python-warning*
 ----------------------------------------
@@ -1257,7 +1291,7 @@ the same value. To mirror a tabstop simply insert the tabstop again using the
 
 A tabstop can be mirrored multiple times in one snippet, and more than one
 tabstop can be mirrored in the same snippet. A mirrored tabstop can have a
-default value defined. Only the first instance of the tabstop need have a
+default value defined. Only the first instance of the tabstop needs to have a
 default value. Mirrored tabstop will take on the default value automatically.
 
 Mirrors are handy for start-end tags, for example, TeX 'begin' and 'end' tag
@@ -1336,7 +1370,7 @@ The options can be any combination of >
           By default, transformation are made on the raw utf-8 string. With
           this option, matching is done on the corresponding ASCII string
           instead, for example 'à' will become 'a'.
-          This option required the python package 'unidecode'.
+          This option requires the python package 'unidecode'.
 
 The syntax of regular expressions is beyond the scope of this document. Python
 regular expressions are used internally, so the python 're' module can be used
@@ -1813,6 +1847,10 @@ will be triggered.
 
 *Warning:* using of this feature might lead to significant vim slowdown. If
 you discovered that, please report an issue.
+
+If you want to temporarily disable autotriggering, the `autotrigger` behavior
+can be toggled via |UltiSnips#ToggleAutoTrigger|. By default it is enabled,
+but it is possible to customize it with |g:UltiSnipsAutoTrigger|.
 
 Consider following useful Go snippets:
 ------------------- SNIP -------------------
